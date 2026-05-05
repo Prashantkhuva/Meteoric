@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import "tailwindcss";
+
+/* Theme */
+@theme {
+  --font-primary: "Inter", sans-serif;
+  --font-secondary: "DM Sans", sans-serif;
+}
+
+/* Base */
+html,
+body,
+#root {
+  min-height: 100%;
+  background: #0c0c0c;
+  font-family: var(--font-primary);
+}
+
+/* 🌑 PREMIUM DARK SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a transparent;
+}
