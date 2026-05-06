@@ -11,14 +11,34 @@ export default function SmoothScroll() {
       infinite: false,
     });
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+    function handleAnchorClick(event) {
+      const link = event.target.closest('a[href^="#"]');
+
+      if (!link) return;
+
+      const hash = link.getAttribute("href");
+      const target = hash === "#" ? document.body : document.querySelector(hash);
+
+      if (!target) return;
+
+      event.preventDefault();
+      lenis.scrollTo(target);
+      window.history.pushState(null, "", hash);
     }
 
-    requestAnimationFrame(raf);
+    let frameId;
+
+    function raf(time) {
+      lenis.raf(time);
+      frameId = requestAnimationFrame(raf);
+    }
+
+    document.addEventListener("click", handleAnchorClick);
+    frameId = requestAnimationFrame(raf);
 
     return () => {
+      document.removeEventListener("click", handleAnchorClick);
+      cancelAnimationFrame(frameId);
       lenis.destroy();
     };
   }, []);

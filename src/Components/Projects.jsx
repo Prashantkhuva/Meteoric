@@ -78,7 +78,7 @@ function ProjectCardDesktop({ project, isActive }) {
       }`}
     >
       <div
-        className={`bg-gradient-to-b ${project.gradient} flex flex-col w-full min-h-[500px] relative`}
+        className={`bg-gradient-to-b ${project.gradient} flex flex-col w-full min-h-125 relative`}
       >
         {/* Top overlay — title + arrow button */}
         <div className="absolute top-0 left-0 right-0 z-10 p-8">

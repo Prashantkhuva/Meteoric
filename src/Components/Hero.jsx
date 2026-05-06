@@ -80,7 +80,7 @@ function Hero() {
 
           {/* Secondary CTA */}
           <a
-            href="#projects"
+            href="#process"
             className="group relative inline-flex items-center gap-2 text-base font-medium text-white/60 hover:text-white transition-colors duration-200"
           >
             See How We Build

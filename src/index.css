@@ -17,6 +17,10 @@ body,
   font-family: var(--font-primary);
 }
 
+html.lenis {
+  scroll-behavior: auto !important;
+}
+
 /* 🌑 PREMIUM DARK SCROLLBAR */
 ::-webkit-scrollbar {
   width: 6px;
@@ -40,4 +44,19 @@ body,
 * {
   scrollbar-width: thin;
   scrollbar-color: #2a2a2a transparent;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  width: max-content;
+  animation: marquee 30s linear infinite;
 }
