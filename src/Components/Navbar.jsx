@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RequestModal from "./RequestModal";
+import RequestModal from "./NavBar/RequestModal";
 
 const navItems = [
   { label: "Work", href: "#work" },

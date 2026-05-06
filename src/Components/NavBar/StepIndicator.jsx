@@ -33,11 +33,11 @@ function StepIndicator({ step }) {
             {i !== 2 && (
               <div className="relative mx-4">
                 {/* base line */}
-                <div className="w-16 h-[2px] bg-[#252525]" />
+                <div className="w-16 h-0.5 bg-[#252525]" />
 
                 {/* progress line */}
                 <div
-                  className={`absolute top-0 left-0 h-[2px] bg-white transition-all duration-500
+                  className={`absolute top-0 left-0 h-0.5 bg-white transition-all duration-500
                   ${step > s ? "w-full" : "w-0"}`}
                 />
               </div>
