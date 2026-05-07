@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import RequestModal from "./NavBar/RequestModal";
 import { Link } from "react-router-dom";
@@ -8,7 +8,10 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="relative overflow-hidden bg-black border-t border-[#EAEFFF]/8">
+      <footer
+        id="contact"
+        className="relative overflow-hidden bg-black border-t border-[#EAEFFF]/8"
+      >
         {/* Subtle bottom glow */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[37.5rem] h-[18.75rem] max-w-[90vw] bg-[#EAEFFF]/[0.04] blur-[120px] rounded-full pointer-events-none" />
 

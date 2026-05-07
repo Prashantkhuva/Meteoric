@@ -1,0 +1,84 @@
+export const SITE_URL = "https://withmeteoric.vercel.app";
+export const SITE_NAME = "Meteoric";
+export const DEFAULT_OG_IMAGE = "/og-image.png";
+
+export const seoDefaults = {
+  title: "Meteoric | Full-Stack Web Development for Founders",
+  description:
+    "Meteoric builds clean, fast, production-ready websites, SaaS products, and full-stack web apps for founders and small businesses.",
+  keywords: [
+    "Meteoric",
+    "React developer",
+    "Vite developer",
+    "full-stack developer",
+    "web development agency",
+    "SaaS development",
+    "landing page development",
+    "MERN stack developer",
+  ],
+  path: "/",
+};
+
+export const pageSeo = {
+  home: {
+    title: "Meteoric | Full-Stack Web Development for Founders",
+    description:
+      "Launch high-performing landing pages, SaaS products, and full-stack web apps with Meteoric, a lean React and MERN development studio.",
+    keywords: [
+      "Meteoric",
+      "web development agency",
+      "React development",
+      "full-stack web apps",
+      "SaaS development",
+      "landing page developer",
+    ],
+    path: "/",
+  },
+  projects: {
+    title: "Projects | Meteoric",
+    description:
+      "Explore shipped Meteoric projects including SaaS products, developer tools, and full-stack React applications built for real users.",
+    keywords: [
+      "Meteoric projects",
+      "React portfolio",
+      "SaaS projects",
+      "full-stack projects",
+      "MERN stack portfolio",
+      "Vite React apps",
+    ],
+    path: "/projects",
+  },
+  contact: {
+    title: "Contact | Meteoric",
+    description:
+      "Start a project with Meteoric for landing pages, SaaS products, full-stack web apps, and production-ready React development.",
+    keywords: [
+      "contact Meteoric",
+      "hire React developer",
+      "hire full-stack developer",
+      "web app development",
+      "SaaS developer for founders",
+    ],
+    path: "/contact",
+  },
+  about: {
+    title: "About Prashant Khuva | Meteoric",
+    description:
+      "Learn about Prashant Khuva, the full-stack developer behind Meteoric, building clean React and MERN products for founders.",
+    keywords: [
+      "Prashant Khuva",
+      "Meteoric founder",
+      "full-stack developer",
+      "React developer",
+      "MERN stack developer",
+    ],
+    path: "/about",
+  },
+};
+
+export const sitemapRoutes = [
+  { path: "/", priority: "1.0", changefreq: "weekly" },
+  { path: "/projects", priority: "0.8", changefreq: "monthly" },
+  { path: "/contact", priority: "0.7", changefreq: "monthly" },
+  { path: "/about", priority: "0.6", changefreq: "monthly" },
+];

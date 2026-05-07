@@ -10,6 +10,14 @@ function App() {
       <SmoothScroll />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route
+          path="/projects"
+          element={<Home seoKey="projects" scrollTargetId="work" />}
+        />
+        <Route
+          path="/contact"
+          element={<Home seoKey="contact" scrollTargetId="contact" />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

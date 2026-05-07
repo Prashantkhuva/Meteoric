@@ -1,5 +1,3 @@
-import React from "react";
-
 function Logo({ className = "" }) {
   return (
     <span className={`block ${className}`} aria-label="Meteoric" role="img">

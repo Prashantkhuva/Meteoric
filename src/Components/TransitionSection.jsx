@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ArrowUpRight, X, Monitor, Database, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 

@@ -47,7 +47,7 @@ function Step2({
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [setCountryOpen]);
 
   return (
     <motion.div

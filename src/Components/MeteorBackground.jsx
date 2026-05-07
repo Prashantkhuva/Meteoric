@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 function MeteorBackground({ showBrand = true }) {
   const canvasRef = useRef(null);

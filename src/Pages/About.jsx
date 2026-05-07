@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Navbar from "../Components/Navbar";
+import SEO from "../Components/SEO";
+import { pageSeo } from "../seo.config";
 
 const stack = [
   "React",
@@ -24,6 +26,7 @@ const stats = [
 export default function AboutPage() {
   return (
     <>
+      <SEO {...pageSeo.about} />
       <Navbar />
 
       <main className="min-h-screen bg-black text-white">

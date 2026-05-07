@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import RequestModal from "./NavBar/RequestModal";
 import Logo from "./Logo";
 
@@ -13,11 +13,6 @@ const navItems = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location.pathname, location.hash]);
 
   return (
     <>
@@ -36,6 +31,7 @@ export default function Navbar() {
                 <Link
                   key={item.to}
                   to={item.to}
+                  onClick={() => setIsMenuOpen(false)}
                   className="relative group transition"
                 >
                   {item.label}
@@ -78,6 +74,7 @@ export default function Navbar() {
                 <Link
                   key={item.to}
                   to={item.to}
+                  onClick={() => setIsMenuOpen(false)}
                   className="rounded-2xl px-4 py-3 text-sm font-medium text-white/75 transition-colors duration-300 hover:bg-white/10 hover:text-white"
                 >
                   {item.label}
