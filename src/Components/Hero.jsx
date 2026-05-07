@@ -22,26 +22,26 @@ function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
-        {/* Badge */}
+      <div className="relative pt-10 z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
+        {/* Badge
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/70 backdrop-blur-sm"
+          className="relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/70 backdrop-blur-sm"
         >
           <span className="w-2 h-2 rounded-full bg-[#EAEFFF] shadow-[0_0_8px_rgba(234,239,255,0.8)]" />
           <span className="text-xs tracking-wide">
             Trusted by founders worldwide
           </span>
-        </motion.div>
+        </motion.div> */}
 
         {/* Heading */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight text-white"
+          className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight text-white"
         >
           We design and ship high-performance websites
           <span className="text-white/40"> — in weeks, not months.</span>
@@ -52,7 +52,7 @@ function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-2xl text-base md:text-lg text-white/60 leading-relaxed"
+          className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed"
         >
           We partner with founders to design, develop, and launch modern
           websites and SaaS products that actually convert — not just look good.
@@ -63,7 +63,7 @@ function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mt-4"
+          className="relative flex flex-col sm:flex-row items-center gap-4 mt-4"
         >
           {/* Primary CTA */}
           <a

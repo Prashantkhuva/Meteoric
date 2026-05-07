@@ -12,7 +12,7 @@ function Step0({ setStep }) {
       className="flex justify-center"
     >
       <div className="w-full max-w-sm">
-        <p className="text-white/50 text-sm mb-6 text-center">
+        <p className="text-white text-2xl ml-0 mt-0 mb-10 ">
           How would you like to get started?
         </p>
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import RequestModal from "./NavBar/RequestModal";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,8 +59,8 @@ export default function Footer() {
               </p>
 
               {/* Right Side */}
-              <a
-                href="/about"
+              <Link
+                to="/about"
                 className="group text-sm text-white/30 hover:text-white transition-colors duration-300"
               >
                 Built & Designed by{" "}
@@ -69,7 +70,7 @@ export default function Footer() {
                     <ArrowUpRight size={12} />
                   </span>
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
