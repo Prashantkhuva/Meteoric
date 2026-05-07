@@ -14,7 +14,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden bg-[#0c0c0c] flex items-center px-6 md:px-16"
+      className="relative min-h-screen w-full overflow-hidden bg-black flex items-center px-6 md:px-16"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -70,7 +70,7 @@ function Hero() {
             data-cal-namespace="let-s-build"
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
-            className="relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 group"
+            className="relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] group"
           >
             <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
             <span className="relative z-10 group-hover:text-black">

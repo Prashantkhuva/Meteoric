@@ -81,7 +81,7 @@ export default function ProcessSection() {
             {/* animated progress */}
             <motion.div
               style={{ height }}
-              className="absolute top-0 left-0 w-full rounded-full bg-linear-to-b from-white via-white/70 to-transparent shadow-[0_0_16px_rgba(255,255,255,0.7)]"
+              className="absolute top-0 left-0 w-full rounded-full bg-linear-to-b from-[#EAEFFF] via-[#EAEFFF]/60 to-transparent shadow-[0_0_14px_rgba(234,239,255,0.35)]"
             />
           </div>
 
@@ -121,7 +121,7 @@ export default function ProcessSection() {
                     {item.title}
                   </h3>
 
-                  <p className="mb-8 max-w-3xl text-base leading-relaxed text-white/55 sm:text-lg md:mb-10 md:text-2xl">
+                  <p className="mb-8 max-w-2xl text-base leading-relaxed text-[#EAEFFF]/50 sm:text-lg md:mb-10 md:text-xl">
                     {item.description}
                   </p>
 

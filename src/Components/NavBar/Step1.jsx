@@ -38,13 +38,13 @@ function Step1({ step, setStep, formData, setFormData }) {
               className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                 selected
                   ? "bg-white/10 border-white text-white"
-                  : "border-[#252525] text-white/70 hover:border-[#EAEFFF]/40"
+                  : "border-[#EAEFFF]/10 text-white/70 hover:border-[#EAEFFF]/40"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
-                    selected ? "bg-white border-white" : "border-[#454545]"
+                    selected ? "bg-white border-white" : "border-[#EAEFFF]/20"
                   }`}
                 >
                   {selected && <Check size={10} className="text-black" />}
@@ -58,7 +58,7 @@ function Step1({ step, setStep, formData, setFormData }) {
       <div className="flex justify-between mt-8">
         <button
           onClick={() => setStep(0)}
-          className="px-6 py-2 border border-[#252525] rounded-full hover:border-white/40 transition-colors text-sm"
+          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm"
         >
           Back
         </button>
@@ -68,7 +68,7 @@ function Step1({ step, setStep, formData, setFormData }) {
           className={`px-6 py-2 rounded-full transition-colors text-sm ${
             step1Valid
               ? "bg-white text-black hover:bg-white/90"
-              : "bg-[#252525] text-[#EAEFFF]/40 cursor-not-allowed"
+              : "bg-[#EAEFFF]/10 text-[#EAEFFF]/40 cursor-not-allowed"
           }`}
         >
           Next

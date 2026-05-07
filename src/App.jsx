@@ -1,14 +1,18 @@
 import "./App.css";
 import SmoothScroll from "./Components/ui/SmoothScroll";
 import Home from "./Pages/Home";
-import { useEffect } from "react";
-import Lenis from "lenis";
+import About from "./Pages/About";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <>
       <SmoothScroll />
-      <Home />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   );
 }

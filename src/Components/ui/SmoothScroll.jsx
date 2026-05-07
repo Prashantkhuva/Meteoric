@@ -1,7 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import { useLocation } from "react-router-dom";
 
 export default function SmoothScroll() {
+  const location = useLocation();
+  const lenisRef = useRef(null);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -10,6 +14,7 @@ export default function SmoothScroll() {
       touchMultiplier: 1.5,
       infinite: false,
     });
+    lenisRef.current = lenis;
 
     function handleAnchorClick(event) {
       const link = event.target.closest('a[href^="#"]');
@@ -40,8 +45,21 @@ export default function SmoothScroll() {
       document.removeEventListener("click", handleAnchorClick);
       cancelAnimationFrame(frameId);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const scrollTarget = location.hash
+      ? document.querySelector(location.hash)
+      : 0;
+
+    const timeoutId = window.setTimeout(() => {
+      lenisRef.current?.scrollTo(scrollTarget || 0, { immediate: !location.hash });
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [location.pathname, location.hash]);
 
   return null;
 }

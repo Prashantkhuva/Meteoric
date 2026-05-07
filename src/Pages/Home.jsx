@@ -4,7 +4,6 @@ import Hero from "../Components/Hero";
 import Projects from "../Components/Projects";
 import TransitionSection from "../Components/TransitionSection";
 import ProcessSection from "../Components/ProcessSection";
-import CTASection from "../Components/CTAsection";
 import CapabilitiesSection from "../Components/CapabilitySection";
 import Footer from "../Components/Footer";
 
@@ -17,7 +16,7 @@ function Home() {
       <Projects />
       <ProcessSection />
       <CapabilitiesSection />
-      <CTASection />
+      {/* <CTASection /> */}
       <Footer />
     </div>
   );

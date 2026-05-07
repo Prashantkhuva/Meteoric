@@ -15,10 +15,10 @@ function StepIndicator({ step }) {
               className={`relative w-11 h-11 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-300
               ${
                 isActive
-                  ? "bg-white text-black scale-110 shadow-[0_0_25px_rgba(255,255,255,0.25)]"
+                  ? "bg-white text-black scale-[1.06] shadow-[0_0_20px_rgba(234,239,255,0.22)]"
                   : isCompleted
                     ? "bg-white text-black"
-                    : "bg-[#141414] text-white/40 border border-[#252525]"
+                    : "bg-[#141414] text-white/40 border border-[#EAEFFF]/10"
               }`}
             >
               {/* GLOW RING (only active) */}
@@ -33,7 +33,7 @@ function StepIndicator({ step }) {
             {i !== 2 && (
               <div className="relative mx-4">
                 {/* base line */}
-                <div className="w-16 h-0.5 bg-[#252525]" />
+                <div className="w-10 sm:w-16 h-0.5 bg-[#EAEFFF]/10" />
 
                 {/* progress line */}
                 <div

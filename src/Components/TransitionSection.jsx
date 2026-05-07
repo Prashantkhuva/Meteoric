@@ -39,9 +39,9 @@ export default function TransitionSection() {
 
   return (
     <>
-      <section className="relative py-10 overflow-hidden">
+      <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
         {/* background glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.04),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           {/* TOP */}
@@ -78,12 +78,12 @@ export default function TransitionSection() {
                   ease: "easeOut",
                 }}
                 onClick={() => setActiveCard(item)}
-                className="group relative cursor-pointer overflow-hidden rounded-[28px] border border-[#EAEFFF]/10 bg-[#0d0d0d] p-6 h-107.5 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:bg-[#101010] hover:shadow-[0_0_30px_rgba(234,239,255,0.03)] before:absolute before:inset-0 before:rounded-[28px] before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.06),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-700 hover:before:opacity-100"
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100"
               >
                 {/* PREMIUM ANIMATED BORDER */}
-                <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 transition-opacity duration-300 group-hover:opacity-40 hover:opacity-100">
+                <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-40">
                   <div
-                    className="absolute inset-0 rounded-[28px] p-[1px]"
+                    className="absolute inset-0 rounded-3xl p-[1px]"
                     style={{
                       background: `
         repeating-conic-gradient(
@@ -97,12 +97,12 @@ export default function TransitionSection() {
       `,
                     }}
                   >
-                    <div className="h-full w-full rounded-[28px] bg-[#0d0d0d]" />
+                    <div className="h-full w-full rounded-3xl bg-black" />
                   </div>
                 </div>
 
                 {/* top ambient glow */}
-                <div className="absolute -top-28 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#EAEFFF]/8 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute -top-28 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#EAEFFF]/7 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
                 <div className="relative z-10 flex flex-col h-full">
                   {/* TOP VISUAL */}
@@ -305,7 +305,7 @@ export default function TransitionSection() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.96 }}
               transition={{ duration: 0.25 }}
-              className="relative z-10 w-full max-w-2xl rounded-[32px] border border-[#EAEFFF]/10 bg-[#101010] p-8 md:p-10 shadow-[0_0_80px_rgba(234,239,255,0.05)]"
+              className="relative z-10 w-full max-w-2xl rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 md:p-10 shadow-[0_0_80px_rgba(234,239,255,0.06)]"
             >
               {/* close */}
               <button

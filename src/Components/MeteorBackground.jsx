@@ -118,7 +118,7 @@ function MeteorBackground({ showBrand = true }) {
     };
 
     const animate = (time) => {
-      ctx.fillStyle = "#0c0c0c";
+      ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, width, height);
 
       drawStars(time);
@@ -170,7 +170,7 @@ const styles = {
     height: "100vh",
     minHeight: "100vh",
     overflow: "hidden",
-    background: "#0c0c0c",
+    background: "#000000",
   },
   canvas: {
     position: "absolute",

@@ -123,7 +123,7 @@ function ProjectCardMobile({ project }) {
 
   return (
     <div
-      className={`bg-gradient-to-b ${project.gradient} rounded-xl overflow-hidden`}
+      className={`bg-gradient-to-b ${project.gradient} rounded-3xl overflow-hidden border border-[#EAEFFF]/10`}
     >
       {/* Image */}
       <div className="relative h-52 w-full overflow-hidden">
@@ -221,7 +221,7 @@ function Projects() {
   const active = projects[activeIndex];
 
   return (
-    <section id="work" className="bg-[#0c0c0c] py-24 px-6 md:px-16">
+    <section id="work" className="bg-black py-24 px-6 md:px-16">
       {/* Section header */}
       <div className="max-w-7xl mx-auto mb-16">
         <p className="text-white/30 uppercase tracking-widest text-xs mb-3">
@@ -265,7 +265,7 @@ function Projects() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="p-8 rounded-2xl  bg-black"
+                className="p-8 rounded-2xl border border-[#EAEFFF]/8 bg-black shadow-[0_0_44px_rgba(234,239,255,0.035)]"
               >
                 {/* Accent line + name */}
                 <div className="flex items-center gap-3 mb-5">

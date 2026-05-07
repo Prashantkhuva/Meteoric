@@ -76,10 +76,10 @@ export default function RequestModal({ isOpen, setIsOpen }) {
         />
 
         <div
-          className={`relative bg-[#151515] rounded-xl w-full overflow-hidden text-white border border-[#252525] z-10 transition-all duration-300
+          className={`relative bg-black rounded-2xl w-full overflow-hidden text-white border border-[#EAEFFF]/10 z-10 transition-all duration-300 shadow-[0_0_80px_rgba(234,239,255,0.06)]
   ${step === 0 ? "max-w-md" : "max-w-2xl"}`}
         >
-          <div className="flex justify-between items-center p-6 border-b border-[#252525]">
+          <div className="flex justify-between items-center p-6 border-b border-[#EAEFFF]/8">
             <h3 className="text-xl font-bold">
               {step === 0 ? "Get Started" : "Request Services"}
             </h3>

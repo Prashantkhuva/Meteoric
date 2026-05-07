@@ -34,7 +34,7 @@ function Step3({
       transition={{ duration: 0.2 }}
     >
       <StepIndicator step={step} />
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium text-white/70 mb-2">
             Currency
@@ -43,7 +43,7 @@ function Step3({
             <button
               type="button"
               onClick={() => setCurrencyOpen(!currencyOpen)}
-              className="w-full px-4 py-3 bg-[#101010] border border-[#252525] rounded-xl text-white text-left flex items-center justify-between hover:border-white/20 transition-colors text-sm"
+              className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white text-left flex items-center justify-between hover:border-[#EAEFFF]/25 transition-colors text-sm"
             >
               <span className="flex items-center gap-2">
                 <span>
@@ -57,7 +57,7 @@ function Step3({
               <span className="text-white/30 text-xs">▾</span>
             </button>
             {currencyOpen && (
-              <div className="absolute top-full left-0 mt-1 w-full bg-[#1a1a1a] border border-[#252525] rounded-xl overflow-hidden z-20">
+              <div className="absolute top-full left-0 mt-1 w-full bg-[#151515] border border-[#EAEFFF]/10 rounded-xl overflow-hidden z-20">
                 {CURRENCIES.map((c) => (
                   <button
                     key={c.label}
@@ -85,11 +85,11 @@ function Step3({
             value={formData.budget}
             onChange={handleChange}
             placeholder="2,000"
-            className="w-full px-4 py-3 bg-[#101010] border border-[#252525] rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors text-sm"
+            className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#EAEFFF]/30 transition-colors text-sm"
           />
         </div>
       </div>
-      <div className="bg-[#101010] p-4 rounded-xl mb-6 border border-[#252525]">
+      <div className="bg-black p-4 rounded-xl mb-6 border border-[#EAEFFF]/10">
         <h4 className="font-medium text-white mb-3 text-sm">
           Review Your Information
         </h4>
@@ -126,7 +126,7 @@ function Step3({
       <div className="flex justify-between">
         <button
           onClick={() => setStep(2)}
-          className="px-6 py-2 border border-[#252525] rounded-full hover:border-white/40 transition-colors text-sm"
+          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm"
         >
           Back
         </button>
@@ -139,7 +139,7 @@ function Step3({
           className={`px-6 py-2 rounded-full transition-colors text-sm ${
             step3Valid
               ? "bg-white text-black hover:bg-white/90"
-              : "bg-[#252525] text-[#EAEFFF]/40 cursor-not-allowed"
+              : "bg-[#EAEFFF]/10 text-[#EAEFFF]/40 cursor-not-allowed"
           }`}
         >
           Submit

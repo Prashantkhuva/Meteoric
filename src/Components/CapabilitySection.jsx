@@ -1,159 +1,308 @@
-import React from "react";
-import { MessageSquare, Rocket, Layers3, Gauge } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { MessageSquare, Rocket, Layers3, Gauge, Globe, AppWindow, LayoutDashboard, Boxes, ArrowUpRight, X, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const capabilities = [
+const services = [
   {
-    icon: <MessageSquare size={20} />,
-    title: "Clear Communication",
-    description:
-      "Fast replies, structured updates, and transparent collaboration throughout the project lifecycle.",
+    icon: <Globe size={20} />,
+    title: "Landing Pages",
+    description: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
+    tag: "Design + Dev",
+    details: "A landing page is often the first thing your audience sees — and first impressions matter. I build pages that load fast, look premium, and are designed to convert. Every section is intentional: clear headline, strong CTA, social proof, and mobile-first layout.",
+    includes: [
+      "Custom responsive design",
+      "Framer Motion animations",
+      "Contact or lead capture form",
+      "Performance optimized",
+      "SEO-ready structure",
+    ],
+    timeline: "3–7 days",
+    stack: ["React", "Tailwind CSS", "Framer Motion"],
   },
-
   {
-    icon: <Rocket size={20} />,
-    title: "Fast Execution",
-    description:
-      "From concept to production-ready experiences with efficient workflows and rapid iteration cycles.",
+    icon: <AppWindow size={20} />,
+    title: "Web Applications",
+    description: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
+    tag: "Full-Stack",
+    details: "Web apps are where complexity lives — authentication, data management, user flows, API integrations. I handle all of it. From the database schema to the frontend state management, everything is built to be clean, maintainable, and production-ready.",
+    includes: [
+      "User authentication & authorization",
+      "REST API design and development",
+      "Database design with MongoDB",
+      "State management with Redux Toolkit",
+      "Deployment on Vercel / Render",
+    ],
+    timeline: "2–6 weeks",
+    stack: ["React", "Node.js", "MongoDB", "Express", "JWT"],
   },
-
   {
-    icon: <Layers3 size={20} />,
-    title: "Scalable Foundations",
-    description:
-      "Clean frontend and backend architecture designed to grow alongside your product and business.",
+    icon: <LayoutDashboard size={20} />,
+    title: "SaaS Products",
+    description: "End-to-end SaaS platforms with authentication, dashboards, payments, and scalable architecture.",
+    tag: "Product Dev",
+    details: "Building a SaaS means thinking beyond features — it means building a product that retains users and scales. I help founders go from idea to a live, working product with all the core SaaS infrastructure: multi-user auth, subscription billing, dashboards, and admin controls.",
+    includes: [
+      "Multi-user authentication system",
+      "Subscription billing integration",
+      "User dashboard and analytics",
+      "Admin panel",
+      "Scalable backend architecture",
+    ],
+    timeline: "4–10 weeks",
+    stack: ["React", "Node.js", "MongoDB", "Stripe", "Appwrite"],
   },
-
   {
-    icon: <Gauge size={20} />,
-    title: "Performance Focused",
-    description:
-      "Interfaces optimized for responsiveness, smooth interactions, and real-world usability.",
+    icon: <Boxes size={20} />,
+    title: "Full-Stack Development",
+    description: "Complete frontend and backend development — from database design to polished UI — using the MERN stack.",
+    tag: "MERN Stack",
+    details: "Have a custom idea that doesn't fit a template? I build fully custom full-stack applications from the ground up. Whether it's an internal tool, a marketplace, or a niche platform — I scope, plan, and execute it cleanly with no over-engineering.",
+    includes: [
+      "Custom frontend with React",
+      "Node.js + Express backend",
+      "MongoDB database architecture",
+      "Third-party API integrations",
+      "Full deployment and handoff",
+    ],
+    timeline: "Depends on scope",
+    stack: ["React", "Node.js", "MongoDB", "Express", "TypeScript"],
   },
 ];
 
-export default function CapabilitiesSection() {
+const capabilities = [
+  {
+    icon: <MessageSquare size={16} />,
+    title: "Direct Access",
+    description: "No project managers, no handoffs. One person, full accountability.",
+  },
+  {
+    icon: <Rocket size={16} />,
+    title: "On-Time Delivery",
+    description: "Clear timelines, no surprises. I set realistic deadlines and stick to them.",
+  },
+  {
+    icon: <Layers3 size={16} />,
+    title: "Clean Codebase",
+    description: "Well-structured, readable code you can hand off to any developer.",
+  },
+  {
+    icon: <Gauge size={16} />,
+    title: "Post-Launch Support",
+    description: "Bug fixes, tweaks, and guidance — I don't disappear after delivery.",
+  },
+];
+
+export default function ServicesSection() {
+  const [activeService, setActiveService] = useState(null);
+
   return (
-    <section className="relative py-36 overflow-hidden">
-      {/* background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />
+    <>
+      <section id="services" className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* TOP */}
-        <div className="max-w-4xl mb-20">
-          <p className="text-[#EAEFFF]/40 uppercase tracking-[0.2em] text-sm mb-6">
-            Working Together
-          </p>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
 
-          <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-[#EAEFFF]">
-            What you can expect
-            <span className="text-[#EAEFFF]/40"> when building with me.</span>
-          </h2>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
 
-          <p className="mt-8 text-[#EAEFFF]/50 text-lg leading-relaxed max-w-2xl">
-            A workflow focused on speed, clarity, scalability, and polished
-            digital experiences.
-          </p>
-        </div>
+          {/* ── SERVICES HEADER ── */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
+            <div>
+              <p className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-xs mb-5">
+                Services
+              </p>
+              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-[#EAEFFF]">
+                What I build
+                <span className="block text-[#EAEFFF]/30 mt-1">for founders.</span>
+              </h2>
+            </div>
+            <p className="text-[#EAEFFF]/40 text-sm leading-relaxed max-w-xs md:text-right">
+              From a landing page to a full SaaS — I handle the entire stack.
+            </p>
+          </div>
 
-        {/* GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {capabilities.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.45,
-                delay: index * 0.08,
-              }}
-              viewport={{ once: true }}
-              whileHover={{
-                y: -6,
-              }}
-              className="group relative overflow-hidden rounded-[30px] border border-[#EAEFFF]/10 bg-[#0d0d0d] p-8 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:bg-[#101010] hover:shadow-[0_0_40px_rgba(234,239,255,0.04)]"
-            >
-              {/* ambient glow */}
-              <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#EAEFFF]/6 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-              {/* animated border */}
-              <div className="pointer-events-none absolute inset-0 rounded-[30px] opacity-0 group-hover:opacity-40 transition-opacity duration-500">
-                <div
-                  className="absolute inset-0 rounded-[30px] p-[1px]"
-                  style={{
-                    background: `
-                      repeating-conic-gradient(
-                        from 180deg at 50% 50%,
-                        #EAEFFF 0%,
-                        rgba(234,239,255,0.8) 8%,
-                        rgba(234,239,255,0.12) 16%,
-                        rgba(234,239,255,0.8) 24%,
-                        #EAEFFF 32%
-                      )
-                    `,
-                  }}
-                >
-                  <div className="h-full w-full rounded-[30px] bg-[#0d0d0d]" />
-                </div>
-              </div>
-
-              <div className="relative z-10">
-                {/* icon */}
-                <div className="w-12 h-12 rounded-2xl border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 flex items-center justify-center text-[#EAEFFF]/70 mb-8">
-                  {item.icon}
+          {/* ── SERVICES LIST ── */}
+          <div className="border-t border-[#EAEFFF]/8 mb-28">
+            {services.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.07 }}
+                viewport={{ once: true }}
+                onClick={() => setActiveService(item)}
+                className="group flex flex-col md:flex-row md:items-center justify-between gap-4 py-7 border-b border-[#EAEFFF]/8 cursor-pointer transition-colors duration-300 hover:bg-[#EAEFFF]/[0.03]"
+              >
+                {/* Left */}
+                <div className="flex items-center gap-6 md:w-1/3">
+                  <span className="text-[#EAEFFF]/15 text-sm font-mono">0{index + 1}</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl border border-[#EAEFFF]/8 bg-[#EAEFFF]/4 flex items-center justify-center text-[#EAEFFF]/50 group-hover:border-[#EAEFFF]/20 group-hover:text-[#EAEFFF]/80 transition-all duration-300">
+                      {item.icon}
+                    </div>
+                    <h3 className="text-lg font-semibold text-[#EAEFFF] tracking-tight group-hover:translate-x-1 transition-transform duration-300">
+                      {item.title}
+                    </h3>
+                  </div>
                 </div>
 
-                {/* title */}
-                <h3 className="text-2xl font-semibold tracking-tight text-[#EAEFFF] mb-4">
-                  {item.title}
-                </h3>
-
-                {/* desc */}
-                <p className="text-[#EAEFFF]/50 leading-relaxed text-base max-w-md">
+                {/* Middle */}
+                <p className="text-[#EAEFFF]/45 text-sm leading-relaxed md:w-1/2 md:max-w-md">
                   {item.description}
                 </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
 
-        {/* bottom strip */}
-        <div className="mt-20 rounded-[30px] border border-[#EAEFFF]/10 bg-[#0d0d0d] px-8 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <p className="text-[#EAEFFF]/35 uppercase tracking-[0.18em] text-xs mb-3">
-              Currently Building
-            </p>
-
-            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#EAEFFF]">
-              Full-stack products, SaaS platforms,
-              <span className="text-[#EAEFFF]/40">
-                {" "}
-                and premium web experiences.
-              </span>
-            </h3>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            {[
-              "React",
-              "Node.js",
-              "MongoDB",
-              "ExpressJS",
-              "Appwrite",
-              "Firebase",
-              "REST APIs",
-              "Tailwind CSS",
-            ].map((tag, i) => (
-              <div
-                key={i}
-                className="px-4 py-2 rounded-full border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 text-[#EAEFFF]/45 text-sm"
-              >
-                {tag}
-              </div>
+                {/* Right */}
+                <div className="flex items-center gap-3 md:justify-end md:w-1/6">
+                  <span className="text-xs px-3 py-1 rounded-full border border-[#EAEFFF]/8 bg-[#EAEFFF]/4 text-[#EAEFFF]/30">
+                    {item.tag}
+                  </span>
+                  <ArrowUpRight
+                    size={16}
+                    className="text-[#EAEFFF]/20 group-hover:text-[#EAEFFF]/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300"
+                  />
+                </div>
+              </motion.div>
             ))}
           </div>
+
+          {/* ── HOW I WORK ── */}
+          <div className="mb-12">
+            <p className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-xs mb-5">
+              How I Work
+            </p>
+            <h2 className="text-3xl md:text-4xl font-semibold leading-[1.05] tracking-tight text-[#EAEFFF]">
+              What you can expect
+              <span className="text-[#EAEFFF]/30"> working with me.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+            {capabilities.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                viewport={{ once: true }}
+                className="group rounded-2xl border border-[#EAEFFF]/8 bg-black p-6 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_28px_rgba(234,239,255,0.035)] transition-all duration-300"
+              >
+                <div className="w-9 h-9 rounded-xl border border-[#EAEFFF]/8 bg-[#EAEFFF]/4 flex items-center justify-center text-[#EAEFFF]/50 mb-5 group-hover:text-[#EAEFFF]/70 transition-colors">
+                  {item.icon}
+                </div>
+                <h3 className="text-sm font-semibold text-[#EAEFFF] mb-2 tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="text-[#EAEFFF]/45 text-xs leading-relaxed">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+       
+
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ── SERVICE DETAIL MODAL ── */}
+      <AnimatePresence>
+        {activeService && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveService(null)}
+              className="absolute inset-0 bg-black/75 backdrop-blur-md"
+            />
+
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative z-10 w-full max-w-xl rounded-2xl border border-[#EAEFFF]/10 bg-black p-6 sm:p-8 shadow-[0_0_80px_rgba(234,239,255,0.06)]"
+            >
+              {/* Close */}
+              <button
+                onClick={() => setActiveService(null)}
+                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 hover:bg-[#EAEFFF]/10 flex items-center justify-center text-[#EAEFFF]/50 hover:text-[#EAEFFF] transition-colors"
+              >
+                <X size={16} />
+              </button>
+
+              {/* Icon + title */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-11 h-11 rounded-xl border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 flex items-center justify-center text-[#EAEFFF]/70">
+                  {activeService.icon}
+                </div>
+                <div>
+                  <p className="text-[#EAEFFF]/30 text-xs uppercase tracking-widest mb-0.5">{activeService.tag}</p>
+                  <h3 className="text-xl font-semibold text-[#EAEFFF] tracking-tight">{activeService.title}</h3>
+                </div>
+              </div>
+
+              {/* Details */}
+              <p className="text-[#EAEFFF]/50 text-sm leading-relaxed mb-7">
+                {activeService.details}
+              </p>
+
+              {/* Divider */}
+              <div className="h-px bg-[#EAEFFF]/8 mb-7" />
+
+              {/* What's included */}
+              <div className="mb-7">
+                <p className="text-[#EAEFFF]/25 text-xs uppercase tracking-widest mb-4">What's Included</p>
+                <div className="space-y-2.5">
+                  {activeService.includes.map((point, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="w-4 h-4 rounded-full bg-[#EAEFFF]/8 flex items-center justify-center shrink-0 mt-0.5">
+                        <Check size={9} className="text-[#EAEFFF]/60" />
+                      </div>
+                      <p className="text-[#EAEFFF]/55 text-sm">{point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Timeline + stack */}
+              <div className="flex flex-col sm:flex-row gap-6 mb-8">
+                <div>
+                  <p className="text-[#EAEFFF]/25 text-xs uppercase tracking-widest mb-2">Timeline</p>
+                  <p className="text-[#EAEFFF]/70 text-sm font-medium">{activeService.timeline}</p>
+                </div>
+                <div>
+                  <p className="text-[#EAEFFF]/25 text-xs uppercase tracking-widest mb-2">Stack</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeService.stack.map((s, i) => (
+                      <span key={i} className="text-xs px-2.5 py-1 rounded-full border border-[#EAEFFF]/8 bg-[#EAEFFF]/4 text-[#EAEFFF]/40">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <button
+                data-cal-namespace="let-s-build"
+                data-cal-link="prashantkhuva/let-s-build"
+                data-cal-config='{"layout":"month_view"}'
+                className="w-full py-3 rounded-xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+              >
+                Start This Project
+              </button>
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
