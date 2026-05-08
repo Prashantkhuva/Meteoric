@@ -155,7 +155,7 @@ function MeteorBackground({ showBrand = true }) {
       <canvas ref={canvasRef} style={styles.canvas} />
       {showBrand && (
         <div style={styles.brand}>
-          <h1 style={styles.title}>Meteoric</h1>
+          <div style={styles.title}>Meteoric</div>
           <p style={styles.tagline}>Software Agency</p>
         </div>
       )}

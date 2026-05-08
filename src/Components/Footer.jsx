@@ -49,9 +49,12 @@ export default function Footer() {
           {/* ── WORDMARK + COPYRIGHT ── */}
           <div className="pt-10 pb-6 overflow-hidden">
             {/* Huge Background Text */}
-            <h1 className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold text-white/[0.04] select-none whitespace-nowrap">
+            <div
+              className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold text-white/[0.04] select-none whitespace-nowrap"
+              aria-hidden="true"
+            >
               Meteoric
-            </h1>
+            </div>
 
             {/* Footer Bottom */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">

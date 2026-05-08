@@ -32,7 +32,7 @@ function Home({ seoKey = "home", scrollTargetId }) {
   }, [location.hash, scrollTargetId]);
 
   return (
-    <div>
+    <main>
       <SEO {...seo} />
       <Navbar />
       <Hero />
@@ -42,7 +42,7 @@ function Home({ seoKey = "home", scrollTargetId }) {
       <CapabilitiesSection />
       {/* <CTASection /> */}
       <Footer />
-    </div>
+    </main>
   );
 }
 

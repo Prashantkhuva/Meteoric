@@ -2,6 +2,15 @@ export const SITE_URL = "https://withmeteoric.vercel.app";
 export const SITE_NAME = "Meteoric";
 export const DEFAULT_OG_IMAGE = "/og-image.png";
 
+/** PNG dimensions for og:image / Twitter (from public/og-image.png IHDR). */
+export const OG_IMAGE_WIDTH = 1635;
+export const OG_IMAGE_HEIGHT = 962;
+
+export const OG_LOCALE = "en_US";
+
+/** Twitter @handle for twitter:site (brand account). */
+export const TWITTER_SITE = "@prashantkhuva_";
+
 export const seoDefaults = {
   title: "Meteoric | Full-Stack Web Development for Founders",
   description:

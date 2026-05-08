@@ -55,6 +55,8 @@ export default function AboutPage() {
                   src="/prashant.png"
                   alt="Prashant Khuva"
                   className="w-full h-full object-cover object-top"
+                  fetchPriority="high"
+                  decoding="async"
                 />
                 {/* Subtle bottom fade */}
                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />

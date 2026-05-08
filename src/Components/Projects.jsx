@@ -103,6 +103,8 @@ function ProjectCardDesktop({ project, isActive }) {
             alt={project.name}
             className="w-full h-full object-contain p-4"
             style={{ position: "absolute", inset: 0 }}
+            loading="lazy"
+            decoding="async"
             whileHover={{ rotate: -3, scale: 1.04 }}
             transition={{ type: "spring", stiffness: 180, damping: 18 }}
             onError={(e) => {
@@ -131,6 +133,8 @@ function ProjectCardMobile({ project }) {
           src={project.image}
           alt={project.name}
           className="object-cover w-full h-full"
+          loading="lazy"
+          decoding="async"
           onError={(e) => {
             e.target.style.display = "none";
           }}
