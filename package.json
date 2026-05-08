@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
-    "prebuild": "node scripts/generate-sitemap.mjs",
+    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-middleware-snapshot.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -15,6 +15,7 @@
     "@calcom/embed-react": "^1.5.3",
     "@emailjs/browser": "^4.4.1",
     "@tailwindcss/vite": "^4.2.4",
+    "@vercel/functions": "^3.5.0",
     "emailjs-com": "^3.2.0",
     "framer-motion": "^12.38.0",
     "lenis": "^1.3.23",

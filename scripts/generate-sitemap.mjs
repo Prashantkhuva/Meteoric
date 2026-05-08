@@ -34,7 +34,20 @@ ${sitemapRoutes
 </urlset>
 `;
 
-const robots = `User-agent: *
+const robots = `# Explicit allow for social / link preview crawlers (in addition to *)
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: *
 Allow: /
 
 Sitemap: ${SITE_URL}/sitemap.xml
