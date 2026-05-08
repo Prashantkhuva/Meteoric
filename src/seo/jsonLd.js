@@ -1,7 +1,8 @@
-import { SITE_NAME, SITE_URL } from "../seo.config.js";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "../seo.config.js";
 
 const SITE_WEBSITE_ID = `${SITE_URL}/#website`;
 const SITE_ORG_ID = `${SITE_URL}/#organization`;
+const SITE_LOGO_URL = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
 
 /**
  * Page-level JSON-LD (@graph: Organization + WebSite + WebPage) for SPA routes.
@@ -17,7 +18,7 @@ export function buildSeoJsonLd({ title, description, canonicalUrl }) {
         url: SITE_URL,
         logo: {
           "@type": "ImageObject",
-          url: `${SITE_URL}/og-image.png`,
+          url: SITE_LOGO_URL,
         },
       },
       {

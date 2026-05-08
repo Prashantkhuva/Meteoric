@@ -1,6 +1,6 @@
 export const SITE_URL = "https://withmeteoric.vercel.app";
 export const SITE_NAME = "Meteoric";
-export const DEFAULT_OG_IMAGE = "/og-image.png";
+export const DEFAULT_OG_IMAGE = "/og-image.png?v=20260508";
 
 /** PNG dimensions for public/og-image.png used by og:image / Twitter. */
 export const OG_IMAGE_WIDTH = 1200;
