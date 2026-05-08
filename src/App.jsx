@@ -1,4 +1,5 @@
 import "./App.css";
+import { AnalyticsRouteListener } from "./analytics/AnalyticsRouteListener.jsx";
 import SmoothScroll from "./Components/ui/SmoothScroll";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -7,6 +8,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 function App() {
   return (
     <>
+      {import.meta.env.PROD ? <AnalyticsRouteListener /> : null}
       <SmoothScroll />
       <Routes>
         <Route path="/" element={<Home />} />
