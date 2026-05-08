@@ -2,8 +2,8 @@
 
 export default {
   "/": {
-    "title": "Meteoric | Full-Stack Web Development for Founders",
-    "description": "Launch high-performing landing pages, SaaS products, and full-stack web apps with Meteoric, a lean React and MERN development studio.",
+    "title": "Meteoric — Building Modern Products for Startups",
+    "description": "Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses.",
     "canonicalUrl": "https://withmeteoric.vercel.app/",
     "imageUrl": "https://withmeteoric.vercel.app/og-image.png",
     "keywords": "Meteoric, web development agency, React development, full-stack web apps, SaaS development, landing page developer",
@@ -13,7 +13,7 @@ export default {
     "ogImageWidth": 1200,
     "ogImageHeight": 630,
     "ogImageType": "image/png",
-    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/#webpage\",\"url\":\"https://withmeteoric.vercel.app/\",\"name\":\"Meteoric | Full-Stack Web Development for Founders\",\"description\":\"Launch high-performing landing pages, SaaS products, and full-stack web apps with Meteoric, a lean React and MERN development studio.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
+    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/#webpage\",\"url\":\"https://withmeteoric.vercel.app/\",\"name\":\"Meteoric — Building Modern Products for Startups\",\"description\":\"Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
   },
   "/projects": {
     "title": "Projects | Meteoric",

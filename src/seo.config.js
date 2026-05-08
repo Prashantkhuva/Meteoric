@@ -12,9 +12,9 @@ export const OG_LOCALE = "en_US";
 export const TWITTER_SITE = "@prashantkhuva_";
 
 export const seoDefaults = {
-  title: "Meteoric | Full-Stack Web Development for Founders",
+  title: "Meteoric — Building Modern Products for Startups",
   description:
-    "Meteoric builds clean, fast, production-ready websites, SaaS products, and full-stack web apps for founders and small businesses.",
+    "Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses.",
   keywords: [
     "Meteoric",
     "React developer",
@@ -30,9 +30,9 @@ export const seoDefaults = {
 
 export const pageSeo = {
   home: {
-    title: "Meteoric | Full-Stack Web Development for Founders",
+    title: "Meteoric — Building Modern Products for Startups",
     description:
-      "Launch high-performing landing pages, SaaS products, and full-stack web apps with Meteoric, a lean React and MERN development studio.",
+      "Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses.",
     keywords: [
       "Meteoric",
       "web development agency",
