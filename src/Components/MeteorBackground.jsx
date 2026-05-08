@@ -140,7 +140,33 @@ function MeteorBackground({ showBrand = true }) {
       animationFrameId = requestAnimationFrame(animate);
     };
 
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const paintStatic = () => {
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, width, height);
+      drawStars(0);
+    };
+
+    const onResize = () => {
+      resizeCanvas();
+      if (prefersReduced) {
+        paintStatic();
+      }
+    };
+
     resizeCanvas();
+
+    if (prefersReduced) {
+      paintStatic();
+      window.addEventListener("resize", onResize);
+      return () => {
+        window.removeEventListener("resize", onResize);
+      };
+    }
+
     animationFrameId = requestAnimationFrame(animate);
     window.addEventListener("resize", resizeCanvas);
 

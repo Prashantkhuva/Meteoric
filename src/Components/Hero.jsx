@@ -1,14 +1,22 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import MeteorBackground from "./MeteorBackground";
-import { getCalApi } from "@calcom/embed-react";
-
 function Hero() {
   useEffect(() => {
+    let cancelled = false;
     (async function () {
-      const cal = await getCalApi({ namespace: "let-s-build" });
-      cal("ui", { theme: "dark", layout: "month_view" });
+      try {
+        const { getCalApi } = await import("@calcom/embed-react");
+        if (cancelled) return;
+        const cal = await getCalApi({ namespace: "let-s-build" });
+        cal("ui", { theme: "dark", layout: "month_view" });
+      } catch {
+        /* embed optional */
+      }
     })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

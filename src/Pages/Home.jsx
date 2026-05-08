@@ -34,7 +34,9 @@ function Home({ seoKey = "home", scrollTargetId }) {
   return (
     <main>
       <SEO {...seo} />
-      <Navbar />
+      <header className="contents">
+        <Navbar />
+      </header>
       <Hero />
       <TransitionSection />
       <Projects />

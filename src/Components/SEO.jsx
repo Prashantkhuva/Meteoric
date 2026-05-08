@@ -52,6 +52,7 @@ export default function SEO({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:secure_url" content={imageUrl} />
       <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
       <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
       <meta property="og:image:type" content="image/png" />

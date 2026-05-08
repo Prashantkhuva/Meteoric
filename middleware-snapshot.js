@@ -10,8 +10,8 @@ export default {
     "siteName": "Meteoric",
     "ogLocale": "en_US",
     "twitterSite": "@prashantkhuva_",
-    "ogImageWidth": 1635,
-    "ogImageHeight": 962,
+    "ogImageWidth": 1200,
+    "ogImageHeight": 630,
     "ogImageType": "image/png",
     "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/#webpage\",\"url\":\"https://withmeteoric.vercel.app/\",\"name\":\"Meteoric | Full-Stack Web Development for Founders\",\"description\":\"Launch high-performing landing pages, SaaS products, and full-stack web apps with Meteoric, a lean React and MERN development studio.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
   },
@@ -24,8 +24,8 @@ export default {
     "siteName": "Meteoric",
     "ogLocale": "en_US",
     "twitterSite": "@prashantkhuva_",
-    "ogImageWidth": 1635,
-    "ogImageHeight": 962,
+    "ogImageWidth": 1200,
+    "ogImageHeight": 630,
     "ogImageType": "image/png",
     "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/projects#webpage\",\"url\":\"https://withmeteoric.vercel.app/projects\",\"name\":\"Projects | Meteoric\",\"description\":\"Explore shipped Meteoric projects including SaaS products, developer tools, and full-stack React applications built for real users.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
   },
@@ -38,8 +38,8 @@ export default {
     "siteName": "Meteoric",
     "ogLocale": "en_US",
     "twitterSite": "@prashantkhuva_",
-    "ogImageWidth": 1635,
-    "ogImageHeight": 962,
+    "ogImageWidth": 1200,
+    "ogImageHeight": 630,
     "ogImageType": "image/png",
     "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/contact#webpage\",\"url\":\"https://withmeteoric.vercel.app/contact\",\"name\":\"Contact | Meteoric\",\"description\":\"Start a project with Meteoric for landing pages, SaaS products, full-stack web apps, and production-ready React development.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
   },
@@ -52,8 +52,8 @@ export default {
     "siteName": "Meteoric",
     "ogLocale": "en_US",
     "twitterSite": "@prashantkhuva_",
-    "ogImageWidth": 1635,
-    "ogImageHeight": 962,
+    "ogImageWidth": 1200,
+    "ogImageHeight": 630,
     "ogImageType": "image/png",
     "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/about#webpage\",\"url\":\"https://withmeteoric.vercel.app/about\",\"name\":\"About Prashant Khuva | Meteoric\",\"description\":\"Learn about Prashant Khuva, the full-stack developer behind Meteoric, building clean React and MERN products for founders.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
   }

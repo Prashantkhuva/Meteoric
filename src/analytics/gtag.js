@@ -25,12 +25,14 @@ export function initGtag() {
 
 /**
  * Sends a page_view for SPA navigations (and initial route after mount).
+ * Uses the recommended GA4 event so we don't re-run full config on each route.
  */
 export function trackPageView(pagePath) {
   if (!import.meta.env.PROD || typeof window.gtag !== "function") return;
 
-  window.gtag("config", GA_MEASUREMENT_ID, {
+  window.gtag("event", "page_view", {
     page_path: pagePath,
     page_title: document.title,
+    page_location: window.location.href,
   });
 }

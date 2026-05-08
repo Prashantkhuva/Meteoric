@@ -35,6 +35,7 @@ function buildSocialHeadFragment(meta) {
     `<meta property="og:description" content="${escAttr(meta.description)}" />`,
     `<meta property="og:url" content="${escAttr(meta.canonicalUrl)}" />`,
     `<meta property="og:image" content="${escAttr(meta.imageUrl)}" />`,
+    `<meta property="og:image:secure_url" content="${escAttr(meta.imageUrl)}" />`,
     `<meta property="og:image:width" content="${escAttr(String(meta.ogImageWidth))}" />`,
     `<meta property="og:image:height" content="${escAttr(String(meta.ogImageHeight))}" />`,
     `<meta property="og:image:type" content="${escAttr(meta.ogImageType)}" />`,
@@ -63,37 +64,53 @@ export default async function middleware(request) {
     return next();
   }
 
-  const url = new URL(request.url);
-  const pathKey = normalizeRoutePath(url.pathname);
-  const meta = snapshot[pathKey] || snapshot["/"];
+  try {
+    const url = new URL(request.url);
+    const pathKey = normalizeRoutePath(url.pathname);
+    const meta = snapshot[pathKey] || snapshot["/"];
 
-  const indexUrl = new URL("/index.html", url.origin);
-  const staticRes = await fetch(indexUrl.toString(), { redirect: "manual" });
+    const indexUrl = new URL("/index.html", url.origin);
+    // Avoid edge subrequest blocks: act like a normal browser fetching HTML.
+    const staticRes = await fetch(indexUrl.toString(), {
+      redirect: "manual",
+      headers: {
+        Accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+        "User-Agent":
+          ua ||
+          "Mozilla/5.0 (compatible; MeteoricPreviewBot/1.0; +https://withmeteoric.vercel.app)",
+      },
+    });
 
-  if (!staticRes.ok) {
+    if (!staticRes.ok) {
+      return next();
+    }
+
+    let html = await staticRes.text();
+
+    html = html.replace(
+      /<title>[\s\S]*?<\/title>/i,
+      `<title>${escAttr(meta.title)}</title>`,
+    );
+
+    if (!html.includes("</head>")) {
+      return next();
+    }
+
+    if (!/property=["']og:title["']/i.test(html)) {
+      html = html.replace(
+        "</head>",
+        `    ${buildSocialHeadFragment(meta)}\n</head>`,
+      );
+    }
+
+    return new Response(html, {
+      status: 200,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      },
+    });
+  } catch {
     return next();
   }
-
-  let html = await staticRes.text();
-
-  html = html.replace(
-    /<title>[\s\S]*?<\/title>/i,
-    `<title>${escAttr(meta.title)}</title>`,
-  );
-
-  if (!html.includes("</head>")) {
-    return next();
-  }
-
-  if (!/property=["']og:title["']/i.test(html)) {
-    html = html.replace("</head>", `    ${buildSocialHeadFragment(meta)}\n</head>`);
-  }
-
-  return new Response(html, {
-    status: 200,
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400",
-    },
-  });
 }

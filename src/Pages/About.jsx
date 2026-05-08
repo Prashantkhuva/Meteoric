@@ -27,7 +27,9 @@ export default function AboutPage() {
   return (
     <>
       <SEO {...pageSeo.about} />
-      <Navbar />
+      <header className="contents">
+        <Navbar />
+      </header>
 
       <main className="min-h-screen bg-black text-white">
         {/* ── HERO ── */}

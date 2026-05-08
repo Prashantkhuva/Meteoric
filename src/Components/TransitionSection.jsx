@@ -301,6 +301,9 @@ export default function TransitionSection() {
             />
 
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="capability-dialog-title"
               initial={{ opacity: 0, y: 30, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -309,6 +312,8 @@ export default function TransitionSection() {
             >
               {/* close */}
               <button
+                type="button"
+                aria-label="Close dialog"
                 onClick={() => setActiveCard(null)}
                 className="absolute top-5 right-5 w-10 h-10 rounded-full border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 hover:bg-[#EAEFFF]/10 flex items-center justify-center transition-colors"
               >
@@ -320,7 +325,10 @@ export default function TransitionSection() {
                 0{activeCard.id}
               </div>
 
-              <h3 className="text-3xl md:text-4xl font-semibold text-[#EAEFFF] mb-6 tracking-tight">
+              <h3
+                id="capability-dialog-title"
+                className="text-3xl md:text-4xl font-semibold text-[#EAEFFF] mb-6 tracking-tight"
+              >
                 {activeCard.title}
               </h3>
 
