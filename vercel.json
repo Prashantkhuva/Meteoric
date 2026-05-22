@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/projects",
+      "destination": "/#work",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/#contact",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!robots\\.txt|sitemap\\.xml|llms\\.txt|favicon\\.svg|og-image\\.png|site\\.webmanifest|apple-touch-icon\\.png|assets/).*)",

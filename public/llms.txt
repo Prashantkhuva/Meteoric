@@ -19,9 +19,9 @@
 ## Public pages
 
 - Home: https://withmeteoric.vercel.app/
-- Projects: https://withmeteoric.vercel.app/projects
-- Contact: https://withmeteoric.vercel.app/contact
 - About: https://withmeteoric.vercel.app/about
+- Work section (on homepage): https://withmeteoric.vercel.app/#work
+- Contact section (on homepage): https://withmeteoric.vercel.app/#contact
 
 ## Notable projects
 

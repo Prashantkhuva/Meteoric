@@ -3,7 +3,6 @@ import snapshot from "./middleware-snapshot.js";
 
 /**
  * Crawlers that need route-correct meta in the initial HTML (no client JS).
- * Includes search engines (Google, Bing, …) and social link preview bots.
  */
 const CRAWLER_UA =
   /googlebot|google-inspectiontool|bingbot|duckduckbot|baiduspider|yandexbot|slurp|facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|slackbot|discordbot|skypeuripreview|applebot|pinterest|bytespider|gptbot|claudebot|perplexitybot/i;
@@ -21,34 +20,96 @@ function escAttr(value) {
     .replace(/"/g, "&quot;");
 }
 
-function buildSocialHeadFragment(meta) {
-  const imageAlt = `${escAttr(meta.siteName)} — ${escAttr(meta.title)}`;
-  const tags = [
-    `<meta name="description" content="${escAttr(meta.description)}" />`,
-    `<meta name="keywords" content="${escAttr(meta.keywords)}" />`,
-    `<meta name="robots" content="index, follow" />`,
-    `<link rel="canonical" href="${escAttr(meta.canonicalUrl)}" />`,
-    `<meta property="og:site_name" content="${escAttr(meta.siteName)}" />`,
-    `<meta property="og:locale" content="${escAttr(meta.ogLocale)}" />`,
-    `<meta property="og:type" content="website" />`,
-    `<meta property="og:title" content="${escAttr(meta.title)}" />`,
-    `<meta property="og:description" content="${escAttr(meta.description)}" />`,
-    `<meta property="og:url" content="${escAttr(meta.canonicalUrl)}" />`,
-    `<meta property="og:image" content="${escAttr(meta.imageUrl)}" />`,
-    `<meta property="og:image:secure_url" content="${escAttr(meta.imageUrl)}" />`,
-    `<meta property="og:image:width" content="${escAttr(String(meta.ogImageWidth))}" />`,
-    `<meta property="og:image:height" content="${escAttr(String(meta.ogImageHeight))}" />`,
-    `<meta property="og:image:type" content="${escAttr(meta.ogImageType)}" />`,
-    `<meta property="og:image:alt" content="${imageAlt}" />`,
-    `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:site" content="${escAttr(meta.twitterSite)}" />`,
-    `<meta name="twitter:title" content="${escAttr(meta.title)}" />`,
-    `<meta name="twitter:description" content="${escAttr(meta.description)}" />`,
-    `<meta name="twitter:image" content="${escAttr(meta.imageUrl)}" />`,
-    `<meta name="twitter:image:alt" content="${imageAlt}" />`,
-    `<script type="application/ld+json">${meta.jsonLdString}</script>`,
-  ];
-  return tags.join("\n    ");
+function replaceTag(html, pattern, replacement) {
+  return pattern.test(html) ? html.replace(pattern, replacement) : html;
+}
+
+function upsertMeta(html, attr, key, content) {
+  const pattern = new RegExp(
+    `<meta\\s+${attr}=["']${key}["'][^>]*>`,
+    "i",
+  );
+  const tag = `<meta ${attr}="${key}" content="${escAttr(content)}" />`;
+  return replaceTag(html, pattern, tag);
+}
+
+function upsertLink(html, rel, href) {
+  const pattern = new RegExp(`<link\\s+rel=["']${rel}["'][^>]*>`, "i");
+  const tag = `<link rel="${rel}" href="${escAttr(href)}" />`;
+  return replaceTag(html, pattern, tag);
+}
+
+function buildJsonLdScript(jsonLdString) {
+  return `<script type="application/ld+json">${jsonLdString}</script>`;
+}
+
+function applyRouteMeta(html, meta) {
+  let out = html;
+
+  out = replaceTag(
+    out,
+    /<title>[\s\S]*?<\/title>/i,
+    `<title>${escAttr(meta.title)}</title>`,
+  );
+
+  out = upsertMeta(out, "name", "description", meta.description);
+  out = upsertMeta(out, "name", "keywords", meta.keywords);
+  out = upsertMeta(out, "name", "robots", "index, follow");
+  out = upsertLink(out, "canonical", meta.canonicalUrl);
+
+  out = upsertMeta(out, "property", "og:site_name", meta.siteName);
+  out = upsertMeta(out, "property", "og:locale", meta.ogLocale);
+  out = upsertMeta(out, "property", "og:type", "website");
+  out = upsertMeta(out, "property", "og:title", meta.title);
+  out = upsertMeta(out, "property", "og:description", meta.description);
+  out = upsertMeta(out, "property", "og:url", meta.canonicalUrl);
+  out = upsertMeta(out, "property", "og:image", meta.imageUrl);
+  out = upsertMeta(out, "property", "og:image:secure_url", meta.imageUrl);
+  out = upsertMeta(
+    out,
+    "property",
+    "og:image:width",
+    String(meta.ogImageWidth),
+  );
+  out = upsertMeta(
+    out,
+    "property",
+    "og:image:height",
+    String(meta.ogImageHeight),
+  );
+  out = upsertMeta(out, "property", "og:image:type", meta.ogImageType);
+  out = upsertMeta(
+    out,
+    "property",
+    "og:image:alt",
+    `${meta.siteName} — ${meta.title}`,
+  );
+
+  out = upsertMeta(out, "name", "twitter:card", "summary_large_image");
+  out = upsertMeta(out, "name", "twitter:site", meta.twitterSite);
+  out = upsertMeta(out, "name", "twitter:title", meta.title);
+  out = upsertMeta(out, "name", "twitter:description", meta.description);
+  out = upsertMeta(out, "name", "twitter:image", meta.imageUrl);
+  out = upsertMeta(
+    out,
+    "name",
+    "twitter:image:alt",
+    `${meta.siteName} — ${meta.title}`,
+  );
+
+  out = out.replace(
+    /<script\s+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi,
+    "",
+  );
+
+  if (out.includes("</head>")) {
+    out = out.replace(
+      "</head>",
+      `    ${buildJsonLdScript(meta.jsonLdString)}\n</head>`,
+    );
+  }
+
+  return out;
 }
 
 export const config = {
@@ -70,7 +131,6 @@ export default async function middleware(request) {
     const meta = snapshot[pathKey] || snapshot["/"];
 
     const indexUrl = new URL("/index.html", url.origin);
-    // Avoid edge subrequest blocks: act like a normal browser fetching HTML.
     const staticRes = await fetch(indexUrl.toString(), {
       redirect: "manual",
       headers: {
@@ -87,21 +147,11 @@ export default async function middleware(request) {
 
     let html = await staticRes.text();
 
-    html = html.replace(
-      /<title>[\s\S]*?<\/title>/i,
-      `<title>${escAttr(meta.title)}</title>`,
-    );
-
     if (!html.includes("</head>")) {
       return next();
     }
 
-    if (!/property=["']og:title["']/i.test(html)) {
-      html = html.replace(
-        "</head>",
-        `    ${buildSocialHeadFragment(meta)}\n</head>`,
-      );
-    }
+    html = applyRouteMeta(html, meta);
 
     return new Response(html, {
       status: 200,
