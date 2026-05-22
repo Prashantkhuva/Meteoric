@@ -9,7 +9,7 @@ const projects = [
     tagline: "Build habits. Track streaks. Stay consistent.",
     description:
       "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time.",
-    link: "https://habit-flow-ten-beta.vercel.app/",
+    link: "https://habit-flow-fullstack.vercel.app/",
     image: "/habit-flow.png",
     gradient: "from-violet-950 to-indigo-900",
     accent: "#7c6aff",
@@ -28,7 +28,7 @@ const projects = [
     tagline: "A dark editorial blogging platform.",
     description:
       "A premium blog platform built with React 19 and Appwrite backend. Features a rich TinyMCE editor, full CRUD for posts, Redux Toolkit state management, and a dark editorial aesthetic with Framer Motion animations throughout.",
-    link: "https://mega-blog-prashantkhuvas-projects.vercel.app/",
+    link: "https://megablog.vercel.app/",
     image: "/megablog.png",
     gradient: "from-amber-950 to-stone-900",
     accent: "#c8a97e",
