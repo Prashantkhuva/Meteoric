@@ -2,11 +2,11 @@ import { next } from "@vercel/functions";
 import snapshot from "./middleware-snapshot.js";
 
 /**
- * Social / link-unfurl crawlers that should receive full OG + JSON-LD in the
- * initial HTML (no client JS required).
+ * Crawlers that need route-correct meta in the initial HTML (no client JS).
+ * Includes search engines (Google, Bing, …) and social link preview bots.
  */
-const SOCIAL_BOT_UA =
-  /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|Discordbot|SkypeUriPreview|Applebot|Pinterest|Slurp/i;
+const CRAWLER_UA =
+  /googlebot|google-inspectiontool|bingbot|duckduckbot|baiduspider|yandexbot|slurp|facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|slackbot|discordbot|skypeuripreview|applebot|pinterest|bytespider|gptbot|claudebot|perplexitybot/i;
 
 function normalizeRoutePath(pathname) {
   if (!pathname || pathname === "/") return "/";
@@ -60,7 +60,7 @@ export const config = {
 
 export default async function middleware(request) {
   const ua = request.headers.get("user-agent") || "";
-  if (!SOCIAL_BOT_UA.test(ua)) {
+  if (!CRAWLER_UA.test(ua)) {
     return next();
   }
 

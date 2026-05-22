@@ -13,6 +13,7 @@
       name="description"
       content="Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses."
     />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://withmeteoric.vercel.app/" />
     <meta property="og:site_name" content="Meteoric" />
     <meta property="og:locale" content="en_US" />
@@ -59,6 +60,46 @@
       name="twitter:image:alt"
       content="Meteoric — Building Modern Products for Startups"
     />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://withmeteoric.vercel.app/#organization",
+            "name": "Meteoric",
+            "url": "https://withmeteoric.vercel.app/",
+            "logo": "https://withmeteoric.vercel.app/og-image.png?v=20260508",
+            "founder": {
+              "@type": "Person",
+              "name": "Prashant Khuva"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://withmeteoric.vercel.app/#website",
+            "name": "Meteoric",
+            "url": "https://withmeteoric.vercel.app/",
+            "publisher": {
+              "@id": "https://withmeteoric.vercel.app/#organization"
+            }
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://withmeteoric.vercel.app/#service",
+            "name": "Meteoric",
+            "url": "https://withmeteoric.vercel.app/",
+            "description": "Full-stack web development, SaaS products, and landing pages for startups.",
+            "areaServed": "Worldwide",
+            "serviceType": [
+              "Web Development",
+              "SaaS Development",
+              "Landing Page Design"
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

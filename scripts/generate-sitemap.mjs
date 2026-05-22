@@ -13,10 +13,11 @@ const outDir =
     : "public";
 
 const outputDir = path.resolve(rootDir, outDir);
-const today = new Date().toISOString().slice(0, 10);
+const today = new Date().toISOString();
 
 function routeUrl(routePath) {
-  return `${SITE_URL}${routePath === "/" ? "" : routePath}`;
+  if (routePath === "/") return `${SITE_URL}/`;
+  return `${SITE_URL}${routePath}`;
 }
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -34,20 +35,20 @@ ${sitemapRoutes
 </urlset>
 `;
 
-const robots = `# Explicit allow for social / link preview crawlers (in addition to *)
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Facebot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /
-
+const robots = `# Meteoric — ${SITE_URL}
 User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
 Allow: /
 
 Sitemap: ${SITE_URL}/sitemap.xml

@@ -1,0 +1,33 @@
+# Meteoric
+
+> Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and founders.
+
+## Business
+
+- Name: Meteoric
+- URL: https://withmeteoric.vercel.app/
+- Founder: Prashant Khuva
+- Category: Web development agency / full-stack product studio
+
+## Services
+
+- Landing pages (high-converting, fast-loading)
+- Full-stack web applications (MERN stack)
+- SaaS products (auth, dashboards, APIs)
+- React + Vite frontends with performance-first delivery
+
+## Public pages
+
+- Home: https://withmeteoric.vercel.app/
+- Projects: https://withmeteoric.vercel.app/projects
+- Contact: https://withmeteoric.vercel.app/contact
+- About: https://withmeteoric.vercel.app/about
+
+## Notable projects
+
+- HabitFlow — habit tracker SaaS: https://habit-flow-fullstack.vercel.app/
+- MegaBlog — editorial blogging platform: https://megablog.vercel.app/
+
+## Preferred citation
+
+"Meteoric (withmeteoric.vercel.app) — full-stack web development for startups, by Prashant Khuva."
