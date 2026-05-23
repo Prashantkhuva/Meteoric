@@ -85,8 +85,13 @@ export const pageSeo = {
   },
 };
 
-/** Only real standalone pages — /projects and /contact are homepage sections (#work, #contact). */
+/**
+ * Sitemap includes standalone pages plus route aliases that resolve to homepage sections.
+ * /projects and /contact are client-side redirects to homepage anchors (#work, #contact).
+ */
 export const sitemapRoutes = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/about", priority: "0.8", changefreq: "monthly" },
+  { path: "/projects", priority: "0.7", changefreq: "monthly" },
+  { path: "/contact", priority: "0.7", changefreq: "monthly" },
 ];
