@@ -9,7 +9,7 @@ const projects = [
     tagline: "Build habits. Track streaks. Stay consistent.",
     description:
       "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time.",
-    link: "https://habit-flow-fullstack.vercel.app/",
+    link: "https://habitflow.indevs.in/",
     image: "/habit-flow.png",
     gradient: "from-violet-950 to-indigo-900",
     accent: "#7c6aff",
@@ -42,30 +42,30 @@ const projects = [
     ],
   },
   {
-  id: 3,
-  name: "Mobile Preview Simulator",
-  tagline: "Preview responsive mobile screens directly inside VS Code.",
-  description:
-    "A VS Code extension that helps developers preview responsive mobile layouts without leaving the editor. Built for frontend developers who want faster UI testing workflows with a clean in-editor mobile simulation experience.",
-  link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
-  image: "/mobile-simulator.png",
-  gradient: "from-sky-950 to-cyan-900",
-  accent: "#38bdf8",
-  tags: [
-    "VS Code Extension",
-    "JavaScript",
-    "Webview API",
-    "Frontend Tools",
-    "Responsive Design",
-  ],
-  features: [
-    "Preview mobile layouts directly in VS Code",
-    "Responsive testing without browser switching",
-    "Clean embedded mobile simulator UI",
-    "Fast workflow for frontend developers",
-    "Lightweight and developer-focused experience",
-  ],
-},
+    id: 3,
+    name: "Mobile Preview Simulator",
+    tagline: "Preview responsive mobile screens directly inside VS Code.",
+    description:
+      "A VS Code extension that helps developers preview responsive mobile layouts without leaving the editor. Built for frontend developers who want faster UI testing workflows with a clean in-editor mobile simulation experience.",
+    link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
+    image: "/mobile-simulator.png",
+    gradient: "from-sky-950 to-cyan-900",
+    accent: "#38bdf8",
+    tags: [
+      "VS Code Extension",
+      "JavaScript",
+      "Webview API",
+      "Frontend Tools",
+      "Responsive Design",
+    ],
+    features: [
+      "Preview mobile layouts directly in VS Code",
+      "Responsive testing without browser switching",
+      "Clean embedded mobile simulator UI",
+      "Fast workflow for frontend developers",
+      "Lightweight and developer-focused experience",
+    ],
+  },
 ];
 
 // Desktop card — full height with image inside gradient bg
