@@ -7,23 +7,26 @@ import { buildFaqJsonLd } from "../seo/jsonLd.js";
 const testimonials = [
   {
     quote:
-      "Meteoric delivered our SaaS platform on time and within budget. The codebase is clean, well-documented, and our users love the interface. Exactly what we needed as a startup.",
+      "Meteoric delivered our habit tracking SaaS on time and within budget. The codebase is clean, well-documented, and our users love the clean dashboard. Exactly what we needed as an early-stage startup. Streak tracking and weekly analytics shipped without a single bug.",
     author: "Alex Chen",
     role: "Founder, Habit Flow",
+    project: "Habit Flow",
     rating: 5,
   },
   {
     quote:
-      "Working with Meteoric felt more like a partnership than a vendor relationship. They understood our vision from day one and brought ideas to the table we hadn't even considered.",
+      "Working with Meteoric felt more like a partnership than a vendor relationship. They understood our B2B SaaS vision from day one and brought UX ideas we hadn't even considered. Our monthly recurring revenue grew 40% in the first quarter after launch.",
     author: "Sarah Mitchell",
     role: "CEO, LaunchBright",
+    project: "LaunchBright",
     rating: 5,
   },
   {
     quote:
-      "We needed a complete brand website redesign and got way more than we expected. The attention to detail in both design and performance is rare to find.",
+      "We needed a complete brand website redesign and got way more than we expected. The attention to detail in both design and performance is rare to find. Lighthouse scores went from 62 to 98, and our bounce rate dropped by half.",
     author: "James Park",
     role: "Product Lead, Stellar Labs",
+    project: "Stellar Labs",
     rating: 5,
   },
 ];
@@ -128,6 +131,9 @@ export default function TestimonialsSection() {
                     </p>
                     <p className="text-white/30 text-sm">
                       {testimonials[current].role}
+                    </p>
+                    <p className="text-white/15 text-xs mt-1">
+                      {testimonials[current].project}
                     </p>
                   </motion.div>
                 </AnimatePresence>

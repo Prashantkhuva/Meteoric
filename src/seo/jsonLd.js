@@ -26,6 +26,7 @@ export function buildSeoJsonLd({ title, description, canonicalUrl }) {
           "https://github.com/Prashantkhuva",
           "https://www.linkedin.com/in/prashantkhuva",
           "https://x.com/prashantkhuva_",
+          "https://www.instagram.com/prashant.khuva/",
         ],
       },
       {
@@ -79,6 +80,7 @@ export function buildLocalBusinessJsonLd() {
       "https://github.com/Prashantkhuva",
       "https://www.linkedin.com/in/prashantkhuva",
       "https://x.com/prashantkhuva_",
+      "https://www.instagram.com/prashant.khuva/",
     ],
   };
 }
@@ -92,6 +94,41 @@ export function buildFaqJsonLd(questions) {
       name: q.question,
       acceptedAnswer: { "@type": "Answer", text: q.answer },
     })),
+  };
+}
+
+export function buildHowToJsonLd(steps) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How Meteoric builds web products",
+    description:
+      "A structured process for modern product development — from strategy and design to development and launch.",
+    step: steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  };
+}
+
+export function buildProductJsonLd(product) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    url: product.url,
+    image: product.image
+      ? { "@type": "ImageObject", url: product.image }
+      : undefined,
+    offers: {
+      "@type": "Offer",
+      price: product.price || "0",
+      priceCurrency: product.currency || "USD",
+      availability: "https://schema.org/InStock",
+    },
   };
 }
 

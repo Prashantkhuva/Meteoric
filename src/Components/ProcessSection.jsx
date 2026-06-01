@@ -1,5 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { Helmet } from "react-helmet-async";
+import { buildHowToJsonLd } from "../seo/jsonLd.js";
 
 const process = [
   {
@@ -45,11 +47,25 @@ export default function ProcessSection() {
 
   const height = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
+  const howToSteps = process.map((step) => ({
+    name: step.title,
+    text: step.description,
+  }));
+
+  const howToSchema = buildHowToJsonLd(howToSteps);
+
   return (
-    <section
-      id="process"
-      className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
-    >
+    <>
+      <Helmet>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        />
+      </Helmet>
+      <section
+        id="process"
+        className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
+      >
       {/* background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)]" />
 
@@ -143,5 +159,6 @@ export default function ProcessSection() {
         </div>
       </div>
     </section>
+    </>
   );
 }

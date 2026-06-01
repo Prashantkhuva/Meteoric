@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ArrowUpRight, Check, Shield, Clock, MessageSquare } from "lucide-react";
+import { ArrowUpRight, Check, Shield, Clock, MessageSquare, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
 const trustSignals = [
   {
@@ -19,6 +20,36 @@ const trustSignals = [
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setSending(true);
+    setError(false);
+
+    try {
+      await emailjs.send(
+        "service_4nznchu",
+        "template_xx2t3io",
+        {
+          name: email,
+          email,
+          services: "Lead Capture (Get Estimate)",
+          details: `New lead via Get Estimate form.\nEmail: ${email}`,
+          budget: "N/A",
+        },
+        "pBe3c_Uz8ZEjGLsoJ",
+      );
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <section
@@ -54,15 +85,7 @@ export default function LeadCaptureSection() {
               </div>
             ) : (
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (email) {
-                    window.open(
-                      `mailto:work.prashantkhuva@gmail.com?subject=Project%20Estimate%20Request&body=Hi%20Meteoric%2C%0A%0AI'd%20like%20to%20get%20a%20free%20estimate%20for%20my%20project.%0A%0AMy%20email%3A%20${encodeURIComponent(email)}%0A%0APlease%20send%20me%20a%20detailed%20scope%20and%20timeline.`,
-                    );
-                    setSubmitted(true);
-                  }
-                }}
+                onSubmit={handleSubmit}
                 className="flex flex-col sm:flex-row items-center gap-3 max-w-lg mx-auto"
               >
                 <input
@@ -71,16 +94,33 @@ export default function LeadCaptureSection() {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 w-full px-5 py-3 rounded-full border border-white/10 bg-white/5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
+                  disabled={sending}
+                  className="flex-1 w-full px-5 py-3 rounded-full border border-white/10 bg-white/5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50"
                 />
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-[#EAEFFF]/90 transition-colors"
+                  disabled={sending}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-[#EAEFFF]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Get Estimate
-                  <ArrowUpRight size={14} />
+                  {sending ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <ArrowUpRight size={14} />
+                  )}
+                  {sending ? "Sending..." : "Get Estimate"}
                 </button>
               </form>
+            )}
+            {error && (
+              <p className="text-red-400/80 text-xs text-center mt-4">
+                Something went wrong. Please email us directly at{" "}
+                <a
+                  href="mailto:work.prashantkhuva@gmail.com"
+                  className="underline hover:text-red-300"
+                >
+                  work.prashantkhuva@gmail.com
+                </a>
+              </p>
             )}
           </div>
         </div>
