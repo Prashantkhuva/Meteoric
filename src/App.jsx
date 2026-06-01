@@ -4,12 +4,14 @@ import SmoothScroll from "./Components/ui/SmoothScroll";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
     <>
       {import.meta.env.PROD ? <AnalyticsRouteListener /> : null}
       <SmoothScroll />
+      <Analytics />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Navigate to="/#work" replace />} />
