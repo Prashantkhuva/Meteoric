@@ -5,10 +5,16 @@ import Projects from "../Components/Projects";
 import TransitionSection from "../Components/TransitionSection";
 import ProcessSection from "../Components/ProcessSection";
 import CapabilitiesSection from "../Components/CapabilitySection";
+import TestimonialsSection from "../Components/TestimonialsSection";
+import LeadCaptureSection from "../Components/LeadCaptureSection";
 import Footer from "../Components/Footer";
 import SEO from "../Components/SEO";
 import { pageSeo } from "../seo.config";
 import { useLocation } from "react-router-dom";
+
+const breadcrumbs = [
+  { name: "Home", url: "https://withmeteoric.vercel.app/" },
+];
 
 function Home({ seoKey = "home", scrollTargetId }) {
   const location = useLocation();
@@ -33,7 +39,7 @@ function Home({ seoKey = "home", scrollTargetId }) {
 
   return (
     <main>
-      <SEO {...seo} />
+      <SEO {...seo} breadcrumbs={breadcrumbs} />
       <header className="contents">
         <Navbar />
       </header>
@@ -42,7 +48,8 @@ function Home({ seoKey = "home", scrollTargetId }) {
       <Projects />
       <ProcessSection />
       <CapabilitiesSection />
-      {/* <CTASection /> */}
+      <TestimonialsSection />
+      <LeadCaptureSection />
       <Footer />
     </main>
   );

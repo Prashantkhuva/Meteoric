@@ -17,7 +17,7 @@ export default function Footer() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
           {/* ── CTA BLOCK ── */}
-          <div className="py-28 md:py-36 border-b border-white/5">
+          <div className="py-24 sm:py-28 lg:py-32 border-b border-white/5">
             <p className="text-white/25 uppercase tracking-[0.3em] text-xs mb-10">
               Start a Project
             </p>
@@ -30,8 +30,8 @@ export default function Footer() {
             </h2>
 
             <p className="mt-8 text-white/40 text-base md:text-lg leading-relaxed max-w-xl">
-              Open for freelance projects, startup collaborations, and
-              full-stack digital products.
+              We partner with founders to design and build web products that
+              drive real results — from landing pages to full SaaS platforms.
             </p>
 
             <button

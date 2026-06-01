@@ -8,7 +8,7 @@ const services = [
     title: "Landing Pages",
     description: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
     tag: "Design + Dev",
-    details: "A landing page is often the first thing your audience sees — and first impressions matter. I build pages that load fast, look premium, and are designed to convert. Every section is intentional: clear headline, strong CTA, social proof, and mobile-first layout.",
+    details: "A landing page is often the first thing your audience sees — and first impressions matter. We build pages that load fast, look premium, and are designed to convert. Every section is intentional: clear headline, strong CTA, social proof, and mobile-first layout.",
     includes: [
       "Custom responsive design",
       "Framer Motion animations",
@@ -24,7 +24,7 @@ const services = [
     title: "Web Applications",
     description: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
     tag: "Full-Stack",
-    details: "Web apps are where complexity lives — authentication, data management, user flows, API integrations. I handle all of it. From the database schema to the frontend state management, everything is built to be clean, maintainable, and production-ready.",
+    details: "Web apps are where complexity lives — authentication, data management, user flows, API integrations. We handle all of it. From the database schema to the frontend state management, everything is built to be clean, maintainable, and production-ready.",
     includes: [
       "User authentication & authorization",
       "REST API design and development",
@@ -40,7 +40,7 @@ const services = [
     title: "SaaS Products",
     description: "End-to-end SaaS platforms with authentication, dashboards, payments, and scalable architecture.",
     tag: "Product Dev",
-    details: "Building a SaaS means thinking beyond features — it means building a product that retains users and scales. I help founders go from idea to a live, working product with all the core SaaS infrastructure: multi-user auth, subscription billing, dashboards, and admin controls.",
+    details: "Building a SaaS means thinking beyond features — it means building a product that retains users and scales. We help founders go from idea to a live, working product with all the core SaaS infrastructure: multi-user auth, subscription billing, dashboards, and admin controls.",
     includes: [
       "Multi-user authentication system",
       "Subscription billing integration",
@@ -56,7 +56,7 @@ const services = [
     title: "Full-Stack Development",
     description: "Complete frontend and backend development — from database design to polished UI — using the MERN stack.",
     tag: "MERN Stack",
-    details: "Have a custom idea that doesn't fit a template? I build fully custom full-stack applications from the ground up. Whether it's an internal tool, a marketplace, or a niche platform — I scope, plan, and execute it cleanly with no over-engineering.",
+    details: "Have a custom idea that doesn't fit a template? We build fully custom full-stack applications from the ground up. Whether it's an internal tool, a marketplace, or a niche platform — we scope, plan, and execute it cleanly with no over-engineering.",
     includes: [
       "Custom frontend with React",
       "Node.js + Express backend",
@@ -73,22 +73,22 @@ const capabilities = [
   {
     icon: <MessageSquare size={16} />,
     title: "Direct Access",
-    description: "No project managers, no handoffs. One person, full accountability.",
+    description: "You work directly with the team — no account managers, no layers, full accountability.",
   },
   {
     icon: <Rocket size={16} />,
     title: "On-Time Delivery",
-    description: "Clear timelines, no surprises. I set realistic deadlines and stick to them.",
+    description: "Clear timelines, no surprises. We set realistic deadlines and we stick to them.",
   },
   {
     icon: <Layers3 size={16} />,
     title: "Clean Codebase",
-    description: "Well-structured, readable code you can hand off to any developer.",
+    description: "Well-structured, readable code you can hand off to any team.",
   },
   {
     icon: <Gauge size={16} />,
     title: "Post-Launch Support",
-    description: "Bug fixes, tweaks, and guidance — I don't disappear after delivery.",
+    description: "Bug fixes, tweaks, and guidance — we don't disappear after delivery.",
   },
 ];
 
@@ -110,12 +110,12 @@ export default function ServicesSection() {
                 Services
               </p>
               <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-[#EAEFFF]">
-                What I build
+                What we build
                 <span className="block text-[#EAEFFF]/30 mt-1">for founders.</span>
               </h2>
             </div>
             <p className="text-[#EAEFFF]/40 text-sm leading-relaxed max-w-xs md:text-right">
-              From a landing page to a full SaaS — I handle the entire stack.
+              From a landing page to a full SaaS — we handle the entire stack.
             </p>
           </div>
 
@@ -163,14 +163,14 @@ export default function ServicesSection() {
             ))}
           </div>
 
-          {/* ── HOW I WORK ── */}
+          {/* ── HOW WE WORK ── */}
           <div className="mb-12">
             <p className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-xs mb-5">
-              How I Work
+              How We Work
             </p>
             <h2 className="text-3xl md:text-4xl font-semibold leading-[1.05] tracking-tight text-[#EAEFFF]">
               What you can expect
-              <span className="text-[#EAEFFF]/30"> working with me.</span>
+              <span className="text-[#EAEFFF]/30"> working with us.</span>
             </h2>
           </div>
 

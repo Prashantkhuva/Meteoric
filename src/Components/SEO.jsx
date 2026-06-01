@@ -9,7 +9,11 @@ import {
   TWITTER_SITE,
   seoDefaults,
 } from "../seo.config";
-import { buildSeoJsonLd } from "../seo/jsonLd.js";
+import {
+  buildSeoJsonLd,
+  buildLocalBusinessJsonLd,
+  buildBreadcrumbJsonLd,
+} from "../seo/jsonLd.js";
 
 function toAbsoluteUrl(path = "/") {
   if (/^https?:\/\//i.test(path)) {
@@ -27,11 +31,18 @@ export default function SEO({
   image = DEFAULT_OG_IMAGE,
   type = "website",
   noindex = false,
+  breadcrumbs,
 }) {
   const canonicalUrl = toAbsoluteUrl(path);
   const imageUrl = toAbsoluteUrl(image);
   const keywordContent = Array.isArray(keywords) ? keywords.join(", ") : keywords;
   const jsonLd = buildSeoJsonLd({ title, description, canonicalUrl });
+
+  const schemas = [jsonLd, buildLocalBusinessJsonLd()];
+
+  if (breadcrumbs) {
+    schemas.push(buildBreadcrumbJsonLd(breadcrumbs));
+  }
 
   return (
     <Helmet>
@@ -65,10 +76,13 @@ export default function SEO({
       <meta name="twitter:image" content={imageUrl} />
       <meta name="twitter:image:alt" content={`${SITE_NAME} — ${title}`} />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
     </Helmet>
   );
 }

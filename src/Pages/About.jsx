@@ -4,23 +4,28 @@ import Navbar from "../Components/Navbar";
 import SEO from "../Components/SEO";
 import { pageSeo } from "../seo.config";
 
-const stack = [
-  "React",
-  "Node.js",
-  "MongoDB",
-  "Express",
-  "TypeScript",
-  "Tailwind CSS",
-  "Redux Toolkit",
-  "Appwrite",
-  "Framer Motion",
-  "REST APIs",
+const values = [
+  {
+    title: "Quality Over Quantity",
+    description:
+      "Every project gets full attention. We don't juggle dozens of clients — we pick the right ones and ship work we're proud of.",
+  },
+  {
+    title: "Direct Partnership",
+    description:
+      "No account managers, no layers. You work directly with the founder — from the first conversation to the final deploy.",
+  },
+  {
+    title: "Ship Mentality",
+    description:
+      "We build for production, not perfection. Clean code, clear timelines, and real results that go live.",
+  },
 ];
 
 const stats = [
-  { value: "2+", label: "Years Building" },
-  { value: "3", label: "Shipped Projects" },
-  { value: "MERN", label: "Core Stack" },
+  { value: "2+", label: "Years in Production" },
+  { value: "5+", label: "Projects Shipped" },
+  { value: "100%", label: "Client Satisfaction" },
 ];
 
 export default function AboutPage() {
@@ -32,15 +37,21 @@ export default function AboutPage() {
       </header>
 
       <main className="min-h-screen bg-black text-white">
+        {/* background glow */}
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-white/[0.015] blur-[120px] rounded-full" />
+        </div>
+
         {/* ── HERO ── */}
-        <section className="max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
+        <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             className="text-white/25 uppercase tracking-[0.3em] text-xs mb-10"
           >
-            About
+            About Meteoric
           </motion.p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
@@ -51,8 +62,7 @@ export default function AboutPage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="relative"
             >
-              {/* Photo container */}
-              <div className="relative overflow-hidden rounded-2xl aspect-4/5 bg-[#111]">
+              <div className="relative overflow-hidden rounded-2xl aspect-4/5 bg-[#111] ring-1 ring-white/10">
                 <img
                   src="/prashant.png"
                   alt="Prashant Khuva"
@@ -60,15 +70,14 @@ export default function AboutPage() {
                   fetchPriority="high"
                   decoding="async"
                 />
-                {/* Subtle bottom fade */}
                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
 
-              {/* Available badge */}
+              {/* Founder badge */}
               <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-black/60 backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#EAEFFF] shadow-[0_0_8px_rgba(234,239,255,0.8)]" />
                 <span className="text-xs text-white/60 font-medium">
-                  Available for Work
+                  Founder & Product Builder
                 </span>
               </div>
             </motion.div>
@@ -80,36 +89,34 @@ export default function AboutPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col gap-8 md:pt-4"
             >
-              {/* Heading */}
               <div>
                 <h1 className="text-4xl md:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
                   Prashant Khuva
                   <span className="block text-white/25 mt-1 text-3xl md:text-4xl">
-                    Full-Stack Developer
+                    Founder — Meteoric
                   </span>
                 </h1>
               </div>
 
-              {/* Bio */}
               <div className="space-y-4 text-[#EAEFFF]/50 text-base leading-relaxed">
                 <p>
-                  I'm a self-taught full-stack developer focused on building
-                  clean, fast, and production-ready web products for founders
-                  and small businesses.
+                  Meteoric is a product studio that partners with founders to
+                  design, develop, and launch modern web products that actually
+                  convert.
                 </p>
                 <p>
-                  No agency overhead. No project managers. You work directly
-                  with the person writing your code — from first call to final
-                  deploy.
+                  I started Meteoric to close the gap between what founders
+                  envision and what agencies deliver. No bloat, no
+                  over-engineering — just clean, production-ready work that
+                  ships on time.
                 </p>
                 <p>
-                  I started from zero, learning everything through building real
-                  projects. That's exactly the mindset I bring to every client's
-                  product.
+                  Every project is built with the same care as if it were our
+                  own. From landing pages to full SaaS platforms, we treat your
+                  product like a startup, not a ticket queue.
                 </p>
               </div>
 
-              {/* Divider */}
               <div className="h-px bg-white/5" />
 
               {/* Stats */}
@@ -122,56 +129,63 @@ export default function AboutPage() {
                 ))}
               </div>
 
-              {/* Divider */}
               <div className="h-px bg-white/5" />
-
-              {/* Stack */}
-              <div>
-                <p className="text-white/20 text-xs uppercase tracking-widest mb-4">
-                  Tech Stack
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {stack.map((tech, i) => (
-                    <motion.span
-                      key={tech}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.3 + i * 0.04 }}
-                      className="text-xs px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/50"
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
 
               {/* Contact info */}
               <div>
                 <p className="text-white/20 text-xs uppercase tracking-widest mb-4">
-                  Contact
+                  Let's work together
                 </p>
-                <a
-                  href="mailto:work.prashantkhuva@gmail.com"
-                  className="text-white/45 hover:text-white text-sm transition-colors duration-200"
-                >
-                  work.prashantkhuva@gmail.com
-                </a>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href="mailto:work.prashantkhuva@gmail.com"
+                    className="text-white/45 hover:text-white text-sm transition-colors duration-200"
+                  >
+                    work.prashantkhuva@gmail.com
+                  </a>
+                  <a
+                    href="https://cal.com/prashantkhuva/let-s-build"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white/45 hover:text-white text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
+                  >
+                    Book a strategy call
+                    <ArrowUpRight size={12} />
+                  </a>
+                </div>
               </div>
 
-              {/* Divider */}
               <div className="h-px bg-white/5" />
 
               {/* Links */}
-              <div className="flex gap-3 flex-wrap">
+              <div className="flex gap-2 sm:gap-3">
                 {[
-                  { label: "GitHub", href: "https://github.com/Prashantkhuva" },
+                  {
+                    label: "GitHub",
+                    href: "https://github.com/Prashantkhuva",
+                    icon: (
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                      </svg>
+                    ),
+                  },
                   {
                     label: "LinkedIn",
                     href: "https://www.linkedin.com/in/prashantkhuva",
+                    icon: (
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                    ),
                   },
                   {
-                    label: "X / Twitter",
+                    label: "X",
                     href: "https://x.com/prashantkhuva_",
+                    icon: (
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                    ),
                   },
                 ].map((link) => (
                   <a
@@ -179,19 +193,79 @@ export default function AboutPage() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/30 text-sm transition-colors group"
+                    className="group inline-flex items-center justify-center gap-2 w-10 h-10 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/30 text-sm font-medium transition-all duration-300"
                   >
-                    {link.label}
-                    <ArrowUpRight
-                      size={14}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    />
+                    <span className="text-white/40 group-hover:text-white transition-colors duration-300">
+                      {link.icon}
+                    </span>
+                    <span className="hidden sm:inline">{link.label}</span>
                   </a>
                 ))}
+              </div>
+
+              {/* CTA */}
+              <div className="mt-4">
+                <a
+                  data-cal-namespace="let-s-build"
+                  data-cal-link="prashantkhuva/let-s-build"
+                  data-cal-config='{"layout":"month_view"}'
+                  className="group relative inline-flex items-center gap-2 overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-7 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02]"
+                >
+                  <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+                  <span className="relative z-10 group-hover:text-black">
+                    Start a Project
+                  </span>
+                </a>
               </div>
             </motion.div>
           </div>
         </section>
+
+        {/* ── HOW WE WORK ── */}
+        <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="text-white/25 uppercase tracking-[0.3em] text-xs mb-10"
+          >
+            How We Work
+          </motion.p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {values.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group rounded-2xl border border-white/10 bg-black p-8 hover:border-white/20 hover:shadow-[0_0_40px_rgba(234,239,255,0.04)] transition-all duration-500"
+              >
+                <span className="text-white/10 text-5xl font-semibold tabular-nums leading-none mb-6 block">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-lg font-semibold text-white mb-3 tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="text-[#EAEFFF]/45 text-sm leading-relaxed">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── BACKGROUND WORDMARK ── */}
+        <div className="relative overflow-hidden pb-24">
+          <div
+            className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold text-white/[0.03] select-none whitespace-nowrap text-center"
+            aria-hidden="true"
+          >
+            Meteoric
+          </div>
+        </div>
       </main>
     </>
   );

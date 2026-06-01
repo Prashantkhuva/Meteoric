@@ -225,7 +225,7 @@ function Projects() {
   const active = projects[activeIndex];
 
   return (
-    <section id="work" className="bg-black py-24 px-6 md:px-16">
+    <section id="work" className="bg-black py-24 sm:py-28 lg:py-32 px-6 md:px-16">
       {/* Section header */}
       <div className="max-w-7xl mx-auto mb-16">
         <p className="text-white/30 uppercase tracking-widest text-xs mb-3">

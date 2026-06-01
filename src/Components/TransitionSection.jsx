@@ -10,7 +10,7 @@ const items = [
     short:
       "Modern interfaces designed with clarity, motion, and intentional visual hierarchy.",
     details:
-      "Every interface is crafted to feel clean, premium, and intuitive. I focus heavily on spacing, typography, interaction design, and subtle motion to create experiences that feel polished rather than template-based.",
+      "Every interface is crafted to feel clean, premium, and intuitive. We focus heavily on spacing, typography, interaction design, and subtle motion to create experiences that feel polished rather than template-based.",
   },
 
   {
@@ -20,7 +20,7 @@ const items = [
     short:
       "Fast-loading systems optimized for smooth interactions and scalability.",
     details:
-      "Performance is built into the foundation — not added later. From optimized frontend architecture to clean backend systems, everything is designed to feel responsive, lightweight, and production-ready.",
+      "Performance is built into the foundation — not added later. From optimized frontend architecture to clean backend systems, everything we build is designed to feel responsive, lightweight, and production-ready.",
   },
 
   {
@@ -30,7 +30,7 @@ const items = [
     short:
       "Products structured to help startups launch quickly and scale confidently.",
     details:
-      "I build systems with long-term scalability in mind. Whether it's a startup MVP, SaaS platform, or brand website, the goal is always to create flexible foundations that can evolve as the business grows.",
+      "We build systems with long-term scalability in mind. Whether it's a startup MVP, SaaS platform, or brand website, the goal is always to create flexible foundations that can evolve as the business grows.",
   },
 ];
 
@@ -59,7 +59,7 @@ export default function TransitionSection() {
             </h2>
 
             <p className="mt-8 text-[#EAEFFF]/50 text-lg max-w-2xl leading-relaxed">
-              I help startups and brands build premium digital experiences
+              We help startups and brands build premium digital experiences
               focused on performance, clarity, and strong visual identity.
             </p>
           </div>

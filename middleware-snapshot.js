@@ -2,59 +2,31 @@
 
 export default {
   "/": {
-    "title": "Meteoric — Building Modern Products for Startups",
-    "description": "Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses.",
+    "title": "Meteoric — Web Development Agency for Startups & SaaS",
+    "description": "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.",
     "canonicalUrl": "https://withmeteoric.vercel.app/",
     "imageUrl": "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-    "keywords": "Meteoric, web development agency, React development, full-stack web apps, SaaS development, landing page developer",
+    "keywords": "web development agency, SaaS development company, React development agency, custom web application development, landing page design services, full-stack development services, Meteoric, hire web developer",
     "siteName": "Meteoric",
     "ogLocale": "en_US",
     "twitterSite": "@prashantkhuva_",
     "ogImageWidth": 1635,
     "ogImageHeight": 962,
     "ogImageType": "image/png",
-    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png?v=20260508\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/#webpage\",\"url\":\"https://withmeteoric.vercel.app/\",\"name\":\"Meteoric — Building Modern Products for Startups\",\"description\":\"Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and internet businesses.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
-  },
-  "/projects": {
-    "title": "Projects | Meteoric",
-    "description": "Explore shipped Meteoric projects including SaaS products, developer tools, and full-stack React applications built for real users.",
-    "canonicalUrl": "https://withmeteoric.vercel.app/projects",
-    "imageUrl": "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-    "keywords": "Meteoric projects, React portfolio, SaaS projects, full-stack projects, MERN stack portfolio, Vite React apps",
-    "siteName": "Meteoric",
-    "ogLocale": "en_US",
-    "twitterSite": "@prashantkhuva_",
-    "ogImageWidth": 1635,
-    "ogImageHeight": 962,
-    "ogImageType": "image/png",
-    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png?v=20260508\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/projects#webpage\",\"url\":\"https://withmeteoric.vercel.app/projects\",\"name\":\"Projects | Meteoric\",\"description\":\"Explore shipped Meteoric projects including SaaS products, developer tools, and full-stack React applications built for real users.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
-  },
-  "/contact": {
-    "title": "Contact | Meteoric",
-    "description": "Start a project with Meteoric for landing pages, SaaS products, full-stack web apps, and production-ready React development.",
-    "canonicalUrl": "https://withmeteoric.vercel.app/contact",
-    "imageUrl": "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-    "keywords": "contact Meteoric, hire React developer, hire full-stack developer, web app development, SaaS developer for founders",
-    "siteName": "Meteoric",
-    "ogLocale": "en_US",
-    "twitterSite": "@prashantkhuva_",
-    "ogImageWidth": 1635,
-    "ogImageHeight": 962,
-    "ogImageType": "image/png",
-    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png?v=20260508\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/contact#webpage\",\"url\":\"https://withmeteoric.vercel.app/contact\",\"name\":\"Contact | Meteoric\",\"description\":\"Start a project with Meteoric for landing pages, SaaS products, full-stack web apps, and production-ready React development.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
+    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png?v=20260508\"},\"description\":\"Web development agency building high-performance websites, SaaS platforms, and full-stack applications for startups and founders.\",\"foundingDate\":\"2024\",\"founder\":{\"@type\":\"Person\",\"name\":\"Prashant Khuva\",\"url\":\"https://withmeteoric.vercel.app/about\"},\"sameAs\":[\"https://github.com/Prashantkhuva\",\"https://www.linkedin.com/in/prashantkhuva\",\"https://x.com/prashantkhuva_\"]},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"},\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://withmeteoric.vercel.app/?s={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/#webpage\",\"url\":\"https://withmeteoric.vercel.app/\",\"name\":\"Meteoric — Web Development Agency for Startups & SaaS\",\"description\":\"Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"},\"about\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}}]}"
   },
   "/about": {
-    "title": "About Prashant Khuva | Meteoric",
-    "description": "Learn about Prashant Khuva, the full-stack developer behind Meteoric, building clean React and MERN products for founders.",
+    "title": "About Meteoric | Web Development Agency for Founders",
+    "description": "Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.",
     "canonicalUrl": "https://withmeteoric.vercel.app/about",
     "imageUrl": "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-    "keywords": "Prashant Khuva, Meteoric founder, full-stack developer, React developer, MERN stack developer",
+    "keywords": "Meteoric, web development agency founder, product studio, React development, SaaS development, founder web developer",
     "siteName": "Meteoric",
     "ogLocale": "en_US",
     "twitterSite": "@prashantkhuva_",
     "ogImageWidth": 1635,
     "ogImageHeight": 962,
     "ogImageType": "image/png",
-    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png?v=20260508\"}},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/about#webpage\",\"url\":\"https://withmeteoric.vercel.app/about\",\"name\":\"About Prashant Khuva | Meteoric\",\"description\":\"Learn about Prashant Khuva, the full-stack developer behind Meteoric, building clean React and MERN products for founders.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"}}]}"
+    "jsonLdString": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://withmeteoric.vercel.app/#organization\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://withmeteoric.vercel.app/og-image.png?v=20260508\"},\"description\":\"Web development agency building high-performance websites, SaaS platforms, and full-stack applications for startups and founders.\",\"foundingDate\":\"2024\",\"founder\":{\"@type\":\"Person\",\"name\":\"Prashant Khuva\",\"url\":\"https://withmeteoric.vercel.app/about\"},\"sameAs\":[\"https://github.com/Prashantkhuva\",\"https://www.linkedin.com/in/prashantkhuva\",\"https://x.com/prashantkhuva_\"]},{\"@type\":\"WebSite\",\"@id\":\"https://withmeteoric.vercel.app/#website\",\"name\":\"Meteoric\",\"url\":\"https://withmeteoric.vercel.app\",\"publisher\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"},\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://withmeteoric.vercel.app/?s={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}},{\"@type\":\"WebPage\",\"@id\":\"https://withmeteoric.vercel.app/about#webpage\",\"url\":\"https://withmeteoric.vercel.app/about\",\"name\":\"About Meteoric | Web Development Agency for Founders\",\"description\":\"Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.\",\"isPartOf\":{\"@id\":\"https://withmeteoric.vercel.app/#website\"},\"about\":{\"@id\":\"https://withmeteoric.vercel.app/#organization\"}}]}"
   }
 };
