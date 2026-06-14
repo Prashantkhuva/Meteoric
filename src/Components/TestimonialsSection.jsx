@@ -7,10 +7,10 @@ import { buildFaqJsonLd } from "../seo/jsonLd.js";
 const testimonials = [
   {
     quote:
-      "Meteoric delivered our habit tracking SaaS on time and within budget. The codebase is clean, well-documented, and our users love the clean dashboard. Exactly what we needed as an early-stage startup. Streak tracking and weekly analytics shipped without a single bug.",
-    author: "Alex Chen",
-    role: "Founder, Habit Flow",
-    project: "Habit Flow",
+      "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference. The team understood our product vision from day one.",
+    author: "Rohan Mehta",
+    role: "CTO, Finlytix",
+    project: "Finlytix Dashboard Redesign",
     rating: 5,
   },
   {
@@ -72,7 +72,7 @@ export default function TestimonialsSection() {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(next, 4000);
+    const timer = setInterval(next, 6500);
     return () => clearInterval(timer);
   }, [next]);
 
@@ -174,7 +174,7 @@ export default function TestimonialsSection() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   {
-                    value: "10+",
+                    value: "12",
                     label: "Projects Delivered",
                   },
                   {
@@ -186,8 +186,8 @@ export default function TestimonialsSection() {
                     label: "Client Rating",
                   },
                   {
-                    value: "< 2wk",
-                    label: "Average Sprint",
+                    value: "10",
+                    label: "Day Average Sprint",
                   },
                 ].map((stat, i) => (
                   <motion.div

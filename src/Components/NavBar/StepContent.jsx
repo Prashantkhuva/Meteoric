@@ -1,10 +1,9 @@
 import { AnimatePresence } from "framer-motion";
-import { useRef } from "react";
 import Step0 from "./Step0";
 import Step1 from "./Step1";
-import Step2 from "./step2";
+import Step2 from "./Step2";
 import Step3 from "./Step3";
-import SuccessStep from "./Successstep";
+import SuccessStep from "./SuccessStep";
 
 function StepContent({
   step,
@@ -17,14 +16,12 @@ function StepContent({
   setCountryOpen,
   currencyOpen,
   setCurrencyOpen,
+  sending,
   handleClose,
 }) {
-  const dropdownRef = useRef(null);
-
   return (
     <AnimatePresence mode="wait">
-      <div ref={dropdownRef} className="w">
-        <AnimatePresence mode="wait">
+      <div className="w">
           {step === 0 && <Step0 setStep={setStep} />}
 
           {step === 1 && (
@@ -54,13 +51,13 @@ function StepContent({
               formData={formData}
               setFormData={setFormData}
               handleSubmit={handleSubmit}
+              sending={sending}
               currencyOpen={currencyOpen}
               setCurrencyOpen={setCurrencyOpen}
             />
           )}
 
           {submitted && <SuccessStep handleClose={handleClose} />}
-        </AnimatePresence>
       </div>
     </AnimatePresence>
   );

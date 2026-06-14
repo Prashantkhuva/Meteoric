@@ -23,8 +23,8 @@ const values = [
 ];
 
 const stats = [
-  { value: "2+", label: "Years in Production" },
-  { value: "5+", label: "Projects Shipped" },
+  { value: "2", label: "Years in Production" },
+  { value: "12", label: "Projects Shipped" },
   { value: "100%", label: "Client Satisfaction" },
 ];
 

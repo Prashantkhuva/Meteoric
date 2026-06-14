@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import StepIndicator from "./StepIndicator";
 
 const CURRENCIES = [
@@ -15,10 +16,11 @@ function Step3({
   formData,
   setFormData,
   handleSubmit,
+  sending,
   currencyOpen,
   setCurrencyOpen,
 }) {
-  const step3Valid = formData.budget;
+  const step3Valid = formData.budget && !sending;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,24 +127,28 @@ function Step3({
       </div>
       <div className="flex justify-between">
         <button
+          type="button"
           onClick={() => setStep(2)}
-          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm"
+          disabled={sending}
+          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm disabled:opacity-40"
         >
           Back
         </button>
         <button
+          type="button"
           onClick={() => {
             if (!step3Valid) return;
             handleSubmit();
           }}
           disabled={!step3Valid}
-          className={`px-6 py-2 rounded-full transition-colors text-sm ${
+          className={`inline-flex items-center gap-2 px-6 py-2 rounded-full transition-colors text-sm ${
             step3Valid
               ? "bg-white text-black hover:bg-white/90"
               : "bg-[#EAEFFF]/10 text-[#EAEFFF]/40 cursor-not-allowed"
           }`}
         >
-          Submit
+          {sending && <Loader2 size={14} className="animate-spin" />}
+          {sending ? "Sending..." : "Submit"}
         </button>
       </div>
     </motion.div>

@@ -1,10 +1,29 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 const projects = [
   {
     id: 1,
+    name: "Let'em Know",
+    tagline: "Premium agency site with GSAP animations & smooth scroll.",
+    description:
+      "A high-performance agency website built for Let'em Know, a Gurgaon-based marketing agency. Features a canvas particle hero, infinite-scroll testimonials, GSAP-powered animations, Lenis smooth scroll, and a Calendly-integrated contact flow — all shipped production-ready.",
+    link: "https://agency-v2-theta.vercel.app/",
+    image: "/lete'm-know.png",
+    gradient: "from-emerald-950 to-teal-900",
+    accent: "#34d399",
+    tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
+    features: [
+      "Canvas particle system hero animation",
+      "GSAP-powered scroll animations",
+      "Lenis smooth scroll integration",
+      "Infinite-scroll testimonial columns",
+      "Calendly popup contact flow",
+    ],
+  },
+  {
+    id: 2,
     name: "Habit Flow",
     tagline: "Build habits. Track streaks. Stay consistent.",
     description:
@@ -23,7 +42,7 @@ const projects = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     name: "MegaBlog",
     tagline: "A dark editorial blogging platform.",
     description:
@@ -42,7 +61,7 @@ const projects = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     name: "Mobile Preview Simulator",
     tagline: "Preview responsive mobile screens directly inside VS Code.",
     description:
@@ -68,8 +87,7 @@ const projects = [
   },
 ];
 
-// Desktop card — full height with image inside gradient bg
-function ProjectCardDesktop({ project, isActive }) {
+const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, isActive }) {
   return (
     <div
       onClick={() => window.open(project.link, "_blank")}
@@ -115,10 +133,9 @@ function ProjectCardDesktop({ project, isActive }) {
       </div>
     </div>
   );
-}
+});
 
-// Mobile card — image on top, info below
-function ProjectCardMobile({ project }) {
+const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
   const [showAll, setShowAll] = useState(false);
   const visibleTags = showAll ? project.tags : project.tags.slice(0, 4);
   const extraCount = project.tags.length - 4;
@@ -201,25 +218,30 @@ function ProjectCardMobile({ project }) {
       </div>
     </div>
   );
-}
+});
 
 function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRefs = useRef([]);
 
   useEffect(() => {
-    const observers = projects.map((_, i) => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveIndex(i);
-        },
-        { threshold: 0.5 },
-      );
-      if (sectionRefs.current[i]) observer.observe(sectionRefs.current[i]);
-      return observer;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.index);
+            if (!isNaN(idx)) setActiveIndex(idx);
+          }
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    sectionRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((obs) => obs.disconnect());
+    return () => observer.disconnect();
   }, []);
 
   const active = projects[activeIndex];
@@ -240,7 +262,7 @@ function Projects() {
         {/* LEFT — scrollable cards */}
         <div className="w-full md:w-1/2 space-y-8">
           {projects.map((project, i) => (
-            <div key={project.id} ref={(el) => (sectionRefs.current[i] = el)}>
+            <div key={project.id} ref={(el) => (sectionRefs.current[i] = el)} data-index={i}>
               {/* Mobile */}
               <div className="md:hidden">
                 <ProjectCardMobile project={project} />

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ArrowUpRight, Check, Shield, Clock, MessageSquare, Loader2 } from "lucide-react";
-import emailjs from "@emailjs/browser";
 
 const trustSignals = [
   {
@@ -31,9 +30,10 @@ export default function LeadCaptureSection() {
     setError(false);
 
     try {
+      const emailjs = await import("@emailjs/browser").then(m => m.default);
       await emailjs.send(
-        "service_4nznchu",
-        "template_xx2t3io",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           name: email,
           email,
@@ -41,7 +41,7 @@ export default function LeadCaptureSection() {
           details: `New lead via Get Estimate form.\nEmail: ${email}`,
           budget: "N/A",
         },
-        "pBe3c_Uz8ZEjGLsoJ",
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       );
       setSubmitted(true);
     } catch {
@@ -77,7 +77,7 @@ export default function LeadCaptureSection() {
             </p>
 
             {submitted ? (
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
+              <div role="status" aria-live="polite" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
                 <Check size={16} className="text-green-400" />
                 <span className="text-white/60 text-sm">
                   Thanks! We'll be in touch within 24 hours.
@@ -112,7 +112,7 @@ export default function LeadCaptureSection() {
               </form>
             )}
             {error && (
-              <p className="text-red-400/80 text-xs text-center mt-4">
+              <p role="alert" className="text-red-400/80 text-xs text-center mt-4">
                 Something went wrong. Please email us directly at{" "}
                 <a
                   href="mailto:work.prashantkhuva@gmail.com"

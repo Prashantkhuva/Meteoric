@@ -17,6 +17,7 @@ function Step0({ setStep }) {
         </p>
 
         <button
+          type="button"
           data-cal-namespace="let-s-build"
           data-cal-link="prashantkhuva/let-s-build"
           data-cal-config='{"layout":"month_view"}'
@@ -27,6 +28,7 @@ function Step0({ setStep }) {
         </button>
 
         <button
+          type="button"
           onClick={() => setStep(1)}
           className="w-full border border-white/10 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-white/5 transition-colors"
         >

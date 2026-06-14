@@ -78,7 +78,11 @@ export default function TransitionSection() {
                   ease: "easeOut",
                 }}
                 onClick={() => setActiveCard(item)}
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100"
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActiveCard(item); } }}
+                tabIndex={0}
+                role="button"
+                aria-label={`View details about ${item.title}`}
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100 focus-visible:outline-2 focus-visible:outline-white/40"
               >
                 {/* PREMIUM ANIMATED BORDER */}
                 <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-40">

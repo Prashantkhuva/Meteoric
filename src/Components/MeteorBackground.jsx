@@ -11,6 +11,13 @@ function MeteorBackground({ showBrand = true }) {
     let height = 0;
     let stars = [];
     let meteors = [];
+    let isVisible = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisible = entry.isIntersecting; },
+      { threshold: 0 },
+    );
+    if (canvas) observer.observe(canvas);
 
     const starCount = 180;
     const meteorCount = 12;
@@ -118,6 +125,10 @@ function MeteorBackground({ showBrand = true }) {
     };
 
     const animate = (time) => {
+      if (!isVisible) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, width, height);
 
@@ -173,6 +184,7 @@ function MeteorBackground({ showBrand = true }) {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resizeCanvas);
+      observer.disconnect();
     };
   }, []);
 

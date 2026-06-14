@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { ArrowUpRight } from "lucide-react";
-import RequestModal from "./NavBar/RequestModal";
 import { Link } from "react-router-dom";
+
+const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
 export default function Footer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,9 +24,9 @@ export default function Footer() {
             </p>
 
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.0] tracking-tight text-white max-w-4xl">
-              Have an idea?
+              Ready to launch?
               <span className="block text-white/25 mt-2">
-                Let's build something exceptional.
+                Let's make it happen.
               </span>
             </h2>
 
@@ -82,7 +83,7 @@ export default function Footer() {
         </div>
       </footer>
 
-      <RequestModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Suspense fallback={null}><RequestModal isOpen={isOpen} setIsOpen={setIsOpen} /></Suspense>
     </>
   );
 }

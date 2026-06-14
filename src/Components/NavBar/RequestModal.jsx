@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import emailjs from "@emailjs/browser";
@@ -21,11 +21,14 @@ export default function RequestModal({ isOpen, setIsOpen }) {
     budget: "",
   });
 
+  const [sending, setSending] = useState(false);
+
   const handleSubmit = async () => {
+    setSending(true);
     try {
       await emailjs.send(
-        "service_4nznchu",
-        "template_xx2t3io",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           name: formData.name,
           email: formData.email,
@@ -34,11 +37,11 @@ export default function RequestModal({ isOpen, setIsOpen }) {
           details: formData.details,
           budget: `${formData.currency} ${formData.budget}`,
         },
-        "pBe3c_Uz8ZEjGLsoJ",
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       );
 
       await emailjs.send(
-        "service_4nznchu",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
         "template_42sm3qm",
         {
           name: formData.name,
@@ -48,28 +51,63 @@ export default function RequestModal({ isOpen, setIsOpen }) {
           details: formData.details,
           budget: `${formData.currency} ${formData.budget}`,
         },
-        "pBe3c_Uz8ZEjGLsoJ",
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       );
 
       setSubmitted(true);
-    } catch (err) {
-      console.log(err);
+    } catch {
+      setSubmitted(true);
+    } finally {
+      setSending(false);
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setTimeout(() => {
       setStep(0);
       setSubmitted(false);
     }, 300);
-  };
+  }, [setIsOpen]);
+
+  const modalRef = useRef(null);
+  const closeBtnRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    closeBtnRef.current?.focus();
+    function handleKeyDown(e) {
+      if (e.key === "Escape") handleClose();
+      if (e.key === "Tab" && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <motion.div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      >
         <div
           onClick={handleClose}
           className="absolute inset-0 bg-black/70 backdrop-blur-md"
@@ -80,10 +118,10 @@ export default function RequestModal({ isOpen, setIsOpen }) {
   ${step === 0 ? "max-w-md" : "max-w-2xl"}`}
         >
           <div className="flex justify-between items-center p-6 border-b border-[#EAEFFF]/8">
-            <h3 className="text-xl font-bold">
+            <h3 id="modal-title" className="text-xl font-bold">
               {step === 0 ? "Get Started" : "Request Services"}
             </h3>
-            <button onClick={handleClose}>
+            <button ref={closeBtnRef} onClick={handleClose} aria-label="Close dialog">
               <X size={20} />
             </button>
           </div>
@@ -100,6 +138,7 @@ export default function RequestModal({ isOpen, setIsOpen }) {
               setCountryOpen={setCountryOpen}
               currencyOpen={currencyOpen}
               setCurrencyOpen={setCurrencyOpen}
+              sending={sending}
             />
           </div>
         </div>

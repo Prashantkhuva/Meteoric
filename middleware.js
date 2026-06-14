@@ -97,11 +97,6 @@ function applyRouteMeta(html, meta) {
     `${meta.siteName} — ${meta.title}`,
   );
 
-  out = out.replace(
-    /<script\s+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi,
-    "",
-  );
-
   if (out.includes("</head>")) {
     out = out.replace(
       "</head>",

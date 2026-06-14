@@ -11,6 +11,11 @@ function StepIndicator({ step }) {
           <div key={s} className="flex items-center">
             {/* STEP */}
             <div
+              role="progressbar"
+              aria-valuenow={isCompleted ? 100 : isActive ? 50 : 0}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Step ${s}: ${isCompleted ? "completed" : isActive ? "in progress" : "not started"}`}
               className={`relative w-11 h-11 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-300
               ${
                 isActive
@@ -20,9 +25,8 @@ function StepIndicator({ step }) {
                     : "bg-[#141414] text-white/40 border border-[#EAEFFF]/10"
               }`}
             >
-              {/* GLOW RING (only active) */}
               {isActive && (
-                <div className="absolute inset-0 rounded-full border border-white/30 animate-pulse" />
+                <div className="absolute inset-0 rounded-full border border-white/30 animate-pulse motion-reduce:animate-none" />
               )}
 
               {isCompleted ? <Check size={16} /> : s}

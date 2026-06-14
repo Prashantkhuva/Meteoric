@@ -71,3 +71,12 @@ html.lenis {
   width: max-content;
   animation: marquee 30s linear infinite;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+  .animate-pulse {
+    animation: none;
+  }
+}

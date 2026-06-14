@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import RequestModal from "./NavBar/RequestModal";
 import Logo from "./Logo";
+
+const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
 const navItems = [
   { label: "Work", to: "/#work" },
@@ -85,7 +86,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <RequestModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Suspense fallback={null}><RequestModal isOpen={isOpen} setIsOpen={setIsOpen} /></Suspense>
     </>
   );
 }

@@ -6,6 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
+    target: "es2020",
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -21,6 +22,12 @@ export default defineConfig({
           }
           if (id.includes("node_modules/lucide-react")) {
             return "vendor-icons";
+          }
+          if (id.includes("node_modules/@calcom/embed-react")) {
+            return "vendor-cal";
+          }
+          if (id.includes("node_modules/lenis")) {
+            return "vendor-lenis";
           }
         },
       },

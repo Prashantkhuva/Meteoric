@@ -92,7 +92,7 @@ const capabilities = [
   },
 ];
 
-export default function ServicesSection() {
+export default function CapabilitiesSection() {
   const [activeService, setActiveService] = useState(null);
 
   return (
@@ -129,7 +129,11 @@ export default function ServicesSection() {
                 transition={{ duration: 0.4, delay: index * 0.07 }}
                 viewport={{ once: true }}
                 onClick={() => setActiveService(item)}
-                className="group flex flex-col md:flex-row md:items-center justify-between gap-4 py-7 border-b border-[#EAEFFF]/8 cursor-pointer transition-colors duration-300 hover:bg-[#EAEFFF]/[0.03]"
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActiveService(item); } }}
+                tabIndex={0}
+                role="button"
+                aria-label={`View details about ${item.title}`}
+                className="group flex flex-col md:flex-row md:items-center justify-between gap-4 py-7 border-b border-[#EAEFFF]/8 cursor-pointer transition-colors duration-300 hover:bg-[#EAEFFF]/[0.03] focus-visible:outline-2 focus-visible:outline-white/40 focus-visible:-outline-offset-2"
               >
                 {/* Left */}
                 <div className="flex items-center gap-6 md:w-1/3">
@@ -218,11 +222,15 @@ export default function ServicesSection() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setActiveService(null)}
+              onKeyDown={(e) => { if (e.key === "Escape") setActiveService(null); }}
               className="absolute inset-0 bg-black/75 backdrop-blur-md"
             />
 
             {/* Modal */}
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="service-modal-title"
               initial={{ opacity: 0, y: 24, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -232,6 +240,7 @@ export default function ServicesSection() {
               {/* Close */}
               <button
                 onClick={() => setActiveService(null)}
+                aria-label="Close dialog"
                 className="absolute top-5 right-5 w-9 h-9 rounded-full border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 hover:bg-[#EAEFFF]/10 flex items-center justify-center text-[#EAEFFF]/50 hover:text-[#EAEFFF] transition-colors"
               >
                 <X size={16} />
@@ -244,7 +253,7 @@ export default function ServicesSection() {
                 </div>
                 <div>
                   <p className="text-[#EAEFFF]/30 text-xs uppercase tracking-widest mb-0.5">{activeService.tag}</p>
-                  <h3 className="text-xl font-semibold text-[#EAEFFF] tracking-tight">{activeService.title}</h3>
+                  <h3 id="service-modal-title" className="text-xl font-semibold text-[#EAEFFF] tracking-tight">{activeService.title}</h3>
                 </div>
               </div>
 

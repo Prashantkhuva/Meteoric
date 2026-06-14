@@ -1,10 +1,12 @@
-import "./App.css";
 import { AnalyticsRouteListener } from "./analytics/AnalyticsRouteListener.jsx";
 import SmoothScroll from "./Components/ui/SmoothScroll";
-import Home from "./Pages/Home";
-import About from "./Pages/About";
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
+
+const Home = lazy(() => import("./Pages/Home"));
+const About = lazy(() => import("./Pages/About"));
+const NotFound = lazy(() => import("./Pages/NotFound"));
 
 function App() {
   return (
@@ -12,13 +14,15 @@ function App() {
       {import.meta.env.PROD ? <AnalyticsRouteListener /> : null}
       <SmoothScroll />
       <Analytics />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects" element={<Navigate to="/#work" replace />} />
-        <Route path="/contact" element={<Navigate to="/#contact" replace />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Navigate to="/#work" replace />} />
+          <Route path="/contact" element={<Navigate to="/#contact" replace />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

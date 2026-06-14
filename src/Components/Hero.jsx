@@ -31,19 +31,6 @@ function Hero() {
 
       {/* Content */}
       <div className="relative pt-10 z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
-        {/* Badge
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/70 backdrop-blur-sm"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#EAEFFF] shadow-[0_0_8px_rgba(234,239,255,0.8)]" />
-          <span className="text-xs tracking-wide">
-            Trusted by founders worldwide
-          </span>
-        </motion.div> */}
-
         {/* Heading */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}

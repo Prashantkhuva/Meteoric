@@ -35,6 +35,10 @@ function Step1({ step, setStep, formData, setFormData }) {
             <div
               key={s}
               onClick={() => toggleService(s)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleService(s); } }}
+              tabIndex={0}
+              role="checkbox"
+              aria-checked={formData.services.includes(s)}
               className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                 selected
                   ? "bg-white/10 border-white text-white"
@@ -57,12 +61,14 @@ function Step1({ step, setStep, formData, setFormData }) {
       </div>
       <div className="flex justify-between mt-8">
         <button
+          type="button"
           onClick={() => setStep(0)}
           className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm"
         >
           Back
         </button>
         <button
+          type="button"
           onClick={() => step1Valid && setStep(2)}
           disabled={!step1Valid}
           className={`px-6 py-2 rounded-full transition-colors text-sm ${
