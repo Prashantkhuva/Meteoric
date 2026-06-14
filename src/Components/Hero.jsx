@@ -49,7 +49,7 @@ function Hero() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed"
         >
-          We partner with founders to design, develop, and launch modern
+          Meteoric partners with founders to design, develop, and launch modern
           websites and SaaS products that actually convert — not just look good.
         </motion.p>
 

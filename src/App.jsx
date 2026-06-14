@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 const Home = lazy(() => import("./Pages/Home"));
 const About = lazy(() => import("./Pages/About"));
+const Work = lazy(() => import("./Pages/Work"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/projects" element={<Navigate to="/#work" replace />} />
+          <Route path="/work" element={<Work />} />
+          <Route path="/projects" element={<Navigate to="/work" replace />} />
           <Route path="/contact" element={<Navigate to="/#contact" replace />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />

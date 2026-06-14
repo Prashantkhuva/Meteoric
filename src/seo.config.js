@@ -60,9 +60,24 @@ export const pageSeo = {
     ],
     path: "/about",
   },
+  work: {
+    title: "Our Work — Meteoric Portfolio | Web Development Projects",
+    description:
+      "Browse Meteoric's portfolio of shipped projects — landing pages, SaaS platforms, VS Code extensions, and more. Built for founders who ship.",
+    keywords: [
+      "Meteoric portfolio",
+      "web development projects",
+      "React portfolio",
+      "SaaS projects",
+      "landing page examples",
+      "full-stack projects",
+    ],
+    path: "/work",
+  },
 };
 
 export const sitemapRoutes = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/about", priority: "0.8", changefreq: "monthly" },
+  { path: "/work", priority: "0.9", changefreq: "weekly" },
 ];

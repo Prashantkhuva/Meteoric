@@ -1,115 +1,56 @@
 import { useState, useEffect, useRef, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { projects as allProjects } from "../data/projects";
 
-const projects = [
-  {
-    id: 1,
-    name: "Let'em Know",
-    tagline: "Premium agency site with GSAP animations & smooth scroll.",
-    description:
-      "A high-performance agency website built for Let'em Know, a Gurgaon-based marketing agency. Features a canvas particle hero, infinite-scroll testimonials, GSAP-powered animations, Lenis smooth scroll, and a Calendly-integrated contact flow — all shipped production-ready.",
-    link: "https://agency-v2-theta.vercel.app/",
-    image: "/lete'm-know.png",
-    gradient: "from-emerald-950 to-teal-900",
-    accent: "#34d399",
-    tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
-    features: [
-      "Canvas particle system hero animation",
-      "GSAP-powered scroll animations",
-      "Lenis smooth scroll integration",
-      "Infinite-scroll testimonial columns",
-      "Calendly popup contact flow",
-    ],
-  },
-  {
-    id: 2,
-    name: "Habit Flow",
-    tagline: "Build habits. Track streaks. Stay consistent.",
-    description:
-      "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time.",
-    link: "https://habitflow.indevs.in/",
-    image: "/habit-flow.png",
-    gradient: "from-violet-950 to-indigo-900",
-    accent: "#7c6aff",
-    tags: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
-    features: [
-      "Streak tracking with daily check-ins",
-      "Weekly analytics and progress charts",
-      "Reminder notifications system",
-      "Full authentication with JWT",
-      "Mobile-responsive dashboard",
-    ],
-  },
-  {
-    id: 3,
-    name: "MegaBlog",
-    tagline: "A dark editorial blogging platform.",
-    description:
-      "A premium blog platform built with React 19 and Appwrite backend. Features a rich TinyMCE editor, full CRUD for posts, Redux Toolkit state management, and a dark editorial aesthetic with Framer Motion animations throughout.",
-    link: "https://megablog.vercel.app/",
-    image: "/megablog.png",
-    gradient: "from-amber-950 to-stone-900",
-    accent: "#c8a97e",
-    tags: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
-    features: [
-      "Rich text editor with TinyMCE",
-      "Full CRUD — create, edit, delete posts",
-      "Appwrite backend with file storage",
-      "Redux Toolkit global state management",
-      "Dark editorial UI with smooth animations",
-    ],
-  },
-  {
-    id: 4,
-    name: "Mobile Preview Simulator",
-    tagline: "Preview responsive mobile screens directly inside VS Code.",
-    description:
-      "A VS Code extension that helps developers preview responsive mobile layouts without leaving the editor. Built for frontend developers who want faster UI testing workflows with a clean in-editor mobile simulation experience.",
-    link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
-    image: "/mobile-simulator.png",
-    gradient: "from-sky-950 to-cyan-900",
-    accent: "#38bdf8",
-    tags: [
-      "VS Code Extension",
-      "JavaScript",
-      "Webview API",
-      "Frontend Tools",
-      "Responsive Design",
-    ],
-    features: [
-      "Preview mobile layouts directly in VS Code",
-      "Responsive testing without browser switching",
-      "Clean embedded mobile simulator UI",
-      "Fast workflow for frontend developers",
-      "Lightweight and developer-focused experience",
-    ],
-  },
-];
+const projects = allProjects.slice(0, 3);
 
-const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, isActive }) {
+export const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, isActive }) {
   return (
     <div
       onClick={() => window.open(project.link, "_blank")}
-      className={`block rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 group ${
-        isActive ? "ring-1 ring-white/20" : ""
+      className={`block rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 group relative ${
+        isActive
+          ? "ring-1 ring-white/20 shadow-[0_0_60px_rgba(234,239,255,0.06)]"
+          : "ring-1 ring-transparent"
       }`}
     >
+      {/* Top accent bar */}
+      <div
+        className="absolute top-0 left-0 right-0 z-20 h-0.5 opacity-60"
+        style={{ backgroundColor: project.accent }}
+      />
+
       <div
         className={`bg-gradient-to-b ${project.gradient} flex flex-col w-full min-h-125 relative`}
       >
-        {/* Top overlay — title + arrow button */}
+        {/* Top overlay — badge + arrow */}
         <div className="absolute top-0 left-0 right-0 z-10 p-8">
-          <div className="text-white flex flex-row items-start justify-between text-xl font-bold">
-            <span className="max-w-[70%] leading-snug">{project.tagline}</span>
+          <div className="flex items-start justify-between">
+            <div>
+              {/* Number */}
+              <span
+                className="text-[11px] font-mono tracking-wider"
+                style={{ color: project.accent }}
+              >
+                {String(project.id).padStart(2, "0")}
+              </span>
+              {/* Tagline */}
+              <p className="text-white font-semibold text-lg leading-snug max-w-[75%] mt-1">
+                {project.tagline}
+              </p>
+            </div>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 window.open(project.link, "_blank");
               }}
-              className="flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-5 py-2.5 hover:bg-white/30 transition-colors opacity-0 group-hover:opacity-100 duration-300"
+              className="group/btn relative overflow-hidden rounded-full text-sm font-medium transition-all duration-300 hover:scale-[1.02] shrink-0 opacity-0 group-hover:opacity-100"
             >
-              <ArrowUpRight size={18} />
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/20">
+                <ArrowUpRight size={16} className="text-white" />
+              </div>
             </button>
           </div>
         </div>
@@ -130,95 +71,152 @@ const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, isActive 
             }}
           />
         </div>
+
+        {/* Bottom gradient fade for name badge */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/50 to-transparent z-10" />
+
+        {/* Name badge at bottom */}
+        <div className="absolute bottom-4 left-4 z-20">
+          <p className="text-white font-bold text-lg drop-shadow-lg">
+            {project.name}
+          </p>
+        </div>
       </div>
     </div>
   );
 });
 
-const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
-  const [showAll, setShowAll] = useState(false);
-  const visibleTags = showAll ? project.tags : project.tags.slice(0, 4);
-  const extraCount = project.tags.length - 4;
-
+export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
   return (
-    <div
-      className={`bg-gradient-to-b ${project.gradient} rounded-3xl overflow-hidden border border-[#EAEFFF]/10`}
+    <div className="rounded-3xl overflow-hidden border border-white/10
+      bg-gradient-to-b"
+      style={{ background: `${project.gradient}` }}
     >
-      {/* Image */}
+
+      {/* Image area */}
       <div className="relative h-52 w-full overflow-hidden">
         <img
           src={project.image}
           alt={project.name}
-          className="object-cover w-full h-full"
+          className="w-full h-full object-cover"
           loading="lazy"
           decoding="async"
-          onError={(e) => {
-            e.target.style.display = "none";
-          }}
+          onError={(e) => (e.target.style.display = "none")}
         />
-      </div>
 
-      {/* Info */}
-      <div className="p-4">
-        <h3 className="text-xl font-bold text-white mb-1">{project.name}</h3>
-        <p className="text-sm text-white/60 mb-3">{project.tagline}</p>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-2">
-          {visibleTags.map((tag) => (
-            <div
-              key={tag}
-              className="rounded-full py-1 px-2 flex items-center gap-1 border border-white/20 bg-black/30"
-            >
-              <span className="text-xs font-medium text-white">{tag}</span>
-            </div>
-          ))}
-          {!showAll && extraCount > 0 && (
-            <div className="rounded-full py-1 px-2 flex items-center border border-white/20 bg-black/30">
-              <span className="text-xs font-medium text-white">
-                +{extraCount}
-              </span>
-            </div>
-          )}
+        {/* Status pill — top right */}
+        <div className="absolute top-3 right-3 text-[10px] uppercase
+          tracking-widest px-2.5 py-1 rounded-full border border-white/15
+          bg-black/40 text-white/50 backdrop-blur-sm"
+        >
+          {project.status ?? "Live"}
         </div>
 
-        {/* Show more */}
-        {extraCount > 0 && (
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="flex items-center text-xs text-white/50 font-medium mt-2 mb-4"
-          >
-            {showAll ? "Show less" : "Show more"}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={`ml-1 transition-transform ${showAll ? "rotate-180" : ""}`}
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </button>
-        )}
+        {/* Bottom fade into content */}
+        <div className="absolute bottom-0 inset-x-0 h-20
+          bg-gradient-to-t from-black/70 to-transparent" />
+      </div>
 
-        {/* View project button */}
+      {/* Content */}
+      <div className="px-5 pb-6 pt-4 space-y-4">
+
+        {/* Name + external link icon */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-2 h-2 rounded-full shrink-0 mt-1"
+              style={{ background: project.accent }}
+            />
+            <h3 className="text-[18px] font-semibold text-white leading-tight">
+              {project.name}
+            </h3>
+          </div>
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-7 h-7 rounded-full border border-white/12
+              bg-white/4 flex items-center justify-center
+              text-white/50 hover:text-white hover:border-white/30
+              hover:bg-white/8 transition-all shrink-0"
+            aria-label="View project"
+          >
+            <ArrowUpRight size={13} />
+          </a>
+        </div>
+
+        {/* Tagline */}
+        <p className="text-[13px] text-white/50 leading-relaxed ml-4">
+          {project.tagline}
+        </p>
+
+        {/* Description */}
+        <p className="text-[12px] text-white/35 leading-relaxed ml-4">
+          {project.description}
+        </p>
+
+        {/* Divider */}
+        <div className="h-px bg-white/6" />
+
+        {/* Features */}
+        <div>
+          <p className="text-[10px] uppercase tracking-widest
+            text-white/25 mb-2">Features</p>
+          <div className="flex flex-wrap gap-1.5">
+            {project.features.slice(0, 2).map((f, i) => (
+              <span
+                key={i}
+                className="text-[11px] px-2.5 py-1 rounded-md
+                  bg-white/5 border border-white/8 text-white/50"
+              >
+                {f}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Tech stack */}
+        <div>
+          <p className="text-[10px] uppercase tracking-widest
+            text-white/25 mb-2">Stack</p>
+          <div className="flex flex-wrap gap-1.5">
+            {project.tags.slice(0, 4).map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] px-2 py-0.5 rounded-md font-mono
+                  border border-white/7 text-white/30"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA — white filled, black text */}
         <a
           href={project.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 flex justify-center items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-sm w-full py-2.5 text-sm font-medium text-white transition-colors"
+          className="group/btn flex items-center justify-center gap-2
+            w-full py-3 rounded-xl bg-white text-black
+            text-[13px] font-semibold tracking-wide
+            hover:bg-white/90 active:scale-[0.98]
+            transition-all duration-200"
         >
-          View Project <ArrowUpRight size={16} />
+          View Project
+          <ArrowUpRight
+            size={15}
+            className="transition-transform duration-200
+              group-hover/btn:translate-x-0.5
+              group-hover/btn:-translate-y-0.5"
+          />
         </a>
+
       </div>
     </div>
   );
 });
+
 
 function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -256,6 +254,15 @@ function Projects() {
         <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
           Projects that <span className="text-white/30">actually shipped.</span>
         </h2>
+        <Link
+          to="/work"
+          className="group relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] mt-6 px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
+        >
+          <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+          <span className="relative z-10 group-hover:text-black flex items-center gap-2">
+            View All Projects <ArrowUpRight size={16} />
+          </span>
+        </Link>
       </div>
 
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-10">
@@ -291,7 +298,7 @@ function Projects() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="p-8 rounded-2xl border border-[#EAEFFF]/8 bg-black shadow-[0_0_44px_rgba(234,239,255,0.035)]"
+                className="p-8 rounded-2xl border border-[#EAEFFF]/8 bg-gradient-to-b from-white/[0.02] to-transparent shadow-[0_0_44px_rgba(234,239,255,0.035)]"
               >
                 {/* Accent line + name */}
                 <div className="flex items-center gap-3 mb-5">
@@ -305,7 +312,7 @@ function Projects() {
                 </div>
 
                 {/* Description */}
-                <p className="text-white/50 text-sm leading-relaxed mb-8">
+                <p className="text-white/45 text-sm leading-relaxed mb-8">
                   {active.description}
                 </p>
 
@@ -320,24 +327,24 @@ function Projects() {
                       className="flex items-start gap-3"
                     >
                       <span
-                        className="mt-1 text-sm font-bold"
+                        className="mt-0.5 text-[10px] font-mono shrink-0"
                         style={{ color: active.accent }}
                       >
-                        +
+                        &#x25B8;
                       </span>
-                      <p className="text-white/50 text-sm">{f}</p>
+                      <p className="text-white/45 text-sm">{f}</p>
                     </motion.div>
                   ))}
                 </div>
 
                 {/* Tech stack */}
-                <div className="flex flex-wrap gap-2 mb-8">
+                <div className="flex flex-wrap gap-1.5 mb-8">
                   {active.tags.map((tag) => (
                     <motion.span
                       key={tag}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="text-xs px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/50"
+                      className="text-[11px] px-2.5 py-1 rounded-md border border-white/[0.08] bg-white/[0.03] text-white/40 font-medium"
                     >
                       {tag}
                     </motion.span>
@@ -347,9 +354,12 @@ function Projects() {
                 {/* CTA */}
                 <button
                   onClick={() => window.open(active.link, "_blank")}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+                  className="group/btn relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
                 >
-                  View Live Project <ArrowUpRight size={16} />
+                  <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300" />
+                  <span className="relative z-10 group-hover/btn:text-black flex items-center gap-2">
+                    View Live Project <ArrowUpRight size={16} />
+                  </span>
                 </button>
               </motion.div>
             </AnimatePresence>
