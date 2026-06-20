@@ -1,20 +1,89 @@
-import { createClient } from "@/lib/server";
+"use client";
 
-export default async function AdminClientsPage() {
-  const supabase = await createClient();
-  if (!supabase) {
+import { useEffect, useState, useCallback } from "react";
+import { createClient } from "@/lib/client";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  X,
+  Plus,
+  Trash2,
+  Calendar,
+  Building2,
+  Mail,
+} from "lucide-react";
+
+function formatDate(dateStr) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export default function ClientsPage() {
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [deleting, setDeleting] = useState(null);
+
+  const fetchClients = useCallback(async () => {
+    const supabase = createClient();
+    if (!supabase) {
+      setError("Supabase not configured");
+      setLoading(false);
+      return;
+    }
+    const { data } = await supabase
+      .from("clients")
+      .select("*")
+      .order("created_at", { ascending: false });
+    setClients(data || []);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchClients(); }, [fetchClients]);
+
+  async function handleAdd(formData) {
+    const supabase = createClient();
+    await supabase.from("clients").insert({
+      name: formData.get("name"),
+      email: formData.get("email"),
+      company: formData.get("company"),
+      status: "active",
+    });
+    setShowAdd(false);
+    fetchClients();
+  }
+
+  async function handleDelete(id) {
+    setDeleting(id);
+    const supabase = createClient();
+    await supabase.from("clients").delete().eq("id", id);
+    setClients((prev) => prev.filter((c) => c.id !== id));
+    setDeleting(null);
+  }
+
+  if (loading) {
     return (
-      <div className="space-y-6 p-6 lg:p-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-white">Clients</h1>
-        <p className="text-sm text-white/30">Supabase not configured.</p>
+      <div className="flex items-center justify-center h-64 p-6 lg:p-8">
+        <div className="flex items-center gap-3 text-white/20">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/10 border-t-[#EAEFFF]/60" />
+          <span className="text-sm">Loading clients...</span>
+        </div>
       </div>
     );
   }
 
-  const { data: clients } = await supabase
-    .from("clients")
-    .select("*")
-    .order("created_at", { ascending: false });
+  if (error) {
+    return (
+      <div className="space-y-6 p-6 lg:p-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-white">Clients</h1>
+        <p className="text-sm text-white/30">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-6 lg:p-8">
@@ -22,9 +91,16 @@ export default async function AdminClientsPage() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-white">Clients</h1>
           <p className="mt-1 text-sm text-white/40">
-            {clients?.length ?? 0} client{clients?.length !== 1 ? "s" : ""}
+            {clients.length} client{clients.length !== 1 ? "s" : ""}
           </p>
         </div>
+        <button
+          onClick={() => setShowAdd(true)}
+          className="group flex items-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]"
+        >
+          <Plus size={14} />
+          Add Client
+        </button>
       </div>
 
       <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md">
@@ -38,12 +114,13 @@ export default async function AdminClientsPage() {
                 <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Company</th>
                 <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Status</th>
                 <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Created</th>
+                <th className="px-5 py-4" />
               </tr>
             </thead>
             <tbody>
-              {!clients || clients.length === 0 ? (
+              {clients.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-20 text-center text-sm text-white/20">
+                  <td colSpan={6} className="px-5 py-20 text-center text-sm text-white/20">
                     <span className="flex flex-col items-center gap-2">
                       <span className="text-2xl">—</span>
                       <span>No clients yet</span>
@@ -66,7 +143,14 @@ export default async function AdminClientsPage() {
                         </a>
                       ) : "—"}
                     </td>
-                    <td className="px-5 py-4 text-white/40">{client.company || "—"}</td>
+                    <td className="px-5 py-4 text-white/40">
+                      {client.company ? (
+                        <span className="flex items-center gap-1.5">
+                          <Building2 size={12} className="text-white/20" />
+                          {client.company}
+                        </span>
+                      ) : "—"}
+                    </td>
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-[#EAEFFF]/20 px-3 py-1 text-xs font-medium text-[#EAEFFF]/70 bg-[#EAEFFF]/5">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#EAEFFF]/70" />
@@ -74,9 +158,20 @@ export default async function AdminClientsPage() {
                       </span>
                     </td>
                     <td className="px-5 py-4 text-white/30 text-xs tabular-nums">
-                      {client.created_at
-                        ? new Date(client.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-                        : "—"}
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={11} />
+                        {formatDate(client.created_at)}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <button
+                        onClick={() => handleDelete(client.id)}
+                        disabled={deleting === client.id}
+                        className="rounded-lg p-2 text-red-400/20 transition-all duration-300 hover:bg-red-500/[0.04] hover:text-red-400/50 disabled:opacity-30"
+                        title="Delete client"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -85,6 +180,81 @@ export default async function AdminClientsPage() {
           </table>
         </div>
       </div>
+
+      {/* Add Client Modal */}
+      <AnimatePresence>
+        {showAdd && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm p-4 pt-[15vh]"
+            onClick={() => setShowAdd(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 20 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative w-full max-w-md rounded-2xl border border-[#EAEFFF]/10 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowAdd(false)}
+                className="absolute right-4 top-4 rounded-lg p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+              >
+                <X size={16} />
+              </button>
+
+              <h2 className="text-lg font-semibold tracking-tight text-white mb-6">Add Client</h2>
+
+              <form action={handleAdd} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Name</label>
+                  <input
+                    name="name"
+                    required
+                    className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+                    placeholder="john@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Company</label>
+                  <input
+                    name="company"
+                    className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+                    placeholder="Acme Inc."
+                  />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowAdd(false)}
+                    className="flex-1 rounded-xl border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2.5 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]"
+                  >
+                    Add Client
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
