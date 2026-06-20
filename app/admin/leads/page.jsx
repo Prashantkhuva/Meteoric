@@ -5,7 +5,6 @@ import { createClient } from "@/lib/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
-  ChevronDown,
   ArrowRight,
   UserPlus,
   Trash2,
@@ -46,6 +45,7 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewLead, setViewLead] = useState(null);
+  const [statusModal, setStatusModal] = useState(null);
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
   const [deleting, setDeleting] = useState(null);
@@ -188,11 +188,19 @@ export default function LeadsPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3.5">
-                        <StatusDropdown
-                          current={lead.status}
-                          onChange={(val) => handleStatusChange(lead.id, val)}
+                        <button
+                          onClick={() => setStatusModal({ id: lead.id, current: lead.status })}
                           disabled={editingStatus === lead.id}
-                        />
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-300 hover:opacity-80`}
+                          style={{
+                            color: st.color,
+                            borderColor: `${st.color}33`,
+                            background: `${st.color}0d`,
+                          }}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: st.color }} />
+                          {st.label}
+                        </button>
                       </td>
                       <td className="px-4 py-3.5 text-white/30 text-xs tabular-nums">
                         <span className="flex items-center gap-1.5">
@@ -238,6 +246,17 @@ export default function LeadsPage() {
         </div>
       </div>
 
+      {/* Status Modal */}
+      <AnimatePresence>
+        {statusModal && (
+          <StatusModal
+            data={statusModal}
+            onSelect={handleStatusChange}
+            onClose={() => setStatusModal(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Lead Detail Modal */}
       <AnimatePresence>
         {viewLead && <LeadDetailModal lead={viewLead} onClose={() => setViewLead(null)} onDelete={handleDelete} />}
@@ -246,47 +265,43 @@ export default function LeadsPage() {
   );
 }
 
-function StatusDropdown({ current, onChange, disabled }) {
-  const [open, setOpen] = useState(false);
-  const st = statusMap[current] || statusMap.new;
-
+function StatusModal({ data, onSelect, onClose }) {
+  if (!data) return null;
+  const current = data.current;
   return (
-    <div className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        disabled={disabled}
-        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-300 hover:opacity-80`}
-        style={{
-          color: st.color,
-          borderColor: `${st.color}33`,
-          background: `${st.color}0d`,
-        }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 20 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="relative w-full max-w-xs rounded-2xl border border-[#EAEFFF]/10 bg-black/80 backdrop-blur-2xl p-2 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        onClick={(e) => e.stopPropagation()}
       >
-        <span className="h-1.5 w-1.5 rounded-full" style={{ background: st.color }} />
-        {st.label}
-        <ChevronDown size={11} className={`transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full mt-1 z-50 w-40 rounded-xl border border-[#EAEFFF]/10 bg-black/90 backdrop-blur-xl p-1 shadow-xl">
-            {statusList.map((s) => (
-              <button
-                key={s.value}
-                onClick={() => { onChange(s.value); setOpen(false); }}
-                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200 hover:bg-white/[0.04] ${
-                  current === s.value ? "text-white" : "text-white/40"
-                }`}
-              >
-                <span className="h-1.5 w-1.5 rounded-full" style={{ background: s.color }} />
-                {s.label}
-                {current === s.value && <span className="ml-auto text-[#EAEFFF]/50">✓</span>}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+        <p className="px-3 py-3 text-xs font-medium tracking-wider text-white/30 uppercase">Change Status</p>
+        <div className="space-y-0.5">
+          {statusList.map((s) => (
+            <button
+              key={s.value}
+              onClick={() => { onSelect(data.id, s.value); onClose(); }}
+              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/[0.04] ${
+                current === s.value ? "text-white" : "text-white/40"
+              }`}
+            >
+              <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
+              {s.label}
+              {current === s.value && <span className="ml-auto text-[#EAEFFF]/50">✓</span>}
+            </button>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

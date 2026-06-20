@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "../actions";
+import Logo from "@/Components/Logo";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -41,14 +42,7 @@ export default function Sidebar() {
               M
             </span>
           ) : (
-            <div className="flex items-center gap-2.5">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#EAEFFF]/10 border border-[#EAEFFF]/15 text-sm font-bold text-[#EAEFFF]">
-                M
-              </span>
-              <span className="text-base font-semibold tracking-tight text-white">
-                Meteoric<span className="text-[#EAEFFF]">.</span>
-              </span>
-            </div>
+            <Logo className="scale-[0.7] origin-left" />
           )}
         </Link>
       </div>

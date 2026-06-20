@@ -1,6 +1,19 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Sidebar from "./_components/Sidebar";
+import Logo from "@/Components/Logo";
+
+const pageTitles = {
+  "/admin": "Dashboard",
+  "/admin/leads": "Leads",
+  "/admin/clients": "Clients",
+};
 
 export default function AdminLayout({ children }) {
+  const pathname = usePathname();
+  const title = pageTitles[pathname] || "Admin";
+
   return (
     <div className="flex min-h-dvh bg-black">
       <div className="fixed inset-0 pointer-events-none">
@@ -15,12 +28,10 @@ export default function AdminLayout({ children }) {
         <header className="flex items-center justify-between border-b border-[#EAEFFF]/8 bg-black/50 backdrop-blur-2xl px-6 h-16">
           <div className="flex items-center gap-3">
             <span className="hidden sm:flex items-center gap-2.5">
-              <span className="text-base font-semibold tracking-tight text-white">
-                Meteoric<span className="text-[#EAEFFF]">.</span>
-              </span>
+              <Logo className="scale-[0.6] origin-left" />
               <span className="h-3 w-px bg-[#EAEFFF]/10" />
               <span className="text-xs font-medium tracking-widest uppercase text-white/25">
-                Dashboard
+                {title}
               </span>
             </span>
           </div>
