@@ -339,7 +339,7 @@ export default function CalBookingsPage() {
               })}
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   )
