@@ -241,7 +241,7 @@ const styles = {
     margin: "18px 0 0",
     color: "#555",
     fontFamily:
-      "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     fontSize: "12px",
     fontWeight: 700,
     lineHeight: 1.4,

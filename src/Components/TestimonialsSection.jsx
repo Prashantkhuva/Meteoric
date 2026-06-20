@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, ChevronLeft, ChevronRight, Star, Plus } from "lucide-react";
-import { Helmet } from "react-helmet-async";
-import { buildFaqJsonLd } from "../seo/jsonLd.js";
+import { buildFaqJsonLd } from "@/seo/jsonLd";
 
 const testimonials = [
   {
@@ -80,13 +79,10 @@ export default function TestimonialsSection() {
 
   return (
     <>
-      <Helmet>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      </Helmet>
-
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
 

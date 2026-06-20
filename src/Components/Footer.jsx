@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -67,7 +67,7 @@ export default function Footer() {
 
               {/* Right Side */}
               <Link
-                to="/about"
+                href="/about"
                 className="group text-sm text-white/30 hover:text-white transition-colors duration-300"
               >
                 Built & Designed by{" "}

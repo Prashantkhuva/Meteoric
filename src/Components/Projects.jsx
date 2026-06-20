@@ -1,8 +1,11 @@
+"use client";
+
 import { useState, useEffect, useRef, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { projects as allProjects } from "../data/projects";
+import Link from "next/link";
+import Image from "next/image";
+import { projects as allProjects } from "@/data/projects";
 
 const projects = allProjects.slice(0, 3);
 
@@ -62,6 +65,8 @@ export const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, is
             alt={project.name}
             className="w-full h-full object-contain p-4"
             style={{ position: "absolute", inset: 0 }}
+            width={1920}
+            height={1080}
             loading="lazy"
             decoding="async"
             whileHover={{ rotate: -3, scale: 1.04 }}
@@ -95,13 +100,14 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
 
       {/* Image area */}
       <div className="relative h-52 w-full overflow-hidden">
-        <img
+        <Image
           src={project.image}
           alt={project.name}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
           loading="lazy"
-          decoding="async"
-          onError={(e) => (e.target.style.display = "none")}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          onError={() => {}}
         />
 
         {/* Status pill — top right */}
@@ -255,7 +261,7 @@ function Projects() {
           Projects that <span className="text-white/30">actually shipped.</span>
         </h2>
         <Link
-          to="/work"
+          href="/work"
           className="group relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] mt-6 px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
         >
           <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />

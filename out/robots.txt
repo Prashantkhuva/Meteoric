@@ -1,0 +1,17 @@
+# Meteoric — https://withmeteoric.vercel.app
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://withmeteoric.vercel.app/sitemap.xml

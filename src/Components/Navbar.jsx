@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from "react";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Logo from "./Logo";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
@@ -21,7 +21,7 @@ export default function Navbar() {
         <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl mt-4">
           <div className="px-4 md:px-6 py-3 flex items-center justify-between rounded-full backdrop-blur-md bg-black/40 border border-[#EAEFFF]/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
             <Link
-              to="/"
+              href="/"
               className="flex shrink-0 items-center cursor-pointer"
             >
               <Logo />
@@ -31,7 +31,7 @@ export default function Navbar() {
               {navItems.map((item) => (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  href={item.to}
                   onClick={() => setIsMenuOpen(false)}
                   className="relative group transition"
                 >
@@ -44,8 +44,9 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsOpen(true)}
-                className="relative overflow-hidden bg-[#EAEFFF] text-[#202020] px-4 md:px-6 py-2 md:py-3 text-sm md:text-base rounded-full font-semibold transition-all duration-300 hover:scale-[1.02] group cursor-pointer"
+                className="relative overflow-hidden bg-[#EAEFFF] text-[#202020] px-4 md:px-6 py-2 md:py-3 text-sm md:text-base rounded-full font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group cursor-pointer"
               >
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 <span className="relative z-10">Let's Build!</span>
               </button>
 
@@ -74,7 +75,7 @@ export default function Navbar() {
               {navItems.map((item) => (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  href={item.to}
                   onClick={() => setIsMenuOpen(false)}
                   className="rounded-2xl px-4 py-3 text-sm font-medium text-white/75 transition-colors duration-300 hover:bg-white/10 hover:text-white"
                 >

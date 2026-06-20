@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 
 export default function SmoothScroll() {
-  const location = useLocation();
+  const pathname = usePathname();
   const lenisRef = useRef(null);
 
   useEffect(() => {
@@ -56,16 +56,17 @@ export default function SmoothScroll() {
   }, []);
 
   useEffect(() => {
-    const scrollTarget = location.hash
-      ? document.querySelector(location.hash)
+    const hash = window.location.hash;
+    const scrollTarget = hash
+      ? document.querySelector(hash)
       : 0;
 
     const timeoutId = window.setTimeout(() => {
-      lenisRef.current?.scrollTo(scrollTarget || 0, { immediate: !location.hash });
+      lenisRef.current?.scrollTo(scrollTarget || 0, { immediate: !hash });
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [location.pathname, location.hash]);
+  }, [pathname]);
 
   return null;
 }

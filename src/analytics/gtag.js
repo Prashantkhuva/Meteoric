@@ -28,7 +28,7 @@ export function initGtag() {
  * Uses the recommended GA4 event so we don't re-run full config on each route.
  */
 export function trackPageView(pagePath) {
-  if (!import.meta.env.PROD || typeof window.gtag !== "function") return;
+  if (process.env.NODE_ENV !== "production" || typeof window.gtag !== "function") return;
 
   window.gtag("event", "page_view", {
     page_path: pagePath,

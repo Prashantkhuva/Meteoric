@@ -1,30 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,wght@0,100..900;1,100..900&display=swap");
-
 @import "tailwindcss";
 
 /* Theme */
 @theme {
-  --font-primary: "Inter", sans-serif;
-  --font-secondary: "DM Sans", sans-serif;
+  --font-primary: var(--font-inter), "Inter", sans-serif;
+  --font-secondary: var(--font-dm-sans), "DM Sans", sans-serif;
 }
 
 /* Base */
 html,
-body,
-#root {
+body {
   height: 100%;
   min-height: 100%;
+  position: relative;
   background: black;
   font-family: var(--font-primary);
-}
-
-html,
-body,
-#root {
-  position: relative;
-}
-
-body {
   margin: 0;
 }
 
