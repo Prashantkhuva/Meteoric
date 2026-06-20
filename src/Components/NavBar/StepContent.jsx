@@ -17,6 +17,7 @@ function StepContent({
   currencyOpen,
   setCurrencyOpen,
   sending,
+  error,
   handleClose,
 }) {
   return (
@@ -52,6 +53,7 @@ function StepContent({
               setFormData={setFormData}
               handleSubmit={handleSubmit}
               sending={sending}
+              error={error}
               currencyOpen={currencyOpen}
               setCurrencyOpen={setCurrencyOpen}
             />

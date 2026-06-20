@@ -30,12 +30,18 @@ export default function LeadCaptureSection() {
     setSending(true);
     setError(false);
 
-    await createLead({
+    const result = await createLead({
       name: email,
       email,
       services: "Lead Capture (Get Estimate)",
       details: `New lead via Get Estimate form. Email: ${email}`,
     });
+
+    if (result?.error) {
+      setError(result.error);
+      setSending(false);
+      return;
+    }
 
     setSubmitted(true);
     setSending(false);

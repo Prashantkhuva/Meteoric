@@ -17,6 +17,7 @@ function Step3({
   setFormData,
   handleSubmit,
   sending,
+  error,
   currencyOpen,
   setCurrencyOpen,
 }) {
@@ -125,6 +126,11 @@ function Step3({
           )}
         </div>
       </div>
+      {error && (
+        <div className="mb-4 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3 text-sm text-red-400/80">
+          {error}
+        </div>
+      )}
       <div className="flex justify-between">
         <button
           type="button"

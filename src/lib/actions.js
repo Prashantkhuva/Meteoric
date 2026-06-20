@@ -2,38 +2,42 @@
 
 import { createClient } from "@/lib/server";
 
-export async function createLead(formData) {
+export async function createLead(data) {
   try {
     const supabase = await createClient()
+    if (!supabase) {
+      console.error("createLead failed: Supabase not configured (env vars missing)")
+      return { success: false, error: "Supabase not configured" }
+    }
 
-    if (supabase) {
-      const { error } = await supabase.from("leads").insert([
-        {
-          name: formData.name || null,
-          email: formData.email || null,
-          phone: formData.phone || null,
-          services: formData.services || null,
-          details: formData.details || null,
-          budget: formData.budget || null,
-          status: "new",
-        },
-      ])
+    const { error } = await supabase.from("leads").insert([
+      {
+        name: data.name || null,
+        email: data.email || null,
+        phone: data.phone || null,
+        services: data.services || null,
+        details: data.details || null,
+        budget: data.budget || null,
+        status: "new",
+      },
+    ])
 
-      if (error) {
-        console.error("Failed to save lead:", error)
-      }
+    if (error) {
+      console.error("Supabase insert error:", error)
+      return { success: false, error: error.message }
     }
 
     if (process.env.RESEND_API_KEY) {
       const { sendNewLeadNotification, sendLeadAutoReply } = await import("@/lib/email")
       Promise.allSettled([
-        sendNewLeadNotification(formData).catch(() => {}),
-        formData.email ? sendLeadAutoReply(formData).catch(() => {}) : Promise.resolve(),
+        sendNewLeadNotification(data).catch(() => {}),
+        data.email ? sendLeadAutoReply(data).catch(() => {}) : Promise.resolve(),
       ])
     }
+
+    return { success: true }
   } catch (err) {
     console.error("createLead error:", err)
+    return { success: false, error: err.message }
   }
-
-  return { success: true }
 }

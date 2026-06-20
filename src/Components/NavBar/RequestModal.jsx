@@ -22,11 +22,13 @@ export default function RequestModal({ isOpen, setIsOpen }) {
   });
 
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async () => {
     setSending(true);
+    setError(null);
 
-    await createLead({
+    const result = await createLead({
       name: formData.name,
       email: formData.email,
       phone: `${formData.countryCode} ${formData.phone}`,
@@ -34,6 +36,12 @@ export default function RequestModal({ isOpen, setIsOpen }) {
       details: formData.details,
       budget: `${formData.currency} ${formData.budget}`,
     });
+
+    if (result?.error) {
+      setError(result.error);
+      setSending(false);
+      return;
+    }
 
     setSubmitted(true);
     setSending(false);
@@ -116,6 +124,7 @@ export default function RequestModal({ isOpen, setIsOpen }) {
               currencyOpen={currencyOpen}
               setCurrencyOpen={setCurrencyOpen}
               sending={sending}
+              error={error}
               handleClose={handleClose}
             />
           </div>
