@@ -6,7 +6,7 @@ import {
   Container,
   Text,
   Hr,
-} from "@react-email/components";
+} from "react-email";
 
 export default function LeadAutoReply({ name }) {
   return (

@@ -9,7 +9,7 @@ import {
   Hr,
   Heading,
   Link,
-} from "@react-email/components";
+} from "react-email";
 
 export default function NewLeadNotification({ name, email, phone, services, details, budget }) {
   return (
