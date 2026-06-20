@@ -44,7 +44,9 @@ export default function RequestModal({ isOpen, setIsOpen }) {
     }
 
     if (result?.emailError) {
-      console.warn("Email warning:", result.emailError);
+      setError(result.emailError);
+      setSending(false);
+      return;
     }
 
     setSubmitted(true);

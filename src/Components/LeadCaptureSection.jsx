@@ -45,6 +45,9 @@ export default function LeadCaptureSection() {
 
     if (result?.emailError) {
       console.warn("Email warning:", result.emailError);
+      setError(result.emailError);
+      setSending(false);
+      return;
     }
 
     setSubmitted(true);

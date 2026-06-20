@@ -35,8 +35,12 @@ export async function createLead(data) {
         data.email ? sendLeadAutoReply(data) : Promise.resolve(),
       ])
       for (const r of results) {
-        if (r.status === "rejected") emailError = r.reason?.message || r.reason
-        else if (r.value?.error) emailError = r.value.error
+        if (r.status === "rejected") {
+          emailError = typeof r.reason === "string" ? r.reason : r.reason?.message || JSON.stringify(r.reason)
+        } else if (r.value?.error) {
+          const err = r.value.error
+          emailError = typeof err === "string" ? err : err?.message || JSON.stringify(err)
+        }
       }
     }
 
