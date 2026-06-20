@@ -1,18 +1,23 @@
 import { Calendar } from "lucide-react";
 
-const CAL_API = "https://api.cal.com/v1";
+const CAL_API = "https://api.cal.com/v2";
 
 async function getBookings() {
   const key = process.env.CALCOM_API_KEY;
   if (!key) return null;
 
   try {
-    const res = await fetch(`${CAL_API}/bookings?apiKey=${key}`, {
+    const res = await fetch(`${CAL_API}/bookings`, {
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "cal-api-version": "2024-08-13",
+      },
       next: { revalidate: 60 },
     });
     if (!res.ok) return { error: `Cal.com API error: ${res.status}` };
-    const data = await res.json();
-    return { bookings: data.bookings || [] };
+    const json = await res.json();
+    const bookings = json.data || json.bookings || [];
+    return { bookings };
   } catch (err) {
     return { error: err.message };
   }
@@ -80,6 +85,7 @@ export default async function CalBookingsPage() {
               <tbody>
                 {result.bookings.map((b) => {
                   const attendee = b.attendees?.[0];
+                  const status = (b.status || "PENDING").toUpperCase();
                   return (
                     <tr key={b.id} className="border-b border-[#EAEFFF]/5 transition-all duration-300 hover:bg-white/[0.015] last:border-0">
                       <td className="px-5 py-4">
@@ -100,15 +106,15 @@ export default async function CalBookingsPage() {
                       </td>
                       <td className="px-5 py-4">
                         <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
-                          b.status === "ACCEPTED" ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400" :
-                          b.status === "CANCELLED" ? "border-red-500/20 bg-red-500/5 text-red-400" :
+                          status === "ACCEPTED" ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400" :
+                          status === "CANCELLED" ? "border-red-500/20 bg-red-500/5 text-red-400" :
                           "border-amber-500/20 bg-amber-500/5 text-amber-400"
                         }`}>
                           <span className={`h-1.5 w-1.5 rounded-full ${
-                            b.status === "ACCEPTED" ? "bg-emerald-400" :
-                            b.status === "CANCELLED" ? "bg-red-400" : "bg-amber-400"
+                            status === "ACCEPTED" ? "bg-emerald-400" :
+                            status === "CANCELLED" ? "bg-red-400" : "bg-amber-400"
                           }`} />
-                          {b.status || "PENDING"}
+                          {status}
                         </span>
                       </td>
                       <td className="px-5 py-4 text-white/30 text-xs tabular-nums">
