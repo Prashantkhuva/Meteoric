@@ -1,6 +1,8 @@
 {
   "redirects": [],
   "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/work", "destination": "/work/index.html" },
     {
       "source": "/((?!robots\\.txt|sitemap\\.xml|llms\\.txt|favicon\\.svg|og-image\\.png|site\\.webmanifest|apple-touch-icon\\.png|assets/).*)",
       "destination": "/index.html"
