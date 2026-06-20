@@ -1,9 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Calendar as CalendarIcon, List, CalendarDays } from "lucide-react"
 
 import { Calendar } from "@/Components/ui/calendar"
+
+function localDateStr(d) {
+  if (!d) return ""
+  try {
+    const date = new Date(d)
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+  } catch {
+    return ""
+  }
+}
 
 async function fetchBookings() {
   try {
@@ -40,15 +50,6 @@ function formatShort(d) {
   return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
 
-function toDateStr(d) {
-  if (!d) return ""
-  try {
-    return new Date(d).toISOString().slice(0, 10)
-  } catch {
-    return ""
-  }
-}
-
 export default function CalBookingsPage() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -65,16 +66,32 @@ export default function CalBookingsPage() {
   const bookings = data?.bookings || []
   const error = data?.error
 
-  const sortedBookings = [...bookings].sort((a, b) => new Date(b.start) - new Date(a.start))
+  const sortedBookings = useMemo(
+    () => [...bookings].sort((a, b) => new Date(b.start) - new Date(a.start)),
+    [bookings]
+  )
 
-  const bookingsByDate = {}
-  sortedBookings.forEach((b) => {
-    const d = toDateStr(b.start)
-    if (!bookingsByDate[d]) bookingsByDate[d] = []
-    bookingsByDate[d].push(b)
-  })
+  const bookingsByDate = useMemo(() => {
+    const map = {}
+    sortedBookings.forEach((b) => {
+      const d = localDateStr(b.start)
+      if (!map[d]) map[d] = []
+      map[d].push(b)
+    })
+    return map
+  }, [sortedBookings])
 
-  const selectedDayBookings = selectedDate ? (bookingsByDate[toDateStr(selectedDate)] || []) : []
+  const bookingCountByDate = useMemo(() => {
+    const map = {}
+    sortedBookings.forEach((b) => {
+      const d = localDateStr(b.start)
+      map[d] = (map[d] || 0) + 1
+    })
+    return map
+  }, [sortedBookings])
+
+  const selectedKey = selectedDate ? localDateStr(selectedDate) : ""
+  const selectedDayBookings = selectedKey ? (bookingsByDate[selectedKey] || []) : []
 
   const statusColor = (s) => {
     const st = (s || "").toUpperCase()
@@ -220,93 +237,109 @@ export default function CalBookingsPage() {
 
       {view === "calendar" && bookings.length > 0 && (
         <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
-          <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-5">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              modifiers={{
-                hasBooking: (date) => {
-                  const d = toDateStr(date)
-                  return d in bookingsByDate
-                },
-              }}
-              modifiersStyles={{
-                hasBooking: {
-                  fontWeight: "600",
-                },
-              }}
-              footer={
-                <div className="mt-4 border-t border-[#EAEFFF]/8 pt-3 text-xs text-white/20 text-center">
-                  {selectedDate
-                    ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? "s" : ""} on this day`
-                    : "Select a day to view bookings"}
-                </div>
-              }
-            />
-          </div>
-
-          <div className="space-y-3">
-            {!selectedDate && (
-              <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
-                <CalendarDays size={32} className="mx-auto text-white/10 mb-2" />
-                <p className="text-sm text-white/20">Select a date on the calendar</p>
-              </div>
-            )}
-
-            {selectedDate && selectedDayBookings.length === 0 && (
-              <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
-                <p className="text-sm text-white/20">No bookings for {formatShort(selectedDate)}</p>
-              </div>
-            )}
-
-            {selectedDayBookings.map((b) => {
-              const attendee = b.attendees?.[0]
-              const st = (b.status || "PENDING").toUpperCase()
-              return (
-                <div
-                  key={b.id}
-                  className="group cursor-pointer rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-5 transition-all duration-300 hover:border-[#EAEFFF]/20 hover:bg-black/50"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusBg(b.status)} ${statusColor(b.status)}`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${statusColor(b.status).replace("text-", "bg-")}`} />
-                          {st}
-                        </span>
-                        <span className="text-white/20 text-xs tabular-nums">{b.duration ? `${b.duration} min` : "—"}</span>
-                      </div>
-                      <h3 className="text-white/80 font-medium truncate">{b.title || "Untitled Booking"}</h3>
-                      {attendee && (
-                        <p className="text-white/30 text-xs mt-1">
-                          {attendee.name}{attendee.email ? ` · ${attendee.email}` : ""}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-white/60 text-sm font-medium tabular-nums">
-                        {formatTime(b.start)}
-                      </p>
-                      <p className="text-white/20 text-xs tabular-nums">— {formatTime(b.end)}</p>
-                    </div>
+            <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-4">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                modifiers={{
+                  hasBooking: (date) => {
+                    return localDateStr(date) in bookingsByDate
+                  },
+                }}
+                modifiersClassNames={{
+                  hasBooking: "has-booking",
+                }}
+                formatters={{
+                  formatDay: (date) => {
+                    const key = localDateStr(date)
+                    const count = bookingCountByDate[key]
+                    return (
+                      <span className="relative flex items-center justify-center w-full h-full">
+                        {date.getDate()}
+                        {count > 0 && (
+                          <span
+                            className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] leading-none text-[#EAEFFF]/70 bg-[#EAEFFF]/10 rounded-full px-[3px] min-w-[12px] text-center"
+                          >
+                            {count}
+                          </span>
+                        )}
+                      </span>
+                    )
+                  },
+                }}
+                footer={
+                  <div className="mt-3 border-t border-[#EAEFFF]/8 pt-3 text-xs text-white/20 text-center">
+                    {selectedDate
+                      ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? "s" : ""} on this day`
+                      : "Select a day to view bookings"}
                   </div>
+                }
+              />
+            </div>
 
-                  {(b.description || b.location) && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {b.description && (
-                        <span className="text-white/15 text-xs">{b.description}</span>
-                      )}
-                      {b.location && (
-                        <span className="text-white/15 text-xs">{b.location?.type || b.location}</span>
-                      )}
-                    </div>
-                  )}
+            <div className="space-y-3">
+              {!selectedDate && (
+                <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+                  <CalendarDays size={32} className="mx-auto text-white/10 mb-2" />
+                  <p className="text-sm text-white/20">Select a date on the calendar</p>
                 </div>
-              )
-            })}
+              )}
+
+              {selectedDate && selectedDayBookings.length === 0 && (
+                <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+                  <p className="text-sm text-white/20">No bookings for {formatShort(selectedDate)}</p>
+                </div>
+              )}
+
+              {selectedDayBookings.map((b) => {
+                const attendee = b.attendees?.[0]
+                const st = (b.status || "PENDING").toUpperCase()
+                return (
+                  <div
+                    key={b.id}
+                    className="group cursor-pointer rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-5 transition-all duration-300 hover:border-[#EAEFFF]/20 hover:bg-black/50"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusBg(b.status)} ${statusColor(b.status)}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${statusColor(b.status).replace("text-", "bg-")}`} />
+                            {st}
+                          </span>
+                          <span className="text-white/20 text-xs tabular-nums">{b.duration ? `${b.duration} min` : "—"}</span>
+                        </div>
+                        <h3 className="text-white/80 font-medium truncate">{b.title || "Untitled Booking"}</h3>
+                        {attendee && (
+                          <p className="text-white/30 text-xs mt-1">
+                            {attendee.name}{attendee.email ? ` · ${attendee.email}` : ""}
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-white/60 text-sm font-medium tabular-nums">
+                          {formatTime(b.start)}
+                        </p>
+                        <p className="text-white/20 text-xs tabular-nums">— {formatTime(b.end)}</p>
+                      </div>
+                    </div>
+
+                    {(b.description || b.location) && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {b.description && (
+                          <span className="text-white/15 text-xs">{b.description}</span>
+                        )}
+                        {b.location && (
+                          <span className="text-white/15 text-xs">{b.location?.type || b.location}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )

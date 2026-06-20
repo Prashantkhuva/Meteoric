@@ -7,9 +7,8 @@ import { cn } from "@/lib/utils"
 function Calendar({ className, classNames, showOutsideDays = true, ...props }) {
   return (
     <DayPicker
-      animate
       showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("p-2", className)}
       classNames={{
         today: "!text-[#EAEFFF] !font-semibold",
         selected: "!bg-[#EAEFFF]/15 !text-[#EAEFFF] !rounded-lg",
@@ -18,12 +17,12 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }) {
         range_end: "!bg-[#EAEFFF] !text-black !rounded-r-lg",
         chevron: "!fill-[#EAEFFF]/40",
         day_button: cn(
-          "!text-white/60 !rounded-lg !text-sm !size-9",
+          "!relative !text-white/60 !rounded-lg !text-sm !size-9",
           "hover:!bg-[#EAEFFF]/10 hover:!text-white/90",
           "focus-visible:!ring-1 focus-visible:!ring-[#EAEFFF]/30 focus-visible:!outline-none",
           "aria-selected:!bg-[#EAEFFF]/15 aria-selected:!text-[#EAEFFF]",
         ),
-        month_caption: "!text-white/80 !text-sm !font-medium !px-1",
+        month_caption: "!text-white/80 !text-sm !font-medium",
         nav: "!gap-1",
         month_grid: "!mt-2",
         weekdays: "!text-white/30 !text-xs !font-normal",
