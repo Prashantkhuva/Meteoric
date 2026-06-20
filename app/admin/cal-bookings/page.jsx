@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Calendar as CalendarIcon, List, CalendarDays } from "lucide-react"
 
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/Components/ui/calendar"
 
 async function fetchBookings() {
   try {
