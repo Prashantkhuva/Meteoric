@@ -28,6 +28,8 @@ export default function ClientsPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [deleting, setDeleting] = useState(null);
 
+  const [toast, setToast] = useState(null);
+
   const fetchClients = useCallback(async () => {
     const supabase = createClient();
     if (!supabase) {
@@ -35,33 +37,53 @@ export default function ClientsPage() {
       setLoading(false);
       return;
     }
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("clients")
       .select("*")
       .order("created_at", { ascending: false });
-    setClients(data || []);
+    if (error) {
+      setError(error.message);
+    } else {
+      setClients(data || []);
+    }
     setLoading(false);
   }, []);
 
   useEffect(() => { fetchClients(); }, [fetchClients]);
 
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
+
   async function handleAdd(formData) {
     const supabase = createClient();
-    await supabase.from("clients").insert({
+    const { error } = await supabase.from("clients").insert({
       name: formData.get("name"),
       email: formData.get("email"),
       company: formData.get("company"),
       status: "active",
     });
+    if (error) {
+      setToast({ type: "error", message: error.message });
+      return;
+    }
     setShowAdd(false);
+    setToast({ type: "success", message: "Client added" });
     fetchClients();
   }
 
   async function handleDelete(id) {
     setDeleting(id);
     const supabase = createClient();
-    await supabase.from("clients").delete().eq("id", id);
-    setClients((prev) => prev.filter((c) => c.id !== id));
+    const { error } = await supabase.from("clients").delete().eq("id", id);
+    if (error) {
+      setToast({ type: "error", message: error.message });
+    } else {
+      setClients((prev) => prev.filter((c) => c.id !== id));
+      setToast({ type: "success", message: "Client removed" });
+    }
     setDeleting(null);
   }
 
@@ -252,6 +274,24 @@ export default function ClientsPage() {
                 </div>
               </form>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`fixed bottom-6 right-6 z-[100] rounded-xl border px-4 py-3 text-sm font-medium shadow-xl ${
+              toast.type === "error"
+                ? "border-red-500/20 bg-red-500/10 text-red-400"
+                : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+            }`}
+          >
+            {toast.message}
           </motion.div>
         )}
       </AnimatePresence>

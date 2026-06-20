@@ -49,6 +49,7 @@ export default function LeadsPage() {
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
   const [deleting, setDeleting] = useState(null);
+  const [toast, setToast] = useState(null);
 
   const fetchLeads = useCallback(async () => {
     const supabase = createClient();
@@ -57,11 +58,15 @@ export default function LeadsPage() {
       setLoading(false);
       return;
     }
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("leads")
       .select("*")
       .order("created_at", { ascending: false });
-    setLeads(data || []);
+    if (error) {
+      setError(error.message);
+    } else {
+      setLeads(data || []);
+    }
     setLoading(false);
   }, []);
 
@@ -70,35 +75,60 @@ export default function LeadsPage() {
   async function handleStatusChange(leadId, newStatus) {
     setEditingStatus(leadId);
     const supabase = createClient();
-    await supabase.from("leads").update({ status: newStatus }).eq("id", leadId);
-    setLeads((prev) =>
-      prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l))
-    );
+    const { error } = await supabase.from("leads").update({ status: newStatus }).eq("id", leadId);
+    if (error) {
+      setToast({ type: "error", message: error.message });
+    } else {
+      setLeads((prev) =>
+        prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l))
+      );
+    }
     setEditingStatus(null);
   }
 
   async function handleConvert(lead) {
     setConverting(lead.id);
     const supabase = createClient();
-    await supabase.from("clients").insert({
+    const { error: insertErr } = await supabase.from("clients").insert({
       name: lead.name,
       email: lead.email,
       company: lead.company,
       status: "active",
     });
-    await supabase.from("leads").update({ status: "won" }).eq("id", lead.id);
-    setLeads((prev) =>
-      prev.map((l) => (l.id === lead.id ? { ...l, status: "won" } : l))
-    );
+    if (insertErr) {
+      setToast({ type: "error", message: insertErr.message });
+      setConverting(null);
+      return;
+    }
+    const { error: updateErr } = await supabase
+      .from("leads").update({ status: "won" }).eq("id", lead.id);
+    if (updateErr) {
+      setToast({ type: "error", message: updateErr.message });
+    } else {
+      setLeads((prev) =>
+        prev.map((l) => (l.id === lead.id ? { ...l, status: "won" } : l))
+      );
+      setToast({ type: "success", message: `${lead.name || "Lead"} converted to client` });
+    }
     setConverting(null);
   }
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   async function handleDelete(leadId) {
     setDeleting(leadId);
     const supabase = createClient();
-    await supabase.from("leads").delete().eq("id", leadId);
-    setLeads((prev) => prev.filter((l) => l.id !== leadId));
-    if (viewLead?.id === leadId) setViewLead(null);
+    const { error } = await supabase.from("leads").delete().eq("id", leadId);
+    if (error) {
+      setToast({ type: "error", message: error.message });
+    } else {
+      setLeads((prev) => prev.filter((l) => l.id !== leadId));
+      if (viewLead?.id === leadId) setViewLead(null);
+    }
     setDeleting(null);
   }
 
@@ -245,6 +275,24 @@ export default function LeadsPage() {
           </table>
         </div>
       </div>
+
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`fixed bottom-6 right-6 z-[100] rounded-xl border px-4 py-3 text-sm font-medium shadow-xl ${
+              toast.type === "error"
+                ? "border-red-500/20 bg-red-500/10 text-red-400"
+                : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+            }`}
+          >
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Status Modal */}
       <AnimatePresence>
