@@ -231,6 +231,11 @@ export default function CalBookingsPage() {
       {view === "calendar" && bookings.length > 0 && (
         <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
           <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-4">
+            <style>{`
+              .has-booking .rdp-day_button {
+                box-shadow: inset 0 0 0 1px rgba(234, 239, 255, 0.15) !important;
+              }
+            `}</style>
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -248,10 +253,12 @@ export default function CalBookingsPage() {
                   const count = bookingCountByDate[key]
                   return (
                     <span className="relative flex items-center justify-center w-full h-full">
-                      {date.getDate()}
+                      <span className={count > 0 ? "font-semibold text-white/90" : ""}>
+                        {date.getDate()}
+                      </span>
                       {count > 0 && (
-                        <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] leading-none text-[#EAEFFF]/70 bg-[#EAEFFF]/10 rounded-full px-[3px] min-w-[12px] text-center">
-                          {count}
+                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2">
+                          <span className="block h-1 w-1 rounded-full bg-[#EAEFFF]/60" />
                         </span>
                       )}
                     </span>
