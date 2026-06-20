@@ -18,7 +18,11 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <Preview>New lead from {name || email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>New Lead ✦</Heading>
+          <div style={logoWrap}>
+            <Text style={logoMark}>M</Text>
+            <Text style={logo}>Meteoric<span style={dot}>.</span></Text>
+          </div>
+          <Heading style={h1}>New Lead <span style={star}>✦</span></Heading>
           <Text style={muted}>
             A new lead has submitted the form on meteoric.agency
           </Text>
@@ -90,6 +94,43 @@ const container = {
   backgroundColor: "#0a0a0a",
   border: "1px solid rgba(234, 239, 255, 0.1)",
   borderRadius: "16px",
+};
+
+const logoWrap = {
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+  marginBottom: "20px",
+};
+
+const logoMark = {
+  width: "28px",
+  height: "28px",
+  lineHeight: "28px",
+  textAlign: "center",
+  fontSize: "13px",
+  fontWeight: 700,
+  color: "#EAEFFF",
+  backgroundColor: "rgba(234, 239, 255, 0.1)",
+  border: "1px solid rgba(234, 239, 255, 0.15)",
+  borderRadius: "8px",
+  margin: "0",
+};
+
+const logo = {
+  fontSize: "18px",
+  fontWeight: 600,
+  color: "#ffffff",
+  letterSpacing: "-0.02em",
+  margin: "0",
+};
+
+const dot = {
+  color: "#EAEFFF",
+};
+
+const star = {
+  color: "#EAEFFF",
 };
 
 const h1 = {

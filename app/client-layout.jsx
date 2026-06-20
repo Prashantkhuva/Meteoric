@@ -18,12 +18,14 @@ export default function ClientLayout({ children }) {
     trackPageView(pathname);
   }, [pathname]);
 
+  const isAdmin = pathname.startsWith("/admin") || pathname.startsWith("/login");
+
   return (
     <>
       <SmoothScroll />
-      <Navbar />
+      {!isAdmin && <Navbar />}
       <main>{children}</main>
-      <Footer />
+      {!isAdmin && <Footer />}
     </>
   );
 }
