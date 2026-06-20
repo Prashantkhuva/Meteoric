@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Users,
   Briefcase,
+  Calendar,
   ChevronLeft,
   LogOut,
 } from "lucide-react";
@@ -18,6 +19,7 @@ const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/leads", label: "Leads", icon: Users },
   { href: "/admin/clients", label: "Clients", icon: Briefcase },
+  { href: "/admin/cal-bookings", label: "Bookings", icon: Calendar },
 ];
 
 export default function Sidebar() {
