@@ -258,6 +258,23 @@ export default function CalBookingsPage() {
                     color: "rgba(234,239,255,0.9)",
                   },
                 }}
+                components={{
+                  DayContent: (props) => {
+                    const { date } = props
+                    const key = localDateStr(date)
+                    const count = bookingCountByDate[key]
+                    return (
+                      <span className="relative flex items-center justify-center w-full h-full">
+                        {date.getDate()}
+                        {count > 0 && (
+                          <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] leading-none text-[#EAEFFF]/70 bg-[#EAEFFF]/10 rounded-full px-[3px] min-w-[12px] text-center">
+                            {count}
+                          </span>
+                        )}
+                      </span>
+                    )
+                  },
+                }}
                 footer={
                   <div className="mt-3 border-t border-[#EAEFFF]/8 pt-3 text-xs text-white/20 text-center">
                     {selectedDate
