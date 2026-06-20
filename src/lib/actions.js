@@ -30,8 +30,8 @@ export async function createLead(data) {
     if (process.env.RESEND_API_KEY) {
       const { sendNewLeadNotification, sendLeadAutoReply } = await import("@/lib/email")
       Promise.allSettled([
-        sendNewLeadNotification(data).catch(() => {}),
-        data.email ? sendLeadAutoReply(data).catch(() => {}) : Promise.resolve(),
+        sendNewLeadNotification(data),
+        data.email ? sendLeadAutoReply(data) : Promise.resolve(),
       ])
     }
 
