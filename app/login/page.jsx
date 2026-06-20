@@ -19,6 +19,12 @@ function LoginForm() {
     setError(null);
 
     const supabase = createClient();
+    if (!supabase) {
+      setError("Supabase not configured. Check your environment variables.");
+      setLoading(false);
+      return;
+    }
+
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
