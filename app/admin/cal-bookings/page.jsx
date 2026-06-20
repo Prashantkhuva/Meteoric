@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X, Phone, Video, MapPin } from "lucide-react"
+import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X, Phone, Video, MapPin, Building2, FileText, DollarSign } from "lucide-react"
 
 import { Calendar } from "@/Components/ui/calendar"
 import { createClient } from "@/lib/client"
@@ -97,6 +97,7 @@ export default function CalBookingsPage() {
   const [view, setView] = useState("table")
   const [selectedDate, setSelectedDate] = useState(undefined)
   const [selectedBooking, setSelectedBooking] = useState(null)
+  const [showConvertForm, setShowConvertForm] = useState(false)
   const [converting, setConverting] = useState(false)
   const [convertMsg, setConvertMsg] = useState(null)
 
@@ -137,29 +138,28 @@ export default function CalBookingsPage() {
   const selectedKey = selectedDate ? localDateStr(selectedDate) : ""
   const selectedDayBookings = selectedKey ? (bookingsByDate[selectedKey] || []) : []
 
-  async function handleConvertToLead(booking) {
+  async function handleConvertToLead(e) {
+    e.preventDefault()
     setConverting(true)
     setConvertMsg(null)
-    const attendee = booking.attendees?.[0]
-    if (!attendee?.email) {
-      setConvertMsg({ type: "error", text: "No attendee email found for this booking." })
-      setConverting(false)
-      return
-    }
+    const fd = new FormData(e.target)
     try {
       const supabase = createClient()
       const { error: dbErr } = await supabase.from("leads").insert({
-        name: attendee.name || "Unknown",
-        email: attendee.email,
-        phone: attendee.phone || "",
-        message: `Booking: ${booking.title || "Untitled"}`,
+        name: fd.get("name") || "Unknown",
+        email: fd.get("email") || "",
+        phone: fd.get("phone") || "",
+        company: fd.get("company") || "",
+        services: fd.get("services") || "",
+        details: fd.get("details") || "",
+        budget: fd.get("budget") || "",
         status: "new",
-        source: "cal.com",
       })
       if (dbErr) {
         setConvertMsg({ type: "error", text: dbErr.message })
       } else {
-        setConvertMsg({ type: "success", text: `"${attendee.name || attendee.email}" added as a lead.` })
+        setConvertMsg({ type: "success", text: "Lead added successfully." })
+        setTimeout(() => { setShowConvertForm(false); setConvertMsg(null) }, 1500)
       }
     } catch (err) {
       setConvertMsg({ type: "error", text: err.message })
@@ -500,28 +500,103 @@ export default function CalBookingsPage() {
                         </a>
                       )}
 
-                      {attendee?.email && (
+                      {attendee?.email && !showConvertForm && (
                         <button
-                          onClick={() => handleConvertToLead(b)}
-                          disabled={converting}
-                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2.5 text-sm font-medium text-[#EAEFFF]/80 transition-all hover:bg-[#EAEFFF]/10 hover:border-[#EAEFFF]/25 disabled:opacity-50"
+                          onClick={() => setShowConvertForm(true)}
+                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2.5 text-sm font-medium text-[#EAEFFF]/80 transition-all hover:bg-[#EAEFFF]/10 hover:border-[#EAEFFF]/25"
                         >
                           <UserPlus size={16} />
-                          {converting ? "Converting..." : "Convert to Lead"}
+                          Convert to Lead
                         </button>
                       )}
                     </div>
 
-                    {convertMsg && (
-                      <div
-                        className={`rounded-xl border px-4 py-3 text-sm ${
-                          convertMsg.type === "success"
-                            ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
-                            : "border-red-500/20 bg-red-500/5 text-red-400"
-                        }`}
-                      >
-                        {convertMsg.text}
-                      </div>
+                    {showConvertForm && (
+                      <form onSubmit={handleConvertToLead} className="space-y-3 pt-2 border-t border-[#EAEFFF]/8">
+                        <p className="text-xs text-white/20 uppercase tracking-wider">New Lead</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs text-white/30 mb-1">Name *</label>
+                            <input
+                              name="name"
+                              defaultValue={attendee?.name || ""}
+                              required
+                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-white/30 mb-1">Email *</label>
+                            <input
+                              name="email"
+                              type="email"
+                              defaultValue={attendee?.email || ""}
+                              required
+                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-white/30 mb-1">Phone</label>
+                            <input
+                              name="phone"
+                              defaultValue={attendee?.phone || ""}
+                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-white/30 mb-1">Company</label>
+                            <input
+                              name="company"
+                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              placeholder="e.g. Acme Inc"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-white/30 mb-1">Services</label>
+                          <input
+                            name="services"
+                            className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                            placeholder="e.g. Web Design, SEO"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs text-white/30 mb-1">Budget</label>
+                            <input
+                              name="budget"
+                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              placeholder="e.g. $5k-$10k"
+                            />
+                          </div>
+                          <div className="flex items-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => { setShowConvertForm(false); setConvertMsg(null) }}
+                              className="flex-1 rounded-xl border border-[#EAEFFF]/10 px-4 py-2.5 text-sm text-white/40 transition-all hover:bg-[#EAEFFF]/5"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={converting}
+                              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#EAEFFF] px-4 py-2.5 text-sm font-medium text-black transition-all hover:bg-[#EAEFFF]/90 disabled:opacity-50"
+                            >
+                              {converting ? "Saving..." : "Save Lead"}
+                            </button>
+                          </div>
+                        </div>
+                        {convertMsg && (
+                          <div
+                            className={`rounded-xl border px-4 py-3 text-sm ${
+                              convertMsg.type === "success"
+                                ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
+                                : "border-red-500/20 bg-red-500/5 text-red-400"
+                            }`}
+                          >
+                            {convertMsg.text}
+                          </div>
+                        )}
+                      </form>
                     )}
                   </>
                 )
