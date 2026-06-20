@@ -204,7 +204,9 @@ export default function CalBookingsPage() {
                           <div className="flex flex-col">
                             <span className="text-white/60 text-xs">{attendee.name || "—"}</span>
                             <span className="text-white/30 text-xs">{attendee.email || ""}</span>
-                          </div>
+    </div>
+  )
+}
                         ) : (
                           <span className="text-white/20 text-xs">—</span>
                         )}
@@ -296,7 +298,9 @@ export default function CalBookingsPage() {
                             {st}
                           </span>
                           <span className="text-white/20 text-xs tabular-nums">{b.duration ? `${b.duration} min` : "—"}</span>
-                        </div>
+    </div>
+  )
+}
                         <h3 className="text-white/80 font-medium truncate">{b.title || "Untitled Booking"}</h3>
                         {attendee && (
                           <p className="text-white/30 text-xs mt-1">
@@ -327,7 +331,6 @@ export default function CalBookingsPage() {
               })}
             </div>
           </div>
-        </div>
       )}
     </div>
   )
