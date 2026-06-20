@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import emailjs from "@emailjs/browser";
+import { createLead } from "@/lib/actions";
 import StepContent from "./StepContent";
 
 export default function RequestModal({ isOpen, setIsOpen }) {
@@ -25,41 +25,18 @@ export default function RequestModal({ isOpen, setIsOpen }) {
 
   const handleSubmit = async () => {
     setSending(true);
-    try {
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: `${formData.countryCode} ${formData.phone}`,
-          services: formData.services.join(", "),
-          details: formData.details,
-          budget: `${formData.currency} ${formData.budget}`,
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
-      );
 
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        "template_42sm3qm",
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: `${formData.countryCode} ${formData.phone}`,
-          services: formData.services.join(", "),
-          details: formData.details,
-          budget: `${formData.currency} ${formData.budget}`,
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
-      );
+    await createLead({
+      name: formData.name,
+      email: formData.email,
+      phone: `${formData.countryCode} ${formData.phone}`,
+      services: formData.services.join(", "),
+      details: formData.details,
+      budget: `${formData.currency} ${formData.budget}`,
+    });
 
-      setSubmitted(true);
-    } catch {
-      setSubmitted(true);
-    } finally {
-      setSending(false);
-    }
+    setSubmitted(true);
+    setSending(false);
   };
 
   const handleClose = useCallback(() => {

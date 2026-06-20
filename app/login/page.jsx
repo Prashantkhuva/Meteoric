@@ -1,0 +1,121 @@
+"use client";
+
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { createClient } from "@/lib/client";
+
+function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/admin";
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (authError) {
+      setError(authError.message);
+      setLoading(false);
+      return;
+    }
+
+    router.push(redirect);
+    router.refresh();
+  }
+
+  return (
+    <div className="relative flex min-h-dvh items-center justify-center bg-black px-4 overflow-hidden">
+      {/* Ambient glows */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 -left-20 w-[400px] h-[400px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
+        <div className="absolute bottom-1/4 -right-20 w-[400px] h-[400px] bg-[#EAEFFF]/[0.015] blur-[120px] rounded-full" />
+      </div>
+
+      <div className="relative w-full max-w-sm">
+        <div className="mb-10 text-center">
+          <p className="text-3xl font-semibold tracking-tight text-white">
+            Meteoric<span className="text-[#EAEFFF]">.</span>
+          </p>
+          <p className="mt-2 text-sm text-white/40">Admin Dashboard</p>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5 rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        >
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-xs font-medium tracking-wider text-white/40 uppercase"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1.5 w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-xs font-medium tracking-wider text-white/40 uppercase"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1.5 w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-400/80 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="group relative w-full overflow-hidden rounded-xl border-2 border-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#EAEFFF] transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
+          >
+            <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+            <span className="relative z-10 group-hover:text-black transition-colors duration-300">
+              {loading ? "Signing in..." : "Sign in"}
+            </span>
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowUpRight, Check, Shield, Clock, MessageSquare, Loader2 } from "lucide-react";
+import { createLead } from "@/lib/actions";
 
 const trustSignals = [
   {
@@ -29,26 +30,15 @@ export default function LeadCaptureSection() {
     setSending(true);
     setError(false);
 
-    try {
-      const emailjs = await import("@emailjs/browser").then(m => m.default);
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-        {
-          name: email,
-          email,
-          services: "Lead Capture (Get Estimate)",
-          details: `New lead via Get Estimate form.\nEmail: ${email}`,
-          budget: "N/A",
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
-      );
-      setSubmitted(true);
-    } catch {
-      setError(true);
-    } finally {
-      setSending(false);
-    }
+    await createLead({
+      name: email,
+      email,
+      services: "Lead Capture (Get Estimate)",
+      details: `New lead via Get Estimate form. Email: ${email}`,
+    });
+
+    setSubmitted(true);
+    setSending(false);
   };
 
   return (
