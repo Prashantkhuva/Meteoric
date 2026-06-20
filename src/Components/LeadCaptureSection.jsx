@@ -43,6 +43,10 @@ export default function LeadCaptureSection() {
       return;
     }
 
+    if (result?.emailError) {
+      console.warn("Email warning:", result.emailError);
+    }
+
     setSubmitted(true);
     setSending(false);
   };
