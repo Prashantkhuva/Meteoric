@@ -250,22 +250,10 @@ export default function CalBookingsPage() {
                 modifiersClassNames={{
                   hasBooking: "has-booking",
                 }}
-                formatters={{
-                  formatDay: (date) => {
-                    const key = localDateStr(date)
-                    const count = bookingCountByDate[key]
-                    return (
-                      <span className="relative flex items-center justify-center w-full h-full">
-                        {date.getDate()}
-                        {count > 0 && (
-                          <span
-                            className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] leading-none text-[#EAEFFF]/70 bg-[#EAEFFF]/10 rounded-full px-[3px] min-w-[12px] text-center"
-                          >
-                            {count}
-                          </span>
-                        )}
-                      </span>
-                    )
+                modifiersStyles={{
+                  hasBooking: {
+                    fontWeight: "600",
+                    color: "rgba(234,239,255,0.9)",
                   },
                 }}
                 footer={
