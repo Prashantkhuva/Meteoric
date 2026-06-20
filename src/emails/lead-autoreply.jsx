@@ -6,6 +6,7 @@ import {
   Container,
   Text,
   Hr,
+  Img,
 } from "react-email";
 
 export default function LeadAutoReply({ name }) {
@@ -15,10 +16,13 @@ export default function LeadAutoReply({ name }) {
       <Preview>Thank you for reaching out — we'll be in touch</Preview>
       <Body style={main}>
         <Container style={container}>
-          <div style={logoWrap}>
-            <Text style={logoMark}>M</Text>
-            <Text style={logo}>Meteoric<span style={dot}>.</span></Text>
-          </div>
+          <Img
+            src="https://meteoric.agency/meteoric-logo.png"
+            alt="Meteoric"
+            width="168"
+            height="32"
+            style={logoImg}
+          />
 
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
 
@@ -65,37 +69,11 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoWrap = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
+const logoImg = {
   marginBottom: "24px",
-};
-
-const logoMark = {
-  width: "28px",
-  height: "28px",
-  lineHeight: "28px",
-  textAlign: "center",
-  fontSize: "13px",
-  fontWeight: 700,
-  color: "#EAEFFF",
-  backgroundColor: "rgba(234, 239, 255, 0.1)",
-  border: "1px solid rgba(234, 239, 255, 0.15)",
-  borderRadius: "8px",
-  margin: "0",
-};
-
-const logo = {
-  fontSize: "18px",
-  fontWeight: 600,
-  color: "#ffffff",
-  letterSpacing: "-0.02em",
-  margin: "0",
-};
-
-const dot = {
-  color: "#EAEFFF",
+  outline: "none",
+  border: "none",
+  textDecoration: "none",
 };
 
 const greeting = {
