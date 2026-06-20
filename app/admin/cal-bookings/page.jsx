@@ -1,54 +1,142 @@
-import { Calendar } from "lucide-react";
+"use client"
 
-const CAL_API = "https://api.cal.com/v2";
+import { useState, useEffect } from "react"
+import { Calendar as CalendarIcon, List, CalendarDays } from "lucide-react"
 
-async function getBookings() {
-  const key = process.env.CALCOM_API_KEY;
-  if (!key) return null;
+import { Calendar } from "@/components/ui/calendar"
 
+async function fetchBookings() {
   try {
-    const res = await fetch(`${CAL_API}/bookings`, {
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "cal-api-version": "2024-08-13",
-      },
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return { error: `Cal.com API error: ${res.status}` };
-    const json = await res.json();
-    const bookings = json.data || json.bookings || [];
-    return { bookings };
+    const res = await fetch("/api/cal-bookings", { cache: "no-store" })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      return { error: err.error || `API error: ${res.status}` }
+    }
+    return await res.json()
   } catch (err) {
-    return { error: err.message };
+    return { error: err.message }
   }
 }
 
 function formatDate(d) {
-  if (!d) return "—";
+  if (!d) return "—"
   return new Date(d).toLocaleDateString("en-US", {
+    weekday: "short",
     month: "short",
     day: "numeric",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  });
+  })
 }
 
-export default async function CalBookingsPage() {
-  const result = await getBookings();
+function formatTime(d) {
+  if (!d) return ""
+  return new Date(d).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
+}
+
+function formatShort(d) {
+  if (!d) return "—"
+  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+}
+
+function toDateStr(d) {
+  if (!d) return ""
+  try {
+    return new Date(d).toISOString().slice(0, 10)
+  } catch {
+    return ""
+  }
+}
+
+export default function CalBookingsPage() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [view, setView] = useState("table")
+  const [selectedDate, setSelectedDate] = useState(undefined)
+
+  useEffect(() => {
+    fetchBookings().then((res) => {
+      setData(res)
+      setLoading(false)
+    })
+  }, [])
+
+  const bookings = data?.bookings || []
+  const error = data?.error
+
+  const sortedBookings = [...bookings].sort((a, b) => new Date(b.start) - new Date(a.start))
+
+  const bookingsByDate = {}
+  sortedBookings.forEach((b) => {
+    const d = toDateStr(b.start)
+    if (!bookingsByDate[d]) bookingsByDate[d] = []
+    bookingsByDate[d].push(b)
+  })
+
+  const selectedDayBookings = selectedDate ? (bookingsByDate[toDateStr(selectedDate)] || []) : []
+
+  const statusColor = (s) => {
+    const st = (s || "").toUpperCase()
+    if (st === "ACCEPTED") return "text-emerald-400"
+    if (st === "CANCELLED") return "text-red-400"
+    return "text-amber-400"
+  }
+
+  const statusBg = (s) => {
+    const st = (s || "").toUpperCase()
+    if (st === "ACCEPTED") return "bg-emerald-500/10 border-emerald-500/20"
+    if (st === "CANCELLED") return "bg-red-500/10 border-red-500/20"
+    return "bg-amber-500/10 border-amber-500/20"
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex items-center gap-3 text-white/30">
+          <div className="h-4 w-4 animate-spin rounded-full border border-[#EAEFFF]/30 border-t-[#EAEFFF]" />
+          <span className="text-sm">Loading bookings…</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6 p-6 lg:p-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-white">Bookings</h1>
-        <p className="mt-1 text-sm text-white/40">
-          {result?.bookings
-            ? `${result.bookings.length} booking${result.bookings.length !== 1 ? "s" : ""}`
-            : "Cal.com integration"}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-white">Bookings</h1>
+          <p className="mt-1 text-sm text-white/40">
+            {bookings.length
+              ? `${bookings.length} booking${bookings.length !== 1 ? "s" : ""}`
+              : "Cal.com integration"}
+          </p>
+        </div>
+        {bookings.length > 0 && (
+          <div className="flex items-center gap-1 rounded-xl border border-[#EAEFFF]/10 bg-black/40 p-1">
+            <button
+              onClick={() => setView("table")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                view === "table" ? "bg-[#EAEFFF]/10 text-[#EAEFFF]" : "text-white/30 hover:text-white/60"
+              }`}
+            >
+              <List size={14} />
+              List
+            </button>
+            <button
+              onClick={() => setView("calendar")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                view === "calendar" ? "bg-[#EAEFFF]/10 text-[#EAEFFF]" : "text-white/30 hover:text-white/60"
+              }`}
+            >
+              <CalendarDays size={14} />
+              Calendar
+            </button>
+          </div>
+        )}
       </div>
 
-      {!result && (
+      {!data && !loading && (
         <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
           <p className="text-sm text-white/30">
             Set <code className="text-[#EAEFFF]/60">CALCOM_API_KEY</code> in Vercel env vars to fetch bookings.
@@ -56,19 +144,19 @@ export default async function CalBookingsPage() {
         </div>
       )}
 
-      {result?.error && (
+      {error && (
         <div className="rounded-2xl border border-red-500/10 bg-red-500/5 p-6 text-center">
-          <p className="text-sm text-red-400/80">{result.error}</p>
+          <p className="text-sm text-red-400/80">{error}</p>
         </div>
       )}
 
-      {result?.bookings && result.bookings.length === 0 && (
+      {!error && bookings.length === 0 && data && (
         <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
           <p className="text-sm text-white/20">No bookings yet.</p>
         </div>
       )}
 
-      {result?.bookings && result.bookings.length > 0 && (
+      {view === "table" && bookings.length > 0 && (
         <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md">
           <div className="absolute -top-40 -right-40 h-60 w-60 rounded-full bg-[#EAEFFF]/[0.015] blur-[80px]" />
           <div className="relative overflow-x-auto">
@@ -83,9 +171,9 @@ export default async function CalBookingsPage() {
                 </tr>
               </thead>
               <tbody>
-                {result.bookings.map((b) => {
-                  const attendee = b.attendees?.[0];
-                  const status = (b.status || "PENDING").toUpperCase();
+                {sortedBookings.map((b) => {
+                  const attendee = b.attendees?.[0]
+                  const st = (b.status || "PENDING").toUpperCase()
                   return (
                     <tr key={b.id} className="border-b border-[#EAEFFF]/5 transition-all duration-300 hover:bg-white/[0.015] last:border-0">
                       <td className="px-5 py-4">
@@ -105,37 +193,121 @@ export default async function CalBookingsPage() {
                         )}
                       </td>
                       <td className="px-5 py-4">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
-                          status === "ACCEPTED" ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400" :
-                          status === "CANCELLED" ? "border-red-500/20 bg-red-500/5 text-red-400" :
-                          "border-amber-500/20 bg-amber-500/5 text-amber-400"
-                        }`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${
-                            status === "ACCEPTED" ? "bg-emerald-400" :
-                            status === "CANCELLED" ? "bg-red-400" : "bg-amber-400"
-                          }`} />
-                          {status}
+                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${statusBg(b.status)} ${statusColor(b.status)}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${statusColor(b.status).replace("text-", "bg-")}`} />
+                          {st}
                         </span>
                       </td>
                       <td className="px-5 py-4 text-white/30 text-xs tabular-nums">
                         <span className="flex items-center gap-1.5">
-                          <Calendar size={11} />
-                          {formatDate(b.startTime)}
+                          <CalendarIcon size={11} />
+                          {formatDate(b.start)}
                         </span>
                       </td>
                       <td className="px-5 py-4 text-white/30 text-xs tabular-nums">
-                        {b.startTime && b.endTime
-                          ? `${Math.round((new Date(b.endTime) - new Date(b.startTime)) / 60000)} min`
+                        {b.duration ? `${b.duration} min` : b.start && b.end
+                          ? `${Math.round((new Date(b.end) - new Date(b.start)) / 60000)} min`
                           : "—"}
                       </td>
                     </tr>
-                  );
+                  )
                 })}
               </tbody>
             </table>
           </div>
         </div>
       )}
+
+      {view === "calendar" && bookings.length > 0 && (
+        <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
+          <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-5">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              modifiers={{
+                hasBooking: (date) => {
+                  const d = toDateStr(date)
+                  return d in bookingsByDate
+                },
+              }}
+              modifiersStyles={{
+                hasBooking: {
+                  fontWeight: "600",
+                },
+              }}
+              footer={
+                <div className="mt-4 border-t border-[#EAEFFF]/8 pt-3 text-xs text-white/20 text-center">
+                  {selectedDate
+                    ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? "s" : ""} on this day`
+                    : "Select a day to view bookings"}
+                </div>
+              }
+            />
+          </div>
+
+          <div className="space-y-3">
+            {!selectedDate && (
+              <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+                <CalendarDays size={32} className="mx-auto text-white/10 mb-2" />
+                <p className="text-sm text-white/20">Select a date on the calendar</p>
+              </div>
+            )}
+
+            {selectedDate && selectedDayBookings.length === 0 && (
+              <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+                <p className="text-sm text-white/20">No bookings for {formatShort(selectedDate)}</p>
+              </div>
+            )}
+
+            {selectedDayBookings.map((b) => {
+              const attendee = b.attendees?.[0]
+              const st = (b.status || "PENDING").toUpperCase()
+              return (
+                <div
+                  key={b.id}
+                  className="group cursor-pointer rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-5 transition-all duration-300 hover:border-[#EAEFFF]/20 hover:bg-black/50"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusBg(b.status)} ${statusColor(b.status)}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${statusColor(b.status).replace("text-", "bg-")}`} />
+                          {st}
+                        </span>
+                        <span className="text-white/20 text-xs tabular-nums">{b.duration ? `${b.duration} min` : "—"}</span>
+                      </div>
+                      <h3 className="text-white/80 font-medium truncate">{b.title || "Untitled Booking"}</h3>
+                      {attendee && (
+                        <p className="text-white/30 text-xs mt-1">
+                          {attendee.name}{attendee.email ? ` · ${attendee.email}` : ""}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-white/60 text-sm font-medium tabular-nums">
+                        {formatTime(b.start)}
+                      </p>
+                      <p className="text-white/20 text-xs tabular-nums">— {formatTime(b.end)}</p>
+                    </div>
+                  </div>
+
+                  {(b.description || b.location) && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {b.description && (
+                        <span className="text-white/15 text-xs">{b.description}</span>
+                      )}
+                      {b.location && (
+                        <span className="text-white/15 text-xs">{b.location?.type || b.location}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }
