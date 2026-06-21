@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
 import {
   getLeads, createProposal, updateProposal, deleteProposal, sendProposal,
@@ -450,6 +450,18 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
     setSubmitting(false);
   }
 
+  const scrollRef = useRef(null);
+
+  function handleWheel(e) {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atTop = el.scrollTop === 0;
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+    if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) return;
+    el.scrollTop += e.deltaY;
+    e.preventDefault();
+  }
+
   if (!open) return null;
 
   return (
@@ -466,7 +478,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
             <X size={16} />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+        <div ref={scrollRef} onWheel={handleWheel} className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField label="Title" name="title" placeholder="Web Development Proposal" defaultValue={proposal?.title || ""} required />
