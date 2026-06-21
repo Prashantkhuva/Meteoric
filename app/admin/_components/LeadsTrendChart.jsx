@@ -47,16 +47,6 @@ export function LeadsTrendChart({ data }) {
           data={data}
           margin={{ left: 0, right: 0, top: 8, bottom: 0 }}
         >
-          <defs>
-            <linearGradient id="fillLeads" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#EAEFFF" stopOpacity={0.35} />
-              <stop offset="95%" stopColor="#EAEFFF" stopOpacity={0.02} />
-            </linearGradient>
-            <linearGradient id="fillWon" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="rgba(234,239,255,0.4)" stopOpacity={0.2} />
-              <stop offset="95%" stopColor="rgba(234,239,255,0.4)" stopOpacity={0} />
-            </linearGradient>
-          </defs>
           <CartesianGrid
             vertical={false}
             stroke="rgba(255,255,255,0.04)"
@@ -76,17 +66,17 @@ export function LeadsTrendChart({ data }) {
           <Area
             dataKey="won"
             type="natural"
-            fill="url(#fillWon)"
+            fill="rgba(234,239,255,0.06)"
             fillOpacity={1}
-            stroke="rgba(234,239,255,0.25)"
+            stroke="rgba(234,239,255,0.3)"
             strokeWidth={1.5}
             dot={false}
           />
           <Area
             dataKey="leads"
             type="natural"
-            fill="url(#fillLeads)"
-            fillOpacity={1}
+            fill="#EAEFFF"
+            fillOpacity={0.1}
             stroke="#EAEFFF"
             strokeWidth={2}
             dot={{ fill: "#EAEFFF", strokeWidth: 0, r: 3 }}
