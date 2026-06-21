@@ -51,7 +51,6 @@ async function getStats() {
     const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
     if (!monthBuckets[key]) {
       monthBuckets[key] = {
-        month: d.toLocaleDateString("en-US", { month: "short" }),
         leads: 0,
         won: 0,
       };
@@ -60,9 +59,17 @@ async function getStats() {
     if (lead.status === "won") monthBuckets[key].won++;
   });
 
-  const monthlyLeadData = Object.entries(monthBuckets)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, v]) => v);
+  const now = new Date();
+  const monthlyLeadData = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
+    const b = monthBuckets[key];
+    return {
+      month: d.toLocaleDateString("en-US", { month: "short" }),
+      leads: b?.leads || 0,
+      won: b?.won || 0,
+    };
+  });
 
   const { data: upcomingBookings } = await supabase
     .from("leads")
