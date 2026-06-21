@@ -17,13 +17,13 @@ async function getStats() {
     return count ?? 0;
   }
 
-  const [newLeads, contactedLeads, qualifiedLeads, proposalLeads, wonLeads, lostLeads, clientsResult] =
+  const [inquiryLeads, discoveryLeads, proposalLeads, inProgressLeads, completedLeads, lostLeads, clientsResult] =
     await Promise.all([
-      countByStatus("new"),
-      countByStatus("contacted"),
-      countByStatus("qualified"),
+      countByStatus("inquiry"),
+      countByStatus("discovery"),
       countByStatus("proposal"),
-      countByStatus("won"),
+      countByStatus("in_progress"),
+      countByStatus("completed"),
       countByStatus("lost"),
       supabase.from("clients").select("*", { count: "exact", head: true }),
     ]);
@@ -56,7 +56,7 @@ async function getStats() {
       };
     }
     monthBuckets[key].leads++;
-    if (lead.status === "won") monthBuckets[key].won++;
+    if (lead.status === "completed") monthBuckets[key].won++;
   });
 
   const now = new Date();
@@ -74,17 +74,17 @@ async function getStats() {
   const { data: upcomingBookings } = await supabase
     .from("leads")
     .select("name, company, services, created_at, status")
-    .eq("status", "contacted")
+    .eq("status", "discovery")
     .order("created_at", { ascending: false })
     .limit(4);
 
   return {
     totalLeads: totalLeads ?? 0,
-    newLeads,
-    contactedLeads,
-    qualifiedLeads,
+    inquiryLeads,
+    discoveryLeads,
     proposalLeads,
-    wonLeads,
+    inProgressLeads,
+    completedLeads,
     lostLeads,
     totalClients,
     recentLeads: recentLeads || [],
@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
     );
   }
 
-  const conversionRate = stats.totalLeads > 0 ? ((stats.wonLeads / stats.totalLeads) * 100).toFixed(0) : "0";
+  const conversionRate = stats.totalLeads > 0 ? ((stats.completedLeads / stats.totalLeads) * 100).toFixed(0) : "0";
 
   return (
     <div className="p-5 lg:p-8">

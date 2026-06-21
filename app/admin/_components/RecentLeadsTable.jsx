@@ -3,15 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, Phone, Building2, FileText, DollarSign, Clock, Calendar } from "lucide-react";
-
-const STATUS_COLORS = {
-  new: "#34d399",
-  contacted: "#38bdf8",
-  qualified: "#7c6aff",
-  proposal: "#c8a97e",
-  won: "#EAEFFF",
-  lost: "#ef4444",
-};
+import { StatusBadge } from "./StatusBadge";
 
 function formatDate(dateStr) {
   if (!dateStr) return "\u2014";
@@ -51,34 +43,21 @@ export default function RecentLeadsTable({ leads }) {
                   <td colSpan={3} className="px-5 py-12 text-center text-xs text-white/15">No leads yet</td>
                 </tr>
               ) : (
-                leads.map((lead) => {
-                  const sc = STATUS_COLORS[lead.status] || "#ffffff50";
-                  return (
-                    <tr
-                      key={lead.id}
-                      onClick={() => setSelected(lead)}
-                      className="cursor-pointer border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.02] last:border-0"
-                    >
-                      <td className="px-5 py-3">
-                        <span className="text-xs text-white/50">{lead.name || lead.email || "\u2014"}</span>
-                      </td>
-                      <td className="px-5 py-3">
-                        <span
-                          className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium"
-                          style={{
-                            color: sc,
-                            borderColor: `${sc}20`,
-                            background: `${sc}08`,
-                          }}
-                        >
-                          <span className="h-1 w-1 rounded-full" style={{ background: sc }} />
-                          {lead.status}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3 text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</td>
-                    </tr>
-                  );
-                })
+                leads.map((lead) => (
+                  <tr
+                    key={lead.id}
+                    onClick={() => setSelected(lead)}
+                    className="cursor-pointer border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.02] last:border-0"
+                  >
+                    <td className="px-5 py-3">
+                      <span className="text-xs text-white/50">{lead.name || lead.email || "\u2014"}</span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <StatusBadge status={lead.status} />
+                    </td>
+                    <td className="px-5 py-3 text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -95,15 +74,13 @@ export default function RecentLeadsTable({ leads }) {
 }
 
 function LeadDetailModal({ lead, onClose }) {
-  const sc = STATUS_COLORS[lead.status] || "#ffffff50";
-
   const fields = [
     { icon: Mail, label: "Email", value: lead.email, href: lead.email ? `mailto:${lead.email}` : null },
     { icon: Phone, label: "Phone", value: lead.phone },
     { icon: Building2, label: "Company", value: lead.company },
     { icon: FileText, label: "Services", value: lead.services },
     { icon: DollarSign, label: "Budget", value: lead.budget },
-    { icon: Clock, label: "Status", value: lead.status, color: sc },
+    { icon: Clock, label: "Status", value: null },
   ];
 
   return (
@@ -130,31 +107,14 @@ function LeadDetailModal({ lead, onClose }) {
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div
-            className="flex h-10 w-10 items-center justify-center text-sm font-bold rounded"
-            style={{
-              background: `${sc}15`,
-              border: `1px solid ${sc}20`,
-              color: sc,
-            }}
-          >
+          <div className="flex h-10 w-10 items-center justify-center text-sm font-bold rounded border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 text-[#EAEFFF]/70">
             {(lead.name || lead.company || "?").charAt(0).toUpperCase()}
           </div>
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-white">
               {lead.name || lead.company || "Unnamed"}
             </h2>
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium mt-0.5"
-              style={{
-                color: sc,
-                borderColor: `${sc}33`,
-                background: `${sc}0d`,
-              }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full" style={{ background: sc }} />
-              {lead.status}
-            </span>
+            <StatusBadge status={lead.status} className="mt-0.5" />
           </div>
         </div>
 
@@ -177,9 +137,7 @@ function LeadDetailModal({ lead, onClose }) {
                     {f.value}
                   </a>
                 ) : (
-                  <span className="text-sm text-white/60" style={f.color ? { color: f.color } : {}}>
-                    {f.value}
-                  </span>
+                  <span className="text-sm text-white/60">{f.value}</span>
                 )}
               </div>
             );

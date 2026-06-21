@@ -1,18 +1,18 @@
 export const STATUS_COLORS = {
-  new: "#34d399",
-  contacted: "#38bdf8",
-  qualified: "#7c6aff",
+  inquiry: "rgba(234,239,255,0.4)",
+  discovery: "#38bdf8",
   proposal: "#c8a97e",
-  won: "#EAEFFF",
+  in_progress: "rgba(234,239,255,0.7)",
+  completed: "#EAEFFF",
   lost: "#ef4444",
 };
 
 export const STATUS_LIST = [
-  { value: "new", label: "New", color: "#34d399" },
-  { value: "contacted", label: "Contacted", color: "#38bdf8" },
-  { value: "qualified", label: "Qualified", color: "#7c6aff" },
+  { value: "inquiry", label: "Inquiry", color: "rgba(234,239,255,0.4)" },
+  { value: "discovery", label: "Discovery", color: "#38bdf8" },
   { value: "proposal", label: "Proposal", color: "#c8a97e" },
-  { value: "won", label: "Won", color: "#EAEFFF" },
+  { value: "in_progress", label: "In Progress", color: "rgba(234,239,255,0.7)" },
+  { value: "completed", label: "Completed", color: "#EAEFFF" },
   { value: "lost", label: "Lost", color: "#ef4444" },
 ];
 

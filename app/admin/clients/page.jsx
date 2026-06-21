@@ -208,7 +208,7 @@ function DesktopTable({ clients, onDelete }) {
                   ) : "\u2014"}
                 </td>
                 <td className="px-5 py-4">
-                  <StatusBadge status={client.status === "active" ? "won" : client.status} />
+                  <StatusBadge status={client.status === "active" ? "completed" : client.status} />
                 </td>
                 <td className="px-5 py-4 text-xs text-white/30 tabular-nums">
                   <span className="flex items-center gap-1.5">
@@ -247,7 +247,7 @@ function MobileCards({ clients, onDelete }) {
                 <p className="text-xs text-white/25 mt-0.5">{client.company}</p>
               )}
             </div>
-            <StatusBadge status={client.status === "active" ? "won" : client.status} />
+            <StatusBadge status={client.status === "active" ? "completed" : client.status} />
           </div>
           <div className="flex flex-wrap gap-2 text-xs text-white/30 mb-3">
             {client.email && <span>{client.email}</span>}

@@ -33,8 +33,8 @@ export default function DashboardClient({ stats, conversionRate, monthlyLeadData
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard label="Total Leads" value={stats.totalLeads} subtext="All time" />
-        <KPICard label="New" value={stats.newLeads} subtext="Awaiting contact" />
-        <KPICard label="Won" value={stats.wonLeads} subtext="Converted" />
+        <KPICard label="Inquiry" value={stats.inquiryLeads} subtext="New leads" />
+        <KPICard label="Completed" value={stats.completedLeads} subtext="Delivered" />
         <KPICard label="Clients" value={stats.totalClients} subtext="Active accounts" accent />
       </div>
 

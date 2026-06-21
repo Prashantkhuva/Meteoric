@@ -56,7 +56,7 @@ export async function convertLeadToClient(formData) {
 
   await supabase
     .from("leads")
-    .update({ status: "won" })
+    .update({ status: "completed" })
     .eq("id", id);
 
   revalidatePath("/admin/leads");

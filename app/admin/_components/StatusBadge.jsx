@@ -1,19 +1,44 @@
 import { cn } from "@/lib/utils";
 
+const OLD_MAP = {
+  new: "inquiry",
+  contacted: "discovery",
+  qualified: "proposal",
+  won: "completed",
+};
+
+const colors = {
+  inquiry: { bg: "bg-[#EAEFFF]/8", border: "border-[#EAEFFF]/20", text: "text-[#EAEFFF]/70", dot: "bg-[#EAEFFF]/60" },
+  discovery: { bg: "bg-sky-500/10", border: "border-sky-500/25", text: "text-sky-400", dot: "bg-sky-400" },
+  proposal: { bg: "bg-amber-500/10", border: "border-amber-500/25", text: "text-amber-400", dot: "bg-amber-400" },
+  in_progress: { bg: "bg-[#EAEFFF]/12", border: "border-[#EAEFFF]/25", text: "text-[#EAEFFF]/80", dot: "bg-[#EAEFFF]/80" },
+  completed: { bg: "bg-[#EAEFFF]/10", border: "border-[#EAEFFF]/25", text: "text-[#EAEFFF]", dot: "bg-[#EAEFFF]" },
+  lost: { bg: "bg-red-500/10", border: "border-red-500/25", text: "text-red-400", dot: "bg-red-400" },
+};
+
+function resolve(status) {
+  return colors[OLD_MAP[status] || status] || colors.inquiry;
+}
+
+const labels = {
+  inquiry: "Inquiry",
+  discovery: "Discovery",
+  proposal: "Proposal",
+  in_progress: "In Progress",
+  completed: "Completed",
+  lost: "Lost",
+};
+
+function label(status) {
+  return labels[OLD_MAP[status] || status] || status;
+}
+
 export function StatusBadge({ status, className }) {
-  const colors = {
-    new: { bg: "bg-emerald-500/10", border: "border-emerald-500/25", text: "text-emerald-400", dot: "bg-emerald-400" },
-    contacted: { bg: "bg-sky-500/10", border: "border-sky-500/25", text: "text-sky-400", dot: "bg-sky-400" },
-    qualified: { bg: "bg-violet-500/10", border: "border-violet-500/25", text: "text-violet-400", dot: "bg-violet-400" },
-    proposal: { bg: "bg-amber-500/10", border: "border-amber-500/25", text: "text-amber-400", dot: "bg-amber-400" },
-    won: { bg: "bg-[#EAEFFF]/10", border: "border-[#EAEFFF]/25", text: "text-[#EAEFFF]", dot: "bg-[#EAEFFF]" },
-    lost: { bg: "bg-red-500/10", border: "border-red-500/25", text: "text-red-400", dot: "bg-red-400" },
-  };
-  const s = colors[status] || colors.new;
+  const s = resolve(status);
   return (
     <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium", s.bg, s.border, s.text, className)}>
       <span className={cn("h-1.5 w-1.5 rounded-full", s.dot)} />
-      <span>{status}</span>
+      <span>{label(status)}</span>
     </span>
   );
 }

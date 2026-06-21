@@ -16,11 +16,11 @@ import { Toolbar, FilterChip, ClearFiltersButton } from "../_components/Toolbar"
 
 const PAGE_SIZE = 15;
 const statusList = [
-  { value: "new", label: "New" },
-  { value: "contacted", label: "Contacted" },
-  { value: "qualified", label: "Qualified" },
+  { value: "inquiry", label: "Inquiry" },
+  { value: "discovery", label: "Discovery" },
   { value: "proposal", label: "Proposal" },
-  { value: "won", label: "Won" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "completed", label: "Completed" },
   { value: "lost", label: "Lost" },
 ];
 
@@ -98,10 +98,10 @@ export default function LeadsPage() {
     });
     if (insertErr) { addToast(insertErr.message, "error"); setConverting(null); return; }
     const { error: updateErr } = await supabase
-      .from("leads").update({ status: "won" }).eq("id", lead.id);
+      .from("leads").update({ status: "completed" }).eq("id", lead.id);
     if (updateErr) { addToast(updateErr.message, "error"); }
     else {
-      setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status: "won" } : l)));
+      setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status: "completed" } : l)));
       addToast(`${lead.name || "Lead"} converted to client`, "success");
     }
     setConverting(null);
@@ -127,7 +127,7 @@ export default function LeadsPage() {
       phone: formData.get("phone"),
       services: formData.get("services"),
       budget: formData.get("budget"),
-      status: "new",
+      status: "inquiry",
     });
     if (error) { addToast(error.message, "error"); return; }
     setShowAddLead(false);
@@ -293,7 +293,7 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
                 <td className="px-5 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-0.5">
                     <IconButton onClick={() => onView(lead)} icon={Eye} label="View details" />
-                    {lead.status !== "won" && lead.status !== "lost" && (
+                    {lead.status !== "completed" && lead.status !== "lost" && (
                       <IconButton
                         onClick={() => onConvert(lead)}
                         disabled={converting === lead.id}
@@ -350,7 +350,7 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
             <span className="text-[10px] text-white/30 tabular-nums">{formatDate(lead.created_at)}</span>
             <div className="flex items-center gap-1">
               <IconButton onClick={() => onView(lead)} icon={Eye} label="View details" />
-              {lead.status !== "won" && lead.status !== "lost" && (
+              {lead.status !== "completed" && lead.status !== "lost" && (
                 <IconButton
                   onClick={() => onConvert(lead)}
                   disabled={converting === lead.id}
@@ -626,7 +626,7 @@ function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
-                {lead.status !== "won" && lead.status !== "lost" && (
+                {lead.status !== "completed" && lead.status !== "lost" && (
                   <button
                     onClick={() => onConvert(lead)}
                     disabled={converting}

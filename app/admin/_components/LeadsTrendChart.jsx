@@ -13,10 +13,6 @@ const chartConfig = {
     label: "Leads",
     color: "#EAEFFF",
   },
-  won: {
-    label: "Won",
-    color: "rgba(234,239,255,0.4)",
-  },
 }
 
 export function LeadsTrendChart({ data }) {
@@ -62,15 +58,6 @@ export function LeadsTrendChart({ data }) {
           <ChartTooltip
             cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }}
             content={<ChartTooltipContent indicator="line" />}
-          />
-          <Area
-            dataKey="won"
-            type="natural"
-            fill="rgba(234,239,255,0.06)"
-            fillOpacity={1}
-            stroke="rgba(234,239,255,0.3)"
-            strokeWidth={1.5}
-            dot={false}
           />
           <Area
             dataKey="leads"
