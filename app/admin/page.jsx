@@ -36,6 +36,34 @@ async function getStats() {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const { data: monthlyRaw } = await supabase
+    .from("leads")
+    .select("created_at, status")
+    .gte("created_at", sixMonthsAgo.toISOString())
+    .order("created_at", { ascending: true });
+
+  const monthBuckets = {};
+  (monthlyRaw || []).forEach((lead) => {
+    const d = new Date(lead.created_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
+    if (!monthBuckets[key]) {
+      monthBuckets[key] = {
+        month: d.toLocaleDateString("en-US", { month: "short" }),
+        leads: 0,
+        won: 0,
+      };
+    }
+    monthBuckets[key].leads++;
+    if (lead.status === "won") monthBuckets[key].won++;
+  });
+
+  const monthlyLeadData = Object.entries(monthBuckets)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, v]) => v);
+
   const { data: upcomingBookings } = await supabase
     .from("leads")
     .select("name, company, services, created_at, status")
@@ -54,6 +82,7 @@ async function getStats() {
     totalClients,
     recentLeads: recentLeads || [],
     upcomingWork: upcomingBookings || [],
+    monthlyLeadData,
   };
 }
 
@@ -74,7 +103,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="p-5 lg:p-8">
-      <DashboardClient stats={stats} conversionRate={conversionRate} />
+      <DashboardClient stats={stats} conversionRate={conversionRate} monthlyLeadData={stats.monthlyLeadData} />
     </div>
   );
 }

@@ -5,11 +5,11 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { KPICard } from "./KPICard";
 import { StatusBadge } from "./StatusBadge";
-import { PipelineChart } from "./PipelineChart";
+import { LeadsTrendChart } from "./LeadsTrendChart";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export default function DashboardClient({ stats, conversionRate }) {
+export default function DashboardClient({ stats, conversionRate, monthlyLeadData }) {
   const [greeting, setGreeting] = useState("");
   const [dateStr, setDateStr] = useState("");
 
@@ -40,17 +40,7 @@ export default function DashboardClient({ stats, conversionRate }) {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <PipelineChart
-            counts={{
-              new: stats.newLeads,
-              contacted: stats.contactedLeads,
-              qualified: stats.qualifiedLeads,
-              proposal: stats.proposalLeads,
-              won: stats.wonLeads,
-              lost: stats.lostLeads,
-            }}
-            total={stats.totalLeads}
-          />
+          <LeadsTrendChart data={monthlyLeadData} />
         </div>
         <div className="space-y-6">
           <ConversionCard total={stats.totalClients} conversionRate={conversionRate} />
