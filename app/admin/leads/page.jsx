@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
-import { updateLeadStatus, convertLeadToClient, deleteLead, addLead } from "../actions";
+import { updateLeadStatus, convertLeadToClient, addLead } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
@@ -115,7 +115,9 @@ export default function LeadsPage() {
     if (!id) return;
     setDeleteTarget(null);
     try {
-      await deleteLead(id);
+      const supabase = createClient();
+      const { error } = await supabase.from("leads").delete().eq("id", id);
+      if (error) throw error;
       setLeads((prev) => prev.filter((l) => l.id !== id));
       if (viewLead?.id === id) setViewLead(null);
       addToast("Lead deleted", "success");
