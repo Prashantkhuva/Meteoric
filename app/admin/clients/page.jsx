@@ -214,7 +214,7 @@ export default function ClientsPage() {
 
 function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus }) {
   return (
-    <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
+    <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a]">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
@@ -336,13 +336,13 @@ function StatusSelect({ current, onChange, disabled }) {
       <button
         onClick={() => setOpen(!open)}
         disabled={disabled}
-        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all hover:opacity-80"
+        className="inline-flex items-center gap-1 text-xs font-medium text-white/50 hover:text-white/70 transition-colors"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Status: ${current}. Click to change.`}
       >
         <StatusBadge status={current} />
-        <ChevronDown size={10} className="opacity-50" />
+        <ChevronDown size={10} className="opacity-40" />
       </button>
       <AnimatePresence>
         {open && (
