@@ -43,7 +43,7 @@ export function LeadsChart({ data }) {
   })).filter((d) => d.value > 0);
 
   const RADIAN = Math.PI / 180;
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
     const radius = outerRadius + 24;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -84,7 +84,7 @@ export function LeadsChart({ data }) {
                   label={renderCustomLabel}
                   labelLine={false}
                 >
-                  {chartData.map((entry, index) => (
+                  {chartData.map((entry) => (
                     <Cell key={entry.key} fill={entry.color} />
                   ))}
                 </Pie>

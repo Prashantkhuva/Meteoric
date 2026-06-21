@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Users,
   Briefcase,
   Calendar,
-  ChevronLeft,
   LogOut,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
 
 const links = [
@@ -21,96 +22,119 @@ const links = [
   { href: "/admin/cal-bookings", label: "Bookings", icon: Calendar },
 ];
 
-export default function Sidebar() {
+export function Sidebar({ mobileOpen, onMobileClose }) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(true);
 
-  return (
-    <motion.aside
-      layout
-      className="relative flex flex-col border-r border-white/5 bg-black"
-      animate={{ width: collapsed ? 60 : 200 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-    >
-      <div className="flex h-14 items-center justify-center border-b border-white/5">
-        <Link href="/admin" className="flex items-center justify-center gap-2" aria-label="Meteoric Admin">
-          {collapsed ? (
-            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#EAEFFF] text-[10px] font-bold text-[#202020]">
-              M
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#EAEFFF] text-[10px] font-bold text-[#202020]">
-                M
-              </span>
-              <span className="text-sm font-semibold tracking-tight text-white">Meteoric</span>
-              <span className="text-[10px] font-medium text-white/15 px-1.5 py-0.5 rounded-full border border-white/5">v1</span>
-            </span>
-          )}
+  useEffect(() => {
+    function handleKey(e) {
+      if (e.key === "Escape" && mobileOpen) onMobileClose();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [mobileOpen, onMobileClose]);
+
+  const nav = (
+    <nav className="flex flex-col h-full">
+      <div className="flex items-center h-14 px-5 border-b border-white/[0.04] shrink-0">
+        <Link href="/admin" className="flex items-center gap-2.5" aria-label="Meteoric Admin">
+          <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-[#EAEFFF] text-xs font-bold text-[#121212]">
+            M
+          </span>
+          <span className="text-sm font-semibold text-white">Meteoric</span>
+          <span className="text-[10px] font-medium text-white/20 px-1.5 py-0.5 rounded-full border border-white/[0.06]">
+            v1
+          </span>
         </Link>
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-2 py-4">
+      <div className="flex-1 py-3 px-2.5 space-y-0.5 overflow-y-auto">
         {links.map((link) => {
           const active = pathname === link.href;
           const Icon = link.icon;
           return (
-            <Link key={link.href} href={link.href} className="group relative block">
-              <div
-                className={`relative flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-all duration-300 ${
-                  active ? "text-white bg-white/5" : "text-white/25 hover:text-white/50 hover:bg-white/[0.02]"
-                }`}
-              >
-                {active && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-[#EAEFFF]" />
-                )}
-                <span className="relative z-10 flex items-center justify-center">
-                  <Icon size={16} />
-                </span>
-                {!collapsed && (
-                  <span className="relative z-10 font-medium tracking-tight">
-                    {link.label}
-                  </span>
-                )}
-              </div>
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={onMobileClose}
+              className={cn(
+                "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                active
+                  ? "bg-[#EAEFFF]/8 text-[#EAEFFF] border border-[#EAEFFF]/10"
+                  : "text-white/45 hover:text-white/70 hover:bg-white/[0.03] border border-transparent"
+              )}
+            >
+              <Icon size={17} />
+              <span>{link.label}</span>
+              {active && (
+                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#EAEFFF]" />
+              )}
             </Link>
           );
         })}
-      </nav>
+      </div>
 
-      <div className="border-t border-white/5 p-2 space-y-0.5">
-        {!collapsed && (
-          <div className="px-2.5 py-2 mb-1">
-            <div className="flex items-center gap-2.5">
-              <div className="h-6 w-6 rounded-full bg-[#EAEFFF] flex items-center justify-center text-[9px] font-bold text-black">
-                P
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-white/60 truncate">Prashant</p>
-                <p className="text-[10px] text-white/20 truncate">Admin</p>
-              </div>
-            </div>
+      <div className="border-t border-white/[0.04] p-3 space-y-2">
+        <div className="flex items-center gap-3 px-3 py-2">
+          <div className="h-8 w-8 rounded-full bg-[#EAEFFF] flex items-center justify-center text-xs font-bold text-[#121212]">
+            P
           </div>
-        )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white/70 truncate">Prashant</p>
+            <p className="text-xs text-white/35 truncate">Administrator</p>
+          </div>
+        </div>
         <form action={signOut}>
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg px-2.5 py-2 text-sm text-white/15 transition-all duration-300 hover:bg-white/[0.02] hover:text-white/30"
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/30 hover:text-white/60 hover:bg-white/[0.03] transition-all"
           >
-            <LogOut size={14} />
-            {!collapsed && <span className="font-medium">Sign out</span>}
+            <LogOut size={16} />
+            Sign out
           </button>
         </form>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="flex w-full items-center justify-center rounded-lg px-2.5 py-1.5 text-white/10 transition-all duration-300 hover:bg-white/[0.02] hover:text-white/25"
-        >
-          <ChevronLeft
-            size={12}
-            className={`transition-transform duration-300 ${!collapsed ? "rotate-0" : "rotate-180"}`}
-          />
-        </button>
       </div>
-    </motion.aside>
+    </nav>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-60 xl:w-64 border-r border-white/[0.04] bg-[#070707] shrink-0">
+        {nav}
+      </aside>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+              onClick={onMobileClose}
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed left-0 top-0 z-50 h-full w-72 border-r border-white/[0.04] bg-[#070707] lg:hidden"
+            >
+              <div className="flex items-center justify-end h-14 px-4 border-b border-white/[0.04]">
+                <button
+                  onClick={onMobileClose}
+                  className="rounded-lg p-1.5 text-white/30 hover:bg-white/[0.04] hover:text-white/60 transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              {nav}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

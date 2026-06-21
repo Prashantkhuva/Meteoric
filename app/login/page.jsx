@@ -41,29 +41,40 @@ function LoginForm() {
   }
 
   return (
-    <div className="relative flex min-h-dvh items-center justify-center bg-black px-4 overflow-hidden">
-      {/* Ambient glows */}
-      <div className="absolute inset-0 pointer-events-none">
+    <div className="relative flex min-h-dvh items-center justify-center bg-[#070707] px-4 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+            backgroundSize: "40px 40px",
+          }}
+        />
         <div className="absolute top-1/4 -left-20 w-[400px] h-[400px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
         <div className="absolute bottom-1/4 -right-20 w-[400px] h-[400px] bg-[#EAEFFF]/[0.015] blur-[120px] rounded-full" />
       </div>
 
       <div className="relative w-full max-w-sm">
         <div className="mb-10 text-center">
-          <p className="text-3xl font-semibold tracking-tight text-white">
+          <div className="flex items-center justify-center gap-2.5 mb-4">
+            <span className="flex items-center justify-center h-10 w-10 rounded-2xl bg-[#EAEFFF] text-sm font-bold text-[#121212]">
+              M
+            </span>
+          </div>
+          <p className="text-2xl font-semibold tracking-tight text-white">
             Meteoric<span className="text-[#EAEFFF]">.</span>
           </p>
-          <p className="mt-2 text-sm text-white/40">Admin Dashboard</p>
+          <p className="mt-2 text-sm text-white/35">Admin Dashboard</p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+          className="space-y-5 rounded-2xl border border-[#EAEFFF]/10 bg-[#0a0a0a]/80 backdrop-blur-xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
         >
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-medium tracking-wider text-white/40 uppercase"
+              className="block text-xs font-semibold tracking-wider text-white/40 uppercase"
             >
               Email
             </label>
@@ -73,7 +84,7 @@ function LoginForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+              className="mt-1.5 w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-200 focus:border-[#EAEFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#EAEFFF]/10"
               placeholder="you@example.com"
             />
           </div>
@@ -81,7 +92,7 @@ function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="block text-xs font-medium tracking-wider text-white/40 uppercase"
+              className="block text-xs font-semibold tracking-wider text-white/40 uppercase"
             >
               Password
             </label>
@@ -91,13 +102,13 @@ function LoginForm() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+              className="mt-1.5 w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-200 focus:border-[#EAEFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#EAEFFF]/10"
               placeholder="Enter your password"
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-400/80 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2">
+            <p className="text-sm text-red-400/80 bg-red-500/5 border border-red-500/10 rounded-xl px-3 py-2">
               {error}
             </p>
           )}
@@ -105,12 +116,9 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="group relative w-full overflow-hidden rounded-full bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+            className="group relative w-full overflow-hidden rounded-xl bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#121212] transition-all duration-200 hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50 disabled:active:scale-100"
           >
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-            <span className="relative z-10">
-              {loading ? "Signing in..." : "Sign in"}
-            </span>
+            {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
       </div>

@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'middleware-snapshot.js']),
+  globalIgnores(['dist', 'out', '.next', 'middleware-snapshot.js']),
   {
     files: ['middleware.js'],
     ...js.configs.recommended,

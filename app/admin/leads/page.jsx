@@ -1,89 +1,91 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X,
-  Plus,
-  ArrowRight,
-  UserPlus,
-  Trash2,
-  Eye,
-  Mail,
-  Phone,
-  Building2,
-  FileText,
-  DollarSign,
-  Clock,
-  Calendar,
+  X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
+  FileText, DollarSign, Calendar, ChevronDown,
 } from "lucide-react";
+import { formatDate } from "@/lib/admin";
+import { useToast } from "../_components/ToastContext";
+import { StatusBadge } from "../_components/StatusBadge";
+import { ConfirmDialog } from "../_components/ConfirmDialog";
+import { Pagination } from "../_components/Pagination";
+import { Toolbar, FilterChip, ClearFiltersButton } from "../_components/Toolbar";
 
+const PAGE_SIZE = 15;
 const statusList = [
-  { value: "new", label: "New", color: "#34d399" },
-  { value: "contacted", label: "Contacted", color: "#38bdf8" },
-  { value: "qualified", label: "Qualified", color: "#7c6aff" },
-  { value: "proposal", label: "Proposal", color: "#c8a97e" },
-  { value: "won", label: "Won", color: "#EAEFFF" },
-  { value: "lost", label: "Lost", color: "#ef4444" },
+  { value: "new", label: "New" },
+  { value: "contacted", label: "Contacted" },
+  { value: "qualified", label: "Qualified" },
+  { value: "proposal", label: "Proposal" },
+  { value: "won", label: "Won" },
+  { value: "lost", label: "Lost" },
 ];
-
-const statusMap = Object.fromEntries(statusList.map((s) => [s.value, s]));
-
-function formatDate(dateStr) {
-  if (!dateStr) return "\u2014";
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sort, setSort] = useState("newest");
+  const [page, setPage] = useState(1);
   const [viewLead, setViewLead] = useState(null);
-  const [statusModal, setStatusModal] = useState(null);
   const [showAddLead, setShowAddLead] = useState(false);
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
-  const [deleting, setDeleting] = useState(null);
-  const [toast, setToast] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const addToast = useToast();
 
-  const fetchLeads = useCallback(async () => {
-    const supabase = createClient();
-    if (!supabase) {
-      setError("Supabase not configured");
-      setLoading(false);
-      return;
-    }
-    const { data, error } = await supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) {
-      setError(error.message);
-    } else {
-      setLeads(data || []);
-    }
-    setLoading(false);
+  useEffect(() => {
+    fetchLeads();
   }, []);
 
-  useEffect(() => { fetchLeads(); }, [fetchLeads]);
+  async function fetchLeads() {
+    const supabase = createClient();
+    if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
+    const { data, error } = await supabase
+      .from("leads").select("*").order("created_at", { ascending: false });
+    if (error) { setError(error.message); }
+    else { setLeads(data || []); }
+    setLoading(false);
+  }
+
+  const filtered = useMemo(() => {
+    let result = [...leads];
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter((l) =>
+        (l.name?.toLowerCase() || "").includes(q) ||
+        (l.email?.toLowerCase() || "").includes(q) ||
+        (l.company?.toLowerCase() || "").includes(q)
+      );
+    }
+    if (statusFilter !== "all") {
+      result = result.filter((l) => l.status === statusFilter);
+    }
+    result.sort((a, b) => {
+      if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
+      if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
+      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+      return 0;
+    });
+    return result;
+  }, [leads, search, statusFilter, sort]);
+
+  const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
+  const pageLeads = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   async function handleStatusChange(leadId, newStatus) {
     setEditingStatus(leadId);
     const supabase = createClient();
     const { error } = await supabase.from("leads").update({ status: newStatus }).eq("id", leadId);
-    if (error) {
-      setToast({ type: "error", message: error.message });
-    } else {
-      setLeads((prev) =>
-        prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l))
-      );
+    if (error) { addToast(error.message, "error"); }
+    else {
+      setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)));
+      addToast("Status updated", "success");
     }
     setEditingStatus(null);
   }
@@ -92,46 +94,29 @@ export default function LeadsPage() {
     setConverting(lead.id);
     const supabase = createClient();
     const { error: insertErr } = await supabase.from("clients").insert({
-      name: lead.name,
-      email: lead.email,
-      company: lead.company,
-      status: "active",
+      name: lead.name, email: lead.email, company: lead.company, status: "active",
     });
-    if (insertErr) {
-      setToast({ type: "error", message: insertErr.message });
-      setConverting(null);
-      return;
-    }
+    if (insertErr) { addToast(insertErr.message, "error"); setConverting(null); return; }
     const { error: updateErr } = await supabase
       .from("leads").update({ status: "won" }).eq("id", lead.id);
-    if (updateErr) {
-      setToast({ type: "error", message: updateErr.message });
-    } else {
-      setLeads((prev) =>
-        prev.map((l) => (l.id === lead.id ? { ...l, status: "won" } : l))
-      );
-      setToast({ type: "success", message: `${lead.name || "Lead"} converted to client` });
+    if (updateErr) { addToast(updateErr.message, "error"); }
+    else {
+      setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status: "won" } : l)));
+      addToast(`${lead.name || "Lead"} converted to client`, "success");
     }
     setConverting(null);
   }
 
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 4000);
-    return () => clearTimeout(t);
-  }, [toast]);
-
   async function handleDelete(leadId) {
-    setDeleting(leadId);
+    setDeleteTarget(null);
     const supabase = createClient();
     const { error } = await supabase.from("leads").delete().eq("id", leadId);
-    if (error) {
-      setToast({ type: "error", message: error.message });
-    } else {
+    if (error) { addToast(error.message, "error"); }
+    else {
       setLeads((prev) => prev.filter((l) => l.id !== leadId));
       if (viewLead?.id === leadId) setViewLead(null);
+      addToast("Lead deleted", "success");
     }
-    setDeleting(null);
   }
 
   async function handleAddLead(formData) {
@@ -144,20 +129,17 @@ export default function LeadsPage() {
       budget: formData.get("budget"),
       status: "new",
     });
-    if (error) {
-      setToast({ type: "error", message: error.message });
-      return;
-    }
+    if (error) { addToast(error.message, "error"); return; }
     setShowAddLead(false);
-    setToast({ type: "success", message: "Lead added" });
+    addToast("Lead added", "success");
     fetchLeads();
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
-        <div className="flex items-center gap-3 text-white/20">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/10 border-t-[#EAEFFF]/60" />
+        <div className="flex items-center gap-3 text-white/25">
+          <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
           <span className="text-sm">Loading leads...</span>
         </div>
       </div>
@@ -166,417 +148,507 @@ export default function LeadsPage() {
 
   if (error) {
     return (
-      <div className="space-y-6 p-6 lg:p-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-white">Leads</h1>
-        <p className="text-sm text-white/30">{error}</p>
+      <div className="p-6 lg:p-8">
+        <div className="border border-red-500/10 bg-red-500/5 p-6 text-center">
+          <p className="text-sm text-red-400/80">{error}</p>
+        </div>
       </div>
     );
   }
 
+  const hasFilters = search || statusFilter !== "all";
+
   return (
-    <div className="space-y-6 p-6 lg:p-8">
+    <div className="p-5 lg:p-8 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-white">Leads</h1>
-          <p className="mt-1 text-sm text-white/40">
-            {leads.length} total lead{leads.length !== 1 ? "s" : ""}
-          </p>
+          <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Leads</h1>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{filtered.length} lead{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowAddLead(true)}
-          className="group relative overflow-hidden bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
         >
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-          <span className="relative z-10 flex items-center gap-2">
-            <Plus size={14} />
-            Add Lead
-          </span>
+          <Plus size={15} />
+          Add Lead
         </button>
       </div>
 
-      <div className="border border-white/5 bg-black">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-white/5">
-                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Name</th>
-                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Contact</th>
-                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Status</th>
-                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Created</th>
-                <th className="px-4 py-3.5 text-right text-[10px] font-medium tracking-wider text-white/25 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-20 text-center text-sm text-white/20">
-                    <span className="flex flex-col items-center gap-2">
-                      <span className="text-2xl">&mdash;</span>
-                      <span>No leads yet</span>
-                    </span>
-                  </td>
-                </tr>
-              ) : (
-                leads.map((lead) => {
-                  const st = statusMap[lead.status] || statusMap.new;
-                  return (
-                    <tr
-                      key={lead.id}
-                      className="border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.01] last:border-0"
-                    >
-                      <td className="px-4 py-3.5">
-                        <button
-                          onClick={() => setViewLead(lead)}
-                          className="text-left text-white/80 font-medium transition-colors hover:text-[#EAEFFF]"
-                        >
-                          {lead.name || lead.company || "\u2014"}
-                        </button>
-                        {lead.company && lead.name && (
-                          <span className="block text-xs text-white/20">{lead.company}</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex flex-col gap-0.5">
-                          {lead.email && (
-                            <a href={`mailto:${lead.email}`} className="text-white/40 transition-colors hover:text-[#EAEFFF] text-xs">
-                              {lead.email}
-                            </a>
-                          )}
-                          {lead.phone && (
-                            <span className="text-white/25 text-xs">{lead.phone}</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <button
-                          onClick={() => setStatusModal({ id: lead.id, current: lead.status })}
-                          disabled={editingStatus === lead.id}
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-300 hover:opacity-80`}
-                          style={{
-                            color: st.color,
-                            borderColor: `${st.color}33`,
-                            background: `${st.color}0d`,
-                          }}
-                        >
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: st.color }} />
-                          {st.label}
-                        </button>
-                      </td>
-                      <td className="px-4 py-3.5 text-white/30 text-xs tabular-nums">
-                        <span className="flex items-center gap-1.5">
-                          <Calendar size={11} />
-                          {formatDate(lead.created_at)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            onClick={() => setViewLead(lead)}
-                            className="p-2 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
-                            title="View details"
-                          >
-                            <Eye size={14} />
-                          </button>
-                          {lead.status !== "won" && lead.status !== "lost" && (
-                            <button
-                              onClick={() => handleConvert(lead)}
-                              disabled={converting === lead.id}
-                              className="p-2 text-[#EAEFFF]/30 transition-all duration-300 hover:bg-[#EAEFFF]/[0.04] hover:text-[#EAEFFF]/60 disabled:opacity-30"
-                              title="Convert to client"
-                            >
-                              <UserPlus size={14} />
-                            </button>
-                          )}
-                          <button
-                            onClick={() => handleDelete(lead.id)}
-                            disabled={deleting === lead.id}
-                            className="p-2 text-red-400/20 transition-all duration-300 hover:bg-red-500/[0.04] hover:text-red-400/50 disabled:opacity-30"
-                            title="Delete lead"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+      <Toolbar search={search} onSearchChange={setSearch} resultCount={filtered.length}>
+        <ClearFiltersButton onClick={() => { setSearch(""); setStatusFilter("all"); }} visible={hasFilters} />
+        <FilterChip active={statusFilter === "all"} onClick={() => setStatusFilter("all")}>All</FilterChip>
+        {statusList.map((s) => (
+          <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setStatusFilter(s.value)}>
+            {s.label}
+          </FilterChip>
+        ))}
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
+          aria-label="Sort leads"
+        >
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="name">Name</option>
+        </select>
+      </Toolbar>
+
+      {pageLeads.length === 0 ? (
+        <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
+          <p className="text-sm text-white/25">
+            {hasFilters ? "No leads match your filters" : "No leads yet"}
+          </p>
         </div>
-      </div>
-
-      {/* Add Lead Modal */}
-      <AnimatePresence>
-        {showAddLead && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4 pt-[10vh]"
-            onClick={() => setShowAddLead(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 20 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative w-full max-w-md border border-white/10 bg-black p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setShowAddLead(false)}
-                className="absolute right-4 top-4 p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
-              >
-                <X size={16} />
-              </button>
-
-              <h2 className="text-lg font-semibold tracking-tight text-white mb-6">Add Lead</h2>
-
-              <form action={handleAddLead} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Name</label>
-                  <input name="name" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="John Doe" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Email</label>
-                  <input name="email" type="email" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="john@example.com" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Phone</label>
-                  <input name="phone" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="+1 234 567 890" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Services</label>
-                  <input name="services" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="Web Development, SEO, Design" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Budget</label>
-                  <input name="budget" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="$5,000 - $10,000" />
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 border border-white/10 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
-                  <button type="submit" className="flex-1 relative overflow-hidden bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
-                    <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
-                    <span className="relative z-10">Add Lead</span>
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Toast */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className={`fixed bottom-6 right-6 z-[100] border px-4 py-3 text-sm font-medium ${
-              toast.type === "error"
-                ? "border-red-500/20 bg-red-500/10 text-red-400"
-                : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-            }`}
-          >
-            {toast.message}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Status Modal */}
-      <AnimatePresence>
-        {statusModal && (
-          <StatusModal
-            data={statusModal}
-            onSelect={handleStatusChange}
-            onClose={() => setStatusModal(null)}
+      ) : (
+        <>
+          <DesktopTable
+            leads={pageLeads}
+            onView={setViewLead}
+            onConvert={handleConvert}
+            onStatusChange={handleStatusChange}
+            onDelete={setDeleteTarget}
+            editingStatus={editingStatus}
+            converting={converting}
           />
-        )}
-      </AnimatePresence>
+          <MobileCards
+            leads={pageLeads}
+            onView={setViewLead}
+            onConvert={handleConvert}
+            onStatusChange={handleStatusChange}
+            onDelete={setDeleteTarget}
+            editingStatus={editingStatus}
+            converting={converting}
+          />
+          <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={setPage} />
+        </>
+      )}
 
-      {/* Lead Detail Modal */}
+      <AddLeadModal open={showAddLead} onClose={() => setShowAddLead(false)} onSubmit={handleAddLead} />
+      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onConvert={handleConvert} onDelete={setDeleteTarget} converting={converting} />
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete lead"
+        message="Are you sure you want to delete this lead? This action cannot be undone."
+        confirmLabel="Delete"
+        destructive
+        onConfirm={() => handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+    </div>
+  );
+}
+
+function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting }) {
+  return (
+    <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-white/[0.06]">
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Name</th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Contact</th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Status</th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Created</th>
+              <th className="px-5 py-3.5 text-right text-[10px] font-semibold tracking-wider text-white/30 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {leads.map((lead) => (
+              <tr key={lead.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
+                <td className="px-5 py-3.5">
+                  <button
+                    onClick={() => onView(lead)}
+                    className="text-left text-sm text-white/80 font-medium transition-colors hover:text-[#EAEFFF]"
+                  >
+                    {lead.name || lead.company || "\u2014"}
+                  </button>
+                  {lead.company && lead.name && (
+                    <span className="block text-xs text-white/25">{lead.company}</span>
+                  )}
+                </td>
+                <td className="px-5 py-3.5">
+                  <div className="flex flex-col gap-0.5">
+                    {lead.email && (
+                      <a href={`mailto:${lead.email}`} className="text-xs text-white/45 transition-colors hover:text-[#EAEFFF]">
+                        {lead.email}
+                      </a>
+                    )}
+                    {lead.phone && <span className="text-xs text-white/25">{lead.phone}</span>}
+                  </div>
+                </td>
+                <td className="px-5 py-3.5">
+                  <StatusSelect
+                    current={lead.status}
+                    onChange={(val) => onStatusChange(lead.id, val)}
+                    disabled={editingStatus === lead.id}
+                  />
+                </td>
+                <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={11} className="text-white/20" />
+                    {formatDate(lead.created_at)}
+                  </span>
+                </td>
+                <td className="px-5 py-3.5 text-right">
+                  <div className="flex items-center justify-end gap-0.5">
+                    <IconButton onClick={() => onView(lead)} icon={Eye} label="View details" />
+                    {lead.status !== "won" && lead.status !== "lost" && (
+                      <IconButton
+                        onClick={() => onConvert(lead)}
+                        disabled={converting === lead.id}
+                        icon={UserPlus}
+                        label="Convert to client"
+                        className="text-[#EAEFFF]/30 hover:text-[#EAEFFF]/60 hover:bg-[#EAEFFF]/[0.04]"
+                      />
+                    )}
+                    <IconButton
+                      onClick={() => onDelete(lead.id)}
+                      icon={Trash2}
+                      label="Delete lead"
+                      className="text-red-400/20 hover:text-red-400/50 hover:bg-red-500/[0.04]"
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting }) {
+  return (
+    <div className="sm:hidden space-y-3">
+      {leads.map((lead) => (
+        <div key={lead.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex-1 min-w-0">
+              <button
+                onClick={() => onView(lead)}
+                className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
+              >
+                {lead.name || lead.company || "\u2014"}
+              </button>
+              {lead.company && lead.name && (
+                <p className="text-xs text-white/25 mt-0.5">{lead.company}</p>
+              )}
+            </div>
+            <StatusSelect
+              current={lead.status}
+              onChange={(val) => onStatusChange(lead.id, val)}
+              disabled={editingStatus === lead.id}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2 text-xs text-white/30 mb-3">
+            {lead.email && <span className="truncate max-w-[180px]">{lead.email}</span>}
+            {lead.phone && <span>{lead.phone}</span>}
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</span>
+            <div className="flex items-center gap-1">
+              <IconButton onClick={() => onView(lead)} icon={Eye} label="View details" />
+              {lead.status !== "won" && lead.status !== "lost" && (
+                <IconButton
+                  onClick={() => onConvert(lead)}
+                  disabled={converting === lead.id}
+                  icon={UserPlus}
+                  label="Convert to client"
+                  className="text-[#EAEFFF]/30 hover:text-[#EAEFFF]/60 hover:bg-[#EAEFFF]/[0.04]"
+                />
+              )}
+              <IconButton
+                onClick={() => onDelete(lead.id)}
+                icon={Trash2}
+                label="Delete lead"
+                className="text-red-400/20 hover:text-red-400/50 hover:bg-red-500/[0.04]"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StatusSelect({ current, onChange, disabled }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        disabled={disabled}
+        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all hover:opacity-80"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Status: ${current}. Click to change.`}
+      >
+        <StatusBadge status={current} />
+        <ChevronDown size={10} className="opacity-50" />
+      </button>
       <AnimatePresence>
-        {viewLead && <LeadDetailModal lead={viewLead} onClose={() => setViewLead(null)} onDelete={handleDelete} />}
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.95 }}
+            transition={{ duration: 0.12 }}
+            className="absolute left-0 top-full mt-1 z-50 w-36 border border-white/[0.08] bg-[#0c0c0c] p-1 shadow-2xl"
+            role="listbox"
+            aria-label="Change status"
+          >
+            {statusList.map((s) => {
+              const isActive = current === s.value;
+              return (
+                <button
+                  key={s.value}
+                  onClick={() => { onChange(s.value); setOpen(false); }}
+                  role="option"
+                  aria-selected={isActive}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-xs font-medium transition-all hover:bg-white/[0.06] text-white/50"
+                >
+                  <StatusBadge status={s.value} />
+                  {isActive && <span className="ml-auto text-[#EAEFFF]/40 text-[10px]">\u2713</span>}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
 }
 
-function StatusModal({ data, onSelect, onClose }) {
-  if (!data) return null;
-  const current = data.current;
+function IconButton({ onClick, icon: Icon, label, className, disabled }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-      onClick={onClose}
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`p-2 text-white/20 transition-all hover:bg-white/[0.04] hover:text-white/50 disabled:opacity-30 disabled:pointer-events-none ${className || ""}`}
+      aria-label={label}
+      title={label}
     >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 20 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative w-full max-w-xs border border-white/10 bg-black p-2"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <p className="px-3 py-3 text-[11px] font-medium tracking-wider text-white/30 uppercase">Change Status</p>
-        <div className="space-y-0.5">
-          {statusList.map((s) => (
-            <button
-              key={s.value}
-              onClick={() => { onSelect(data.id, s.value); onClose(); }}
-              className={`flex w-full items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/[0.04] ${
-                current === s.value ? "text-white" : "text-white/40"
-              }`}
-            >
-              <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
-              {s.label}
-              {current === s.value && <span className="ml-auto text-[#EAEFFF]/50">&#10003;</span>}
-            </button>
-          ))}
-        </div>
-      </motion.div>
-    </motion.div>
+      <Icon size={14} />
+    </button>
   );
 }
 
-function LeadDetailModal({ lead, onClose, onDelete }) {
-  const [cnv, setCnv] = useState(false);
-  const st = statusMap[lead.status] || statusMap.new;
-  const fields = [
-    { icon: Mail, label: "Email", value: lead.email, href: lead.email ? `mailto:${lead.email}` : null },
-    { icon: Phone, label: "Phone", value: lead.phone },
-    { icon: Building2, label: "Company", value: lead.company },
-    { icon: FileText, label: "Services", value: lead.services },
-    { icon: DollarSign, label: "Budget", value: lead.budget },
-    { icon: Clock, label: "Status", value: st.label, color: st.color },
-  ];
+function AddLeadModal({ open, onClose, onSubmit }) {
+  const [submitting, setSubmitting] = useState(false);
 
-  async function handleConvert() {
-    setCnv(true);
-    const supabase = createClient();
-    const { error: insertErr } = await supabase.from("clients").insert({
-      name: lead.name,
-      email: lead.email,
-      company: lead.company,
-      status: "active",
-    });
-    if (insertErr) { setCnv(false); return alert(insertErr.message); }
-    const { error: updateErr } = await supabase
-      .from("leads").update({ status: "won" }).eq("id", lead.id);
-    if (updateErr) { setCnv(false); return alert(updateErr.message); }
-    onClose();
-    window.location.reload();
+  useEffect(() => {
+    if (open) {
+      const handleEscape = (e) => { if (e.key === "Escape") onClose(); };
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [open, onClose]);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    await onSubmit(new FormData(e.target));
+    setSubmitting(false);
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4 pt-[10vh]"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 20 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-        className="relative w-full max-w-lg border border-white/10 bg-black p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-[10vh]"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-lead-title"
         >
-          <X size={16} />
-        </button>
-
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center border border-white/10 bg-white/[0.02] text-sm font-bold text-[#EAEFFF]">
-            {(lead.name || lead.company || "?").charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight text-white">
-              {lead.name || lead.company || "Unnamed"}
-            </h2>
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium mt-0.5"
-              style={{
-                color: st.color,
-                borderColor: `${st.color}33`,
-                background: `${st.color}0d`,
-              }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full" style={{ background: st.color }} />
-              {st.label}
-            </span>
-          </div>
-        </div>
-
-        <div className="space-y-0">
-          {fields.map((f) => {
-            if (!f.value) return null;
-            const Icon = f.icon;
-            return (
-              <div key={f.label} className="flex items-center gap-3 border-b border-white/5 py-3 last:border-0">
-                <Icon size={13} className="text-white/20 shrink-0" />
-                <span className="text-xs font-medium tracking-wider text-white/30 uppercase w-16 shrink-0">
-                  {f.label}
-                </span>
-                {f.href ? (
-                  <a href={f.href} className="text-sm text-white/60 transition-colors hover:text-[#EAEFFF]">
-                    {f.value}
-                  </a>
-                ) : (
-                  <span className="text-sm text-white/60" style={f.color ? { color: f.color } : {}}>
-                    {f.value}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {lead.details && (
-          <div className="mt-4 border border-white/5 bg-white/[0.02] p-4">
-            <p className="text-xs font-medium tracking-wider text-white/30 uppercase mb-2">Details</p>
-            <p className="text-sm text-white/50 leading-relaxed whitespace-pre-wrap">{lead.details}</p>
-          </div>
-        )}
-
-        <div className="mt-4 text-xs text-white/15 text-right tabular-nums">
-          Created {formatDate(lead.created_at)}
-        </div>
-
-        <div className="mt-5 flex items-center gap-2 border-t border-white/5 pt-4">
-          {lead.status !== "won" && lead.status !== "lost" && (
-            <button
-              onClick={handleConvert}
-              disabled={cnv}
-              className="relative overflow-hidden flex items-center gap-2 bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
-            >
-              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
-              <span className="relative z-10 flex items-center gap-2">
-                <UserPlus size={13} />
-                {cnv ? "Converting..." : "Convert to Client"}
-                <ArrowRight size={12} />
-              </span>
-            </button>
-          )}
-          <button
-            onClick={() => { onDelete(lead.id); onClose(); }}
-            className="ml-auto flex items-center gap-2 border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+          <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-md border border-white/[0.08] bg-[#0c0c0c] p-6 shadow-2xl"
           >
-            <Trash2 size={13} />
-            Delete
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
+            <button
+              onClick={onClose}
+              className="absolute right-4 top-4 p-1.5 text-white/20 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
+              aria-label="Close dialog"
+            >
+              <X size={16} />
+            </button>
+            <h2 id="add-lead-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">Add Lead</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <FormField label="Name" name="name" placeholder="John Doe" />
+              <FormField label="Email" name="email" type="email" placeholder="john@example.com" />
+              <FormField label="Phone" name="phone" placeholder="+1 234 567 890" />
+              <FormField label="Services" name="services" placeholder="Web Development, SEO, Design" />
+              <FormField label="Budget" name="budget" placeholder="$5,000 - $10,000" />
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
+                >
+                  {submitting ? "Adding..." : "Add Lead"}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function FormField({ label, name, type = "text", placeholder }) {
+  const inputId = `field-${name}`;
+  return (
+    <div>
+      <label htmlFor={inputId} className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+        {label}
+      </label>
+      <input
+        id={inputId}
+        name={name}
+        type={type}
+        className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
+        placeholder={placeholder}
+      />
+    </div>
+  );
+}
+
+function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
+  if (!lead) return null;
+
+  return (
+    <AnimatePresence>
+      {lead && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/60"
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed right-0 top-0 z-50 h-full w-full max-w-lg border-l border-white/[0.06] bg-[#0a0a0a] shadow-2xl overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="lead-detail-title"
+          >
+            <div className="sticky top-0 flex items-center justify-between border-b border-white/[0.06] bg-[#0a0a0a] px-6 py-4 z-10">
+              <h2 id="lead-detail-title" className="text-base font-semibold tracking-tight text-white/90">
+                Lead Details
+              </h2>
+              <button
+                onClick={onClose}
+                className="p-1.5 text-white/30 hover:text-white/60 transition-colors hover:bg-white/[0.04]"
+                aria-label="Close panel"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center text-sm font-bold border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 text-[#EAEFFF]/70">
+                  {(lead.name || lead.company || "?").charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white/90">{lead.name || lead.company || "Unnamed"}</h3>
+                  <StatusBadge status={lead.status} className="mt-0.5" />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  { icon: Mail, label: "Email", value: lead.email, href: lead.email ? `mailto:${lead.email}` : null },
+                  { icon: Phone, label: "Phone", value: lead.phone },
+                  { icon: Building2, label: "Company", value: lead.company },
+                  { icon: FileText, label: "Services", value: lead.services },
+                  { icon: DollarSign, label: "Budget", value: lead.budget },
+                ].map((f) => {
+                  if (!f.value) return null;
+                  const Icon = f.icon;
+                  return (
+                    <div key={f.label} className="flex items-center gap-3 border-b border-white/[0.04] py-3 last:border-0">
+                      <Icon size={13} className="text-white/20 shrink-0" />
+                      <span className="text-[10px] font-semibold tracking-wider text-white/25 uppercase w-16 shrink-0">
+                        {f.label}
+                      </span>
+                      {f.href ? (
+                        <a href={f.href} className="text-sm text-white/60 transition-colors hover:text-[#EAEFFF]">
+                          {f.value}
+                        </a>
+                      ) : (
+                        <span className="text-sm text-white/60">{f.value}</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {lead.details && (
+                <div className="border border-white/[0.06] bg-white/[0.015] p-4">
+                  <p className="text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-2">Details</p>
+                  <p className="text-sm text-white/50 leading-relaxed whitespace-pre-wrap">{lead.details}</p>
+                </div>
+              )}
+
+              <div className="flex items-center gap-1.5 text-[10px] text-white/20 tabular-nums">
+                <Calendar size={11} />
+                Created {formatDate(lead.created_at)}
+              </div>
+
+              <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                {lead.status !== "won" && lead.status !== "lost" && (
+                  <button
+                    onClick={() => onConvert(lead)}
+                    disabled={converting}
+                    className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-40"
+                  >
+                    <UserPlus size={13} />
+                    {converting ? "Converting..." : "Convert to Client"}
+                    <ArrowRight size={12} />
+                  </button>
+                )}
+                <button
+                  onClick={() => { onDelete(lead.id); onClose(); }}
+                  className="ml-auto inline-flex items-center gap-2 border border-red-500/10 bg-red-500/5 px-4 py-2.5 text-xs font-medium text-red-400/60 transition-all hover:bg-red-500/10 hover:text-red-400"
+                >
+                  <Trash2 size={13} />
+                  Delete
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
