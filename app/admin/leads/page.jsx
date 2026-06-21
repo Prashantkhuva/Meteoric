@@ -194,17 +194,17 @@ export default function LeadsPage() {
         </button>
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md">
+      <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
         <div className="absolute -top-40 -right-40 h-60 w-60 rounded-full bg-[#EAEFFF]/[0.015] blur-[80px]" />
         <div className="relative overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[#EAEFFF]/8">
-                <th className="px-4 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Name</th>
-                <th className="px-4 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Contact</th>
-                <th className="px-4 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Status</th>
-                <th className="px-4 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Created</th>
-                <th className="px-4 py-4 text-right text-xs font-medium tracking-wider text-white/30 uppercase">Actions</th>
+              <tr className="border-b border-[#EAEFFF]/5">
+                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Name</th>
+                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Contact</th>
+                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Status</th>
+                <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Created</th>
+                <th className="px-4 py-3.5 text-right text-[10px] font-medium tracking-wider text-white/25 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -223,7 +223,7 @@ export default function LeadsPage() {
                   return (
                     <tr
                       key={lead.id}
-                      className="border-b border-[#EAEFFF]/5 transition-all duration-300 hover:bg-white/[0.015] last:border-0"
+                      className="border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.01] last:border-0"
                     >
                       <td className="px-4 py-3.5">
                         <button
@@ -356,8 +356,8 @@ export default function LeadsPage() {
                   <input name="budget" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="$5,000 - $10,000" />
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 rounded-full border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
-                  <button type="submit" className="flex-1 relative overflow-hidden rounded-full bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 rounded-lg border border-[#EAEFFF]/8 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
+                  <button type="submit" className="flex-1 relative overflow-hidden rounded-lg bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
                     <span className="relative z-10">Add Lead</span>
                   </button>
@@ -421,10 +421,10 @@ function StatusModal({ data, onSelect, onClose }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 20 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative w-full max-w-xs rounded-2xl border border-[#EAEFFF]/10 bg-black/80 backdrop-blur-2xl p-2 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        className="relative w-full max-w-xs rounded-xl border border-[#EAEFFF]/8 bg-black/80 backdrop-blur-2xl p-2 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="px-3 py-3 text-xs font-medium tracking-wider text-white/30 uppercase">Change Status</p>
+        <p className="px-3 py-3 text-[11px] font-medium tracking-wider text-white/30 uppercase">Change Status</p>
         <div className="space-y-0.5">
           {statusList.map((s) => (
             <button
@@ -487,7 +487,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 20 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="relative w-full max-w-lg rounded-2xl border border-[#EAEFFF]/10 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        className="relative w-full max-w-lg rounded-xl border border-[#EAEFFF]/8 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -498,7 +498,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/10 text-sm font-bold text-[#EAEFFF]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#EAEFFF]/15 bg-[#EAEFFF]/10 text-sm font-bold text-[#EAEFFF]">
             {(lead.name || lead.company || "?").charAt(0).toUpperCase()}
           </div>
           <div>
@@ -559,7 +559,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
             <button
               onClick={handleConvert}
               disabled={cnv}
-              className="relative overflow-hidden flex items-center gap-2 rounded-full bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
+              className="relative overflow-hidden flex items-center gap-2 rounded-lg bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
             >
               <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
               <span className="relative z-10 flex items-center gap-2">
@@ -571,7 +571,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
           )}
           <button
             onClick={() => { onDelete(lead.id); onClose(); }}
-            className="ml-auto flex items-center gap-2 rounded-full border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+            className="ml-auto flex items-center gap-2 rounded-lg border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
           >
             <Trash2 size={13} />
             Delete

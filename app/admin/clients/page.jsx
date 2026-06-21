@@ -128,18 +128,18 @@ export default function ClientsPage() {
         </button>
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md">
+      <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
         <div className="absolute -top-40 -right-40 h-60 w-60 rounded-full bg-[#EAEFFF]/[0.015] blur-[80px]" />
         <div className="relative overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[#EAEFFF]/8">
-                <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Name</th>
-                <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Email</th>
-                <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Company</th>
-                <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Status</th>
-                <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Created</th>
-                <th className="px-5 py-4" />
+              <tr className="border-b border-[#EAEFFF]/5">
+                <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Name</th>
+                <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Email</th>
+                <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Company</th>
+                <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Status</th>
+                <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Created</th>
+                <th className="px-5 py-3.5" />
               </tr>
             </thead>
             <tbody>
@@ -154,7 +154,7 @@ export default function ClientsPage() {
                 </tr>
               ) : (
                 clients.map((client) => (
-                  <tr key={client.id} className="border-b border-[#EAEFFF]/5 transition-all duration-300 hover:bg-white/[0.015] last:border-0">
+                  <tr key={client.id} className="border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.01] last:border-0">
                     <td className="px-5 py-4 text-white/80 font-medium">
                       {client.name || client.company || "—"}
                       {client.company && client.name && (
@@ -264,13 +264,13 @@ export default function ClientsPage() {
                   <button
                     type="button"
                     onClick={() => setShowAdd(false)}
-                    className="flex-1 rounded-full border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
+                    className="flex-1 rounded-lg border border-[#EAEFFF]/8 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 relative overflow-hidden rounded-full bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    className="flex-1 relative overflow-hidden rounded-lg bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
                     <span className="relative z-10">Add Client</span>

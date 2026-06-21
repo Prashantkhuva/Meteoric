@@ -28,6 +28,12 @@ async function getStats() {
       supabase.from("clients").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0),
     ]);
 
+  const { data: recentLeads } = await supabase
+    .from("leads")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(5);
+
   return {
     totalLeads: totalLeads ?? 0,
     newLeads,
@@ -37,90 +43,206 @@ async function getStats() {
     wonLeads,
     lostLeads,
     totalClients,
+    recentLeads: recentLeads || [],
   };
+}
+
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+function formatDate(dateStr) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default async function AdminDashboard() {
   const stats = await getStats();
 
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const dateStr = `${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  if (!stats) {
+    return (
+      <div className="p-6 lg:p-8">
+        <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+          <p className="text-sm text-white/30">Supabase not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</p>
+        </div>
+      </div>
+    );
+  }
+
+  const totalLeads = stats.totalLeads;
+  const conversionRate = totalLeads > 0 ? ((stats.wonLeads / totalLeads) * 100).toFixed(0) : "0";
+
   return (
-    <div className="space-y-8 p-6 lg:p-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-white">
-          Dashboard
-        </h1>
-        <p className="mt-1 text-sm text-white/40">
-          {stats ? "Overview of your sales pipeline" : "Supabase not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"}
-        </p>
+    <div className="space-y-6 p-6 lg:p-8">
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight text-white">
+            {greeting}, Prashant
+          </h1>
+          <p className="mt-0.5 text-sm text-white/25">{dateStr}</p>
+        </div>
       </div>
 
-      {stats ? (
-        <>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Total Leads" value={stats.totalLeads} accent="#EAEFFF" />
-            <StatCard label="New" value={stats.newLeads} accent="#34d399" />
-            <StatCard label="Contacted" value={stats.contactedLeads} accent="#38bdf8" />
-            <StatCard label="Won" value={stats.wonLeads} accent="#7c6aff" />
-          </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <LeadsChart
-                data={{
-                  counts: {
-                    new: stats.newLeads,
-                    contacted: stats.contactedLeads,
-                    qualified: stats.qualifiedLeads,
-                    proposal: stats.proposalLeads,
-                    won: stats.wonLeads,
-                    lost: stats.lostLeads,
-                  },
-                  total: stats.totalLeads,
-                }}
-              />
-            </div>
-            <ClientsMini total={stats.totalClients} />
-          </div>
-        </>
-      ) : (
-        <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
-          <p className="text-sm text-white/30">Connect Supabase to see your data here.</p>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Total Leads" value={stats.totalLeads} accent="#EAEFFF" />
+        <StatCard label="New" value={stats.newLeads} accent="#34d399" />
+        <StatCard label="Contacted" value={stats.contactedLeads} accent="#38bdf8" />
+        <StatCard label="Won" value={stats.wonLeads} accent="#7c6aff" />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <LeadsChart
+            data={{
+              counts: {
+                new: stats.newLeads,
+                contacted: stats.contactedLeads,
+                qualified: stats.qualifiedLeads,
+                proposal: stats.proposalLeads,
+                won: stats.wonLeads,
+                lost: stats.lostLeads,
+              },
+              total: stats.totalLeads,
+            }}
+          />
         </div>
-      )}
+        <div className="space-y-6">
+          <ClientsMini total={stats.totalClients} conversionRate={conversionRate} />
+          <QuickActionCard />
+        </div>
+      </div>
+
+      <RecentLeadsTable leads={stats.recentLeads} />
     </div>
   );
 }
 
 function StatCard({ label, value, accent }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md transition-all duration-500 hover:shadow-[0_0_40px_rgba(234,239,255,0.06)]">
+    <div className="group relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm transition-all duration-500 hover:border-[#EAEFFF]/15 hover:bg-black/40 hover:shadow-[0_0_30px_rgba(234,239,255,0.04)]">
       <div
-        className="absolute -top-20 -right-20 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
-        style={{ background: `${accent}20` }}
+        className="absolute -top-16 -right-16 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-20"
+        style={{ background: `${accent}` }}
       />
-      <div className="relative p-5">
-        <p className="text-xs font-medium tracking-wider text-white/40 uppercase">{label}</p>
-        <p className="mt-2 text-3xl font-bold tracking-tight text-white tabular-nums">{value}</p>
+      <div className="relative p-4">
+        <p className="text-[11px] font-medium tracking-wider text-white/30 uppercase">{label}</p>
+        <p className="mt-1.5 text-2xl font-bold tracking-tight text-white tabular-nums">{value}</p>
         <div
-          className="mt-2 h-[2px] w-12 rounded-full"
-          style={{ background: `linear-gradient(to right, ${accent}60, transparent)` }}
+          className="mt-2 h-[1.5px] w-10 rounded-full"
+          style={{ background: `linear-gradient(to right, ${accent}50, transparent)` }}
         />
       </div>
     </div>
   );
 }
 
-async function ClientsMini({ total }) {
+async function ClientsMini({ total, conversionRate }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-6 transition-all duration-500 hover:border-[#EAEFFF]/20 hover:shadow-[0_0_40px_rgba(234,239,255,0.04)]">
-      <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-[#EAEFFF]/5 blur-3xl transition-all duration-500 group-hover:opacity-60" />
+    <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm p-5 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:bg-black/40">
+      <div className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-[#EAEFFF]/5 blur-2xl" />
       <div className="relative">
         <div className="flex items-center gap-2 mb-3">
-          <span className="flex h-2 w-2 rounded-full bg-[#EAEFFF]" />
-          <span className="text-xs font-medium tracking-wider text-white/40 uppercase">Total Clients</span>
+          <span className="flex h-1.5 w-1.5 rounded-full bg-[#EAEFFF]" />
+          <span className="text-[11px] font-medium tracking-wider text-white/30 uppercase">Total Clients</span>
         </div>
-        <p className="text-5xl font-bold tracking-tight text-white tabular-nums">{total}</p>
-        <p className="mt-2 text-xs text-white/25">Active accounts</p>
-        <div className="mt-4 h-[2px] w-16 rounded-full bg-gradient-to-r from-[#EAEFFF]/30 to-transparent" />
+        <p className="text-3xl font-bold tracking-tight text-white tabular-nums">{total}</p>
+        <p className="mt-1 text-xs text-white/20">Active accounts</p>
+        <div className="mt-3 pt-3 border-t border-[#EAEFFF]/5 flex items-center justify-between">
+          <span className="text-[11px] text-white/25">Conversion rate</span>
+          <span className="text-sm font-semibold text-[#EAEFFF] tabular-nums">{conversionRate}%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuickActionCard() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-gradient-to-br from-[#EAEFFF]/5 to-transparent backdrop-blur-sm p-5 transition-all duration-500 hover:border-[#EAEFFF]/15">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#EAEFFF]/[0.03] blur-[60px] rounded-full" />
+      <div className="relative">
+        <p className="text-[11px] font-medium tracking-wider text-white/30 uppercase mb-3">Quick Actions</p>
+        <div className="space-y-2">
+          <a
+            href="/admin/leads"
+            className="block w-full text-left rounded-lg border border-[#EAEFFF]/8 bg-black/30 px-3 py-2 text-xs text-white/40 transition-all duration-300 hover:border-[#EAEFFF]/15 hover:text-white/60 hover:bg-black/50"
+          >
+            View all leads →
+          </a>
+          <a
+            href="/admin/clients"
+            className="block w-full text-left rounded-lg border border-[#EAEFFF]/8 bg-black/30 px-3 py-2 text-xs text-white/40 transition-all duration-300 hover:border-[#EAEFFF]/15 hover:text-white/60 hover:bg-black/50"
+          >
+            Manage clients →
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RecentLeadsTable({ leads }) {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
+      <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#EAEFFF]/[0.01] blur-[60px]" />
+      <div className="relative">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#EAEFFF]/5">
+          <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Leads</h3>
+          <a href="/admin/leads" className="text-[11px] text-white/20 hover:text-white/40 transition-colors">
+            View all
+          </a>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-[#EAEFFF]/5">
+                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Name</th>
+                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Status</th>
+                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leads.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="px-5 py-12 text-center text-xs text-white/15">No leads yet</td>
+                </tr>
+              ) : (
+                leads.map((lead) => (
+                  <tr key={lead.id} className="border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.01] last:border-0">
+                    <td className="px-5 py-3">
+                      <span className="text-xs text-white/50">{lead.name || lead.email || "—"}</span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium"
+                        style={{
+                          color: lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff50",
+                          borderColor: `${lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff"}20`,
+                          background: `${lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff"}08`,
+                        }}
+                      >
+                        <span className="h-1 w-1 rounded-full"
+                          style={{
+                            background: lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff50",
+                          }}
+                        />
+                        {lead.status}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
