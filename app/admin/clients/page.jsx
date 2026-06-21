@@ -88,7 +88,7 @@ export default function ClientsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
-        <div className="flex items-center gap-3 text-white/25">
+        <div className="flex items-center gap-3 text-white/40">
           <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
           <span className="text-sm">Loading clients...</span>
         </div>
@@ -202,7 +202,7 @@ function DesktopTable({ clients, onDelete }) {
                 <td className="px-5 py-4">
                   {client.company ? (
                     <span className="flex items-center gap-1.5 text-xs text-white/45">
-                      <Building2 size={12} className="text-white/20" />
+                      <Building2 size={12} className="text-white/30" />
                       {client.company}
                     </span>
                   ) : "\u2014"}
@@ -212,7 +212,7 @@ function DesktopTable({ clients, onDelete }) {
                 </td>
                 <td className="px-5 py-4 text-xs text-white/30 tabular-nums">
                   <span className="flex items-center gap-1.5">
-                    <Calendar size={11} className="text-white/20" />
+                    <Calendar size={11} className="text-white/30" />
                     {formatDate(client.created_at, { time: false })}
                   </span>
                 </td>
@@ -253,7 +253,7 @@ function MobileCards({ clients, onDelete }) {
             {client.email && <span>{client.email}</span>}
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-white/20 tabular-nums">
+            <span className="text-[10px] text-white/30 tabular-nums">
               {formatDate(client.created_at, { time: false })}
             </span>
             <button
@@ -308,7 +308,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
           >
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 p-1.5 text-white/20 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
+              className="absolute right-4 top-4 p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
               aria-label="Close dialog"
             >
               <X size={16} />

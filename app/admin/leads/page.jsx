@@ -138,7 +138,7 @@ export default function LeadsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
-        <div className="flex items-center gap-3 text-white/25">
+        <div className="flex items-center gap-3 text-white/40">
           <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
           <span className="text-sm">Loading leads...</span>
         </div>
@@ -286,7 +286,7 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
                 </td>
                 <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
                   <span className="flex items-center gap-1.5">
-                    <Calendar size={11} className="text-white/20" />
+                    <Calendar size={11} className="text-white/30" />
                     {formatDate(lead.created_at)}
                   </span>
                 </td>
@@ -347,7 +347,7 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
             {lead.phone && <span>{lead.phone}</span>}
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</span>
+            <span className="text-[10px] text-white/30 tabular-nums">{formatDate(lead.created_at)}</span>
             <div className="flex items-center gap-1">
               <IconButton onClick={() => onView(lead)} icon={Eye} label="View details" />
               {lead.status !== "won" && lead.status !== "lost" && (
@@ -434,7 +434,7 @@ function IconButton({ onClick, icon: Icon, label, className, disabled }) {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`p-2 text-white/20 transition-all hover:bg-white/[0.04] hover:text-white/50 disabled:opacity-30 disabled:pointer-events-none ${className || ""}`}
+      className={`p-2 text-white/30 transition-all hover:bg-white/[0.04] hover:text-white/50 disabled:opacity-30 disabled:pointer-events-none ${className || ""}`}
       aria-label={label}
       title={label}
     >
@@ -483,7 +483,7 @@ function AddLeadModal({ open, onClose, onSubmit }) {
           >
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 p-1.5 text-white/20 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
+              className="absolute right-4 top-4 p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
               aria-label="Close dialog"
             >
               <X size={16} />
@@ -597,7 +597,7 @@ function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
                   const Icon = f.icon;
                   return (
                     <div key={f.label} className="flex items-center gap-3 border-b border-white/[0.04] py-3 last:border-0">
-                      <Icon size={13} className="text-white/20 shrink-0" />
+                      <Icon size={13} className="text-white/30 shrink-0" />
                       <span className="text-[10px] font-semibold tracking-wider text-white/25 uppercase w-16 shrink-0">
                         {f.label}
                       </span>
@@ -620,7 +620,7 @@ function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
                 </div>
               )}
 
-              <div className="flex items-center gap-1.5 text-[10px] text-white/20 tabular-nums">
+              <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
                 <Calendar size={11} />
                 Created {formatDate(lead.created_at)}
               </div>

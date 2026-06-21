@@ -157,7 +157,7 @@ export default function CalBookingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
-        <div className="flex items-center gap-3 text-white/25">
+        <div className="flex items-center gap-3 text-white/40">
           <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
           <span className="text-sm">Loading bookings...</span>
         </div>
@@ -314,7 +314,7 @@ export default function CalBookingsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
                         <BookingStatusBadge status={b.status} />
-                        <span className="text-white/20 text-xs tabular-nums">
+                        <span className="text-white/30 text-xs tabular-nums">
                           {b.duration ? `${b.duration} min` : EM}
                         </span>
                       </div>
@@ -403,7 +403,7 @@ function BookingsTable({ bookings, onSelect }) {
                     </td>
                     <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
                       <span className="flex items-center gap-1.5">
-                        <CalendarIcon size={11} className="text-white/20" />
+                        <CalendarIcon size={11} className="text-white/30" />
                         {formatDate(b.start)}
                       </span>
                     </td>
