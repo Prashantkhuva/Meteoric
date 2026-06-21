@@ -450,113 +450,103 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
     setSubmitting(false);
   }
 
+  if (!open) return null;
+
   return (
-    <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[5vh] overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="proposal-form-title">
-          <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full max-w-2xl border border-white/[0.08] bg-[#0c0c0c] shadow-2xl"
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[5vh]" role="dialog" aria-modal="true" aria-labelledby="proposal-form-title">
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="relative w-full max-w-2xl max-h-[80vh] border border-white/[0.08] bg-[#0c0c0c] shadow-2xl flex flex-col">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/[0.06] px-6 py-4 bg-[#0c0c0c]">
+          <h2 id="proposal-form-title" className="text-lg font-semibold tracking-tight text-white/90">{title}</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
+            aria-label="Close dialog"
           >
-            <div className="max-h-[80vh] overflow-y-auto">
-            <div className="sticky top-0 z-10 flex justify-end bg-[#0c0c0c]">
+            <X size={16} />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField label="Title" name="title" placeholder="Web Development Proposal" defaultValue={proposal?.title || ""} required />
+              <div>
+                <label htmlFor="field-lead_id" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Lead
+                </label>
+                <select
+                  id="field-lead_id"
+                  name="lead_id"
+                  defaultValue={proposal?.lead_id || ""}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                >
+                  <option value="">No lead linked</option>
+                  {leads.map((l) => (
+                    <option key={l.id} value={l.id}>{l.name}{l.company ? ` (${l.company})` : ""}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                Proposal Content
+              </label>
+              <RichEditor
+                content={proposal?.content || null}
+                onChange={setContent}
+                placeholder="Start writing your proposal..."
+              />
+            </div>
+
+            <div>
+              <label htmlFor="field-timeline" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                Timeline
+              </label>
+              <textarea
+                id="field-timeline"
+                name="timeline"
+                rows={2}
+                placeholder="e.g. 4-6 weeks from project start"
+                defaultValue={proposal?.timeline || ""}
+                className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="field-terms" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                Terms & Conditions
+              </label>
+              <textarea
+                id="field-terms"
+                name="terms"
+                rows={3}
+                placeholder="Payment terms, revision policy, etc."
+                defaultValue={proposal?.terms || ""}
+                className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3 pt-2">
               <button
+                type="button"
                 onClick={onClose}
-                className="m-3 p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
-                aria-label="Close dialog"
+                className="flex-1 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
               >
-                <X size={16} />
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="flex-1 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
+              >
+                {submitting ? "Saving..." : proposal ? "Save Changes" : "Create Proposal"}
               </button>
             </div>
-            <div className="px-6 pb-6">
-            <h2 id="proposal-form-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">{title}</h2>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Title" name="title" placeholder="Web Development Proposal" defaultValue={proposal?.title || ""} required />
-                <div>
-                  <label htmlFor="field-lead_id" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-                    Lead
-                  </label>
-                  <select
-                    id="field-lead_id"
-                    name="lead_id"
-                    defaultValue={proposal?.lead_id || ""}
-                    className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
-                  >
-                    <option value="">No lead linked</option>
-                    {leads.map((l) => (
-                      <option key={l.id} value={l.id}>{l.name}{l.company ? ` (${l.company})` : ""}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-                  Proposal Content
-                </label>
-                <RichEditor
-                  content={proposal?.content || null}
-                  onChange={setContent}
-                  placeholder="Start writing your proposal..."
-                />
-              </div>
-
-              <div>
-                <label htmlFor="field-timeline" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-                  Timeline
-                </label>
-                <textarea
-                  id="field-timeline"
-                  name="timeline"
-                  rows={2}
-                  placeholder="e.g. 4-6 weeks from project start"
-                  defaultValue={proposal?.timeline || ""}
-                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="field-terms" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-                  Terms & Conditions
-                </label>
-                <textarea
-                  id="field-terms"
-                  name="terms"
-                  rows={3}
-                  placeholder="Payment terms, revision policy, etc."
-                  defaultValue={proposal?.terms || ""}
-                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="flex-1 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
-                >
-                  {submitting ? "Saving..." : proposal ? "Save Changes" : "Create Proposal"}
-                </button>
-              </div>
-            </form>
-            </div>
-            </div>
-          </motion.div>
+          </form>
         </div>
-      )}
-    </AnimatePresence>
+      </div>
+    </div>
   );
 }
 
