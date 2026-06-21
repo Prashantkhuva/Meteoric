@@ -14,7 +14,7 @@ const STATUS_COLORS = {
 };
 
 function formatDate(dateStr) {
-  if (!dateStr) return "—";
+  if (!dateStr) return "\u2014";
   return new Date(dateStr).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -29,62 +29,59 @@ export default function RecentLeadsTable({ leads }) {
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
-        <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#EAEFFF]/[0.01] blur-[60px]" />
-        <div className="relative">
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#EAEFFF]/5">
-            <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Leads</h3>
-            <a href="/admin/leads" className="text-[11px] text-white/20 hover:text-white/40 transition-colors">
-              View all
-            </a>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-[#EAEFFF]/5">
-                  <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Name</th>
-                  <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Status</th>
-                  <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Date</th>
+      <div className="border border-white/5 bg-black">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/5">
+          <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Leads</h3>
+          <a href="/admin/leads" className="text-[11px] text-white/20 hover:text-white/40 transition-colors">
+            View all
+          </a>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-white/5">
+                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Name</th>
+                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Status</th>
+                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leads.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="px-5 py-12 text-center text-xs text-white/15">No leads yet</td>
                 </tr>
-              </thead>
-              <tbody>
-                {leads.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="px-5 py-12 text-center text-xs text-white/15">No leads yet</td>
-                  </tr>
-                ) : (
-                  leads.map((lead) => {
-                    const sc = STATUS_COLORS[lead.status] || "#ffffff50";
-                    return (
-                      <tr
-                        key={lead.id}
-                        onClick={() => setSelected(lead)}
-                        className="cursor-pointer border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.02] last:border-0"
-                      >
-                        <td className="px-5 py-3">
-                          <span className="text-xs text-white/50">{lead.name || lead.email || "—"}</span>
-                        </td>
-                        <td className="px-5 py-3">
-                          <span
-                            className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium"
-                            style={{
-                              color: sc,
-                              borderColor: `${sc}20`,
-                              background: `${sc}08`,
-                            }}
-                          >
-                            <span className="h-1 w-1 rounded-full" style={{ background: sc }} />
-                            {lead.status}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3 text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+              ) : (
+                leads.map((lead) => {
+                  const sc = STATUS_COLORS[lead.status] || "#ffffff50";
+                  return (
+                    <tr
+                      key={lead.id}
+                      onClick={() => setSelected(lead)}
+                      className="cursor-pointer border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.02] last:border-0"
+                    >
+                      <td className="px-5 py-3">
+                        <span className="text-xs text-white/50">{lead.name || lead.email || "\u2014"}</span>
+                      </td>
+                      <td className="px-5 py-3">
+                        <span
+                          className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium"
+                          style={{
+                            color: sc,
+                            borderColor: `${sc}20`,
+                            background: `${sc}08`,
+                          }}
+                        >
+                          <span className="h-1 w-1 rounded-full" style={{ background: sc }} />
+                          {lead.status}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3 text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -114,7 +111,7 @@ function LeadDetailModal({ lead, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm p-4 pt-[10vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4 pt-[10vh]"
       onClick={onClose}
     >
       <motion.div
@@ -122,19 +119,19 @@ function LeadDetailModal({ lead, onClose }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 20 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="relative w-full max-w-lg rounded-xl border border-[#EAEFFF]/8 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        className="relative w-full max-w-lg border border-white/10 bg-black p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+          className="absolute right-4 top-4 p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
         >
           <X size={16} />
         </button>
 
         <div className="flex items-center gap-3 mb-6">
           <div
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold"
+            className="flex h-10 w-10 items-center justify-center text-sm font-bold rounded"
             style={{
               background: `${sc}15`,
               border: `1px solid ${sc}20`,
@@ -166,7 +163,7 @@ function LeadDetailModal({ lead, onClose }) {
             if (!f.value) return null;
             const Icon = f.icon;
             return (
-              <div key={f.label} className="flex items-center gap-3 border-b border-[#EAEFFF]/5 py-3 last:border-0">
+              <div key={f.label} className="flex items-center gap-3 border-b border-white/5 py-3 last:border-0">
                 <Icon size={13} className="text-white/20 shrink-0" />
                 <span className="text-[10px] font-medium tracking-wider text-white/25 uppercase w-16 shrink-0">
                   {f.label}
@@ -190,7 +187,7 @@ function LeadDetailModal({ lead, onClose }) {
         </div>
 
         {lead.details && (
-          <div className="mt-4 rounded-lg border border-[#EAEFFF]/5 bg-white/[0.02] p-4">
+          <div className="mt-4 border border-white/5 bg-white/[0.02] p-4">
             <p className="text-[10px] font-medium tracking-wider text-white/25 uppercase mb-2">Details</p>
             <p className="text-sm text-white/50 leading-relaxed whitespace-pre-wrap">{lead.details}</p>
           </div>

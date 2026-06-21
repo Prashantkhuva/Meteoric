@@ -185,7 +185,7 @@ export default function CalBookingsPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center gap-3 text-white/30">
-          <div className="h-4 w-4 animate-spin rounded-full border border-[#EAEFFF]/30 border-t-[#EAEFFF]" />
+          <div className="h-4 w-4 animate-spin rounded-full border border-white/30 border-t-white" />
           <span className="text-sm">Loading bookings\u2026</span>
         </div>
       </div>
@@ -204,10 +204,10 @@ export default function CalBookingsPage() {
           </p>
         </div>
         {bookings.length > 0 && (
-          <div className="flex items-center gap-1 rounded-full border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-1">
+          <div className="flex items-center gap-1 border border-white/10 bg-black p-1">
             <button
               onClick={() => setView("table")}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${
                 view === "table" ? "bg-[#EAEFFF] text-[#202020]" : "text-white/30 hover:text-white/60"
               }`}
             >
@@ -216,7 +216,7 @@ export default function CalBookingsPage() {
             </button>
             <button
               onClick={() => setView("calendar")}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${
                 view === "calendar" ? "bg-[#EAEFFF] text-[#202020]" : "text-white/30 hover:text-white/60"
               }`}
             >
@@ -228,7 +228,7 @@ export default function CalBookingsPage() {
       </div>
 
       {!data && !loading && (
-        <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+        <div className="border border-white/10 bg-black p-8 text-center">
           <p className="text-sm text-white/30">
             Set <code className="text-[#EAEFFF]/60">CALCOM_API_KEY</code> in Vercel env vars to fetch bookings.
           </p>
@@ -236,24 +236,23 @@ export default function CalBookingsPage() {
       )}
 
       {error && (
-        <div className="rounded-2xl border border-red-500/10 bg-red-500/5 p-6 text-center">
+        <div className="border border-red-500/10 bg-red-500/5 p-6 text-center">
           <p className="text-sm text-red-400/80">{error}</p>
         </div>
       )}
 
       {!error && bookings.length === 0 && data && (
-        <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+        <div className="border border-white/10 bg-black p-8 text-center">
           <p className="text-sm text-white/20">No bookings yet.</p>
         </div>
       )}
 
       {view === "table" && bookings.length > 0 && (
-        <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md">
-          <div className="absolute -top-40 -right-40 h-60 w-60 rounded-full bg-[#EAEFFF]/[0.015] blur-[80px]" />
-          <div className="relative overflow-x-auto">
+        <div className="border border-white/5 bg-black">
+          <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-[#EAEFFF]/8">
+                <tr className="border-b border-white/5">
                   <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Title</th>
                   <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Attendee</th>
                   <th className="px-5 py-4 text-xs font-medium tracking-wider text-white/30 uppercase">Status</th>
@@ -269,7 +268,7 @@ export default function CalBookingsPage() {
                     <tr
                       key={b.id}
                       onClick={() => setSelectedBooking(b)}
-                      className="cursor-pointer border-b border-[#EAEFFF]/5 transition-all duration-300 hover:bg-white/[0.015] last:border-0"
+                      className="cursor-pointer border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.015] last:border-0"
                     >
                       <td className="px-5 py-4">
                         <span className="text-white/80 font-medium">{b.title || EM}</span>
@@ -312,7 +311,7 @@ export default function CalBookingsPage() {
 
       {view === "calendar" && bookings.length > 0 && (
         <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
-          <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-4">
+          <div className="border border-white/5 bg-black p-4">
             <style>{`
               .has-booking .rdp-day_button {
                 box-shadow: inset 0 0 0 1px rgba(234, 239, 255, 0.15) !important;
@@ -348,7 +347,7 @@ export default function CalBookingsPage() {
                 },
               }}
               footer={
-                <div className="mt-3 border-t border-[#EAEFFF]/8 pt-3 text-xs text-white/20 text-center">
+                <div className="mt-3 border-t border-white/5 pt-3 text-xs text-white/20 text-center">
                   {selectedDate
                     ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? "s" : ""} on this day`
                     : "Select a day to view bookings"}
@@ -359,14 +358,14 @@ export default function CalBookingsPage() {
 
           <div className="space-y-3">
             {!selectedDate && (
-              <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+              <div className="border border-white/5 bg-black p-8 text-center">
                 <CalendarDays size={32} className="mx-auto text-white/10 mb-2" />
                 <p className="text-sm text-white/20">Select a date on the calendar</p>
               </div>
             )}
 
             {selectedDate && selectedDayBookings.length === 0 && (
-              <div className="rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-8 text-center">
+              <div className="border border-white/5 bg-black p-8 text-center">
                 <p className="text-sm text-white/20">No bookings for {formatShort(selectedDate)}</p>
               </div>
             )}
@@ -378,7 +377,7 @@ export default function CalBookingsPage() {
                 <div
                   key={b.id}
                   onClick={() => setSelectedBooking(b)}
-                  className="group cursor-pointer rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-5 transition-all duration-300 hover:border-[#EAEFFF]/20 hover:bg-black/50"
+                  className="group cursor-pointer border border-white/5 bg-black p-5 transition-all duration-300 hover:border-white/10"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -420,17 +419,17 @@ export default function CalBookingsPage() {
       {selectedBooking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80"
             onClick={() => { setSelectedBooking(null); setConvertMsg(null) }}
           />
-          <div className="relative w-full max-w-lg rounded-2xl border border-[#EAEFFF]/10 bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/50">
-            <div className="flex items-center justify-between border-b border-[#EAEFFF]/8 px-6 py-4">
+          <div className="relative w-full max-w-lg border border-white/10 bg-black shadow-2xl shadow-black/50">
+            <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
               <h2 className="text-lg font-semibold text-white/90 truncate pr-4">
                 {selectedBooking.title || "Booking Details"}
               </h2>
               <button
                 onClick={() => { setSelectedBooking(null); setConvertMsg(null) }}
-                className="flex-shrink-0 rounded-lg p-1.5 text-white/30 transition-all hover:bg-[#EAEFFF]/10 hover:text-white/60"
+                className="flex-shrink-0 p-1.5 text-white/30 transition-all hover:bg-white/[0.04] hover:text-white/60"
               >
                 <X size={18} />
               </button>
@@ -455,7 +454,7 @@ export default function CalBookingsPage() {
                     </div>
 
                     {attendee && (
-                      <div className="rounded-xl border border-[#EAEFFF]/8 bg-white/[0.02] p-4">
+                      <div className="border border-white/5 bg-white/[0.02] p-4">
                         <p className="text-xs text-white/20 uppercase tracking-wider mb-2">Attendee</p>
                         <p className="text-white/80 font-medium">{attendee.name || "Unknown"}</p>
                         <p className="text-white/30 text-sm mt-0.5">{attendee.email || ""}</p>
@@ -479,7 +478,7 @@ export default function CalBookingsPage() {
                     )}
 
                     {b.location && (
-                      <div className="rounded-xl border border-[#EAEFFF]/8 bg-white/[0.02] p-4">
+                      <div className="border border-white/5 bg-white/[0.02] p-4">
                         <p className="text-xs text-white/20 uppercase tracking-wider mb-2">Location</p>
                         <p className="text-white/50 text-sm">
                           {typeof b.location === "string" ? b.location : b.location.type || "Meeting"}
@@ -493,7 +492,7 @@ export default function CalBookingsPage() {
                           href={meetingUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/30"
+                          className="inline-flex items-center justify-center gap-2 border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/30"
                         >
                           <ExternalLink size={16} />
                           Join Meeting
@@ -503,7 +502,7 @@ export default function CalBookingsPage() {
                       {attendee?.email && !showConvertForm && (
                         <button
                           onClick={() => setShowConvertForm(true)}
-                          className="relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-full bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                          className="relative overflow-hidden inline-flex items-center justify-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                         >
                           <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
                           <span className="relative z-10 flex items-center gap-2">
@@ -515,7 +514,7 @@ export default function CalBookingsPage() {
                     </div>
 
                     {showConvertForm && (
-                      <form onSubmit={handleConvertToLead} className="space-y-3 pt-2 border-t border-[#EAEFFF]/8">
+                      <form onSubmit={handleConvertToLead} className="space-y-3 pt-2 border-t border-white/5">
                         <p className="text-xs text-white/20 uppercase tracking-wider">New Lead</p>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
@@ -524,7 +523,7 @@ export default function CalBookingsPage() {
                               name="name"
                               defaultValue={attendee?.name || ""}
                               required
-                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              className="w-full border border-white/10 bg-black px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30"
                             />
                           </div>
                           <div>
@@ -534,7 +533,7 @@ export default function CalBookingsPage() {
                               type="email"
                               defaultValue={attendee?.email || ""}
                               required
-                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              className="w-full border border-white/10 bg-black px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30"
                             />
                           </div>
                           <div>
@@ -542,14 +541,14 @@ export default function CalBookingsPage() {
                             <input
                               name="phone"
                               defaultValue={attendee?.phone || ""}
-                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              className="w-full border border-white/10 bg-black px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30"
                             />
                           </div>
                           <div>
                             <label className="block text-xs text-white/30 mb-1">Company</label>
                             <input
                               name="company"
-                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              className="w-full border border-white/10 bg-black px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30"
                               placeholder="e.g. Acme Inc"
                             />
                           </div>
@@ -558,7 +557,7 @@ export default function CalBookingsPage() {
                           <label className="block text-xs text-white/30 mb-1">Services</label>
                           <input
                             name="services"
-                            className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                            className="w-full border border-white/10 bg-black px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30"
                             placeholder="e.g. Web Design, SEO"
                           />
                         </div>
@@ -567,7 +566,7 @@ export default function CalBookingsPage() {
                             <label className="block text-xs text-white/30 mb-1">Budget</label>
                             <input
                               name="budget"
-                              className="w-full rounded-lg border border-[#EAEFFF]/10 bg-black/40 px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30 focus:bg-black/60"
+                              className="w-full border border-white/10 bg-black px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/30"
                               placeholder="e.g. $5k-$10k"
                             />
                           </div>
@@ -575,14 +574,14 @@ export default function CalBookingsPage() {
                             <button
                               type="button"
                               onClick={() => { setShowConvertForm(false); setConvertMsg(null) }}
-                              className="flex-1 rounded-full border border-[#EAEFFF]/10 px-4 py-2.5 text-sm text-white/40 transition-all hover:bg-[#EAEFFF]/5"
+                              className="flex-1 border border-white/10 px-4 py-2.5 text-sm text-white/40 transition-all hover:bg-white/[0.03]"
                             >
                               Cancel
                             </button>
                             <button
                               type="submit"
                               disabled={converting}
-                              className="relative overflow-hidden flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+                              className="relative overflow-hidden flex-1 inline-flex items-center justify-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
                             >
                               <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
                               <span className="relative z-10">{converting ? "Saving..." : "Save Lead"}</span>
@@ -591,7 +590,7 @@ export default function CalBookingsPage() {
                         </div>
                         {convertMsg && (
                           <div
-                            className={`rounded-xl border px-4 py-3 text-sm ${
+                            className={`border px-4 py-3 text-sm ${
                               convertMsg.type === "success"
                                 ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
                                 : "border-red-500/20 bg-red-500/5 text-red-400"

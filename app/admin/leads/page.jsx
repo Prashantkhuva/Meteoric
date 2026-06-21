@@ -31,7 +31,7 @@ const statusList = [
 const statusMap = Object.fromEntries(statusList.map((s) => [s.value, s]));
 
 function formatDate(dateStr) {
-  if (!dateStr) return "—";
+  if (!dateStr) return "\u2014";
   return new Date(dateStr).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -184,7 +184,7 @@ export default function LeadsPage() {
         </div>
         <button
           onClick={() => setShowAddLead(true)}
-          className="group relative overflow-hidden rounded-full bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="group relative overflow-hidden bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         >
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           <span className="relative z-10 flex items-center gap-2">
@@ -194,12 +194,11 @@ export default function LeadsPage() {
         </button>
       </div>
 
-      <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
-        <div className="absolute -top-40 -right-40 h-60 w-60 rounded-full bg-[#EAEFFF]/[0.015] blur-[80px]" />
-        <div className="relative overflow-x-auto">
+      <div className="border border-white/5 bg-black">
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[#EAEFFF]/5">
+              <tr className="border-b border-white/5">
                 <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Name</th>
                 <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Contact</th>
                 <th className="px-4 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Status</th>
@@ -212,7 +211,7 @@ export default function LeadsPage() {
                 <tr>
                   <td colSpan={5} className="px-4 py-20 text-center text-sm text-white/20">
                     <span className="flex flex-col items-center gap-2">
-                      <span className="text-2xl">—</span>
+                      <span className="text-2xl">&mdash;</span>
                       <span>No leads yet</span>
                     </span>
                   </td>
@@ -223,14 +222,14 @@ export default function LeadsPage() {
                   return (
                     <tr
                       key={lead.id}
-                      className="border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.01] last:border-0"
+                      className="border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.01] last:border-0"
                     >
                       <td className="px-4 py-3.5">
                         <button
                           onClick={() => setViewLead(lead)}
                           className="text-left text-white/80 font-medium transition-colors hover:text-[#EAEFFF]"
                         >
-                          {lead.name || lead.company || "—"}
+                          {lead.name || lead.company || "\u2014"}
                         </button>
                         {lead.company && lead.name && (
                           <span className="block text-xs text-white/20">{lead.company}</span>
@@ -273,7 +272,7 @@ export default function LeadsPage() {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => setViewLead(lead)}
-                            className="rounded-lg p-2 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+                            className="p-2 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
                             title="View details"
                           >
                             <Eye size={14} />
@@ -282,7 +281,7 @@ export default function LeadsPage() {
                             <button
                               onClick={() => handleConvert(lead)}
                               disabled={converting === lead.id}
-                              className="rounded-lg p-2 text-[#EAEFFF]/30 transition-all duration-300 hover:bg-[#EAEFFF]/[0.04] hover:text-[#EAEFFF]/60 disabled:opacity-30"
+                              className="p-2 text-[#EAEFFF]/30 transition-all duration-300 hover:bg-[#EAEFFF]/[0.04] hover:text-[#EAEFFF]/60 disabled:opacity-30"
                               title="Convert to client"
                             >
                               <UserPlus size={14} />
@@ -291,7 +290,7 @@ export default function LeadsPage() {
                           <button
                             onClick={() => handleDelete(lead.id)}
                             disabled={deleting === lead.id}
-                            className="rounded-lg p-2 text-red-400/20 transition-all duration-300 hover:bg-red-500/[0.04] hover:text-red-400/50 disabled:opacity-30"
+                            className="p-2 text-red-400/20 transition-all duration-300 hover:bg-red-500/[0.04] hover:text-red-400/50 disabled:opacity-30"
                             title="Delete lead"
                           >
                             <Trash2 size={14} />
@@ -314,7 +313,7 @@ export default function LeadsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm p-4 pt-[10vh]"
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4 pt-[10vh]"
             onClick={() => setShowAddLead(false)}
           >
             <motion.div
@@ -322,12 +321,12 @@ export default function LeadsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative w-full max-w-md rounded-2xl border border-[#EAEFFF]/10 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+              className="relative w-full max-w-md border border-white/10 bg-black p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setShowAddLead(false)}
-                className="absolute right-4 top-4 rounded-lg p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+                className="absolute right-4 top-4 p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
               >
                 <X size={16} />
               </button>
@@ -337,27 +336,27 @@ export default function LeadsPage() {
               <form action={handleAddLead} className="space-y-4">
                 <div>
                   <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Name</label>
-                  <input name="name" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="John Doe" />
+                  <input name="name" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="John Doe" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Email</label>
-                  <input name="email" type="email" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="john@example.com" />
+                  <input name="email" type="email" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="john@example.com" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Phone</label>
-                  <input name="phone" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="+1 234 567 890" />
+                  <input name="phone" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="+1 234 567 890" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Services</label>
-                  <input name="services" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="Web Development, SEO, Design" />
+                  <input name="services" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="Web Development, SEO, Design" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Budget</label>
-                  <input name="budget" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="$5,000 - $10,000" />
+                  <input name="budget" className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none" placeholder="$5,000 - $10,000" />
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 rounded-lg border border-[#EAEFFF]/8 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
-                  <button type="submit" className="flex-1 relative overflow-hidden rounded-lg bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 border border-white/10 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
+                  <button type="submit" className="flex-1 relative overflow-hidden bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
                     <span className="relative z-10">Add Lead</span>
                   </button>
@@ -375,7 +374,7 @@ export default function LeadsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className={`fixed bottom-6 right-6 z-[100] rounded-xl border px-4 py-3 text-sm font-medium shadow-xl ${
+            className={`fixed bottom-6 right-6 z-[100] border px-4 py-3 text-sm font-medium ${
               toast.type === "error"
                 ? "border-red-500/20 bg-red-500/10 text-red-400"
                 : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
@@ -413,7 +412,7 @@ function StatusModal({ data, onSelect, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
       onClick={onClose}
     >
       <motion.div
@@ -421,7 +420,7 @@ function StatusModal({ data, onSelect, onClose }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 20 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative w-full max-w-xs rounded-xl border border-[#EAEFFF]/8 bg-black/80 backdrop-blur-2xl p-2 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        className="relative w-full max-w-xs border border-white/10 bg-black p-2"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="px-3 py-3 text-[11px] font-medium tracking-wider text-white/30 uppercase">Change Status</p>
@@ -430,13 +429,13 @@ function StatusModal({ data, onSelect, onClose }) {
             <button
               key={s.value}
               onClick={() => { onSelect(data.id, s.value); onClose(); }}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/[0.04] ${
+              className={`flex w-full items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/[0.04] ${
                 current === s.value ? "text-white" : "text-white/40"
               }`}
             >
               <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
               {s.label}
-              {current === s.value && <span className="ml-auto text-[#EAEFFF]/50">✓</span>}
+              {current === s.value && <span className="ml-auto text-[#EAEFFF]/50">&#10003;</span>}
             </button>
           ))}
         </div>
@@ -479,7 +478,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm p-4 pt-[10vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4 pt-[10vh]"
       onClick={onClose}
     >
       <motion.div
@@ -487,18 +486,18 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 20 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="relative w-full max-w-lg rounded-xl border border-[#EAEFFF]/8 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+        className="relative w-full max-w-lg border border-white/10 bg-black p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+          className="absolute right-4 top-4 p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
         >
           <X size={16} />
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#EAEFFF]/15 bg-[#EAEFFF]/10 text-sm font-bold text-[#EAEFFF]">
+          <div className="flex h-10 w-10 items-center justify-center border border-white/10 bg-white/[0.02] text-sm font-bold text-[#EAEFFF]">
             {(lead.name || lead.company || "?").charAt(0).toUpperCase()}
           </div>
           <div>
@@ -524,7 +523,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
             if (!f.value) return null;
             const Icon = f.icon;
             return (
-              <div key={f.label} className="flex items-center gap-3 border-b border-[#EAEFFF]/5 py-3 last:border-0">
+              <div key={f.label} className="flex items-center gap-3 border-b border-white/5 py-3 last:border-0">
                 <Icon size={13} className="text-white/20 shrink-0" />
                 <span className="text-xs font-medium tracking-wider text-white/30 uppercase w-16 shrink-0">
                   {f.label}
@@ -544,7 +543,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
         </div>
 
         {lead.details && (
-          <div className="mt-4 rounded-xl border border-[#EAEFFF]/5 bg-white/[0.02] p-4">
+          <div className="mt-4 border border-white/5 bg-white/[0.02] p-4">
             <p className="text-xs font-medium tracking-wider text-white/30 uppercase mb-2">Details</p>
             <p className="text-sm text-white/50 leading-relaxed whitespace-pre-wrap">{lead.details}</p>
           </div>
@@ -554,12 +553,12 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
           Created {formatDate(lead.created_at)}
         </div>
 
-        <div className="mt-5 flex items-center gap-2 border-t border-[#EAEFFF]/8 pt-4">
+        <div className="mt-5 flex items-center gap-2 border-t border-white/5 pt-4">
           {lead.status !== "won" && lead.status !== "lost" && (
             <button
               onClick={handleConvert}
               disabled={cnv}
-              className="relative overflow-hidden flex items-center gap-2 rounded-lg bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
+              className="relative overflow-hidden flex items-center gap-2 bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
             >
               <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
               <span className="relative z-10 flex items-center gap-2">
@@ -571,7 +570,7 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
           )}
           <button
             onClick={() => { onDelete(lead.id); onClose(); }}
-            className="ml-auto flex items-center gap-2 rounded-lg border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+            className="ml-auto flex items-center gap-2 border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
           >
             <Trash2 size={13} />
             Delete

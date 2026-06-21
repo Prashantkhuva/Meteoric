@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 function formatDate(dateStr) {
-  if (!dateStr) return "—";
+  if (!dateStr) return "\u2014";
   return new Date(dateStr).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -118,7 +118,7 @@ export default function ClientsPage() {
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="group relative overflow-hidden rounded-full bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="group relative overflow-hidden bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         >
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           <span className="relative z-10 flex items-center gap-2">
@@ -128,12 +128,11 @@ export default function ClientsPage() {
         </button>
       </div>
 
-      <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
-        <div className="absolute -top-40 -right-40 h-60 w-60 rounded-full bg-[#EAEFFF]/[0.015] blur-[80px]" />
-        <div className="relative overflow-x-auto">
+      <div className="border border-white/5 bg-black">
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[#EAEFFF]/5">
+              <tr className="border-b border-white/5">
                 <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Name</th>
                 <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Email</th>
                 <th className="px-5 py-3.5 text-[10px] font-medium tracking-wider text-white/25 uppercase">Company</th>
@@ -147,16 +146,16 @@ export default function ClientsPage() {
                 <tr>
                   <td colSpan={6} className="px-5 py-20 text-center text-sm text-white/20">
                     <span className="flex flex-col items-center gap-2">
-                      <span className="text-2xl">—</span>
+                      <span className="text-2xl">&mdash;</span>
                       <span>No clients yet</span>
                     </span>
                   </td>
                 </tr>
               ) : (
                 clients.map((client) => (
-                  <tr key={client.id} className="border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.01] last:border-0">
+                  <tr key={client.id} className="border-b border-white/[0.02] transition-all duration-300 hover:bg-white/[0.01] last:border-0">
                     <td className="px-5 py-4 text-white/80 font-medium">
-                      {client.name || client.company || "—"}
+                      {client.name || client.company || "\u2014"}
                       {client.company && client.name && (
                         <span className="block text-xs text-white/20 font-normal">{client.company}</span>
                       )}
@@ -166,7 +165,7 @@ export default function ClientsPage() {
                         <a href={`mailto:${client.email}`} className="transition-colors hover:text-[#EAEFFF]">
                           {client.email}
                         </a>
-                      ) : "—"}
+                      ) : "\u2014"}
                     </td>
                     <td className="px-5 py-4 text-white/40">
                       {client.company ? (
@@ -174,7 +173,7 @@ export default function ClientsPage() {
                           <Building2 size={12} className="text-white/20" />
                           {client.company}
                         </span>
-                      ) : "—"}
+                      ) : "\u2014"}
                     </td>
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-[#EAEFFF]/20 px-3 py-1 text-xs font-medium text-[#EAEFFF]/70 bg-[#EAEFFF]/5">
@@ -192,7 +191,7 @@ export default function ClientsPage() {
                       <button
                         onClick={() => handleDelete(client.id)}
                         disabled={deleting === client.id}
-                        className="rounded-lg p-2 text-red-400/20 transition-all duration-300 hover:bg-red-500/[0.04] hover:text-red-400/50 disabled:opacity-30"
+                        className="p-2 text-red-400/20 transition-all duration-300 hover:bg-red-500/[0.04] hover:text-red-400/50 disabled:opacity-30"
                         title="Delete client"
                       >
                         <Trash2 size={14} />
@@ -213,7 +212,7 @@ export default function ClientsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm p-4 pt-[15vh]"
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4 pt-[15vh]"
             onClick={() => setShowAdd(false)}
           >
             <motion.div
@@ -221,12 +220,12 @@ export default function ClientsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative w-full max-w-md rounded-2xl border border-[#EAEFFF]/10 bg-black/80 backdrop-blur-2xl p-6 shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+              className="relative w-full max-w-md border border-white/10 bg-black p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setShowAdd(false)}
-                className="absolute right-4 top-4 rounded-lg p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
+                className="absolute right-4 top-4 p-1.5 text-white/20 transition-all duration-300 hover:bg-white/[0.04] hover:text-white/50"
               >
                 <X size={16} />
               </button>
@@ -239,7 +238,7 @@ export default function ClientsPage() {
                   <input
                     name="name"
                     required
-                    className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+                    className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none"
                     placeholder="John Doe"
                   />
                 </div>
@@ -248,7 +247,7 @@ export default function ClientsPage() {
                   <input
                     name="email"
                     type="email"
-                    className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+                    className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -256,7 +255,7 @@ export default function ClientsPage() {
                   <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Company</label>
                   <input
                     name="company"
-                    className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]"
+                    className="w-full border border-white/10 bg-black px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none"
                     placeholder="Acme Inc."
                   />
                 </div>
@@ -264,13 +263,13 @@ export default function ClientsPage() {
                   <button
                     type="button"
                     onClick={() => setShowAdd(false)}
-                    className="flex-1 rounded-lg border border-[#EAEFFF]/8 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
+                    className="flex-1 border border-white/10 px-4 py-2.5 text-xs font-medium text-white/35 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 relative overflow-hidden rounded-lg bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    className="flex-1 relative overflow-hidden bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
                     <span className="relative z-10">Add Client</span>
@@ -289,7 +288,7 @@ export default function ClientsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className={`fixed bottom-6 right-6 z-[100] rounded-xl border px-4 py-3 text-sm font-medium shadow-xl ${
+            className={`fixed bottom-6 right-6 z-[100] border px-4 py-3 text-sm font-medium ${
               toast.type === "error"
                 ? "border-red-500/20 bg-red-500/10 text-red-400"
                 : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
