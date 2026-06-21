@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
 import { updateLeadStatus, convertLeadToClient, deleteLead, addLead } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -39,6 +39,7 @@ export default function LeadsPage() {
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const deleteRef = useRef(null);
   const addToast = useToast();
 
   useEffect(() => {
@@ -104,12 +105,19 @@ export default function LeadsPage() {
     setConverting(null);
   }
 
-  async function handleDelete(leadId) {
+  function promptDelete(leadId) {
+    deleteRef.current = leadId;
+    setDeleteTarget(leadId);
+  }
+
+  async function handleDelete() {
+    const id = deleteRef.current;
+    if (!id) return;
     setDeleteTarget(null);
     try {
-      await deleteLead(leadId);
-      setLeads((prev) => prev.filter((l) => l.id !== leadId));
-      if (viewLead?.id === leadId) setViewLead(null);
+      await deleteLead(id);
+      setLeads((prev) => prev.filter((l) => l.id !== id));
+      if (viewLead?.id === id) setViewLead(null);
       addToast("Lead deleted", "success");
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
@@ -199,7 +207,7 @@ export default function LeadsPage() {
             onView={setViewLead}
             onConvert={handleConvert}
             onStatusChange={handleStatusChange}
-            onDelete={setDeleteTarget}
+            onDelete={promptDelete}
             editingStatus={editingStatus}
             converting={converting}
           />
@@ -208,7 +216,7 @@ export default function LeadsPage() {
             onView={setViewLead}
             onConvert={handleConvert}
             onStatusChange={handleStatusChange}
-            onDelete={setDeleteTarget}
+            onDelete={promptDelete}
             editingStatus={editingStatus}
             converting={converting}
           />
@@ -217,14 +225,14 @@ export default function LeadsPage() {
       )}
 
       <AddLeadModal open={showAddLead} onClose={() => setShowAddLead(false)} onSubmit={handleAddLead} />
-      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onConvert={handleConvert} onDelete={setDeleteTarget} converting={converting} />
+      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onConvert={handleConvert} onDelete={promptDelete} converting={converting} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Delete lead"
         message="Are you sure you want to delete this lead? This action cannot be undone."
         confirmLabel="Delete"
         destructive
-        onConfirm={() => handleDelete(deleteTarget)}
+        onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />
     </div>
