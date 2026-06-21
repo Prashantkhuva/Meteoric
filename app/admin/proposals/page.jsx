@@ -460,8 +460,9 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl"
+            className="relative w-full max-w-2xl border border-white/[0.08] bg-[#0c0c0c] shadow-2xl"
           >
+            <div className="max-h-[80vh] overflow-y-auto">
             <div className="sticky top-0 z-10 flex justify-end bg-[#0c0c0c]">
               <button
                 onClick={onClose}
@@ -550,6 +551,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
                 </button>
               </div>
             </form>
+            </div>
             </div>
           </motion.div>
         </div>
