@@ -81,22 +81,12 @@ export async function deleteLead(id) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
-  const { data: existing } = await supabase
-    .from("leads")
-    .select("id")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (!existing) throw new Error("Lead not found");
-
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("leads")
     .delete()
-    .eq("id", id)
-    .select("id");
+    .eq("id", id);
 
   if (error) throw error;
-  if (!data || data.length === 0) throw new Error("Delete failed — no rows affected");
 
   revalidatePath("/admin/leads");
   revalidatePath("/admin");
@@ -237,14 +227,12 @@ export async function deleteProposal(id) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("proposals")
     .delete()
-    .eq("id", id)
-    .select("id");
+    .eq("id", id);
 
   if (error) throw error;
-  if (!data || data.length === 0) throw new Error("Delete failed — no rows affected");
 
   revalidatePath("/admin/proposals");
   revalidatePath("/admin");
