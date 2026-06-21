@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/server";
 import { LeadsChart } from "./_components/LeadsChart";
+import RecentLeadsTable from "./_components/RecentLeadsTable";
 
 async function getStats() {
   const supabase = await createClient();
@@ -189,61 +190,4 @@ function QuickActionCard() {
   );
 }
 
-function RecentLeadsTable({ leads }) {
-  return (
-    <div className="relative overflow-hidden rounded-xl border border-[#EAEFFF]/8 bg-black/30 backdrop-blur-sm">
-      <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#EAEFFF]/[0.01] blur-[60px]" />
-      <div className="relative">
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#EAEFFF]/5">
-          <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Leads</h3>
-          <a href="/admin/leads" className="text-[11px] text-white/20 hover:text-white/40 transition-colors">
-            View all
-          </a>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-[#EAEFFF]/5">
-                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Name</th>
-                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Status</th>
-                <th className="px-5 py-3 text-[10px] font-medium tracking-wider text-white/20 uppercase">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.length === 0 ? (
-                <tr>
-                  <td colSpan={3} className="px-5 py-12 text-center text-xs text-white/15">No leads yet</td>
-                </tr>
-              ) : (
-                leads.map((lead) => (
-                  <tr key={lead.id} className="border-b border-[#EAEFFF]/3 transition-all duration-300 hover:bg-white/[0.01] last:border-0">
-                    <td className="px-5 py-3">
-                      <span className="text-xs text-white/50">{lead.name || lead.email || "—"}</span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium"
-                        style={{
-                          color: lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff50",
-                          borderColor: `${lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff"}20`,
-                          background: `${lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff"}08`,
-                        }}
-                      >
-                        <span className="h-1 w-1 rounded-full"
-                          style={{
-                            background: lead.status === "new" ? "#34d399" : lead.status === "contacted" ? "#38bdf8" : lead.status === "won" ? "#EAEFFF" : "#ffffff50",
-                          }}
-                        />
-                        {lead.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-[10px] text-white/20 tabular-nums">{formatDate(lead.created_at)}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
+
