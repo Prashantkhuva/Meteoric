@@ -14,6 +14,11 @@ const colors = {
   in_progress: { bg: "bg-[#EAEFFF]/12", border: "border-[#EAEFFF]/25", text: "text-[#EAEFFF]/80", dot: "bg-[#EAEFFF]/80" },
   completed: { bg: "bg-[#EAEFFF]/10", border: "border-[#EAEFFF]/25", text: "text-[#EAEFFF]", dot: "bg-[#EAEFFF]" },
   lost: { bg: "bg-red-500/10", border: "border-red-500/25", text: "text-red-400", dot: "bg-red-400" },
+  onboarding: { bg: "bg-sky-500/8", border: "border-sky-500/20", text: "text-sky-400", dot: "bg-sky-400" },
+  active: { bg: "bg-[#EAEFFF]/10", border: "border-[#EAEFFF]/25", text: "text-[#EAEFFF]", dot: "bg-[#EAEFFF]" },
+  at_risk: { bg: "bg-amber-500/10", border: "border-amber-500/25", text: "text-amber-400", dot: "bg-amber-400" },
+  inactive: { bg: "bg-white/[0.04]", border: "border-white/[0.10]", text: "text-white/40", dot: "bg-white/30" },
+  churned: { bg: "bg-red-500/8", border: "border-red-500/20", text: "text-red-400/70", dot: "bg-red-400/70" },
 };
 
 function resolve(status) {
@@ -27,6 +32,11 @@ const labels = {
   in_progress: "In Progress",
   completed: "Completed",
   lost: "Lost",
+  onboarding: "Onboarding",
+  active: "Active",
+  at_risk: "At Risk",
+  inactive: "Inactive",
+  churned: "Churned",
 };
 
 function label(status) {

@@ -1,26 +1,37 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Trash2, Calendar, Building2 } from "lucide-react";
+import { X, Plus, Trash2, Calendar, Building2, Mail, ChevronDown } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
 import { StatusBadge } from "../_components/StatusBadge";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
-import { Toolbar, ClearFiltersButton } from "../_components/Toolbar";
+import { Toolbar, FilterChip, ClearFiltersButton } from "../_components/Toolbar";
 
 const PAGE_SIZE = 15;
+
+const clientStatusList = [
+  { value: "onboarding", label: "Onboarding" },
+  { value: "active", label: "Active" },
+  { value: "at_risk", label: "At Risk" },
+  { value: "inactive", label: "Inactive" },
+  { value: "churned", label: "Churned" },
+];
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
+  const [viewClient, setViewClient] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [editingStatus, setEditingStatus] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const addToast = useToast();
 
@@ -48,6 +59,9 @@ export default function ClientsPage() {
         (c.company?.toLowerCase() || "").includes(q)
       );
     }
+    if (statusFilter !== "all") {
+      result = result.filter((c) => c.status === statusFilter);
+    }
     result.sort((a, b) => {
       if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
       if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
@@ -55,10 +69,22 @@ export default function ClientsPage() {
       return 0;
     });
     return result;
-  }, [clients, search, sort]);
+  }, [clients, search, statusFilter, sort]);
 
   const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
   const pageClients = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  async function handleStatusChange(clientId, newStatus) {
+    setEditingStatus(clientId);
+    const supabase = createClient();
+    const { error } = await supabase.from("clients").update({ status: newStatus }).eq("id", clientId);
+    if (error) { addToast(error.message, "error"); }
+    else {
+      setClients((prev) => prev.map((c) => (c.id === clientId ? { ...c, status: newStatus } : c)));
+      addToast("Status updated", "success");
+    }
+    setEditingStatus(null);
+  }
 
   async function handleAdd(formData) {
     const supabase = createClient();
@@ -66,7 +92,7 @@ export default function ClientsPage() {
       name: formData.get("name"),
       email: formData.get("email"),
       company: formData.get("company"),
-      status: "active",
+      status: "onboarding",
     });
     if (error) { addToast(error.message, "error"); return; }
     setShowAdd(false);
@@ -81,6 +107,7 @@ export default function ClientsPage() {
     if (error) { addToast(error.message, "error"); }
     else {
       setClients((prev) => prev.filter((c) => c.id !== id));
+      if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
     }
   }
@@ -106,7 +133,7 @@ export default function ClientsPage() {
     );
   }
 
-  const hasFilters = !!search;
+  const hasFilters = search || statusFilter !== "all";
 
   return (
     <div className="p-5 lg:p-8 space-y-5">
@@ -125,7 +152,13 @@ export default function ClientsPage() {
       </div>
 
       <Toolbar search={search} onSearchChange={setSearch} resultCount={filtered.length}>
-        <ClearFiltersButton onClick={() => { setSearch(""); }} visible={hasFilters} />
+        <ClearFiltersButton onClick={() => { setSearch(""); setStatusFilter("all"); }} visible={hasFilters} />
+        <FilterChip active={statusFilter === "all"} onClick={() => setStatusFilter("all")}>All</FilterChip>
+        {clientStatusList.map((s) => (
+          <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setStatusFilter(s.value)}>
+            {s.label}
+          </FilterChip>
+        ))}
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
@@ -141,18 +174,31 @@ export default function ClientsPage() {
       {pageClients.length === 0 ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
-            {hasFilters ? "No clients match your search" : "No clients yet"}
+            {hasFilters ? "No clients match your filters" : "No clients yet"}
           </p>
         </div>
       ) : (
         <>
-          <DesktopTable clients={pageClients} onDelete={setDeleteTarget} />
-          <MobileCards clients={pageClients} onDelete={setDeleteTarget} />
+          <DesktopTable
+            clients={pageClients}
+            onView={setViewClient}
+            onStatusChange={handleStatusChange}
+            onDelete={setDeleteTarget}
+            editingStatus={editingStatus}
+          />
+          <MobileCards
+            clients={pageClients}
+            onView={setViewClient}
+            onStatusChange={handleStatusChange}
+            onDelete={setDeleteTarget}
+            editingStatus={editingStatus}
+          />
           <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={setPage} />
         </>
       )}
 
       <AddClientModal open={showAdd} onClose={() => setShowAdd(false)} onSubmit={handleAdd} />
+      <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Delete client"
@@ -166,7 +212,7 @@ export default function ClientsPage() {
   );
 }
 
-function DesktopTable({ clients, onDelete }) {
+function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus }) {
   return (
     <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
       <div className="overflow-x-auto">
@@ -175,7 +221,6 @@ function DesktopTable({ clients, onDelete }) {
             <tr className="border-b border-white/[0.06]">
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Name</th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Email</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Company</th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Status</th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Created</th>
               <th className="px-5 py-3.5" />
@@ -185,11 +230,14 @@ function DesktopTable({ clients, onDelete }) {
             {clients.map((client) => (
               <tr key={client.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
                 <td className="px-5 py-4">
-                  <span className="text-sm text-white/80 font-medium">
+                  <button
+                    onClick={() => onView(client)}
+                    className="text-left text-sm text-white/80 font-medium transition-colors hover:text-[#EAEFFF]"
+                  >
                     {client.name || client.company || "\u2014"}
-                  </span>
+                  </button>
                   {client.company && client.name && (
-                    <span className="block text-xs text-white/25 font-normal">{client.company}</span>
+                    <span className="block text-xs text-white/25">{client.company}</span>
                   )}
                 </td>
                 <td className="px-5 py-4">
@@ -200,20 +248,16 @@ function DesktopTable({ clients, onDelete }) {
                   ) : "\u2014"}
                 </td>
                 <td className="px-5 py-4">
-                  {client.company ? (
-                    <span className="flex items-center gap-1.5 text-xs text-white/45">
-                      <Building2 size={12} className="text-white/30" />
-                      {client.company}
-                    </span>
-                  ) : "\u2014"}
-                </td>
-                <td className="px-5 py-4">
-                  <StatusBadge status={client.status === "active" ? "completed" : client.status} />
+                  <StatusSelect
+                    current={client.status}
+                    onChange={(val) => onStatusChange(client.id, val)}
+                    disabled={editingStatus === client.id}
+                  />
                 </td>
                 <td className="px-5 py-4 text-xs text-white/30 tabular-nums">
                   <span className="flex items-center gap-1.5">
                     <Calendar size={11} className="text-white/30" />
-                    {formatDate(client.created_at, { time: false })}
+                    {formatDate(client.created_at)}
                   </span>
                 </td>
                 <td className="px-5 py-4 text-right">
@@ -221,7 +265,6 @@ function DesktopTable({ clients, onDelete }) {
                     onClick={() => onDelete(client.id)}
                     className="p-2 text-red-400/20 transition-all hover:bg-red-500/[0.04] hover:text-red-400/50"
                     aria-label={`Delete ${client.name || "client"}`}
-                    title="Delete client"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -235,37 +278,101 @@ function DesktopTable({ clients, onDelete }) {
   );
 }
 
-function MobileCards({ clients, onDelete }) {
+function MobileCards({ clients, onView, onStatusChange, onDelete, editingStatus }) {
   return (
     <div className="sm:hidden space-y-3">
       {clients.map((client) => (
         <div key={client.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white/80">{client.name || client.company || "\u2014"}</p>
+              <button
+                onClick={() => onView(client)}
+                className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
+              >
+                {client.name || client.company || "\u2014"}
+              </button>
               {client.company && client.name && (
                 <p className="text-xs text-white/25 mt-0.5">{client.company}</p>
               )}
             </div>
-            <StatusBadge status={client.status === "active" ? "completed" : client.status} />
+            <StatusSelect
+              current={client.status}
+              onChange={(val) => onStatusChange(client.id, val)}
+              disabled={editingStatus === client.id}
+            />
           </div>
           <div className="flex flex-wrap gap-2 text-xs text-white/30 mb-3">
             {client.email && <span>{client.email}</span>}
           </div>
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-white/30 tabular-nums">
-              {formatDate(client.created_at, { time: false })}
+              {formatDate(client.created_at)}
             </span>
             <button
               onClick={() => onDelete(client.id)}
               className="p-2 text-red-400/20 hover:text-red-400/50 hover:bg-red-500/[0.04] transition-all"
-              aria-label={`Delete ${client.name || "client"}`}
             >
               <Trash2 size={14} />
             </button>
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+function StatusSelect({ current, onChange, disabled }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        disabled={disabled}
+        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all hover:opacity-80"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Status: ${current}. Click to change.`}
+      >
+        <StatusBadge status={current} />
+        <ChevronDown size={10} className="opacity-50" />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.95 }}
+            transition={{ duration: 0.12 }}
+            className="absolute left-0 top-full mt-1 z-50 w-36 border border-white/[0.08] bg-[#0c0c0c] p-1 shadow-2xl"
+            role="listbox"
+            aria-label="Change status"
+          >
+            {clientStatusList.map((s) => {
+              const isActive = current === s.value;
+              return (
+                <button
+                  key={s.value}
+                  onClick={() => { onChange(s.value); setOpen(false); }}
+                  role="option"
+                  aria-selected={isActive}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-xs font-medium transition-all hover:bg-white/[0.06] text-white/50"
+                >
+                  <StatusBadge status={s.value} />
+                  {isActive && <span className="ml-auto text-[#EAEFFF]/40 text-[10px]">\u2713</span>}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -369,6 +476,91 @@ function AddClientModal({ open, onClose, onSubmit }) {
             </form>
           </motion.div>
         </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function ClientDetailDrawer({ client, onClose }) {
+  if (!client) return null;
+
+  return (
+    <AnimatePresence>
+      {client && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/60"
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed right-0 top-0 z-50 h-full w-full max-w-lg border-l border-white/[0.06] bg-[#0a0a0a] shadow-2xl overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="client-detail-title"
+          >
+            <div className="sticky top-0 flex items-center justify-between border-b border-white/[0.06] bg-[#0a0a0a] px-6 py-4 z-10">
+              <h2 id="client-detail-title" className="text-base font-semibold tracking-tight text-white/90">
+                Client Details
+              </h2>
+              <button
+                onClick={onClose}
+                className="p-1.5 text-white/30 hover:text-white/60 transition-colors hover:bg-white/[0.04]"
+                aria-label="Close panel"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center text-sm font-bold border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 text-[#EAEFFF]/70">
+                  {(client.name || client.company || "?").charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white/90">{client.name || client.company || "Unnamed"}</h3>
+                  <StatusBadge status={client.status} className="mt-0.5" />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  { icon: Mail, label: "Email", value: client.email, href: client.email ? `mailto:${client.email}` : null },
+                  { icon: Building2, label: "Company", value: client.company },
+                ].map((f) => {
+                  if (!f.value) return null;
+                  const Icon = f.icon;
+                  return (
+                    <div key={f.label} className="flex items-center gap-3 border-b border-white/[0.04] py-3 last:border-0">
+                      <Icon size={13} className="text-white/30 shrink-0" />
+                      <span className="text-[10px] font-semibold tracking-wider text-white/25 uppercase w-16 shrink-0">
+                        {f.label}
+                      </span>
+                      {f.href ? (
+                        <a href={f.href} className="text-sm text-white/60 transition-colors hover:text-[#EAEFFF]">
+                          {f.value}
+                        </a>
+                      ) : (
+                        <span className="text-sm text-white/60">{f.value}</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
+                <Calendar size={11} />
+                Created {formatDate(client.created_at)}
+              </div>
+            </div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

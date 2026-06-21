@@ -94,7 +94,7 @@ export default function LeadsPage() {
     setConverting(lead.id);
     const supabase = createClient();
     const { error: insertErr } = await supabase.from("clients").insert({
-      name: lead.name, email: lead.email, company: lead.company, status: "active",
+      name: lead.name, email: lead.email, company: lead.company, status: "onboarding",
     });
     if (insertErr) { addToast(insertErr.message, "error"); setConverting(null); return; }
     const { error: updateErr } = await supabase

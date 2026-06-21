@@ -49,7 +49,7 @@ export async function convertLeadToClient(formData) {
       name: lead.name,
       email: lead.email,
       company: lead.company,
-      status: "active",
+      status: "onboarding",
     });
 
   if (insertError) throw insertError;
@@ -74,7 +74,7 @@ export async function addClient(formData) {
 
   const { error } = await supabase
     .from("clients")
-    .insert({ name, email, company, status: "active" });
+    .insert({ name, email, company, status: "onboarding" });
 
   if (error) throw error;
   revalidatePath("/admin/clients");
