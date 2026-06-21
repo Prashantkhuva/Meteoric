@@ -1,62 +1,134 @@
-import { createClient } from "@/lib/server";
+"use client";
 
-export async function LeadsChart() {
-  const supabase = await createClient();
-  if (!supabase) return null;
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-  const { data: leads } = await supabase.from("leads").select("status");
+const COLORS = {
+  new: "#34d399",
+  contacted: "#38bdf8",
+  qualified: "#7c6aff",
+  proposal: "#c8a97e",
+  won: "#EAEFFF",
+  lost: "#ef4444",
+};
 
-  const counts = { new: 0, contacted: 0, qualified: 0, proposal: 0, won: 0, lost: 0 };
-  const steps = [
-    { key: "new", label: "New", color: "#34d399", progress: "from-emerald-400/60 to-emerald-500/40" },
-    { key: "contacted", label: "Contacted", color: "#38bdf8", progress: "from-sky-400/60 to-sky-500/40" },
-    { key: "qualified", label: "Qualified", color: "#7c6aff", progress: "from-indigo-400/60 to-indigo-500/40" },
-    { key: "proposal", label: "Proposal", color: "#c8a97e", progress: "from-amber-300/60 to-amber-400/40" },
-    { key: "won", label: "Won", color: "#EAEFFF", progress: "from-[#EAEFFF]/60 to-[#EAEFFF]/40" },
-    { key: "lost", label: "Lost", color: "#ef4444", progress: "from-red-400/60 to-red-500/40" },
-  ];
+const STEPS = [
+  { key: "new", label: "New" },
+  { key: "contacted", label: "Contacted" },
+  { key: "qualified", label: "Qualified" },
+  { key: "proposal", label: "Proposal" },
+  { key: "won", label: "Won" },
+  { key: "lost", label: "Lost" },
+];
 
-  leads?.forEach((l) => { if (counts[l.status] !== undefined) counts[l.status]++; });
+export function LeadsChart({ data }) {
+  if (!data || data.total === 0) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-6">
+        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-[#EAEFFF]/[0.02] blur-[100px]" />
+        <div className="relative">
+          <h2 className="text-base font-semibold tracking-tight text-white/90">Pipeline Funnel</h2>
+          <p className="mt-0.5 text-xs text-white/25">Leads grouped by stage</p>
+          <div className="flex items-center justify-center h-48 text-white/15 text-sm mt-4">
+            No lead data yet
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  const { counts, total } = data;
+
+  const chartData = STEPS.map((s) => ({
+    name: s.label,
+    value: counts[s.key] || 0,
+    color: COLORS[s.key],
+    key: s.key,
+  })).filter((d) => d.value > 0);
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const radius = outerRadius + 24;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const item = chartData[index];
+    if (!item || percent < 0.05) return null;
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="rgba(255,255,255,0.4)"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        fontSize={11}
+      >
+        {item.name}
+      </text>
+    );
+  };
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-6">
       <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-[#EAEFFF]/[0.02] blur-[100px]" />
       <div className="relative">
         <h2 className="text-base font-semibold tracking-tight text-white/90">Pipeline Funnel</h2>
-        <p className="mt-0.5 text-xs text-white/25">Leads grouped by stage</p>
+        <p className="mt-0.5 text-xs text-white/25">{total} total leads across {chartData.length} stages</p>
 
-        <div className="mt-6 space-y-5">
-          {steps.map(({ key, label, color, progress }) => {
-            const count = counts[key];
-            const pct = total > 0 ? (count / total) * 100 : 0;
-            return (
-              <div key={key} className="group">
-                <div className="mb-2 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="absolute inline-flex h-full w-full rounded-full opacity-40" style={{ background: color }} />
-                      <span className="relative inline-flex h-2.5 w-2.5 rounded-full" style={{ background: color }} />
-                    </span>
-                    <span className="text-xs font-medium text-white/50 transition-colors group-hover:text-white/70 tracking-wide">{label}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs tabular-nums text-white/30">{count}</span>
-                    <span className="text-[11px] tabular-nums text-white/15 w-10 text-right">{pct.toFixed(0)}%</span>
-                  </div>
-                </div>
-                <div className="relative h-2.5 overflow-hidden rounded-full bg-white/[0.03] border border-white/[0.03]">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r transition-all duration-700 ease-out opacity-80 group-hover:opacity-100 shadow-[0_0_12px_rgba(234,239,255,0.08)]"
-                    style={{ width: `${pct}%` }}
+        <div className="mt-4 grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+          <div className="lg:col-span-3 flex justify-center">
+            <div className="relative">
+              <ResponsiveContainer width={280} height={280}>
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={72}
+                    outerRadius={100}
+                    dataKey="value"
+                    strokeWidth={0}
+                    label={renderCustomLabel}
+                    labelLine={false}
                   >
-                    <div className={`h-full w-full rounded-full bg-gradient-to-r ${progress}`} />
-                  </div>
+                    {chartData.map((entry, index) => (
+                      <Cell key={entry.key} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center">
+                  <p className="text-3xl font-bold tracking-tight text-white tabular-nums">{total}</p>
+                  <p className="text-[11px] text-white/25 font-medium tracking-wider uppercase">Total</p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 space-y-2.5">
+            {STEPS.map((s) => {
+              const count = counts[s.key] || 0;
+              const pct = total > 0 ? (count / total) * 100 : 0;
+              if (count === 0 && s.key !== "lost") return null;
+              return (
+                <div key={s.key} className="group flex items-center justify-between rounded-xl px-3.5 py-2.5 transition-all duration-300 hover:bg-white/[0.02]">
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className="h-2.5 w-2.5 rounded-full ring-1 ring-inset"
+                      style={{
+                        background: COLORS[s.key],
+                        ringColor: `${COLORS[s.key]}40`,
+                      }}
+                    />
+                    <span className="text-sm text-white/50 group-hover:text-white/70 transition-colors">{s.label}</span>
+                  </div>
+                  <div className="flex items-center gap-3 tabular-nums">
+                    <span className="text-sm font-medium text-white/80">{count}</span>
+                    <span className="text-xs text-white/20 w-8 text-right">{pct.toFixed(0)}%</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

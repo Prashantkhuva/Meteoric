@@ -9,31 +9,34 @@ async function getStats() {
     .from("leads")
     .select("*", { count: "exact", head: true });
 
-  const { count: newLeads } = await supabase
-    .from("leads")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "new");
+  async function countByStatus(status) {
+    const { count } = await supabase
+      .from("leads")
+      .select("*", { count: "exact", head: true })
+      .eq("status", status);
+    return count ?? 0;
+  }
 
-  const { count: contactedLeads } = await supabase
-    .from("leads")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "contacted");
-
-  const { count: wonLeads } = await supabase
-    .from("leads")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "won");
-
-  const { count: totalClients } = await supabase
-    .from("clients")
-    .select("*", { count: "exact", head: true });
+  const [newLeads, contactedLeads, qualifiedLeads, proposalLeads, wonLeads, lostLeads, totalClients] =
+    await Promise.all([
+      countByStatus("new"),
+      countByStatus("contacted"),
+      countByStatus("qualified"),
+      countByStatus("proposal"),
+      countByStatus("won"),
+      countByStatus("lost"),
+      supabase.from("clients").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0),
+    ]);
 
   return {
     totalLeads: totalLeads ?? 0,
-    newLeads: newLeads ?? 0,
-    contactedLeads: contactedLeads ?? 0,
-    wonLeads: wonLeads ?? 0,
-    totalClients: totalClients ?? 0,
+    newLeads,
+    contactedLeads,
+    qualifiedLeads,
+    proposalLeads,
+    wonLeads,
+    lostLeads,
+    totalClients,
   };
 }
 
@@ -61,7 +64,19 @@ export default async function AdminDashboard() {
           </div>
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <LeadsChart />
+              <LeadsChart
+                data={{
+                  counts: {
+                    new: stats.newLeads,
+                    contacted: stats.contactedLeads,
+                    qualified: stats.qualifiedLeads,
+                    proposal: stats.proposalLeads,
+                    won: stats.wonLeads,
+                    lost: stats.lostLeads,
+                  },
+                  total: stats.totalLeads,
+                }}
+              />
             </div>
             <ClientsMini total={stats.totalClients} />
           </div>
