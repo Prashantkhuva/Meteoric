@@ -27,6 +27,16 @@ export async function sendLeadAutoReply(lead) {
   const r = getResend()
   if (!r) { console.log("[email] RESEND_API_KEY not set"); return }
   if (!lead.email) { console.log("[email] no lead email, skipping auto-reply"); return }
+
+  const adminEmail = process.env.ADMIN_EMAIL
+  const fromDomain = (process.env.FROM_EMAIL || "").match(/@([^>]+)/)?.[1]
+
+  if (fromDomain === "resend.dev" && lead.email !== adminEmail) {
+    console.log("[email] Resend test mode: can only send to", adminEmail, "— skipping auto-reply to", lead.email)
+    console.log("[email] To send to other recipients, verify a domain at https://resend.com/domains and update FROM_EMAIL")
+    return
+  }
+
   const { default: LeadAutoReply } = await import("@/emails/lead-autoreply")
   console.log("[email] sending auto-reply to", lead.email)
   const result = await r.emails.send({

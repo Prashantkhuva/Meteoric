@@ -54,10 +54,10 @@ export default async function AdminDashboard() {
       {stats ? (
         <>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Total Leads" value={stats.totalLeads} gradient="from-[#EAEFFF]/20 via-[#EAEFFF]/10 to-transparent" />
-            <StatCard label="New" value={stats.newLeads} gradient="from-emerald-500/20 via-emerald-500/10 to-transparent" />
-            <StatCard label="Contacted" value={stats.contactedLeads} gradient="from-sky-500/20 via-sky-500/10 to-transparent" />
-            <StatCard label="Won" value={stats.wonLeads} gradient="from-violet-500/20 via-violet-500/10 to-transparent" />
+            <StatCard label="Total Leads" value={stats.totalLeads} accent="#EAEFFF" />
+            <StatCard label="New" value={stats.newLeads} accent="#34d399" />
+            <StatCard label="Contacted" value={stats.contactedLeads} accent="#38bdf8" />
+            <StatCard label="Won" value={stats.wonLeads} accent="#7c6aff" />
           </div>
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
@@ -75,15 +75,20 @@ export default async function AdminDashboard() {
   );
 }
 
-function StatCard({ label, value, gradient }) {
+function StatCard({ label, value, accent }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md transition-all duration-500 hover:border-[#EAEFFF]/20 hover:shadow-[0_0_40px_rgba(234,239,255,0.04)]">
-      <div className="absolute inset-0 bg-gradient-to-b opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ backgroundImage: `linear-gradient(to bottom, ${gradient.replace('from-', '').replace('via-', '').replace('to-', '')})` }} />
-      <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30 bg-[#EAEFFF]/10" />
+    <div className="group relative overflow-hidden rounded-2xl border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md transition-all duration-500 hover:shadow-[0_0_40px_rgba(234,239,255,0.06)]">
+      <div
+        className="absolute -top-20 -right-20 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
+        style={{ background: `${accent}20` }}
+      />
       <div className="relative p-5">
         <p className="text-xs font-medium tracking-wider text-white/40 uppercase">{label}</p>
         <p className="mt-2 text-3xl font-bold tracking-tight text-white tabular-nums">{value}</p>
-        <div className="mt-2 h-[2px] w-12 rounded-full bg-gradient-to-r from-white/20 to-transparent" />
+        <div
+          className="mt-2 h-[2px] w-12 rounded-full"
+          style={{ background: `linear-gradient(to right, ${accent}60, transparent)` }}
+        />
       </div>
     </div>
   );

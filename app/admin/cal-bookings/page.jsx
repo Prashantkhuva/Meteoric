@@ -204,11 +204,11 @@ export default function CalBookingsPage() {
           </p>
         </div>
         {bookings.length > 0 && (
-          <div className="flex items-center gap-1 rounded-xl border border-[#EAEFFF]/10 bg-black/40 p-1">
+          <div className="flex items-center gap-1 rounded-full border border-[#EAEFFF]/10 bg-black/40 backdrop-blur-md p-1">
             <button
               onClick={() => setView("table")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                view === "table" ? "bg-[#EAEFFF]/10 text-[#EAEFFF]" : "text-white/30 hover:text-white/60"
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                view === "table" ? "bg-[#EAEFFF] text-[#202020]" : "text-white/30 hover:text-white/60"
               }`}
             >
               <List size={14} />
@@ -216,8 +216,8 @@ export default function CalBookingsPage() {
             </button>
             <button
               onClick={() => setView("calendar")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                view === "calendar" ? "bg-[#EAEFFF]/10 text-[#EAEFFF]" : "text-white/30 hover:text-white/60"
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                view === "calendar" ? "bg-[#EAEFFF] text-[#202020]" : "text-white/30 hover:text-white/60"
               }`}
             >
               <CalendarDays size={14} />
@@ -493,7 +493,7 @@ export default function CalBookingsPage() {
                           href={meetingUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/30"
+                          className="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/30"
                         >
                           <ExternalLink size={16} />
                           Join Meeting
@@ -503,10 +503,13 @@ export default function CalBookingsPage() {
                       {attendee?.email && !showConvertForm && (
                         <button
                           onClick={() => setShowConvertForm(true)}
-                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2.5 text-sm font-medium text-[#EAEFFF]/80 transition-all hover:bg-[#EAEFFF]/10 hover:border-[#EAEFFF]/25"
+                          className="relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-full bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                         >
-                          <UserPlus size={16} />
-                          Convert to Lead
+                          <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
+                          <span className="relative z-10 flex items-center gap-2">
+                            <UserPlus size={16} />
+                            Convert to Lead
+                          </span>
                         </button>
                       )}
                     </div>
@@ -572,16 +575,17 @@ export default function CalBookingsPage() {
                             <button
                               type="button"
                               onClick={() => { setShowConvertForm(false); setConvertMsg(null) }}
-                              className="flex-1 rounded-xl border border-[#EAEFFF]/10 px-4 py-2.5 text-sm text-white/40 transition-all hover:bg-[#EAEFFF]/5"
+                              className="flex-1 rounded-full border border-[#EAEFFF]/10 px-4 py-2.5 text-sm text-white/40 transition-all hover:bg-[#EAEFFF]/5"
                             >
                               Cancel
                             </button>
                             <button
                               type="submit"
                               disabled={converting}
-                              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#EAEFFF] px-4 py-2.5 text-sm font-medium text-black transition-all hover:bg-[#EAEFFF]/90 disabled:opacity-50"
+                              className="relative overflow-hidden flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
                             >
-                              {converting ? "Saving..." : "Save Lead"}
+                              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
+                              <span className="relative z-10">{converting ? "Saving..." : "Save Lead"}</span>
                             </button>
                           </div>
                         </div>

@@ -184,10 +184,13 @@ export default function LeadsPage() {
         </div>
         <button
           onClick={() => setShowAddLead(true)}
-          className="group flex items-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]"
+          className="group relative overflow-hidden rounded-full bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         >
-          <Plus size={14} />
-          Add Lead
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+          <span className="relative z-10 flex items-center gap-2">
+            <Plus size={14} />
+            Add Lead
+          </span>
         </button>
       </div>
 
@@ -353,8 +356,11 @@ export default function LeadsPage() {
                   <input name="budget" className="w-full rounded-xl border border-[#EAEFFF]/10 bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all duration-300 focus:border-[#EAEFFF]/30 focus:outline-none focus:shadow-[0_0_20px_rgba(234,239,255,0.04)]" placeholder="$5,000 - $10,000" />
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 rounded-xl border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
-                  <button type="submit" className="flex-1 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2.5 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]">Add Lead</button>
+                  <button type="button" onClick={() => setShowAddLead(false)} className="flex-1 rounded-full border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60">Cancel</button>
+                  <button type="submit" className="flex-1 relative overflow-hidden rounded-full bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                    <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
+                    <span className="relative z-10">Add Lead</span>
+                  </button>
                 </div>
               </form>
             </motion.div>
@@ -553,16 +559,19 @@ function LeadDetailModal({ lead, onClose, onDelete }) {
             <button
               onClick={handleConvert}
               disabled={cnv}
-              className="flex items-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF] disabled:opacity-40"
+              className="relative overflow-hidden flex items-center gap-2 rounded-full bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
             >
-              <UserPlus size={13} />
-              {cnv ? "Converting..." : "Convert to Client"}
-              <ArrowRight size={12} />
+              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
+              <span className="relative z-10 flex items-center gap-2">
+                <UserPlus size={13} />
+                {cnv ? "Converting..." : "Convert to Client"}
+                <ArrowRight size={12} />
+              </span>
             </button>
           )}
           <button
             onClick={() => { onDelete(lead.id); onClose(); }}
-            className="ml-auto flex items-center gap-2 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+            className="ml-auto flex items-center gap-2 rounded-full border border-red-500/10 bg-red-500/5 px-4 py-2 text-xs font-medium text-red-400/50 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
           >
             <Trash2 size={13} />
             Delete

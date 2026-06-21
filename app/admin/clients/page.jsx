@@ -118,10 +118,13 @@ export default function ClientsPage() {
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="group flex items-center gap-2 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]"
+          className="group relative overflow-hidden rounded-full bg-[#EAEFFF] px-5 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         >
-          <Plus size={14} />
-          Add Client
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+          <span className="relative z-10 flex items-center gap-2">
+            <Plus size={14} />
+            Add Client
+          </span>
         </button>
       </div>
 
@@ -261,15 +264,16 @@ export default function ClientsPage() {
                   <button
                     type="button"
                     onClick={() => setShowAdd(false)}
-                    className="flex-1 rounded-xl border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
+                    className="flex-1 rounded-full border border-[#EAEFFF]/10 px-4 py-2.5 text-xs font-medium text-white/40 transition-all duration-300 hover:bg-white/[0.03] hover:text-white/60"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 rounded-xl border border-[#EAEFFF]/15 bg-[#EAEFFF]/5 px-4 py-2.5 text-xs font-medium text-[#EAEFFF]/70 transition-all duration-300 hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]"
+                    className="flex-1 relative overflow-hidden rounded-full bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    Add Client
+                    <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
+                    <span className="relative z-10">Add Client</span>
                   </button>
                 </div>
               </form>

@@ -105,10 +105,10 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="group relative w-full overflow-hidden rounded-xl border-2 border-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#EAEFFF] transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
+            className="group relative w-full overflow-hidden rounded-full bg-[#EAEFFF] px-4 py-2.5 text-sm font-semibold text-[#202020] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
           >
-            <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-            <span className="relative z-10 group-hover:text-black transition-colors duration-300">
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            <span className="relative z-10">
               {loading ? "Signing in..." : "Sign in"}
             </span>
           </button>
