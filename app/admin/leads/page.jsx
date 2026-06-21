@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@/lib/client";
 import { updateLeadStatus, convertLeadToClient, deleteLead, addLead } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
-  FileText, DollarSign, Calendar, ChevronDown,
+  FileText, DollarSign, Calendar,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
 import { StatusBadge } from "../_components/StatusBadge";
+import { StatusSelect } from "../_components/StatusSelect";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, ClearFiltersButton } from "../_components/Toolbar";
@@ -269,9 +270,10 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
                 </td>
                 <td className="px-5 py-3.5">
                   <StatusSelect
-                    current={lead.status}
+                    value={lead.status}
                     onChange={(val) => onStatusChange(lead.id, val)}
                     disabled={editingStatus === lead.id}
+                    options={statusList}
                   />
                 </td>
                 <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
@@ -326,9 +328,10 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
               )}
             </div>
             <StatusSelect
-              current={lead.status}
+              value={lead.status}
               onChange={(val) => onStatusChange(lead.id, val)}
               disabled={editingStatus === lead.id}
+              options={statusList}
             />
           </div>
           <div className="flex flex-wrap gap-2 text-xs text-white/30 mb-3">
@@ -358,62 +361,6 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
           </div>
         </div>
       ))}
-    </div>
-  );
-}
-
-function StatusSelect({ current, onChange, disabled }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const handleClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        disabled={disabled}
-        className="inline-flex items-center gap-1 text-xs font-medium text-white/50 hover:text-white/70 transition-colors"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-label={`Status: ${current}. Click to change.`}
-      >
-        <StatusBadge status={current} />
-        <ChevronDown size={10} className="opacity-40" />
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.95 }}
-            transition={{ duration: 0.12 }}
-            className="absolute left-0 top-full mt-1 z-50 w-36 border border-white/[0.08] bg-[#0c0c0c] p-1 shadow-2xl"
-            role="listbox"
-            aria-label="Change status"
-          >
-            {statusList.map((s) => {
-              const isActive = current === s.value;
-              return (
-                <button
-                  key={s.value}
-                  onClick={() => { onChange(s.value); setOpen(false); }}
-                  role="option"
-                  aria-selected={isActive}
-                  className="flex w-full items-center gap-2.5 px-3 py-2 text-xs font-medium transition-all hover:bg-white/[0.06] text-white/50"
-                >
-                  <StatusBadge status={s.value} />
-                  {isActive && <span className="ml-auto text-[#EAEFFF]/40 text-[10px]">\u2713</span>}
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
