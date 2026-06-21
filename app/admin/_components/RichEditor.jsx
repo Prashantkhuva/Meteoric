@@ -109,7 +109,9 @@ export function RichEditor({ content, onChange, placeholder = "Start writing..."
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a]">
       <Toolbar editor={editor} />
-      <EditorContent editor={editor} />
+      <div className="max-h-[300px] overflow-y-auto">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 }
