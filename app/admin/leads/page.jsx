@@ -232,9 +232,8 @@ export default function LeadsPage() {
 
 function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting }) {
   return (
-    <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a]">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+    <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-x-auto">
+      <table className="w-full text-left text-sm min-w-max">
           <thead>
             <tr className="border-b border-white/[0.06]">
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Name</th>
@@ -305,7 +304,6 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
             ))}
           </tbody>
         </table>
-      </div>
     </div>
   );
 }
