@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
+import { updateLeadStatus, convertLeadToClient, deleteLead, addLead } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
@@ -80,59 +81,49 @@ export default function LeadsPage() {
 
   async function handleStatusChange(leadId, newStatus) {
     setEditingStatus(leadId);
-    const supabase = createClient();
-    const { error } = await supabase.from("leads").update({ status: newStatus }).eq("id", leadId);
-    if (error) { addToast(error.message, "error"); }
-    else {
+    try {
+      await updateLeadStatus(leadId, newStatus);
       setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)));
       addToast("Status updated", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to update status", "error");
     }
     setEditingStatus(null);
   }
 
   async function handleConvert(lead) {
     setConverting(lead.id);
-    const supabase = createClient();
-    const { error: insertErr } = await supabase.from("clients").insert({
-      name: lead.name, email: lead.email, company: lead.company, status: "onboarding",
-    });
-    if (insertErr) { addToast(insertErr.message, "error"); setConverting(null); return; }
-    const { error: updateErr } = await supabase
-      .from("leads").update({ status: "completed" }).eq("id", lead.id);
-    if (updateErr) { addToast(updateErr.message, "error"); }
-    else {
+    try {
+      await convertLeadToClient(lead.id);
       setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status: "completed" } : l)));
       addToast(`${lead.name || "Lead"} converted to client`, "success");
+    } catch (err) {
+      addToast(err.message || "Failed to convert", "error");
     }
     setConverting(null);
   }
 
   async function handleDelete(leadId) {
     setDeleteTarget(null);
-    const supabase = createClient();
-    const { error } = await supabase.from("leads").delete().eq("id", leadId);
-    if (error) { addToast(error.message, "error"); }
-    else {
+    try {
+      await deleteLead(leadId);
       setLeads((prev) => prev.filter((l) => l.id !== leadId));
       if (viewLead?.id === leadId) setViewLead(null);
       addToast("Lead deleted", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
     }
   }
 
   async function handleAddLead(formData) {
-    const supabase = createClient();
-    const { error } = await supabase.from("leads").insert({
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      services: formData.get("services"),
-      budget: formData.get("budget"),
-      status: "inquiry",
-    });
-    if (error) { addToast(error.message, "error"); return; }
-    setShowAddLead(false);
-    addToast("Lead added", "success");
-    fetchLeads();
+    try {
+      await addLead(formData);
+      setShowAddLead(false);
+      addToast("Lead added", "success");
+      fetchLeads();
+    } catch (err) {
+      addToast(err.message || "Failed to add lead", "error");
+    }
   }
 
   if (loading) {

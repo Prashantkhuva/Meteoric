@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X } from "lucide-react"
 import { Calendar } from "@/Components/ui/calendar"
-import { createClient } from "@/lib/client"
+import { createLeadFromBooking } from "../actions"
 import { formatDate, formatShort, formatTime, formatDateLong } from "@/lib/admin"
 import { cn } from "@/lib/utils"
 import { useToast } from "../_components/ToastContext"
@@ -128,26 +128,11 @@ export default function CalBookingsPage() {
     e.preventDefault()
     setConverting(true)
     setConvertMsg(null)
-    const fd = new FormData(e.target)
     try {
-      const supabase = createClient()
-      const { error: dbErr } = await supabase.from("leads").insert({
-        name: fd.get("name") || "Unknown",
-        email: fd.get("email") || "",
-        phone: fd.get("phone") || "",
-        company: fd.get("company") || "",
-        services: fd.get("services") || "",
-        details: fd.get("details") || "",
-        budget: fd.get("budget") || "",
-        status: "new",
-      })
-      if (dbErr) {
-        setConvertMsg({ type: "error", text: dbErr.message })
-      } else {
-        setConvertMsg({ type: "success", text: "Lead added successfully." })
-        addToast("Lead created from booking", "success")
-        setTimeout(() => { setShowConvertForm(false); setConvertMsg(null) }, 1500)
-      }
+      await createLeadFromBooking(new FormData(e.target))
+      setConvertMsg({ type: "success", text: "Lead added successfully." })
+      addToast("Lead created from booking", "success")
+      setTimeout(() => { setShowConvertForm(false); setConvertMsg(null) }, 1500)
     } catch (err) {
       setConvertMsg({ type: "error", text: err.message })
     }

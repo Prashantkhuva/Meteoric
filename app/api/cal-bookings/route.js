@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server"
+import { createClient } from "@/lib/server"
 
 const CAL_API = "https://api.cal.com/v2"
 
 export async function GET() {
+  const supabase = await createClient()
+  if (supabase) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+  }
+
   const key = process.env.CALCOM_API_KEY
   if (!key) {
     return NextResponse.json({ error: "CALCOM_API_KEY not set" }, { status: 500 })

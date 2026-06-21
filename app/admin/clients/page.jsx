@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
+import { updateClientStatus, addClient, deleteClient } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Trash2, Calendar, Building2, Mail, ChevronDown } from "lucide-react";
 import { formatDate } from "@/lib/admin";
@@ -76,39 +77,36 @@ export default function ClientsPage() {
 
   async function handleStatusChange(clientId, newStatus) {
     setEditingStatus(clientId);
-    const supabase = createClient();
-    const { error } = await supabase.from("clients").update({ status: newStatus }).eq("id", clientId);
-    if (error) { addToast(error.message, "error"); }
-    else {
+    try {
+      await updateClientStatus(clientId, newStatus);
       setClients((prev) => prev.map((c) => (c.id === clientId ? { ...c, status: newStatus } : c)));
       addToast("Status updated", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to update status", "error");
     }
     setEditingStatus(null);
   }
 
   async function handleAdd(formData) {
-    const supabase = createClient();
-    const { error } = await supabase.from("clients").insert({
-      name: formData.get("name"),
-      email: formData.get("email"),
-      company: formData.get("company"),
-      status: "onboarding",
-    });
-    if (error) { addToast(error.message, "error"); return; }
-    setShowAdd(false);
-    addToast("Client added", "success");
-    fetchClients();
+    try {
+      await addClient(formData);
+      setShowAdd(false);
+      addToast("Client added", "success");
+      fetchClients();
+    } catch (err) {
+      addToast(err.message || "Failed to add client", "error");
+    }
   }
 
   async function handleDelete(id) {
     setDeleteTarget(null);
-    const supabase = createClient();
-    const { error } = await supabase.from("clients").delete().eq("id", id);
-    if (error) { addToast(error.message, "error"); }
-    else {
+    try {
+      await deleteClient(id);
       setClients((prev) => prev.filter((c) => c.id !== id));
       if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
     }
   }
 

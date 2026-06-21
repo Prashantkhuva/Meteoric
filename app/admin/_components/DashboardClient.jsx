@@ -9,7 +9,7 @@ import { LeadsTrendChart } from "./LeadsTrendChart";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export default function DashboardClient({ stats, conversionRate, monthlyLeadData }) {
+export default function DashboardClient({ stats, conversionRate, monthlyLeadData, userName }) {
   const [greeting, setGreeting] = useState("");
   const [dateStr, setDateStr] = useState("");
 
@@ -25,7 +25,7 @@ export default function DashboardClient({ stats, conversionRate, monthlyLeadData
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">
-            {greeting}, Prashant
+            {greeting}, {userName || "Admin"}
           </h1>
           <p className="mt-1 text-sm text-white/35">{dateStr}</p>
         </div>

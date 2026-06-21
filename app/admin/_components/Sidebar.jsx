@@ -8,6 +8,9 @@ import {
   Users,
   Briefcase,
   Calendar,
+  FileText,
+  FolderKanban,
+  Receipt,
   LogOut,
   X,
 } from "lucide-react";
@@ -19,10 +22,13 @@ const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/leads", label: "Leads", icon: Users },
   { href: "/admin/clients", label: "Clients", icon: Briefcase },
+  { href: "/admin/proposals", label: "Proposals", icon: FileText },
+  { href: "/admin/projects", label: "Projects", icon: FolderKanban },
+  { href: "/admin/invoices", label: "Invoices", icon: Receipt },
   { href: "/admin/cal-bookings", label: "Bookings", icon: Calendar },
 ];
 
-export function Sidebar({ mobileOpen, onMobileClose }) {
+export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const pathname = usePathname();
 
   useEffect(() => {
@@ -76,11 +82,11 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
       <div className="border-t border-white/[0.04] p-3 space-y-2">
         <div className="flex items-center gap-3 px-3 py-2">
           <div className="h-8 w-8 rounded-full bg-[#EAEFFF] flex items-center justify-center text-xs font-bold text-[#121212]">
-            P
+            {(userName || "A").charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white/70 truncate">Prashant</p>
-            <p className="text-xs text-white/35 truncate">Administrator</p>
+            <p className="text-sm font-medium text-white/70 truncate">{userName || "Admin"}</p>
+            <p className="text-xs text-white/35 truncate">{userEmail || "Administrator"}</p>
           </div>
         </div>
         <form action={signOut}>

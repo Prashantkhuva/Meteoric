@@ -12,12 +12,9 @@ export async function signOut() {
   redirect("/login");
 }
 
-export async function updateLeadStatus(formData) {
+export async function updateLeadStatus(id, status) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
-
-  const id = formData.get("id");
-  const status = formData.get("status");
 
   const { error } = await supabase
     .from("leads")
@@ -29,11 +26,27 @@ export async function updateLeadStatus(formData) {
   revalidatePath("/admin");
 }
 
-export async function convertLeadToClient(formData) {
+export async function addLead(formData) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
-  const id = formData.get("id");
+  const { error } = await supabase.from("leads").insert({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    services: formData.get("services"),
+    budget: formData.get("budget"),
+    status: "inquiry",
+  });
+
+  if (error) throw error;
+  revalidatePath("/admin/leads");
+  revalidatePath("/admin");
+}
+
+export async function convertLeadToClient(id) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
 
   const { data: lead } = await supabase
     .from("leads")
@@ -64,6 +77,34 @@ export async function convertLeadToClient(formData) {
   revalidatePath("/admin");
 }
 
+export async function deleteLead(id) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase
+    .from("leads")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/leads");
+  revalidatePath("/admin");
+}
+
+export async function updateClientStatus(id, status) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase
+    .from("clients")
+    .update({ status })
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/clients");
+  revalidatePath("/admin");
+}
+
 export async function addClient(formData) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
@@ -81,27 +122,9 @@ export async function addClient(formData) {
   revalidatePath("/admin");
 }
 
-export async function deleteLead(formData) {
+export async function deleteClient(id) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
-
-  const id = formData.get("id");
-
-  const { error } = await supabase
-    .from("leads")
-    .delete()
-    .eq("id", id);
-
-  if (error) throw error;
-  revalidatePath("/admin/leads");
-  revalidatePath("/admin");
-}
-
-export async function deleteClient(formData) {
-  const supabase = await createClient();
-  if (!supabase) throw new Error("Supabase not configured");
-
-  const id = formData.get("id");
 
   const { error } = await supabase
     .from("clients")
@@ -110,5 +133,25 @@ export async function deleteClient(formData) {
 
   if (error) throw error;
   revalidatePath("/admin/clients");
+  revalidatePath("/admin");
+}
+
+export async function createLeadFromBooking(formData) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase.from("leads").insert({
+    name: formData.get("name") || "Unknown",
+    email: formData.get("email") || "",
+    phone: formData.get("phone") || "",
+    company: formData.get("company") || "",
+    services: formData.get("services") || "",
+    details: formData.get("details") || "",
+    budget: formData.get("budget") || "",
+    status: "inquiry",
+  });
+
+  if (error) throw error;
+  revalidatePath("/admin/leads");
   revalidatePath("/admin");
 }

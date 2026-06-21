@@ -96,6 +96,18 @@ async function getStats() {
 export default async function AdminDashboard() {
   const stats = await getStats();
 
+  const supabase = await createClient();
+  let userName = "Admin";
+  if (supabase) {
+    const { data } = await supabase.auth.getUser();
+    const user = data?.user;
+    userName =
+      user?.user_metadata?.full_name ||
+      user?.user_metadata?.name ||
+      user?.email?.split("@")[0] ||
+      "Admin";
+  }
+
   if (!stats) {
     return (
       <div className="p-6 lg:p-8">
@@ -110,7 +122,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="p-5 lg:p-8">
-      <DashboardClient stats={stats} conversionRate={conversionRate} monthlyLeadData={stats.monthlyLeadData} />
+      <DashboardClient stats={stats} conversionRate={conversionRate} monthlyLeadData={stats.monthlyLeadData} userName={userName} />
     </div>
   );
 }
