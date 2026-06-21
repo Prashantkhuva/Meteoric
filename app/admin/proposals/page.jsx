@@ -468,15 +468,16 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-2xl border border-white/[0.08] bg-[#0c0c0c] p-6 shadow-2xl"
+            className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl"
           >
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
+              className="sticky top-0 z-10 float-right m-4 p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04] bg-[#0c0c0c]"
               aria-label="Close dialog"
             >
               <X size={16} />
             </button>
+            <div className="p-6 pt-0">
             <h2 id="proposal-form-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">{title}</h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -555,6 +556,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
                 </button>
               </div>
             </form>
+            </div>
           </motion.div>
         </motion.div>
       )}
