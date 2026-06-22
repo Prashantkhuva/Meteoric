@@ -1,6 +1,7 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
+import { signOut } from "../actions";
 
 export function TopBar({ title, onMenuClick }) {
   return (
@@ -18,6 +19,15 @@ export function TopBar({ title, onMenuClick }) {
         </span>
       </div>
       <div className="flex items-center gap-3">
+        <form action={signOut} className="lg:hidden">
+          <button
+            type="submit"
+            className="rounded-lg p-1.5 text-white/30 hover:bg-white/[0.04] hover:text-white/60 transition-colors"
+            aria-label="Sign out"
+          >
+            <LogOut size={18} />
+          </button>
+        </form>
         <div className="flex items-center gap-2 rounded-full border border-white/[0.06] px-3 py-1 bg-[#0a0a0a]">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
