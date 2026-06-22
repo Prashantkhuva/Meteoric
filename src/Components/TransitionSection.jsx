@@ -65,19 +65,18 @@ export default function TransitionSection() {
   }, { scope: sectionRef });
 
   useGSAP(() => {
-    gsap.from(cardsRef.current?.querySelectorAll(".gsap-card"), {
-      y: 60,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: cardsRef.current,
-        start: "top 80%",
-        end: "top 35%",
-        toggleActions: "play none none none",
+    gsap.fromTo(cardsRef.current?.querySelectorAll(".gsap-card"),
+      { y: 60, opacity: 0 },
+      {
+        y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "power3.out",
+        scrollTrigger: {
+          trigger: cardsRef.current,
+          start: "top 80%",
+          end: "top 35%",
+          toggleActions: "play none none none",
+        },
       },
-    });
+    );
   }, { scope: sectionRef });
 
   return (
@@ -114,8 +113,8 @@ export default function TransitionSection() {
           {/* CARDS */}
           <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {items.map((item) => (
+              <div key={item.id} className="gsap-card opacity-0">
               <motion.div
-                key={item.id}
                 whileHover={{
                   y: -8,
                   scale: 1.01,
@@ -129,7 +128,7 @@ export default function TransitionSection() {
                 tabIndex={0}
                 role="button"
                 aria-label={`View details about ${item.title}`}
-                className="gsap-card group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100 focus-visible:outline-2 focus-visible:outline-white/40"
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100 focus-visible:outline-2 focus-visible:outline-white/40"
               >
                 {/* PREMIUM ANIMATED BORDER */}
                 <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-40">
@@ -332,6 +331,7 @@ export default function TransitionSection() {
                   </div>
                 </div>
               </motion.div>
+              </div>
             ))}
           </div>
         </div>
