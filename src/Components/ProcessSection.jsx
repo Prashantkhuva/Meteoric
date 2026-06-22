@@ -1,6 +1,11 @@
 import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { buildHowToJsonLd } from "@/seo/jsonLd";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const process = [
   {
@@ -36,8 +41,13 @@ const process = [
   },
 ];
 
+const mainHeading = "A structured process built for".split(" ");
+const mutedHeading = "modern product development.".split(" ");
+
 export default function ProcessSection() {
+  const sectionRef = useRef(null);
   const ref = useRef(null);
+  const headingRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -53,6 +63,22 @@ export default function ProcessSection() {
 
   const howToSchema = buildHowToJsonLd(howToSteps);
 
+  useGSAP(() => {
+    gsap.from(headingRef.current?.querySelectorAll(".gsap-proc-word"), {
+      y: 40,
+      opacity: 0,
+      duration: 0.7,
+      stagger: 0.03,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 88%",
+        end: "top 50%",
+        toggleActions: "play none none none",
+      },
+    });
+  }, { scope: sectionRef });
+
   return (
     <>
       <script
@@ -60,6 +86,7 @@ export default function ProcessSection() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
       />
       <section
+        ref={sectionRef}
         id="process"
         className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
       >
@@ -68,14 +95,21 @@ export default function ProcessSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6">
         {/* TOP */}
-        <div className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
+        <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
           <p className="text-white/40 uppercase tracking-[0.2em] text-sm mb-6">
             Working Together
           </p>
 
           <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-6xl">
-            A structured process built for
-            <span className="text-white/40"> modern product development.</span>
+            {mainHeading.map((word, i) => (
+              <span key={i} className="gsap-proc-word inline-block">{word}{' '}</span>
+            ))}
+            <span className="text-white/40">
+              {" "}
+              {mutedHeading.map((word, i) => (
+                <span key={i} className="gsap-proc-word inline-block">{word}{' '}</span>
+              ))}
+            </span>
           </h2>
 
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/50 sm:mt-8 sm:text-lg">

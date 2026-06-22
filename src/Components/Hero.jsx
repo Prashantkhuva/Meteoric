@@ -1,7 +1,16 @@
-import { useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import MeteorBackground from "./MeteorBackground";
+
+const heroWords = "We design and ship high-performance websites".split(" ");
+const mutedWords = ["—", ..."in weeks, not months.".split(" ")];
+
 function Hero() {
+  const containerRef = useRef(null);
+  const subtextRef = useRef(null);
+  const ctaRef = useRef(null);
+
   useEffect(() => {
     let cancelled = false;
     (async function () {
@@ -19,6 +28,17 @@ function Hero() {
     };
   }, []);
 
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.7 } });
+    tl.from(containerRef.current?.querySelectorAll(".gsap-word"), {
+      y: 60,
+      opacity: 0,
+      stagger: 0.04,
+    })
+      .from(subtextRef.current, { y: 30, opacity: 0 }, "-=0.25")
+      .from(ctaRef.current, { y: 30, opacity: 0 }, "-=0.2");
+  }, { scope: containerRef });
+
   return (
     <section
       id="home"
@@ -30,36 +50,27 @@ function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative pt-10 z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
+      <div ref={containerRef} className="relative pt-10 z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
         {/* Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight text-white"
-        >
-          We design and ship high-performance websites
-          <span className="text-white/40"> — in weeks, not months.</span>
-        </motion.h1>
+        <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight text-white">
+          {heroWords.map((word, i) => (
+            <span key={i} className="gsap-word inline-block">{word}{' '}</span>
+          ))}
+          <span className="text-white/40">
+            {mutedWords.map((word, i) => (
+              <span key={i} className="gsap-word inline-block">{word}{' '}</span>
+            ))}
+          </span>
+        </h1>
 
         {/* Subtext */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed"
-        >
+        <p ref={subtextRef} className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed">
           Meteoric partners with founders to design, develop, and launch modern
           websites and SaaS products that actually convert — not just look good.
-        </motion.p>
+        </p>
 
         {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="relative flex flex-col sm:flex-row items-center gap-4 mt-4"
-        >
+        <div ref={ctaRef} className="relative flex flex-col sm:flex-row items-center gap-4 mt-4">
           {/* Primary CTA */}
           <a
             data-cal-namespace="let-s-build"
@@ -93,7 +104,7 @@ function Hero() {
             </svg>
             <span className="absolute bottom-0 left-0 h-px w-0 bg-white/60 transition-all duration-300 group-hover:w-full" />
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

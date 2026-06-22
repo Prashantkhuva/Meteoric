@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, X, Monitor, Database, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const items = [
   {
@@ -36,25 +41,67 @@ const items = [
 
 export default function TransitionSection() {
   const [activeCard, setActiveCard] = useState(null);
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const cardsRef = useRef(null);
+
+  const mainWords = "Digital products that feel".split(" ");
+  const mutedWords = "modern, fast, and unforgettable.".split(" ");
+
+  useGSAP(() => {
+    gsap.from(headingRef.current?.querySelectorAll(".gsap-head-word"), {
+      y: 40,
+      opacity: 0,
+      duration: 0.7,
+      stagger: 0.03,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 88%",
+        end: "top 50%",
+        toggleActions: "play none none none",
+      },
+    });
+  }, { scope: sectionRef });
+
+  useGSAP(() => {
+    gsap.from(cardsRef.current?.querySelectorAll(".gsap-card"), {
+      y: 60,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: cardsRef.current,
+        start: "top 80%",
+        end: "top 35%",
+        toggleActions: "play none none none",
+      },
+    });
+  }, { scope: sectionRef });
 
   return (
     <>
-      <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
+      <section ref={sectionRef} className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
         {/* background glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           {/* TOP */}
-          <div className="max-w-4xl mb-20">
+          <div ref={headingRef} className="max-w-4xl mb-20">
             <p className="text-[#EAEFFF]/40 uppercase tracking-[0.2em] text-sm mb-6">
               Beyond Just Development
             </p>
 
             <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-[#EAEFFF]">
-              Digital products that feel
+              {mainWords.map((word, i) => (
+                <span key={i} className="gsap-head-word inline-block">{word}{' '}</span>
+              ))}
               <span className="text-[#EAEFFF]/40">
                 {" "}
-                modern, fast, and unforgettable.
+                {mutedWords.map((word, i) => (
+                  <span key={i} className="gsap-head-word inline-block">{word}{' '}</span>
+                ))}
               </span>
             </h2>
 
@@ -65,7 +112,7 @@ export default function TransitionSection() {
           </div>
 
           {/* CARDS */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {items.map((item) => (
               <motion.div
                 key={item.id}
@@ -82,7 +129,7 @@ export default function TransitionSection() {
                 tabIndex={0}
                 role="button"
                 aria-label={`View details about ${item.title}`}
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100 focus-visible:outline-2 focus-visible:outline-white/40"
+                className="gsap-card group relative cursor-pointer overflow-hidden rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 min-h-[26.875rem] md:h-[26.875rem] transition-all duration-300 hover:border-[#EAEFFF]/18 hover:bg-[#050505] hover:shadow-[0_0_34px_rgba(234,239,255,0.045)] before:absolute before:inset-0 before:rounded-3xl before:bg-[radial-gradient(circle_at_top,rgba(234,239,255,0.05),transparent_70%)] before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100 focus-visible:outline-2 focus-visible:outline-white/40"
               >
                 {/* PREMIUM ANIMATED BORDER */}
                 <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-40">
