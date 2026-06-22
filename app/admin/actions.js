@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function signOut() {
   const supabase = await createClient();
@@ -30,9 +31,15 @@ export async function addLead(formData) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
+  const email = formData.get("email");
+  if (email) {
+    const { data: existing } = await supabase.from("leads").select("id").eq("email", email).maybeSingle();
+    if (existing) throw new Error("A lead with this email already exists");
+  }
+
   const { error } = await supabase.from("leads").insert({
     name: formData.get("name"),
-    email: formData.get("email"),
+    email,
     phone: formData.get("phone"),
     services: formData.get("services"),
     budget: formData.get("budget"),
@@ -115,6 +122,11 @@ export async function addClient(formData) {
   const email = formData.get("email");
   const company = formData.get("company");
   const phone = formData.get("phone");
+
+  if (email) {
+    const { data: existing } = await supabase.from("clients").select("id").eq("email", email).maybeSingle();
+    if (existing) throw new Error("A client with this email already exists");
+  }
 
   const { error } = await supabase
     .from("clients")
@@ -270,7 +282,7 @@ export async function sendProposal(id) {
 
   if (error) throw error;
 
-  const previewUrl = `https://meteoric.agency/admin/proposals`;
+  const previewUrl = `${getSiteUrl()}/admin/proposals`;
 
   try {
     const { Resend } = await import("resend");
@@ -402,7 +414,7 @@ export async function sendInvoice(id) {
 
   if (error) throw error;
 
-  const previewUrl = `https://meteoric.agency/preview/invoice/${id}`;
+  const previewUrl = `${getSiteUrl()}/preview/invoice/${id}`;
 
   try {
     const { Resend } = await import("resend");
@@ -445,14 +457,17 @@ export async function markInvoiceAsPaid(id, paidAt) {
   revalidatePath("/admin");
 }
 
-export async function markInvoiceAsOverdue(id) {
+export async function markInvoiceAsOverdue(ids) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
+
+  const idList = Array.isArray(ids) ? ids : [ids];
+  if (idList.length === 0) return;
 
   const { error } = await supabase
     .from("invoices")
     .update({ status: "overdue" })
-    .eq("id", id);
+    .in("id", idList);
 
   if (error) throw error;
   revalidatePath("/admin/invoices");

@@ -9,7 +9,8 @@ import {
   Img,
 } from "react-email";
 
-export default function LeadAutoReply({ name }) {
+export default function LeadAutoReply({ name, siteUrl }) {
+  const baseUrl = siteUrl || "https://withmeteoric.vercel.app";
   return (
     <Html>
       <Head />
@@ -17,7 +18,7 @@ export default function LeadAutoReply({ name }) {
       <Body style={main}>
         <Container style={container}>
           <Img
-            src="https://meteoric.agency/meteoric-logo.png"
+            src={`${baseUrl}/meteoric-logo.png`}
             alt="Meteoric"
             width="168"
             height="32"
@@ -34,8 +35,8 @@ export default function LeadAutoReply({ name }) {
           <Text style={paragraph}>
             Our team typically responds within 24 hours. In the meantime, feel
             free to browse our work at{" "}
-            <a href="https://meteoric.agency" style={link}>
-              meteoric.agency
+            <a href={baseUrl} style={link}>
+              {baseUrl.replace("https://", "")}
             </a>
             .
           </Text>

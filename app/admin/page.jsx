@@ -82,6 +82,28 @@ async function getStats() {
     .from("invoices")
     .select("status, total");
 
+  const { count: totalProjects } = await supabase
+    .from("projects")
+    .select("*", { count: "exact", head: true });
+
+  async function countProjects(status) {
+    const { count } = await supabase
+      .from("projects")
+      .select("*", { count: "exact", head: true })
+      .eq("status", status);
+    return count ?? 0;
+  }
+
+  const [planningProjects, activeProjects, reviewProjects, completedProjects, onHoldProjects, cancelledProjects] =
+    await Promise.all([
+      countProjects("planning"),
+      countProjects("in_progress"),
+      countProjects("review"),
+      countProjects("completed"),
+      countProjects("on_hold"),
+      countProjects("cancelled"),
+    ]);
+
   let totalOutstanding = 0;
   let paidThisMonth = 0;
   let overdueCount = 0;
@@ -119,6 +141,13 @@ async function getStats() {
     totalRevenue,
     overdueCount,
     invoiceCount: (invoiceTotals || []).length,
+    totalProjects: totalProjects ?? 0,
+    planningProjects,
+    activeProjects,
+    reviewProjects,
+    completedProjects,
+    onHoldProjects,
+    cancelledProjects,
   };
 }
 
@@ -160,6 +189,15 @@ export default async function AdminDashboard() {
         invoiceRevenue={stats.totalRevenue}
         overdueCount={stats.overdueCount}
         invoiceCount={stats.invoiceCount}
+        projectStats={{
+          total: stats.totalProjects,
+          planning: stats.planningProjects,
+          active: stats.activeProjects,
+          review: stats.reviewProjects,
+          completed: stats.completedProjects,
+          onHold: stats.onHoldProjects,
+          cancelled: stats.cancelledProjects,
+        }}
       />
     </div>
   );

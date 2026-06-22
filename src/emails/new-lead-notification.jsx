@@ -12,7 +12,8 @@ import {
   Img,
 } from "react-email";
 
-export default function NewLeadNotification({ name, email, phone, services, details, budget }) {
+export default function NewLeadNotification({ name, email, phone, services, details, budget, siteUrl }) {
+  const baseUrl = siteUrl || "https://withmeteoric.vercel.app";
   return (
     <Html>
       <Head />
@@ -20,7 +21,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <Body style={main}>
         <Container style={container}>
           <Img
-            src="https://meteoric.agency/meteoric-logo.png"
+            src={`${baseUrl}/meteoric-logo.png`}
             alt="Meteoric"
             width="168"
             height="32"
@@ -28,7 +29,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
           />
           <Heading style={h1}>New Lead <span style={star}>✦</span></Heading>
           <Text style={muted}>
-            A new lead has submitted the form on meteoric.agency
+            A new lead has submitted the form on {baseUrl.replace("https://", "")}
           </Text>
           <Hr style={hr} />
 

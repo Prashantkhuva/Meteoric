@@ -9,7 +9,7 @@ import { LeadsTrendChart } from "./LeadsTrendChart";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export default function DashboardClient({ stats, conversionRate, monthlyLeadData, userName, invoiceOutstanding, invoiceRevenue, overdueCount, invoiceCount }) {
+export default function DashboardClient({ stats, conversionRate, monthlyLeadData, userName, invoiceOutstanding, invoiceRevenue, overdueCount, invoiceCount, projectStats }) {
   const [greeting, setGreeting] = useState("");
   const [dateStr, setDateStr] = useState("");
 
@@ -36,6 +36,13 @@ export default function DashboardClient({ stats, conversionRate, monthlyLeadData
         <KPICard label="Clients" value={stats.totalClients} subtext="Active accounts" />
         <KPICard label="Revenue" value={`$${invoiceRevenue.toFixed(0)}`} subtext="Paid invoices" accent />
         <KPICard label="Outstanding" value={`$${invoiceOutstanding.toFixed(0)}`} subtext={`${overdueCount} overdue of ${invoiceCount} invoices`} />
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KPICard label="Total Projects" value={projectStats?.total || 0} subtext="All time" />
+        <KPICard label="Active" value={projectStats?.active || 0} subtext="In progress" />
+        <KPICard label="Completed" value={projectStats?.completed || 0} subtext="Done" />
+        <KPICard label="On Hold" value={projectStats?.onHold || 0} subtext="Paused" />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
@@ -92,6 +99,13 @@ function QuickLinksCard() {
           className="group flex items-center justify-between border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-xs text-white/45 transition-all hover:border-white/[0.10] hover:text-white/70"
         >
           View invoices
+          <ArrowRight size={12} className="text-white/25 group-hover:text-white/40 transition-colors" />
+        </Link>
+        <Link
+          href="/admin/projects"
+          className="group flex items-center justify-between border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-xs text-white/45 transition-all hover:border-white/[0.10] hover:text-white/70"
+        >
+          View projects
           <ArrowRight size={12} className="text-white/25 group-hover:text-white/40 transition-colors" />
         </Link>
       </div>

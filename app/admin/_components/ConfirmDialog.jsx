@@ -3,9 +3,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
+import { useFocusTrap } from "./useFocusTrap";
 
-export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, onCancel, destructive }) {
+export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, onCancel, destructive, loading }) {
   const confirmRef = useRef(null);
+  const dialogRef = useFocusTrap(open);
 
   useEffect(() => {
     if (open) {
@@ -34,6 +36,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, o
           onClick={onCancel}
         >
           <motion.div
+            ref={dialogRef}
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -63,12 +66,13 @@ export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, o
               <button
                 ref={confirmRef}
                 onClick={onConfirm}
+                disabled={loading}
                 className={destructive
-                  ? "rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors"
-                  : "rounded-lg bg-[#EAEFFF] px-4 py-2 text-sm font-semibold text-[#121212] hover:bg-[#EAEFFF]/90 transition-colors"
+                  ? "rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+                  : "rounded-lg bg-[#EAEFFF] px-4 py-2 text-sm font-semibold text-[#121212] hover:bg-[#EAEFFF]/90 transition-colors disabled:opacity-50 disabled:pointer-events-none"
                 }
               >
-                {confirmLabel || "Confirm"}
+                {loading ? "Deleting..." : confirmLabel || "Confirm"}
               </button>
             </div>
           </motion.div>

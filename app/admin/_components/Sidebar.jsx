@@ -17,6 +17,7 @@ import {
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
+import Logo from "@/Components/Logo";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -42,14 +43,8 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const nav = (
     <nav className="flex flex-col h-full">
       <div className="flex items-center h-14 px-5 border-b border-white/[0.04] shrink-0">
-        <Link href="/admin" className="flex items-center gap-2.5" aria-label="Meteoric Admin">
-          <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-[#EAEFFF] text-xs font-bold text-[#121212]">
-            M
-          </span>
-          <span className="text-sm font-semibold text-white">Meteoric</span>
-          <span className="text-[10px] font-medium text-white/20 px-1.5 py-0.5 rounded-full border border-white/[0.06]">
-            v1
-          </span>
+        <Link href="/admin" className="flex items-center" aria-label="Meteoric Admin">
+          <Logo className="!block w-[120px]" />
         </Link>
       </div>
 
