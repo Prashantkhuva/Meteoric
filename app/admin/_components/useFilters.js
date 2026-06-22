@@ -13,6 +13,8 @@ export function useFilters(defaults = {}) {
     status: searchParams.get("status") || defaults.status || "all",
     sort: searchParams.get("sort") || defaults.sort || "newest",
     page: Number(searchParams.get("page")) || defaults.page || 1,
+    col: searchParams.get("col") || "",
+    dir: searchParams.get("dir") || "asc",
   }), [searchParams, defaults.search, defaults.status, defaults.sort, defaults.page]);
 
   const debounceRef = useRef(null);
@@ -33,5 +35,25 @@ export function useFilters(defaults = {}) {
     }, updates.search !== undefined ? 300 : 0);
   }, [searchParams, router, pathname]);
 
-  return { filters, setFilters };
+  const toggleColSort = useCallback((column) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currentCol = params.get("col") || "";
+    const currentDir = params.get("dir") || "asc";
+    if (currentCol === column) {
+      if (currentDir === "asc") {
+        params.set("dir", "desc");
+      } else {
+        params.delete("col");
+        params.delete("dir");
+      }
+    } else {
+      params.set("col", column);
+      params.set("dir", "asc");
+    }
+    params.delete("page");
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [searchParams, router, pathname]);
+
+  return { filters, setFilters, toggleColSort };
 }

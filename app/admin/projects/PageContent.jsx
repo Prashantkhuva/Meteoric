@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
 import {
   createProject, updateProject, deleteProject, getClients,
@@ -8,17 +8,21 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Building2, Pencil, FolderKanban,
-  DollarSign, Clock, Target, CheckCircle, AlertCircle,
+  DollarSign, Clock, Target, CheckCircle, AlertCircle, Download,
+  ChevronUp, ChevronDown,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, SortDropdown } from "../_components/Toolbar";
+import { BulkActionBar } from "../_components/BulkActionBar";
 import { IconButton } from "../_components/IconButton";
 import { FormField } from "../_components/FormField";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
+import { useShortcuts } from "../_components/useShortcuts";
+import { downloadCSV } from "../_components/csv-export";
 
 const PAGE_SIZE = 15;
 
@@ -43,23 +47,50 @@ function statusColor(status) {
   return map[status] || "text-white/30 bg-white/[0.04] border-white/[0.06]";
 }
 
+const CSV_COLUMNS = [
+  { label: "Name", accessor: (p) => p.name || "" },
+  { label: "Client", accessor: (p) => p.client?.name || "" },
+  { label: "Status", accessor: (p) => p.status || "" },
+  { label: "Budget", accessor: (p) => p.budget || "" },
+  { label: "Deadline", accessor: (p) => p.deadline || "" },
+  { label: "Created", accessor: (p) => formatDate(p.created_at) },
+];
+
+const SORT_COLUMNS = {
+  name: (a, b) => (a.name || "").localeCompare(b.name || ""),
+  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
+  budget: (a, b) => (a.budget || 0) - (b.budget || 0),
+  deadline: (a, b) => new Date(a.deadline || 0) - new Date(b.deadline || 0),
+  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+};
+
 export default function ProjectsPage() {
   const [projects, setProjects] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { filters, setFilters } = useFilters();
-  const { search, status: statusFilter, sort, page } = filters;
+  const { filters, setFilters, toggleColSort } = useFilters();
+  const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewProject, setViewProject] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
   const [showNew, setShowNew] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useShortcuts(
+    useMemo(() => ({
+      "n": () => setShowNew(true),
+      "/": () => searchRef.current?.focus(),
+      "Escape": () => { if (viewProject) setViewProject(null); if (showNew) setShowNew(false); },
+    }), [viewProject, showNew])
+  );
 
   async function fetchData() {
     const supabase = createClient();
@@ -88,18 +119,81 @@ export default function ProjectsPage() {
     if (statusFilter !== "all") {
       result = result.filter((p) => p.status === statusFilter);
     }
-    result.sort((a, b) => {
-      if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-      if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-      if (sort === "deadline") return new Date(a.deadline || 0) - new Date(b.deadline || 0);
-      return 0;
-    });
+    if (col && SORT_COLUMNS[col]) {
+      result.sort((a, b) => {
+        const cmp = SORT_COLUMNS[col](a, b);
+        return dir === "desc" ? -cmp : cmp;
+      });
+    } else {
+      result.sort((a, b) => {
+        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
+        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
+        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+        if (sort === "deadline") return new Date(a.deadline || 0) - new Date(b.deadline || 0);
+        return 0;
+      });
+    }
     return result;
-  }, [projects, search, statusFilter, sort]);
+  }, [projects, search, statusFilter, sort, col, dir]);
 
   const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
   const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  useEffect(() => {
+    setSelected(new Set());
+  }, [page, search, statusFilter]);
+
+  function toggleSelect(id) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === pageItems.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(pageItems.map((p) => p.id)));
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => deleteProject(id)));
+      setProjects((prev) => prev.filter((p) => !ids.includes(p.id)));
+      if (viewProject && ids.includes(viewProject.id)) setViewProject(null);
+      addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} deleted`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
+    }
+  }
+
+  async function handleBulkStatusChange(newStatus) {
+    const ids = [...selected];
+    const formDatas = ids.map((id) => {
+      const fd = new FormData();
+      fd.set("id", id);
+      fd.set("status", newStatus);
+      return fd;
+    });
+    try {
+      await Promise.all(formDatas.map((fd) => updateProject(fd)));
+      setProjects((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
+      addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} updated`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to update", "error");
+    }
+  }
+
+  function handleExportCSV() {
+    downloadCSV(filtered, CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);
+    addToast("CSV exported", "success");
+  }
 
   async function handleCreate(formData) {
     try {
@@ -175,6 +269,14 @@ export default function ProjectsPage() {
       </div>
 
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+        <button
+          onClick={handleExportCSV}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          aria-label="Export CSV"
+        >
+          <Download size={12} className="inline mr-1" />
+          CSV
+        </button>
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
         {projectStatuses.map((s) => (
           <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setFilters({ status: s.value, page: 1 })}>
@@ -217,16 +319,32 @@ export default function ProjectsPage() {
             onView={setViewProject}
             onEdit={setEditingProject}
             onDelete={setDeleteTarget}
+            selected={selected}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={toggleSelectAll}
+            col={col}
+            dir={dir}
+            onColSort={toggleColSort}
           />
           <MobileCards
             items={pageItems}
             onView={setViewProject}
             onEdit={setEditingProject}
             onDelete={setDeleteTarget}
+            selected={selected}
+            onToggleSelect={toggleSelect}
           />
           <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
+
+      <BulkActionBar
+        selectedCount={selected.size}
+        onClear={() => setSelected(new Set())}
+        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onStatusChange={handleBulkStatusChange}
+        statusOptions={projectStatuses}
+      />
 
       <ProjectFormModal
         key={formResetKey}
@@ -268,23 +386,60 @@ export default function ProjectsPage() {
   );
 }
 
-function DesktopTable({ items, onView, onEdit, onDelete }) {
+function SortIcon({ column, col, dir }) {
+  if (col !== column) return null;
+  return dir === "asc" ? (
+    <ChevronUp size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  ) : (
+    <ChevronDown size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  );
+}
+
+function DesktopTable({ items, onView, onEdit, onDelete, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
+  const allSelected = items.length > 0 && selected.size === items.length;
+
   return (
     <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-x-auto">
       <table className="w-full text-left text-sm min-w-max">
         <thead>
           <tr className="border-b border-white/[0.06]">
-            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Project</th>
+            <th className="px-5 py-3.5 w-10">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={onToggleSelectAll}
+                className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
+                aria-label="Select all"
+              />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("name")}>
+              Project<SortIcon column="name" col={col} dir={dir} />
+            </th>
             <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Client</th>
-            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Status</th>
-            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Budget</th>
-            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Deadline</th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("status")}>
+              Status<SortIcon column="status" col={col} dir={dir} />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("budget")}>
+              Budget<SortIcon column="budget" col={col} dir={dir} />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("deadline")}>
+              Deadline<SortIcon column="deadline" col={col} dir={dir} />
+            </th>
             <th className="px-5 py-3.5 text-right text-[10px] font-semibold tracking-wider text-white/30 uppercase">Actions</th>
           </tr>
         </thead>
         <tbody>
           {items.map((p) => (
             <tr key={p.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
+              <td className="px-5 py-3.5">
+                <input
+                  type="checkbox"
+                  checked={selected.has(p.id)}
+                  onChange={() => onToggleSelect(p.id)}
+                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
+                  aria-label={`Select ${p.name || "project"}`}
+                />
+              </td>
               <td className="px-5 py-3.5">
                 <button
                   onClick={() => onView(p)}
@@ -334,22 +489,31 @@ function DesktopTable({ items, onView, onEdit, onDelete }) {
   );
 }
 
-function MobileCards({ items, onView, onEdit, onDelete }) {
+function MobileCards({ items, onView, onEdit, onDelete, selected, onToggleSelect }) {
   return (
     <div className="sm:hidden space-y-3">
       {items.map((p) => (
         <div key={p.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-2">
-            <div className="flex-1 min-w-0">
-              <button
-                onClick={() => onView(p)}
-                className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
-              >
-                {p.name}
-              </button>
-              {p.client && (
-                <p className="text-xs text-white/35 mt-0.5">{p.client.name}</p>
-              )}
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <input
+                type="checkbox"
+                checked={selected.has(p.id)}
+                onChange={() => onToggleSelect(p.id)}
+                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
+                aria-label={`Select ${p.name || "project"}`}
+              />
+              <div className="min-w-0">
+                <button
+                  onClick={() => onView(p)}
+                  className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
+                >
+                  {p.name}
+                </button>
+                {p.client && (
+                  <p className="text-xs text-white/35 mt-0.5">{p.client.name}</p>
+                )}
+              </div>
             </div>
             <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold border shrink-0 ${statusColor(p.status)}`}>
               {projectStatuses.find((s) => s.value === p.status)?.label || p.status}

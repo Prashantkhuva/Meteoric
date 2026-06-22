@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
 import { updateClientStatus, addClient, deleteClient } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle
+  X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle, Download,
+  ChevronUp, ChevronDown,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
@@ -14,8 +15,11 @@ import { StatusSelect } from "../_components/StatusSelect";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
+import { BulkActionBar } from "../_components/BulkActionBar";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
+import { useShortcuts } from "../_components/useShortcuts";
+import { downloadCSV } from "../_components/csv-export";
 
 const PAGE_SIZE = 15;
 
@@ -27,22 +31,48 @@ const clientStatusList = [
   { value: "churned", label: "Churned" },
 ];
 
+const CSV_COLUMNS = [
+  { label: "Name", accessor: (c) => c.name || "" },
+  { label: "Email", accessor: (c) => c.email || "" },
+  { label: "Phone", accessor: (c) => c.phone || "" },
+  { label: "Company", accessor: (c) => c.company || "" },
+  { label: "Status", accessor: (c) => c.status || "" },
+  { label: "Created", accessor: (c) => formatDate(c.created_at) },
+];
+
+const SORT_COLUMNS = {
+  name: (a, b) => (a.name || "").localeCompare(b.name || ""),
+  email: (a, b) => (a.email || "").localeCompare(b.email || ""),
+  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
+  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+};
+
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { filters, setFilters } = useFilters();
-  const { search, status: statusFilter, sort, page } = filters;
+  const { filters, setFilters, toggleColSort } = useFilters();
+  const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewClient, setViewClient] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     fetchClients();
   }, []);
+
+  useShortcuts(
+    useMemo(() => ({
+      "n": () => setShowAdd(true),
+      "/": () => searchRef.current?.focus(),
+      "Escape": () => { if (viewClient) setViewClient(null); if (showAdd) setShowAdd(false); },
+    }), [viewClient, showAdd])
+  );
 
   async function fetchClients() {
     const supabase = createClient();
@@ -67,17 +97,74 @@ export default function ClientsPage() {
     if (statusFilter !== "all") {
       result = result.filter((c) => c.status === statusFilter);
     }
-    result.sort((a, b) => {
-      if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-      if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-      return 0;
-    });
+    if (col && SORT_COLUMNS[col]) {
+      result.sort((a, b) => {
+        const cmp = SORT_COLUMNS[col](a, b);
+        return dir === "desc" ? -cmp : cmp;
+      });
+    } else {
+      result.sort((a, b) => {
+        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
+        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
+        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+        return 0;
+      });
+    }
     return result;
-  }, [clients, search, statusFilter, sort]);
+  }, [clients, search, statusFilter, sort, col, dir]);
 
   const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
   const pageClients = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  useEffect(() => {
+    setSelected(new Set());
+  }, [page, search, statusFilter]);
+
+  function toggleSelect(id) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === pageClients.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(pageClients.map((c) => c.id)));
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => deleteClient(id)));
+      setClients((prev) => prev.filter((c) => !ids.includes(c.id)));
+      if (viewClient && ids.includes(viewClient.id)) setViewClient(null);
+      addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} deleted`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
+    }
+  }
+
+  async function handleBulkStatusChange(newStatus) {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => updateClientStatus(id, newStatus)));
+      setClients((prev) => prev.map((c) => ids.includes(c.id) ? { ...c, status: newStatus } : c));
+      addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} updated`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to update", "error");
+    }
+  }
+
+  function handleExportCSV() {
+    downloadCSV(filtered, CSV_COLUMNS, `clients-${new Date().toISOString().slice(0, 10)}.csv`);
+    addToast("CSV exported", "success");
+  }
 
   async function handleStatusChange(clientId, newStatus) {
     setEditingStatus(clientId);
@@ -154,6 +241,14 @@ export default function ClientsPage() {
       </div>
 
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+        <button
+          onClick={handleExportCSV}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          aria-label="Export CSV"
+        >
+          <Download size={12} className="inline mr-1" />
+          CSV
+        </button>
         <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all" })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
         {clientStatusList.map((s) => (
@@ -196,6 +291,12 @@ export default function ClientsPage() {
             onStatusChange={handleStatusChange}
             onDelete={setDeleteTarget}
             editingStatus={editingStatus}
+            selected={selected}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={toggleSelectAll}
+            col={col}
+            dir={dir}
+            onColSort={toggleColSort}
           />
           <MobileCards
             clients={pageClients}
@@ -203,10 +304,20 @@ export default function ClientsPage() {
             onStatusChange={handleStatusChange}
             onDelete={setDeleteTarget}
             editingStatus={editingStatus}
+            selected={selected}
+            onToggleSelect={toggleSelect}
           />
           <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
+
+      <BulkActionBar
+        selectedCount={selected.size}
+        onClear={() => setSelected(new Set())}
+        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onStatusChange={handleBulkStatusChange}
+        statusOptions={clientStatusList}
+      />
 
       <AddClientModal key={formResetKey} open={showAdd} onClose={() => { setShowAdd(false); setFormResetKey(k => k + 1); }} onSubmit={handleAdd} />
       <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} />
@@ -223,22 +334,59 @@ export default function ClientsPage() {
   );
 }
 
-function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus }) {
+function SortIcon({ column, col, dir }) {
+  if (col !== column) return null;
+  return dir === "asc" ? (
+    <ChevronUp size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  ) : (
+    <ChevronDown size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  );
+}
+
+function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
+  const allSelected = clients.length > 0 && selected.size === clients.length;
+
   return (
     <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-x-auto">
       <table className="w-full text-left text-sm min-w-max">
           <thead>
             <tr className="border-b border-white/[0.06]">
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Name</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Email</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Status</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Created</th>
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={onToggleSelectAll}
+                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
+                  aria-label="Select all"
+                />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("name")}>
+                Name<SortIcon column="name" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("email")}>
+                Email<SortIcon column="email" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("status")}>
+                Status<SortIcon column="status" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("created_at")}>
+                Created<SortIcon column="created_at" col={col} dir={dir} />
+              </th>
               <th className="px-5 py-3.5" />
             </tr>
           </thead>
           <tbody>
             {clients.map((client) => (
               <tr key={client.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(client.id)}
+                    onChange={() => onToggleSelect(client.id)}
+                    className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
+                    aria-label={`Select ${client.name || client.email || "client"}`}
+                  />
+                </td>
                 <td className="px-5 py-4">
                   <button
                     onClick={() => onView(client)}
@@ -288,22 +436,31 @@ function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus
   );
 }
 
-function MobileCards({ clients, onView, onStatusChange, onDelete, editingStatus }) {
+function MobileCards({ clients, onView, onStatusChange, onDelete, editingStatus, selected, onToggleSelect }) {
   return (
     <div className="sm:hidden space-y-3">
       {clients.map((client) => (
         <div key={client.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-3">
-            <div className="flex-1 min-w-0">
-              <button
-                onClick={() => onView(client)}
-                className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
-              >
-                {client.name || client.company || "\u2014"}
-              </button>
-              {client.company && client.name && (
-                <p className="text-xs text-white/25 mt-0.5">{client.company}</p>
-              )}
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <input
+                type="checkbox"
+                checked={selected.has(client.id)}
+                onChange={() => onToggleSelect(client.id)}
+                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
+                aria-label={`Select ${client.name || client.email || "client"}`}
+              />
+              <div className="min-w-0">
+                <button
+                  onClick={() => onView(client)}
+                  className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
+                >
+                  {client.name || client.company || "\u2014"}
+                </button>
+                {client.company && client.name && (
+                  <p className="text-xs text-white/25 mt-0.5">{client.company}</p>
+                )}
+              </div>
             </div>
             <StatusSelect
               value={client.status}

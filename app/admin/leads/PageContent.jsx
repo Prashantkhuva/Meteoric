@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
 import { updateLeadStatus, convertLeadToClient, addLead, deleteLead } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
-  FileText, DollarSign, Calendar,
+  FileText, DollarSign, Calendar, Download, ChevronUp, ChevronDown,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
@@ -15,10 +15,13 @@ import { StatusSelect } from "../_components/StatusSelect";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
+import { BulkActionBar } from "../_components/BulkActionBar";
 import { IconButton } from "../_components/IconButton";
 import { FormField } from "../_components/FormField";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
+import { useShortcuts } from "../_components/useShortcuts";
+import { downloadCSV } from "../_components/csv-export";
 
 const PAGE_SIZE = 15;
 const statusList = [
@@ -30,24 +33,50 @@ const statusList = [
   { value: "lost", label: "Lost" },
 ];
 
+const CSV_COLUMNS = [
+  { label: "Name", accessor: (l) => l.name || "" },
+  { label: "Email", accessor: (l) => l.email || "" },
+  { label: "Phone", accessor: (l) => l.phone || "" },
+  { label: "Company", accessor: (l) => l.company || "" },
+  { label: "Status", accessor: (l) => l.status || "" },
+  { label: "Budget", accessor: (l) => l.budget || "" },
+  { label: "Created", accessor: (l) => formatDate(l.created_at) },
+];
+
+const SORT_COLUMNS = {
+  name: (a, b) => (a.name || "").localeCompare(b.name || ""),
+  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
+  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+};
+
 export default function LeadsPage() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { filters, setFilters } = useFilters();
-  const { search, status: statusFilter, sort, page } = filters;
+  const { filters, setFilters, toggleColSort } = useFilters();
+  const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewLead, setViewLead] = useState(null);
   const [showAddLead, setShowAddLead] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [selected, setSelected] = useState(new Set());
   const deleteRef = useRef(null);
   const addToast = useToast();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     fetchLeads();
   }, []);
+
+  useShortcuts(
+    useMemo(() => ({
+      "n": () => setShowAddLead(true),
+      "/": () => searchRef.current?.focus(),
+      "Escape": () => { if (viewLead) setViewLead(null); if (showAddLead) setShowAddLead(false); },
+    }), [viewLead, showAddLead])
+  );
 
   async function fetchLeads() {
     const supabase = createClient();
@@ -72,17 +101,74 @@ export default function LeadsPage() {
     if (statusFilter !== "all") {
       result = result.filter((l) => l.status === statusFilter);
     }
-    result.sort((a, b) => {
-      if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-      if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-      return 0;
-    });
+    if (col && SORT_COLUMNS[col]) {
+      result.sort((a, b) => {
+        const cmp = SORT_COLUMNS[col](a, b);
+        return dir === "desc" ? -cmp : cmp;
+      });
+    } else {
+      result.sort((a, b) => {
+        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
+        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
+        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+        return 0;
+      });
+    }
     return result;
-  }, [leads, search, statusFilter, sort]);
+  }, [leads, search, statusFilter, sort, col, dir]);
 
   const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
   const pageLeads = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  useEffect(() => {
+    setSelected(new Set());
+  }, [page, search, statusFilter]);
+
+  function toggleSelect(id) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === pageLeads.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(pageLeads.map((l) => l.id)));
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => deleteLead(id)));
+      setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
+      if (viewLead && ids.includes(viewLead.id)) setViewLead(null);
+      addToast(`${ids.length} lead${ids.length > 1 ? "s" : ""} deleted`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
+    }
+  }
+
+  async function handleBulkStatusChange(newStatus) {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => updateLeadStatus(id, newStatus)));
+      setLeads((prev) => prev.map((l) => ids.includes(l.id) ? { ...l, status: newStatus } : l));
+      addToast(`${ids.length} lead${ids.length > 1 ? "s" : ""} updated`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to update", "error");
+    }
+  }
+
+  function handleExportCSV() {
+    downloadCSV(filtered, CSV_COLUMNS, `leads-${new Date().toISOString().slice(0, 10)}.csv`);
+    addToast("CSV exported", "success");
+  }
 
   async function handleStatusChange(leadId, newStatus) {
     setEditingStatus(leadId);
@@ -178,6 +264,14 @@ export default function LeadsPage() {
       </div>
 
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+        <button
+          onClick={handleExportCSV}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          aria-label="Export CSV"
+        >
+          <Download size={12} className="inline mr-1" />
+          CSV
+        </button>
         <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all" })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
         {statusList.map((s) => (
@@ -222,6 +316,12 @@ export default function LeadsPage() {
             onDelete={promptDelete}
             editingStatus={editingStatus}
             converting={converting}
+            selected={selected}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={toggleSelectAll}
+            col={col}
+            dir={dir}
+            onColSort={toggleColSort}
           />
           <MobileCards
             leads={pageLeads}
@@ -231,10 +331,20 @@ export default function LeadsPage() {
             onDelete={promptDelete}
             editingStatus={editingStatus}
             converting={converting}
+            selected={selected}
+            onToggleSelect={toggleSelect}
           />
           <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
+
+      <BulkActionBar
+        selectedCount={selected.size}
+        onClear={() => setSelected(new Set())}
+        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onStatusChange={handleBulkStatusChange}
+        statusOptions={statusList}
+      />
 
       <AddLeadModal key={formResetKey} open={showAddLead} onClose={() => { setShowAddLead(false); setFormResetKey(k => k + 1); }} onSubmit={handleAddLead} />
       <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onConvert={handleConvert} onDelete={promptDelete} converting={converting} />
@@ -251,22 +361,57 @@ export default function LeadsPage() {
   );
 }
 
-function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting }) {
+function SortIcon({ column, col, dir }) {
+  if (col !== column) return null;
+  return dir === "asc" ? (
+    <ChevronUp size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  ) : (
+    <ChevronDown size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  );
+}
+
+function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
+  const allSelected = leads.length > 0 && selected.size === leads.length;
+
   return (
     <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-x-auto">
       <table className="w-full text-left text-sm min-w-max">
           <thead>
             <tr className="border-b border-white/[0.06]">
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Name</th>
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={onToggleSelectAll}
+                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
+                  aria-label="Select all"
+                />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("name")}>
+                Name<SortIcon column="name" col={col} dir={dir} />
+              </th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Contact</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Status</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Created</th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("status")}>
+                Status<SortIcon column="status" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("created_at")}>
+                Created<SortIcon column="created_at" col={col} dir={dir} />
+              </th>
               <th className="px-5 py-3.5 text-right text-[10px] font-semibold tracking-wider text-white/30 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {leads.map((lead) => (
               <tr key={lead.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(lead.id)}
+                    onChange={() => onToggleSelect(lead.id)}
+                    className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
+                    aria-label={`Select ${lead.name || lead.email || "lead"}`}
+                  />
+                </td>
                 <td className="px-5 py-3.5">
                   <button
                     onClick={() => onView(lead)}
@@ -330,22 +475,31 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
   );
 }
 
-function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting }) {
+function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editingStatus, converting, selected, onToggleSelect }) {
   return (
     <div className="sm:hidden space-y-3">
       {leads.map((lead) => (
         <div key={lead.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-3">
-            <div className="flex-1 min-w-0">
-              <button
-                onClick={() => onView(lead)}
-                className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
-              >
-                {lead.name || lead.company || "\u2014"}
-              </button>
-              {lead.company && lead.name && (
-                <p className="text-xs text-white/25 mt-0.5">{lead.company}</p>
-              )}
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <input
+                type="checkbox"
+                checked={selected.has(lead.id)}
+                onChange={() => onToggleSelect(lead.id)}
+                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
+                aria-label={`Select ${lead.name || lead.email || "lead"}`}
+              />
+              <div className="min-w-0">
+                <button
+                  onClick={() => onView(lead)}
+                  className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
+                >
+                  {lead.name || lead.company || "\u2014"}
+                </button>
+                {lead.company && lead.name && (
+                  <p className="text-xs text-white/25 mt-0.5">{lead.company}</p>
+                )}
+              </div>
             </div>
             <StatusSelect
               value={lead.status}
