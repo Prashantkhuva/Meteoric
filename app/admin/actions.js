@@ -167,6 +167,16 @@ export async function getLeads() {
   return data || [];
 }
 
+export async function getClients() {
+  const supabase = await createClient();
+  if (!supabase) return [];
+  const { data } = await supabase
+    .from("clients")
+    .select("id, name, email, company")
+    .order("name", { ascending: true });
+  return data || [];
+}
+
 export async function createProposal(formData) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
@@ -278,5 +288,135 @@ export async function sendProposal(id) {
   }
 
   revalidatePath("/admin/proposals");
+  revalidatePath("/admin");
+}
+
+export async function createInvoice(formData) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { count } = await supabase
+    .from("invoices")
+    .select("*", { count: "exact", head: true });
+
+  const nextNum = String((count || 0) + 1).padStart(4, "0");
+  const invoiceNumber = `INV-${nextNum}`;
+
+  let items = [];
+  try { items = JSON.parse(formData.get("items")); } catch {}
+
+  const subtotal = items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
+  const tax = Number(formData.get("tax")) || 0;
+  const total = subtotal + tax;
+
+  const { error } = await supabase.from("invoices").insert({
+    client_id: formData.get("client_id") || null,
+    proposal_id: formData.get("proposal_id") || null,
+    invoice_number: invoiceNumber,
+    status: "draft",
+    items,
+    subtotal,
+    tax,
+    total,
+    notes: formData.get("notes") || null,
+    terms: formData.get("terms") || null,
+    due_date: formData.get("due_date") || null,
+  });
+
+  if (error) throw error;
+  revalidatePath("/admin/invoices");
+  revalidatePath("/admin");
+}
+
+export async function updateInvoice(formData) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const id = formData.get("id");
+
+  let items = [];
+  try { items = JSON.parse(formData.get("items")); } catch {}
+
+  const subtotal = items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
+  const tax = Number(formData.get("tax")) || 0;
+  const total = subtotal + tax;
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({
+      client_id: formData.get("client_id") || null,
+      proposal_id: formData.get("proposal_id") || null,
+      status: formData.get("status") || "draft",
+      items,
+      subtotal,
+      tax,
+      total,
+      notes: formData.get("notes") || null,
+      terms: formData.get("terms") || null,
+      due_date: formData.get("due_date") || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/invoices");
+  revalidatePath("/admin");
+}
+
+export async function deleteInvoice(id) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase
+    .from("invoices")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/invoices");
+  revalidatePath("/admin");
+}
+
+export async function sendInvoice(id) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { data: invoice } = await supabase
+    .from("invoices")
+    .select("*, client:clients(name, email)")
+    .eq("id", id)
+    .single();
+
+  if (!invoice) throw new Error("Invoice not found");
+  if (!invoice.client?.email) throw new Error("Client has no email address");
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({ status: "sent", sent_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) throw error;
+
+  try {
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>",
+      to: invoice.client.email,
+      subject: `Invoice: ${invoice.invoice_number}`,
+      html: `
+        <p>Hi ${invoice.client.name || "there"},</p>
+        <p>An invoice has been issued:</p>
+        <h2>${invoice.invoice_number}</h2>
+        <p>Total: $${Number(invoice.total).toFixed(2)}</p>
+        ${invoice.due_date ? `<p>Due: ${invoice.due_date}</p>` : ""}
+        <p>You can view the full invoice by logging into your account.</p>
+      `,
+    });
+  } catch {
+    // email is best-effort; invoice is still marked as sent
+  }
+
+  revalidatePath("/admin/invoices");
   revalidatePath("/admin");
 }
