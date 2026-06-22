@@ -18,7 +18,7 @@ import { useToast } from "../_components/ToastContext";
 import { StatusBadge } from "../_components/StatusBadge";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
-import { Toolbar, FilterChip } from "../_components/Toolbar";
+import { Toolbar, FilterChip, SortDropdown } from "../_components/Toolbar";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 import { getSiteUrl } from "@/lib/site-url";
@@ -239,18 +239,17 @@ export default function InvoicesPage() {
             {s.label}
           </FilterChip>
         ))}
-        <select
+        <SortDropdown
           value={sort}
-          onChange={(e) => setFilters({ sort: e.target.value })}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
-          aria-label="Sort invoices"
-          style={{ colorScheme: "dark" }}
-        >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="amount">Amount</option>
-          <option value="number">Invoice #</option>
-        </select>
+          onChange={(v) => setFilters({ sort: v })}
+          label="Sort invoices"
+          options={[
+            { value: "newest", label: "Newest" },
+            { value: "oldest", label: "Oldest" },
+            { value: "amount", label: "Amount" },
+            { value: "number", label: "Invoice #" },
+          ]}
+        />
       </Toolbar>
 
       {pageItems.length === 0 ? (

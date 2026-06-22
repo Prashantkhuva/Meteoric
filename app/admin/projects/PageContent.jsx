@@ -14,7 +14,7 @@ import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
-import { Toolbar, FilterChip } from "../_components/Toolbar";
+import { Toolbar, FilterChip, SortDropdown } from "../_components/Toolbar";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 
@@ -179,18 +179,17 @@ export default function ProjectsPage() {
             {s.label}
           </FilterChip>
         ))}
-        <select
+        <SortDropdown
           value={sort}
-          onChange={(e) => setFilters({ sort: e.target.value })}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
-          aria-label="Sort projects"
-          style={{ colorScheme: "dark" }}
-        >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="name">Name</option>
-          <option value="deadline">Deadline</option>
-        </select>
+          onChange={(v) => setFilters({ sort: v })}
+          label="Sort projects"
+          options={[
+            { value: "newest", label: "Newest" },
+            { value: "oldest", label: "Oldest" },
+            { value: "name", label: "Name" },
+            { value: "deadline", label: "Deadline" },
+          ]}
+        />
       </Toolbar>
 
       {pageItems.length === 0 ? (

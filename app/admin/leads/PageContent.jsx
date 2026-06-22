@@ -14,7 +14,7 @@ import { StatusBadge } from "../_components/StatusBadge";
 import { StatusSelect } from "../_components/StatusSelect";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
-import { Toolbar, FilterChip, ClearFiltersButton } from "../_components/Toolbar";
+import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 
@@ -183,17 +183,16 @@ export default function LeadsPage() {
             {s.label}
           </FilterChip>
         ))}
-        <select
+        <SortDropdown
           value={sort}
-          onChange={(e) => setFilters({ sort: e.target.value })}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
-          aria-label="Sort leads"
-          style={{ colorScheme: "dark" }}
-        >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="name">Name</option>
-        </select>
+          onChange={(v) => setFilters({ sort: v })}
+          label="Sort leads"
+          options={[
+            { value: "newest", label: "Newest" },
+            { value: "oldest", label: "Oldest" },
+            { value: "name", label: "Name" },
+          ]}
+        />
       </Toolbar>
 
       {pageLeads.length === 0 ? (

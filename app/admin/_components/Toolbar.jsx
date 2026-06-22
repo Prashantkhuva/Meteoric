@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Search, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Toolbar({ search, onSearchChange, children, resultCount }) {
@@ -48,6 +49,53 @@ export function FilterChip({ active, onClick, children }) {
     >
       {children}
     </button>
+  );
+}
+
+export function SortDropdown({ value, onChange, options, label }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const current = options.find((o) => o.value === value);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
+        aria-label={label}
+        aria-expanded={open}
+      >
+        {current?.label || value}
+        <ChevronDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1 z-50 min-w-[130px] border border-white/[0.08] bg-[#0a0a0a] shadow-xl">
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+              className={cn(
+                "block w-full text-left px-3 py-2 text-xs transition-colors",
+                opt.value === value
+                  ? "text-[#EAEFFF] bg-[#EAEFFF]/[0.04]"
+                  : "text-white/40 hover:text-white/60 hover:bg-white/[0.02]"
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
