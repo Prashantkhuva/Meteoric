@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { createClient } from "@/lib/client";
 import { Sidebar } from "./_components/Sidebar";
 import { TopBar } from "./_components/TopBar";
 import { ToastProvider } from "./_components/Toast";
@@ -16,13 +17,32 @@ const pageTitles = {
   "/admin/invoices": "Invoices",
 };
 
-export function AdminShell({ children, userName, userEmail }) {
+export function AdminShell({ children }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userName, setUserName] = useState("Admin");
+  const [userEmail, setUserEmail] = useState(null);
   const title = pageTitles[pathname] || "Admin";
 
   const openMobile = useCallback(() => setMobileOpen(true), []);
   const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }) => {
+      const user = data?.user;
+      if (user) {
+        setUserName(
+          user?.user_metadata?.full_name ||
+          user?.user_metadata?.name ||
+          user?.email?.split("@")[0] ||
+          "Admin"
+        );
+        setUserEmail(user?.email);
+      }
+    });
+  }, []);
 
   return (
     <ToastProvider>
