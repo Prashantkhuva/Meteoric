@@ -4,6 +4,7 @@ import { createClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/lib/site-url";
+import { sendProposalEmail, sendInvoiceEmail } from "@/lib/email";
 
 export async function signOut() {
   const supabase = await createClient();
@@ -293,21 +294,7 @@ export async function sendProposal(id) {
   const previewUrl = `${getSiteUrl()}/admin/proposals`;
 
   try {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { default: ProposalEmail } = await import("@/emails/proposal-email");
-    await resend.emails.send({
-      from: process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>",
-      to: proposal.lead.email,
-      subject: `Proposal: ${proposal.title}`,
-      react: ProposalEmail({
-        name: proposal.lead.name,
-        title: proposal.title,
-        timeline: proposal.timeline,
-        terms: proposal.terms,
-        previewUrl,
-      }),
-    });
+    await sendProposalEmail(proposal, proposal.lead, previewUrl);
   } catch (err) {
     console.error("Failed to send proposal email:", err);
   }
@@ -426,24 +413,7 @@ export async function sendInvoice(id) {
   const previewUrl = `${getSiteUrl()}/preview/invoice/${id}`;
 
   try {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { default: InvoiceEmail } = await import("@/emails/invoice-email");
-    const dueDate = invoice.due_date
-      ? new Date(invoice.due_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-      : null;
-    await resend.emails.send({
-      from: process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>",
-      to: invoice.client.email,
-      subject: `Invoice ${invoice.invoice_number} from Meteoric`,
-      react: InvoiceEmail({
-        name: invoice.client.name,
-        invoiceNumber: invoice.invoice_number,
-        total: invoice.total,
-        dueDate,
-        previewUrl,
-      }),
-    });
+    await sendInvoiceEmail(invoice, invoice.client, previewUrl);
   } catch (err) {
     console.error("Failed to send invoice email:", err);
   }

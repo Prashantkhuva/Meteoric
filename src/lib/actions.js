@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/server";
+import { sendNewLeadNotification, sendLeadAutoReply } from "@/lib/email";
 
 export async function createLead(data) {
   try {
@@ -29,7 +30,6 @@ export async function createLead(data) {
 
     let emailError = null
     if (process.env.RESEND_API_KEY) {
-      const { sendNewLeadNotification, sendLeadAutoReply } = await import("@/lib/email")
       const results = await Promise.allSettled([
         sendNewLeadNotification(data),
         data.email ? sendLeadAutoReply(data) : Promise.resolve(),

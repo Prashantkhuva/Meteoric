@@ -145,6 +145,11 @@ export default function ProposalsPage() {
     }
   }
 
+  function handleEdit(proposal) {
+    setEditingProposal(proposal);
+    setViewProposal(null);
+  }
+
   async function handleSend(id) {
     setSending(id);
     try {
@@ -280,7 +285,7 @@ export default function ProposalsPage() {
         onClose={() => setViewProposal(null)}
         onEdit={handleEdit}
         onSend={handleSend}
-        onDelete={promptDelete}
+        onDelete={(id) => { setDeleteTarget(id); setViewProposal(null); }}
         onCreateInvoice={handleCreateInvoice}
         sending={sending}
       />

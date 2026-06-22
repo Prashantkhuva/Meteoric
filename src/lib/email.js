@@ -1,51 +1,106 @@
-let _resend = null
+import { resend } from "@/lib/resend";
+import NewLeadEmail from "@/emails/new-lead-notification";
+import LeadAutoReply from "@/emails/lead-autoreply";
+import ProposalEmail from "@/emails/proposal-email";
+import InvoiceEmail from "@/emails/invoice-email";
 
-function getResend() {
-  if (!_resend && process.env.RESEND_API_KEY) {
-    const { Resend } = require("resend")
-    _resend = new Resend(process.env.RESEND_API_KEY)
-  }
-  return _resend
+const FROM =
+  process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>";
+const ADMIN = process.env.ADMIN_EMAIL;
+const DOMAIN = (FROM || "").match(/@([^>]+)/)?.[1];
+
+function isTestMode() {
+  return DOMAIN === "resend.dev";
+}
+
+function testModeWarning(recipient) {
+  console.warn(
+    `[resend] Test mode: can only send to ${ADMIN}, not ${recipient}. ` +
+      `Verify a domain at https://resend.com/domains and update FROM_EMAIL.`
+  );
 }
 
 export async function sendNewLeadNotification(lead) {
-  const r = getResend()
-  if (!r) { console.log("[email] RESEND_API_KEY not set"); return }
-  const { default: NewLeadEmail } = await import("@/emails/new-lead-notification")
-  const result = await r.emails.send({
-    from: process.env.FROM_EMAIL,
-    to: [process.env.ADMIN_EMAIL],
+  const result = await resend.emails.send({
+    from: FROM,
+    to: [ADMIN],
     subject: `New lead from ${lead.name || lead.email}`,
     react: NewLeadEmail(lead),
-  })
-  if (result?.error) console.error("[email] admin notification failed:", result.error)
-  else console.log("[email] admin notification sent")
-  return result
+  });
+  if (result?.error) console.error("[resend] admin notification failed:", result.error);
+  return result;
 }
 
 export async function sendLeadAutoReply(lead) {
-  const r = getResend()
-  if (!r) { console.log("[email] RESEND_API_KEY not set"); return }
-  if (!lead.email) { console.log("[email] no lead email, skipping auto-reply"); return }
+  if (!lead.email) return;
 
-  const adminEmail = process.env.ADMIN_EMAIL
-  const fromDomain = (process.env.FROM_EMAIL || "").match(/@([^>]+)/)?.[1]
-
-  if (fromDomain === "resend.dev" && lead.email !== adminEmail) {
-    console.log("[email] Resend test mode: can only send to", adminEmail, "— skipping auto-reply to", lead.email)
-    console.log("[email] To send to other recipients, verify a domain at https://resend.com/domains and update FROM_EMAIL")
-    return
+  if (isTestMode() && lead.email !== ADMIN) {
+    testModeWarning(lead.email);
+    return { success: false, message: "Cannot send in test mode — verify a domain first" };
   }
 
-  const { default: LeadAutoReply } = await import("@/emails/lead-autoreply")
-  console.log("[email] sending auto-reply to", lead.email)
-  const result = await r.emails.send({
-    from: process.env.FROM_EMAIL,
+  const result = await resend.emails.send({
+    from: FROM,
     to: [lead.email],
     subject: "Thank you for reaching out — Meteoric",
     react: LeadAutoReply({ name: lead.name }),
-  })
-  if (result?.error) console.error("[email] auto-reply failed:", result.error)
-  else console.log("[email] auto-reply sent to", lead.email)
-  return result
+  });
+  if (result?.error) console.error("[resend] auto-reply failed:", result.error);
+  return result;
+}
+
+export async function sendProposalEmail(proposal, lead, previewUrl) {
+  if (!lead?.email) throw new Error("Lead has no email address");
+
+  if (isTestMode() && lead.email !== ADMIN) {
+    testModeWarning(lead.email);
+    return { success: false, message: "Cannot send in test mode — verify a domain first" };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM,
+    to: lead.email,
+    subject: `Proposal: ${proposal.title}`,
+    react: ProposalEmail({
+      name: lead.name,
+      title: proposal.title,
+      timeline: proposal.timeline,
+      terms: proposal.terms,
+      previewUrl,
+    }),
+  });
+  if (result?.error) console.error("[resend] proposal email failed:", result.error);
+  return result;
+}
+
+export async function sendInvoiceEmail(invoice, client, previewUrl) {
+  if (!client?.email) throw new Error("Client has no email address");
+
+  if (isTestMode() && client.email !== ADMIN) {
+    testModeWarning(client.email);
+    return { success: false, message: "Cannot send in test mode — verify a domain first" };
+  }
+
+  const dueDate = invoice.due_date
+    ? new Date(invoice.due_date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
+
+  const result = await resend.emails.send({
+    from: FROM,
+    to: client.email,
+    subject: `Invoice ${invoice.invoice_number} from Meteoric`,
+    react: InvoiceEmail({
+      name: client.name,
+      invoiceNumber: invoice.invoice_number,
+      total: invoice.total,
+      dueDate,
+      previewUrl,
+    }),
+  });
+  if (result?.error) console.error("[resend] invoice email failed:", result.error);
+  return result;
 }
