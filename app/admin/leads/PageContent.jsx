@@ -188,6 +188,7 @@ export default function LeadsPage() {
           onChange={(e) => setFilters({ sort: e.target.value })}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
           aria-label="Sort leads"
+          style={{ colorScheme: "dark" }}
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>

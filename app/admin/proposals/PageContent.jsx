@@ -216,6 +216,7 @@ export default function ProposalsPage() {
           onChange={(e) => setFilters({ sort: e.target.value })}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
           aria-label="Sort proposals"
+          style={{ colorScheme: "dark" }}
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -536,6 +537,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
                   name="lead_id"
                   defaultValue={proposal?.lead_id || ""}
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  style={{ colorScheme: "dark" }}
                 >
                   <option value="">No lead linked</option>
                   {leads.map((l) => (

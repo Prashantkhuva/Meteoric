@@ -244,6 +244,7 @@ export default function InvoicesPage() {
           onChange={(e) => setFilters({ sort: e.target.value })}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors outline-none"
           aria-label="Sort invoices"
+          style={{ colorScheme: "dark" }}
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -590,6 +591,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
                   name="client_id"
                   defaultValue={invoice?.client_id || ""}
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  style={{ colorScheme: "dark" }}
                 >
                   <option value="">No client linked</option>
                   {clients.map((c) => (
