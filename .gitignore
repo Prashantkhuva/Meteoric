@@ -24,3 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Testing
+test-results/
+
+# OpenCode session summary
+SUMMARY.md
