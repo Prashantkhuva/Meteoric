@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
 import {
-  createProject, updateProject, deleteProject, getClients,
+  createProject, updateProject, deleteProject, getClients, getProjectsPaginated,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -56,16 +56,9 @@ const CSV_COLUMNS = [
   { label: "Created", accessor: (p) => formatDate(p.created_at) },
 ];
 
-const SORT_COLUMNS = {
-  name: (a, b) => (a.name || "").localeCompare(b.name || ""),
-  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
-  budget: (a, b) => (a.budget || 0) - (b.budget || 0),
-  deadline: (a, b) => new Date(a.deadline || 0) - new Date(b.deadline || 0),
-  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
-};
-
 export default function ProjectsPage() {
   const [projects, setProjects] = useState([]);
+  const [total, setTotal] = useState(0);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -82,7 +75,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [search, statusFilter, sort, page, col, dir]);
 
   useShortcuts(
     useMemo(() => ({
@@ -93,51 +86,16 @@ export default function ProjectsPage() {
   );
 
   async function fetchData() {
-    const supabase = createClient();
-    if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
-
-    const [projectRes, clientsRes] = await Promise.all([
-      supabase.from("projects").select("*, client:clients(name, email, company)").order("created_at", { ascending: false }),
+    setLoading(true);
+    const [result, clientsRes] = await Promise.all([
+      getProjectsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
       getClients().catch(() => []),
     ]);
-
-    if (projectRes.error) { setError(projectRes.error.message); }
-    else { setProjects(projectRes.data || []); }
+    if (result.error) { setError(result.error); }
+    else { setProjects(result.data); setTotal(result.total); }
     setClients(clientsRes);
     setLoading(false);
   }
-
-  const filtered = useMemo(() => {
-    let result = [...projects];
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter((p) =>
-        (p.name?.toLowerCase() || "").includes(q) ||
-        (p.client?.name?.toLowerCase() || "").includes(q)
-      );
-    }
-    if (statusFilter !== "all") {
-      result = result.filter((p) => p.status === statusFilter);
-    }
-    if (col && SORT_COLUMNS[col]) {
-      result.sort((a, b) => {
-        const cmp = SORT_COLUMNS[col](a, b);
-        return dir === "desc" ? -cmp : cmp;
-      });
-    } else {
-      result.sort((a, b) => {
-        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-        if (sort === "deadline") return new Date(a.deadline || 0) - new Date(b.deadline || 0);
-        return 0;
-      });
-    }
-    return result;
-  }, [projects, search, statusFilter, sort, col, dir]);
-
-  const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
-  const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   useEffect(() => {
     setSelected(new Set());
@@ -152,10 +110,10 @@ export default function ProjectsPage() {
   }
 
   function toggleSelectAll() {
-    if (selected.size === pageItems.length) {
+    if (selected.size === projects.length) {
       setSelected(new Set());
     } else {
-      setSelected(new Set(pageItems.map((p) => p.id)));
+      setSelected(new Set(projects.map((p) => p.id)));
     }
   }
 
@@ -164,6 +122,7 @@ export default function ProjectsPage() {
     try {
       await Promise.all(ids.map((id) => deleteProject(id)));
       setProjects((prev) => prev.filter((p) => !ids.includes(p.id)));
+      setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewProject && ids.includes(viewProject.id)) setViewProject(null);
       addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
@@ -190,8 +149,14 @@ export default function ProjectsPage() {
     }
   }
 
-  function handleExportCSV() {
-    downloadCSV(filtered, CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);
+  async function handleExportCSV() {
+    const supabase = createClient();
+    if (!supabase) return;
+    let query = supabase.from("projects").select("*, client:clients(name, email, company)");
+    if (search) { query = query.or(`name.ilike.%${search}%,client.name.ilike.%${search}%`); }
+    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+    const { data } = await query;
+    downloadCSV(data || [], CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);
     addToast("CSV exported", "success");
   }
 
@@ -222,6 +187,7 @@ export default function ProjectsPage() {
     try {
       await deleteProject(id);
       setProjects((prev) => prev.filter((p) => p.id !== id));
+      setTotal((prev) => Math.max(0, prev - 1));
       if (viewProject?.id === id) setViewProject(null);
       addToast("Project deleted", "success");
     } catch (err) {
@@ -257,7 +223,7 @@ export default function ProjectsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Projects</h1>
-          <p className="mt-1 text-sm text-white/35 tabular-nums">{filtered.length} project{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{total} project{total !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowNew(true)}
@@ -268,7 +234,7 @@ export default function ProjectsPage() {
         </button>
       </div>
 
-      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total}>
         <button
           onClick={handleExportCSV}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
@@ -296,7 +262,7 @@ export default function ProjectsPage() {
         />
       </Toolbar>
 
-      {pageItems.length === 0 ? (
+      {projects.length === 0 && !loading ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <FolderKanban size={40} className="mx-auto text-white/10 mb-4" />
           <p className="text-sm text-white/25">
@@ -314,27 +280,31 @@ export default function ProjectsPage() {
         </div>
       ) : (
         <>
-          <DesktopTable
-            items={pageItems}
-            onView={setViewProject}
-            onEdit={setEditingProject}
-            onDelete={setDeleteTarget}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={toggleSelectAll}
-            col={col}
-            dir={dir}
-            onColSort={toggleColSort}
-          />
-          <MobileCards
-            items={pageItems}
-            onView={setViewProject}
-            onEdit={setEditingProject}
-            onDelete={setDeleteTarget}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-          />
-          <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          {projects.length > 0 && (
+            <>
+              <DesktopTable
+                items={projects}
+                onView={setViewProject}
+                onEdit={setEditingProject}
+                onDelete={setDeleteTarget}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+                onToggleSelectAll={toggleSelectAll}
+                col={col}
+                dir={dir}
+                onColSort={toggleColSort}
+              />
+              <MobileCards
+                items={projects}
+                onView={setViewProject}
+                onEdit={setEditingProject}
+                onDelete={setDeleteTarget}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+              />
+            </>
+          )}
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 

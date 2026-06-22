@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
 import {
-  getLeads, createProposal, updateProposal, deleteProposal, sendProposal,
+  getLeads, createProposal, updateProposal, deleteProposal, sendProposal, getProposalsPaginated,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -56,14 +56,9 @@ const CSV_COLUMNS = [
   { label: "Created", accessor: (p) => formatDate(p.created_at) },
 ];
 
-const SORT_COLUMNS = {
-  title: (a, b) => (a.title || "").localeCompare(b.title || ""),
-  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
-  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
-};
-
 export default function ProposalsPage() {
   const [proposals, setProposals] = useState([]);
+  const [total, setTotal] = useState(0);
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,7 +86,7 @@ export default function ProposalsPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [search, statusFilter, sort, page, col, dir]);
 
   useShortcuts(
     useMemo(() => ({
@@ -102,50 +97,16 @@ export default function ProposalsPage() {
   );
 
   async function fetchData() {
-    const supabase = createClient();
-    if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
-
-    const [proposalRes, leadsRes] = await Promise.all([
-      supabase.from("proposals").select("*, lead:leads(name, email, phone, company)").order("created_at", { ascending: false }),
+    setLoading(true);
+    const [result, leadsRes] = await Promise.all([
+      getProposalsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
       getLeads().catch(() => []),
     ]);
-
-    if (proposalRes.error) { setError(proposalRes.error.message); }
-    else { setProposals(proposalRes.data || []); }
+    if (result.error) { setError(result.error); }
+    else { setProposals(result.data); setTotal(result.total); }
     setLeads(leadsRes);
     setLoading(false);
   }
-
-  const filtered = useMemo(() => {
-    let result = [...proposals];
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter((p) =>
-        (p.title?.toLowerCase() || "").includes(q) ||
-        (p.lead?.name?.toLowerCase() || "").includes(q)
-      );
-    }
-    if (statusFilter !== "all") {
-      result = result.filter((p) => p.status === statusFilter);
-    }
-    if (col && SORT_COLUMNS[col]) {
-      result.sort((a, b) => {
-        const cmp = SORT_COLUMNS[col](a, b);
-        return dir === "desc" ? -cmp : cmp;
-      });
-    } else {
-      result.sort((a, b) => {
-        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-        if (sort === "title") return (a.title || "").localeCompare(b.title || "");
-        return 0;
-      });
-    }
-    return result;
-  }, [proposals, search, statusFilter, sort, col, dir]);
-
-  const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
-  const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   useEffect(() => {
     setSelected(new Set());
@@ -160,10 +121,10 @@ export default function ProposalsPage() {
   }
 
   function toggleSelectAll() {
-    if (selected.size === pageItems.length) {
+    if (selected.size === proposals.length) {
       setSelected(new Set());
     } else {
-      setSelected(new Set(pageItems.map((p) => p.id)));
+      setSelected(new Set(proposals.map((p) => p.id)));
     }
   }
 
@@ -172,6 +133,7 @@ export default function ProposalsPage() {
     try {
       await Promise.all(ids.map((id) => deleteProposal(id)));
       setProposals((prev) => prev.filter((p) => !ids.includes(p.id)));
+      setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewProposal && ids.includes(viewProposal.id)) setViewProposal(null);
       addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
@@ -180,8 +142,14 @@ export default function ProposalsPage() {
     }
   }
 
-  function handleExportCSV() {
-    downloadCSV(filtered, CSV_COLUMNS, `proposals-${new Date().toISOString().slice(0, 10)}.csv`);
+  async function handleExportCSV() {
+    const supabase = createClient();
+    if (!supabase) return;
+    let query = supabase.from("proposals").select("*, lead:leads(name, email, phone, company)");
+    if (search) { query = query.or(`title.ilike.%${search}%,lead.name.ilike.%${search}%`); }
+    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+    const { data } = await query;
+    downloadCSV(data || [], CSV_COLUMNS, `proposals-${new Date().toISOString().slice(0, 10)}.csv`);
     addToast("CSV exported", "success");
   }
 
@@ -212,6 +180,7 @@ export default function ProposalsPage() {
     try {
       await deleteProposal(id);
       setProposals((prev) => prev.filter((p) => p.id !== id));
+      setTotal((prev) => Math.max(0, prev - 1));
       if (viewProposal?.id === id) setViewProposal(null);
       addToast("Proposal deleted", "success");
     } catch (err) {
@@ -267,7 +236,7 @@ export default function ProposalsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Proposals</h1>
-          <p className="mt-1 text-sm text-white/35 tabular-nums">{filtered.length} proposal{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{total} proposal{total !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowNewProposal(true)}
@@ -278,7 +247,7 @@ export default function ProposalsPage() {
         </button>
       </div>
 
-      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total}>
         <button
           onClick={handleExportCSV}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
@@ -305,7 +274,7 @@ export default function ProposalsPage() {
         />
       </Toolbar>
 
-      {pageItems.length === 0 ? (
+      {proposals.length === 0 && !loading ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
             {hasFilters ? "No proposals match your filters" : "No proposals yet \u2014 create your first proposal to get started"}
@@ -322,31 +291,35 @@ export default function ProposalsPage() {
         </div>
       ) : (
         <>
-          <DesktopTable
-            items={pageItems}
-            onView={setViewProposal}
-            onEdit={setEditingProposal}
-            onSend={handleSend}
-            onDelete={setDeleteTarget}
-            sending={sending}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={toggleSelectAll}
-            col={col}
-            dir={dir}
-            onColSort={toggleColSort}
-          />
-          <MobileCards
-            items={pageItems}
-            onView={setViewProposal}
-            onEdit={setEditingProposal}
-            onSend={handleSend}
-            onDelete={setDeleteTarget}
-            sending={sending}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-          />
-          <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          {proposals.length > 0 && (
+            <>
+              <DesktopTable
+                items={proposals}
+                onView={setViewProposal}
+                onEdit={setEditingProposal}
+                onSend={handleSend}
+                onDelete={setDeleteTarget}
+                sending={sending}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+                onToggleSelectAll={toggleSelectAll}
+                col={col}
+                dir={dir}
+                onColSort={toggleColSort}
+              />
+              <MobileCards
+                items={proposals}
+                onView={setViewProposal}
+                onEdit={setEditingProposal}
+                onSend={handleSend}
+                onDelete={setDeleteTarget}
+                sending={sending}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+              />
+            </>
+          )}
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 

@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
-  markInvoiceAsPaid, markInvoiceAsOverdue, getClients,
+  markInvoiceAsPaid, markInvoiceAsOverdue, getClients, getInvoicesPaginated,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -59,15 +59,9 @@ const CSV_COLUMNS = [
   { label: "Created", accessor: (inv) => formatDate(inv.created_at) },
 ];
 
-const SORT_COLUMNS = {
-  invoice_number: (a, b) => (a.invoice_number || "").localeCompare(b.invoice_number || ""),
-  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
-  total: (a, b) => (a.total || 0) - (b.total || 0),
-  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
-};
-
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState([]);
+  const [total, setTotal] = useState(0);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,7 +86,9 @@ export default function InvoicesPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [search, statusFilter, sort, page, col, dir]);
+
+  const checkedOverdue = useRef(false);
 
   useShortcuts(
     useMemo(() => ({
@@ -102,30 +98,33 @@ export default function InvoicesPage() {
     }), [viewInvoice, showNewInvoice])
   );
 
-  const checkedOverdue = useRef(false);
-
   async function fetchData() {
-    const supabase = createClient();
-    if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
+    setLoading(true);
 
-    const [invoiceRes, clientsRes] = await Promise.all([
-      supabase.from("invoices").select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)").order("created_at", { ascending: false }),
+    const [result, clientsRes] = await Promise.all([
+      getInvoicesPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
       getClients().catch(() => []),
     ]);
 
-    if (invoiceRes.error) { setError(invoiceRes.error.message); setLoading(false); return; }
+    if (result.error) { setError(result.error); setLoading(false); return; }
 
-    setInvoices(invoiceRes.data || []);
+    setInvoices(result.data);
+    setTotal(result.total);
     setClients(clientsRes);
     setLoading(false);
 
     if (checkedOverdue.current) return;
     checkedOverdue.current = true;
 
+    const supabase = createClient();
+    if (!supabase) return;
+    const { data: allInvoices } = await supabase
+      .from("invoices").select("id, status, due_date");
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const overdueIds = [];
-    (invoiceRes.data || []).forEach((inv) => {
+    (allInvoices || []).forEach((inv) => {
       if (inv.status === "sent" && inv.due_date) {
         const due = new Date(inv.due_date);
         if (due < today) overdueIds.push(inv.id);
@@ -142,42 +141,6 @@ export default function InvoicesPage() {
     }
   }
 
-  const filtered = useMemo(() => {
-    let result = [...invoices];
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter((inv) =>
-        (inv.invoice_number?.toLowerCase() || "").includes(q) ||
-        (inv.client?.name?.toLowerCase() || "").includes(q)
-      );
-    }
-    if (statusFilter !== "all") {
-      result = result.filter((inv) => inv.status === statusFilter);
-    }
-    if (col && SORT_COLUMNS[col]) {
-      result.sort((a, b) => {
-        const cmp = SORT_COLUMNS[col](a, b);
-        return dir === "desc" ? -cmp : cmp;
-      });
-    } else {
-      result.sort((a, b) => {
-        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-        if (sort === "amount") return (b.total || 0) - (a.total || 0);
-        if (sort === "number") return (a.invoice_number || "").localeCompare(b.invoice_number || "");
-        return 0;
-      });
-    }
-    return result;
-  }, [invoices, search, statusFilter, sort, col, dir]);
-
-  const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
-  const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-
-  useEffect(() => {
-    setSelected(new Set());
-  }, [page, search, statusFilter]);
-
   function toggleSelect(id) {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -187,10 +150,10 @@ export default function InvoicesPage() {
   }
 
   function toggleSelectAll() {
-    if (selected.size === pageItems.length) {
+    if (selected.size === invoices.length) {
       setSelected(new Set());
     } else {
-      setSelected(new Set(pageItems.map((inv) => inv.id)));
+      setSelected(new Set(invoices.map((inv) => inv.id)));
     }
   }
 
@@ -199,6 +162,7 @@ export default function InvoicesPage() {
     try {
       await Promise.all(ids.map((id) => deleteInvoice(id)));
       setInvoices((prev) => prev.filter((inv) => !ids.includes(inv.id)));
+      setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewInvoice && ids.includes(viewInvoice.id)) setViewInvoice(null);
       addToast(`${ids.length} invoice${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
@@ -207,8 +171,14 @@ export default function InvoicesPage() {
     }
   }
 
-  function handleExportCSV() {
-    downloadCSV(filtered, CSV_COLUMNS, `invoices-${new Date().toISOString().slice(0, 10)}.csv`);
+  async function handleExportCSV() {
+    const supabase = createClient();
+    if (!supabase) return;
+    let query = supabase.from("invoices").select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)");
+    if (search) { query = query.or(`invoice_number.ilike.%${search}%,client.name.ilike.%${search}%`); }
+    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+    const { data } = await query;
+    downloadCSV(data || [], CSV_COLUMNS, `invoices-${new Date().toISOString().slice(0, 10)}.csv`);
     addToast("CSV exported", "success");
   }
 
@@ -239,6 +209,7 @@ export default function InvoicesPage() {
     try {
       await deleteInvoice(id);
       setInvoices((prev) => prev.filter((inv) => inv.id !== id));
+      setTotal((prev) => Math.max(0, prev - 1));
       if (viewInvoice?.id === id) setViewInvoice(null);
       addToast("Invoice deleted", "success");
     } catch (err) {
@@ -303,7 +274,7 @@ export default function InvoicesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Invoices</h1>
-          <p className="mt-1 text-sm text-white/35 tabular-nums">{filtered.length} invoice{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{total} invoice{total !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowNewInvoice(true)}
@@ -314,7 +285,7 @@ export default function InvoicesPage() {
         </button>
       </div>
 
-      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total}>
         <button
           onClick={handleExportCSV}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
@@ -342,7 +313,7 @@ export default function InvoicesPage() {
         />
       </Toolbar>
 
-      {pageItems.length === 0 ? (
+      {invoices.length === 0 && !loading ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <Receipt size={40} className="mx-auto text-white/10 mb-4" />
           <p className="text-sm text-white/25">
@@ -360,31 +331,35 @@ export default function InvoicesPage() {
         </div>
       ) : (
         <>
-          <DesktopTable
-            items={pageItems}
-            onView={setViewInvoice}
-            onEdit={setEditingInvoice}
-            onSend={handleSend}
-            onDelete={setDeleteTarget}
-            sending={sending}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={toggleSelectAll}
-            col={col}
-            dir={dir}
-            onColSort={toggleColSort}
-          />
-          <MobileCards
-            items={pageItems}
-            onView={setViewInvoice}
-            onEdit={setEditingInvoice}
-            onSend={handleSend}
-            onDelete={setDeleteTarget}
-            sending={sending}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-          />
-          <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          {invoices.length > 0 && (
+            <>
+              <DesktopTable
+                items={invoices}
+                onView={setViewInvoice}
+                onEdit={setEditingInvoice}
+                onSend={handleSend}
+                onDelete={setDeleteTarget}
+                sending={sending}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+                onToggleSelectAll={toggleSelectAll}
+                col={col}
+                dir={dir}
+                onColSort={toggleColSort}
+              />
+              <MobileCards
+                items={invoices}
+                onView={setViewInvoice}
+                onEdit={setEditingInvoice}
+                onSend={handleSend}
+                onDelete={setDeleteTarget}
+                sending={sending}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+              />
+            </>
+          )}
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 

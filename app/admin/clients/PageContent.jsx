@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
-import { updateClientStatus, addClient, deleteClient } from "../actions";
+import { updateClientStatus, addClient, deleteClient, getClientsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle, Download,
@@ -40,15 +40,9 @@ const CSV_COLUMNS = [
   { label: "Created", accessor: (c) => formatDate(c.created_at) },
 ];
 
-const SORT_COLUMNS = {
-  name: (a, b) => (a.name || "").localeCompare(b.name || ""),
-  email: (a, b) => (a.email || "").localeCompare(b.email || ""),
-  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
-  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
-};
-
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
@@ -64,7 +58,7 @@ export default function ClientsPage() {
 
   useEffect(() => {
     fetchClients();
-  }, []);
+  }, [search, statusFilter, sort, page, col, dir]);
 
   useShortcuts(
     useMemo(() => ({
@@ -75,46 +69,12 @@ export default function ClientsPage() {
   );
 
   async function fetchClients() {
-    const supabase = createClient();
-    if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
-    const { data, error } = await supabase
-      .from("clients").select("*").order("created_at", { ascending: false });
-    if (error) { setError(error.message); }
-    else { setClients(data || []); }
+    setLoading(true);
+    const result = await getClientsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort });
+    if (result.error) { setError(result.error); }
+    else { setClients(result.data); setTotal(result.total); }
     setLoading(false);
   }
-
-  const filtered = useMemo(() => {
-    let result = [...clients];
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter((c) =>
-        (c.name?.toLowerCase() || "").includes(q) ||
-        (c.email?.toLowerCase() || "").includes(q) ||
-        (c.company?.toLowerCase() || "").includes(q)
-      );
-    }
-    if (statusFilter !== "all") {
-      result = result.filter((c) => c.status === statusFilter);
-    }
-    if (col && SORT_COLUMNS[col]) {
-      result.sort((a, b) => {
-        const cmp = SORT_COLUMNS[col](a, b);
-        return dir === "desc" ? -cmp : cmp;
-      });
-    } else {
-      result.sort((a, b) => {
-        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-        return 0;
-      });
-    }
-    return result;
-  }, [clients, search, statusFilter, sort, col, dir]);
-
-  const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
-  const pageClients = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   useEffect(() => {
     setSelected(new Set());
@@ -129,10 +89,10 @@ export default function ClientsPage() {
   }
 
   function toggleSelectAll() {
-    if (selected.size === pageClients.length) {
+    if (selected.size === clients.length) {
       setSelected(new Set());
     } else {
-      setSelected(new Set(pageClients.map((c) => c.id)));
+      setSelected(new Set(clients.map((c) => c.id)));
     }
   }
 
@@ -141,6 +101,7 @@ export default function ClientsPage() {
     try {
       await Promise.all(ids.map((id) => deleteClient(id)));
       setClients((prev) => prev.filter((c) => !ids.includes(c.id)));
+      setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewClient && ids.includes(viewClient.id)) setViewClient(null);
       addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
@@ -161,8 +122,14 @@ export default function ClientsPage() {
     }
   }
 
-  function handleExportCSV() {
-    downloadCSV(filtered, CSV_COLUMNS, `clients-${new Date().toISOString().slice(0, 10)}.csv`);
+  async function handleExportCSV() {
+    const supabase = createClient();
+    if (!supabase) return;
+    let query = supabase.from("clients").select("*");
+    if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+    const { data } = await query;
+    downloadCSV(data || [], CSV_COLUMNS, `clients-${new Date().toISOString().slice(0, 10)}.csv`);
     addToast("CSV exported", "success");
   }
 
@@ -194,6 +161,7 @@ export default function ClientsPage() {
     try {
       await deleteClient(id);
       setClients((prev) => prev.filter((c) => c.id !== id));
+      setTotal((prev) => Math.max(0, prev - 1));
       if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
     } catch (err) {
@@ -229,7 +197,7 @@ export default function ClientsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Clients</h1>
-          <p className="mt-1 text-sm text-white/35 tabular-nums">{filtered.length} client{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{total} client{total !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
@@ -240,7 +208,7 @@ export default function ClientsPage() {
         </button>
       </div>
 
-      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total}>
         <button
           onClick={handleExportCSV}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
@@ -268,7 +236,7 @@ export default function ClientsPage() {
         />
       </Toolbar>
 
-      {pageClients.length === 0 ? (
+      {clients.length === 0 && !loading ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
             {hasFilters ? "No clients match your filters" : "No clients yet \u2014 add your first client to get started"}
@@ -285,29 +253,33 @@ export default function ClientsPage() {
         </div>
       ) : (
         <>
-          <DesktopTable
-            clients={pageClients}
-            onView={setViewClient}
-            onStatusChange={handleStatusChange}
-            onDelete={setDeleteTarget}
-            editingStatus={editingStatus}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={toggleSelectAll}
-            col={col}
-            dir={dir}
-            onColSort={toggleColSort}
-          />
-          <MobileCards
-            clients={pageClients}
-            onView={setViewClient}
-            onStatusChange={handleStatusChange}
-            onDelete={setDeleteTarget}
-            editingStatus={editingStatus}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-          />
-          <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          {clients.length > 0 && (
+            <>
+              <DesktopTable
+                clients={clients}
+                onView={setViewClient}
+                onStatusChange={handleStatusChange}
+                onDelete={setDeleteTarget}
+                editingStatus={editingStatus}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+                onToggleSelectAll={toggleSelectAll}
+                col={col}
+                dir={dir}
+                onColSort={toggleColSort}
+              />
+              <MobileCards
+                clients={clients}
+                onView={setViewClient}
+                onStatusChange={handleStatusChange}
+                onDelete={setDeleteTarget}
+                editingStatus={editingStatus}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+              />
+            </>
+          )}
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 

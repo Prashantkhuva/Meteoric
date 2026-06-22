@@ -519,3 +519,105 @@ export async function deleteProject(id) {
   revalidatePath("/admin/projects");
   revalidatePath("/admin");
 }
+
+function resolveOrder(col, dir, sort) {
+  const validCols = ["name", "email", "status", "created_at", "invoice_number", "total", "budget", "deadline", "title", "company", "phone"];
+  if (col && validCols.includes(col)) {
+    return { column: col, ascending: dir !== "desc" };
+  }
+  const sortMap = {
+    newest: { column: "created_at", ascending: false },
+    oldest: { column: "created_at", ascending: true },
+    name: { column: "name", ascending: true },
+    title: { column: "title", ascending: true },
+    amount: { column: "total", ascending: false },
+    number: { column: "invoice_number", ascending: true },
+    deadline: { column: "deadline", ascending: true },
+  };
+  return sortMap[sort] || { column: "created_at", ascending: false };
+}
+
+export async function getLeadsPaginated({ page = 1, pageSize = 15, search = "", status = "all", col = "", dir = "asc", sort = "newest" }) {
+  const supabase = await createClient();
+  if (!supabase) return { data: [], total: 0 };
+
+  let query = supabase.from("leads").select("*", { count: "exact" });
+  if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+  if (status !== "all") { query = query.eq("status", status); }
+  const order = resolveOrder(col, dir, sort);
+  query = query.order(order.column, { ascending: order.ascending });
+  const from = (page - 1) * pageSize;
+  query = query.range(from, from + pageSize - 1);
+
+  const { data, count, error } = await query;
+  if (error) return { data: [], total: 0 };
+  return { data: data || [], total: count || 0 };
+}
+
+export async function getClientsPaginated({ page = 1, pageSize = 15, search = "", status = "all", col = "", dir = "asc", sort = "newest" }) {
+  const supabase = await createClient();
+  if (!supabase) return { data: [], total: 0 };
+
+  let query = supabase.from("clients").select("*", { count: "exact" });
+  if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+  if (status !== "all") { query = query.eq("status", status); }
+  const order = resolveOrder(col, dir, sort);
+  query = query.order(order.column, { ascending: order.ascending });
+  const from = (page - 1) * pageSize;
+  query = query.range(from, from + pageSize - 1);
+
+  const { data, count, error } = await query;
+  if (error) return { data: [], total: 0 };
+  return { data: data || [], total: count || 0 };
+}
+
+export async function getProposalsPaginated({ page = 1, pageSize = 15, search = "", status = "all", col = "", dir = "asc", sort = "newest" }) {
+  const supabase = await createClient();
+  if (!supabase) return { data: [], total: 0 };
+
+  let query = supabase.from("proposals").select("*, lead:leads(name, email, phone, company)", { count: "exact" });
+  if (search) { query = query.or(`title.ilike.%${search}%,lead.name.ilike.%${search}%`); }
+  if (status !== "all") { query = query.eq("status", status); }
+  const order = resolveOrder(col, dir, sort);
+  query = query.order(order.column, { ascending: order.ascending });
+  const from = (page - 1) * pageSize;
+  query = query.range(from, from + pageSize - 1);
+
+  const { data, count, error } = await query;
+  if (error) return { data: [], total: 0 };
+  return { data: data || [], total: count || 0 };
+}
+
+export async function getInvoicesPaginated({ page = 1, pageSize = 15, search = "", status = "all", col = "", dir = "asc", sort = "newest" }) {
+  const supabase = await createClient();
+  if (!supabase) return { data: [], total: 0 };
+
+  let query = supabase.from("invoices").select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)", { count: "exact" });
+  if (search) { query = query.or(`invoice_number.ilike.%${search}%,client.name.ilike.%${search}%`); }
+  if (status !== "all") { query = query.eq("status", status); }
+  const order = resolveOrder(col, dir, sort);
+  query = query.order(order.column, { ascending: order.ascending });
+  const from = (page - 1) * pageSize;
+  query = query.range(from, from + pageSize - 1);
+
+  const { data, count, error } = await query;
+  if (error) return { data: [], total: 0 };
+  return { data: data || [], total: count || 0 };
+}
+
+export async function getProjectsPaginated({ page = 1, pageSize = 15, search = "", status = "all", col = "", dir = "asc", sort = "newest" }) {
+  const supabase = await createClient();
+  if (!supabase) return { data: [], total: 0 };
+
+  let query = supabase.from("projects").select("*, client:clients(name, email, company)", { count: "exact" });
+  if (search) { query = query.or(`name.ilike.%${search}%,client.name.ilike.%${search}%`); }
+  if (status !== "all") { query = query.eq("status", status); }
+  const order = resolveOrder(col, dir, sort);
+  query = query.order(order.column, { ascending: order.ascending });
+  const from = (page - 1) * pageSize;
+  query = query.range(from, from + pageSize - 1);
+
+  const { data, count, error } = await query;
+  if (error) return { data: [], total: 0 };
+  return { data: data || [], total: count || 0 };
+}

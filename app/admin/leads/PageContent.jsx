@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
-import { updateLeadStatus, convertLeadToClient, addLead, deleteLead } from "../actions";
+import { updateLeadStatus, convertLeadToClient, addLead, deleteLead, getLeadsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
@@ -43,14 +43,9 @@ const CSV_COLUMNS = [
   { label: "Created", accessor: (l) => formatDate(l.created_at) },
 ];
 
-const SORT_COLUMNS = {
-  name: (a, b) => (a.name || "").localeCompare(b.name || ""),
-  status: (a, b) => (a.status || "").localeCompare(b.status || ""),
-  created_at: (a, b) => new Date(a.created_at) - new Date(b.created_at),
-};
-
 export default function LeadsPage() {
   const [leads, setLeads] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
@@ -68,7 +63,7 @@ export default function LeadsPage() {
 
   useEffect(() => {
     fetchLeads();
-  }, []);
+  }, [search, statusFilter, sort, page, col, dir]);
 
   useShortcuts(
     useMemo(() => ({
@@ -79,46 +74,12 @@ export default function LeadsPage() {
   );
 
   async function fetchLeads() {
-    const supabase = createClient();
-    if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
-    const { data, error } = await supabase
-      .from("leads").select("*").order("created_at", { ascending: false });
-    if (error) { setError(error.message); }
-    else { setLeads(data || []); }
+    setLoading(true);
+    const result = await getLeadsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort });
+    if (result.error) { setError(result.error); }
+    else { setLeads(result.data); setTotal(result.total); }
     setLoading(false);
   }
-
-  const filtered = useMemo(() => {
-    let result = [...leads];
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter((l) =>
-        (l.name?.toLowerCase() || "").includes(q) ||
-        (l.email?.toLowerCase() || "").includes(q) ||
-        (l.company?.toLowerCase() || "").includes(q)
-      );
-    }
-    if (statusFilter !== "all") {
-      result = result.filter((l) => l.status === statusFilter);
-    }
-    if (col && SORT_COLUMNS[col]) {
-      result.sort((a, b) => {
-        const cmp = SORT_COLUMNS[col](a, b);
-        return dir === "desc" ? -cmp : cmp;
-      });
-    } else {
-      result.sort((a, b) => {
-        if (sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
-        if (sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
-        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-        return 0;
-      });
-    }
-    return result;
-  }, [leads, search, statusFilter, sort, col, dir]);
-
-  const safePage = Math.min(page, Math.ceil(filtered.length / PAGE_SIZE) || 1);
-  const pageLeads = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   useEffect(() => {
     setSelected(new Set());
@@ -133,10 +94,10 @@ export default function LeadsPage() {
   }
 
   function toggleSelectAll() {
-    if (selected.size === pageLeads.length) {
+    if (selected.size === leads.length) {
       setSelected(new Set());
     } else {
-      setSelected(new Set(pageLeads.map((l) => l.id)));
+      setSelected(new Set(leads.map((l) => l.id)));
     }
   }
 
@@ -145,6 +106,7 @@ export default function LeadsPage() {
     try {
       await Promise.all(ids.map((id) => deleteLead(id)));
       setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
+      setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewLead && ids.includes(viewLead.id)) setViewLead(null);
       addToast(`${ids.length} lead${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
@@ -165,8 +127,14 @@ export default function LeadsPage() {
     }
   }
 
-  function handleExportCSV() {
-    downloadCSV(filtered, CSV_COLUMNS, `leads-${new Date().toISOString().slice(0, 10)}.csv`);
+  async function handleExportCSV() {
+    const supabase = createClient();
+    if (!supabase) return;
+    let query = supabase.from("leads").select("*");
+    if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+    const { data } = await query;
+    downloadCSV(data || [], CSV_COLUMNS, `leads-${new Date().toISOString().slice(0, 10)}.csv`);
     addToast("CSV exported", "success");
   }
 
@@ -206,6 +174,7 @@ export default function LeadsPage() {
     try {
       await deleteLead(id);
       setLeads((prev) => prev.filter((l) => l.id !== id));
+      setTotal((prev) => Math.max(0, prev - 1));
       if (viewLead?.id === id) setViewLead(null);
       addToast("Lead deleted", "success");
     } catch (err) {
@@ -252,7 +221,7 @@ export default function LeadsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Leads</h1>
-          <p className="mt-1 text-sm text-white/35 tabular-nums">{filtered.length} lead{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{total} lead{total !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowAddLead(true)}
@@ -263,7 +232,7 @@ export default function LeadsPage() {
         </button>
       </div>
 
-      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filtered.length}>
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total}>
         <button
           onClick={handleExportCSV}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
@@ -291,7 +260,7 @@ export default function LeadsPage() {
         />
       </Toolbar>
 
-      {pageLeads.length === 0 ? (
+      {leads.length === 0 && !loading ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
             {hasFilters ? "No leads match your filters" : "No leads yet \u2014 add your first lead to get started"}
@@ -308,33 +277,37 @@ export default function LeadsPage() {
         </div>
       ) : (
         <>
-          <DesktopTable
-            leads={pageLeads}
-            onView={setViewLead}
-            onConvert={handleConvert}
-            onStatusChange={handleStatusChange}
-            onDelete={promptDelete}
-            editingStatus={editingStatus}
-            converting={converting}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={toggleSelectAll}
-            col={col}
-            dir={dir}
-            onColSort={toggleColSort}
-          />
-          <MobileCards
-            leads={pageLeads}
-            onView={setViewLead}
-            onConvert={handleConvert}
-            onStatusChange={handleStatusChange}
-            onDelete={promptDelete}
-            editingStatus={editingStatus}
-            converting={converting}
-            selected={selected}
-            onToggleSelect={toggleSelect}
-          />
-          <Pagination current={page} total={filtered.length} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          {leads.length > 0 && (
+            <>
+              <DesktopTable
+                leads={leads}
+                onView={setViewLead}
+                onConvert={handleConvert}
+                onStatusChange={handleStatusChange}
+                onDelete={promptDelete}
+                editingStatus={editingStatus}
+                converting={converting}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+                onToggleSelectAll={toggleSelectAll}
+                col={col}
+                dir={dir}
+                onColSort={toggleColSort}
+              />
+              <MobileCards
+                leads={leads}
+                onView={setViewLead}
+                onConvert={handleConvert}
+                onStatusChange={handleStatusChange}
+                onDelete={promptDelete}
+                editingStatus={editingStatus}
+                converting={converting}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+              />
+            </>
+          )}
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 
