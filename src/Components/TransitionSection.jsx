@@ -49,6 +49,11 @@ export default function TransitionSection() {
   const mutedWords = "modern, fast, and unforgettable.".split(" ");
 
   useGSAP(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      headingRef.current?.querySelectorAll(".gsap-head-word").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      cardsRef.current?.querySelectorAll(".gsap-card").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      return;
+    }
     gsap.from(headingRef.current?.querySelectorAll(".gsap-head-word"), {
       y: 40,
       opacity: 0,
@@ -62,9 +67,7 @@ export default function TransitionSection() {
         toggleActions: "play none none none",
       },
     });
-  }, { scope: sectionRef });
 
-  useGSAP(() => {
     gsap.fromTo(cardsRef.current?.querySelectorAll(".gsap-card"),
       { y: 60, opacity: 0 },
       {

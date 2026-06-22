@@ -15,6 +15,8 @@ import { StatusSelect } from "../_components/StatusSelect";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
+import { IconButton } from "../_components/IconButton";
+import { FormField } from "../_components/FormField";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 
@@ -383,20 +385,6 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
   );
 }
 
-function IconButton({ onClick, icon: Icon, label, className, disabled }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`p-2 text-white/30 transition-all hover:bg-white/[0.04] hover:text-white/50 disabled:opacity-30 disabled:pointer-events-none ${className || ""}`}
-      aria-label={label}
-      title={label}
-    >
-      <Icon size={14} />
-    </button>
-  );
-}
-
 function AddLeadModal({ open, onClose, onSubmit }) {
   const [submitting, setSubmitting] = useState(false);
   const trapRef = useFocusTrap(open);
@@ -472,24 +460,6 @@ function AddLeadModal({ open, onClose, onSubmit }) {
         </motion.div>
       )}
     </AnimatePresence>
-  );
-}
-
-function FormField({ label, name, type = "text", placeholder }) {
-  const inputId = `field-${name}`;
-  return (
-    <div>
-      <label htmlFor={inputId} className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-        {label}
-      </label>
-      <input
-        id={inputId}
-        name={name}
-        type={type}
-        className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
-        placeholder={placeholder}
-      />
-    </div>
   );
 }
 

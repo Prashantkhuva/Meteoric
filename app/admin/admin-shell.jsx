@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/client";
 import { Sidebar } from "./_components/Sidebar";
 import { TopBar } from "./_components/TopBar";
 import { ToastProvider } from "./_components/Toast";
+import ErrorBoundary from "@/Components/ErrorBoundary";
 
 const pageTitles = {
   "/admin": "Dashboard",
@@ -19,9 +20,11 @@ const pageTitles = {
 
 export function AdminShell({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userName, setUserName] = useState("Admin");
   const [userEmail, setUserEmail] = useState(null);
+  const [checking, setChecking] = useState(true);
   const title = pageTitles[pathname] || "Admin";
 
   const openMobile = useCallback(() => setMobileOpen(true), []);
@@ -29,20 +32,37 @@ export function AdminShell({ children }) {
 
   useEffect(() => {
     const supabase = createClient();
-    if (!supabase) return;
+    if (!supabase) {
+      setChecking(false);
+      return;
+    }
     supabase.auth.getUser().then(({ data }) => {
       const user = data?.user;
-      if (user) {
-        setUserName(
-          user?.user_metadata?.full_name ||
-          user?.user_metadata?.name ||
-          user?.email?.split("@")[0] ||
-          "Admin"
-        );
-        setUserEmail(user?.email);
+      if (!user) {
+        router.replace("/login");
+        return;
       }
+      setUserName(
+        user?.user_metadata?.full_name ||
+        user?.user_metadata?.name ||
+        user?.email?.split("@")[0] ||
+        "Admin"
+      );
+      setUserEmail(user?.email);
+      setChecking(false);
     });
-  }, []);
+  }, [router]);
+
+  if (checking) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-[#070707]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#EAEFFF] border-t-transparent" />
+          <p className="text-sm text-white/40">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <ToastProvider>
@@ -62,7 +82,9 @@ export function AdminShell({ children }) {
         <div className="relative flex flex-1 flex-col min-w-0">
           <TopBar title={title} onMenuClick={openMobile} />
           <main className="flex-1 overflow-auto">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </main>
         </div>
       </div>

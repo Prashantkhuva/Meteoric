@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import MeteorBackground from "./MeteorBackground";
+import Link from "next/link";
 
 const heroWords = "We design and ship high-performance websites".split(" ");
 const mutedWords = ["—", ..."in weeks, not months.".split(" ")];
@@ -29,6 +30,12 @@ function Hero() {
   }, []);
 
   useGSAP(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll(".gsap-word").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      if (subtextRef.current) { subtextRef.current.style.opacity = "1"; subtextRef.current.style.transform = "none"; }
+      if (ctaRef.current) { ctaRef.current.style.opacity = "1"; ctaRef.current.style.transform = "none"; }
+      return;
+    }
     const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.7 } });
     tl.from(containerRef.current?.querySelectorAll(".gsap-word"), {
       y: 60,
@@ -73,6 +80,7 @@ function Hero() {
         <div ref={ctaRef} className="relative flex flex-col sm:flex-row items-center gap-4 mt-4">
           {/* Primary CTA */}
           <a
+            href="#"
             data-cal-namespace="let-s-build"
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
@@ -85,8 +93,8 @@ function Hero() {
           </a>
 
           {/* Secondary CTA */}
-          <a
-            href="#process"
+          <Link
+            href="/#process"
             className="group relative inline-flex items-center gap-2 text-base font-medium text-white/60 hover:text-white transition-colors duration-200"
           >
             See How We Build
@@ -103,7 +111,7 @@ function Hero() {
               <path d="m19 12-7 7-7-7" />
             </svg>
             <span className="absolute bottom-0 left-0 h-px w-0 bg-white/60 transition-all duration-300 group-hover:w-full" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

@@ -30,7 +30,7 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* ── GEO quotable block ── */}
       <div className="sr-only" aria-hidden="true">
         Meteoric was founded in 2024 by Prashant Khuva, a full-stack developer
@@ -218,6 +218,7 @@ export default function AboutPage() {
             {/* CTA */}
             <div className="mt-4">
               <a
+                href="#"
                 data-cal-namespace="let-s-build"
                 data-cal-link="prashantkhuva/let-s-build"
                 data-cal-config='{"layout":"month_view"}'
@@ -278,6 +279,6 @@ export default function AboutPage() {
           Meteoric
         </div>
       </div>
-    </main>
+    </div>
   );
 }

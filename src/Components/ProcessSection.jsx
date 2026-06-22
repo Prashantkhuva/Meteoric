@@ -64,6 +64,10 @@ export default function ProcessSection() {
   const howToSchema = buildHowToJsonLd(howToSteps);
 
   useGSAP(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      headingRef.current?.querySelectorAll(".gsap-proc-word").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      return;
+    }
     gsap.from(headingRef.current?.querySelectorAll(".gsap-proc-word"), {
       y: 40,
       opacity: 0,

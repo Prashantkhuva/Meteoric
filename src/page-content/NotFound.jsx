@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
       <div className="relative z-10 text-center max-w-lg">
         <p className="text-white/20 text-[8rem] md:text-[10rem] font-bold leading-none mb-4 select-none">
@@ -22,6 +22,6 @@ export default function NotFound() {
           Back to Home <ArrowUpRight size={16} />
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

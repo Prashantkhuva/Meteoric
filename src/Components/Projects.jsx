@@ -59,23 +59,23 @@ export const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, is
         </div>
 
         {/* Image */}
-        <div className="relative flex-1 overflow-hidden rounded-2xl flex items-center justify-center mt-20 mx-4 mb-4">
-          <motion.img
+        <motion.div
+          className="relative flex-1 overflow-hidden rounded-2xl flex items-center justify-center mt-20 mx-4 mb-4"
+          whileHover={{ rotate: -3, scale: 1.04 }}
+          transition={{ type: "spring", stiffness: 180, damping: 18 }}
+        >
+          <Image
             src={project.image}
             alt={project.name}
-            className="w-full h-full object-contain p-4"
-            style={{ position: "absolute", inset: 0 }}
-            width={1920}
-            height={1080}
+            fill
+            className="object-contain p-4"
+            sizes="(max-width: 768px) 100vw, 50vw"
             loading="lazy"
-            decoding="async"
-            whileHover={{ rotate: -3, scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 180, damping: 18 }}
             onError={(e) => {
               e.target.style.display = "none";
             }}
           />
-        </div>
+        </motion.div>
 
         {/* Bottom gradient fade for name badge */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/50 to-transparent z-10" />

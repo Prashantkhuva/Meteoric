@@ -2,12 +2,13 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import { ProjectCardMobile } from "@/Components/Projects";
 import { projects } from "@/data/projects";
 
 export default function WorkPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* ── GEO quotable block ── */}
       <div className="sr-only" aria-hidden="true">
         Meteoric's portfolio includes 12+ projects shipped since 2024,
@@ -74,7 +75,7 @@ export default function WorkPage() {
             ))}
           </div>
         </section>
-      </main>
+      </div>
   );
 }
 
@@ -95,18 +96,23 @@ function DesktopProjectCard({ project, index }) {
           className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`}
         />
         <div className="absolute inset-0 flex items-center justify-center p-10">
-          <motion.img
-            src={project.image}
-            alt={project.name}
-            className="w-full h-full object-contain max-h-[24rem]"
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
+          <motion.div
+            className="w-full h-full"
             whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 150, damping: 20 }}
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
+          >
+            <Image
+              src={project.image}
+              alt={project.name}
+              fill
+              className="object-contain max-h-[24rem]"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              loading={index === 0 ? "eager" : "lazy"}
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
+            />
+          </motion.div>
         </div>
         {/* Subtle overlay at bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/40 to-transparent lg:hidden" />

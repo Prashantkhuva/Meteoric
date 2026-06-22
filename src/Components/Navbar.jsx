@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useRef, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
@@ -14,6 +14,17 @@ const navItems = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const prev = document.activeElement;
+    const el = menuRef.current;
+    if (el && typeof el.focus === "function") el.focus();
+    return () => {
+      if (prev && typeof prev.focus === "function") prev.focus();
+    };
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -65,6 +76,8 @@ export default function Navbar() {
           </div>
 
           <div
+            ref={menuRef}
+            tabIndex={-1}
             className={`md:hidden absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-[1.5rem] border border-[#EAEFFF]/10 bg-black/85 backdrop-blur-xl shadow-[0_18px_60px_rgba(0,0,0,0.45)] transition-all duration-300 ${
               isMenuOpen
                 ? "pointer-events-auto translate-y-0 opacity-100"

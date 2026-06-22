@@ -291,7 +291,7 @@ export async function sendProposal(id) {
 
   if (error) throw error;
 
-  const previewUrl = `${getSiteUrl()}/admin/proposals`;
+  const previewUrl = `${getSiteUrl()}/preview/proposal/${id}`;
 
   try {
     await sendProposalEmail(proposal, proposal.lead, previewUrl);

@@ -19,6 +19,8 @@ import { StatusBadge } from "../_components/StatusBadge";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, SortDropdown } from "../_components/Toolbar";
+import { IconButton } from "../_components/IconButton";
+import { FormField } from "../_components/FormField";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 import { getSiteUrl } from "@/lib/site-url";
@@ -66,6 +68,8 @@ export default function InvoicesPage() {
     }
   }, [searchParams]);
 
+  const checkedOverdue = useRef(false);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -81,6 +85,13 @@ export default function InvoicesPage() {
 
     if (invoiceRes.error) { setError(invoiceRes.error.message); setLoading(false); return; }
 
+    setInvoices(invoiceRes.data || []);
+    setClients(clientsRes);
+    setLoading(false);
+
+    if (checkedOverdue.current) return;
+    checkedOverdue.current = true;
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const overdueIds = [];
@@ -90,10 +101,6 @@ export default function InvoicesPage() {
         if (due < today) overdueIds.push(inv.id);
       }
     });
-
-    setInvoices(invoiceRes.data || []);
-    setClients(clientsRes);
-    setLoading(false);
 
     if (overdueIds.length > 0) {
       try {
@@ -495,20 +502,6 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending }) {
   );
 }
 
-function IconButton({ onClick, icon: Icon, label, className, disabled }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`p-2 text-white/30 transition-all hover:bg-white/[0.04] hover:text-white/50 disabled:opacity-30 disabled:pointer-events-none ${className || ""}`}
-      aria-label={label}
-      title={label}
-    >
-      <Icon size={14} />
-    </button>
-  );
-}
-
 function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, proposalId }) {
   const [submitting, setSubmitting] = useState(false);
   const [items, setItems] = useState(invoice?.items || [{ description: "", quantity: 1, rate: 0 }]);
@@ -745,28 +738,6 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
           </form>
         </div>
       </div>
-    </div>
-  );
-}
-
-function FormField({ label, name, type = "text", placeholder, defaultValue, required, disabled }) {
-  const inputId = `field-${name}`;
-  return (
-    <div>
-      <label htmlFor={inputId} className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-        {label}
-        {required && <span className="text-red-400/60 ml-0.5">*</span>}
-      </label>
-      <input
-        id={inputId}
-        name={name}
-        type={type}
-        required={required}
-        disabled={disabled}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none disabled:opacity-30"
-      />
     </div>
   );
 }

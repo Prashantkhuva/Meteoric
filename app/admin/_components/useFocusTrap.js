@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { lockScroll, unlockScroll } from "./body-scroll-lock";
 
 export function useFocusTrap(open) {
   const ref = useRef(null);
@@ -17,6 +18,7 @@ export function useFocusTrap(open) {
       if (previousFocusRef.current?.focus) {
         previousFocusRef.current.focus();
       }
+      unlockScroll();
       return;
     }
     const el = ref.current;
@@ -46,11 +48,11 @@ export function useFocusTrap(open) {
 
     el.addEventListener("keydown", handleKey);
     first?.focus();
-    document.body.style.overflow = "hidden";
+    lockScroll();
 
     return () => {
       el.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = "";
+      unlockScroll();
     };
   }, [open]);
 

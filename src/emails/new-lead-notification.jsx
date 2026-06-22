@@ -75,8 +75,8 @@ export default function NewLeadNotification({ name, email, phone, services, deta
 
           <Hr style={hr} />
           <Text style={footer}>
-            <Link href="https://hlxjljckxthmtssqrzwo.supabase.co" style={link}>
-              View in Supabase
+            <Link href={`${baseUrl}/admin/leads`} style={link}>
+              View in Admin
             </Link>
           </Text>
         </Container>

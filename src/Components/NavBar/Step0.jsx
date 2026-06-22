@@ -16,8 +16,8 @@ function Step0({ setStep }) {
           How would you like to get started?
         </p>
 
-        <button
-          type="button"
+        <a
+          href="#"
           data-cal-namespace="let-s-build"
           data-cal-link="prashantkhuva/let-s-build"
           data-cal-config='{"layout":"month_view"}'
@@ -25,7 +25,7 @@ function Step0({ setStep }) {
         >
           <Calendar size={18} />
           Book a Free Strategy Call
-        </button>
+        </a>
 
         <button
           type="button"

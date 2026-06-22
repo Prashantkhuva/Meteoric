@@ -61,6 +61,7 @@ const faqs = [
 export default function TestimonialsSection() {
   const [current, setCurrent] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+  const [paused, setPaused] = useState(false);
 
   const next = useCallback(() => {
     setCurrent((c) => (c + 1) % testimonials.length);
@@ -71,9 +72,10 @@ export default function TestimonialsSection() {
   }, []);
 
   useEffect(() => {
+    if (paused) return;
     const timer = setInterval(next, 6500);
     return () => clearInterval(timer);
-  }, [next]);
+  }, [next, paused]);
 
   const faqSchema = buildFaqJsonLd(faqs);
 
@@ -83,7 +85,11 @@ export default function TestimonialsSection() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
+      <section
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black"
+      >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">

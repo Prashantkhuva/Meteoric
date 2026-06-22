@@ -31,7 +31,7 @@ export default function LeadCaptureSection() {
     setError(false);
 
     const result = await createLead({
-      name: email,
+      name: "",
       email,
       services: "Lead Capture (Get Estimate)",
       details: `New lead via Get Estimate form. Email: ${email}`,
@@ -53,7 +53,7 @@ export default function LeadCaptureSection() {
 
   return (
     <section
-      id="contact"
+      id="lead-capture"
       className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black scroll-mt-24"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
