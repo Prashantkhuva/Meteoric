@@ -420,3 +420,31 @@ export async function sendInvoice(id) {
   revalidatePath("/admin/invoices");
   revalidatePath("/admin");
 }
+
+export async function markInvoiceAsPaid(id, paidAt) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({ status: "paid", paid_at: paidAt || new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/invoices");
+  revalidatePath("/admin");
+}
+
+export async function markInvoiceAsOverdue(id) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({ status: "overdue" })
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/invoices");
+  revalidatePath("/admin");
+}

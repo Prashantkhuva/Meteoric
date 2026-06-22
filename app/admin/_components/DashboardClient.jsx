@@ -9,7 +9,7 @@ import { LeadsTrendChart } from "./LeadsTrendChart";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export default function DashboardClient({ stats, conversionRate, monthlyLeadData, userName }) {
+export default function DashboardClient({ stats, conversionRate, monthlyLeadData, userName, invoiceOutstanding, invoiceRevenue, overdueCount, invoiceCount }) {
   const [greeting, setGreeting] = useState("");
   const [dateStr, setDateStr] = useState("");
 
@@ -33,9 +33,9 @@ export default function DashboardClient({ stats, conversionRate, monthlyLeadData
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard label="Total Leads" value={stats.totalLeads} subtext="All time" />
-        <KPICard label="Inquiry" value={stats.inquiryLeads} subtext="New leads" />
-        <KPICard label="Completed" value={stats.completedLeads} subtext="Delivered" />
-        <KPICard label="Clients" value={stats.totalClients} subtext="Active accounts" accent />
+        <KPICard label="Clients" value={stats.totalClients} subtext="Active accounts" />
+        <KPICard label="Revenue" value={`$${invoiceRevenue.toFixed(0)}`} subtext="Paid invoices" accent />
+        <KPICard label="Outstanding" value={`$${invoiceOutstanding.toFixed(0)}`} subtext={`${overdueCount} overdue of ${invoiceCount} invoices`} />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
@@ -85,6 +85,13 @@ function QuickLinksCard() {
           className="group flex items-center justify-between border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-xs text-white/45 transition-all hover:border-white/[0.10] hover:text-white/70"
         >
           Manage clients
+          <ArrowRight size={12} className="text-white/25 group-hover:text-white/40 transition-colors" />
+        </Link>
+        <Link
+          href="/admin/invoices"
+          className="group flex items-center justify-between border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-xs text-white/45 transition-all hover:border-white/[0.10] hover:text-white/70"
+        >
+          View invoices
           <ArrowRight size={12} className="text-white/25 group-hover:text-white/40 transition-colors" />
         </Link>
       </div>

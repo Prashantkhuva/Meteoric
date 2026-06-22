@@ -3,12 +3,13 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
 import {
-  createInvoice, updateInvoice, deleteInvoice, sendInvoice, getClients,
+  createInvoice, updateInvoice, deleteInvoice, sendInvoice,
+  markInvoiceAsPaid, markInvoiceAsOverdue, getClients,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Eye, Trash2, Send, Receipt, Calendar, Building2, Mail,
-  Pencil, DollarSign, FileText, ArrowUpRight, PlusCircle,
+  Pencil, DollarSign, FileText, ArrowUpRight, PlusCircle, Printer, CheckCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
@@ -67,10 +68,31 @@ export default function InvoicesPage() {
       getClients().catch(() => []),
     ]);
 
-    if (invoiceRes.error) { setError(invoiceRes.error.message); }
-    else { setInvoices(invoiceRes.data || []); }
+    if (invoiceRes.error) { setError(invoiceRes.error.message); setLoading(false); return; }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const overdueIds = [];
+    const mapped = (invoiceRes.data || []).map((inv) => {
+      if (inv.status === "sent" && inv.due_date) {
+        const due = new Date(inv.due_date);
+        if (due < today) {
+          overdueIds.push(inv.id);
+          return { ...inv, status: "overdue" };
+        }
+      }
+      return inv;
+    });
+
+    setInvoices(mapped);
     setClients(clientsRes);
     setLoading(false);
+
+    if (overdueIds.length > 0) {
+      for (const id of overdueIds) {
+        markInvoiceAsOverdue(id).catch(() => {});
+      }
+    }
   }
 
   const filtered = useMemo(() => {
@@ -129,6 +151,20 @@ export default function InvoicesPage() {
       addToast("Invoice deleted", "success");
     } catch (err) {
       addToast(err.message || "Failed to delete invoice", "error");
+    }
+  }
+
+  async function handleMarkAsPaid(id) {
+    const paidAt = new Date().toISOString();
+    try {
+      await markInvoiceAsPaid(id, paidAt);
+      setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "paid", paid_at: paidAt } : inv)));
+      if (viewInvoice?.id === id) {
+        setViewInvoice((prev) => prev ? { ...prev, status: "paid", paid_at: paidAt } : null);
+      }
+      addToast("Invoice marked as paid", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to mark as paid", "error");
     }
   }
 
@@ -259,6 +295,7 @@ export default function InvoicesPage() {
         onClose={() => setViewInvoice(null)}
         onEdit={setEditingInvoice}
         onSend={handleSend}
+        onMarkAsPaid={handleMarkAsPaid}
         onDelete={setDeleteTarget}
         sending={sending}
       />
@@ -330,6 +367,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending }) {
               <td className="px-5 py-3.5 text-right">
                 <div className="flex items-center justify-end gap-0.5">
                   <IconButton onClick={() => onView(inv)} icon={Eye} label="View details" />
+                  <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" className="text-white/30 hover:text-white/50" />
                   {(inv.status === "draft" || inv.status === "sent") && (
                     <IconButton
                       onClick={() => onEdit(inv)}
@@ -392,6 +430,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending }) {
           </div>
           <div className="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-white/[0.04]">
             <IconButton onClick={() => onView(inv)} icon={Eye} label="View details" />
+            <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" />
             {(inv.status === "draft" || inv.status === "sent") && (
               <IconButton onClick={() => onEdit(inv)} icon={Pencil} label="Edit invoice" />
             )}
@@ -692,7 +731,7 @@ function FormField({ label, name, type = "text", placeholder, defaultValue, requ
   );
 }
 
-function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onDelete, sending }) {
+function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, sending }) {
   if (!invoice) return null;
 
   return (
@@ -808,6 +847,13 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onDelete, sendi
                 </div>
               )}
 
+              {invoice.paid_at && (
+                <div className="flex items-center gap-2 text-[10px] text-emerald-400/60 tabular-nums">
+                  <CheckCircle size={11} />
+                  Paid {formatDate(invoice.paid_at)}
+                </div>
+              )}
+
               {invoice.notes && (
                 <div className="border border-white/[0.06] bg-white/[0.015] p-4">
                   <p className="text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">Notes</p>
@@ -828,6 +874,13 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onDelete, sendi
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                <button
+                  onClick={() => window.open(`/admin/invoices/preview/${invoice.id}`, "_blank")}
+                  className="inline-flex items-center gap-2 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
+                >
+                  <Printer size={13} />
+                  Print / PDF
+                </button>
                 {(invoice.status === "draft" || invoice.status === "sent") && (
                   <button
                     onClick={() => onEdit(invoice)}
@@ -845,6 +898,15 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onDelete, sendi
                   >
                     <Send size={13} />
                     {sending === invoice.id ? "Sending..." : "Send to Client"}
+                  </button>
+                )}
+                {(invoice.status === "sent" || invoice.status === "overdue") && (
+                  <button
+                    onClick={() => onMarkAsPaid(invoice.id)}
+                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97]"
+                  >
+                    <CheckCircle size={13} />
+                    Mark as Paid
                   </button>
                 )}
                 {invoice.status === "draft" && (

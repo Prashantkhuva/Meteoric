@@ -78,6 +78,31 @@ async function getStats() {
     .order("created_at", { ascending: false })
     .limit(4);
 
+  const { data: invoiceTotals } = await supabase
+    .from("invoices")
+    .select("status, total");
+
+  let totalOutstanding = 0;
+  let paidThisMonth = 0;
+  let overdueCount = 0;
+  let totalRevenue = 0;
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+
+  (invoiceTotals || []).forEach((inv) => {
+    const amt = Number(inv.total) || 0;
+    if (inv.status === "sent" || inv.status === "overdue") {
+      totalOutstanding += amt;
+    }
+    if (inv.status === "paid") {
+      totalRevenue += amt;
+    }
+    if (inv.status === "overdue") {
+      overdueCount++;
+    }
+  });
+
   return {
     totalLeads: totalLeads ?? 0,
     inquiryLeads,
@@ -90,6 +115,10 @@ async function getStats() {
     recentLeads: recentLeads || [],
     upcomingWork: upcomingBookings || [],
     monthlyLeadData,
+    totalOutstanding,
+    totalRevenue,
+    overdueCount,
+    invoiceCount: (invoiceTotals || []).length,
   };
 }
 
@@ -122,7 +151,16 @@ export default async function AdminDashboard() {
 
   return (
     <div className="p-5 lg:p-8">
-      <DashboardClient stats={stats} conversionRate={conversionRate} monthlyLeadData={stats.monthlyLeadData} userName={userName} />
+      <DashboardClient
+        stats={stats}
+        conversionRate={conversionRate}
+        monthlyLeadData={stats.monthlyLeadData}
+        userName={userName}
+        invoiceOutstanding={stats.totalOutstanding}
+        invoiceRevenue={stats.totalRevenue}
+        overdueCount={stats.overdueCount}
+        invoiceCount={stats.invoiceCount}
+      />
     </div>
   );
 }
