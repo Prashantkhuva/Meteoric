@@ -35,6 +35,7 @@ export default function ClientsPage() {
   const { search, status: statusFilter, sort, page } = filters;
   const [viewClient, setViewClient] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const addToast = useToast();
@@ -175,8 +176,17 @@ export default function ClientsPage() {
       {pageClients.length === 0 ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
-            {hasFilters ? "No clients match your filters" : "No clients yet"}
+            {hasFilters ? "No clients match your filters" : "No clients yet \u2014 add your first client to get started"}
           </p>
+          {!hasFilters && (
+            <button
+              onClick={() => setShowAdd(true)}
+              className="mt-4 inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+            >
+              <Plus size={15} />
+              Add Client
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -198,7 +208,7 @@ export default function ClientsPage() {
         </>
       )}
 
-      <AddClientModal open={showAdd} onClose={() => setShowAdd(false)} onSubmit={handleAdd} />
+      <AddClientModal key={formResetKey} open={showAdd} onClose={() => { setShowAdd(false); setFormResetKey(k => k + 1); }} onSubmit={handleAdd} />
       <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} />
       <ConfirmDialog
         open={!!deleteTarget}
@@ -443,6 +453,13 @@ function AddClientModal({ open, onClose, onSubmit }) {
 function ClientDetailDrawer({ client, onClose }) {
   if (!client) return null;
   const trapRef = useFocusTrap(!!client);
+
+  useEffect(() => {
+    if (!client) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [client, onClose]);
 
   return (
     <AnimatePresence>

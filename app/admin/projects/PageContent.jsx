@@ -51,6 +51,7 @@ export default function ProjectsPage() {
   const [viewProject, setViewProject] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
   const [showNew, setShowNew] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const addToast = useToast();
 
@@ -195,8 +196,17 @@ export default function ProjectsPage() {
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <FolderKanban size={40} className="mx-auto text-white/10 mb-4" />
           <p className="text-sm text-white/25">
-            {hasFilters ? "No projects match your filters" : "No projects yet"}
+            {hasFilters ? "No projects match your filters" : "No projects yet \u2014 create your first project to get started"}
           </p>
+          {!hasFilters && (
+            <button
+              onClick={() => setShowNew(true)}
+              className="mt-4 inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+            >
+              <Plus size={15} />
+              New Project
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -217,8 +227,9 @@ export default function ProjectsPage() {
       )}
 
       <ProjectFormModal
+        key={formResetKey}
         open={showNew}
-        onClose={() => setShowNew(false)}
+        onClose={() => { setShowNew(false); setFormResetKey(k => k + 1); }}
         onSubmit={handleCreate}
         clients={clients}
         title="New Project"
@@ -556,6 +567,13 @@ function FormField({ label, name, type = "text", placeholder, defaultValue, requ
 function ProjectDetailDrawer({ project, onClose, onEdit, onDelete }) {
   if (!project) return null;
   const trapRef = useFocusTrap(!!project);
+
+  useEffect(() => {
+    if (!project) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [project, onClose]);
 
   const statusInfo = projectStatuses.find((s) => s.value === project.status);
 

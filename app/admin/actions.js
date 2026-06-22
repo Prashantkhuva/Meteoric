@@ -57,11 +57,17 @@ export async function convertLeadToClient(id) {
 
   const { data: lead } = await supabase
     .from("leads")
-    .select("*")
+    .select("name, email, phone, company, status")
     .eq("id", id)
     .single();
 
   if (!lead) throw new Error("Lead not found");
+  if (lead.status === "completed") throw new Error("Lead has already been converted");
+
+  if (lead.email) {
+    const { data: existing } = await supabase.from("clients").select("id").eq("email", lead.email).maybeSingle();
+    if (existing) throw new Error("A client with this email already exists");
+  }
 
   const { error: insertError } = await supabase
     .from("clients")
@@ -75,10 +81,12 @@ export async function convertLeadToClient(id) {
 
   if (insertError) throw insertError;
 
-  await supabase
+  const { error: updateError } = await supabase
     .from("leads")
     .update({ status: "completed" })
     .eq("id", id);
+
+  if (updateError) throw updateError;
 
   revalidatePath("/admin/leads");
   revalidatePath("/admin/clients");
@@ -300,8 +308,8 @@ export async function sendProposal(id) {
         previewUrl,
       }),
     });
-  } catch {
-    // email is best-effort; proposal is still marked as sent
+  } catch (err) {
+    console.error("Failed to send proposal email:", err);
   }
 
   revalidatePath("/admin/proposals");
@@ -317,7 +325,8 @@ export async function createInvoice(formData) {
     .select("*", { count: "exact", head: true });
 
   const nextNum = String((count || 0) + 1).padStart(4, "0");
-  const invoiceNumber = `INV-${nextNum}`;
+  const ts = Date.now().toString(36).toUpperCase();
+  const invoiceNumber = `INV-${nextNum}-${ts}`;
 
   let items = [];
   try { items = JSON.parse(formData.get("items")); } catch {}
@@ -435,8 +444,8 @@ export async function sendInvoice(id) {
         previewUrl,
       }),
     });
-  } catch {
-    // email is best-effort; invoice is still marked as sent
+  } catch (err) {
+    console.error("Failed to send invoice email:", err);
   }
 
   revalidatePath("/admin/invoices");

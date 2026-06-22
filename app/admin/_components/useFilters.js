@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 export function useFilters(defaults = {}) {
   const searchParams = useSearchParams();
@@ -15,6 +15,8 @@ export function useFilters(defaults = {}) {
     page: Number(searchParams.get("page")) || defaults.page || 1,
   }), [searchParams, defaults.search, defaults.status, defaults.sort, defaults.page]);
 
+  const debounceRef = useRef(null);
+
   const setFilters = useCallback((updates) => {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(updates).forEach(([key, value]) => {
@@ -24,8 +26,11 @@ export function useFilters(defaults = {}) {
         params.set(key, String(value));
       }
     });
-    const qs = params.toString();
-    router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const qs = params.toString();
+      router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+    }, updates.search !== undefined ? 300 : 0);
   }, [searchParams, router, pathname]);
 
   return { filters, setFilters };

@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
 import Logo from "@/Components/Logo";
+import { useFocusTrap } from "./useFocusTrap";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -31,6 +32,7 @@ const links = [
 
 export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const pathname = usePathname();
+  const mobileTrapRef = useFocusTrap(mobileOpen);
 
   useEffect(() => {
     function handleKey(e) {
@@ -116,6 +118,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
               onClick={onMobileClose}
             />
             <motion.aside
+              ref={mobileTrapRef}
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}

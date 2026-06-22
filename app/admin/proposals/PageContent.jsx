@@ -53,6 +53,7 @@ export default function ProposalsPage() {
   const [viewProposal, setViewProposal] = useState(null);
   const [editingProposal, setEditingProposal] = useState(null);
   const [showNewProposal, setShowNewProposal] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [sending, setSending] = useState(null);
   const router = useRouter();
@@ -220,8 +221,17 @@ export default function ProposalsPage() {
       {pageItems.length === 0 ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
-            {hasFilters ? "No proposals match your filters" : "No proposals yet"}
+            {hasFilters ? "No proposals match your filters" : "No proposals yet \u2014 create your first proposal to get started"}
           </p>
+          {!hasFilters && (
+            <button
+              onClick={() => setShowNewProposal(true)}
+              className="mt-4 inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+            >
+              <Plus size={15} />
+              New Proposal
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -246,8 +256,9 @@ export default function ProposalsPage() {
       )}
 
       <ProposalFormModal
+        key={formResetKey}
         open={showNewProposal}
-        onClose={() => setShowNewProposal(false)}
+        onClose={() => { setShowNewProposal(false); setFormResetKey(k => k + 1); }}
         onSubmit={handleCreate}
         leads={leads}
         title="New Proposal"
@@ -627,6 +638,13 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
   if (!proposal) return null;
   const trapRef = useFocusTrap(!!proposal);
 
+  useEffect(() => {
+    if (!proposal) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [proposal, onClose]);
+
   return (
     <AnimatePresence>
       {proposal && (
@@ -833,7 +851,11 @@ function renderInlineContent(content) {
               case "bold": text = <strong key={i}>{text}</strong>; break;
               case "italic": text = <em key={i}>{text}</em>; break;
               case "underline": text = <u key={i}>{text}</u>; break;
-              case "link": text = <a key={i} href={mark.attrs?.href} className="text-[#EAEFFF]/60 hover:text-[#EAEFFF] underline">{text}</a>; break;
+              case "link": {
+                const href = mark.attrs?.href || "";
+                const safe = href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:") ? href : "";
+                text = <a key={i} href={safe} target="_blank" rel="noopener noreferrer" className="text-[#EAEFFF]/60 hover:text-[#EAEFFF] underline">{text}</a>;
+              } break;
             }
           }
         }

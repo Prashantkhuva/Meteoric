@@ -4,9 +4,21 @@ import { useEffect, useRef } from "react";
 
 export function useFocusTrap(open) {
   const ref = useRef(null);
+  const previousFocusRef = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (open) {
+      previousFocusRef.current = document.activeElement;
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      if (previousFocusRef.current?.focus) {
+        previousFocusRef.current.focus();
+      }
+      return;
+    }
     const el = ref.current;
     if (!el) return;
 

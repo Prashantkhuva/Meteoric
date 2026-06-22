@@ -9,26 +9,25 @@ async function getStats() {
     .from("leads")
     .select("*", { count: "exact", head: true });
 
-  async function countByStatus(status) {
-    const { count } = await supabase
-      .from("leads")
-      .select("*", { count: "exact", head: true })
-      .eq("status", status);
-    return count ?? 0;
-  }
+  const { data: leadStatusCounts } = await supabase
+    .from("leads")
+    .select("status");
 
-  const [inquiryLeads, discoveryLeads, proposalLeads, inProgressLeads, completedLeads, lostLeads, clientsResult] =
-    await Promise.all([
-      countByStatus("inquiry"),
-      countByStatus("discovery"),
-      countByStatus("proposal"),
-      countByStatus("in_progress"),
-      countByStatus("completed"),
-      countByStatus("lost"),
-      supabase.from("clients").select("*", { count: "exact", head: true }),
-    ]);
+  const statusBuckets = { inquiry: 0, discovery: 0, proposal: 0, in_progress: 0, completed: 0, lost: 0 };
+  (leadStatusCounts || []).forEach((l) => { if (statusBuckets[l.status] !== undefined) statusBuckets[l.status]++; });
+
+  const [clientsResult] = await Promise.all([
+    supabase.from("clients").select("*", { count: "exact", head: true }),
+  ]);
 
   const totalClients = clientsResult.count ?? 0;
+
+  const inquiryLeads = statusBuckets.inquiry;
+  const discoveryLeads = statusBuckets.discovery;
+  const proposalLeads = statusBuckets.proposal;
+  const inProgressLeads = statusBuckets.in_progress;
+  const completedLeads = statusBuckets.completed;
+  const lostLeads = statusBuckets.lost;
 
   const { data: recentLeads } = await supabase
     .from("leads")
@@ -71,13 +70,6 @@ async function getStats() {
     };
   });
 
-  const { data: upcomingBookings } = await supabase
-    .from("leads")
-    .select("name, company, services, created_at, status")
-    .eq("status", "discovery")
-    .order("created_at", { ascending: false })
-    .limit(4);
-
   const { data: invoiceTotals } = await supabase
     .from("invoices")
     .select("status, total");
@@ -86,23 +78,12 @@ async function getStats() {
     .from("projects")
     .select("*", { count: "exact", head: true });
 
-  async function countProjects(status) {
-    const { count } = await supabase
-      .from("projects")
-      .select("*", { count: "exact", head: true })
-      .eq("status", status);
-    return count ?? 0;
-  }
+  const { data: projectStatusData } = await supabase
+    .from("projects")
+    .select("status");
 
-  const [planningProjects, activeProjects, reviewProjects, completedProjects, onHoldProjects, cancelledProjects] =
-    await Promise.all([
-      countProjects("planning"),
-      countProjects("in_progress"),
-      countProjects("review"),
-      countProjects("completed"),
-      countProjects("on_hold"),
-      countProjects("cancelled"),
-    ]);
+  const projectBuckets = { planning: 0, in_progress: 0, review: 0, completed: 0, on_hold: 0, cancelled: 0 };
+  (projectStatusData || []).forEach((p) => { if (projectBuckets[p.status] !== undefined) projectBuckets[p.status]++; });
 
   let totalOutstanding = 0;
   let paidThisMonth = 0;
@@ -135,19 +116,18 @@ async function getStats() {
     lostLeads,
     totalClients,
     recentLeads: recentLeads || [],
-    upcomingWork: upcomingBookings || [],
     monthlyLeadData,
     totalOutstanding,
     totalRevenue,
     overdueCount,
     invoiceCount: (invoiceTotals || []).length,
     totalProjects: totalProjects ?? 0,
-    planningProjects,
-    activeProjects,
-    reviewProjects,
-    completedProjects,
-    onHoldProjects,
-    cancelledProjects,
+    planningProjects: projectBuckets.planning,
+    activeProjects: projectBuckets.in_progress,
+    reviewProjects: projectBuckets.review,
+    completedProjects: projectBuckets.completed,
+    onHoldProjects: projectBuckets.on_hold,
+    cancelledProjects: projectBuckets.cancelled,
   };
 }
 

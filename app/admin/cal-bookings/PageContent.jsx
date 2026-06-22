@@ -66,6 +66,7 @@ export default function CalBookingsPage() {
   const [selectedDate, setSelectedDate] = useState(undefined)
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [showConvertForm, setShowConvertForm] = useState(false)
+  const [formResetKey, setFormResetKey] = useState(0)
   const [converting, setConverting] = useState(false)
   const [convertMsg, setConvertMsg] = useState(null)
   const { filters, setFilters } = useFilters();
@@ -209,7 +210,7 @@ export default function CalBookingsPage() {
 
       {!error && bookings.length === 0 && data && (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
-          <p className="text-sm text-white/25">No bookings yet.</p>
+          <p className="text-sm text-white/25">No bookings yet \u2014 bookings will appear here once clients schedule through your Cal.com booking page.</p>
         </div>
       )}
 
@@ -326,8 +327,9 @@ export default function CalBookingsPage() {
 
       {selectedBooking && (
         <BookingDetailDialog
+          key={formResetKey}
           booking={selectedBooking}
-          onClose={() => { setSelectedBooking(null); setConvertMsg(null); setShowConvertForm(false) }}
+          onClose={() => { setSelectedBooking(null); setFormResetKey(k => k + 1); setConvertMsg(null); setShowConvertForm(false) }}
           showConvertForm={showConvertForm}
           setShowConvertForm={setShowConvertForm}
           handleConvertToLead={handleConvertToLead}
@@ -414,6 +416,13 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
   const attendee = booking.attendees?.[0]
   const meetingUrl = getMeetingUrl(booking)
   const trapRef = useFocusTrap(!!booking)
+
+  useEffect(() => {
+    if (!booking) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [booking, onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

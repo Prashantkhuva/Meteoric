@@ -54,6 +54,7 @@ export default function InvoicesPage() {
   const [viewInvoice, setViewInvoice] = useState(null);
   const [editingInvoice, setEditingInvoice] = useState(null);
   const [showNewInvoice, setShowNewInvoice] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [sending, setSending] = useState(null);
   const addToast = useToast();
@@ -83,23 +84,24 @@ export default function InvoicesPage() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const overdueIds = [];
-    const mapped = (invoiceRes.data || []).map((inv) => {
+    (invoiceRes.data || []).forEach((inv) => {
       if (inv.status === "sent" && inv.due_date) {
         const due = new Date(inv.due_date);
-        if (due < today) {
-          overdueIds.push(inv.id);
-          return { ...inv, status: "overdue" };
-        }
+        if (due < today) overdueIds.push(inv.id);
       }
-      return inv;
     });
 
-    setInvoices(mapped);
+    setInvoices(invoiceRes.data || []);
     setClients(clientsRes);
     setLoading(false);
 
     if (overdueIds.length > 0) {
-      markInvoiceAsOverdue(overdueIds).catch(() => {});
+      try {
+        await markInvoiceAsOverdue(overdueIds);
+        setInvoices((prev) => prev.map((inv) =>
+          overdueIds.includes(inv.id) ? { ...inv, status: "overdue" } : inv
+        ));
+      } catch {}
     }
   }
 
@@ -254,8 +256,17 @@ export default function InvoicesPage() {
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <Receipt size={40} className="mx-auto text-white/10 mb-4" />
           <p className="text-sm text-white/25">
-            {hasFilters ? "No invoices match your filters" : "No invoices yet"}
+            {hasFilters ? "No invoices match your filters" : "No invoices yet \u2014 create your first invoice to get started"}
           </p>
+          {!hasFilters && (
+            <button
+              onClick={() => setShowNewInvoice(true)}
+              className="mt-4 inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+            >
+              <Plus size={15} />
+              New Invoice
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -280,8 +291,9 @@ export default function InvoicesPage() {
       )}
 
       <InvoiceFormModal
+        key={formResetKey}
         open={showNewInvoice}
-        onClose={() => { setShowNewInvoice(false); window.history.replaceState(null, "", "/admin/invoices"); }}
+        onClose={() => { setShowNewInvoice(false); setFormResetKey(k => k + 1); window.history.replaceState(null, "", "/admin/invoices"); }}
         onSubmit={handleCreate}
         clients={clients}
         proposalId={searchParams.get("proposalId")}
@@ -761,6 +773,13 @@ function FormField({ label, name, type = "text", placeholder, defaultValue, requ
 function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, sending }) {
   if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
+
+  useEffect(() => {
+    if (!invoice) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [invoice, onClose]);
 
   return (
     <AnimatePresence>

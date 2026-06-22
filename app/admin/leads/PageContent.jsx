@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/client";
-import { updateLeadStatus, convertLeadToClient, addLead } from "../actions";
+import { updateLeadStatus, convertLeadToClient, addLead, deleteLead } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
@@ -36,6 +36,7 @@ export default function LeadsPage() {
   const { search, status: statusFilter, sort, page } = filters;
   const [viewLead, setViewLead] = useState(null);
   const [showAddLead, setShowAddLead] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -115,9 +116,7 @@ export default function LeadsPage() {
     if (!id) return;
     setDeleteTarget(null);
     try {
-      const supabase = createClient();
-      const { error } = await supabase.from("leads").delete().eq("id", id);
-      if (error) throw error;
+      await deleteLead(id);
       setLeads((prev) => prev.filter((l) => l.id !== id));
       if (viewLead?.id === id) setViewLead(null);
       addToast("Lead deleted", "success");
@@ -199,8 +198,17 @@ export default function LeadsPage() {
       {pageLeads.length === 0 ? (
         <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
           <p className="text-sm text-white/25">
-            {hasFilters ? "No leads match your filters" : "No leads yet"}
+            {hasFilters ? "No leads match your filters" : "No leads yet \u2014 add your first lead to get started"}
           </p>
+          {!hasFilters && (
+            <button
+              onClick={() => setShowAddLead(true)}
+              className="mt-4 inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+            >
+              <Plus size={15} />
+              Add Lead
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -226,7 +234,7 @@ export default function LeadsPage() {
         </>
       )}
 
-      <AddLeadModal open={showAddLead} onClose={() => setShowAddLead(false)} onSubmit={handleAddLead} />
+      <AddLeadModal key={formResetKey} open={showAddLead} onClose={() => { setShowAddLead(false); setFormResetKey(k => k + 1); }} onSubmit={handleAddLead} />
       <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onConvert={handleConvert} onDelete={promptDelete} converting={converting} />
       <ConfirmDialog
         open={!!deleteTarget}
@@ -488,6 +496,13 @@ function FormField({ label, name, type = "text", placeholder }) {
 function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
   if (!lead) return null;
   const trapRef = useFocusTrap(!!lead);
+
+  useEffect(() => {
+    if (!lead) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [lead, onClose]);
 
   return (
     <AnimatePresence>
