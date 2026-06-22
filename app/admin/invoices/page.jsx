@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Eye, Trash2, Send, Receipt, Calendar, Building2, Mail,
   Pencil, DollarSign, FileText, ArrowUpRight, PlusCircle, Printer, CheckCircle,
+  MessageCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
@@ -64,7 +65,7 @@ export default function InvoicesPage() {
     if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
 
     const [invoiceRes, clientsRes] = await Promise.all([
-      supabase.from("invoices").select("*, client:clients(name, email, company)").order("created_at", { ascending: false }),
+      supabase.from("invoices").select("*, client:clients(name, email, phone, company)").order("created_at", { ascending: false }),
       getClients().catch(() => []),
     ]);
 
@@ -368,6 +369,14 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending }) {
                 <div className="flex items-center justify-end gap-0.5">
                   <IconButton onClick={() => onView(inv)} icon={Eye} label="View details" />
                   <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" className="text-white/30 hover:text-white/50" />
+                  {inv.client?.phone && (
+                    <IconButton
+                      onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}. Check your email for details.`)}`, "_blank")}
+                      icon={MessageCircle}
+                      label="Share via WhatsApp"
+                      className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
+                    />
+                  )}
                   {(inv.status === "draft" || inv.status === "sent") && (
                     <IconButton
                       onClick={() => onEdit(inv)}
@@ -431,6 +440,14 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending }) {
           <div className="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-white/[0.04]">
             <IconButton onClick={() => onView(inv)} icon={Eye} label="View details" />
             <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" />
+            {inv.client?.phone && (
+              <IconButton
+                onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.`)}`, "_blank")}
+                icon={MessageCircle}
+                label="Share via WhatsApp"
+                className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
+              />
+            )}
             {(inv.status === "draft" || inv.status === "sent") && (
               <IconButton onClick={() => onEdit(inv)} icon={Pencil} label="Edit invoice" />
             )}
@@ -875,12 +892,21 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
                 <button
-                  onClick={() => window.open(`/admin/invoices/preview/${invoice.id}`, "_blank")}
+                  onClick={() => window.open(`/preview/invoice/${invoice.id}`, "_blank")}
                   className="inline-flex items-center gap-2 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
                 >
                   <Printer size={13} />
                   Print / PDF
                 </button>
+                {invoice.client?.phone && (
+                  <button
+                    onClick={() => window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for $${Number(invoice.total).toFixed(2)}. View it here: https://meteoric.agency/preview/invoice/${invoice.id}`)}`, "_blank")}
+                    className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
+                  >
+                    <MessageCircle size={13} />
+                    WhatsApp
+                  </button>
+                )}
                 {(invoice.status === "draft" || invoice.status === "sent") && (
                   <button
                     onClick={() => onEdit(invoice)}

@@ -61,6 +61,7 @@ export async function convertLeadToClient(id) {
     .insert({
       name: lead.name,
       email: lead.email,
+      phone: lead.phone,
       company: lead.company,
       status: "onboarding",
     });
@@ -113,10 +114,11 @@ export async function addClient(formData) {
   const name = formData.get("name");
   const email = formData.get("email");
   const company = formData.get("company");
+  const phone = formData.get("phone");
 
   const { error } = await supabase
     .from("clients")
-    .insert({ name, email, company, status: "onboarding" });
+    .insert({ name, email, phone: phone || null, company, status: "onboarding" });
 
   if (error) throw error;
   revalidatePath("/admin/clients");
@@ -172,7 +174,7 @@ export async function getClients() {
   if (!supabase) return [];
   const { data } = await supabase
     .from("clients")
-    .select("id, name, email, company")
+    .select("id, name, email, phone, company")
     .order("name", { ascending: true });
   return data || [];
 }
@@ -254,7 +256,7 @@ export async function sendProposal(id) {
 
   const { data: proposal } = await supabase
     .from("proposals")
-    .select("*, lead:leads(name, email)")
+    .select("*, lead:leads(name, email, phone)")
     .eq("id", id)
     .single();
 
@@ -268,20 +270,23 @@ export async function sendProposal(id) {
 
   if (error) throw error;
 
+  const previewUrl = `https://meteoric.agency/admin/proposals`;
+
   try {
     const { Resend } = await import("resend");
     const resend = new Resend(process.env.RESEND_API_KEY);
+    const { default: ProposalEmail } = await import("@/emails/proposal-email");
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>",
       to: proposal.lead.email,
       subject: `Proposal: ${proposal.title}`,
-      html: `
-        <p>Hi ${proposal.lead.name || "there"},</p>
-        <p>A proposal has been prepared for you:</p>
-        <h2>${proposal.title}</h2>
-        <p>You can view the full proposal by logging into your account.</p>
-        <p>We look forward to working with you!</p>
-      `,
+      react: ProposalEmail({
+        name: proposal.lead.name,
+        title: proposal.title,
+        timeline: proposal.timeline,
+        terms: proposal.terms,
+        previewUrl,
+      }),
     });
   } catch {
     // email is best-effort; proposal is still marked as sent
@@ -383,7 +388,7 @@ export async function sendInvoice(id) {
 
   const { data: invoice } = await supabase
     .from("invoices")
-    .select("*, client:clients(name, email)")
+    .select("*, client:clients(name, email, phone)")
     .eq("id", id)
     .single();
 
@@ -397,21 +402,26 @@ export async function sendInvoice(id) {
 
   if (error) throw error;
 
+  const previewUrl = `https://meteoric.agency/preview/invoice/${id}`;
+
   try {
     const { Resend } = await import("resend");
     const resend = new Resend(process.env.RESEND_API_KEY);
+    const { default: InvoiceEmail } = await import("@/emails/invoice-email");
+    const dueDate = invoice.due_date
+      ? new Date(invoice.due_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+      : null;
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>",
       to: invoice.client.email,
-      subject: `Invoice: ${invoice.invoice_number}`,
-      html: `
-        <p>Hi ${invoice.client.name || "there"},</p>
-        <p>An invoice has been issued:</p>
-        <h2>${invoice.invoice_number}</h2>
-        <p>Total: $${Number(invoice.total).toFixed(2)}</p>
-        ${invoice.due_date ? `<p>Due: ${invoice.due_date}</p>` : ""}
-        <p>You can view the full invoice by logging into your account.</p>
-      `,
+      subject: `Invoice ${invoice.invoice_number} from Meteoric`,
+      react: InvoiceEmail({
+        name: invoice.client.name,
+        invoiceNumber: invoice.invoice_number,
+        total: invoice.total,
+        dueDate,
+        previewUrl,
+      }),
     });
   } catch {
     // email is best-effort; invoice is still marked as sent
@@ -446,5 +456,72 @@ export async function markInvoiceAsOverdue(id) {
 
   if (error) throw error;
   revalidatePath("/admin/invoices");
+  revalidatePath("/admin");
+}
+
+export async function createProject(formData) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const services = formData.get("services") || null;
+  const parsedServices = services ? services.split(",").map((s) => s.trim()).filter(Boolean) : [];
+
+  const { error } = await supabase.from("projects").insert({
+    client_id: formData.get("client_id") || null,
+    name: formData.get("name"),
+    description: formData.get("description") || null,
+    status: formData.get("status") || "planning",
+    start_date: formData.get("start_date") || null,
+    deadline: formData.get("deadline") || null,
+    budget: formData.get("budget") ? Number(formData.get("budget")) : null,
+    services: parsedServices,
+    notes: formData.get("notes") || null,
+  });
+
+  if (error) throw error;
+  revalidatePath("/admin/projects");
+  revalidatePath("/admin");
+}
+
+export async function updateProject(formData) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const id = formData.get("id");
+  const services = formData.get("services") || null;
+  const parsedServices = services ? services.split(",").map((s) => s.trim()).filter(Boolean) : [];
+
+  const { error } = await supabase
+    .from("projects")
+    .update({
+      client_id: formData.get("client_id") || null,
+      name: formData.get("name"),
+      description: formData.get("description") || null,
+      status: formData.get("status") || "planning",
+      start_date: formData.get("start_date") || null,
+      deadline: formData.get("deadline") || null,
+      budget: formData.get("budget") ? Number(formData.get("budget")) : null,
+      services: parsedServices,
+      notes: formData.get("notes") || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/projects");
+  revalidatePath("/admin");
+}
+
+export async function deleteProject(id) {
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase not configured");
+
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/projects");
   revalidatePath("/admin");
 }

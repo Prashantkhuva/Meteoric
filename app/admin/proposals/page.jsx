@@ -8,7 +8,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Eye, Trash2, Send, FileText, Calendar, Building2, Pencil,
-  ArrowUpRight,
+  ArrowUpRight, MessageCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
@@ -65,7 +65,7 @@ export default function ProposalsPage() {
     if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
 
     const [proposalRes, leadsRes] = await Promise.all([
-      supabase.from("proposals").select("*, lead:leads(name, email, company)").order("created_at", { ascending: false }),
+      supabase.from("proposals").select("*, lead:leads(name, email, phone, company)").order("created_at", { ascending: false }),
       getLeads().catch(() => []),
     ]);
 
@@ -325,6 +325,14 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending }) {
               <td className="px-5 py-3.5 text-right">
                 <div className="flex items-center justify-end gap-0.5">
                   <IconButton onClick={() => onView(p)} icon={Eye} label="View details" />
+                  {p.lead?.phone && (
+                    <IconButton
+                      onClick={() => window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}, I've sent you a proposal: ${p.title}`)}`, "_blank")}
+                      icon={MessageCircle}
+                      label="Share via WhatsApp"
+                      className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
+                    />
+                  )}
                   <IconButton
                     onClick={() => onEdit(p)}
                     icon={Pencil}
@@ -381,6 +389,14 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending }) {
             <span className="text-[10px] text-white/30 tabular-nums">{formatDate(p.created_at)}</span>
             <div className="flex items-center gap-1">
               <IconButton onClick={() => onView(p)} icon={Eye} label="View details" />
+              {p.lead?.phone && (
+                <IconButton
+                  onClick={() => window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}, I've sent you a proposal: ${p.title}`)}`, "_blank")}
+                  icon={MessageCircle}
+                  label="Share via WhatsApp"
+                  className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
+                />
+              )}
               <IconButton onClick={() => onEdit(p)} icon={Pencil} label="Edit proposal" />
               {p.status === "draft" && (
                 <IconButton
@@ -685,6 +701,15 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, sen
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                {proposal.lead?.phone && (
+                  <button
+                    onClick={() => window.open(`https://wa.me/${proposal.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${proposal.lead.name}, I've sent you a proposal: ${proposal.title}. Check your email for details.`)}`, "_blank")}
+                    className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
+                  >
+                    <MessageCircle size={13} />
+                    WhatsApp
+                  </button>
+                )}
                 <button
                   onClick={() => onEdit(proposal)}
                   className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"

@@ -4,7 +4,9 @@ import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@/lib/client";
 import { updateClientStatus, addClient, deleteClient } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Trash2, Calendar, Building2, Mail } from "lucide-react";
+import {
+  X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle
+} from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
 import { StatusBadge } from "../_components/StatusBadge";
@@ -390,6 +392,18 @@ function AddClientModal({ open, onClose, onSubmit }) {
                 />
               </div>
               <div>
+                <label htmlFor="client-phone" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Phone / WhatsApp
+                </label>
+                <input
+                  id="client-phone"
+                  name="phone"
+                  type="tel"
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  placeholder="+1 555 123 4567"
+                />
+              </div>
+              <div>
                 <label htmlFor="client-company" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Company
                 </label>
@@ -475,6 +489,8 @@ function ClientDetailDrawer({ client, onClose }) {
               <div className="space-y-3">
                 {[
                   { icon: Mail, label: "Email", value: client.email, href: client.email ? `mailto:${client.email}` : null },
+                  { icon: Phone, label: "Phone", value: client.phone, href: client.phone ? `tel:${client.phone}` : null },
+                  { icon: MessageCircle, label: "WhatsApp", value: client.phone ? `wa.me/${client.phone.replace(/[^0-9]/g, "")}` : null, href: client.phone ? `https://wa.me/${client.phone.replace(/[^0-9]/g, "")}` : null },
                   { icon: Building2, label: "Company", value: client.company },
                 ].map((f) => {
                   if (!f.value) return null;

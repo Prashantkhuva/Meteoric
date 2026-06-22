@@ -20,18 +20,17 @@ create table if not exists invoices (
 
 alter table invoices enable row level security;
 
-create policy "Authenticated users can view invoices"
-  on invoices for select
-  using (auth.role() = 'authenticated');
-
-create policy "Authenticated users can insert invoices"
-  on invoices for insert
-  with check (auth.role() = 'authenticated');
-
-create policy "Authenticated users can update invoices"
-  on invoices for update
-  using (auth.role() = 'authenticated');
-
-create policy "Authenticated users can delete invoices"
-  on invoices for delete
-  using (auth.role() = 'authenticated');
+do $$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'invoices' and policyname = 'Authenticated users can view invoices') then
+    create policy "Authenticated users can view invoices" on invoices for select using (auth.role() = 'authenticated');
+  end if;
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'invoices' and policyname = 'Authenticated users can insert invoices') then
+    create policy "Authenticated users can insert invoices" on invoices for insert with check (auth.role() = 'authenticated');
+  end if;
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'invoices' and policyname = 'Authenticated users can update invoices') then
+    create policy "Authenticated users can update invoices" on invoices for update using (auth.role() = 'authenticated');
+  end if;
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'invoices' and policyname = 'Authenticated users can delete invoices') then
+    create policy "Authenticated users can delete invoices" on invoices for delete using (auth.role() = 'authenticated');
+  end if;
+end $$;
