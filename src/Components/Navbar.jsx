@@ -29,8 +29,8 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-center">
-        <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl mt-4">
-          <div className="px-4 md:px-6 py-3 flex items-center justify-between rounded-full backdrop-blur-md bg-black/40 border border-[#EAEFFF]/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+        <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl mt-3">
+          <div className="px-4 md:px-6 py-2 flex items-center justify-between rounded-full backdrop-blur-md bg-black/40 border border-[#EAEFFF]/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
             <Link
               href="/"
               className="flex shrink-0 items-center cursor-pointer"
@@ -55,7 +55,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsOpen(true)}
-                className="relative overflow-hidden bg-[#EAEFFF] text-[#202020] px-4 md:px-6 py-2 md:py-3 text-sm md:text-base rounded-full font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group cursor-pointer"
+                className="relative overflow-hidden bg-[#EAEFFF] text-[#202020] px-4 md:px-5 py-1.5 md:py-2 text-sm md:text-base rounded-full font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group cursor-pointer"
               >
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 <span className="relative z-10">Let's Build!</span>
