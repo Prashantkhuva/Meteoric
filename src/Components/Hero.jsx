@@ -58,11 +58,13 @@ function Hero() {
       {/* Content */}
       <div ref={containerRef} className="relative pt-10 z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
         {/* Heading */}
-        <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight text-white">
-          {heroWords.map((word, i) => (
-            <span key={i} className="gsap-word inline-block">{word}{' '}</span>
-          ))}
-          <span className="text-white/40">
+        <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
+          <span className="block">
+            {heroWords.map((word, i) => (
+              <span key={i} className="gsap-word inline-block">{word}{' '}</span>
+            ))}
+          </span>
+          <span className="block text-white/40 mt-2">
             {mutedWords.map((word, i) => (
               <span key={i} className="gsap-word inline-block">{word}{' '}</span>
             ))}
