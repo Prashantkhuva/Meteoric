@@ -150,15 +150,14 @@ export async function deleteClient(id) {
   const supabase = await createClient();
   if (!supabase) return { error: "Supabase not configured" };
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("clients")
     .delete()
-    .eq("id", id);
+    .eq("id", id)
+    .select();
 
-  if (error) return { error: error.message || "Database delete failed" };
-  revalidatePath("/admin/clients");
-  revalidatePath("/admin");
-  return { success: true };
+  if (error) return { error: error.message, code: error.code, details: error.details, hint: error.hint };
+  return { success: true, deletedData: data };
 }
 
 export async function testClientDelete(id) {
