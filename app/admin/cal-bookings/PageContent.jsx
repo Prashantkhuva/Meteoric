@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback } from "react"
 import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X, Download, ChevronUp, ChevronDown } from "lucide-react"
-import { Calendar } from "@/Components/ui/calendar"
+import { CalendarCustom } from "@/Components/ui/calendar-custom"
 import { createLeadFromBooking } from "../actions"
 import { formatDate, formatShort, formatTime, formatDateLong } from "@/lib/admin"
 import { cn } from "@/lib/utils"
@@ -331,48 +331,16 @@ export default function CalBookingsPage() {
       {view === "calendar" && bookings.length > 0 && (
         <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
           <div className="border border-white/[0.06] bg-[#0a0a0a] p-4">
-            <style>{`
-              .has-booking .rdp-day_button {
-                box-shadow: inset 0 0 0 1px rgba(234, 239, 255, 0.15) !important;
-              }
-            `}</style>
-            <Calendar
-              mode="single"
+            <CalendarCustom
               selected={selectedDate}
               onSelect={setSelectedDate}
-              modifiers={{
-                hasBooking: (date) => localDateStr(date) in bookingsByDate,
-              }}
-              modifiersClassNames={{
-                hasBooking: "has-booking",
-              }}
-              components={{
-                DayContent: (props) => {
-                  const { date } = props
-                  const key = localDateStr(date)
-                  const count = bookingCountByDate[key]
-                  return (
-                    <span className="relative flex items-center justify-center w-full h-full">
-                      <span className={count > 0 ? "font-semibold text-white/90" : ""}>
-                        {date.getDate()}
-                      </span>
-                      {count > 0 && (
-                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2">
-                          <span className="block h-1 w-1 rounded-full bg-[#EAEFFF]/60" />
-                        </span>
-                      )}
-                    </span>
-                  )
-                },
-              }}
-              footer={
-                <div className="mt-3 border-t border-white/[0.06] pt-3 text-xs text-white/25 text-center">
-                  {selectedDate
-                    ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? "s" : ""} on this day`
-                    : "Select a day to view bookings"}
-                </div>
-              }
+              bookingCountByDate={bookingCountByDate}
             />
+            <div className="mt-3 border-t border-white/[0.06] pt-3 text-xs text-white/25 text-center">
+              {selectedDate
+                ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? "s" : ""} on this day`
+                : "Select a day to view bookings"}
+            </div>
           </div>
 
           <div className="space-y-3">
