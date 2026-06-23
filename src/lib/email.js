@@ -54,7 +54,7 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
 
   if (isTestMode() && lead.email !== ADMIN) {
     testModeWarning(lead.email);
-    return { success: false, message: "Cannot send in test mode — verify a domain first" };
+    throw new Error("Cannot send — verify a custom domain in Resend first (test mode only delivers to admin)");
   }
 
   const result = await resend.emails.send({
@@ -69,7 +69,7 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
       previewUrl,
     }),
   });
-  if (result?.error) console.error("[resend] proposal email failed:", result.error);
+  if (result?.error) throw new Error(result.error.message || "Failed to send proposal email");
   return result;
 }
 
@@ -78,7 +78,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
 
   if (isTestMode() && client.email !== ADMIN) {
     testModeWarning(client.email);
-    return { success: false, message: "Cannot send in test mode — verify a domain first" };
+    throw new Error("Cannot send — verify a custom domain in Resend first (test mode only delivers to admin)");
   }
 
   const dueDate = invoice.due_date
@@ -101,6 +101,6 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
       previewUrl,
     }),
   });
-  if (result?.error) console.error("[resend] invoice email failed:", result.error);
+  if (result?.error) throw new Error(result.error.message || "Failed to send invoice email");
   return result;
 }

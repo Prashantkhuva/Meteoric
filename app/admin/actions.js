@@ -284,20 +284,15 @@ export async function sendProposal(id) {
   if (!proposal) throw new Error("Proposal not found");
   if (!proposal.lead?.email) throw new Error("Lead has no email address");
 
+  const previewUrl = `${getSiteUrl()}/preview/proposal/${id}`;
+  await sendProposalEmail(proposal, proposal.lead, previewUrl);
+
   const { error } = await supabase
     .from("proposals")
     .update({ status: "sent", sent_at: new Date().toISOString() })
     .eq("id", id);
 
   if (error) throw error;
-
-  const previewUrl = `${getSiteUrl()}/preview/proposal/${id}`;
-
-  try {
-    await sendProposalEmail(proposal, proposal.lead, previewUrl);
-  } catch (err) {
-    console.error("Failed to send proposal email:", err);
-  }
 
   revalidatePath("/admin/proposals");
   revalidatePath("/admin");
@@ -403,20 +398,15 @@ export async function sendInvoice(id) {
   if (!invoice) throw new Error("Invoice not found");
   if (!invoice.client?.email) throw new Error("Client has no email address");
 
+  const previewUrl = `${getSiteUrl()}/preview/invoice/${id}`;
+  await sendInvoiceEmail(invoice, invoice.client, previewUrl);
+
   const { error } = await supabase
     .from("invoices")
     .update({ status: "sent", sent_at: new Date().toISOString() })
     .eq("id", id);
 
   if (error) throw error;
-
-  const previewUrl = `${getSiteUrl()}/preview/invoice/${id}`;
-
-  try {
-    await sendInvoiceEmail(invoice, invoice.client, previewUrl);
-  } catch (err) {
-    console.error("Failed to send invoice email:", err);
-  }
 
   revalidatePath("/admin/invoices");
   revalidatePath("/admin");
