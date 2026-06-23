@@ -148,16 +148,17 @@ export async function addClient(formData) {
 
 export async function deleteClient(id) {
   const supabase = await createClient();
-  if (!supabase) throw new Error("Supabase not configured");
+  if (!supabase) return { error: "Supabase not configured" };
 
   const { error } = await supabase
     .from("clients")
     .delete()
     .eq("id", id);
 
-  if (error) throw error;
+  if (error) return { error: error.message || "Database delete failed" };
   revalidatePath("/admin/clients");
   revalidatePath("/admin");
+  return { success: true };
 }
 
 export async function createLeadFromBooking(formData) {
