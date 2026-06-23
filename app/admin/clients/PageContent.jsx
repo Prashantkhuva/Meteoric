@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/client";
-import { updateClientStatus, addClient, deleteClient, getClientsPaginated } from "../actions";
+import { updateClientStatus, addClient, deleteClient, bulkDeleteClients, getClientsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle, Download,
@@ -102,7 +102,7 @@ export default function ClientsPage() {
     const ids = [...selected];
     setIsDeleting(true);
     try {
-      await Promise.all(ids.map((id) => deleteClient(id)));
+      await bulkDeleteClients(ids);
       setClients((prev) => prev.filter((c) => !ids.includes(c.id)));
       setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewClient && ids.includes(viewClient.id)) setViewClient(null);
