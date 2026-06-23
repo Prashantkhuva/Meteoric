@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
 
@@ -30,7 +30,13 @@ export default function Navbar() {
     <>
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-center">
         <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl">
-          <div className="h-8 px-3 md:px-5 flex items-center justify-between rounded-full backdrop-blur-md bg-black/40 border border-[#EAEFFF]/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+          {/* Glow behind nav */}
+          <div className="absolute -inset-2 rounded-full bg-gradient-to-b from-[#EAEFFF]/5 via-transparent to-transparent blur-2xl pointer-events-none" />
+
+          <div className="relative h-9 px-4 md:px-6 flex items-center justify-between rounded-full bg-black/50 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+            {/* Top edge highlight */}
+            <div className="absolute inset-x-[15%] -top-px h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+
             <Link
               href="/"
               className="flex shrink-0 items-center cursor-pointer"
@@ -38,16 +44,15 @@ export default function Navbar() {
               <Logo />
             </Link>
 
-            <div className="hidden md:flex items-center gap-8 text-sm text-neutral-300">
+            <div className="hidden md:flex items-center gap-6">
               {navItems.map((item) => (
                 <Link
                   key={item.to}
                   href={item.to}
                   onClick={() => setIsMenuOpen(false)}
-                  className="relative group transition"
+                  className="relative text-[13px] font-medium text-white/50 tracking-wide transition-colors duration-300 hover:text-white/90 before:absolute before:left-1/2 before:-translate-x-1/2 before:-bottom-[3px] before:w-0 before:h-[2px] before:rounded-full before:bg-white/70 before:transition-all before:duration-300 hover:before:w-[60%]"
                 >
                   {item.label}
-                  <span className="absolute left-0 -bottom-1 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
             </div>
@@ -55,10 +60,13 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsOpen(true)}
-                className="relative overflow-hidden bg-[#EAEFFF] text-[#202020] px-3 md:px-4 py-0.5 text-sm rounded-full font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group cursor-pointer"
+                className="relative overflow-hidden bg-white text-[#121212] px-3 md:px-4 py-[3px] text-[13px] font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.97] group cursor-pointer"
               >
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                <span className="relative z-10">Let's Build!</span>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                <span className="relative z-10 inline-flex items-center gap-1.5">
+                  Let's Build
+                  <Sparkles size={12} className="opacity-70" />
+                </span>
               </button>
 
               <button
@@ -68,29 +76,30 @@ export default function Navbar() {
                 }
                 aria-expanded={isMenuOpen}
                 onClick={() => setIsMenuOpen((open) => !open)}
-                className="md:hidden inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/10 text-white transition-colors duration-300 hover:bg-white/10"
+                className="md:hidden inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-white/60 transition-all duration-300 hover:bg-white/10 hover:text-white"
               >
-                {isMenuOpen ? <X size={14} /> : <Menu size={14} />}
+                {isMenuOpen ? <X size={13} /> : <Menu size={13} />}
               </button>
             </div>
           </div>
 
+          {/* Mobile dropdown */}
           <div
             ref={menuRef}
             tabIndex={-1}
-            className={`md:hidden absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-[1.5rem] border border-[#EAEFFF]/10 bg-black/85 backdrop-blur-xl shadow-[0_18px_60px_rgba(0,0,0,0.45)] transition-all duration-300 ${
+            className={`md:hidden absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl border border-white/[0.06] bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300 ${
               isMenuOpen
                 ? "pointer-events-auto translate-y-0 opacity-100"
-                : "pointer-events-none -translate-y-2 opacity-0"
+                : "pointer-events-none -translate-y-3 opacity-0"
             }`}
           >
-            <div className="flex flex-col p-2">
-              {navItems.map((item) => (
+            <div className="flex flex-col p-1.5">
+              {navItems.map((item, i) => (
                 <Link
                   key={item.to}
                   href={item.to}
                   onClick={() => setIsMenuOpen(false)}
-                  className="rounded-2xl px-4 py-3 text-sm font-medium text-white/75 transition-colors duration-300 hover:bg-white/10 hover:text-white"
+                  className="group relative rounded-xl px-4 py-3 text-sm font-medium text-white/60 transition-all duration-200 hover:bg-white/[0.06] hover:text-white"
                 >
                   {item.label}
                 </Link>
