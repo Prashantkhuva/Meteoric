@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   X, Plus, Eye, Trash2, Send, FileText, Calendar, Building2, Pencil,
-  ArrowUpRight, MessageCircle, Download, ChevronUp, ChevronDown,
+  ArrowUpRight, MessageCircle, Download, ChevronUp, ChevronDown, Printer,
 } from "lucide-react";
 import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
@@ -483,6 +483,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                       className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
                     />
                   )}
+                  <IconButton onClick={() => window.open(`/preview/proposal/${p.id}`, "_blank")} icon={Printer} label="Print / PDF" className="text-white/30 hover:text-white/50" />
                   <IconButton
                     onClick={() => onEdit(p)}
                     icon={Pencil}
@@ -554,6 +555,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
                   className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
                 />
               )}
+              <IconButton onClick={() => window.open(`/preview/proposal/${p.id}`, "_blank")} icon={Printer} label="Print / PDF" />
               <IconButton onClick={() => onEdit(p)} icon={Pencil} label="Edit proposal" />
               {p.status === "draft" && (
                 <IconButton
@@ -823,6 +825,13 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                <button
+                  onClick={() => window.open(`/preview/proposal/${proposal.id}`, "_blank")}
+                  className="inline-flex items-center gap-2 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
+                >
+                  <Printer size={13} />
+                  Print / PDF
+                </button>
                 {proposal.lead?.phone && (
                   <button
                     onClick={() => window.open(`https://wa.me/${proposal.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${proposal.lead.name}, I've sent you a proposal: ${proposal.title}. View it here: ${getSiteUrl()}/preview/proposal/${proposal.id}`)}`, "_blank")}

@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/server";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/seo.config";
 
 export async function GET(_request, { params }) {
   const { id } = await params;
@@ -44,6 +44,7 @@ export async function GET(_request, { params }) {
 
   const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : "";
   const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status;
+  const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -51,44 +52,50 @@ export async function GET(_request, { params }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Invoice ${invoice.invoice_number} — Meteoric</title>
+<meta property="og:title" content="Invoice ${invoice.invoice_number} — Meteoric" />
+<meta property="og:description" content="Invoice for ${esc(invoice.client?.name || "—")} — $${total.toFixed(2)} due ${invoice.due_date ? fmt(invoice.due_date) : "—"}" />
+<meta property="og:image" content="${ogUrl}" />
+<meta property="og:image:width" content="1635" />
+<meta property="og:image:height" content="962" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #f5f5f5; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+body { background: #070707; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.85); }
 .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; max-width: 800px; margin-left: auto; margin-right: auto; }
-.toolbar a { color: #666; text-decoration: none; font-size: 13px; }
-.toolbar a:hover { color: #000; }
-.print-btn { background: #000; color: #fff; border: none; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-.print-btn:hover { opacity: 0.9; }
-.invoice { max-width: 800px; margin: 0 auto; background: #fff; padding: 48px 56px; }
-.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 2px solid #000; }
-.brand h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: #000; }
-.brand p { font-size: 12px; color: #999; margin-top: 4px; }
+.toolbar a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+.toolbar a:hover { color: rgba(255,255,255,0.7); }
+.print-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.08); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+.print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
+.invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.brand img { height: 28px; width: auto; display: block; }
 .meta { text-align: right; }
-.meta .number { font-size: 22px; font-weight: 700; color: #000; }
-.meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
-.meta .status.paid { color: #059669; }
-.meta .status.overdue { color: #dc2626; }
-.meta .dates { font-size: 12px; color: #999; margin-top: 8px; line-height: 1.6; }
-.meta .dates .paid { color: #059669; font-weight: 600; }
+.meta .number { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: rgba(255,255,255,0.3); }
+.meta .status.paid { color: #34d399; }
+.meta .status.overdue { color: #f87171; }
+.meta .dates { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 8px; line-height: 1.6; }
+.meta .dates .paid { color: #34d399; font-weight: 600; }
 .parties { display: flex; justify-content: space-between; margin-bottom: 48px; gap: 40px; }
-.from h3, .to h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #bbb; margin-bottom: 8px; }
-.from p, .to p { font-size: 13px; line-height: 1.5; color: #333; }
-.from .name, .to .name { font-weight: 600; color: #111; }
+.from h3, .to h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 8px; }
+.from p, .to p { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.6); }
+.from .name, .to .name { font-weight: 600; color: rgba(255,255,255,0.85); }
 .to { text-align: right; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
-thead th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #bbb; padding-bottom: 12px; border-bottom: 2px solid #000; }
+thead th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 thead th:not(:first-child) { text-align: right; }
-tbody td { padding: 12px 0; font-size: 13px; color: #333; border-bottom: 1px solid #eee; }
+tbody td { padding: 12px 0; font-size: 13px; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.04); }
 tbody td:not(:first-child) { text-align: right; }
-tbody td:first-child { color: #111; }
+tbody td:first-child { color: rgba(255,255,255,0.85); }
 .totals { margin-left: auto; width: 280px; }
-.totals .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; color: #666; }
-.totals .row.total { padding: 12px 0 0; margin-top: 4px; border-top: 2px solid #000; font-size: 16px; font-weight: 700; color: #000; }
-.footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid #ddd; }
-.footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #bbb; margin-bottom: 4px; }
-.footer p { font-size: 13px; color: #666; white-space: pre-wrap; margin-bottom: 16px; }
+.totals .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; color: rgba(255,255,255,0.5); }
+.totals .row.total { padding: 12px 0 0; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
+.footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px; }
+.footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
 @media print {
-  body { background: #fff; padding: 0; }
+  body { background: #070707; padding: 0; }
   .toolbar { display: none !important; }
   .invoice { box-shadow: none; padding: 40px 48px; }
   @page { margin: 20mm 15mm; }
@@ -107,7 +114,7 @@ tbody td:first-child { color: #111; }
 <div class="invoice">
   <div class="header">
     <div class="brand">
-      <img src="/meteoric-logo.png" alt="Meteoric" style="height:32px;width:auto;display:block" />
+      <img src="/meteoric-logo.png" alt="Meteoric" />
     </div>
     <div class="meta">
       <p class="number">${invoice.invoice_number}</p>
