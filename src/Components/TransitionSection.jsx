@@ -92,14 +92,14 @@ export default function TransitionSection() {
               Beyond Just Development
             </p>
 
-            <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-[#EAEFFF]">
+            <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-[#EAEFFF] [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
               {mainWords.map((word, i) => (
-                <span key={i} className="gsap-head-word inline-block">{word}{' '}</span>
+                <span key={i} className="gsap-head-word inline-block">{word}</span>
               ))}
-              <span className="text-[#EAEFFF]/40">
+              <span className="text-[#EAEFFF]/40 [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
                 {" "}
                 {mutedWords.map((word, i) => (
-                  <span key={i} className="gsap-head-word inline-block">{word}{' '}</span>
+                  <span key={i} className="gsap-head-word inline-block">{word}</span>
                 ))}
               </span>
             </h2>
