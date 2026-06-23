@@ -24,6 +24,7 @@ import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 import { useShortcuts } from "../_components/useShortcuts";
 import { downloadCSV } from "../_components/csv-export";
+import Checkbox from "../_components/Checkbox";
 import { RichEditor } from "../_components/RichEditor";
 
 const PAGE_SIZE = 15;
@@ -410,12 +411,10 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
         <thead>
           <tr className="border-b border-white/[0.06]">
             <th className="px-5 py-3.5 w-10">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={allSelected}
                 onChange={onToggleSelectAll}
-                className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                aria-label="Select all"
+                label="Select all"
               />
             </th>
             <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("title")}>
@@ -435,12 +434,10 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
           {items.map((p) => (
             <tr key={p.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
               <td className="px-5 py-3.5">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={selected.has(p.id)}
                   onChange={() => onToggleSelect(p.id)}
-                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                  aria-label={`Select ${p.title || "proposal"}`}
+                  label={`Select ${p.title || "proposal"}`}
                 />
               </td>
               <td className="px-5 py-3.5">
@@ -523,12 +520,10 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
         <div key={p.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selected.has(p.id)}
                 onChange={() => onToggleSelect(p.id)}
-                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
-                aria-label={`Select ${p.title || "proposal"}`}
+                label={`Select ${p.title || "proposal"}`}
               />
               <div className="min-w-0">
                 <button

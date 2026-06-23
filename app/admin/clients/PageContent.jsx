@@ -16,6 +16,7 @@ import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
 import { BulkActionBar } from "../_components/BulkActionBar";
+import Checkbox from "../_components/Checkbox";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 import { useShortcuts } from "../_components/useShortcuts";
@@ -344,12 +345,10 @@ function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus
           <thead>
             <tr className="border-b border-white/[0.06]">
               <th className="px-5 py-3.5 w-10">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={allSelected}
                   onChange={onToggleSelectAll}
-                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                  aria-label="Select all"
+                  label="Select all"
                 />
               </th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("name")}>
@@ -371,12 +370,10 @@ function DesktopTable({ clients, onView, onStatusChange, onDelete, editingStatus
             {clients.map((client) => (
               <tr key={client.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
                 <td className="px-5 py-3.5">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={selected.has(client.id)}
                     onChange={() => onToggleSelect(client.id)}
-                    className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                    aria-label={`Select ${client.name || client.email || "client"}`}
+                    label={`Select ${client.name || "client"}`}
                   />
                 </td>
                 <td className="px-5 py-4">
@@ -435,12 +432,10 @@ function MobileCards({ clients, onView, onStatusChange, onDelete, editingStatus,
         <div key={client.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selected.has(client.id)}
                 onChange={() => onToggleSelect(client.id)}
-                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
-                aria-label={`Select ${client.name || client.email || "client"}`}
+                label={`Select ${client.name || "client"}`}
               />
               <div className="min-w-0">
                 <button

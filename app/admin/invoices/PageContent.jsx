@@ -24,6 +24,7 @@ import { FormField } from "../_components/FormField";
 import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 import { useShortcuts } from "../_components/useShortcuts";
+import Checkbox from "../_components/Checkbox";
 import { downloadCSV } from "../_components/csv-export";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -451,12 +452,10 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
         <thead>
           <tr className="border-b border-white/[0.06]">
             <th className="px-5 py-3.5 w-10">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={allSelected}
                 onChange={onToggleSelectAll}
-                className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                aria-label="Select all"
+                label="Select all"
               />
             </th>
             <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("invoice_number")}>
@@ -479,12 +478,10 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
           {items.map((inv) => (
             <tr key={inv.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
               <td className="px-5 py-3.5">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={selected.has(inv.id)}
                   onChange={() => onToggleSelect(inv.id)}
-                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                  aria-label={`Select invoice ${inv.invoice_number}`}
+                  label={`Select invoice ${inv.invoice_number}`}
                 />
               </td>
               <td className="px-5 py-3.5">
@@ -575,12 +572,10 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
         <div key={inv.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selected.has(inv.id)}
                 onChange={() => onToggleSelect(inv.id)}
-                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
-                aria-label={`Select invoice ${inv.invoice_number}`}
+                label={`Select invoice ${inv.invoice_number}`}
               />
               <div className="min-w-0">
                 <button

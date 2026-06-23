@@ -22,6 +22,7 @@ import { useFilters } from "../_components/useFilters";
 import { useFocusTrap } from "../_components/useFocusTrap";
 import { useShortcuts } from "../_components/useShortcuts";
 import { downloadCSV } from "../_components/csv-export";
+import Checkbox from "../_components/Checkbox";
 
 const PAGE_SIZE = 15;
 const statusList = [
@@ -372,12 +373,10 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
           <thead>
             <tr className="border-b border-white/[0.06]">
               <th className="px-5 py-3.5 w-10">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={allSelected}
                   onChange={onToggleSelectAll}
-                  className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                  aria-label="Select all"
+                  label="Select all"
                 />
               </th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("name")}>
@@ -397,12 +396,10 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
             {leads.map((lead) => (
               <tr key={lead.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
                 <td className="px-5 py-3.5">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={selected.has(lead.id)}
                     onChange={() => onToggleSelect(lead.id)}
-                    className="rounded border-white/20 bg-transparent accent-[#EAEFFF]"
-                    aria-label={`Select ${lead.name || lead.email || "lead"}`}
+                    label={`Select ${lead.name || "lead"}`}
                   />
                 </td>
                 <td className="px-5 py-3.5">
@@ -475,12 +472,10 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
         <div key={lead.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selected.has(lead.id)}
                 onChange={() => onToggleSelect(lead.id)}
-                className="rounded border-white/20 bg-transparent accent-[#EAEFFF] mt-0.5"
-                aria-label={`Select ${lead.name || lead.email || "lead"}`}
+                label={`Select ${lead.name || "lead"}`}
               />
               <div className="min-w-0">
                 <button
