@@ -54,12 +54,9 @@ export default function TransitionSection() {
       cardsRef.current?.querySelectorAll(".gsap-card").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
       return;
     }
-    gsap.from(headingRef.current?.querySelectorAll(".gsap-head-word"), {
-      y: 40,
-      opacity: 0,
-      duration: 0.7,
-      stagger: 0.03,
-      ease: "power3.out",
+    gsap.fromTo(headingRef.current?.querySelectorAll(".gsap-head-word"),
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.7, stagger: 0.03, ease: "power3.out",
       scrollTrigger: {
         trigger: headingRef.current,
         start: "top 88%",

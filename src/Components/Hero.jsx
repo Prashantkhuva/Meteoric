@@ -37,11 +37,10 @@ function Hero() {
       return;
     }
     const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.7 } });
-    tl.from(containerRef.current?.querySelectorAll(".gsap-word"), {
-      y: 60,
-      opacity: 0,
-      stagger: 0.04,
-    })
+    tl.fromTo(containerRef.current?.querySelectorAll(".gsap-word"),
+      { y: 60, opacity: 0 },
+      { y: 0, opacity: 1, stagger: 0.04 },
+    )
       .from(subtextRef.current, { y: 30, opacity: 0 }, "-=0.25")
       .from(ctaRef.current, { y: 30, opacity: 0 }, "-=0.2");
   }, { scope: containerRef });

@@ -82,7 +82,7 @@ html.lenis {
 .gsap-word,
 .gsap-head-word,
 .gsap-proc-word {
-  opacity: 0;
+  /* Initial state set by GSAP .fromTo() — no CSS opacity to avoid broken end state */
 }
 
 input:-webkit-autofill,
