@@ -161,6 +161,22 @@ export async function deleteClient(id) {
   return { success: true };
 }
 
+export async function testClientDelete(id) {
+  const supabase = await createClient();
+  if (!supabase) return { error: "Supabase not configured", env: { url: !!process.env.NEXT_PUBLIC_SUPABASE_URL, key: !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } };
+
+  const { data: before, error: beforeErr } = await supabase.from("clients").select("id").eq("id", id).maybeSingle();
+  if (beforeErr) return { error: "Before check failed: " + beforeErr.message };
+
+  const { data, error, count } = await supabase.from("clients").delete().eq("id", id).select("id");
+  if (error) return { error: error.message, details: error };
+
+  const { data: after, error: afterErr } = await supabase.from("clients").select("id").eq("id", id).maybeSingle();
+  if (afterErr) return { error: "After check failed: " + afterErr.message };
+
+  return { success: true, existed: !!before, stillExists: !!after, deletedData: data };
+}
+
 export async function createLeadFromBooking(formData) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");

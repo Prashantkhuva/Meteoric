@@ -106,6 +106,7 @@ export default function ClientsPage() {
     let errors = [];
     for (const id of ids) {
       const result = await deleteClient(id);
+      console.log("deleteClient result for id", id, JSON.stringify(result));
       if (result.error) {
         errors.push(id);
         console.error("deleteClient failed for id", id, result.error);
@@ -179,6 +180,7 @@ export default function ClientsPage() {
   async function handleDelete(id) {
     setIsDeleting(true);
     const result = await deleteClient(id);
+    console.log("deleteClient single result for id", id, JSON.stringify(result));
     if (result.error) {
       addToast(result.error, "error");
     } else {
