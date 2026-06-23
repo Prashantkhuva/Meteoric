@@ -33,7 +33,7 @@ export default function Navbar() {
             {/* Glow behind nav */}
             <div className="absolute -inset-3 rounded-full bg-gradient-to-b from-[#EAEFFF]/8 via-transparent to-transparent blur-3xl pointer-events-none" />
 
-            <div className="relative h-10 px-5 md:px-7 flex items-center justify-between rounded-full bg-black/50 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+            <div className="relative px-5 md:px-7 h-15 flex items-center justify-between rounded-full bg-black/50 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
               {/* Top edge highlight */}
               <div className="absolute inset-x-[20%] -top-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
 
@@ -60,7 +60,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsOpen(true)}
-                className="relative overflow-hidden bg-white text-[#121212] px-3 md:px-4 py-[3px] text-[13px] font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.97] group cursor-pointer"
+                className="relative overflow-hidden bg-white text-[#121212] px-3 md:px-4 py-[4px] text-[13px] font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.97] group cursor-pointer"
               >
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
                 <span className="relative z-10">Let's Build</span>

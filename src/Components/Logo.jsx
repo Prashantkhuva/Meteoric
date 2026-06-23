@@ -7,8 +7,8 @@ const Logo = memo(function Logo({ className = "" }) {
       <Image
         src="/meteoric-logo.png"
         alt=""
-        width={130}
-        height={18}
+        width={168}
+        height={32}
         className="hidden sm:block"
         aria-hidden="true"
       />
