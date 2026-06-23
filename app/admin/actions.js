@@ -160,20 +160,6 @@ export async function deleteClient(id) {
   revalidatePath("/admin");
 }
 
-export async function bulkDeleteClients(ids) {
-  const supabase = await createClient();
-  if (!supabase) throw new Error("Supabase not configured");
-
-  const { error } = await supabase
-    .from("clients")
-    .delete()
-    .in("id", ids);
-
-  if (error) throw error;
-  revalidatePath("/admin/clients");
-  revalidatePath("/admin");
-}
-
 export async function createLeadFromBooking(formData) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
