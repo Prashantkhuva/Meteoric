@@ -148,60 +148,16 @@ export async function addClient(formData) {
 
 export async function deleteClient(id) {
   const supabase = await createClient();
-  if (!supabase) return { error: "Supabase not configured" };
+  if (!supabase) throw new Error("Supabase not configured");
 
-  // Get the auth session from the SSR client
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  if (sessionError) return { error: "Session error: " + sessionError.message, id, idType: typeof id };
+  const { error } = await supabase
+    .from("clients")
+    .delete()
+    .eq("id", id);
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  const token = session?.access_token;
-
-  const headers = {
-    "apikey": key,
-    "Content-Type": "application/json",
-    "Prefer": "return=representation",
-  };
-  // Use session token if available, otherwise fall back to anon key
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  } else {
-    headers["Authorization"] = `Bearer ${key}`;
-  }
-
-  const res = await fetch(`${url}/rest/v1/clients?id=eq.${id}`, {
-    method: "DELETE",
-    headers,
-  });
-
-  const text = await res.text();
-  let data;
-  try { data = JSON.parse(text); } catch { data = text; }
-
-  if (!res.ok) return {
-    error: `HTTP ${res.status}: ${typeof data === "string" ? data.substring(0, 200) : JSON.stringify(data)}`,
-    hasSession: !!session,
-    id, idType: typeof id,
-  };
-
-  return { success: true, deletedData: data, hasSession: !!session, id, idType: typeof id };
-}
-
-export async function testClientDelete(id) {
-  const supabase = await createClient();
-  if (!supabase) return { error: "Supabase not configured", env: { url: !!process.env.NEXT_PUBLIC_SUPABASE_URL, key: !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } };
-
-  const { data: before, error: beforeErr } = await supabase.from("clients").select("id").eq("id", id).maybeSingle();
-  if (beforeErr) return { error: "Before check failed: " + beforeErr.message };
-
-  const { data, error, count } = await supabase.from("clients").delete().eq("id", id).select("id");
-  if (error) return { error: error.message, details: error };
-
-  const { data: after, error: afterErr } = await supabase.from("clients").select("id").eq("id", id).maybeSingle();
-  if (afterErr) return { error: "After check failed: " + afterErr.message };
-
-  return { success: true, existed: !!before, stillExists: !!after, deletedData: data };
+  if (error) throw error;
+  revalidatePath("/admin/clients");
+  revalidatePath("/admin");
 }
 
 export async function createLeadFromBooking(formData) {

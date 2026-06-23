@@ -102,31 +102,17 @@ export default function ClientsPage() {
   async function handleBulkDelete() {
     const ids = [...selected];
     setIsDeleting(true);
-    let deleted = 0;
-    let errors = [];
-    for (const id of ids) {
-      const result = await deleteClient(id);
-      console.log("deleteClient result for id", id, JSON.stringify(result));
-      if (result.error) {
-        errors.push(id);
-        console.error("deleteClient failed for id", id, result.error);
-      } else {
-        deleted++;
-      }
-    }
-    if (deleted > 0) {
+    try {
+      await Promise.all(ids.map((id) => deleteClient(id)));
       setClients((prev) => prev.filter((c) => !ids.includes(c.id)));
-      setTotal((prev) => Math.max(0, prev - deleted));
+      setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewClient && ids.includes(viewClient.id)) setViewClient(null);
-    }
-    setSelected(new Set());
-    setBulkConfirm(null);
-    if (errors.length === 0) {
-      addToast(`${deleted} client${deleted > 1 ? "s" : ""} deleted`, "success");
-    } else if (deleted === 0) {
-      addToast("Failed to delete. Open browser console (F12) for details.", "error");
-    } else {
-      addToast(`${deleted} deleted, ${errors.length} failed — check console`, "error");
+      addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} deleted`, "success");
+      setSelected(new Set());
+      setBulkConfirm(null);
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
+      setBulkConfirm(null);
     }
     setIsDeleting(false);
   }
@@ -179,15 +165,14 @@ export default function ClientsPage() {
 
   async function handleDelete(id) {
     setIsDeleting(true);
-    const result = await deleteClient(id);
-    console.log("deleteClient single result for id", id, JSON.stringify(result));
-    if (result.error) {
-      addToast(result.error, "error");
-    } else {
+    try {
+      await deleteClient(id);
       setClients((prev) => prev.filter((c) => c.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
     }
     setDeleteTarget(null);
     setIsDeleting(false);
