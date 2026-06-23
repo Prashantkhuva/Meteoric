@@ -205,15 +205,15 @@ export default function ProposalsPage() {
 
   async function handleSend(id) {
     setSending(id);
-    try {
-      await sendProposal(id);
+    const result = await sendProposal(id);
+    if (result.success) {
       setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status: "sent", sent_at: new Date().toISOString() } : p)));
       if (viewProposal?.id === id) {
         setViewProposal((prev) => prev ? { ...prev, status: "sent", sent_at: new Date().toISOString() } : null);
       }
       addToast("Proposal sent to lead", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to send proposal", "error");
+    } else {
+      addToast(result.error || "Failed to send proposal", "error");
     }
     setSending(null);
   }

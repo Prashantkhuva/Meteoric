@@ -284,7 +284,7 @@ export async function deleteProposal(id) {
 export async function sendProposal(id) {
   try {
     const supabase = await createClient();
-    if (!supabase) throw new Error("Supabase not configured");
+    if (!supabase) return { success: false, error: "Supabase not configured" };
 
     const { data: proposal, error: fetchError } = await supabase
       .from("proposals")
@@ -292,9 +292,9 @@ export async function sendProposal(id) {
       .eq("id", id)
       .single();
 
-    if (fetchError) throw new Error(fetchError.message || "Failed to fetch proposal");
-    if (!proposal) throw new Error("Proposal not found");
-    if (!proposal.lead?.email) throw new Error("Lead has no email address");
+    if (fetchError) return { success: false, error: fetchError.message };
+    if (!proposal) return { success: false, error: "Proposal not found" };
+    if (!proposal.lead?.email) return { success: false, error: "Lead has no email address" };
 
     const previewUrl = `${getSiteUrl()}/preview/proposal/${id}`;
 
@@ -305,13 +305,14 @@ export async function sendProposal(id) {
       .update({ status: "sent", sent_at: new Date().toISOString() })
       .eq("id", id);
 
-    if (error) throw error;
+    if (error) return { success: false, error: error.message };
 
     revalidatePath("/admin/proposals");
     revalidatePath("/admin");
+    return { success: true };
   } catch (err) {
     console.error("sendProposal error:", err);
-    throw new Error(err.message || "Failed to send proposal");
+    return { success: false, error: err.message || "Failed to send proposal" };
   }
 }
 
@@ -405,7 +406,7 @@ export async function deleteInvoice(id) {
 export async function sendInvoice(id) {
   try {
     const supabase = await createClient();
-    if (!supabase) throw new Error("Supabase not configured");
+    if (!supabase) return { success: false, error: "Supabase not configured" };
 
     const { data: invoice, error: fetchError } = await supabase
       .from("invoices")
@@ -413,9 +414,9 @@ export async function sendInvoice(id) {
       .eq("id", id)
       .single();
 
-    if (fetchError) throw new Error(fetchError.message || "Failed to fetch invoice");
-    if (!invoice) throw new Error("Invoice not found");
-    if (!invoice.client?.email) throw new Error("Client has no email address");
+    if (fetchError) return { success: false, error: fetchError.message };
+    if (!invoice) return { success: false, error: "Invoice not found" };
+    if (!invoice.client?.email) return { success: false, error: "Client has no email address" };
 
     const previewUrl = `${getSiteUrl()}/preview/invoice/${id}`;
 
@@ -426,13 +427,14 @@ export async function sendInvoice(id) {
       .update({ status: "sent", sent_at: new Date().toISOString() })
       .eq("id", id);
 
-    if (error) throw error;
+    if (error) return { success: false, error: error.message };
 
     revalidatePath("/admin/invoices");
     revalidatePath("/admin");
+    return { success: true };
   } catch (err) {
     console.error("sendInvoice error:", err);
-    throw new Error(err.message || "Failed to send invoice");
+    return { success: false, error: err.message || "Failed to send invoice" };
   }
 }
 

@@ -242,15 +242,15 @@ export default function InvoicesPage() {
 
   async function handleSend(id) {
     setSending(id);
-    try {
-      await sendInvoice(id);
+    const result = await sendInvoice(id);
+    if (result.success) {
       setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "sent", sent_at: new Date().toISOString() } : inv)));
       if (viewInvoice?.id === id) {
         setViewInvoice((prev) => prev ? { ...prev, status: "sent", sent_at: new Date().toISOString() } : null);
       }
       addToast("Invoice sent to client", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to send invoice", "error");
+    } else {
+      addToast(result.error || "Failed to send invoice", "error");
     }
     setSending(null);
   }
