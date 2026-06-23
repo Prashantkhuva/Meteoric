@@ -107,8 +107,7 @@ tbody td:first-child { color: #111; }
 <div class="invoice">
   <div class="header">
     <div class="brand">
-      <h1>Meteoric</h1>
-      <p>Digital Solutions</p>
+      <img src="/meteoric-logo.png" alt="Meteoric" style="height:32px;width:auto;display:block" />
     </div>
     <div class="meta">
       <p class="number">${invoice.invoice_number}</p>

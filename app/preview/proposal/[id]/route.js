@@ -96,8 +96,7 @@ body { background: #f5f5f5; padding: 40px 20px; font-family: -apple-system, Blin
 <div class="proposal">
   <div class="header">
     <div class="brand">
-      <h1>Meteoric</h1>
-      <p>Digital Solutions</p>
+      <img src="/meteoric-logo.png" alt="Meteoric" style="height:32px;width:auto;display:block" />
     </div>
     <div class="meta">
       <p class="title">${esc(proposal.title)}</p>
