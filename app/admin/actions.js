@@ -285,17 +285,24 @@ export async function sendProposal(id) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
-  const { data: proposal } = await supabase
+  const { data: proposal, error: fetchError } = await supabase
     .from("proposals")
     .select("*, lead:leads(name, email, phone)")
     .eq("id", id)
     .single();
 
+  if (fetchError) throw new Error(fetchError.message || "Failed to fetch proposal");
   if (!proposal) throw new Error("Proposal not found");
   if (!proposal.lead?.email) throw new Error("Lead has no email address");
 
   const previewUrl = `${getSiteUrl()}/preview/proposal/${id}`;
-  await sendProposalEmail(proposal, proposal.lead, previewUrl);
+
+  try {
+    await sendProposalEmail(proposal, proposal.lead, previewUrl);
+  } catch (emailErr) {
+    console.error("sendProposal email error:", emailErr);
+    throw new Error(emailErr.message || "Failed to send proposal email");
+  }
 
   const { error } = await supabase
     .from("proposals")
@@ -399,17 +406,24 @@ export async function sendInvoice(id) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
-  const { data: invoice } = await supabase
+  const { data: invoice, error: fetchError } = await supabase
     .from("invoices")
     .select("*, client:clients(name, email, phone)")
     .eq("id", id)
     .single();
 
+  if (fetchError) throw new Error(fetchError.message || "Failed to fetch invoice");
   if (!invoice) throw new Error("Invoice not found");
   if (!invoice.client?.email) throw new Error("Client has no email address");
 
   const previewUrl = `${getSiteUrl()}/preview/invoice/${id}`;
-  await sendInvoiceEmail(invoice, invoice.client, previewUrl);
+
+  try {
+    await sendInvoiceEmail(invoice, invoice.client, previewUrl);
+  } catch (emailErr) {
+    console.error("sendInvoice email error:", emailErr);
+    throw new Error(emailErr.message || "Failed to send invoice email");
+  }
 
   const { error } = await supabase
     .from("invoices")

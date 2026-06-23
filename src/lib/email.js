@@ -57,18 +57,24 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
     throw new Error("Cannot send — verify a custom domain in Resend first (test mode only delivers to admin)");
   }
 
-  const result = await resend.emails.send({
-    from: FROM,
-    to: lead.email,
-    subject: `Proposal: ${proposal.title}`,
-    react: ProposalEmail({
-      name: lead.name,
-      title: proposal.title,
-      timeline: proposal.timeline,
-      terms: proposal.terms,
-      previewUrl,
-    }),
-  });
+  let result;
+  try {
+    result = await resend.emails.send({
+      from: FROM,
+      to: lead.email,
+      subject: `Proposal: ${proposal.title}`,
+      react: ProposalEmail({
+        name: lead.name,
+        title: proposal.title,
+        timeline: proposal.timeline,
+        terms: proposal.terms,
+        previewUrl,
+      }),
+    });
+  } catch (raw) {
+    console.error("[resend] proposal email threw:", raw);
+    throw new Error(raw?.message || "Failed to send proposal email");
+  }
   if (result?.error) throw new Error(result.error.message || "Failed to send proposal email");
   return result;
 }
@@ -89,18 +95,24 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
       })
     : null;
 
-  const result = await resend.emails.send({
-    from: FROM,
-    to: client.email,
-    subject: `Invoice ${invoice.invoice_number} from Meteoric`,
-    react: InvoiceEmail({
-      name: client.name,
-      invoiceNumber: invoice.invoice_number,
-      total: invoice.total,
-      dueDate,
-      previewUrl,
-    }),
-  });
+  let result;
+  try {
+    result = await resend.emails.send({
+      from: FROM,
+      to: client.email,
+      subject: `Invoice ${invoice.invoice_number} from Meteoric`,
+      react: InvoiceEmail({
+        name: client.name,
+        invoiceNumber: invoice.invoice_number,
+        total: invoice.total,
+        dueDate,
+        previewUrl,
+      }),
+    });
+  } catch (raw) {
+    console.error("[resend] invoice email threw:", raw);
+    throw new Error(raw?.message || "Failed to send invoice email");
+  }
   if (result?.error) throw new Error(result.error.message || "Failed to send invoice email");
   return result;
 }
