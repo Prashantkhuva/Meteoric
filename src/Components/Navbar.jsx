@@ -29,8 +29,8 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-center">
-        <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl mt-1">
-          <div className="px-3 md:px-5 py-[3px] flex items-center justify-between rounded-full backdrop-blur-md bg-black/40 border border-[#EAEFFF]/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+        <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl">
+          <div className="px-3 md:px-5 py-0 flex items-center justify-between rounded-full backdrop-blur-md bg-black/40 border border-[#EAEFFF]/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
             <Link
               href="/"
               className="flex shrink-0 items-center cursor-pointer"
