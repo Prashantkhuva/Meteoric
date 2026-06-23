@@ -150,12 +150,22 @@ export async function deleteClient(id) {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("clients")
     .delete()
-    .eq("id", id);
+    .eq("id", id)
+    .select("id");
 
-  if (error) throw error;
+  if (error) {
+    console.error("deleteClient Supabase error:", error);
+    throw new Error(error.message || "Database delete failed");
+  }
+
+  if (!data || data.length === 0) {
+    console.error("deleteClient: 0 rows deleted for id", id);
+    throw new Error("Client was not deleted (0 rows affected)");
+  }
+
   revalidatePath("/admin/clients");
   revalidatePath("/admin");
 }

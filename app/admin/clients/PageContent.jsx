@@ -102,18 +102,25 @@ export default function ClientsPage() {
   async function handleBulkDelete() {
     const ids = [...selected];
     setIsDeleting(true);
-    try {
-      await Promise.all(ids.map((id) => deleteClient(id)));
+    let allSucceeded = true;
+    for (const id of ids) {
+      try {
+        await deleteClient(id);
+      } catch (err) {
+        console.error("handleBulkDelete error for id", id, err);
+        allSucceeded = false;
+      }
+    }
+    if (allSucceeded) {
       setClients((prev) => prev.filter((c) => !ids.includes(c.id)));
       setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewClient && ids.includes(viewClient.id)) setViewClient(null);
       addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} deleted`, "success");
-      setSelected(new Set());
-      setBulkConfirm(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete", "error");
-      setBulkConfirm(null);
+    } else {
+      addToast("Some clients could not be deleted. See console (F12).", "error");
     }
+    setSelected(new Set());
+    setBulkConfirm(null);
     setIsDeleting(false);
   }
 
@@ -172,6 +179,7 @@ export default function ClientsPage() {
       if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
     } catch (err) {
+      console.error("handleDelete error:", err);
       addToast(err.message || "Failed to delete", "error");
     }
     setDeleteTarget(null);
