@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
 
@@ -29,13 +29,13 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-center">
-        <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl">
-          {/* Glow behind nav */}
-          <div className="absolute -inset-2 rounded-full bg-gradient-to-b from-[#EAEFFF]/5 via-transparent to-transparent blur-2xl pointer-events-none" />
+          <div className="relative w-[95%] md:w-[80%] lg:w-[56rem] max-w-6xl mt-4">
+            {/* Glow behind nav */}
+            <div className="absolute -inset-3 rounded-full bg-gradient-to-b from-[#EAEFFF]/8 via-transparent to-transparent blur-3xl pointer-events-none" />
 
-          <div className="relative h-9 px-4 md:px-6 flex items-center justify-between rounded-full bg-black/50 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
-            {/* Top edge highlight */}
-            <div className="absolute inset-x-[15%] -top-px h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+            <div className="relative h-10 px-5 md:px-7 flex items-center justify-between rounded-full bg-black/50 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+              {/* Top edge highlight */}
+              <div className="absolute inset-x-[20%] -top-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
 
             <Link
               href="/"
@@ -44,7 +44,7 @@ export default function Navbar() {
               <Logo />
             </Link>
 
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
                 <Link
                   key={item.to}
@@ -63,10 +63,7 @@ export default function Navbar() {
                 className="relative overflow-hidden bg-white text-[#121212] px-3 md:px-4 py-[3px] text-[13px] font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.97] group cursor-pointer"
               >
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-                <span className="relative z-10 inline-flex items-center gap-1.5">
-                  Let's Build
-                  <Sparkles size={12} className="opacity-70" />
-                </span>
+                <span className="relative z-10">Let's Build</span>
               </button>
 
               <button
@@ -93,7 +90,7 @@ export default function Navbar() {
                 : "pointer-events-none -translate-y-3 opacity-0"
             }`}
           >
-            <div className="flex flex-col p-1.5">
+            <div className="flex flex-col p-2">
               {navItems.map((item, i) => (
                 <Link
                   key={item.to}
