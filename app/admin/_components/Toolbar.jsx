@@ -4,12 +4,13 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function Toolbar({ search, onSearchChange, children, resultCount }) {
+export function Toolbar({ search, onSearchChange, children, resultCount, searchRef }) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="relative flex-1 max-w-xs">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none" />
         <input
+          ref={searchRef}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search..."

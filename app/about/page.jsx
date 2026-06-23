@@ -1,40 +1,42 @@
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/seo.config";
+import AboutPage from "@/page-content/About";
+
+const pageTitle = "About Meteoric | Web Development Agency for Founders";
+const pageDesc =
+  "Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.";
+
 export const metadata = {
-  title: "About Meteoric | Web Development Agency for Founders",
-  description:
-    "Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.",
+  title: pageTitle,
+  description: pageDesc,
   openGraph: {
-    title: "About Meteoric | Web Development Agency for Founders",
-    description:
-      "Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.",
-    url: "https://withmeteoric.vercel.app/about",
+    title: pageTitle,
+    description: pageDesc,
+    url: `${SITE_URL}/about`,
     images: [
       {
-        url: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-        secureUrl: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
+        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         width: 1635,
         height: 962,
-        alt: "About Meteoric — Web Development Agency for Founders",
+        alt: pageTitle,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
-    title: "About Meteoric | Web Development Agency for Founders",
-    description:
-      "Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.",
-    images: ["https://withmeteoric.vercel.app/og-image.png?v=20260508"],
+    title: pageTitle,
+    description: pageDesc,
+    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
 };
-
-import AboutPage from "@/page-content/About";
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://withmeteoric.vercel.app/" },
-    { "@type": "ListItem", position: 2, name: "About", item: "https://withmeteoric.vercel.app/about" },
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "About", item: `${SITE_URL}/about` },
   ],
 };
 

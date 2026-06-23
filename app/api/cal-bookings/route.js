@@ -5,11 +5,12 @@ const CAL_API = "https://api.cal.com/v2"
 
 export async function GET() {
   const supabase = await createClient()
-  if (supabase) {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+  if (!supabase) {
+    return NextResponse.json({ error: "Auth client unavailable" }, { status: 500 })
+  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const key = process.env.CALCOM_API_KEY

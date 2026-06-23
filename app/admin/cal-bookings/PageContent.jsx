@@ -1,18 +1,30 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X } from "lucide-react"
+import { useState, useEffect, useMemo, useRef, useCallback } from "react"
+import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X, Download, ChevronUp, ChevronDown } from "lucide-react"
 import { Calendar } from "@/Components/ui/calendar"
 import { createLeadFromBooking } from "../actions"
 import { formatDate, formatShort, formatTime, formatDateLong } from "@/lib/admin"
 import { cn } from "@/lib/utils"
 import { useToast } from "../_components/ToastContext"
 import { BookingStatusBadge } from "../_components/StatusBadge"
-import { Toolbar, FilterChip, ClearFiltersButton } from "../_components/Toolbar"
+import { Toolbar, FilterChip, ClearFiltersButton, SortDropdown } from "../_components/Toolbar"
 import { useFilters } from "../_components/useFilters"
 import { useFocusTrap } from "../_components/useFocusTrap"
+import { useShortcuts } from "../_components/useShortcuts"
+import { downloadCSV } from "../_components/csv-export"
 
 const EM = "\u2014"
+
+const CSV_COLUMNS = [
+  { label: "Title", accessor: (b) => b.title || "" },
+  { label: "Attendee Name", accessor: (b) => b.attendees?.[0]?.name || "" },
+  { label: "Attendee Email", accessor: (b) => b.attendees?.[0]?.email || "" },
+  { label: "Status", accessor: (b) => b.status || "" },
+  { label: "Date", accessor: (b) => formatDate(b.start) },
+  { label: "Duration (min)", accessor: (b) => b.duration || "" },
+  { label: "Description", accessor: (b) => b.description || "" },
+]
 
 function localDateStr(d) {
   if (!d) return ""
@@ -59,6 +71,15 @@ function getLocationLabel(booking) {
   return loc.type || "Meeting"
 }
 
+function SortIcon({ column, col, dir }) {
+  if (col !== column) return null;
+  return dir === "asc" ? (
+    <ChevronUp size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  ) : (
+    <ChevronDown size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  );
+}
+
 export default function CalBookingsPage() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -69,9 +90,10 @@ export default function CalBookingsPage() {
   const [formResetKey, setFormResetKey] = useState(0)
   const [converting, setConverting] = useState(false)
   const [convertMsg, setConvertMsg] = useState(null)
-  const { filters, setFilters } = useFilters();
-  const { search, status: statusFilter } = filters;
+  const { filters, setFilters, toggleColSort } = useFilters();
+  const { search, status: statusFilter, sort, col, dir } = filters;
   const addToast = useToast()
+  const searchRef = useRef(null);
 
   useEffect(() => {
     fetchBookings().then((res) => {
@@ -83,10 +105,44 @@ export default function CalBookingsPage() {
   const bookings = useMemo(() => data?.bookings || [], [data?.bookings])
   const error = data?.error
 
-  const sortedBookings = useMemo(
-    () => [...bookings].sort((a, b) => new Date(b.start) - new Date(a.start)),
-    [bookings],
-  )
+  const sortedBookings = useMemo(() => {
+    let result = [...bookings]
+    if (sort === "oldest") {
+      result.sort((a, b) => new Date(a.start) - new Date(b.start))
+    } else if (sort === "name") {
+      result.sort((a, b) => (a.title || "").localeCompare(b.title || ""))
+    } else if (sort === "status") {
+      result.sort((a, b) => (a.status || "").localeCompare(b.status || ""))
+    } else {
+      result.sort((a, b) => new Date(b.start) - new Date(a.start))
+    }
+    if (col && dir) {
+      result.sort((a, b) => {
+        let va, vb;
+        switch (col) {
+          case "title":
+            va = (a.title || "").toLowerCase(); vb = (b.title || "").toLowerCase();
+            return dir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+          case "attendee":
+            va = (a.attendees?.[0]?.name || "").toLowerCase();
+            vb = (b.attendees?.[0]?.name || "").toLowerCase();
+            return dir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+          case "status":
+            va = (a.status || "").toLowerCase(); vb = (b.status || "").toLowerCase();
+            return dir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+          case "date":
+            va = new Date(a.start).getTime(); vb = new Date(b.start).getTime();
+            return dir === "asc" ? va - vb : vb - va;
+          case "duration":
+            va = a.duration || 0; vb = b.duration || 0;
+            return dir === "asc" ? va - vb : vb - va;
+          default:
+            return 0;
+        }
+      });
+    }
+    return result
+  }, [bookings, sort, col, dir])
 
   const filteredBookings = useMemo(() => {
     let result = sortedBookings
@@ -127,6 +183,17 @@ export default function CalBookingsPage() {
   const selectedKey = selectedDate ? localDateStr(selectedDate) : ""
   const selectedDayBookings = selectedKey ? (bookingsByDate[selectedKey] || []) : []
 
+  useShortcuts(
+    useMemo(() => ({
+      "/": () => searchRef.current?.focus(),
+      "Escape": () => { if (selectedBooking) setSelectedBooking(null); },
+    }), [selectedBooking])
+  );
+
+  const handleExportCSV = useCallback(() => {
+    downloadCSV(filteredBookings, CSV_COLUMNS, "bookings");
+  }, [filteredBookings]);
+
   async function handleConvertToLead(e) {
     e.preventDefault()
     setConverting(true)
@@ -152,6 +219,8 @@ export default function CalBookingsPage() {
       </div>
     )
   }
+
+  const hasFilters = search || statusFilter !== "all";
 
   return (
     <div className="p-5 lg:p-8 space-y-5">
@@ -216,16 +285,46 @@ export default function CalBookingsPage() {
 
       {view === "table" && bookings.length > 0 && (
         <>
-          <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={filteredBookings.length}>
-            <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all" })} visible={!!search || statusFilter !== "all"} />
+          <Toolbar
+            search={search}
+            onSearchChange={(v) => setFilters({ search: v, page: 1 })}
+            resultCount={filteredBookings.length}
+            searchRef={searchRef}
+          >
+            <button
+              onClick={handleExportCSV}
+              className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+              aria-label="Export CSV"
+            >
+              <Download size={12} className="inline mr-1" />
+              CSV
+            </button>
+            <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all" })} visible={hasFilters} />
             <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
             {["ACCEPTED", "PENDING", "CANCELLED"].map((s) => (
               <FilterChip key={s} active={statusFilter === s} onClick={() => setFilters({ status: s, page: 1 })}>
                 {s.charAt(0) + s.slice(1).toLowerCase()}
               </FilterChip>
             ))}
+            <SortDropdown
+              value={sort}
+              onChange={(v) => setFilters({ sort: v })}
+              label="Sort bookings"
+              options={[
+                { value: "newest", label: "Newest" },
+                { value: "oldest", label: "Oldest" },
+                { value: "name", label: "Title" },
+                { value: "status", label: "Status" },
+              ]}
+            />
           </Toolbar>
-          <BookingsTable bookings={filteredBookings} onSelect={setSelectedBooking} />
+          <BookingsTable
+            bookings={filteredBookings}
+            onSelect={setSelectedBooking}
+            col={col}
+            dir={dir}
+            onColSort={toggleColSort}
+          />
         </>
       )}
 
@@ -341,18 +440,28 @@ export default function CalBookingsPage() {
   )
 }
 
-function BookingsTable({ bookings, onSelect }) {
+function BookingsTable({ bookings, onSelect, col, dir, onColSort }) {
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-white/[0.06]">
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Title</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Attendee</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Status</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Date</th>
-              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Duration</th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("title")}>
+                Title<SortIcon column="title" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("attendee")}>
+                Attendee<SortIcon column="attendee" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("status")}>
+                Status<SortIcon column="status" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("date")}>
+                Date<SortIcon column="date" col={col} dir={dir} />
+              </th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("duration")}>
+                Duration<SortIcon column="duration" col={col} dir={dir} />
+              </th>
             </tr>
           </thead>
           <tbody>

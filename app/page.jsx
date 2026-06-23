@@ -3,12 +3,13 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import HomePage from "@/page-content/Home";
+import { SITE_URL } from "@/seo.config";
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://withmeteoric.vercel.app/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
   ],
 };
 

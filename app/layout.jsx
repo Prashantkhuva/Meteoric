@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import ClientLayout from "./client-layout";
 import { Inter, DM_Sans } from "next/font/google";
 import ErrorBoundary from "@/Components/ErrorBoundary";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/seo.config";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,11 +17,16 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 });
 
+const metaTitle = "Meteoric — Web Development Agency for Startups & SaaS";
+const metaDesc =
+  "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
+const metaDescOg =
+  "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.";
+
 export const metadata = {
-  title: "Meteoric — Web Development Agency for Startups & SaaS",
-  description:
-    "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.",
-  metadataBase: new URL("https://withmeteoric.vercel.app"),
+  title: metaTitle,
+  description: metaDesc,
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",
@@ -28,30 +34,28 @@ export const metadata = {
   manifest: "/site.webmanifest",
   robots: "index, follow",
   openGraph: {
-    siteName: "Meteoric",
+    siteName: SITE_NAME,
     locale: "en_US",
     type: "website",
-    title: "Meteoric — Web Development Agency for Startups & SaaS",
-    description:
-      "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.",
-    url: "https://withmeteoric.vercel.app/",
+    title: metaTitle,
+    description: metaDescOg,
+    url: `${SITE_URL}/`,
     images: [
       {
-        url: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-        secureUrl: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
+        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         width: 1635,
         height: 962,
-        alt: "Meteoric — Web Development Agency for Startups & SaaS",
+        alt: metaTitle,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
-    title: "Meteoric — Web Development Agency for Startups & SaaS",
-    description:
-      "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.",
-    images: ["https://withmeteoric.vercel.app/og-image.png?v=20260508"],
+    title: metaTitle,
+    description: metaDescOg,
+    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
 };
 
@@ -68,26 +72,26 @@ export default function RootLayout({ children }) {
               "@graph": [
                 {
                   "@type": "Organization",
-                  "@id": "https://withmeteoric.vercel.app/#organization",
-                  name: "Meteoric",
-                  url: "https://withmeteoric.vercel.app/",
-                  logo: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
+                  "@id": `${SITE_URL}/#organization`,
+                  name: SITE_NAME,
+                  url: SITE_URL,
+                  logo: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
                   founder: { "@type": "Person", name: "Prashant Khuva" },
                 },
                 {
                   "@type": "WebSite",
-                  "@id": "https://withmeteoric.vercel.app/#website",
-                  name: "Meteoric",
-                  url: "https://withmeteoric.vercel.app/",
+                  "@id": `${SITE_URL}/#website`,
+                  name: SITE_NAME,
+                  url: SITE_URL,
                   publisher: {
-                    "@id": "https://withmeteoric.vercel.app/#organization",
+                    "@id": `${SITE_URL}/#organization`,
                   },
                 },
                 {
                   "@type": "ProfessionalService",
-                  "@id": "https://withmeteoric.vercel.app/#service",
-                  name: "Meteoric",
-                  url: "https://withmeteoric.vercel.app/",
+                  "@id": `${SITE_URL}/#service`,
+                  name: SITE_NAME,
+                  url: SITE_URL,
                   description:
                     "Full-stack web development, SaaS products, and landing pages for startups.",
                   areaServed: "Worldwide",

@@ -1,40 +1,42 @@
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/seo.config";
+import WorkPage from "@/page-content/Work";
+
+const pageTitle = "Our Work — Meteoric Portfolio | Web Development Projects";
+const pageDesc =
+  "Browse Meteoric's portfolio of shipped projects — landing pages, SaaS platforms, VS Code extensions, and more. Built for founders who ship.";
+
 export const metadata = {
-  title: "Our Work — Meteoric Portfolio | Web Development Projects",
-  description:
-    "Browse Meteoric's portfolio of shipped projects — landing pages, SaaS platforms, VS Code extensions, and more. Built for founders who ship.",
+  title: pageTitle,
+  description: pageDesc,
   openGraph: {
-    title: "Our Work — Meteoric Portfolio | Web Development Projects",
-    description:
-      "Browse Meteoric's portfolio of shipped projects — landing pages, SaaS platforms, VS Code extensions, and more. Built for founders who ship.",
-    url: "https://withmeteoric.vercel.app/work",
+    title: pageTitle,
+    description: pageDesc,
+    url: `${SITE_URL}/work`,
     images: [
       {
-        url: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
-        secureUrl: "https://withmeteoric.vercel.app/og-image.png?v=20260508",
+        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         width: 1635,
         height: 962,
-        alt: "Our Work — Meteoric Portfolio",
+        alt: pageTitle,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
-    title: "Our Work — Meteoric Portfolio | Web Development Projects",
-    description:
-      "Browse Meteoric's portfolio of shipped projects — landing pages, SaaS platforms, VS Code extensions, and more. Built for founders who ship.",
-    images: ["https://withmeteoric.vercel.app/og-image.png?v=20260508"],
+    title: pageTitle,
+    description: pageDesc,
+    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
 };
-
-import WorkPage from "@/page-content/Work";
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://withmeteoric.vercel.app/" },
-    { "@type": "ListItem", position: 2, name: "Work", item: "https://withmeteoric.vercel.app/work" },
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
   ],
 };
 

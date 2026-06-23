@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/admin";
 import { useToast } from "../_components/ToastContext";
 import { ConfirmDialog } from "../_components/ConfirmDialog";
 import { Pagination } from "../_components/Pagination";
-import { Toolbar, FilterChip, SortDropdown } from "../_components/Toolbar";
+import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
 import { BulkActionBar } from "../_components/BulkActionBar";
 import { IconButton } from "../_components/IconButton";
 import { FormField } from "../_components/FormField";
@@ -234,7 +234,7 @@ export default function ProjectsPage() {
         </button>
       </div>
 
-      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total}>
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total} searchRef={searchRef}>
         <button
           onClick={handleExportCSV}
           className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
@@ -243,6 +243,7 @@ export default function ProjectsPage() {
           <Download size={12} className="inline mr-1" />
           CSV
         </button>
+        <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", page: 1 })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
         {projectStatuses.map((s) => (
           <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setFilters({ status: s.value, page: 1 })}>
