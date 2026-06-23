@@ -150,14 +150,24 @@ export async function deleteClient(id) {
   const supabase = await createClient();
   if (!supabase) return { error: "Supabase not configured" };
 
+  // First check if the row exists
+  const { data: existing, error: checkErr } = await supabase
+    .from("clients")
+    .select("id, name")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (checkErr) return { error: "Check failed: " + checkErr.message, id, idType: typeof id };
+  if (!existing) return { error: "Client not found", id, idType: typeof id };
+
   const { data, error } = await supabase
     .from("clients")
     .delete()
     .eq("id", id)
     .select();
 
-  if (error) return { error: error.message, code: error.code, details: error.details, hint: error.hint };
-  return { success: true, deletedData: data };
+  if (error) return { error: error.message, code: error.code, details: error.details, hint: error.hint, id, idType: typeof id };
+  return { success: true, deletedData: data, found: existing.name, id, idType: typeof id };
 }
 
 export async function testClientDelete(id) {
