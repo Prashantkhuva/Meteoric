@@ -24,6 +24,30 @@ export async function GET(request) {
     });
   }
 
+  if (action === "delete-raw" && id) {
+    // Direct REST API call with anon key
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    const headers = {
+      "apikey": key,
+      "Authorization": `Bearer ${token || key}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation",
+    };
+    const res = await fetch(`${url}/rest/v1/clients?id=eq.${id}`, { method: "DELETE", headers });
+    const text = await res.text();
+    let body;
+    try { body = JSON.parse(text); } catch { body = text; }
+    return NextResponse.json({
+      status: res.status,
+      ok: res.ok,
+      body,
+      hasSession: !!session,
+    });
+  }
+
   if (action === "delete" && id) {
     // Check if it exists first
     const { data: before } = await supabase.from("clients").select("id").eq("id", Number(id)).maybeSingle();
@@ -32,11 +56,26 @@ export async function GET(request) {
     // Check if still exists
     const { data: after } = await supabase.from("clients").select("id").eq("id", Number(id)).maybeSingle();
     return NextResponse.json({
+      table: "clients",
       existedBefore: !!before,
       existsAfter: !!after,
       deletedData: data,
       deleteError: error?.message || null,
       deleteErrorObj: error,
+    });
+  }
+
+  if (action === "delete-lead" && id) {
+    // Same test but for leads
+    const { data: before } = await supabase.from("leads").select("id").eq("id", Number(id)).maybeSingle();
+    const { data, error } = await supabase.from("leads").delete().eq("id", Number(id)).select();
+    const { data: after } = await supabase.from("leads").select("id").eq("id", Number(id)).maybeSingle();
+    return NextResponse.json({
+      table: "leads",
+      existedBefore: !!before,
+      existsAfter: !!after,
+      deletedData: data,
+      deleteError: error?.message || null,
     });
   }
 
