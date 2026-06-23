@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { useFocusTrap } from "./useFocusTrap";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, onCancel, destructive, loading }) {
   const confirmRef = useRef(null);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { lockScroll, unlockScroll } from "./body-scroll-lock";
+import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 
 export function useFocusTrap(open) {
   const ref = useRef(null);

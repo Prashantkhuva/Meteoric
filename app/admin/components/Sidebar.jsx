@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
 import Logo from "@/components/sections/Logo";
-import { useFocusTrap } from "./useFocusTrap";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
