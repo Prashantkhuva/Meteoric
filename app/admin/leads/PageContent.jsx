@@ -56,6 +56,8 @@ export default function LeadsPage() {
   const [editingStatus, setEditingStatus] = useState(null);
   const [converting, setConverting] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [bulkConfirm, setBulkConfirm] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const deleteRef = useRef(null);
   const addToast = useToast();
@@ -103,6 +105,7 @@ export default function LeadsPage() {
 
   async function handleBulkDelete() {
     const ids = [...selected];
+    setIsDeleting(true);
     try {
       await Promise.all(ids.map((id) => deleteLead(id)));
       setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
@@ -110,9 +113,12 @@ export default function LeadsPage() {
       if (viewLead && ids.includes(viewLead.id)) setViewLead(null);
       addToast(`${ids.length} lead${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
+      setBulkConfirm(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+      setBulkConfirm(null);
     }
+    setIsDeleting(false);
   }
 
   async function handleBulkStatusChange(newStatus) {
@@ -170,16 +176,19 @@ export default function LeadsPage() {
   async function handleDelete() {
     const id = deleteRef.current;
     if (!id) return;
-    setDeleteTarget(null);
+    setIsDeleting(true);
     try {
       await deleteLead(id);
       setLeads((prev) => prev.filter((l) => l.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewLead?.id === id) setViewLead(null);
       addToast("Lead deleted", "success");
+      setDeleteTarget(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+      setDeleteTarget(null);
     }
+    setIsDeleting(false);
   }
 
   async function handleAddLead(formData) {
@@ -314,7 +323,7 @@ export default function LeadsPage() {
       <BulkActionBar
         selectedCount={selected.size}
         onClear={() => setSelected(new Set())}
-        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={statusList}
       />
@@ -327,8 +336,19 @@ export default function LeadsPage() {
         message="Are you sure you want to delete this lead? This action cannot be undone."
         confirmLabel="Delete"
         destructive
+        loading={isDeleting}
         onConfirm={handleDelete}
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={() => { if (!isDeleting) setDeleteTarget(null) }}
+      />
+      <ConfirmDialog
+        open={bulkConfirm === "delete"}
+        title="Delete leads"
+        message={`Are you sure you want to delete ${selected.size} lead${selected.size !== 1 ? "s" : ""}? This action cannot be undone.`}
+        confirmLabel="Delete All"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => { if (!isDeleting) setBulkConfirm(null) }}
       />
     </div>
   );

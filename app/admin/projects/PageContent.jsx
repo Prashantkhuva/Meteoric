@@ -69,6 +69,8 @@ export default function ProjectsPage() {
   const [showNew, setShowNew] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [bulkConfirm, setBulkConfirm] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
   const searchRef = useRef(null);
@@ -119,6 +121,7 @@ export default function ProjectsPage() {
 
   async function handleBulkDelete() {
     const ids = [...selected];
+    setIsDeleting(true);
     try {
       await Promise.all(ids.map((id) => deleteProject(id)));
       setProjects((prev) => prev.filter((p) => !ids.includes(p.id)));
@@ -126,9 +129,12 @@ export default function ProjectsPage() {
       if (viewProject && ids.includes(viewProject.id)) setViewProject(null);
       addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
+      setBulkConfirm(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+      setBulkConfirm(null);
     }
+    setIsDeleting(false);
   }
 
   async function handleBulkStatusChange(newStatus) {
@@ -183,16 +189,19 @@ export default function ProjectsPage() {
   }
 
   async function handleDelete(id) {
-    setDeleteTarget(null);
+    setIsDeleting(true);
     try {
       await deleteProject(id);
       setProjects((prev) => prev.filter((p) => p.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewProject?.id === id) setViewProject(null);
       addToast("Project deleted", "success");
+      setDeleteTarget(null);
     } catch (err) {
       addToast(err.message || "Failed to delete project", "error");
+      setDeleteTarget(null);
     }
+    setIsDeleting(false);
   }
 
   if (loading) {
@@ -312,7 +321,7 @@ export default function ProjectsPage() {
       <BulkActionBar
         selectedCount={selected.size}
         onClear={() => setSelected(new Set())}
-        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={projectStatuses}
       />
@@ -350,8 +359,19 @@ export default function ProjectsPage() {
         message="Are you sure you want to delete this project? This action cannot be undone."
         confirmLabel="Delete"
         destructive
+        loading={isDeleting}
         onConfirm={() => handleDelete(deleteTarget)}
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={() => { if (!isDeleting) setDeleteTarget(null) }}
+      />
+      <ConfirmDialog
+        open={bulkConfirm === "delete"}
+        title="Delete projects"
+        message={`Are you sure you want to delete ${selected.size} project${selected.size !== 1 ? "s" : ""}? This action cannot be undone.`}
+        confirmLabel="Delete All"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => { if (!isDeleting) setBulkConfirm(null) }}
       />
     </div>
   );

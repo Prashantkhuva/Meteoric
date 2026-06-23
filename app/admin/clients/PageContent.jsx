@@ -52,6 +52,8 @@ export default function ClientsPage() {
   const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [bulkConfirm, setBulkConfirm] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
   const searchRef = useRef(null);
@@ -98,6 +100,7 @@ export default function ClientsPage() {
 
   async function handleBulkDelete() {
     const ids = [...selected];
+    setIsDeleting(true);
     try {
       await Promise.all(ids.map((id) => deleteClient(id)));
       setClients((prev) => prev.filter((c) => !ids.includes(c.id)));
@@ -105,9 +108,12 @@ export default function ClientsPage() {
       if (viewClient && ids.includes(viewClient.id)) setViewClient(null);
       addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
+      setBulkConfirm(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+      setBulkConfirm(null);
     }
+    setIsDeleting(false);
   }
 
   async function handleBulkStatusChange(newStatus) {
@@ -157,16 +163,19 @@ export default function ClientsPage() {
   }
 
   async function handleDelete(id) {
-    setDeleteTarget(null);
+    setIsDeleting(true);
     try {
       await deleteClient(id);
       setClients((prev) => prev.filter((c) => c.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
+      setDeleteTarget(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+      setDeleteTarget(null);
     }
+    setIsDeleting(false);
   }
 
   if (loading) {
@@ -286,7 +295,7 @@ export default function ClientsPage() {
       <BulkActionBar
         selectedCount={selected.size}
         onClear={() => setSelected(new Set())}
-        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={clientStatusList}
       />
@@ -299,8 +308,19 @@ export default function ClientsPage() {
         message="Are you sure you want to delete this client? This action cannot be undone."
         confirmLabel="Delete"
         destructive
+        loading={isDeleting}
         onConfirm={() => handleDelete(deleteTarget)}
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={() => { if (!isDeleting) setDeleteTarget(null) }}
+      />
+      <ConfirmDialog
+        open={bulkConfirm === "delete"}
+        title="Delete clients"
+        message={`Are you sure you want to delete ${selected.size} client${selected.size !== 1 ? "s" : ""}? This action cannot be undone.`}
+        confirmLabel="Delete All"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => { if (!isDeleting) setBulkConfirm(null) }}
       />
     </div>
   );

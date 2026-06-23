@@ -68,6 +68,8 @@ export default function ProposalsPage() {
   const [showNewProposal, setShowNewProposal] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [bulkConfirm, setBulkConfirm] = useState(null);
   const [sending, setSending] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const router = useRouter();
@@ -129,6 +131,7 @@ export default function ProposalsPage() {
 
   async function handleBulkDelete() {
     const ids = [...selected];
+    setIsDeleting(true);
     try {
       await Promise.all(ids.map((id) => deleteProposal(id)));
       setProposals((prev) => prev.filter((p) => !ids.includes(p.id)));
@@ -136,9 +139,12 @@ export default function ProposalsPage() {
       if (viewProposal && ids.includes(viewProposal.id)) setViewProposal(null);
       addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
+      setBulkConfirm(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+      setBulkConfirm(null);
     }
+    setIsDeleting(false);
   }
 
   async function handleExportCSV() {
@@ -175,16 +181,19 @@ export default function ProposalsPage() {
   }
 
   async function handleDelete(id) {
-    setDeleteTarget(null);
+    setIsDeleting(true);
     try {
       await deleteProposal(id);
       setProposals((prev) => prev.filter((p) => p.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewProposal?.id === id) setViewProposal(null);
       addToast("Proposal deleted", "success");
+      setDeleteTarget(null);
     } catch (err) {
       addToast(err.message || "Failed to delete proposal", "error");
+      setDeleteTarget(null);
     }
+    setIsDeleting(false);
   }
 
   function handleEdit(proposal) {
@@ -326,7 +335,7 @@ export default function ProposalsPage() {
       <BulkActionBar
         selectedCount={selected.size}
         onClear={() => setSelected(new Set())}
-        onDelete={selected.size > 0 ? handleBulkDelete : undefined}
+        onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
       />
 
       <ProposalFormModal
@@ -365,8 +374,19 @@ export default function ProposalsPage() {
         message="Are you sure you want to delete this proposal? This action cannot be undone."
         confirmLabel="Delete"
         destructive
+        loading={isDeleting}
         onConfirm={() => handleDelete(deleteTarget)}
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={() => { if (!isDeleting) setDeleteTarget(null) }}
+      />
+      <ConfirmDialog
+        open={bulkConfirm === "delete"}
+        title="Delete proposals"
+        message={`Are you sure you want to delete ${selected.size} proposal${selected.size !== 1 ? "s" : ""}? This action cannot be undone.`}
+        confirmLabel="Delete All"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => { if (!isDeleting) setBulkConfirm(null) }}
       />
     </div>
   );
