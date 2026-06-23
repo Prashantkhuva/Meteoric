@@ -75,22 +75,12 @@ export async function convertLeadToClient(id) {
     .insert({
       name: lead.name,
       email: lead.email,
+      phone: lead.phone,
       company: lead.company,
       status: "onboarding",
     });
 
   if (insertError) throw new Error(insertError.message);
-
-  if (lead.phone) {
-    const { data: newClient } = await supabase
-      .from("clients")
-      .select("id")
-      .eq("email", lead.email)
-      .single();
-    if (newClient) {
-      await supabase.from("clients").update({ phone: lead.phone }).eq("id", newClient.id);
-    }
-  }
 
   const { error: updateError } = await supabase
     .from("leads")
