@@ -150,24 +150,42 @@ export async function deleteClient(id) {
   const supabase = await createClient();
   if (!supabase) return { error: "Supabase not configured" };
 
-  // First check if the row exists
-  const { data: existing, error: checkErr } = await supabase
-    .from("clients")
-    .select("id, name")
-    .eq("id", id)
-    .maybeSingle();
+  // Get the auth session from the SSR client
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) return { error: "Session error: " + sessionError.message, id, idType: typeof id };
 
-  if (checkErr) return { error: "Check failed: " + checkErr.message, id, idType: typeof id };
-  if (!existing) return { error: "Client not found", id, idType: typeof id };
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  const token = session?.access_token;
 
-  const { data, error } = await supabase
-    .from("clients")
-    .delete()
-    .eq("id", id)
-    .select();
+  const headers = {
+    "apikey": key,
+    "Content-Type": "application/json",
+    "Prefer": "return=representation",
+  };
+  // Use session token if available, otherwise fall back to anon key
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    headers["Authorization"] = `Bearer ${key}`;
+  }
 
-  if (error) return { error: error.message, code: error.code, details: error.details, hint: error.hint, id, idType: typeof id };
-  return { success: true, deletedData: data, found: existing.name, id, idType: typeof id };
+  const res = await fetch(`${url}/rest/v1/clients?id=eq.${id}`, {
+    method: "DELETE",
+    headers,
+  });
+
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch { data = text; }
+
+  if (!res.ok) return {
+    error: `HTTP ${res.status}: ${typeof data === "string" ? data.substring(0, 200) : JSON.stringify(data)}`,
+    hasSession: !!session,
+    id, idType: typeof id,
+  };
+
+  return { success: true, deletedData: data, hasSession: !!session, id, idType: typeof id };
 }
 
 export async function testClientDelete(id) {
