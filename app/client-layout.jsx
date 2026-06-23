@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "@/Components/Navbar";
-import Footer from "@/Components/Footer";
-import SmoothScroll from "@/Components/ui/SmoothScroll";
-import { initGtag, trackPageView } from "@/analytics/gtag";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import SmoothScroll from "@/components/ui/SmoothScroll";
+import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();

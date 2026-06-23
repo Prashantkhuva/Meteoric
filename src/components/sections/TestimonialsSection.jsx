@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, ChevronLeft, ChevronRight, Star, Plus } from "lucide-react";
-import { buildFaqJsonLd } from "@/seo/jsonLd";
+import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
 const testimonials = [
   {

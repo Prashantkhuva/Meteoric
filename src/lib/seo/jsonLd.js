@@ -1,4 +1,4 @@
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/seo.config";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo/config";
 
 const SITE_WEBSITE_ID = `${SITE_URL}/#website`;
 const SITE_ORG_ID = `${SITE_URL}/#organization`;

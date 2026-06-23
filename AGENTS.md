@@ -15,26 +15,43 @@
 
 ## Project Structure
 ```
-app/          — Next.js App Router pages + API routes
-├── admin/    — Admin panel (leads, clients, proposals, invoices, projects)
+app/              — Next.js App Router pages + API routes
+├── (marketing)/  — Public pages route group
+│   ├── about/
+│   ├── work/
+│   └── page.jsx  — Home
+├── admin/        — Admin panel (leads, clients, proposals, invoices, projects)
 │   ├── actions.js           — Server actions (CRUD + send email)
-│   ├── _components/         — Shared admin UI (Checkbox, ConfirmDialog, etc.)
+│   ├── components/          — Admin UI (Checkbox, ConfirmDialog, etc.)
 │   └── {leads,clients,...}/ — PageContent.jsx pattern per resource
-├── preview/  — Invoice & proposal PDF preview routes
-├── login/    — Auth pages
-├── api/      — API routes
-└── layout.jsx — Root layout with SEO, fonts, Analytics
+├── preview/      — Invoice & proposal PDF preview routes
+├── login/        — Auth pages
+├── api/          — API routes
+├── layout.jsx    — Root layout with SEO, fonts, Analytics
+└── client-layout.jsx — Client layout wrapper
 src/
-├── Components/ — Shared React components (Navbar, Hero, etc.)
-├── lib/        — Utilities (client.js, server.js, email.js, resend.js, etc.)
-├── emails/     — React Email templates (proposal-email, invoice-email)
-├── page-content/ — Page-level content components
-├── data/       — Static data
-├── seo/        — SEO utilities
-└── index.css   — Tailwind entry + theme tokens
-public/         — Static assets (logo, OG image, etc.)
-supabase/       — Migrations + seed
-scripts/        — Build/utility scripts
+├── components/
+│   ├── layout/   — Navbar, Footer, NavBar modal
+│   ├── pages/    — Page-level content (Home, About, Work, NotFound)
+│   ├── sections/ — Feature sections (Hero, Process, Projects, etc.)
+│   └── ui/       — shadcn primitives (button, card, table, etc.)
+├── lib/
+│   ├── supabase/ — client.js, server.js, admin.js
+│   ├── email/    — email.js, resend.js
+│   ├── seo/      — config.js, jsonLd.js
+│   ├── analytics/— gtag.js, measurementId.js
+│   ├── actions.js — Server actions (lead creation)
+│   ├── csv-export.js
+│   ├── body-scroll-lock.js
+│   └── utils.js
+├── hooks/        — useFilters, useFocusTrap, useShortcuts
+├── config/       — site-url.js, admin-tokens.js
+├── data/         — Static data (projects.js)
+├── emails/       — React Email templates
+└── index.css     — Tailwind entry + theme tokens
+public/           — Static assets (logo, OG image, etc.)
+supabase/         — Migrations + seed
+scripts/          — Build/utility scripts (generate-sitemap, proxy)
 ```
 
 ## Database
@@ -46,7 +63,7 @@ scripts/        — Build/utility scripts
 ## Admin Panel
 - All pages use `PageContent.jsx` pattern (client component)
 - Server actions in `app/admin/actions.js`
-- Custom `Checkbox` component at `app/admin/_components/Checkbox.jsx`
+- Custom `Checkbox` component at `app/admin/components/Checkbox.jsx`
 - Delete confirmations use `ConfirmDialog` with `loading` prop
 - Pagination: 15 items per page
 - Status transitions: draft → sent (leads/proposals), draft → sent → paid/overdue (invoices)

@@ -1,10 +1,10 @@
-import Hero from "@/Components/Hero";
-import Projects from "@/Components/Projects";
-import TransitionSection from "@/Components/TransitionSection";
-import ProcessSection from "@/Components/ProcessSection";
-import CapabilitiesSection from "@/Components/CapabilitySection";
-import TestimonialsSection from "@/Components/TestimonialsSection";
-import LeadCaptureSection from "@/Components/LeadCaptureSection";
+import Hero from "@/components/sections/Hero";
+import Projects from "@/components/sections/Projects";
+import TransitionSection from "@/components/sections/TransitionSection";
+import ProcessSection from "@/components/sections/ProcessSection";
+import CapabilitiesSection from "@/components/sections/CapabilitySection";
+import TestimonialsSection from "@/components/sections/TestimonialsSection";
+import LeadCaptureSection from "@/components/sections/LeadCaptureSection";
 
 export default function Home() {
   return (

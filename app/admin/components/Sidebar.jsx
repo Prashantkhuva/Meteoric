@@ -17,7 +17,7 @@ import {
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
-import Logo from "@/Components/Logo";
+import Logo from "@/components/sections/Logo";
 import { useFocusTrap } from "./useFocusTrap";
 
 const links = [

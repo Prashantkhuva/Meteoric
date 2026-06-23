@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { ProjectCardMobile } from "@/Components/Projects";
+import { ProjectCardMobile } from "@/components/sections/Projects";
 import { projects } from "@/data/projects";
 
 export default function WorkPage() {

@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient } from "@/lib/server";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { getSiteUrl } from "@/lib/site-url";
-import { sendProposalEmail, sendInvoiceEmail } from "@/lib/email";
+import { getSiteUrl } from "@/config/site-url";
+import { sendProposalEmail, sendInvoiceEmail } from "@/lib/email/email";
 
 export async function signOut() {
   const supabase = await createClient();

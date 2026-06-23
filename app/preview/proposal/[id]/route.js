@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/server";
+import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/seo.config";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 export async function GET(_request, { params }) {
   const { id } = await params;
@@ -63,7 +63,7 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
 .proposal { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
 .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-.brand img { height: 40px; width: auto; display: block; }
+.brand img { height: 32px; width: 168px; display: block; }
 .meta { text-align: right; }
 .meta .title { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
 .meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: rgba(255,255,255,0.3); }

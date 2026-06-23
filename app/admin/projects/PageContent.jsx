@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { createClient } from "@/lib/client";
+import { createClient } from "@/lib/supabase/client";
 import {
   createProject, updateProject, deleteProject, getClients, getProjectsPaginated,
 } from "../actions";
@@ -11,19 +11,19 @@ import {
   DollarSign, Clock, Target, CheckCircle, AlertCircle, Download,
   ChevronUp, ChevronDown,
 } from "lucide-react";
-import { formatDate } from "@/lib/admin";
-import { useToast } from "../_components/ToastContext";
-import { ConfirmDialog } from "../_components/ConfirmDialog";
-import { Pagination } from "../_components/Pagination";
-import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
-import { BulkActionBar } from "../_components/BulkActionBar";
-import { IconButton } from "../_components/IconButton";
-import { FormField } from "../_components/FormField";
-import { useFilters } from "../_components/useFilters";
-import { useFocusTrap } from "../_components/useFocusTrap";
-import { useShortcuts } from "../_components/useShortcuts";
-import { downloadCSV } from "../_components/csv-export";
-import Checkbox from "../_components/Checkbox";
+import { formatDate } from "@/lib/supabase/admin";
+import { useToast } from "../components/ToastContext";
+import { ConfirmDialog } from "../components/ConfirmDialog";
+import { Pagination } from "../components/Pagination";
+import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
+import { BulkActionBar } from "../components/BulkActionBar";
+import { IconButton } from "../components/IconButton";
+import { FormField } from "../components/FormField";
+import { useFilters } from "@/hooks/useFilters";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useShortcuts } from "@/hooks/useShortcuts";
+import { downloadCSV } from "@/lib/csv-export";
+import Checkbox from "../components/Checkbox";
 
 const PAGE_SIZE = 15;
 

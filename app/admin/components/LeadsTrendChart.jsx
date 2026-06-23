@@ -6,7 +6,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/Components/ui/chart"
+} from "@/components/ui/chart"
 
 const chartConfig = {
   leads: {

@@ -2,8 +2,8 @@ import "../src/index.css";
 import { Analytics } from "@vercel/analytics/react";
 import ClientLayout from "./client-layout";
 import { Inter, DM_Sans } from "next/font/google";
-import ErrorBoundary from "@/Components/ErrorBoundary";
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/seo.config";
+import ErrorBoundary from "@/components/sections/ErrorBoundary";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const inter = Inter({
   subsets: ["latin"],

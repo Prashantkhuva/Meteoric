@@ -1,4 +1,4 @@
-import { resend } from "@/lib/resend";
+import { resend } from "@/lib/email/resend";
 import NewLeadEmail from "@/emails/new-lead-notification";
 import LeadAutoReply from "@/emails/lead-autoreply";
 import ProposalEmail from "@/emails/proposal-email";

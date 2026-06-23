@@ -1,7 +1,7 @@
 "use server";
 
-import { createClient } from "@/lib/server";
-import { sendNewLeadNotification, sendLeadAutoReply } from "@/lib/email";
+import { createClient } from "@/lib/supabase/server";
+import { sendNewLeadNotification, sendLeadAutoReply } from "@/lib/email/email";
 
 export async function createLead(data) {
   try {

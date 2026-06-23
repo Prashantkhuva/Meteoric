@@ -1,5 +1,5 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/seo.config";
-import WorkPage from "@/page-content/Work";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import WorkPage from "@/components/pages/Work";
 
 const pageTitle = "Our Work — Meteoric Portfolio | Web Development Projects";
 const pageDesc =

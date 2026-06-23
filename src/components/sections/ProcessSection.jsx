@@ -3,7 +3,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { buildHowToJsonLd } from "@/seo/jsonLd";
+import { buildHowToJsonLd } from "@/lib/seo/jsonLd";
 
 gsap.registerPlugin(ScrollTrigger);
 

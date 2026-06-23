@@ -1,5 +1,5 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/seo.config";
-import AboutPage from "@/page-content/About";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import AboutPage from "@/components/pages/About";
 
 const pageTitle = "About Meteoric | Web Development Agency for Founders";
 const pageDesc =

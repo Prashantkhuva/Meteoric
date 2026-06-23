@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import HomePage from "@/page-content/Home";
-import { SITE_URL } from "@/seo.config";
+import HomePage from "@/components/pages/Home";
+import { SITE_URL } from "@/lib/seo/config";
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",

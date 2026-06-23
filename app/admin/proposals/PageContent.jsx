@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { createClient } from "@/lib/client";
+import { createClient } from "@/lib/supabase/client";
 import {
   getLeads, createProposal, updateProposal, deleteProposal, sendProposal, getProposalsPaginated,
 } from "../actions";
@@ -11,22 +11,22 @@ import {
   X, Plus, Eye, Trash2, Send, FileText, Calendar, Building2, Pencil,
   ArrowUpRight, MessageCircle, Download, ChevronUp, ChevronDown, Printer,
 } from "lucide-react";
-import { formatDate } from "@/lib/admin";
-import { useToast } from "../_components/ToastContext";
-import { StatusSelect } from "../_components/StatusSelect";
-import { ConfirmDialog } from "../_components/ConfirmDialog";
-import { Pagination } from "../_components/Pagination";
-import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../_components/Toolbar";
-import { BulkActionBar } from "../_components/BulkActionBar";
-import { IconButton } from "../_components/IconButton";
-import { FormField } from "../_components/FormField";
-import { useFilters } from "../_components/useFilters";
-import { useFocusTrap } from "../_components/useFocusTrap";
-import { useShortcuts } from "../_components/useShortcuts";
-import { downloadCSV } from "../_components/csv-export";
-import { getSiteUrl } from "@/lib/site-url";
-import Checkbox from "../_components/Checkbox";
-import { RichEditor } from "../_components/RichEditor";
+import { formatDate } from "@/lib/supabase/admin";
+import { useToast } from "../components/ToastContext";
+import { StatusSelect } from "../components/StatusSelect";
+import { ConfirmDialog } from "../components/ConfirmDialog";
+import { Pagination } from "../components/Pagination";
+import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
+import { BulkActionBar } from "../components/BulkActionBar";
+import { IconButton } from "../components/IconButton";
+import { FormField } from "../components/FormField";
+import { useFilters } from "@/hooks/useFilters";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useShortcuts } from "@/hooks/useShortcuts";
+import { downloadCSV } from "@/lib/csv-export";
+import { getSiteUrl } from "@/config/site-url";
+import Checkbox from "../components/Checkbox";
+import { RichEditor } from "../components/RichEditor";
 
 const PAGE_SIZE = 15;
 

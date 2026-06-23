@@ -2,11 +2,11 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/client";
-import { Sidebar } from "./_components/Sidebar";
-import { TopBar } from "./_components/TopBar";
-import { ToastProvider } from "./_components/Toast";
-import ErrorBoundary from "@/Components/ErrorBoundary";
+import { createClient } from "@/lib/supabase/client";
+import { Sidebar } from "./components/Sidebar";
+import { TopBar } from "./components/TopBar";
+import { ToastProvider } from "./components/Toast";
+import ErrorBoundary from "@/components/sections/ErrorBoundary";
 
 const pageTitles = {
   "/admin": "Dashboard",

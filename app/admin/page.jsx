@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/server";
-import DashboardClient from "./_components/DashboardClient";
+import { createClient } from "@/lib/supabase/server";
+import DashboardClient from "./components/DashboardClient";
 
 async function getStats() {
   const supabase = await createClient();
