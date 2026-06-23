@@ -419,7 +419,7 @@ function DesktopTable({ items, onView, onEdit, onDelete, selected, onToggleSelec
                   {p.name}
                 </button>
                 {p.services?.length > 0 && (
-                  <span className="block text-xs text-white/25 mt-0.5">{p.services.join(", ")}</span>
+                  <span className="block text-xs text-white/25 mt-0.5">{p.services}</span>
                 )}
               </td>
               <td className="px-5 py-3.5">
@@ -530,7 +530,7 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
 
   if (!open) return null;
 
-  const servicesStr = project?.services?.length ? project.services.join(", ") : "";
+  const servicesStr = project?.services || "";
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 py-[5vh]" role="dialog" aria-modal="true" aria-labelledby="project-form-title">
@@ -771,7 +771,7 @@ function ProjectDetailDrawer({ project, onClose, onEdit, onDelete }) {
                       <CheckCircle size={12} />
                       Services
                     </div>
-                    <p className="text-sm text-white/60">{project.services.join(", ")}</p>
+                    <p className="text-sm text-white/60">{project.services}</p>
                   </div>
                 )}
               </div>
