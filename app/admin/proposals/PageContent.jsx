@@ -635,7 +635,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="proposal-form-title">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative w-full max-w-2xl max-h-[calc(100dvh-32px)] overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
+      <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative w-full max-w-2xl max-h-full overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/[0.06] bg-[#0c0c0c] px-6 py-4">
           <h2 id="proposal-form-title" className="text-lg font-semibold tracking-tight text-white/90">{title}</h2>
           <button
@@ -646,7 +646,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
             <X size={16} />
           </button>
         </div>
-        <div ref={scrollRef} onWheel={handleWheel} className="px-6 py-5">
+        <div className="px-6 py-5">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField label="Title" name="title" placeholder="Web Development Proposal" defaultValue={proposal?.title || ""} required />
