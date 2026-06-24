@@ -1,22 +1,5 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "rules": [
-    "All id columns are bigint generated always as identity — resolve foreign keys via subqueries (email/name), never hardcode IDs",
-    "services column is text, not an array — display directly, never call .join()",
-    "Resend test mode (onboarding@resend.dev) only delivers to ADMIN_EMAIL (work.prashantkhuva@gmail.com)",
-    "Use ConfirmDialog component with loading prop for delete states",
-    "Checkbox component at app/admin/_components/Checkbox.jsx — custom button[role=\"checkbox\"], not native input",
-    "Dark theme: bg #070707, card bg #0a0a0a, text rgba(255,255,255,0.85), accent #EAEFFF",
-    "Fonts: Inter (primary) via --font-inter, DM Sans (secondary) via --font-dm-sans",
-    "Path alias: @/* maps to src/*",
-    "JavaScript (JSX), not TypeScript",
-    "Tailwind CSS v4 — CSS-first config (no tailwind.config.js), @theme directive in src/index.css",
-    "Next.js App Router with app/ directory",
-    "ESLint v10 flat config — no Prettier",
-    "Animations: GSAP for scroll/hero, Framer Motion for UI interactions, Lenis for smooth scroll",
-    "Admin pages: all use PageContent.jsx pattern, server actions in app/admin/actions.js",
-    "WhatsApp sharing: wa.me links with encodeURIComponent + getSiteUrl() for preview URLs",
-    "PDF generation: via window.print() on preview routes at app/preview/{proposal,invoice}/[id]/route.js"
-  ],
-  "formatters": ["eslint"]
+  "instructions": [
+    "AGENTS.md"
+  ]
 }
