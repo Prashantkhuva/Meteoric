@@ -18,6 +18,15 @@ import { Pagination } from "../components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
 import { BulkActionBar } from "../components/BulkActionBar";
 import { IconButton } from "../components/IconButton";
+
+function displayServices(val) {
+  if (!val) return "";
+  if (typeof val === "string" && val.startsWith("[")) {
+    try { return JSON.parse(val).join(", "); } catch { return val; }
+  }
+  if (Array.isArray(val)) return val.join(", ");
+  return val;
+}
 import { FormField } from "../components/FormField";
 import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -436,7 +445,7 @@ function DesktopTable({ items, onView, onEdit, onDelete, selected, onToggleSelec
                   {p.name}
                 </button>
                 {p.services?.length > 0 && (
-                  <span className="block text-xs text-white/25 mt-0.5">{p.services}</span>
+                  <span className="block text-xs text-white/25 mt-0.5">{displayServices(p.services)}</span>
                 )}
               </td>
               <td className="px-5 py-3.5">
@@ -545,7 +554,7 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
 
   if (!open) return null;
 
-  const servicesStr = project?.services || "";
+  const servicesStr = displayServices(project?.services) || "";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="project-form-title">
@@ -786,7 +795,7 @@ function ProjectDetailDrawer({ project, onClose, onEdit, onDelete }) {
                       <CheckCircle size={12} />
                       Services
                     </div>
-                    <p className="text-sm text-white/60">{project.services}</p>
+                    <p className="text-sm text-white/60">{displayServices(project.services)}</p>
                   </div>
                 )}
               </div>

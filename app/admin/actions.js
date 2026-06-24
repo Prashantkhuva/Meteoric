@@ -572,10 +572,6 @@ export async function createProject(formData) {
   const supabase = await getSupabase();
   const data = validateFormData(projectSchema, formData);
 
-  const parsedServices = data.services
-    ? data.services.split(",").map((s) => s.trim()).filter(Boolean)
-    : [];
-
   const { error } = await supabase.from("projects").insert({
     client_id: data.client_id,
     name: data.name,
@@ -584,7 +580,7 @@ export async function createProject(formData) {
     start_date: data.start_date,
     deadline: data.deadline,
     budget: data.budget,
-    services: parsedServices,
+    services: data.services || null,
     notes: data.notes,
   });
 
@@ -596,10 +592,6 @@ export async function updateProject(formData) {
   const supabase = await getSupabase();
   const data = validateFormData(projectSchema, formData);
 
-  const parsedServices = data.services
-    ? data.services.split(",").map((s) => s.trim()).filter(Boolean)
-    : [];
-
   const { error } = await supabase
     .from("projects")
     .update({
@@ -610,7 +602,7 @@ export async function updateProject(formData) {
       start_date: data.start_date,
       deadline: data.deadline,
       budget: data.budget,
-      services: parsedServices,
+      services: data.services || null,
       notes: data.notes,
       updated_at: new Date().toISOString(),
     })
