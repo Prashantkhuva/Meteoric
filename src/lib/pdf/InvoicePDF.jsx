@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     borderBottom: `1px solid ${colors.border}`,
   },
   logo: {
-    width: 130,
-    height: 26,
+    width: 105,
+    height: 70,
   },
   meta: {
     alignItems: "flex-end",

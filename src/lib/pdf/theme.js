@@ -5,7 +5,7 @@ export const colors = {
   text: "rgba(255,255,255,0.85)",
   textSecondary: "rgba(255,255,255,0.5)",
   textMuted: "rgba(255,255,255,0.25)",
-  accent: "#EAEFFF",
+  accent: "#EAEAFF",
   accentMuted: "rgba(234,234,255,0.12)",
   danger: "#f87171",
 };
