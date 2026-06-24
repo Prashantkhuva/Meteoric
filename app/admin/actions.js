@@ -326,9 +326,21 @@ export async function sendProposal(id) {
   }
 }
 
+function parseFormData(formData) {
+  const raw = Object.fromEntries(formData.entries());
+  if (typeof raw.items === "string") {
+    try {
+      raw.items = JSON.parse(raw.items);
+    } catch {
+      raw.items = [];
+    }
+  }
+  return raw;
+}
+
 export async function createInvoice(formData) {
   const supabase = await getSupabase();
-  const data = validateFormData(invoiceSchema, formData);
+  const data = invoiceSchema.parse(parseFormData(formData));
 
   const { count } = await supabase
     .from("invoices")
@@ -364,7 +376,7 @@ export async function createInvoice(formData) {
 
 export async function updateInvoice(formData) {
   const supabase = await getSupabase();
-  const data = validateFormData(invoiceSchema, formData);
+  const data = invoiceSchema.parse(parseFormData(formData));
 
   const subtotal = data.items.reduce(
     (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
