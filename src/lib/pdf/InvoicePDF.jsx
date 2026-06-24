@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
     fontSize: fontSizes.body,
     color: colors.text,
+    lineHeight: 1.5,
   },
   topBar: {
     height: 3,
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.tight,
     letterSpacing: 1.5,
   },
-  partyDivider: {
+  partyAccent: {
     width: 28,
     height: 1.5,
     backgroundColor: colors.accent,
@@ -81,12 +82,13 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.title,
     fontWeight: 600,
     color: colors.text,
-    marginBottom: 2,
+    marginBottom: 3,
   },
   partyDetail: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    marginBottom: 1,
+    marginBottom: 2,
+    lineHeight: 1.5,
   },
   toBlock: {
     alignItems: "flex-end",
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    borderBottom: `1px solid ${colors.accentMuted}`,
+    borderBottom: `1px solid ${colors.border}`,
     paddingBottom: spacing.element,
     marginBottom: spacing.tight,
   },
@@ -109,19 +111,20 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     flexDirection: "row",
-    borderBottom: `1px solid ${colors.borderLight}`,
+    borderBottom: `1px solid ${colors.border}`,
     paddingVertical: spacing.element,
   },
   tableCell: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
+    lineHeight: 1.5,
   },
   tableCellFirst: {
     color: colors.text,
   },
-  cellDesc: { flex: 3 },
-  cellQty: { flex: 1, textAlign: "right" },
-  cellRate: { flex: 1.5, textAlign: "right" },
+  cellDesc: { flex: 3, paddingRight: 12 },
+  cellQty: { flex: 1, textAlign: "right", paddingRight: 8 },
+  cellRate: { flex: 1.5, textAlign: "right", paddingRight: 8 },
   cellAmount: { flex: 1.5, textAlign: "right" },
   totals: {
     width: 260,
@@ -133,10 +136,11 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.tight,
     fontSize: fontSizes.body,
     color: colors.textSecondary,
+    lineHeight: 1.5,
   },
   totalRowFinal: {
-    borderTop: `1px solid ${colors.accentMuted}`,
-    marginTop: 2,
+    borderTop: `1px solid ${colors.border}`,
+    marginTop: spacing.tight,
     paddingTop: spacing.element,
     fontSize: fontSizes.title,
     fontWeight: 700,
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
   footerSection: {
     marginTop: spacing.section,
     paddingTop: spacing.block,
-    borderTop: `1px solid ${colors.borderLight}`,
+    borderTop: `1px solid ${colors.border}`,
   },
   footerLabel: {
     fontSize: fontSizes.label,
@@ -155,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.tight,
     letterSpacing: 1.5,
   },
-  footerDivider: {
+  footerAccent: {
     width: 28,
     height: 1.5,
     backgroundColor: colors.accent,
@@ -164,8 +168,8 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    lineHeight: 1.6,
     marginBottom: spacing.element,
+    lineHeight: 1.6,
   },
   contactBar: {
     flexDirection: "row",
@@ -178,6 +182,7 @@ const styles = StyleSheet.create({
   contactItem: {
     fontSize: fontSizes.small,
     color: colors.textMuted,
+    lineHeight: 1.5,
   },
 });
 
@@ -241,14 +246,14 @@ export default function InvoicePDF({ invoice, client, logo }) {
         <View style={styles.parties}>
           <View style={styles.partyBlock}>
             <Text style={styles.partyLabel}>From</Text>
-            <View style={styles.partyDivider} />
+            <View style={styles.partyAccent} />
             <Text style={styles.partyName}>Meteoric</Text>
             <Text style={styles.partyDetail}>contact@withmeteoric.com</Text>
             <Text style={styles.partyDetail}>withmeteoric.com</Text>
           </View>
           <View style={[styles.partyBlock, styles.toBlock]}>
             <Text style={styles.partyLabel}>To</Text>
-            <View style={[styles.partyDivider, { alignSelf: "flex-end" }]} />
+            <View style={[styles.partyAccent, { alignSelf: "flex-end" }]} />
             <Text style={styles.partyName}>{esc(client?.name || "\u2014")}</Text>
             {client?.company && (
               <Text style={styles.partyDetail}>{esc(client.company)}</Text>
@@ -306,14 +311,14 @@ export default function InvoicePDF({ invoice, client, logo }) {
             {invoice.notes && (
               <>
                 <Text style={styles.footerLabel}>Notes</Text>
-                <View style={styles.footerDivider} />
+                <View style={styles.footerAccent} />
                 <Text style={styles.footerText}>{esc(invoice.notes)}</Text>
               </>
             )}
             {invoice.terms && (
               <>
                 <Text style={styles.footerLabel}>Terms & Conditions</Text>
-                <View style={styles.footerDivider} />
+                <View style={styles.footerAccent} />
                 <Text style={styles.footerText}>{esc(invoice.terms)}</Text>
               </>
             )}

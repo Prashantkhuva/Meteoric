@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
     fontSize: fontSizes.body,
     color: colors.text,
+    lineHeight: 1.5,
   },
   topBar: {
     height: 3,
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     color: colors.textMuted,
     marginTop: spacing.tight,
+    lineHeight: 1.6,
   },
   preparedSection: {
     marginBottom: spacing.section,
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.tight,
     letterSpacing: 1.5,
   },
-  preparedDivider: {
+  preparedAccent: {
     width: 28,
     height: 1.5,
     backgroundColor: colors.accent,
@@ -73,11 +75,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.h3,
     fontWeight: 600,
     color: colors.text,
-    marginBottom: 2,
+    marginBottom: 3,
   },
   toContact: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
+    lineHeight: 1.5,
   },
   contentBlock: {
     marginBottom: spacing.section,
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     flexDirection: "row",
-    marginBottom: 3,
+    marginBottom: 4,
     fontSize: fontSizes.body,
     color: colors.textSecondary,
     lineHeight: 1.6,
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
   footerSection: {
     marginTop: spacing.section,
     paddingTop: spacing.block,
-    borderTop: `1px solid ${colors.borderLight}`,
+    borderTop: `1px solid ${colors.border}`,
   },
   footerLabel: {
     fontSize: fontSizes.label,
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.tight,
     letterSpacing: 1.5,
   },
-  footerDivider: {
+  footerAccent: {
     width: 28,
     height: 1.5,
     backgroundColor: colors.accent,
@@ -141,8 +144,8 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    lineHeight: 1.6,
     marginBottom: spacing.element,
+    lineHeight: 1.6,
   },
   contactBar: {
     flexDirection: "row",
@@ -155,10 +158,7 @@ const styles = StyleSheet.create({
   contactItem: {
     fontSize: fontSizes.small,
     color: colors.textMuted,
-  },
-  contactDivider: {
-    fontSize: fontSizes.small,
-    color: colors.border,
+    lineHeight: 1.5,
   },
 });
 
@@ -283,7 +283,7 @@ export default function ProposalPDF({ proposal, lead, logo }) {
 
         <View style={styles.preparedSection}>
           <Text style={styles.preparedLabel}>Prepared for</Text>
-          <View style={styles.preparedDivider} />
+          <View style={styles.preparedAccent} />
           {lead && (
             <>
               <Text style={styles.toName}>{esc(lead.name)}</Text>
@@ -303,7 +303,7 @@ export default function ProposalPDF({ proposal, lead, logo }) {
         {proposal.timeline && (
           <View style={styles.footerSection}>
             <Text style={styles.footerLabel}>Timeline</Text>
-            <View style={styles.footerDivider} />
+            <View style={styles.footerAccent} />
             <Text style={styles.footerText}>{esc(proposal.timeline)}</Text>
           </View>
         )}
@@ -311,7 +311,7 @@ export default function ProposalPDF({ proposal, lead, logo }) {
         {proposal.terms && (
           <View style={styles.footerSection}>
             <Text style={styles.footerLabel}>Terms & Conditions</Text>
-            <View style={styles.footerDivider} />
+            <View style={styles.footerAccent} />
             <Text style={styles.footerText}>{esc(proposal.terms)}</Text>
           </View>
         )}
