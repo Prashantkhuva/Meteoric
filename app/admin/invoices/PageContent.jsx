@@ -18,6 +18,18 @@ import { useToast } from "../components/ToastContext";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { Pagination } from "../components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
+
+const CURRENCIES = [
+  { label: "USD", symbol: "$" },
+  { label: "INR", symbol: "₹" },
+  { label: "EUR", symbol: "€" },
+  { label: "GBP", symbol: "£" },
+  { label: "AUD", symbol: "A$" },
+];
+
+function getCurrencySymbol(currency) {
+  return CURRENCIES.find((c) => c.label === currency)?.symbol || "$";
+}
 import { BulkActionBar } from "../components/BulkActionBar";
 import { IconButton } from "../components/IconButton";
 import { FormField } from "../components/FormField";
@@ -510,7 +522,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                 </span>
               </td>
               <td className="px-5 py-3.5 text-sm text-white/60 tabular-nums">
-                ${Number(inv.total).toFixed(2)}
+                {getCurrencySymbol(inv.currency)}{Number(inv.total).toFixed(2)}
               </td>
               <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
                 <span className="flex items-center gap-1.5">
@@ -526,7 +538,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                     <IconButton
                       onClick={async () => {
                         const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
-                        window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                        window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
                       }
                       icon={MessageCircle}
                       label="Share via WhatsApp"
@@ -597,7 +609,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
             </span>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-sm text-white/60 tabular-nums font-medium">${Number(inv.total).toFixed(2)}</span>
+            <span className="text-sm text-white/60 tabular-nums font-medium">{getCurrencySymbol(inv.currency)}{Number(inv.total).toFixed(2)}</span>
             <span className="text-[10px] text-white/30 tabular-nums">{formatDate(inv.created_at)}</span>
           </div>
           <div className="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-white/[0.04]">
@@ -607,7 +619,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
               <IconButton
                 onClick={async () => {
                   const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
-                  window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                  window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
                 }
                 icon={MessageCircle}
                 label="Share via WhatsApp"
@@ -645,8 +657,12 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   const [submitting, setSubmitting] = useState(false);
   const [items, setItems] = useState(invoice?.items || [{ description: "", quantity: 1, rate: 0 }]);
   const [tax, setTax] = useState(invoice?.tax || 0);
+  const [currency, setCurrency] = useState(invoice?.currency || "USD");
+  const [currencyOpen, setCurrencyOpen] = useState(false);
   const trapRef = useFocusTrap(open);
   const scrollRef = useRef(null);
+
+  const currencySymbol = getCurrencySymbol(currency);
 
   function handleWheel(e) {
     const el = scrollRef.current;
@@ -698,6 +714,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
     const fd = new FormData(e.target);
     fd.set("items", JSON.stringify(items.filter((i) => i.description.trim())));
     fd.set("tax", String(tax));
+    fd.set("currency", currency);
     if (invoice) fd.set("id", invoice.id);
     if (proposalId) fd.set("proposal_id", proposalId);
     await onSubmit(fd);
@@ -722,8 +739,42 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
         </div>
         <div className="px-6 py-5">
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <FormField label="Invoice Number" name="invoice_number" placeholder="Auto-generated" defaultValue={invoice?.invoice_number || ""} disabled />
+              <div>
+                <label htmlFor="field-currency" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Currency
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setCurrencyOpen(!currencyOpen)}
+                    className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 text-left flex items-center justify-between transition-all focus:border-[#EAEFFF]/20 outline-none"
+                    style={{ colorScheme: "dark" }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-white/40">{currencySymbol}</span>
+                      <span>{currency}</span>
+                    </span>
+                    <span className="text-white/20 text-xs">▾</span>
+                  </button>
+                  {currencyOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-full bg-[#151515] border border-white/[0.06] overflow-hidden z-20">
+                      {CURRENCIES.map((c) => (
+                        <button
+                          key={c.label}
+                          type="button"
+                          onClick={() => { setCurrency(c.label); setCurrencyOpen(false); }}
+                          className={`w-full px-3.5 py-2 text-left flex items-center gap-2 text-sm transition-colors ${currency === c.label ? "bg-white/5 text-white" : "text-white/60 hover:bg-white/[0.03] hover:text-white/80"}`}
+                        >
+                          <span className="text-white/40">{c.symbol}</span>
+                          <span>{c.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
               <div>
                 <label htmlFor="field-client_id" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Client
@@ -779,7 +830,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
                       className="w-full bg-transparent text-sm text-white/80 text-right outline-none"
                     />
                     <span className="text-sm text-white/60 text-right tabular-nums">
-                      ${((Number(item.quantity) || 0) * (Number(item.rate) || 0)).toFixed(2)}
+                      {currencySymbol}{((Number(item.quantity) || 0) * (Number(item.rate) || 0)).toFixed(2)}
                     </span>
                     {items.length > 1 && (
                       <button
@@ -807,7 +858,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
             <div className="flex flex-col items-end gap-1.5 border-t border-white/[0.06] pt-3">
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-xs text-white/30">Subtotal</span>
-                <span className="text-white/60 w-28 text-right tabular-nums">${subtotal.toFixed(2)}</span>
+                <span className="text-white/60 w-28 text-right tabular-nums">{currencySymbol}{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-xs text-white/30">Tax</span>
@@ -822,7 +873,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
               </div>
               <div className="flex items-center gap-4 text-sm font-semibold border-t border-white/[0.06] pt-1.5">
                 <span className="text-xs text-white/50">Total</span>
-                <span className="text-white/90 w-28 text-right tabular-nums">${total.toFixed(2)}</span>
+                <span className="text-white/90 w-28 text-right tabular-nums">{currencySymbol}{total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -895,6 +946,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
 function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, sending }) {
   if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
+  const drawerCurrency = getCurrencySymbol(invoice.currency);
 
   useEffect(() => {
     if (!invoice) return;
@@ -993,11 +1045,11 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                           <div className="flex-1 min-w-0">
                             <p className="text-sm text-white/70">{item.description}</p>
                             <p className="text-xs text-white/30 tabular-nums mt-0.5">
-                              {item.quantity} &times; ${Number(item.rate).toFixed(2)}
+                              {item.quantity} &times; {drawerCurrency}{Number(item.rate).toFixed(2)}
                             </p>
                           </div>
                           <span className="text-sm text-white/60 tabular-nums shrink-0 ml-4">
-                            ${amount.toFixed(2)}
+                            {drawerCurrency}{amount.toFixed(2)}
                           </span>
                         </div>
                       );
@@ -1006,17 +1058,17 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                   <div className="flex flex-col items-end gap-1 mt-3 text-sm">
                     <div className="flex items-center gap-6">
                       <span className="text-xs text-white/30">Subtotal</span>
-                      <span className="text-white/50 w-24 text-right tabular-nums">${Number(invoice.subtotal || 0).toFixed(2)}</span>
+                      <span className="text-white/50 w-24 text-right tabular-nums">{drawerCurrency}{Number(invoice.subtotal || 0).toFixed(2)}</span>
                     </div>
                     {Number(invoice.tax) > 0 && (
                       <div className="flex items-center gap-6">
                         <span className="text-xs text-white/30">Tax</span>
-                        <span className="text-white/50 w-24 text-right tabular-nums">${Number(invoice.tax).toFixed(2)}</span>
+                        <span className="text-white/50 w-24 text-right tabular-nums">{drawerCurrency}{Number(invoice.tax).toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex items-center gap-6 font-semibold border-t border-white/[0.06] pt-1.5">
                       <span className="text-xs text-white/50">Total</span>
-                      <span className="text-white/90 w-24 text-right tabular-nums">${Number(invoice.total || 0).toFixed(2)}</span>
+                      <span className="text-white/90 w-24 text-right tabular-nums">{drawerCurrency}{Number(invoice.total || 0).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -1067,7 +1119,7 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                   <button
                     onClick={async () => {
                       const t = invoice.share_token || (await ensureShareToken("invoice", invoice.id)).token;
-                      window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for $${Number(invoice.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                      window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for ${drawerCurrency}${Number(invoice.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
                     }
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
                   >

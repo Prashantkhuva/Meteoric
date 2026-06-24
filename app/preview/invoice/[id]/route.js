@@ -2,6 +2,18 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
+const CURRENCIES = {
+  USD: "$",
+  INR: "₹",
+  EUR: "€",
+  GBP: "£",
+  AUD: "A$",
+};
+
+function getCurrencySymbol(currency) {
+  return CURRENCIES[currency] || "$";
+}
+
 export async function GET(request, { params }) {
   const { id } = await params;
   const token = request.nextUrl.searchParams.get("token");
@@ -52,6 +64,7 @@ export async function GET(request, { params }) {
   const subtotal = items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
   const tax = Number(invoice.tax) || 0;
   const total = Number(invoice.total) || subtotal + tax;
+  const currency = getCurrencySymbol(invoice.currency);
 
   function fmt(d) {
     if (!d) return "";
@@ -72,7 +85,7 @@ export async function GET(request, { params }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Invoice ${invoice.invoice_number} — Meteoric</title>
 <meta property="og:title" content="Invoice ${invoice.invoice_number} — Meteoric" />
-<meta property="og:description" content="Invoice for ${esc(invoice.client?.name || "—")} — $${total.toFixed(2)} due ${invoice.due_date ? fmt(invoice.due_date) : "—"}" />
+<meta property="og:description" content="Invoice for ${esc(invoice.client?.name || "—")} — ${currency}${total.toFixed(2)} due ${invoice.due_date ? fmt(invoice.due_date) : "—"}" />
 <meta property="og:image" content="${ogUrl}" />
 <meta property="og:image:width" content="1635" />
 <meta property="og:image:height" content="962" />
@@ -170,16 +183,16 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     </thead>
     <tbody>
       ${items.map(function(item) {
-        return "<tr><td>" + esc(item.description) + "</td><td>" + item.quantity + "</td><td>$" + Number(item.rate).toFixed(2) + "</td><td>$" + itemAmount(item) + "</td></tr>";
+        return "<tr><td>" + esc(item.description) + "</td><td>" + item.quantity + "</td><td>" + currency + Number(item.rate).toFixed(2) + "</td><td>" + currency + itemAmount(item) + "</td></tr>";
       }).join("")}
     </tbody>
   </table>
   ` : ""}
 
   <div class="totals">
-    <div class="row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
-    ${tax > 0 ? '<div class="row"><span>Tax</span><span>$' + tax.toFixed(2) + "</span></div>" : ""}
-    <div class="row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+    <div class="row"><span>Subtotal</span><span>${currency}${subtotal.toFixed(2)}</span></div>
+    ${tax > 0 ? '<div class="row"><span>Tax</span><span>' + currency + tax.toFixed(2) + "</span></div>" : ""}
+    <div class="row total"><span>Total</span><span>${currency}${total.toFixed(2)}</span></div>
   </div>
 
   ${(invoice.notes || invoice.terms) ? `

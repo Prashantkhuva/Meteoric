@@ -98,3 +98,21 @@ input:-webkit-autofill:focus {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5;
+  background: #1a1a1a;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  height: 100%;
+  cursor: pointer;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:hover::-webkit-inner-spin-button,
+input[type="number"]:hover::-webkit-outer-spin-button {
+  opacity: 1;
+}

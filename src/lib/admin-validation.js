@@ -97,6 +97,7 @@ export const invoiceSchema = z.object({
   status: statusSchema(VALID_INVOICE_STATUSES).optional(),
   items: z.array(invoiceItemSchema).optional().default([]),
   tax: z.coerce.number().min(0).max(9999999).optional().default(0),
+  currency: z.string().max(10).optional().default("USD"),
   notes: z.string().max(5000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   terms: z.string().max(10000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   due_date: z.string().max(20).optional().or(z.literal("")).transform((v) => v || null),
