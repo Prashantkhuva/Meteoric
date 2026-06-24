@@ -12,40 +12,52 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   topBar: {
-    height: 3,
+    height: 4,
     backgroundColor: colors.accent,
-    marginBottom: 44,
+    marginBottom: 40,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: spacing.section,
-    paddingBottom: spacing.block,
-    borderBottom: `1px solid ${colors.border}`,
+    marginBottom: spacing.block,
+  },
+  logoCol: {
+    flex: 1,
   },
   logo: {
-    width: 105,
-    height: 70,
+    width: 100,
+    height: 67,
   },
-  meta: {
+  metaCol: {
     alignItems: "flex-end",
+    maxWidth: "60%",
   },
   title: {
     fontSize: fontSizes.h1,
-    fontWeight: 700,
+    fontFamily: fonts.bold,
     color: colors.accent,
-    letterSpacing: -0.3,
+    letterSpacing: -0.5,
   },
-  statusBadge: {
-    fontSize: fontSizes.small,
-    fontWeight: 600,
-    textTransform: "uppercase",
-    color: colors.textMuted,
+  statusPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 3,
     marginTop: spacing.tight,
+    alignSelf: "flex-end",
+  },
+  statusText: {
+    fontSize: fontSizes.small,
+    fontFamily: fonts.bold,
+    textTransform: "uppercase",
     letterSpacing: 1.5,
   },
-  sentStatus: {
+  statusDraft: {
+    backgroundColor: colors.accentMuted,
+    color: colors.textMuted,
+  },
+  statusSent: {
+    backgroundColor: colors.accentMuted,
     color: colors.accent,
   },
   dateRow: {
@@ -53,27 +65,33 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: spacing.tight,
     lineHeight: 1.6,
+    textAlign: "right",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: spacing.block,
   },
   preparedSection: {
     marginBottom: spacing.section,
   },
   preparedLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1.5,
+    letterSpacing: 2,
   },
   preparedAccent: {
-    width: 28,
-    height: 1.5,
+    width: 24,
+    height: 2,
     backgroundColor: colors.accent,
     marginBottom: spacing.element,
   },
   toName: {
     fontSize: fontSizes.h3,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     color: colors.text,
     marginBottom: 3,
   },
@@ -93,7 +111,7 @@ const styles = StyleSheet.create({
   },
   heading1: {
     fontSize: fontSizes.h2,
-    fontWeight: 700,
+    fontFamily: fonts.bold,
     color: colors.accent,
     marginTop: spacing.block,
     marginBottom: spacing.element,
@@ -101,7 +119,7 @@ const styles = StyleSheet.create({
   },
   heading2: {
     fontSize: fontSizes.h3,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     color: colors.text,
     marginTop: spacing.block,
     marginBottom: spacing.element,
@@ -129,15 +147,15 @@ const styles = StyleSheet.create({
   },
   footerLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1.5,
+    letterSpacing: 2,
   },
   footerAccent: {
-    width: 28,
-    height: 1.5,
+    width: 24,
+    height: 2,
     backgroundColor: colors.accent,
     marginBottom: spacing.element,
   },
@@ -150,7 +168,7 @@ const styles = StyleSheet.create({
   contactBar: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 24,
+    gap: 28,
     marginTop: spacing.section,
     paddingTop: spacing.block,
     borderTop: `1px solid ${colors.border}`,
@@ -251,11 +269,14 @@ function formatDate(d) {
 }
 
 function StatusBadge({ status }) {
-  const statusText = status === "sent" ? "Sent" : status === "draft" ? "Draft" : status;
+  const style = status === "sent" ? styles.statusSent : styles.statusDraft;
+  const label = status === "sent" ? "Sent" : status === "draft" ? "Draft" : status;
   return (
-    <Text style={[styles.statusBadge, status === "sent" && styles.sentStatus]}>
-      {statusText}
-    </Text>
+    <View style={[styles.statusPill, style]}>
+      <Text style={[styles.statusText, { color: style.color }]}>
+        {label}
+      </Text>
+    </View>
   );
 }
 
@@ -268,18 +289,22 @@ export default function ProposalPDF({ proposal, lead, logo }) {
         <View style={styles.topBar} />
 
         <View style={styles.header}>
-          {logo && <Image style={styles.logo} src={logo} />}
-          <View style={styles.meta}>
+          <View style={styles.logoCol}>
+            {logo && <Image style={styles.logo} src={logo} />}
+          </View>
+          <View style={styles.metaCol}>
             <Text style={styles.title}>{esc(proposal.title)}</Text>
             <StatusBadge status={proposal.status} />
-            {proposal.sent_at && (
-              <Text style={styles.dateRow}>Sent: {formatDate(proposal.sent_at)}</Text>
-            )}
             {proposal.created_at && (
               <Text style={styles.dateRow}>Created: {formatDate(proposal.created_at)}</Text>
             )}
+            {proposal.sent_at && (
+              <Text style={styles.dateRow}>Sent: {formatDate(proposal.sent_at)}</Text>
+            )}
           </View>
         </View>
+
+        <View style={styles.divider} />
 
         <View style={styles.preparedSection}>
           <Text style={styles.preparedLabel}>Prepared for</Text>

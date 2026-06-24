@@ -7,6 +7,8 @@ export const colors = {
   textMuted: "#454545",
   accent: "#E8E4FF",
   accentMuted: "#222225",
+  success: "#4ade80",
+  warning: "#fbbf24",
   danger: "#f87171",
 };
 
@@ -17,19 +19,20 @@ export const fonts = {
 };
 
 export const fontSizes = {
-  h1: 26,
-  h2: 18,
-  h3: 15,
-  body: 11,
-  small: 9,
-  label: 8,
-  title: 14,
+  h1: 28,
+  h2: 16,
+  h3: 13,
+  body: 10,
+  small: 8,
+  label: 7,
+  title: 13,
+  huge: 34,
 };
 
 export const spacing = {
-  page: 48,
-  section: 32,
-  block: 22,
-  element: 12,
-  tight: 6,
+  page: 44,
+  section: 28,
+  block: 18,
+  element: 10,
+  tight: 5,
 };

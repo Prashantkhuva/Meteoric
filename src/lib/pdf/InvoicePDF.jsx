@@ -12,90 +12,115 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   topBar: {
-    height: 3,
+    height: 4,
     backgroundColor: colors.accent,
-    marginBottom: 44,
+    marginBottom: 40,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: spacing.section,
-    paddingBottom: spacing.block,
-    borderBottom: `1px solid ${colors.border}`,
+    marginBottom: spacing.block,
+  },
+  logoCol: {
+    flex: 1,
   },
   logo: {
-    width: 105,
-    height: 70,
+    width: 100,
+    height: 67,
   },
-  meta: {
+  metaCol: {
     alignItems: "flex-end",
+    maxWidth: "60%",
   },
   invoiceNumber: {
     fontSize: fontSizes.h1,
-    fontWeight: 700,
+    fontFamily: fonts.bold,
     color: colors.accent,
-    letterSpacing: -0.3,
+    letterSpacing: -0.5,
   },
-  statusBadge: {
-    fontSize: fontSizes.small,
-    fontWeight: 600,
-    textTransform: "uppercase",
+  statusPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 3,
     marginTop: spacing.tight,
+    alignSelf: "flex-end",
+  },
+  statusText: {
+    fontSize: fontSizes.small,
+    fontFamily: fonts.bold,
+    textTransform: "uppercase",
     letterSpacing: 1.5,
   },
-  statusSent: { color: colors.textMuted },
-  statusPaid: { color: colors.accent },
-  statusOverdue: { color: colors.danger },
+  statusSent: {
+    backgroundColor: colors.accentMuted,
+    color: colors.accent,
+  },
+  statusPaid: {
+    backgroundColor: "rgba(74,222,128,0.12)",
+    color: colors.success,
+  },
+  statusOverdue: {
+    backgroundColor: "rgba(248,113,113,0.12)",
+    color: colors.danger,
+  },
+  statusDraft: {
+    backgroundColor: colors.accentMuted,
+    color: colors.textMuted,
+  },
   dates: {
     fontSize: fontSizes.small,
     color: colors.textMuted,
     marginTop: spacing.tight,
     lineHeight: 1.6,
+    textAlign: "right",
   },
-  paidDate: {
+  dateHighlight: {
     color: colors.accent,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: spacing.block,
   },
   parties: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: spacing.section,
-    gap: 40,
+    gap: 32,
   },
   partyBlock: {},
   partyLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1.5,
+    letterSpacing: 2,
   },
   partyAccent: {
-    width: 28,
-    height: 1.5,
+    width: 24,
+    height: 2,
     backgroundColor: colors.accent,
     marginBottom: spacing.element,
   },
   partyName: {
     fontSize: fontSizes.title,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     color: colors.text,
-    marginBottom: 3,
+    marginBottom: 2,
   },
   partyDetail: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    marginBottom: 2,
+    marginBottom: 1,
     lineHeight: 1.5,
   },
   toBlock: {
     alignItems: "flex-end",
   },
-  table: {
-    marginBottom: spacing.block,
-  },
+  table: {},
   tableHeader: {
     flexDirection: "row",
     borderBottom: `1px solid ${colors.border}`,
@@ -104,15 +129,18 @@ const styles = StyleSheet.create({
   },
   tableHeaderCell: {
     fontSize: fontSizes.label,
-    fontWeight: 700,
+    fontFamily: fonts.bold,
     textTransform: "uppercase",
     color: colors.accent,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
   tableRow: {
     flexDirection: "row",
     borderBottom: `1px solid ${colors.border}`,
     paddingVertical: spacing.element,
+  },
+  tableRowAlt: {
+    backgroundColor: colors.accentMuted,
   },
   tableCell: {
     fontSize: fontSizes.body,
@@ -126,24 +154,41 @@ const styles = StyleSheet.create({
   cellQty: { flex: 1, textAlign: "right", paddingRight: 8 },
   cellRate: { flex: 1.5, textAlign: "right", paddingRight: 8 },
   cellAmount: { flex: 1.5, textAlign: "right" },
-  totals: {
-    width: 260,
-    marginLeft: "auto",
+  totalsContainer: {
+    marginTop: spacing.block,
+    paddingTop: spacing.block,
+    borderTop: `1px solid ${colors.border}`,
+    alignItems: "flex-end",
+  },
+  totalsInner: {
+    width: 220,
   },
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: spacing.tight,
+    paddingVertical: 3,
     fontSize: fontSizes.body,
     color: colors.textSecondary,
     lineHeight: 1.5,
   },
   totalRowFinal: {
-    borderTop: `1px solid ${colors.border}`,
     marginTop: spacing.tight,
     paddingTop: spacing.element,
-    fontSize: fontSizes.title,
-    fontWeight: 700,
+    borderTop: `1px solid ${colors.accent}`,
+    paddingHorizontal: spacing.element,
+    paddingVertical: spacing.tight,
+    backgroundColor: colors.accentMuted,
+  },
+  totalLabelFinal: {
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.accent,
+    textTransform: "uppercase",
+    letterSpacing: 1.5,
+  },
+  totalValueFinal: {
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   footerSection: {
@@ -153,15 +198,15 @@ const styles = StyleSheet.create({
   },
   footerLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 600,
+    fontFamily: fonts.bold,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1.5,
+    letterSpacing: 2,
   },
   footerAccent: {
-    width: 28,
-    height: 1.5,
+    width: 24,
+    height: 2,
     backgroundColor: colors.accent,
     marginBottom: spacing.element,
   },
@@ -174,7 +219,7 @@ const styles = StyleSheet.create({
   contactBar: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 24,
+    gap: 28,
     marginTop: spacing.section,
     paddingTop: spacing.block,
     borderTop: `1px solid ${colors.border}`,
@@ -201,16 +246,25 @@ function formatDate(d) {
 }
 
 function StatusBadge({ status }) {
-  const statusStyle =
-    status === "overdue"
-      ? styles.statusOverdue
-      : status === "paid"
-        ? styles.statusPaid
-        : styles.statusSent;
+  const styleMap = {
+    overdue: styles.statusOverdue,
+    paid: styles.statusPaid,
+    sent: styles.statusSent,
+    draft: styles.statusDraft,
+  };
+  const colorMap = {
+    overdue: styles.statusOverdue,
+    paid: styles.statusPaid,
+    sent: styles.statusSent,
+    draft: styles.statusDraft,
+  };
+  const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
   return (
-    <Text style={[styles.statusBadge, statusStyle]}>
-      {status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status}
-    </Text>
+    <View style={[styles.statusPill, colorMap[status] || styles.statusSent]}>
+      <Text style={[styles.statusText, { color: (colorMap[status] || styles.statusSent).color }]}>
+        {label}
+      </Text>
+    </View>
   );
 }
 
@@ -229,19 +283,23 @@ export default function InvoicePDF({ invoice, client, logo }) {
         <View style={styles.topBar} />
 
         <View style={styles.header}>
-          {logo && <Image style={styles.logo} src={logo} />}
-          <View style={styles.meta}>
+          <View style={styles.logoCol}>
+            {logo && <Image style={styles.logo} src={logo} />}
+          </View>
+          <View style={styles.metaCol}>
             <Text style={styles.invoiceNumber}>{esc(invoice.invoice_number)}</Text>
             <StatusBadge status={invoice.status} />
             <View style={styles.dates}>
               {invoice.created_at && <Text>Issued: {formatDate(invoice.created_at)}</Text>}
               {invoice.due_date && <Text>Due: {formatDate(invoice.due_date)}</Text>}
               {invoice.paid_at && (
-                <Text style={styles.paidDate}>Paid: {formatDate(invoice.paid_at)}</Text>
+                <Text>Paid: <Text style={styles.dateHighlight}>{formatDate(invoice.paid_at)}</Text></Text>
               )}
             </View>
           </View>
         </View>
+
+        <View style={styles.divider} />
 
         <View style={styles.parties}>
           <View style={styles.partyBlock}>
@@ -264,6 +322,8 @@ export default function InvoicePDF({ invoice, client, logo }) {
           </View>
         </View>
 
+        <View style={styles.divider} />
+
         {items.length > 0 && (
           <View style={styles.table}>
             <View style={styles.tableHeader}>
@@ -273,7 +333,7 @@ export default function InvoicePDF({ invoice, client, logo }) {
               <Text style={[styles.tableHeaderCell, styles.cellAmount]}>Amount</Text>
             </View>
             {items.map((item, i) => (
-              <View key={i} style={styles.tableRow}>
+              <View key={i} style={[styles.tableRow, i % 2 === 1 && styles.tableRowAlt]}>
                 <Text style={[styles.tableCell, styles.tableCellFirst, styles.cellDesc]}>
                   {esc(item.description)}
                 </Text>
@@ -289,20 +349,22 @@ export default function InvoicePDF({ invoice, client, logo }) {
           </View>
         )}
 
-        <View style={styles.totals}>
-          <View style={styles.totalRow}>
-            <Text>Subtotal</Text>
-            <Text>${subtotal.toFixed(2)}</Text>
-          </View>
-          {tax > 0 && (
+        <View style={styles.totalsContainer}>
+          <View style={styles.totalsInner}>
             <View style={styles.totalRow}>
-              <Text>Tax</Text>
-              <Text>${tax.toFixed(2)}</Text>
+              <Text>Subtotal</Text>
+              <Text>${subtotal.toFixed(2)}</Text>
             </View>
-          )}
-          <View style={[styles.totalRow, styles.totalRowFinal]}>
-            <Text>Total</Text>
-            <Text>${total.toFixed(2)}</Text>
+            {tax > 0 && (
+              <View style={styles.totalRow}>
+                <Text>Tax</Text>
+                <Text>${tax.toFixed(2)}</Text>
+              </View>
+            )}
+            <View style={styles.totalRowFinal}>
+              <Text style={styles.totalLabelFinal}>Total Due</Text>
+              <Text style={styles.totalValueFinal}>${total.toFixed(2)}</Text>
+            </View>
           </View>
         </View>
 
