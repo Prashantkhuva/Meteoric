@@ -645,3 +645,37 @@ export async function getProjectsPaginated(params) {
   if (error) return { data: [], total: 0 };
   return { data: data || [], total: count || 0 };
 }
+
+export async function ensureShareToken(type, id) {
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+
+    if (type !== "proposal" && type !== "invoice") {
+      return { token: null };
+    }
+
+    const table = type === "proposal" ? "proposals" : "invoices";
+
+    const { data: existing } = await supabase
+      .from(table)
+      .select("share_token")
+      .eq("id", safeId)
+      .single();
+
+    if (existing?.share_token) {
+      return { token: existing.share_token };
+    }
+
+    const token = randomUUID();
+    const { error } = await supabase
+      .from(table)
+      .update({ share_token: token })
+      .eq("id", safeId);
+
+    if (error) return { token: null };
+    return { token };
+  } catch {
+    return { token: null };
+  }
+}

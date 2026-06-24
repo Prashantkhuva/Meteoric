@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
-  markInvoiceAsPaid, markInvoiceAsOverdue, getClients, getInvoicesPaginated,
+  markInvoiceAsPaid, markInvoiceAsOverdue, getClients, getInvoicesPaginated, ensureShareToken,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -524,7 +524,10 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                   <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" className="text-white/30 hover:text-white/50" />
                   {inv.client?.phone && (
                     <IconButton
-                      onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${inv.share_token ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${inv.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
+                      onClick={async () => {
+                        const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
+                        window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                      }
                       icon={MessageCircle}
                       label="Share via WhatsApp"
                       className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
@@ -602,7 +605,10 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
             <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" />
             {inv.client?.phone && (
               <IconButton
-                onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${inv.share_token ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${inv.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
+                onClick={async () => {
+                  const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
+                  window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                }
                 icon={MessageCircle}
                 label="Share via WhatsApp"
                 className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
@@ -1048,7 +1054,10 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                 </button>
                 {invoice.client?.phone && (
                   <button
-                    onClick={() => window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for $${Number(invoice.total).toFixed(2)}.${invoice.share_token ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${invoice.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
+                    onClick={async () => {
+                      const t = invoice.share_token || (await ensureShareToken("invoice", invoice.id)).token;
+                      window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for $${Number(invoice.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                    }
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
                   >
                     <MessageCircle size={13} />
