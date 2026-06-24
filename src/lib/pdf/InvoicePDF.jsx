@@ -40,14 +40,14 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   statusPill: {
-    paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 3,
-    marginTop: spacing.tight,
+    marginTop: 14,
     alignSelf: "flex-end",
   },
   statusText: {
-    fontSize: fontSizes.small,
+    fontSize: 9,
     fontFamily: fonts.bold,
     textTransform: "uppercase",
     letterSpacing: 1.5,
@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: colors.border,
-    marginVertical: spacing.block,
+    marginVertical: 24,
   },
   parties: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: spacing.section,
-    gap: 32,
+    marginBottom: 36,
+    gap: 40,
   },
   partyBlock: {},
   partyLabel: {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   partyDetail: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    marginBottom: 1,
+    marginBottom: 2,
     lineHeight: 1.5,
   },
   toBlock: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     borderBottom: `1px solid ${colors.border}`,
-    paddingBottom: spacing.element,
+    paddingBottom: 14,
     marginBottom: spacing.tight,
   },
   tableHeaderCell: {
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   tableRow: {
     flexDirection: "row",
     borderBottom: `1px solid ${colors.border}`,
-    paddingVertical: spacing.element,
+    paddingVertical: 14,
   },
   tableRowAlt: {
     backgroundColor: colors.accentMuted,
@@ -155,28 +155,28 @@ const styles = StyleSheet.create({
   cellRate: { flex: 1.5, textAlign: "right", paddingRight: 8 },
   cellAmount: { flex: 1.5, textAlign: "right" },
   totalsContainer: {
-    marginTop: spacing.block,
-    paddingTop: spacing.block,
+    marginTop: 28,
+    paddingTop: 22,
     borderTop: `1px solid ${colors.border}`,
     alignItems: "flex-end",
   },
   totalsInner: {
-    width: 220,
+    width: 240,
   },
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 3,
+    paddingVertical: 5,
     fontSize: fontSizes.body,
     color: colors.textSecondary,
     lineHeight: 1.5,
   },
   totalRowFinal: {
     marginTop: spacing.tight,
-    paddingTop: spacing.element,
+    paddingTop: 14,
     borderTop: `1px solid ${colors.accent}`,
-    paddingHorizontal: spacing.element,
-    paddingVertical: spacing.tight,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     backgroundColor: colors.accentMuted,
   },
   totalLabelFinal: {
@@ -192,8 +192,8 @@ const styles = StyleSheet.create({
     color: colors.accent,
   },
   footerSection: {
-    marginTop: spacing.section,
-    paddingTop: spacing.block,
+    marginTop: 36,
+    paddingTop: 22,
     borderTop: `1px solid ${colors.border}`,
   },
   footerLabel: {
@@ -220,8 +220,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: 28,
-    marginTop: spacing.section,
-    paddingTop: spacing.block,
+    marginTop: 40,
+    paddingTop: 22,
     borderTop: `1px solid ${colors.border}`,
   },
   contactItem: {
