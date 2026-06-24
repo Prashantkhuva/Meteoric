@@ -137,13 +137,15 @@ export default async function AdminDashboard() {
   const supabase = await createClient();
   let userName = "Admin";
   if (supabase) {
-    const { data } = await supabase.auth.getUser();
-    const user = data?.user;
-    userName =
-      user?.user_metadata?.full_name ||
-      user?.user_metadata?.name ||
-      user?.email?.split("@")[0] ||
-      "Admin";
+    try {
+      const { data } = await supabase.auth.getUser();
+      const user = data?.user;
+      userName =
+        user?.user_metadata?.full_name ||
+        user?.user_metadata?.name ||
+        user?.email?.split("@")[0] ||
+        "Admin";
+    } catch {}
   }
 
   if (!stats) {

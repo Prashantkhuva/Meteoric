@@ -548,9 +548,9 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
   const servicesStr = project?.services || "";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 py-[5vh]" role="dialog" aria-modal="true" aria-labelledby="project-form-title">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="project-form-title">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div ref={trapRef} className="relative w-full max-w-2xl max-h-[calc(100dvh-10vh)] flex flex-col border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
+      <div ref={trapRef} className="relative w-full max-w-2xl max-h-[calc(100dvh-32px)] overflow-hidden flex flex-col border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
         <div className="shrink-0 flex items-center justify-between border-b border-white/[0.06] px-6 py-4">
           <h2 id="project-form-title" className="text-lg font-semibold tracking-tight text-white/90">{title}</h2>
           <button
