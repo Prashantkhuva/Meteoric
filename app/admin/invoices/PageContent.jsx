@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation";
 import {
   X, Plus, Eye, Trash2, Send, Receipt, Calendar, Building2, Mail,
   Pencil, DollarSign, FileText, ArrowUpRight, PlusCircle, Printer, CheckCircle,
-  MessageCircle, Download, ChevronUp, ChevronDown, XCircle,
+  MessageCircle, Download, ChevronUp, ChevronDown, XCircle, Clock,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -264,6 +264,19 @@ export default function InvoicesPage() {
     }
   }
 
+  async function handleMarkAsOverdue(id) {
+    try {
+      await markInvoiceAsOverdue(id);
+      setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "overdue" } : inv)));
+      if (viewInvoice?.id === id) {
+        setViewInvoice((prev) => prev ? { ...prev, status: "overdue" } : null);
+      }
+      addToast("Invoice marked as overdue", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to mark as overdue", "error");
+    }
+  }
+
   async function handleCancelInvoice() {
     if (!viewInvoice) return;
     try {
@@ -444,6 +457,7 @@ export default function InvoicesPage() {
         onEdit={setEditingInvoice}
         onSend={handleSend}
         onMarkAsPaid={handleMarkAsPaid}
+        onMarkAsOverdue={handleMarkAsOverdue}
         onDelete={setDeleteTarget}
         onCancel={handleCancelInvoice}
         sending={sending}
@@ -970,7 +984,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   );
 }
 
-function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, onCancel, sending }) {
+function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onMarkAsOverdue, onDelete, onCancel, sending }) {
   if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
   const scrollRef = useRef(null);
@@ -1192,6 +1206,15 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                   >
                     <CheckCircle size={13} />
                     Mark as Paid
+                  </button>
+                )}
+                {invoice.status === "sent" && (
+                  <button
+                    onClick={() => onMarkAsOverdue(invoice.id)}
+                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06]"
+                  >
+                    <Clock size={13} />
+                    Mark as Overdue
                   </button>
                 )}
                 {(invoice.status === "sent" || invoice.status === "overdue") && (

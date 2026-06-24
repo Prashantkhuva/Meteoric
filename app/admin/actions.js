@@ -625,6 +625,17 @@ export async function deleteProject(id) {
   revalidateAdmin("/admin/projects");
 }
 
+export async function updateProjectStatus(id, newStatus) {
+  const supabase = await getSupabase();
+  const safeId = idSchema.parse(id);
+  const { error } = await supabase
+    .from("projects")
+    .update({ status: newStatus, updated_at: new Date().toISOString() })
+    .eq("id", safeId);
+  if (error) throw error;
+  revalidateAdmin("/admin/projects");
+}
+
 function resolveOrder(col, dir, sort) {
   const validCols = [
     "name", "email", "status", "created_at", "invoice_number",

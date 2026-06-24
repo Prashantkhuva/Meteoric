@@ -316,7 +316,7 @@ export default function ClientsPage() {
       />
 
       <ClientFormModal key={formResetKey} open={showAdd || !!editClient} client={editClient} onClose={() => { setShowAdd(false); setEditClient(null); setFormResetKey(k => k + 1); }} onSubmit={handleAdd} />
-      <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} onEdit={(client) => { setViewClient(null); setEditClient(client); }} />
+      <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} onEdit={(client) => { setViewClient(null); setEditClient(client); }} onDelete={setDeleteTarget} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Delete client"
@@ -614,7 +614,7 @@ function ClientFormModal({ open, client, onClose, onSubmit }) {
   );
 }
 
-function ClientDetailDrawer({ client, onClose, onEdit }) {
+function ClientDetailDrawer({ client, onClose, onEdit, onDelete }) {
   if (!client) return null;
   const trapRef = useFocusTrap(!!client);
 
@@ -710,6 +710,13 @@ function ClientDetailDrawer({ client, onClose, onEdit }) {
                 >
                   <Pencil size={13} />
                   Edit
+                </button>
+                <button
+                  onClick={() => { onDelete(client.id); onClose(); }}
+                  className="ml-auto inline-flex items-center gap-2 border border-red-500/10 bg-red-500/5 px-4 py-2.5 text-xs font-medium text-red-400/60 transition-all hover:bg-red-500/10 hover:text-red-400"
+                >
+                  <Trash2 size={13} />
+                  Delete
                 </button>
               </div>
             </div>

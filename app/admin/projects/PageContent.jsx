@@ -3,13 +3,13 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  createProject, updateProject, deleteProject, getClients, getProjectsPaginated,
+  createProject, updateProject, deleteProject, updateProjectStatus, getClients, getProjectsPaginated,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Building2, Pencil, FolderKanban,
   DollarSign, Clock, Target, CheckCircle, AlertCircle, Download,
-  ChevronUp, ChevronDown,
+  ChevronUp, ChevronDown, Play, Pause, XCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -214,6 +214,19 @@ export default function ProjectsPage() {
     setIsDeleting(false);
   }
 
+  async function handleStatusChange(id, newStatus) {
+    try {
+      await updateProjectStatus(id, newStatus);
+      setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
+      if (viewProject?.id === id) {
+        setViewProject((prev) => prev ? { ...prev, status: newStatus } : null);
+      }
+      addToast(`Project marked as ${projectStatuses.find((s) => s.value === newStatus)?.label || newStatus}`, "success");
+    } catch (err) {
+      addToast(err.message || "Failed to update status", "error");
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
@@ -361,6 +374,7 @@ export default function ProjectsPage() {
         onClose={() => setViewProject(null)}
         onEdit={setEditingProject}
         onDelete={setDeleteTarget}
+        onStatusChange={handleStatusChange}
       />
 
       <ConfirmDialog
@@ -681,7 +695,7 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
   );
 }
 
-function ProjectDetailDrawer({ project, onClose, onEdit, onDelete }) {
+function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChange }) {
   if (!project) return null;
   const trapRef = useFocusTrap(!!project);
 
@@ -812,7 +826,61 @@ function ProjectDetailDrawer({ project, onClose, onEdit, onDelete }) {
                 Created {formatDate(project.created_at)}
               </div>
 
-              <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+              <div className="flex flex-wrap gap-2 border-t border-white/[0.06] pt-4">
+                {project.status === "planning" && (
+                  <button
+                    onClick={() => onStatusChange(project.id, "in_progress")}
+                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06]"
+                  >
+                    <Play size={13} />
+                    Start Project
+                  </button>
+                )}
+                {project.status === "in_progress" && (
+                  <button
+                    onClick={() => onStatusChange(project.id, "review")}
+                    className="inline-flex items-center gap-2 border border-cyan-400/20 px-4 py-2.5 text-xs font-semibold text-cyan-400/70 transition-all hover:bg-cyan-500/[0.06]"
+                  >
+                    <CheckCircle size={13} />
+                    Mark for Review
+                  </button>
+                )}
+                {project.status === "review" && (
+                  <button
+                    onClick={() => onStatusChange(project.id, "completed")}
+                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97]"
+                  >
+                    <CheckCircle size={13} />
+                    Complete
+                  </button>
+                )}
+                {["planning", "in_progress", "review"].includes(project.status) && (
+                  <button
+                    onClick={() => onStatusChange(project.id, "on_hold")}
+                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06]"
+                  >
+                    <Pause size={13} />
+                    Put on Hold
+                  </button>
+                )}
+                {project.status === "on_hold" && (
+                  <button
+                    onClick={() => onStatusChange(project.id, "in_progress")}
+                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06]"
+                  >
+                    <Play size={13} />
+                    Resume
+                  </button>
+                )}
+                {!["completed", "cancelled"].includes(project.status) && (
+                  <button
+                    onClick={() => onStatusChange(project.id, "cancelled")}
+                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06]"
+                  >
+                    <XCircle size={13} />
+                    Cancel Project
+                  </button>
+                )}
                 <button
                   onClick={() => onEdit(project)}
                   className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
