@@ -3,6 +3,7 @@ import NewLeadEmail from "@/emails/new-lead-notification";
 import LeadAutoReply from "@/emails/lead-autoreply";
 import ProposalEmail from "@/emails/proposal-email";
 import InvoiceEmail from "@/emails/invoice-email";
+import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 
 const FROM =
   process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>";
@@ -57,6 +58,8 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
     throw new Error("Cannot send — verify a custom domain in Resend first (test mode only delivers to admin)");
   }
 
+  const pdfBuffer = await generateProposalPdf(proposal, lead);
+
   let result;
   try {
     result = await resend.emails.send({
@@ -70,6 +73,12 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
         terms: proposal.terms,
         previewUrl,
       }),
+      attachments: [
+        {
+          filename: `Proposal-${proposal.title.replace(/[^a-zA-Z0-9]/g, "-")}.pdf`,
+          content: pdfBuffer,
+        },
+      ],
     });
   } catch (raw) {
     console.error("[resend] proposal email threw:", raw);
@@ -95,6 +104,8 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
       })
     : null;
 
+  const pdfBuffer = await generateInvoicePdf(invoice, client);
+
   let result;
   try {
     result = await resend.emails.send({
@@ -108,6 +119,12 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
         dueDate,
         previewUrl,
       }),
+      attachments: [
+        {
+          filename: `Invoice-${invoice.invoice_number}.pdf`,
+          content: pdfBuffer,
+        },
+      ],
     });
   } catch (raw) {
     console.error("[resend] invoice email threw:", raw);
