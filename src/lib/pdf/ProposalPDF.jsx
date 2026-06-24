@@ -5,9 +5,15 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.background,
     padding: spacing.page,
+    paddingTop: 0,
     fontFamily: fonts.body,
     fontSize: fontSizes.body,
     color: colors.text,
+  },
+  topBar: {
+    height: 3,
+    backgroundColor: colors.accent,
+    marginBottom: 44,
   },
   header: {
     flexDirection: "row",
@@ -18,8 +24,8 @@ const styles = StyleSheet.create({
     borderBottom: `1px solid ${colors.border}`,
   },
   logo: {
-    width: 120,
-    height: 24,
+    width: 130,
+    height: 26,
   },
   meta: {
     alignItems: "flex-end",
@@ -27,37 +33,45 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes.h1,
     fontWeight: 700,
-    color: "#fff",
+    color: colors.accent,
+    letterSpacing: -0.3,
   },
   statusBadge: {
     fontSize: fontSizes.small,
-    fontWeight: 700,
+    fontWeight: 600,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginTop: spacing.tight,
+    letterSpacing: 1.5,
   },
   sentStatus: {
-    color: colors.success,
+    color: colors.accent,
   },
   dateRow: {
     fontSize: fontSizes.small,
     color: colors.textMuted,
     marginTop: spacing.tight,
   },
-  toSection: {
+  preparedSection: {
     marginBottom: spacing.section,
   },
-  toLabel: {
+  preparedLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 700,
+    fontWeight: 600,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  preparedDivider: {
+    width: 28,
+    height: 1.5,
+    backgroundColor: colors.accent,
+    marginBottom: spacing.element,
   },
   toName: {
-    fontSize: fontSizes.body,
-    fontWeight: 700,
+    fontSize: fontSizes.h3,
+    fontWeight: 600,
     color: colors.text,
     marginBottom: 2,
   },
@@ -71,20 +85,21 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    lineHeight: 1.6,
+    lineHeight: 1.7,
     marginBottom: spacing.element,
   },
   heading1: {
     fontSize: fontSizes.h2,
     fontWeight: 700,
-    color: "#fff",
+    color: colors.accent,
     marginTop: spacing.block,
     marginBottom: spacing.element,
+    letterSpacing: -0.2,
   },
   heading2: {
     fontSize: fontSizes.h3,
     fontWeight: 600,
-    color: "#fff",
+    color: colors.text,
     marginTop: spacing.block,
     marginBottom: spacing.element,
   },
@@ -93,12 +108,12 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    lineHeight: 1.5,
+    lineHeight: 1.6,
   },
   bullet: {
-    width: 16,
+    width: 14,
     fontSize: fontSizes.body,
-    color: colors.textSecondary,
+    color: colors.accent,
   },
   link: {
     color: colors.accent,
@@ -107,21 +122,43 @@ const styles = StyleSheet.create({
   footerSection: {
     marginTop: spacing.section,
     paddingTop: spacing.block,
-    borderTop: `1px solid ${colors.border}`,
+    borderTop: `1px solid ${colors.borderLight}`,
   },
   footerLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 700,
+    fontWeight: 600,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  footerDivider: {
+    width: 28,
+    height: 1.5,
+    backgroundColor: colors.accent,
+    marginBottom: spacing.element,
   },
   footerText: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    lineHeight: 1.5,
+    lineHeight: 1.6,
     marginBottom: spacing.element,
+  },
+  contactBar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 24,
+    marginTop: spacing.section,
+    paddingTop: spacing.block,
+    borderTop: `1px solid ${colors.border}`,
+  },
+  contactItem: {
+    fontSize: fontSizes.small,
+    color: colors.textMuted,
+  },
+  contactDivider: {
+    fontSize: fontSizes.small,
+    color: colors.border,
   },
 });
 
@@ -153,7 +190,7 @@ function ProposalContentNode({ node }) {
     case "bulletList":
       return (node.content || []).map((item, i) => (
         <View key={i} style={styles.listItem}>
-          <Text style={styles.bullet}>{"\u2022"}</Text>
+          <Text style={styles.bullet}>{"\u25E6"}</Text>
           <Text style={{ flex: 1 }}>
             <InlineContent content={item.content} />
           </Text>
@@ -188,8 +225,8 @@ function InlineContent({ content }) {
       let text = esc(node.text);
       if (node.marks) {
         for (const mark of node.marks) {
-          if (mark.type === "bold") text = <Text key={i} style={{ fontFamily: fonts.bold }}>{text}</Text>;
-          else if (mark.type === "italic") text = <Text key={i} style={{ fontFamily: fonts.oblique }}>{text}</Text>;
+          if (mark.type === "bold") text = <Text key={i} style={{ fontWeight: 700, color: colors.text }}>{text}</Text>;
+          else if (mark.type === "italic") text = <Text key={i} style={{ fontStyle: "italic" }}>{text}</Text>;
           else if (mark.type === "underline") text = <Text key={i} style={{ textDecoration: "underline" }}>{text}</Text>;
           else if (mark.type === "link") {
             const href = mark.attrs?.href || "";
@@ -222,14 +259,16 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function ProposalPDF({ proposal, lead }) {
+export default function ProposalPDF({ proposal, lead, logo }) {
   const content = proposal.content;
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <View style={styles.topBar} />
+
         <View style={styles.header}>
-          <Image style={styles.logo} src="/meteoric-logo.png" />
+          {logo && <Image style={styles.logo} src={logo} />}
           <View style={styles.meta}>
             <Text style={styles.title}>{esc(proposal.title)}</Text>
             <StatusBadge status={proposal.status} />
@@ -242,8 +281,9 @@ export default function ProposalPDF({ proposal, lead }) {
           </View>
         </View>
 
-        <View style={styles.toSection}>
-          <Text style={styles.toLabel}>Prepared for</Text>
+        <View style={styles.preparedSection}>
+          <Text style={styles.preparedLabel}>Prepared for</Text>
+          <View style={styles.preparedDivider} />
           {lead && (
             <>
               <Text style={styles.toName}>{esc(lead.name)}</Text>
@@ -263,6 +303,7 @@ export default function ProposalPDF({ proposal, lead }) {
         {proposal.timeline && (
           <View style={styles.footerSection}>
             <Text style={styles.footerLabel}>Timeline</Text>
+            <View style={styles.footerDivider} />
             <Text style={styles.footerText}>{esc(proposal.timeline)}</Text>
           </View>
         )}
@@ -270,9 +311,16 @@ export default function ProposalPDF({ proposal, lead }) {
         {proposal.terms && (
           <View style={styles.footerSection}>
             <Text style={styles.footerLabel}>Terms & Conditions</Text>
+            <View style={styles.footerDivider} />
             <Text style={styles.footerText}>{esc(proposal.terms)}</Text>
           </View>
         )}
+
+        <View style={styles.contactBar}>
+          <Text style={styles.contactItem}>Meteoric</Text>
+          <Text style={styles.contactItem}>contact@withmeteoric.com</Text>
+          <Text style={styles.contactItem}>withmeteoric.com</Text>
+        </View>
       </Page>
     </Document>
   );

@@ -5,9 +5,15 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.background,
     padding: spacing.page,
+    paddingTop: 0,
     fontFamily: fonts.body,
     fontSize: fontSizes.body,
     color: colors.text,
+  },
+  topBar: {
+    height: 3,
+    backgroundColor: colors.accent,
+    marginBottom: 44,
   },
   header: {
     flexDirection: "row",
@@ -18,8 +24,8 @@ const styles = StyleSheet.create({
     borderBottom: `1px solid ${colors.border}`,
   },
   logo: {
-    width: 120,
-    height: 24,
+    width: 130,
+    height: 26,
   },
   meta: {
     alignItems: "flex-end",
@@ -27,16 +33,18 @@ const styles = StyleSheet.create({
   invoiceNumber: {
     fontSize: fontSizes.h1,
     fontWeight: 700,
-    color: "#fff",
+    color: colors.accent,
+    letterSpacing: -0.3,
   },
   statusBadge: {
     fontSize: fontSizes.small,
-    fontWeight: 700,
+    fontWeight: 600,
     textTransform: "uppercase",
     marginTop: spacing.tight,
+    letterSpacing: 1.5,
   },
   statusSent: { color: colors.textMuted },
-  statusPaid: { color: colors.success },
+  statusPaid: { color: colors.accent },
   statusOverdue: { color: colors.danger },
   dates: {
     fontSize: fontSizes.small,
@@ -45,8 +53,8 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
   },
   paidDate: {
-    color: colors.success,
-    fontWeight: 700,
+    color: colors.accent,
+    fontWeight: 600,
   },
   parties: {
     flexDirection: "row",
@@ -57,15 +65,21 @@ const styles = StyleSheet.create({
   partyBlock: {},
   partyLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 700,
+    fontWeight: 600,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  partyDivider: {
+    width: 28,
+    height: 1.5,
+    backgroundColor: colors.accent,
+    marginBottom: spacing.element,
   },
   partyName: {
-    fontSize: fontSizes.body,
-    fontWeight: 700,
+    fontSize: fontSizes.title,
+    fontWeight: 600,
     color: colors.text,
     marginBottom: 2,
   },
@@ -82,7 +96,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    borderBottom: `1px solid ${colors.border}`,
+    borderBottom: `1px solid ${colors.accentMuted}`,
     paddingBottom: spacing.element,
     marginBottom: spacing.tight,
   },
@@ -90,12 +104,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.label,
     fontWeight: 700,
     textTransform: "uppercase",
-    color: colors.textMuted,
-    letterSpacing: 0.5,
+    color: colors.accent,
+    letterSpacing: 1,
   },
   tableRow: {
     flexDirection: "row",
-    borderBottom: `1px solid ${colors.border.replace("0.06", "0.04")}`,
+    borderBottom: `1px solid ${colors.borderLight}`,
     paddingVertical: spacing.element,
   },
   tableCell: {
@@ -121,31 +135,49 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   totalRowFinal: {
-    borderTop: `1px solid ${colors.textMuted}40`,
+    borderTop: `1px solid ${colors.accentMuted}`,
     marginTop: 2,
     paddingTop: spacing.element,
     fontSize: fontSizes.title,
     fontWeight: 700,
-    color: "#fff",
+    color: colors.accent,
   },
   footerSection: {
     marginTop: spacing.section,
     paddingTop: spacing.block,
-    borderTop: `1px solid ${colors.border}`,
+    borderTop: `1px solid ${colors.borderLight}`,
   },
   footerLabel: {
     fontSize: fontSizes.label,
-    fontWeight: 700,
+    fontWeight: 600,
     textTransform: "uppercase",
     color: colors.textMuted,
     marginBottom: spacing.tight,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  footerDivider: {
+    width: 28,
+    height: 1.5,
+    backgroundColor: colors.accent,
+    marginBottom: spacing.element,
   },
   footerText: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
-    lineHeight: 1.5,
+    lineHeight: 1.6,
     marginBottom: spacing.element,
+  },
+  contactBar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 24,
+    marginTop: spacing.section,
+    paddingTop: spacing.block,
+    borderTop: `1px solid ${colors.border}`,
+  },
+  contactItem: {
+    fontSize: fontSizes.small,
+    color: colors.textMuted,
   },
 });
 
@@ -177,7 +209,7 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function InvoicePDF({ invoice, client }) {
+export default function InvoicePDF({ invoice, client, logo }) {
   const items = invoice.items || [];
   const subtotal = items.reduce(
     (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
@@ -189,8 +221,10 @@ export default function InvoicePDF({ invoice, client }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <View style={styles.topBar} />
+
         <View style={styles.header}>
-          <Image style={styles.logo} src="/meteoric-logo.png" />
+          {logo && <Image style={styles.logo} src={logo} />}
           <View style={styles.meta}>
             <Text style={styles.invoiceNumber}>{esc(invoice.invoice_number)}</Text>
             <StatusBadge status={invoice.status} />
@@ -207,11 +241,14 @@ export default function InvoicePDF({ invoice, client }) {
         <View style={styles.parties}>
           <View style={styles.partyBlock}>
             <Text style={styles.partyLabel}>From</Text>
+            <View style={styles.partyDivider} />
             <Text style={styles.partyName}>Meteoric</Text>
             <Text style={styles.partyDetail}>contact@withmeteoric.com</Text>
+            <Text style={styles.partyDetail}>withmeteoric.com</Text>
           </View>
           <View style={[styles.partyBlock, styles.toBlock]}>
             <Text style={styles.partyLabel}>To</Text>
+            <View style={[styles.partyDivider, { alignSelf: "flex-end" }]} />
             <Text style={styles.partyName}>{esc(client?.name || "\u2014")}</Text>
             {client?.company && (
               <Text style={styles.partyDetail}>{esc(client.company)}</Text>
@@ -269,17 +306,25 @@ export default function InvoicePDF({ invoice, client }) {
             {invoice.notes && (
               <>
                 <Text style={styles.footerLabel}>Notes</Text>
+                <View style={styles.footerDivider} />
                 <Text style={styles.footerText}>{esc(invoice.notes)}</Text>
               </>
             )}
             {invoice.terms && (
               <>
                 <Text style={styles.footerLabel}>Terms & Conditions</Text>
+                <View style={styles.footerDivider} />
                 <Text style={styles.footerText}>{esc(invoice.terms)}</Text>
               </>
             )}
           </View>
         )}
+
+        <View style={styles.contactBar}>
+          <Text style={styles.contactItem}>Meteoric</Text>
+          <Text style={styles.contactItem}>contact@withmeteoric.com</Text>
+          <Text style={styles.contactItem}>withmeteoric.com</Text>
+        </View>
       </Page>
     </Document>
   );
