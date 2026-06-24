@@ -1,7 +1,6 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 import fs from "fs";
 import path from "path";
-import "./fonts";
 import ProposalPDF from "./ProposalPDF";
 import InvoicePDF from "./InvoicePDF";
 
