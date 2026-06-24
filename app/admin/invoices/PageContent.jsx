@@ -31,6 +31,7 @@ function getCurrencySymbol(currency) {
   return CURRENCIES.find((c) => c.label === currency)?.symbol || "$";
 }
 import { BulkActionBar } from "../components/BulkActionBar";
+import { StatusSelect } from "../components/StatusSelect";
 import { IconButton } from "../components/IconButton";
 import { FormField } from "../components/FormField";
 import { useFilters } from "@/hooks/useFilters";
@@ -87,6 +88,7 @@ export default function InvoicesPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [bulkConfirm, setBulkConfirm] = useState(null);
   const [sending, setSending] = useState(null);
+  const [editingStatus, setEditingStatus] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
   const searchParams = useSearchParams();
@@ -187,6 +189,21 @@ export default function InvoicesPage() {
       setBulkConfirm(null);
     }
     setIsDeleting(false);
+  }
+
+  async function handleStatusChange(id, newStatus) {
+    setEditingStatus(id);
+    try {
+      await updateInvoiceStatus(id, newStatus);
+      setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: newStatus } : inv)));
+      if (viewInvoice?.id === id) {
+        setViewInvoice((prev) => prev ? { ...prev, status: newStatus } : null);
+      }
+      addToast("Status updated", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to update status", "error");
+    }
+    setEditingStatus(null);
   }
 
   async function handleBulkStatusChange(newStatus) {
@@ -398,6 +415,8 @@ export default function InvoicesPage() {
                 onEdit={setEditingInvoice}
                 onSend={handleSend}
                 onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
                 sending={sending}
                 selected={selected}
                 onToggleSelect={toggleSelect}
@@ -412,6 +431,8 @@ export default function InvoicesPage() {
                 onEdit={setEditingInvoice}
                 onSend={handleSend}
                 onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
                 sending={sending}
                 selected={selected}
                 onToggleSelect={toggleSelect}
@@ -496,7 +517,7 @@ function SortIcon({ column, col, dir }) {
   );
 }
 
-function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
+function DesktopTable({ items, onView, onEdit, onSend, onDelete, onStatusChange, editingStatus, sending, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
   const allSelected = items.length > 0 && selected.size === items.length;
 
   return (
@@ -558,9 +579,12 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                 )}
               </td>
               <td className="px-5 py-3.5">
-                <span className={`inline-flex items-center px-2.5 py-0.5 text-[10px] font-semibold border ${statusColor(inv.status)}`}>
-                  {statusList.find((s) => s.value === inv.status)?.label || inv.status}
-                </span>
+                <StatusSelect
+                  value={inv.status}
+                  onChange={(val) => onStatusChange(inv.id, val)}
+                  disabled={editingStatus === inv.id}
+                  options={statusList}
+                />
               </td>
               <td className="px-5 py-3.5 text-sm text-white/60 tabular-nums">
                 {getCurrencySymbol(inv.currency)}{Number(inv.total).toFixed(2)}
@@ -621,7 +645,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
   );
 }
 
-function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selected, onToggleSelect }) {
+function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, editingStatus, sending, selected, onToggleSelect }) {
   return (
     <div className="sm:hidden space-y-3">
       {items.map((inv) => (
@@ -645,9 +669,12 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
                 )}
               </div>
             </div>
-            <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold border shrink-0 ${statusColor(inv.status)}`}>
-              {statusList.find((s) => s.value === inv.status)?.label || inv.status}
-            </span>
+            <StatusSelect
+              value={inv.status}
+              onChange={(val) => onStatusChange(inv.id, val)}
+              disabled={editingStatus === inv.id}
+              options={statusList}
+            />
           </div>
           <div className="flex items-center justify-between mt-2">
             <span className="text-sm text-white/60 tabular-nums font-medium">{getCurrencySymbol(inv.currency)}{Number(inv.total).toFixed(2)}</span>

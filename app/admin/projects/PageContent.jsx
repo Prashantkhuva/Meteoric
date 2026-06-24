@@ -17,6 +17,7 @@ import { ConfirmDialog } from "../components/ConfirmDialog";
 import { Pagination } from "../components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
 import { BulkActionBar } from "../components/BulkActionBar";
+import { StatusSelect } from "../components/StatusSelect";
 import { IconButton } from "../components/IconButton";
 
 function displayServices(val) {
@@ -81,6 +82,7 @@ export default function ProjectsPage() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [bulkConfirm, setBulkConfirm] = useState(null);
+  const [editingStatus, setEditingStatus] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
   const searchRef = useRef(null);
@@ -215,16 +217,18 @@ export default function ProjectsPage() {
   }
 
   async function handleStatusChange(id, newStatus) {
+    setEditingStatus(id);
     try {
       await updateProjectStatus(id, newStatus);
       setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
       if (viewProject?.id === id) {
         setViewProject((prev) => prev ? { ...prev, status: newStatus } : null);
       }
-      addToast(`Project marked as ${projectStatuses.find((s) => s.value === newStatus)?.label || newStatus}`, "success");
+      addToast("Status updated", "success");
     } catch (err) {
       addToast(err.message || "Failed to update status", "error");
     }
+    setEditingStatus(null);
   }
 
   if (loading) {
@@ -320,6 +324,8 @@ export default function ProjectsPage() {
                 onView={setViewProject}
                 onEdit={setEditingProject}
                 onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
                 selected={selected}
                 onToggleSelect={toggleSelect}
                 onToggleSelectAll={toggleSelectAll}
@@ -332,6 +338,8 @@ export default function ProjectsPage() {
                 onView={setViewProject}
                 onEdit={setEditingProject}
                 onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
                 selected={selected}
                 onToggleSelect={toggleSelect}
               />
@@ -410,7 +418,7 @@ function SortIcon({ column, col, dir }) {
   );
 }
 
-function DesktopTable({ items, onView, onEdit, onDelete, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
+function DesktopTable({ items, onView, onEdit, onDelete, onStatusChange, editingStatus, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
   const allSelected = items.length > 0 && selected.size === items.length;
 
   return (
@@ -470,9 +478,12 @@ function DesktopTable({ items, onView, onEdit, onDelete, selected, onToggleSelec
                 )}
               </td>
               <td className="px-5 py-3.5">
-                <span className={`inline-flex items-center px-2.5 py-0.5 text-[10px] font-semibold border ${statusColor(p.status)}`}>
-                  {projectStatuses.find((s) => s.value === p.status)?.label || p.status}
-                </span>
+                <StatusSelect
+                  value={p.status}
+                  onChange={(val) => onStatusChange(p.id, val)}
+                  disabled={editingStatus === p.id}
+                  options={projectStatuses}
+                />
               </td>
               <td className="px-5 py-3.5 text-sm text-white/60 tabular-nums">
                 {p.budget ? `$${Number(p.budget).toLocaleString()}` : "—"}
@@ -500,7 +511,7 @@ function DesktopTable({ items, onView, onEdit, onDelete, selected, onToggleSelec
   );
 }
 
-function MobileCards({ items, onView, onEdit, onDelete, selected, onToggleSelect }) {
+function MobileCards({ items, onView, onEdit, onDelete, onStatusChange, editingStatus, selected, onToggleSelect }) {
   return (
     <div className="sm:hidden space-y-3">
       {items.map((p) => (
@@ -524,9 +535,12 @@ function MobileCards({ items, onView, onEdit, onDelete, selected, onToggleSelect
                 )}
               </div>
             </div>
-            <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold border shrink-0 ${statusColor(p.status)}`}>
-              {projectStatuses.find((s) => s.value === p.status)?.label || p.status}
-            </span>
+            <StatusSelect
+              value={p.status}
+              onChange={(val) => onStatusChange(p.id, val)}
+              disabled={editingStatus === p.id}
+              options={projectStatuses}
+            />
           </div>
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-3 text-xs text-white/30">

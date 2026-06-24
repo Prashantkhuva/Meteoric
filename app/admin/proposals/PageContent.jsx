@@ -74,6 +74,7 @@ export default function ProposalsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [bulkConfirm, setBulkConfirm] = useState(null);
   const [sending, setSending] = useState(null);
+  const [editingStatus, setEditingStatus] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const router = useRouter();
   const addToast = useToast();
@@ -232,16 +233,18 @@ export default function ProposalsPage() {
   }
 
   async function handleStatusChange(id, newStatus) {
+    setEditingStatus(id);
     try {
       await updateProposalStatus(id, newStatus);
       setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
       if (viewProposal?.id === id) {
         setViewProposal((prev) => prev ? { ...prev, status: newStatus } : null);
       }
-      addToast(`Proposal marked as ${statusList.find((s) => s.value === newStatus)?.label || newStatus}`, "success");
+      addToast("Status updated", "success");
     } catch (err) {
       addToast(err.message || "Failed to update status", "error");
     }
+    setEditingStatus(null);
   }
 
   if (loading) {
@@ -336,6 +339,8 @@ export default function ProposalsPage() {
                 onEdit={setEditingProposal}
                 onSend={handleSend}
                 onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
                 sending={sending}
                 selected={selected}
                 onToggleSelect={toggleSelect}
@@ -350,6 +355,8 @@ export default function ProposalsPage() {
                 onEdit={setEditingProposal}
                 onSend={handleSend}
                 onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
                 sending={sending}
                 selected={selected}
                 onToggleSelect={toggleSelect}
@@ -432,7 +439,7 @@ function SortIcon({ column, col, dir }) {
   );
 }
 
-function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
+function DesktopTable({ items, onView, onEdit, onSend, onDelete, onStatusChange, editingStatus, sending, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }) {
   const allSelected = items.length > 0 && selected.size === items.length;
 
   return (
@@ -491,9 +498,12 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                 )}
               </td>
               <td className="px-5 py-3.5">
-                <span className={`inline-flex items-center px-2.5 py-0.5 text-[10px] font-semibold border ${statusColor(p.status)}`}>
-                  {statusList.find((s) => s.value === p.status)?.label || p.status}
-                </span>
+                <StatusSelect
+                  value={p.status}
+                  onChange={(val) => onStatusChange(p.id, val)}
+                  disabled={editingStatus === p.id}
+                  options={statusList}
+                />
               </td>
               <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
                 <span className="flex items-center gap-1.5">
@@ -547,7 +557,7 @@ onClick={async () => {
   );
 }
 
-function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selected, onToggleSelect }) {
+function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, editingStatus, sending, selected, onToggleSelect }) {
   return (
     <div className="sm:hidden space-y-3">
       {items.map((p) => (
@@ -571,9 +581,12 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
                 )}
               </div>
             </div>
-            <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold border shrink-0 ${statusColor(p.status)}`}>
-              {statusList.find((s) => s.value === p.status)?.label || p.status}
-            </span>
+            <StatusSelect
+              value={p.status}
+              onChange={(val) => onStatusChange(p.id, val)}
+              disabled={editingStatus === p.id}
+              options={statusList}
+            />
           </div>
           <div className="flex items-center justify-between mt-3">
             <span className="text-[10px] text-white/30 tabular-nums">{formatDate(p.created_at)}</span>
