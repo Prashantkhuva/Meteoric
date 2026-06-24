@@ -11,27 +11,37 @@ export async function GET(request, { params }) {
     return new Response("Service unavailable", { status: 500 });
   }
 
-  let { data: proposal } = await supabase
-    .from("proposals")
-    .select("*, lead:leads(name, email, phone)")
-    .eq("id", id)
-    .single();
+  let proposal;
 
-  if (!proposal) {
-    return new Response("Not found", { status: 404 });
-  }
-
-  // If no auth cookie and no valid token, redirect to login
-  if (!token || token !== proposal.share_token) {
+  if (token) {
+    const { data, error } = await supabase.rpc("get_proposal_with_lead", {
+      proposal_id: id,
+      token,
+    });
+    if (error || !data) {
+      return new Response("Not found", { status: 404 });
+    }
+    proposal = typeof data === "string" ? JSON.parse(data) : data;
+  } else {
     const cookieStore = await cookies();
     const hasAuthCookie = cookieStore.getAll().some((c) => c.name.startsWith("sb-"));
     if (!hasAuthCookie) {
-      if (token) return new Response("Not found", { status: 404 });
       return new Response(null, {
         status: 302,
         headers: { Location: "/login?redirect=/preview/proposal/" + id },
       });
     }
+
+    const { data, error } = await supabase
+      .from("proposals")
+      .select("*, lead:leads(name, email, phone)")
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      return new Response("Not found", { status: 404 });
+    }
+    proposal = data;
   }
 
   if (!proposal) {

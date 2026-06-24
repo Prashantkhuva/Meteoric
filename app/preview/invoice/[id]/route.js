@@ -11,27 +11,37 @@ export async function GET(request, { params }) {
     return new Response("Service unavailable", { status: 500 });
   }
 
-  let { data: invoice } = await supabase
-    .from("invoices")
-    .select("*, client:clients(name, email, company)")
-    .eq("id", id)
-    .single();
+  let invoice;
 
-  if (!invoice) {
-    return new Response("Not found", { status: 404 });
-  }
-
-  // If no auth cookie and no valid token, redirect to login
-  if (!token || token !== invoice.share_token) {
+  if (token) {
+    const { data, error } = await supabase.rpc("get_invoice_with_client", {
+      invoice_id: id,
+      token,
+    });
+    if (error || !data) {
+      return new Response("Not found", { status: 404 });
+    }
+    invoice = typeof data === "string" ? JSON.parse(data) : data;
+  } else {
     const cookieStore = await cookies();
     const hasAuthCookie = cookieStore.getAll().some((c) => c.name.startsWith("sb-"));
     if (!hasAuthCookie) {
-      if (token) return new Response("Not found", { status: 404 });
       return new Response(null, {
         status: 302,
         headers: { Location: "/login?redirect=/preview/invoice/" + id },
       });
     }
+
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*, client:clients(name, email, company)")
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      return new Response("Not found", { status: 404 });
+    }
+    invoice = data;
   }
 
   if (!invoice) {

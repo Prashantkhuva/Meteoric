@@ -19,16 +19,14 @@ export async function GET(request, { params }) {
 
   try {
     if (type === "proposal") {
-      const { data: proposal } = await supabase
-        .from("proposals")
-        .select("*, lead:leads(name, email, phone)")
-        .eq("id", id)
-        .eq("share_token", token)
-        .single();
-
-      if (!proposal) {
+      const { data, error } = await supabase.rpc("get_proposal_with_lead", {
+        proposal_id: id,
+        token,
+      });
+      if (error || !data) {
         return new Response("Not found", { status: 404 });
       }
+      const proposal = typeof data === "string" ? JSON.parse(data) : data;
 
       const pdfBuffer = await generateProposalPdf(proposal, proposal.lead);
       const filename = `Proposal-${proposal.title.replace(/[^a-zA-Z0-9]/g, "-")}.pdf`;
@@ -42,16 +40,14 @@ export async function GET(request, { params }) {
       });
     }
 
-    const { data: invoice } = await supabase
-      .from("invoices")
-      .select("*, client:clients(name, email, phone)")
-      .eq("id", id)
-      .eq("share_token", token)
-      .single();
-
-    if (!invoice) {
+    const { data, error } = await supabase.rpc("get_invoice_with_client", {
+      invoice_id: id,
+      token,
+    });
+    if (error || !data) {
       return new Response("Not found", { status: 404 });
     }
+    const invoice = typeof data === "string" ? JSON.parse(data) : data;
 
     const pdfBuffer = await generateInvoicePdf(invoice, invoice.client);
     const filename = `Invoice-${invoice.invoice_number}.pdf`;
