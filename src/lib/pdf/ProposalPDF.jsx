@@ -225,8 +225,8 @@ function InlineContent({ content }) {
       let text = esc(node.text);
       if (node.marks) {
         for (const mark of node.marks) {
-          if (mark.type === "bold") text = <Text key={i} style={{ fontWeight: 700, color: colors.text }}>{text}</Text>;
-          else if (mark.type === "italic") text = <Text key={i} style={{ fontStyle: "italic" }}>{text}</Text>;
+          if (mark.type === "bold") text = <Text key={i} style={{ fontFamily: fonts.bold, color: colors.text }}>{text}</Text>;
+          else if (mark.type === "italic") text = <Text key={i} style={{ fontFamily: fonts.oblique }}>{text}</Text>;
           else if (mark.type === "underline") text = <Text key={i} style={{ textDecoration: "underline" }}>{text}</Text>;
           else if (mark.type === "link") {
             const href = mark.attrs?.href || "";
