@@ -946,7 +946,18 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
 function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, sending }) {
   if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
+  const scrollRef = useRef(null);
   const drawerCurrency = getCurrencySymbol(invoice.currency);
+
+  function handleWheel(e) {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atTop = el.scrollTop === 0;
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+    if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) return;
+    el.scrollTop += e.deltaY;
+    e.preventDefault();
+  }
 
   useEffect(() => {
     if (!invoice) return;
@@ -967,7 +978,7 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
             onClick={onClose}
           />
           <motion.div
-            ref={trapRef}
+            ref={(el) => { trapRef.current = el; scrollRef.current = el }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -976,6 +987,7 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
             role="dialog"
             aria-modal="true"
             aria-labelledby="invoice-detail-title"
+            onWheel={handleWheel}
           >
             <div className="sticky top-0 flex items-center justify-between border-b border-white/[0.06] bg-[#0a0a0a] px-6 py-4 z-10">
               <h2 id="invoice-detail-title" className="text-base font-semibold tracking-tight text-white/90">
