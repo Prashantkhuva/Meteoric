@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -305,13 +306,14 @@ export async function sendProposal(id) {
     if (!proposal) return { success: false, error: "Proposal not found" };
     if (!proposal.lead?.email) return { success: false, error: "Lead has no email address" };
 
-    const previewUrl = `${getSiteUrl()}/preview/proposal/${safeId}`;
+    const shareToken = randomUUID();
+    const previewUrl = `${getSiteUrl()}/preview/proposal/${safeId}?token=${shareToken}`;
 
     await sendProposalEmail(proposal, proposal.lead, previewUrl);
 
     const { error } = await supabase
       .from("proposals")
-      .update({ status: "sent", sent_at: new Date().toISOString() })
+      .update({ status: "sent", sent_at: new Date().toISOString(), share_token: shareToken })
       .eq("id", safeId);
 
     if (error) return { success: false, error: error.message };
@@ -419,13 +421,14 @@ export async function sendInvoice(id) {
     if (!invoice) return { success: false, error: "Invoice not found" };
     if (!invoice.client?.email) return { success: false, error: "Client has no email address" };
 
-    const previewUrl = `${getSiteUrl()}/preview/invoice/${safeId}`;
+    const shareToken = randomUUID();
+    const previewUrl = `${getSiteUrl()}/preview/invoice/${safeId}?token=${shareToken}`;
 
     await sendInvoiceEmail(invoice, invoice.client, previewUrl);
 
     const { error } = await supabase
       .from("invoices")
-      .update({ status: "sent", sent_at: new Date().toISOString() })
+      .update({ status: "sent", sent_at: new Date().toISOString(), share_token: shareToken })
       .eq("id", safeId);
 
     if (error) return { success: false, error: error.message };

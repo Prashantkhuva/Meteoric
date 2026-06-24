@@ -524,7 +524,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                   <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" className="text-white/30 hover:text-white/50" />
                   {inv.client?.phone && (
                     <IconButton
-                      onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}. Check your email for details.`)}`, "_blank")}
+                      onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${inv.share_token ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${inv.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
                       icon={MessageCircle}
                       label="Share via WhatsApp"
                       className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
@@ -602,7 +602,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
             <IconButton onClick={() => window.open(`/preview/invoice/${inv.id}`, "_blank")} icon={Printer} label="Print / PDF" />
             {inv.client?.phone && (
               <IconButton
-                onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.`)}`, "_blank")}
+                onClick={() => window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for $${Number(inv.total).toFixed(2)}.${inv.share_token ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${inv.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
                 icon={MessageCircle}
                 label="Share via WhatsApp"
                 className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
@@ -1048,7 +1048,7 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                 </button>
                 {invoice.client?.phone && (
                   <button
-                    onClick={() => window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for $${Number(invoice.total).toFixed(2)}. View it here: ${getSiteUrl()}/preview/invoice/${invoice.id}`)}`, "_blank")}
+                    onClick={() => window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for $${Number(invoice.total).toFixed(2)}.${invoice.share_token ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${invoice.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
                   >
                     <MessageCircle size={13} />

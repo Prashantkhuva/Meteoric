@@ -477,7 +477,7 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, sending, select
                   <IconButton onClick={() => onView(p)} icon={Eye} label="View details" />
                   {p.lead?.phone && (
                     <IconButton
-                      onClick={() => window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}, I've sent you a proposal: ${p.title}. View it here: ${getSiteUrl()}/preview/proposal/${p.id}`)}`, "_blank")}
+                      onClick={() => window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}, I've sent you a proposal: ${p.title}.${p.share_token ? ` Download: ${getSiteUrl()}/api/pdf/proposal/${p.id}?token=${p.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
                       icon={MessageCircle}
                       label="Share via WhatsApp"
                       className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
@@ -549,7 +549,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, sending, selecte
               <IconButton onClick={() => onView(p)} icon={Eye} label="View details" />
               {p.lead?.phone && (
                 <IconButton
-                  onClick={() => window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}, I've sent you a proposal: ${p.title}. View it here: ${getSiteUrl()}/preview/proposal/${p.id}`)}`, "_blank")}
+                  onClick={() => window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}, I've sent you a proposal: ${p.title}.${p.share_token ? ` Download: ${getSiteUrl()}/api/pdf/proposal/${p.id}?token=${p.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
                   icon={MessageCircle}
                   label="Share via WhatsApp"
                   className="text-emerald-400/30 hover:text-emerald-400/60 hover:bg-emerald-500/[0.04]"
@@ -834,7 +834,7 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
                 </button>
                 {proposal.lead?.phone && (
                   <button
-                    onClick={() => window.open(`https://wa.me/${proposal.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${proposal.lead.name}, I've sent you a proposal: ${proposal.title}. View it here: ${getSiteUrl()}/preview/proposal/${proposal.id}`)}`, "_blank")}
+                    onClick={() => window.open(`https://wa.me/${proposal.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${proposal.lead.name}, I've sent you a proposal: ${proposal.title}.${proposal.share_token ? ` Download: ${getSiteUrl()}/api/pdf/proposal/${proposal.id}?token=${proposal.share_token}` : " Check your email for the PDF."}`)}`, "_blank")}
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
                   >
                     <MessageCircle size={13} />

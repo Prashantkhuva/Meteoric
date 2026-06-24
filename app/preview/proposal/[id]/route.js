@@ -2,28 +2,37 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
-export async function GET(_request, { params }) {
+export async function GET(request, { params }) {
   const { id } = await params;
-
-  const cookieStore = await cookies();
-  const hasAuthCookie = cookieStore.getAll().some((c) => c.name.startsWith("sb-"));
-  if (!hasAuthCookie) {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/login?redirect=/preview/proposal/" + id },
-    });
-  }
+  const token = request.nextUrl.searchParams.get("token");
 
   const supabase = await createClient();
   if (!supabase) {
     return new Response("Service unavailable", { status: 500 });
   }
 
-  const { data: proposal } = await supabase
+  let { data: proposal } = await supabase
     .from("proposals")
     .select("*, lead:leads(name, email, phone)")
     .eq("id", id)
     .single();
+
+  if (!proposal) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  // If no auth cookie and no valid token, redirect to login
+  if (!token || token !== proposal.share_token) {
+    const cookieStore = await cookies();
+    const hasAuthCookie = cookieStore.getAll().some((c) => c.name.startsWith("sb-"));
+    if (!hasAuthCookie) {
+      if (token) return new Response("Not found", { status: 404 });
+      return new Response(null, {
+        status: 302,
+        headers: { Location: "/login?redirect=/preview/proposal/" + id },
+      });
+    }
+  }
 
   if (!proposal) {
     return new Response("Not found", { status: 404 });
