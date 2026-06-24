@@ -646,6 +646,17 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   const [items, setItems] = useState(invoice?.items || [{ description: "", quantity: 1, rate: 0 }]);
   const [tax, setTax] = useState(invoice?.tax || 0);
   const trapRef = useFocusTrap(open);
+  const scrollRef = useRef(null);
+
+  function handleWheel(e) {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atTop = el.scrollTop === 0;
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+    if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) return;
+    el.scrollTop += e.deltaY;
+    e.preventDefault();
+  }
 
   useEffect(() => {
     if (open && invoice) {
@@ -698,7 +709,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="invoice-form-title">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div ref={trapRef} className="relative w-full max-w-2xl max-h-full overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
+      <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative w-full max-w-2xl max-h-full overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/[0.06] bg-[#0c0c0c] px-6 py-4">
           <h2 id="invoice-form-title" className="text-lg font-semibold tracking-tight text-white/90">{title}</h2>
           <button
