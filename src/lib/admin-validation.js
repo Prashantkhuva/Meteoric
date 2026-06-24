@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const VALID_LEAD_STATUSES = ["inquiry", "discovery", "proposal", "in_progress", "completed", "lost"];
-export const VALID_CLIENT_STATUSES = ["onboarding", "active", "retainer", "past"];
-export const VALID_PROPOSAL_STATUSES = ["draft", "sent", "accepted", "rejected"];
-export const VALID_INVOICE_STATUSES = ["draft", "sent", "paid", "overdue"];
-export const VALID_PROJECT_STATUSES = ["planning", "active", "completed", "on_hold", "cancelled"];
+export const VALID_CLIENT_STATUSES = ["onboarding", "active", "at_risk", "inactive", "churned"];
+export const VALID_PROPOSAL_STATUSES = ["draft", "sent", "viewed", "accepted", "rejected"];
+export const VALID_INVOICE_STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"];
+export const VALID_PROJECT_STATUSES = ["planning", "in_progress", "review", "completed", "on_hold", "cancelled"];
 
 const VALID_COLUMNS = [
   "name", "email", "status", "created_at", "invoice_number", "total",

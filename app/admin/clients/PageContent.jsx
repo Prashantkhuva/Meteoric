@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { updateClientStatus, addClient, deleteClient, getClientsPaginated } from "../actions";
+import { updateClientStatus, addClient, updateClient, deleteClient, getClientsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle, Download,
-  ChevronUp, ChevronDown,
+  ChevronUp, ChevronDown, Pencil,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -49,6 +49,7 @@ export default function ClientsPage() {
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewClient, setViewClient] = useState(null);
+  const [editClient, setEditClient] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
@@ -67,7 +68,7 @@ export default function ClientsPage() {
     useMemo(() => ({
       "n": () => setShowAdd(true),
       "/": () => searchRef.current?.focus(),
-      "Escape": () => { if (viewClient) setViewClient(null); if (showAdd) setShowAdd(false); },
+      "Escape": () => { if (viewClient) setViewClient(null); if (showAdd) setShowAdd(false); if (editClient) setEditClient(null); },
     }), [viewClient, showAdd])
   );
 
@@ -161,12 +162,18 @@ export default function ClientsPage() {
 
   async function handleAdd(formData) {
     try {
-      await addClient(formData);
-      setShowAdd(false);
-      addToast("Client added", "success");
+      if (formData.get("id")) {
+        await updateClient(formData);
+        setEditClient(null);
+        addToast("Client updated", "success");
+      } else {
+        await addClient(formData);
+        setShowAdd(false);
+        addToast("Client added", "success");
+      }
       fetchClients();
     } catch (err) {
-      addToast(err.message || "Failed to add client", "error");
+      addToast(err.message || "Failed to save client", "error");
     }
   }
 
@@ -308,8 +315,8 @@ export default function ClientsPage() {
         statusOptions={clientStatusList}
       />
 
-      <AddClientModal key={formResetKey} open={showAdd} onClose={() => { setShowAdd(false); setFormResetKey(k => k + 1); }} onSubmit={handleAdd} />
-      <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} />
+      <ClientFormModal key={formResetKey} open={showAdd || !!editClient} client={editClient} onClose={() => { setShowAdd(false); setEditClient(null); setFormResetKey(k => k + 1); }} onSubmit={handleAdd} />
+      <ClientDetailDrawer client={viewClient} onClose={() => setViewClient(null)} onEdit={(client) => { setViewClient(null); setEditClient(client); }} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Delete client"
@@ -483,9 +490,10 @@ function MobileCards({ clients, onView, onStatusChange, onDelete, editingStatus,
   );
 }
 
-function AddClientModal({ open, onClose, onSubmit }) {
+function ClientFormModal({ open, client, onClose, onSubmit }) {
   const [submitting, setSubmitting] = useState(false);
   const trapRef = useFocusTrap(open);
+  const isEdit = !!client;
 
   useEffect(() => {
     const handleEscape = (e) => { if (e.key === "Escape" && open) onClose(); };
@@ -528,8 +536,9 @@ function AddClientModal({ open, onClose, onSubmit }) {
             >
               <X size={16} />
             </button>
-            <h2 id="add-client-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">Add Client</h2>
+            <h2 id="add-client-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">{isEdit ? "Edit Client" : "Add Client"}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {isEdit && <input type="hidden" name="id" value={client.id} />}
               <div>
                 <label htmlFor="client-name" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Name <span className="text-red-400/60">*</span>
@@ -540,6 +549,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
                   required
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
                   placeholder="John Doe"
+                  defaultValue={client?.name || ""}
                 />
               </div>
               <div>
@@ -552,6 +562,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
                   type="email"
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
                   placeholder="john@example.com"
+                  defaultValue={client?.email || ""}
                 />
               </div>
               <div>
@@ -564,6 +575,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
                   type="tel"
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
                   placeholder="+1 555 123 4567"
+                  defaultValue={client?.phone || ""}
                 />
               </div>
               <div>
@@ -575,6 +587,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
                   name="company"
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
                   placeholder="Acme Inc."
+                  defaultValue={client?.company || ""}
                 />
               </div>
               <div className="flex gap-3 pt-2">
@@ -590,7 +603,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
                   disabled={submitting}
                   className="flex-1 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
                 >
-                  {submitting ? "Adding..." : "Add Client"}
+                  {submitting ? "Saving..." : isEdit ? "Save Changes" : "Add Client"}
                 </button>
               </div>
             </form>
@@ -601,7 +614,7 @@ function AddClientModal({ open, onClose, onSubmit }) {
   );
 }
 
-function ClientDetailDrawer({ client, onClose }) {
+function ClientDetailDrawer({ client, onClose, onEdit }) {
   if (!client) return null;
   const trapRef = useFocusTrap(!!client);
 
@@ -688,6 +701,16 @@ function ClientDetailDrawer({ client, onClose }) {
               <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
                 <Calendar size={11} />
                 Created {formatDate(client.created_at)}
+              </div>
+
+              <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                <button
+                  onClick={() => onEdit(client)}
+                  className="inline-flex items-center gap-2 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
+                >
+                  <Pencil size={13} />
+                  Edit
+                </button>
               </div>
             </div>
           </motion.div>

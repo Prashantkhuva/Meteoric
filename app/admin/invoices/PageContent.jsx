@@ -4,14 +4,14 @@ import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
-  markInvoiceAsPaid, markInvoiceAsOverdue, getClients, getInvoicesPaginated, ensureShareToken,
+  markInvoiceAsPaid, markInvoiceAsOverdue, cancelInvoice, updateInvoiceStatus, getClients, getInvoicesPaginated, ensureShareToken,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import {
   X, Plus, Eye, Trash2, Send, Receipt, Calendar, Building2, Mail,
   Pencil, DollarSign, FileText, ArrowUpRight, PlusCircle, Printer, CheckCircle,
-  MessageCircle, Download, ChevronUp, ChevronDown,
+  MessageCircle, Download, ChevronUp, ChevronDown, XCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -189,6 +189,18 @@ export default function InvoicesPage() {
     setIsDeleting(false);
   }
 
+  async function handleBulkStatusChange(newStatus) {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => updateInvoiceStatus(id, newStatus)));
+      setInvoices((prev) => prev.map((inv) => ids.includes(inv.id) ? { ...inv, status: newStatus } : inv));
+      addToast(`${ids.length} invoice${ids.length > 1 ? "s" : ""} updated`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to update", "error");
+    }
+  }
+
   async function handleExportCSV() {
     const supabase = createClient();
     if (!supabase) return;
@@ -249,6 +261,18 @@ export default function InvoicesPage() {
       addToast("Invoice marked as paid", "success");
     } catch (err) {
       addToast(err.message || "Failed to mark as paid", "error");
+    }
+  }
+
+  async function handleCancelInvoice() {
+    if (!viewInvoice) return;
+    try {
+      await cancelInvoice(viewInvoice.id);
+      setInvoices((prev) => prev.map((inv) => (inv.id === viewInvoice.id ? { ...inv, status: "cancelled" } : inv)));
+      setViewInvoice((prev) => prev ? { ...prev, status: "cancelled" } : null);
+      addToast("Invoice cancelled", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to cancel invoice", "error");
     }
   }
 
@@ -389,6 +413,8 @@ export default function InvoicesPage() {
         selectedCount={selected.size}
         onClear={() => setSelected(new Set())}
         onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
+        onStatusChange={handleBulkStatusChange}
+        statusOptions={statusList}
       />
 
       <InvoiceFormModal
@@ -419,6 +445,7 @@ export default function InvoicesPage() {
         onSend={handleSend}
         onMarkAsPaid={handleMarkAsPaid}
         onDelete={setDeleteTarget}
+        onCancel={handleCancelInvoice}
         sending={sending}
       />
 
@@ -943,7 +970,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   );
 }
 
-function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, sending }) {
+function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onDelete, onCancel, sending }) {
   if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
   const scrollRef = useRef(null);
@@ -1165,6 +1192,15 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                   >
                     <CheckCircle size={13} />
                     Mark as Paid
+                  </button>
+                )}
+                {(invoice.status === "sent" || invoice.status === "overdue") && (
+                  <button
+                    onClick={onCancel}
+                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06]"
+                  >
+                    <XCircle size={13} />
+                    Cancel Invoice
                   </button>
                 )}
                 {invoice.status === "draft" && (

@@ -3,13 +3,14 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  getLeads, createProposal, updateProposal, deleteProposal, sendProposal, getProposalsPaginated, ensureShareToken,
+  getLeads, createProposal, updateProposal, deleteProposal, sendProposal, updateProposalStatus, getProposalsPaginated, ensureShareToken,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   X, Plus, Eye, Trash2, Send, FileText, Calendar, Building2, Pencil,
   ArrowUpRight, MessageCircle, Download, ChevronUp, ChevronDown, Printer,
+  CheckCircle2, XCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -149,6 +150,18 @@ export default function ProposalsPage() {
     setIsDeleting(false);
   }
 
+  async function handleBulkStatusChange(newStatus) {
+    const ids = [...selected];
+    try {
+      await Promise.all(ids.map((id) => updateProposalStatus(id, newStatus)));
+      setProposals((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
+      addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} updated`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to update", "error");
+    }
+  }
+
   async function handleExportCSV() {
     const supabase = createClient();
     if (!supabase) return;
@@ -216,6 +229,19 @@ export default function ProposalsPage() {
       addToast(result.error || "Failed to send proposal", "error");
     }
     setSending(null);
+  }
+
+  async function handleStatusChange(id, newStatus) {
+    try {
+      await updateProposalStatus(id, newStatus);
+      setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
+      if (viewProposal?.id === id) {
+        setViewProposal((prev) => prev ? { ...prev, status: newStatus } : null);
+      }
+      addToast(`Proposal marked as ${statusList.find((s) => s.value === newStatus)?.label || newStatus}`, "success");
+    } catch (err) {
+      addToast(err.message || "Failed to update status", "error");
+    }
   }
 
   if (loading) {
@@ -338,6 +364,8 @@ export default function ProposalsPage() {
         selectedCount={selected.size}
         onClear={() => setSelected(new Set())}
         onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
+        onStatusChange={handleBulkStatusChange}
+        statusOptions={statusList}
       />
 
       <ProposalFormModal
@@ -367,6 +395,7 @@ export default function ProposalsPage() {
         onSend={handleSend}
         onDelete={(id) => { setDeleteTarget(id); setViewProposal(null); }}
         onCreateInvoice={handleCreateInvoice}
+        onStatusChange={handleStatusChange}
         sending={sending}
       />
 
@@ -731,7 +760,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
   );
 }
 
-function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onCreateInvoice, sending }) {
+function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onCreateInvoice, onStatusChange, sending }) {
   if (!proposal) return null;
   const trapRef = useFocusTrap(!!proposal);
 
@@ -875,6 +904,24 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
                     <Send size={13} />
                     {sending === proposal.id ? "Sending..." : "Send to Lead"}
                   </button>
+                )}
+                {proposal.status === "sent" && (
+                  <>
+                    <button
+                      onClick={() => onStatusChange(proposal.id, "accepted")}
+                      className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
+                    >
+                      <CheckCircle2 size={13} />
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => onStatusChange(proposal.id, "rejected")}
+                      className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06]"
+                    >
+                      <XCircle size={13} />
+                      Reject
+                    </button>
+                  </>
                 )}
                 <button
                   onClick={() => { onDelete(proposal.id); onClose(); }}

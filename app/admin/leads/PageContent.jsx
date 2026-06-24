@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { updateLeadStatus, convertLeadToClient, addLead, deleteLead, getLeadsPaginated } from "../actions";
+import { updateLeadStatus, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
-  FileText, DollarSign, Calendar, Download, ChevronUp, ChevronDown,
+  FileText, DollarSign, Calendar, Download, ChevronUp, ChevronDown, Pencil,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -52,6 +52,7 @@ export default function LeadsPage() {
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewLead, setViewLead] = useState(null);
+  const [editLead, setEditLead] = useState(null);
   const [showAddLead, setShowAddLead] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [editingStatus, setEditingStatus] = useState(null);
@@ -72,7 +73,7 @@ export default function LeadsPage() {
     useMemo(() => ({
       "n": () => setShowAddLead(true),
       "/": () => searchRef.current?.focus(),
-      "Escape": () => { if (viewLead) setViewLead(null); if (showAddLead) setShowAddLead(false); },
+      "Escape": () => { if (viewLead) setViewLead(null); if (showAddLead) setShowAddLead(false); if (editLead) setEditLead(null); },
     }), [viewLead, showAddLead])
   );
 
@@ -194,12 +195,18 @@ export default function LeadsPage() {
 
   async function handleAddLead(formData) {
     try {
-      await addLead(formData);
-      setShowAddLead(false);
-      addToast("Lead added", "success");
+      if (formData.get("id")) {
+        await updateLead(formData);
+        setEditLead(null);
+        addToast("Lead updated", "success");
+      } else {
+        await addLead(formData);
+        setShowAddLead(false);
+        addToast("Lead added", "success");
+      }
       fetchLeads();
     } catch (err) {
-      addToast(err.message || "Failed to add lead", "error");
+      addToast(err.message || "Failed to save lead", "error");
     }
   }
 
@@ -329,8 +336,8 @@ export default function LeadsPage() {
         statusOptions={statusList}
       />
 
-      <AddLeadModal key={formResetKey} open={showAddLead} onClose={() => { setShowAddLead(false); setFormResetKey(k => k + 1); }} onSubmit={handleAddLead} />
-      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onConvert={handleConvert} onDelete={promptDelete} converting={converting} />
+      <LeadFormModal key={formResetKey} open={showAddLead || !!editLead} lead={editLead} onClose={() => { setShowAddLead(false); setEditLead(null); setFormResetKey(k => k + 1); }} onSubmit={handleAddLead} />
+      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onEdit={(lead) => { setViewLead(null); setEditLead(lead); }} onConvert={handleConvert} onDelete={promptDelete} converting={converting} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Delete lead"
@@ -527,9 +534,10 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
   );
 }
 
-function AddLeadModal({ open, onClose, onSubmit }) {
+function LeadFormModal({ open, lead, onClose, onSubmit }) {
   const [submitting, setSubmitting] = useState(false);
   const trapRef = useFocusTrap(open);
+  const isEdit = !!lead;
 
   useEffect(() => {
     if (open) {
@@ -574,13 +582,14 @@ function AddLeadModal({ open, onClose, onSubmit }) {
             >
               <X size={16} />
             </button>
-            <h2 id="add-lead-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">Add Lead</h2>
+            <h2 id="add-lead-title" className="text-lg font-semibold tracking-tight text-white/90 mb-6">{isEdit ? "Edit Lead" : "Add Lead"}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <FormField label="Name" name="name" placeholder="John Doe" />
-              <FormField label="Email" name="email" type="email" placeholder="john@example.com" />
-              <FormField label="Phone" name="phone" placeholder="+1 234 567 890" />
-              <FormField label="Services" name="services" placeholder="Web Development, SEO, Design" />
-              <FormField label="Budget" name="budget" placeholder="$5,000 - $10,000" />
+              {isEdit && <input type="hidden" name="id" value={lead.id} />}
+              <FormField label="Name" name="name" placeholder="John Doe" defaultValue={lead?.name || ""} />
+              <FormField label="Email" name="email" type="email" placeholder="john@example.com" defaultValue={lead?.email || ""} />
+              <FormField label="Phone" name="phone" placeholder="+1 234 567 890" defaultValue={lead?.phone || ""} />
+              <FormField label="Services" name="services" placeholder="Web Development, SEO, Design" defaultValue={lead?.services || ""} />
+              <FormField label="Budget" name="budget" placeholder="$5,000 - $10,000" defaultValue={lead?.budget || ""} />
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
@@ -594,7 +603,7 @@ function AddLeadModal({ open, onClose, onSubmit }) {
                   disabled={submitting}
                   className="flex-1 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
                 >
-                  {submitting ? "Adding..." : "Add Lead"}
+                  {submitting ? "Saving..." : isEdit ? "Save Changes" : "Add Lead"}
                 </button>
               </div>
             </form>
@@ -605,7 +614,7 @@ function AddLeadModal({ open, onClose, onSubmit }) {
   );
 }
 
-function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
+function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converting }) {
   if (!lead) return null;
   const trapRef = useFocusTrap(!!lead);
 
@@ -703,6 +712,13 @@ function LeadDetailDrawer({ lead, onClose, onConvert, onDelete, converting }) {
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                <button
+                  onClick={() => onEdit(lead)}
+                  className="inline-flex items-center gap-2 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
+                >
+                  <Pencil size={13} />
+                  Edit
+                </button>
                 {lead.status !== "completed" && lead.status !== "lost" && (
                   <button
                     onClick={() => onConvert(lead)}

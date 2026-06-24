@@ -19,6 +19,17 @@ const colors = {
   at_risk: { bg: "bg-amber-500/10", border: "border-amber-500/25", text: "text-amber-400", dot: "bg-amber-400" },
   inactive: { bg: "bg-white/[0.04]", border: "border-white/[0.10]", text: "text-white/40", dot: "bg-white/30" },
   churned: { bg: "bg-red-500/8", border: "border-red-500/20", text: "text-red-400/70", dot: "bg-red-400/70" },
+  draft: { bg: "bg-white/[0.04]", border: "border-white/[0.06]", text: "text-white/30", dot: "bg-white/30" },
+  sent: { bg: "bg-blue-500/8", border: "border-blue-400/15", text: "text-blue-300/80", dot: "bg-blue-400" },
+  viewed: { bg: "bg-yellow-500/8", border: "border-yellow-400/15", text: "text-yellow-300/80", dot: "bg-yellow-400" },
+  accepted: { bg: "bg-emerald-500/8", border: "border-emerald-400/15", text: "text-emerald-300/80", dot: "bg-emerald-400" },
+  rejected: { bg: "bg-red-500/8", border: "border-red-400/15", text: "text-red-300/80", dot: "bg-red-400" },
+  paid: { bg: "bg-emerald-500/8", border: "border-emerald-400/15", text: "text-emerald-300/80", dot: "bg-emerald-400" },
+  overdue: { bg: "bg-red-500/8", border: "border-red-400/15", text: "text-red-300/80", dot: "bg-red-400" },
+  cancelled: { bg: "bg-white/[0.02]", border: "border-white/[0.04]", text: "text-white/25", dot: "bg-white/20" },
+  planning: { bg: "bg-white/[0.04]", border: "border-white/[0.06]", text: "text-white/30", dot: "bg-white/30" },
+  review: { bg: "bg-yellow-500/8", border: "border-yellow-400/15", text: "text-yellow-300/80", dot: "bg-yellow-400" },
+  on_hold: { bg: "bg-orange-500/8", border: "border-orange-400/15", text: "text-orange-300/80", dot: "bg-orange-400" },
 };
 
 function resolve(status) {
@@ -37,6 +48,17 @@ const labels = {
   at_risk: "At Risk",
   inactive: "Inactive",
   churned: "Churned",
+  draft: "Draft",
+  sent: "Sent",
+  viewed: "Viewed",
+  accepted: "Accepted",
+  rejected: "Rejected",
+  paid: "Paid",
+  overdue: "Overdue",
+  cancelled: "Cancelled",
+  planning: "Planning",
+  review: "Review",
+  on_hold: "On Hold",
 };
 
 function label(status) {

@@ -83,6 +83,28 @@ export async function addLead(formData) {
   revalidateAdmin("/admin/leads");
 }
 
+export async function updateLead(formData) {
+  const supabase = await getSupabase();
+  const raw = Object.fromEntries(formData.entries());
+  raw.id = idSchema.parse(raw.id);
+  const data = leadSchema.parse(raw);
+
+  const { error } = await supabase
+    .from("leads")
+    .update({
+      name: data.name,
+      email: data.email || null,
+      phone: data.phone,
+      services: data.services,
+      budget: data.budget,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", raw.id);
+
+  if (error) throw error;
+  revalidateAdmin("/admin/leads");
+}
+
 export async function convertLeadToClient(id) {
   const supabase = await getSupabase();
   const safeId = idSchema.parse(id);
@@ -174,6 +196,27 @@ export async function addClient(formData) {
     company: data.company,
     status: "onboarding",
   });
+
+  if (error) throw error;
+  revalidateAdmin("/admin/clients");
+}
+
+export async function updateClient(formData) {
+  const supabase = await getSupabase();
+  const raw = Object.fromEntries(formData.entries());
+  raw.id = idSchema.parse(raw.id);
+  const data = clientSchema.parse(raw);
+
+  const { error } = await supabase
+    .from("clients")
+    .update({
+      name: data.name,
+      email: data.email || null,
+      phone: data.phone,
+      company: data.company,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", raw.id);
 
   if (error) throw error;
   revalidateAdmin("/admin/clients");
@@ -324,6 +367,20 @@ export async function sendProposal(id) {
     console.error("sendProposal error:", err);
     return { success: false, error: err.message || "Failed to send proposal" };
   }
+}
+
+export async function updateProposalStatus(id, status) {
+  const supabase = await getSupabase();
+  const safeId = idSchema.parse(id);
+  const safeStatus = statusSchema(VALID_PROPOSAL_STATUSES).parse(status);
+
+  const { error } = await supabase
+    .from("proposals")
+    .update({ status: safeStatus, updated_at: new Date().toISOString() })
+    .eq("id", safeId);
+
+  if (error) throw error;
+  revalidateAdmin("/admin/proposals");
 }
 
 function parseFormData(formData) {
@@ -479,6 +536,33 @@ export async function markInvoiceAsOverdue(ids) {
     .from("invoices")
     .update({ status: "overdue" })
     .in("id", safeIds);
+
+  if (error) throw error;
+  revalidateAdmin("/admin/invoices");
+}
+
+export async function cancelInvoice(id) {
+  const supabase = await getSupabase();
+  const safeId = idSchema.parse(id);
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({ status: "cancelled", updated_at: new Date().toISOString() })
+    .eq("id", safeId);
+
+  if (error) throw error;
+  revalidateAdmin("/admin/invoices");
+}
+
+export async function updateInvoiceStatus(id, status) {
+  const supabase = await getSupabase();
+  const safeId = idSchema.parse(id);
+  const safeStatus = statusSchema(VALID_INVOICE_STATUSES).parse(status);
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({ status: safeStatus, updated_at: new Date().toISOString() })
+    .eq("id", safeId);
 
   if (error) throw error;
   revalidateAdmin("/admin/invoices");
