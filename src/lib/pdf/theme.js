@@ -1,12 +1,12 @@
 export const colors = {
   background: "#070707",
   card: "#0a0a0a",
-  border: "rgba(255,255,255,0.08)",
-  text: "rgba(255,255,255,0.85)",
-  textSecondary: "rgba(255,255,255,0.5)",
-  textMuted: "rgba(255,255,255,0.25)",
-  accent: "#EAEAFF",
-  accentMuted: "rgba(234,234,255,0.12)",
+  border: "#1B1B1B",
+  text: "#DADADA",
+  textSecondary: "#838383",
+  textMuted: "#454545",
+  accent: "#E8E4FF",
+  accentMuted: "#222225",
   danger: "#f87171",
 };
 
