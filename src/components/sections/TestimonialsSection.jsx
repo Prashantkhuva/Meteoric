@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Quote, ChevronLeft, ChevronRight, Star, Plus } from "lucide-react";
+import { Quote, ChevronLeft, ChevronRight, Star, Plus, MessageSquareText, BadgeCheck } from "lucide-react";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
+import { getApprovedReviews } from "@/lib/actions";
+import ReviewFormModal from "./ReviewFormModal";
 
-const testimonials = [
+const fallbackTestimonials = [
   {
     quote:
       "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference. The team understood our product vision from day one.",
@@ -59,17 +61,40 @@ const faqs = [
 ];
 
 export default function TestimonialsSection() {
+  const [reviews, setReviews] = useState(null);
   const [current, setCurrent] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
   const [paused, setPaused] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
+  const displayReviews = reviews || fallbackTestimonials;
+
+  useEffect(() => {
+    async function load() {
+      const result = await getApprovedReviews();
+      if (result.success && result.data.length > 0) {
+        setReviews(result.data.map((r) => ({
+          quote: r.content,
+          author: r.name,
+          role: r.role,
+          project: r.project,
+          rating: r.rating,
+          company: r.company,
+          isVerified: r.is_verified,
+          createdAt: r.created_at,
+        })));
+      }
+    }
+    load();
+  }, []);
 
   const next = useCallback(() => {
-    setCurrent((c) => (c + 1) % testimonials.length);
-  }, []);
+    setCurrent((c) => (c + 1) % displayReviews.length);
+  }, [displayReviews.length]);
 
   const prev = useCallback(() => {
-    setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
-  }, []);
+    setCurrent((c) => (c - 1 + displayReviews.length) % displayReviews.length);
+  }, [displayReviews.length]);
 
   useEffect(() => {
     if (paused) return;
@@ -115,10 +140,10 @@ export default function TestimonialsSection() {
                     transition={{ duration: 0.3 }}
                   >
                     <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-medium mb-8">
-                      "{testimonials[current].quote}"
+                      "{displayReviews[current].quote}"
                     </p>
                     <div className="flex items-center gap-1 mb-3">
-                      {Array.from({ length: testimonials[current].rating }).map(
+                      {Array.from({ length: displayReviews[current].rating }).map(
                         (_, i) => (
                           <Star
                             key={i}
@@ -128,15 +153,31 @@ export default function TestimonialsSection() {
                         ),
                       )}
                     </div>
-                    <p className="text-white font-semibold">
-                      {testimonials[current].author}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-white font-semibold">
+                        {displayReviews[current].author}
+                      </p>
+                      {displayReviews[current].isVerified && (
+                        <BadgeCheck size={14} className="text-[#EAEFFF]" />
+                      )}
+                    </div>
                     <p className="text-white/30 text-sm">
-                      {testimonials[current].role}
+                      {displayReviews[current].role}
+                      {displayReviews[current].role && displayReviews[current].company ? ", " : ""}
+                      {displayReviews[current].company && (
+                        <span className="text-white/40">{displayReviews[current].company}</span>
+                      )}
                     </p>
-                    <p className="text-white/15 text-xs mt-1">
-                      {testimonials[current].project}
-                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <p className="text-white/15 text-xs">
+                        {displayReviews[current].project}
+                      </p>
+                      {displayReviews[current].createdAt && (
+                        <span className="text-white/10 text-[10px]">
+                          · {new Date(displayReviews[current].createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                      )}
+                    </div>
                   </motion.div>
                 </AnimatePresence>
 
@@ -157,7 +198,7 @@ export default function TestimonialsSection() {
                   </div>
 
                   <div className="flex gap-1.5">
-                    {testimonials.map((_, i) => (
+                    {displayReviews.map((_, i) => (
                       <button
                         key={i}
                         onClick={() => setCurrent(i)}
@@ -208,6 +249,35 @@ export default function TestimonialsSection() {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* ── GIVE YOUR FEEDBACK ── */}
+          <div className="mb-28 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="rounded-2xl border border-white/10 bg-black p-8 md:p-12 max-w-2xl mx-auto"
+            >
+              <p className="text-white/25 uppercase tracking-[0.3em] text-xs mb-5">
+                Your Voice Matters
+              </p>
+              <h3 className="text-2xl md:text-3xl font-semibold text-white mb-3">
+                Share your experience
+              </h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-8 max-w-md mx-auto">
+                Worked with us? Leave an honest review — real names, real stories,
+                full transparency. Every review is published as-is after verification.
+              </p>
+              <button
+                onClick={() => setShowForm(true)}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-[#EAEFFF]/90 transition-colors"
+              >
+                <MessageSquareText size={14} />
+                Give Your Feedback
+              </button>
+            </motion.div>
           </div>
 
           {/* ── FAQ ── */}
@@ -272,6 +342,8 @@ export default function TestimonialsSection() {
           </div>
         </div>
       </section>
+
+      <ReviewFormModal open={showForm} onClose={() => setShowForm(false)} />
     </>
   );
 }
