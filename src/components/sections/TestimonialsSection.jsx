@@ -139,38 +139,40 @@ export default function TestimonialsSection() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               {/* Left — quote */}
               <div className="relative">
-                <div className="absolute -top-6 -left-4 w-20 h-20 rounded-full bg-[#EAEFFF]/[0.03] blur-2xl" />
+                <div className="absolute -top-8 -left-6 w-32 h-32 rounded-full bg-[#EAEFFF]/[0.04] blur-3xl" />
                 <div className="relative">
                   <Quote
-                    size={48}
-                    className="text-white/[0.03] absolute -top-3 -left-3"
+                    size={64}
+                    className="text-white/[0.04] absolute -top-5 -left-4"
                   />
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={current}
-                      initial={{ opacity: 0, y: 16 }}
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -16 }}
-                      transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                     >
-                      <p className="text-xl md:text-[26px] text-white/85 leading-[1.65] font-[350] mb-10 tracking-tight">
-                        &ldquo;{displayReviews[current].quote}&rdquo;
-                      </p>
+                      <div className="relative mb-10">
+                        <p className="text-xl md:text-[28px] text-white/85 leading-[1.7] font-[350] tracking-tight">
+                          &ldquo;{displayReviews[current].quote}&rdquo;
+                        </p>
+                      </div>
                       <div className="flex items-center gap-1 mb-4">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            size={13}
+                            size={14}
                             className={
                               i < displayReviews[current].rating
-                                ? "text-[#EAEFFF] fill-[#EAEFFF] drop-shadow-[0_0_4px_rgba(234,239,255,0.3)]"
+                                ? "text-[#EAEFFF] fill-[#EAEFFF] drop-shadow-[0_0_6px_rgba(234,239,255,0.35)]"
                                 : "text-white/10"
                             }
                           />
                         ))}
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-white/60 text-xs font-semibold border border-white/10">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center text-white/70 text-sm font-semibold border border-white/10 shadow-[0_0_16px_rgba(255,255,255,0.04)]">
                           {displayReviews[current].author.charAt(0)}
                         </div>
                         <div>
@@ -179,7 +181,7 @@ export default function TestimonialsSection() {
                               {displayReviews[current].author}
                             </p>
                             {displayReviews[current].isVerified && (
-                              <BadgeCheck size={13} className="text-[#EAEFFF]" />
+                              <BadgeCheck size={13} className="text-[#EAEFFF] drop-shadow-[0_0_4px_rgba(234,239,255,0.3)]" />
                             )}
                           </div>
                           <p className="text-white/30 text-xs mt-1">
@@ -191,16 +193,20 @@ export default function TestimonialsSection() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/[0.04]">
-                        <p className="text-white/15 text-[11px] tracking-wider uppercase">
-                          {displayReviews[current].project}
-                        </p>
-                        {displayReviews[current].createdAt && (
-                          <span className="text-white/10 text-[10px]">
-                            · {new Date(displayReviews[current].createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                          </span>
-                        )}
-                      </div>
+                      {(displayReviews[current].project || displayReviews[current].createdAt) && (
+                        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/[0.04]">
+                          {displayReviews[current].project && (
+                            <p className="text-white/15 text-[11px] tracking-wider uppercase">
+                              {displayReviews[current].project}
+                            </p>
+                          )}
+                          {displayReviews[current].createdAt && (
+                            <span className="text-white/10 text-[10px]">
+                              · {new Date(displayReviews[current].createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </motion.div>
                   </AnimatePresence>
                 </div>
@@ -209,13 +215,13 @@ export default function TestimonialsSection() {
                   <div className="flex gap-2">
                     <button
                       onClick={prev}
-                      className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all duration-200"
+                      className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 hover:shadow-[0_0_12px_rgba(255,255,255,0.04)] transition-all duration-200"
                     >
                       <ChevronLeft size={14} />
                     </button>
                     <button
                       onClick={next}
-                      className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all duration-200"
+                      className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 hover:shadow-[0_0_12px_rgba(255,255,255,0.04)] transition-all duration-200"
                     >
                       <ChevronRight size={14} />
                     </button>
@@ -228,7 +234,7 @@ export default function TestimonialsSection() {
                         onClick={() => setCurrent(i)}
                         className={`rounded-full transition-all duration-500 ${
                           i === current
-                            ? "w-6 h-1.5 bg-white"
+                            ? "w-7 h-1.5 bg-white/90"
                             : "w-1.5 h-1.5 bg-white/15 hover:bg-white/30"
                         }`}
                       />
@@ -248,11 +254,11 @@ export default function TestimonialsSection() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
-                      className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-6 hover:border-white/20 hover:from-white/[0.06] transition-all duration-300"
+                      className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-6 hover:border-white/20 hover:from-white/[0.06] hover:shadow-[0_0_24px_rgba(234,239,255,0.04)] transition-all duration-300"
                     >
                       <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       <div className="relative">
-                        <Icon size={16} className="text-white/20 mb-3" />
+                        <Icon size={18} className="text-white/20 mb-3 group-hover:text-white/30 transition-colors duration-300" />
                         <p className="text-3xl font-semibold text-white mb-1 tracking-tight">
                           {stat.value}
                         </p>
