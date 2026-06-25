@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Star, Loader2, Check, Send, Sparkles } from "lucide-react";
 import { createReview } from "@/lib/actions";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export default function ReviewFormModal({ open, onClose }) {
+  const trapRef = useFocusTrap(open);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleKey(e) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -71,7 +83,7 @@ export default function ReviewFormModal({ open, onClose }) {
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative z-10 w-full max-w-lg"
           >
-            <div className="relative rounded-3xl border border-white/[0.08] bg-[#0a0a0a] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto">
+            <div ref={trapRef} className="relative rounded-3xl border border-white/[0.08] bg-[#0a0a0a] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto">
               <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
 
               <button

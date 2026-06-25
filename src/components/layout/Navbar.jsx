@@ -2,6 +2,7 @@ import { useState, lazy, Suspense, useRef, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/sections/Logo";
+import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -17,13 +18,17 @@ export default function Navbar() {
   const menuRef = useRef(null);
 
   useEffect(() => {
-    if (!isMenuOpen) return;
-    const prev = document.activeElement;
-    const el = menuRef.current;
-    if (el && typeof el.focus === "function") el.focus();
-    return () => {
-      if (prev && typeof prev.focus === "function") prev.focus();
-    };
+    if (isMenuOpen) {
+      lockScroll();
+      const prev = document.activeElement;
+      const el = menuRef.current;
+      if (el && typeof el.focus === "function") el.focus();
+      return () => {
+        unlockScroll();
+        if (prev && typeof prev.focus === "function") prev.focus();
+      };
+    }
+    unlockScroll();
   }, [isMenuOpen]);
 
   return (

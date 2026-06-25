@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createLead } from "@/lib/actions";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import StepContent from "./StepContent";
 
 export default function RequestModal({ isOpen, setIsOpen }) {
@@ -59,28 +60,13 @@ export default function RequestModal({ isOpen, setIsOpen }) {
     }, 300);
   }, [setIsOpen]);
 
-  const modalRef = useRef(null);
+  const trapRef = useFocusTrap(isOpen);
   const closeBtnRef = useRef(null);
 
   useEffect(() => {
     if (!isOpen) return;
-    closeBtnRef.current?.focus();
     function handleKeyDown(e) {
       if (e.key === "Escape") handleClose();
-      if (e.key === "Tab" && modalRef.current) {
-        const focusable = modalRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
     }
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
@@ -91,7 +77,7 @@ export default function RequestModal({ isOpen, setIsOpen }) {
   return (
     <AnimatePresence>
       <motion.div
-        ref={modalRef}
+        ref={trapRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
