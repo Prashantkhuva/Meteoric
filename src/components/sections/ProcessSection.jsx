@@ -92,12 +92,12 @@ export default function ProcessSection() {
         className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
       >
       {/* background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
         {/* TOP */}
         <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm mb-6">
+          <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
             Working Together
           </p>
 

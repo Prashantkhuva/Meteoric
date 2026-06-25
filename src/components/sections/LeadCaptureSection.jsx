@@ -61,8 +61,8 @@ export default function LeadCaptureSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* ── INLINE LEAD CAPTURE ── */}
         <div className="max-w-3xl mx-auto mb-20">
-          <div className="rounded-2xl border border-white/10 bg-black p-8 md:p-12 text-center">
-            <p className="text-white/25 uppercase tracking-[0.3em] text-xs mb-6">
+          <div className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] p-8 md:p-12 text-center">
+            <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
               Start a Project
             </p>
             <h2 className="text-3xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white mb-4">
@@ -95,12 +95,12 @@ export default function LeadCaptureSection() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={sending}
-                  className="flex-1 w-full px-5 py-3 rounded-full border border-white/10 bg-white/5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50"
+                  className="flex-1 w-full px-5 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={sending}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-[#EAEFFF]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                 >
                   {sending ? (
                     <Loader2 size={14} className="animate-spin" />

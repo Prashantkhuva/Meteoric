@@ -106,12 +106,12 @@ export default function CapabilitiesSection() {
           {/* ── SERVICES HEADER ── */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
             <div>
-              <p className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-xs mb-5">
+              <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
                 Services
               </p>
-              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-[#EAEFFF]">
+              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white">
                 What we build
-                <span className="block text-[#EAEFFF]/30 mt-1">for founders.</span>
+                <span className="block text-white/30 mt-1">for founders.</span>
               </h2>
             </div>
             <p className="text-[#EAEFFF]/40 text-sm leading-relaxed max-w-xs md:text-right">
@@ -169,12 +169,12 @@ export default function CapabilitiesSection() {
 
           {/* ── HOW WE WORK ── */}
           <div className="mb-12">
-            <p className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-xs mb-5">
+            <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
               How We Work
             </p>
-            <h2 className="text-3xl md:text-4xl font-semibold leading-[1.05] tracking-tight text-[#EAEFFF]">
+            <h2 className="text-3xl md:text-4xl font-semibold leading-[1.05] tracking-tight text-white">
               What you can expect
-              <span className="text-[#EAEFFF]/30"> working with us.</span>
+              <span className="text-white/30"> working with us.</span>
             </h2>
           </div>
 
@@ -231,17 +231,17 @@ export default function CapabilitiesSection() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="service-modal-title"
-              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 16, scale: 0.97 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative z-10 w-full max-w-xl rounded-2xl border border-[#EAEFFF]/10 bg-black p-6 sm:p-8 shadow-[0_0_80px_rgba(234,239,255,0.06)]"
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+              className="relative z-10 w-full max-w-xl rounded-2xl border border-white/[0.08] bg-black p-6 sm:p-8 shadow-[0_0_80px_rgba(234,239,255,0.06)]"
             >
               {/* Close */}
               <button
                 onClick={() => setActiveService(null)}
                 aria-label="Close dialog"
-                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 hover:bg-[#EAEFFF]/10 flex items-center justify-center text-[#EAEFFF]/50 hover:text-[#EAEFFF] transition-colors"
+                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-[#EAEFFF]/10 bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-white/50 hover:text-white transition-colors"
               >
                 <X size={16} />
               </button>

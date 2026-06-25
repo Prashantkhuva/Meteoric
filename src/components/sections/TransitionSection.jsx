@@ -85,18 +85,18 @@ export default function TransitionSection() {
         {/* background glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
           {/* TOP */}
           <div ref={headingRef} className="max-w-4xl mb-20">
-            <p className="text-[#EAEFFF]/40 uppercase tracking-[0.2em] text-sm mb-6">
+            <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
               Beyond Just Development
             </p>
 
-            <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-[#EAEFFF] [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
+            <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-white [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
               {mainWords.map((word, i) => (
                 <span key={i} className="gsap-head-word inline-block">{word}</span>
               ))}
-              <span className="text-[#EAEFFF]/40 [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
+              <span className="text-white/30 [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
                 {" "}
                 {mutedWords.map((word, i) => (
                   <span key={i} className="gsap-head-word inline-block">{word}</span>
@@ -344,7 +344,7 @@ export default function TransitionSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
             <div
               onClick={() => setActiveCard(null)}
@@ -355,20 +355,20 @@ export default function TransitionSection() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="capability-dialog-title"
-              initial={{ opacity: 0, y: 30, scale: 0.96 }}
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.96 }}
-              transition={{ duration: 0.25 }}
-              className="relative z-10 w-full max-w-2xl rounded-3xl border border-[#EAEFFF]/10 bg-black p-6 md:p-10 shadow-[0_0_80px_rgba(234,239,255,0.06)]"
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+              className="relative z-10 w-full max-w-2xl rounded-2xl border border-white/[0.08] bg-black p-6 md:p-10 shadow-[0_0_80px_rgba(234,239,255,0.06)]"
             >
               {/* close */}
               <button
                 type="button"
                 aria-label="Close dialog"
                 onClick={() => setActiveCard(null)}
-                className="absolute top-5 right-5 w-10 h-10 rounded-full border border-[#EAEFFF]/10 bg-[#EAEFFF]/5 hover:bg-[#EAEFFF]/10 flex items-center justify-center transition-colors"
+                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-white/50 hover:text-white transition-colors"
               >
-                <X size={18} className="text-[#EAEFFF]/70" />
+                <X size={16} className="text-white/50" />
               </button>
 
               {/* number */}

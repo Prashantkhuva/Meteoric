@@ -94,14 +94,14 @@ export default function ReviewFormModal({ open, onClose }) {
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative z-10 w-full max-w-lg"
           >
-            <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative rounded-3xl border border-white/[0.08] bg-[#0a0a0a] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto">
+            <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative rounded-2xl border border-white/[0.08] bg-[#0a0a0a] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto">
               <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
 
               <button
                 onClick={handleClose}
-                className="absolute top-5 right-5 w-8 h-8 rounded-full border border-white/[0.08] flex items-center justify-center text-white/30 hover:text-white hover:border-white/20 hover:bg-white/[0.04] transition-all duration-200 z-10"
+                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-white/50 hover:text-white transition-colors z-10"
               >
-                <X size={13} />
+                <X size={16} />
               </button>
 
               <div className="p-8 md:p-10">

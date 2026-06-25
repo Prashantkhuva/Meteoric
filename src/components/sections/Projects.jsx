@@ -251,13 +251,13 @@ function Projects() {
   const active = projects[activeIndex];
 
   return (
-    <section id="work" className="bg-black py-24 sm:py-28 lg:py-32 px-6 md:px-16">
+    <section id="work" className="bg-black py-24 sm:py-28 lg:py-32 px-6 md:px-12">
       {/* Section header */}
       <div className="max-w-7xl mx-auto mb-16">
-        <p className="text-white/30 uppercase tracking-widest text-xs mb-3">
+        <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
           Selected Work
         </p>
-        <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+        <h2 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
           Projects that <span className="text-white/30">actually shipped.</span>
         </h2>
         <Link
@@ -360,7 +360,7 @@ function Projects() {
                 {/* CTA */}
                 <button
                   onClick={() => window.open(active.link, "_blank")}
-                  className="group/btn relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
+                  className="group/btn relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-8 py-4 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
                 >
                   <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300" />
                   <span className="relative z-10 group-hover/btn:text-black flex items-center gap-2">

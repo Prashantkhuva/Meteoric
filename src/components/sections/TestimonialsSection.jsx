@@ -131,7 +131,7 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-white/20 uppercase tracking-[0.3em] text-xs mb-12"
+              className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5"
             >
               Client Stories
             </motion.p>
@@ -289,7 +289,7 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-white/20 uppercase tracking-[0.3em] text-xs mb-8"
+              className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5"
             >
               FAQs
             </motion.p>
@@ -304,8 +304,8 @@ export default function TestimonialsSection() {
                   key={i}
                   className={`group rounded-xl border transition-all duration-300 ${
                     openFaq === i
-                      ? "border-[#EAEFFF]/12 bg-gradient-to-b from-[#EAEFFF]/[0.03] to-transparent"
-                      : "border-white/[0.05] bg-white/[0.02] hover:border-white/10"
+                      ? "border-white/[0.12] bg-gradient-to-b from-white/[0.03] to-transparent"
+                      : "border-white/[0.06] bg-white/[0.02] hover:border-white/10"
                   }`}
                 >
                   <button
