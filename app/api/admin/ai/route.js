@@ -1,5 +1,5 @@
 import { google } from "@ai-sdk/google";
-import { streamText, tool } from "ai";
+import { generateText, tool } from "ai";
 import { z } from "zod";
 import {
   getLeadStats,
@@ -56,7 +56,7 @@ export async function POST(req) {
   try {
     const { messages } = await req.json();
 
-    const result = streamText({
+    const result = await generateText({
       model: google("gemini-1.5-flash"),
       system: `You are the Meteoric admin assistant. Help the user run their agency.
 Keep responses very brief — one paragraph or a short list.
@@ -68,7 +68,16 @@ Current date: ${new Date().toLocaleDateString("en-US")}`,
       maxSteps: 3,
     });
 
-    return result.toDataStreamResponse();
+    return new Response(
+      JSON.stringify({
+        content: result.text,
+        toolCalls: result.toolCalls || [],
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (err) {
     console.error("[ai/admin] error:", err);
     return new Response(JSON.stringify({ error: "AI assistant unavailable" }), {

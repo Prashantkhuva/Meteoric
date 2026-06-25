@@ -1,22 +1,25 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Bot, Send, Loader2, User, Sparkles } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export default function AIAssistant({ open, onClose }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [showWelcome, setShowWelcome] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const trapRef = useFocusTrap(open);
+  const loadingRef = useRef(false);
+  const messagesRef = useRef([]);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } =
-    useChat({
-      api: "/api/admin/ai",
-      onResponse: () => setShowWelcome(false),
-    });
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -27,6 +30,64 @@ export default function AIAssistant({ open, onClose }) {
       inputRef.current?.focus();
     }
   }, [open]);
+
+  const submit = useCallback(async (text) => {
+    if (!text.trim() || loadingRef.current) return;
+
+    setShowWelcome(false);
+    setError(null);
+
+    const userMessage = { id: crypto.randomUUID(), role: "user", content: text };
+    const assistantMessage = { id: crypto.randomUUID(), role: "assistant", content: "" };
+
+    setMessages((prev) => [...prev, userMessage, assistantMessage]);
+    setInput("");
+    loadingRef.current = true;
+    setIsLoading(true);
+
+    try {
+      const currentMessages = [
+        ...messagesRef.current,
+        userMessage,
+      ];
+
+      const res = await fetch("/api/admin/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: currentMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      if (!res.ok) throw new Error("AI assistant unavailable");
+
+      const data = await res.json();
+
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          ...updated[updated.length - 1],
+          content: data.content || "No response",
+          toolCalls: data.toolCalls,
+        };
+        return updated;
+      });
+    } catch (err) {
+      setError(err);
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      loadingRef.current = false;
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+    submit(input);
+  }, [submit, input]);
 
   if (!open) return null;
 
@@ -89,18 +150,7 @@ export default function AIAssistant({ open, onClose }) {
                 ].map((q) => (
                   <button
                     key={q}
-                    onClick={() => {
-                      setShowWelcome(false);
-                      const form = document.createElement("form");
-                      const input = document.createElement("input");
-                      input.name = "input";
-                      input.value = q;
-                      form.appendChild(input);
-                      handleInputChange({ target: { value: q } });
-                      setTimeout(() => {
-                        handleSubmit(new Event("submit"));
-                      }, 50);
-                    }}
+                    onClick={() => submit(q)}
                     className="block w-full text-left border border-white/[0.06] px-4 py-2.5 text-xs text-white/40 hover:text-white/70 hover:border-white/[0.12] hover:bg-white/[0.02] transition-all"
                   >
                     {q}
@@ -133,10 +183,10 @@ export default function AIAssistant({ open, onClose }) {
                           <span className="text-white/30 italic">Thinking...</span>
                         )}
                       </div>
-                      {m.toolInvocations && (
+                      {m.toolCalls && m.toolCalls.length > 0 && (
                         <div className="mt-2 pt-2 border-t border-white/[0.04]">
                           <span className="text-[10px] text-white/20">
-                            Used: {m.toolInvocations.map((t) => t.toolName).join(", ")}
+                            Used: {m.toolCalls.map((t) => t.name || t.toolName).join(", ")}
                           </span>
                         </div>
                       )}
@@ -174,7 +224,7 @@ export default function AIAssistant({ open, onClose }) {
               ref={inputRef}
               name="input"
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               placeholder="Ask anything..."
               className="flex-1 border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none transition-all focus:border-[#EAEFFF]/20"
             />
