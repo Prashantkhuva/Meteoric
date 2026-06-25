@@ -62,9 +62,8 @@ export default function AIAssistant({ open, onClose }) {
         }),
       });
 
-      if (!res.ok) throw new Error("AI assistant unavailable");
-
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "AI assistant unavailable");
 
       setMessages((prev) => {
         const updated = [...prev];

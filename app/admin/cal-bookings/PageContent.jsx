@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react"
 import { Calendar as CalendarIcon, List, CalendarDays, ExternalLink, UserPlus, X, Download, ChevronUp, ChevronDown } from "lucide-react"
 import { CalendarCustom } from "@/components/ui/calendar-custom"
-import { createLeadFromBooking } from "../actions"
+import { createLeadFromBooking, updateBookingStatus } from "../actions"
 import { formatDate, formatShort, formatTime, formatDateLong } from "@/lib/supabase/admin"
 import { cn } from "@/lib/utils"
 import { useToast } from "../components/ToastContext"
@@ -90,6 +90,7 @@ export default function CalBookingsPage() {
   const [formResetKey, setFormResetKey] = useState(0)
   const [converting, setConverting] = useState(false)
   const [convertMsg, setConvertMsg] = useState(null)
+  const [refreshKey, setRefreshKey] = useState(0)
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, col, dir } = filters;
   const addToast = useToast()
@@ -100,7 +101,7 @@ export default function CalBookingsPage() {
       setData(res)
       setLoading(false)
     })
-  }, [])
+  }, [refreshKey])
 
   const bookings = useMemo(() => data?.bookings || [], [data?.bookings])
   const error = data?.error
@@ -193,6 +194,17 @@ export default function CalBookingsPage() {
   const handleExportCSV = useCallback(() => {
     downloadCSV(filteredBookings, CSV_COLUMNS, "bookings");
   }, [filteredBookings]);
+
+  async function handleBookingStatusUpdate(bookingId, status) {
+    try {
+      await updateBookingStatus(bookingId, status)
+      setSelectedBooking(null)
+      setRefreshKey(k => k + 1)
+      addToast(`Booking ${status}`, "success")
+    } catch (err) {
+      addToast(err.message, "error")
+    }
+  }
 
   async function handleConvertToLead(e) {
     e.preventDefault()
@@ -402,6 +414,7 @@ export default function CalBookingsPage() {
           handleConvertToLead={handleConvertToLead}
           converting={converting}
           convertMsg={convertMsg}
+          onStatusUpdate={handleBookingStatusUpdate}
         />
       )}
     </div>
@@ -489,7 +502,7 @@ function BookingsTable({ bookings, onSelect, col, dir, onColSort }) {
   )
 }
 
-function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvertForm, handleConvertToLead, converting, convertMsg, setConvertMsg }) {
+function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvertForm, handleConvertToLead, converting, convertMsg, setConvertMsg, onStatusUpdate }) {
   const attendee = booking.attendees?.[0]
   const meetingUrl = getMeetingUrl(booking)
   const trapRef = useFocusTrap(!!booking)
@@ -566,6 +579,25 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
           )}
 
           <div className="flex flex-col gap-2 pt-2">
+            {(booking.status || "").toUpperCase() === "PENDING" && (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => onStatusUpdate(booking.id, "accepted")}
+                  className="inline-flex items-center justify-center gap-2 border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/30 active:scale-[0.97]"
+                >
+                  <ExternalLink size={16} />
+                  Accept
+                </button>
+                <button
+                  onClick={() => onStatusUpdate(booking.id, "rejected")}
+                  className="inline-flex items-center justify-center gap-2 border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-500/20 hover:border-red-500/30 active:scale-[0.97]"
+                >
+                  <X size={16} />
+                  Reject
+                </button>
+              </div>
+            )}
+
             {meetingUrl && (
               <a
                 href={meetingUrl}

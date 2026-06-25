@@ -1,4 +1,4 @@
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText, tool } from "ai";
 import { z } from "zod";
 import {
@@ -13,6 +13,12 @@ import {
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
+
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_API || "",
+});
+
+const model = google("gemini-1.5-flash");
 
 const tools = {
   getLeadStats: tool({
@@ -57,7 +63,7 @@ export async function POST(req) {
     const { messages } = await req.json();
 
     const result = await generateText({
-      model: google("gemini-1.5-flash"),
+      model,
       system: `You are the Meteoric admin assistant. Help the user run their agency.
 Keep responses very brief — one paragraph or a short list.
 Use tools to look up data. If a tool returns nothing useful, say so plainly.
@@ -80,7 +86,7 @@ Current date: ${new Date().toLocaleDateString("en-US")}`,
     );
   } catch (err) {
     console.error("[ai/admin] error:", err);
-    return new Response(JSON.stringify({ error: "AI assistant unavailable" }), {
+    return new Response(JSON.stringify({ error: err.message || "AI assistant unavailable" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
