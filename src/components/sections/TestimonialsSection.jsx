@@ -126,7 +126,7 @@ export default function TestimonialsSection() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
           {/* ── TESTIMONIALS ── */}
-          <div className="mb-20">
+          <div className="mb-28">
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -235,25 +235,24 @@ export default function TestimonialsSection() {
                   </div>
                 </div>
 
-                {/* Inline review button on left */}
+                {/* Minimal review CTA */}
                 <motion.div
-                  initial={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.25 }}
-                  className="relative rounded-xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-5 mx-auto w-full max-w-sm"
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                  className="mt-10 inline-flex items-center gap-3"
                 >
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/4 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
-                  <p className="text-white/40 text-xs mb-3 text-center">Share your experience</p>
-                  <div className="flex justify-center">
-                    <button
-                      onClick={() => setShowForm(true)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#EAEFFF] text-black text-xs font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_16px_rgba(234,239,255,0.06)] hover:shadow-[0_0_24px_rgba(234,239,255,0.12)]"
-                    >
-                      <MessageSquareText size={11} />
-                      Write a review
-                    </button>
-                  </div>
+                  <span className="text-white/15 text-xs uppercase tracking-wider">
+                    Worked with us?
+                  </span>
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.08] text-white/40 text-xs hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all duration-200"
+                  >
+                    <Sparkles size={11} className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors" />
+                    Leave a review
+                  </button>
                 </motion.div>
               </div>
 
