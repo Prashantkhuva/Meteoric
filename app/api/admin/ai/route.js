@@ -18,7 +18,8 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API || "",
 });
 
-const model = google("gemini-1.5-flash");
+const modelId = process.env.AI_MODEL || "gemini-2.0-flash";
+const model = google(modelId);
 
 const tools = {
   getLeadStats: tool({

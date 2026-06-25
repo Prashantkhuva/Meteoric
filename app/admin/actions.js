@@ -272,15 +272,18 @@ export async function updateBookingStatus(bookingId, status) {
   const key = process.env.CALCOM_API_KEY;
   if (!key) return { error: "CALCOM_API_KEY not set" };
 
+  const endpoint = status === "accepted"
+    ? `https://api.cal.com/v2/bookings/${bookingId}/confirm`
+    : `https://api.cal.com/v2/bookings/${bookingId}/reject`;
+
   try {
-    const res = await fetch(`https://api.cal.com/v2/bookings/${bookingId}/status`, {
-      method: "PATCH",
+    const res = await fetch(endpoint, {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${key}`,
         "cal-api-version": "2024-08-13",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status }),
     });
 
     if (!res.ok) {
