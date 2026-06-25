@@ -582,14 +582,14 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
             {(booking.status || "").toUpperCase() === "PENDING" && (
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => onStatusUpdate(booking.id, "accepted")}
+                  onClick={() => onStatusUpdate(booking.uid, "accepted")}
                   className="inline-flex items-center justify-center gap-2 border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/30 active:scale-[0.97]"
                 >
                   <ExternalLink size={16} />
                   Accept
                 </button>
                 <button
-                  onClick={() => onStatusUpdate(booking.id, "rejected")}
+                  onClick={() => onStatusUpdate(booking.uid, "rejected")}
                   className="inline-flex items-center justify-center gap-2 border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-500/20 hover:border-red-500/30 active:scale-[0.97]"
                 >
                   <X size={16} />
