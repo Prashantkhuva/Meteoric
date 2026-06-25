@@ -196,13 +196,13 @@ export default function CalBookingsPage() {
   }, [filteredBookings]);
 
   async function handleBookingStatusUpdate(bookingId, status) {
-    try {
-      await updateBookingStatus(bookingId, status)
-      setSelectedBooking(null)
-      setRefreshKey(k => k + 1)
-      addToast(`Booking ${status}`, "success")
-    } catch (err) {
-      addToast(err.message, "error")
+    const result = await updateBookingStatus(bookingId, status);
+    if (result.error) {
+      addToast(result.error, "error");
+    } else {
+      setSelectedBooking(null);
+      setRefreshKey(k => k + 1);
+      addToast(`Booking ${status}`, "success");
     }
   }
 

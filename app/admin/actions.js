@@ -270,24 +270,30 @@ export async function deleteClient(id) {
 
 export async function updateBookingStatus(bookingId, status) {
   const key = process.env.CALCOM_API_KEY;
-  if (!key) throw new Error("CALCOM_API_KEY not set");
+  if (!key) return { error: "CALCOM_API_KEY not set" };
 
-  const res = await fetch(`https://api.cal.com/v2/bookings/${bookingId}/status`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "cal-api-version": "2024-08-13",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ status }),
-  });
+  try {
+    const res = await fetch(`https://api.cal.com/v2/bookings/${bookingId}/status`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "cal-api-version": "2024-08-13",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error?.message || `Cal.com API error: ${res.status}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      return { error: err.error?.message || `Cal.com API error: ${res.status}` };
+    }
+
+    revalidateAdmin("/admin/cal-bookings");
+    return { success: true };
+  } catch (err) {
+    console.error("[updateBookingStatus]", err);
+    return { error: err.message };
   }
-
-  revalidateAdmin("/admin/cal-bookings");
 }
 
 export async function createLeadFromBooking(formData) {
