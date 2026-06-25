@@ -141,7 +141,7 @@ export default function TestimonialsSection() {
               <div className="lg:col-span-3">
                 <div className="relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10">
                   <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <Quote size={36} className="text-white/[0.04] absolute top-6 left-8" />
+                  <Quote size={40} className="text-white/[0.04] absolute top-6 left-8" />
                   <div className="relative">
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -151,10 +151,10 @@ export default function TestimonialsSection() {
                         exit={{ opacity: 0, y: -16 }}
                         transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
                       >
-                        <p className="text-base md:text-xl text-white/85 leading-[1.8] font-[350] mb-7 tracking-tight pl-8">
+                        <p className="text-base md:text-xl text-white/85 leading-[1.8] font-[350] mb-8 tracking-tight pl-8">
                           &ldquo;{displayReviews[current].quote}&rdquo;
                         </p>
-                        <div className="flex items-center gap-1 mb-4">
+                        <div className="flex items-center gap-1 mb-5">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
@@ -204,7 +204,7 @@ export default function TestimonialsSection() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 mt-5">
+                <div className="flex items-center gap-4 mt-6">
                   <div className="flex gap-2">
                     <button
                       onClick={prev}
@@ -236,8 +236,8 @@ export default function TestimonialsSection() {
                 </div>
               </div>
 
-              {/* Right — trust */}
-              <div className="lg:col-span-2">
+              {/* Right — trust + feedback */}
+              <div className="lg:col-span-2 flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-3">
                   {trustStats.map((stat, i) => {
                     const Icon = stat.icon;
@@ -259,41 +259,26 @@ export default function TestimonialsSection() {
                     );
                   })}
                 </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: 0.25 }}
+                  className="rounded-xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-5 text-center"
+                >
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/4 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
+                  <p className="text-white/40 text-xs mb-3">Share your experience</p>
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#EAEFFF] text-black text-xs font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_16px_rgba(234,239,255,0.06)] hover:shadow-[0_0_24px_rgba(234,239,255,0.12)]"
+                  >
+                    <MessageSquareText size={11} />
+                    Write a review
+                  </button>
+                </motion.div>
               </div>
             </div>
-          </div>
-
-          {/* ── GIVE YOUR FEEDBACK ── */}
-          <div className="mb-20">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.04] to-transparent p-10 md:p-12 text-center overflow-hidden"
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/30 to-transparent" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.015),transparent_60%)]" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/[0.06] bg-white/[0.03] text-white/30 text-[11px] uppercase tracking-[0.2em] mb-5">
-                  <Sparkles size={11} className="text-[#EAEFFF]/50" />
-                  Your Voice Matters
-                </div>
-                <h3 className="text-2xl md:text-3xl font-semibold text-white mb-3 tracking-tight">
-                  Share your experience
-                </h3>
-                <p className="text-white/30 text-sm leading-relaxed mb-8 max-w-md mx-auto">
-                  Worked with us? Leave an honest review — real names, real stories, full transparency.
-                </p>
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="group relative inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.1)] hover:shadow-[0_0_30px_rgba(234,239,255,0.2)]"
-                >
-                  <MessageSquareText size={13} className="group-hover:scale-110 transition-transform" />
-                  Give Your Feedback
-                </button>
-              </div>
-            </motion.div>
           </div>
 
           {/* ── FAQ ── */}
