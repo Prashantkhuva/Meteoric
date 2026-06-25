@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
   markInvoiceAsPaid, markInvoiceAsOverdue, cancelInvoice, updateInvoiceStatus, getClients, getInvoicesPaginated, ensureShareToken,
+  checkOverdueInvoices, getProposalPricing,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -90,6 +91,7 @@ export default function InvoicesPage() {
   const [sending, setSending] = useState(null);
   const [editingStatus, setEditingStatus] = useState(null);
   const [selected, setSelected] = useState(new Set());
+  const [checkingOverdue, setCheckingOverdue] = useState(false);
   const addToast = useToast();
   const searchParams = useSearchParams();
   const searchRef = useRef(null);
@@ -227,6 +229,35 @@ export default function InvoicesPage() {
     const { data } = await query;
     downloadCSV(data || [], CSV_COLUMNS, `invoices-${new Date().toISOString().slice(0, 10)}.csv`);
     addToast("CSV exported", "success");
+  }
+
+  async function handleCheckOverdue() {
+    setCheckingOverdue(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { data: allInvoices } = await supabase
+        .from("invoices").select("id, status, due_date");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const overdueIds = [];
+      (allInvoices || []).forEach((inv) => {
+        if (inv.status === "sent" && inv.due_date) {
+          if (new Date(inv.due_date) < today) overdueIds.push(inv.id);
+        }
+      });
+      if (overdueIds.length > 0) {
+        await markInvoiceAsOverdue(overdueIds);
+        setInvoices((prev) => prev.map((inv) =>
+          overdueIds.includes(inv.id) ? { ...inv, status: "overdue" } : inv
+        ));
+      }
+      const result = await checkOverdueInvoices();
+      addToast(`Overdue check done — ${result.sent} reminder${result.sent !== 1 ? "s" : ""} sent`, result.errors.length ? "warning" : "success");
+    } catch (err) {
+      addToast(err.message || "Overdue check failed", "error");
+    }
+    setCheckingOverdue(false);
   }
 
   async function handleCreate(formData) {
@@ -368,6 +399,15 @@ export default function InvoicesPage() {
         >
           <Download size={12} className="inline mr-1" />
           CSV
+        </button>
+        <button
+          onClick={handleCheckOverdue}
+          disabled={checkingOverdue}
+          className="rounded-full border border-red-400/20 bg-red-500/5 px-3 py-1 text-xs text-red-400/60 hover:text-red-400/80 hover:bg-red-500/10 transition-colors disabled:opacity-40"
+          aria-label="Check overdue invoices"
+        >
+          <Clock size={12} className="inline mr-1" />
+          {checkingOverdue ? "Checking..." : "Check Overdue"}
         </button>
         <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", page: 1 })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
@@ -750,6 +790,19 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
     if (open && !invoice) {
       setItems([{ description: "", quantity: 1, rate: 0 }]);
       setTax(0);
+
+      if (proposalId) {
+        getProposalPricing(proposalId).then((data) => {
+          if (data?.pricing?.length) {
+            const mapped = data.pricing.map((p) => ({
+              description: p.description || p.title || "",
+              quantity: p.quantity || 1,
+              rate: p.rate || p.amount || 0,
+            }));
+            setItems(mapped);
+          }
+        }).catch(() => {});
+      }
     }
   }, [open, invoice]);
 

@@ -630,15 +630,29 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
 
 function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) {
   const [submitting, setSubmitting] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [content, setContent] = useState(null);
+  const [titleVal, setTitleVal] = useState(proposal?.title || "");
+  const [timelineVal, setTimelineVal] = useState(proposal?.timeline || "");
+  const [termsVal, setTermsVal] = useState(proposal?.terms || "");
+  const [leadId, setLeadId] = useState(proposal?.lead_id || "");
+  const [pricingJson, setPricingJson] = useState(null);
   const trapRef = useFocusTrap(open);
 
   useEffect(() => {
     if (open && proposal) {
       setContent(proposal.content);
+      setTitleVal(proposal.title || "");
+      setTimelineVal(proposal.timeline || "");
+      setTermsVal(proposal.terms || "");
+      setLeadId(proposal.lead_id || "");
     }
     if (open && !proposal) {
       setContent(null);
+      setTitleVal("");
+      setTimelineVal("");
+      setTermsVal("");
+      setLeadId("");
     }
   }, [open, proposal]);
 
@@ -650,11 +664,29 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
     }
   }, [open, onClose]);
 
+  async function handleGenerate() {
+    if (!leadId) return;
+    setGenerating(true);
+    try {
+      const { generateProposalDraft } = await import("../actions");
+      const draft = await generateProposalDraft(leadId);
+      setTitleVal(draft.title || "");
+      setTimelineVal(draft.timeline || "");
+      setTermsVal(draft.terms || "");
+      if (draft.content) setContent(draft.content);
+      if (draft.pricing) setPricingJson(draft.pricing);
+    } catch (err) {
+      console.error("[ai] proposal generation failed:", err);
+    }
+    setGenerating(false);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
     const fd = new FormData(e.target);
     fd.set("content", JSON.stringify(content));
+    if (pricingJson) fd.set("pricing", JSON.stringify(pricingJson));
     if (proposal) fd.set("id", proposal.id);
     await onSubmit(fd);
     setSubmitting(false);
@@ -691,23 +723,36 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
         <div className="px-6 py-5">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField label="Title" name="title" placeholder="Web Development Proposal" defaultValue={proposal?.title || ""} required />
+              <FormField label="Title" name="title" placeholder="Web Development Proposal" value={titleVal} onChange={(e) => setTitleVal(e.target.value)} required />
               <div>
                 <label htmlFor="field-lead_id" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Lead
                 </label>
-                <select
-                  id="field-lead_id"
-                  name="lead_id"
-                  defaultValue={proposal?.lead_id || ""}
-                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
-                  style={{ colorScheme: "dark" }}
-                >
-                  <option value="">No lead linked</option>
-                  {leads.map((l) => (
-                    <option key={l.id} value={l.id}>{l.name}{l.company ? ` (${l.company})` : ""}</option>
-                  ))}
-                </select>
+                <div className="flex items-center gap-2">
+                  <select
+                    id="field-lead_id"
+                    name="lead_id"
+                    value={leadId}
+                    onChange={(e) => setLeadId(e.target.value)}
+                    className="flex-1 border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                    style={{ colorScheme: "dark" }}
+                  >
+                    <option value="">No lead linked</option>
+                    {leads.map((l) => (
+                      <option key={l.id} value={l.id}>{l.name}{l.company ? ` (${l.company})` : ""}</option>
+                    ))}
+                  </select>
+                  {!proposal && (
+                    <button
+                      type="button"
+                      onClick={handleGenerate}
+                      disabled={generating || !leadId}
+                      className="shrink-0 border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 px-3 py-2.5 text-xs font-medium text-[#EAEFFF]/60 transition-all hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]/80 disabled:opacity-30"
+                    >
+                      {generating ? "Generating..." : "AI Generate"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -731,7 +776,8 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
                 name="timeline"
                 rows={2}
                 placeholder="e.g. 4-6 weeks from project start"
-                defaultValue={proposal?.timeline || ""}
+                value={timelineVal}
+                onChange={(e) => setTimelineVal(e.target.value)}
                 className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
               />
             </div>
@@ -745,7 +791,8 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
                 name="terms"
                 rows={3}
                 placeholder="Payment terms, revision policy, etc."
-                defaultValue={proposal?.terms || ""}
+                value={termsVal}
+                onChange={(e) => setTermsVal(e.target.value)}
                 className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
               />
             </div>

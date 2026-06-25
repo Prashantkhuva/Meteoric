@@ -1,9 +1,9 @@
 "use client";
 
-import { Menu, LogOut } from "lucide-react";
+import { Menu, LogOut, Bot } from "lucide-react";
 import { signOut } from "../actions";
 
-export function TopBar({ title, onMenuClick }) {
+export function TopBar({ title, onMenuClick, onAIClick }) {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between h-14 px-4 lg:px-6 border-b border-white/[0.04] bg-[#070707]/90 backdrop-blur-md">
       <div className="flex items-center gap-3">
@@ -19,6 +19,13 @@ export function TopBar({ title, onMenuClick }) {
         </span>
       </div>
       <div className="flex items-center gap-3">
+        <button
+          onClick={onAIClick}
+          className="rounded-lg p-1.5 text-white/30 hover:bg-white/[0.04] hover:text-[#EAEFFF]/60 transition-colors"
+          aria-label="Open AI assistant"
+        >
+          <Bot size={18} />
+        </button>
         <form action={signOut} className="lg:hidden">
           <button
             type="submit"

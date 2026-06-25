@@ -3,6 +3,8 @@ import NewLeadEmail from "@/emails/new-lead-notification";
 import LeadAutoReply from "@/emails/lead-autoreply";
 import ProposalEmail from "@/emails/proposal-email";
 import InvoiceEmail from "@/emails/invoice-email";
+import OverdueReminder from "@/emails/overdue-reminder";
+import ClientWelcome from "@/emails/client-welcome";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 
 const FROM =
@@ -88,6 +90,24 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
   return result;
 }
 
+export async function sendClientWelcome(client) {
+  if (!client?.email) return;
+
+  if (isTestMode() && client.email !== ADMIN) {
+    testModeWarning(client.email);
+    return { success: false, message: "Cannot send in test mode" };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM,
+    to: [client.email],
+    subject: "Welcome to Meteoric — Let's Build Something Great",
+    react: ClientWelcome({ name: client.name }),
+  });
+  if (result?.error) console.error("[resend] client welcome failed:", result.error);
+  return result;
+}
+
 export async function sendInvoiceEmail(invoice, client, previewUrl) {
   if (!client?.email) throw new Error("Client has no email address");
 
@@ -131,5 +151,43 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
     throw new Error(raw?.message || "Failed to send invoice email");
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send invoice email");
+  return result;
+}
+
+export async function sendOverdueReminder(invoice, client, previewUrl) {
+  if (!client?.email) throw new Error("Client has no email address");
+
+  const dueDate = invoice.due_date
+    ? new Date(invoice.due_date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
+
+  const daysOverdue = invoice.due_date
+    ? Math.floor((Date.now() - new Date(invoice.due_date).getTime()) / 86400000)
+    : 0;
+
+  let result;
+  try {
+    result = await resend.emails.send({
+      from: FROM,
+      to: client.email,
+      subject: `Overdue: Invoice ${invoice.invoice_number} — ${daysOverdue} day${daysOverdue !== 1 ? "s" : ""} past due`,
+      react: OverdueReminder({
+        name: client.name,
+        invoiceNumber: invoice.invoice_number,
+        total: invoice.total,
+        dueDate,
+        daysOverdue,
+        previewUrl,
+      }),
+    });
+  } catch (raw) {
+    console.error("[resend] overdue reminder threw:", raw);
+    throw new Error(raw?.message || "Failed to send overdue reminder");
+  }
+  if (result?.error) throw new Error(result.error.message || "Failed to send overdue reminder");
   return result;
 }

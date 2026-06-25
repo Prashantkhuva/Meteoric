@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
-import { sendProposalEmail, sendInvoiceEmail } from "@/lib/email/email";
+import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome } from "@/lib/email/email";
+import { callAIJson } from "@/lib/ai/provider";
+import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import {
   idSchema,
   emailSchema,
@@ -80,6 +82,26 @@ export async function addLead(formData) {
   });
 
   if (error) throw error;
+
+  if (process.env.GOOGLE_API && data.email) {
+    try {
+      const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
+      if (aiRes && typeof aiRes.score === "number") {
+        await supabase
+          .from("leads")
+          .update({
+            ai_score: aiRes.score,
+            ai_category: aiRes.category || null,
+            ai_summary: aiRes.summary || null,
+          })
+          .eq("email", data.email)
+          .is("ai_score", null);
+      }
+    } catch (aiErr) {
+      console.warn("[ai] lead scoring failed:", aiErr?.message);
+    }
+  }
+
   revalidateAdmin("/admin/leads");
 }
 
@@ -144,6 +166,14 @@ export async function convertLeadToClient(id) {
     .eq("id", safeId);
 
   if (updateError) throw new Error(updateError.message);
+
+  if (process.env.RESEND_API_KEY && lead.email) {
+    try {
+      await sendClientWelcome({ name: lead.name, email: lead.email });
+    } catch (welcomeErr) {
+      console.warn("[email] client welcome failed:", welcomeErr?.message);
+    }
+  }
 
   revalidateAdmin("/admin/leads", "/admin/clients");
 }
@@ -271,6 +301,58 @@ export async function getClients() {
     .select("id, name, email, phone, company")
     .order("name", { ascending: true });
   return data || [];
+}
+
+export async function generateProposalDraft(leadId) {
+  const supabase = await getSupabase();
+  const safeId = idSchema.parse(leadId);
+
+  const { data: lead, error } = await supabase
+    .from("leads")
+    .select("name, email, phone, company, services, budget, details")
+    .eq("id", safeId)
+    .single();
+
+  if (error || !lead) throw new Error("Lead not found");
+
+  if (!process.env.GOOGLE_API) {
+    return {
+      title: `${lead.services || "Web Development"} — Proposal`,
+      content: `<p>We propose delivering a tailored solution for ${lead.company || lead.name} covering ${lead.services || "web development"} within your budget of ${lead.budget || "market rate"}.</p>`,
+      pricing: [{ description: lead.services || "Web Development", quantity: 1, rate: 2500 }],
+      timeline: "4-6 weeks",
+      terms: "50% deposit to start, net 30 on completion",
+    };
+  }
+
+  const { callAIJson } = await import("@/lib/ai/provider");
+  const { proposalDraftPrompt } = await import("@/lib/ai/prompts");
+  const prompt = proposalDraftPrompt(lead);
+  const result = await callAIJson(prompt.system, prompt.user);
+
+  return {
+    title: result?.title || `${lead.services || "Web Development"} — Proposal`,
+    content: result?.content
+      ? `<p>${result.content.replace(/\n/g, "</p><p>")}</p>`
+      : `<p>Proposal for ${lead.company || lead.name}.</p>`,
+    pricing: result?.pricing?.length ? result.pricing : [{ description: lead.services || "Web Development", quantity: 1, rate: 2500 }],
+    timeline: result?.timeline || "4-6 weeks",
+    terms: result?.terms || "50% deposit to start, net 30 on completion",
+  };
+}
+
+export async function getProposalPricing(id) {
+  const supabase = await getSupabase();
+  const safeId = idSchema.parse(id);
+
+  const { data, error } = await supabase
+    .from("proposals")
+    .select("pricing, title, lead:leads(name, email, phone, company)")
+    .eq("id", safeId)
+    .single();
+
+  if (error) return null;
+  return data;
 }
 
 export async function createProposal(formData) {
@@ -475,6 +557,49 @@ export async function deleteInvoice(id) {
 
   if (error) throw error;
   revalidateAdmin("/admin/invoices");
+}
+
+export async function checkOverdueInvoices() {
+  const supabase = await getSupabase();
+
+  const { data: overdue, error } = await supabase
+    .from("invoices")
+    .select("*, client:clients(name, email, phone, company)")
+    .eq("status", "sent")
+    .lt("due_date", new Date().toISOString())
+    .or(`last_reminder_sent_at.is.null,last_reminder_sent_at.lt.${new Date(Date.now() - 86400000 * 3).toISOString()}`);
+
+  if (error) {
+    console.error("[overdue] query failed:", error);
+    return { sent: 0, errors: [error.message] };
+  }
+
+  const errors = [];
+  let sent = 0;
+
+  for (const invoice of overdue || []) {
+    if (!invoice.client?.email) continue;
+
+    const shareToken = invoice.share_token || randomUUID();
+    const previewUrl = `${getSiteUrl()}/preview/invoice/${invoice.id}?token=${shareToken}`;
+
+    try {
+      await sendOverdueReminder(invoice, invoice.client, previewUrl);
+      await supabase
+        .from("invoices")
+        .update({
+          last_reminder_sent_at: new Date().toISOString(),
+          reminder_count: (invoice.reminder_count || 0) + 1,
+          share_token: invoice.share_token || shareToken,
+        })
+        .eq("id", invoice.id);
+      sent++;
+    } catch (e) {
+      errors.push(e.message);
+    }
+  }
+
+  return { sent, errors };
 }
 
 export async function sendInvoice(id) {

@@ -390,6 +390,9 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
                 Name<SortIcon column="name" col={col} dir={dir} />
               </th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Contact</th>
+              <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("ai_score")}>
+                Score<SortIcon column="ai_score" col={col} dir={dir} />
+              </th>
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("status")}>
                 Status<SortIcon column="status" col={col} dir={dir} />
               </th>
@@ -429,6 +432,9 @@ function DesktopTable({ leads, onView, onConvert, onStatusChange, onDelete, edit
                     )}
                     {lead.phone && <span className="text-xs text-white/25">{lead.phone}</span>}
                   </div>
+                </td>
+                <td className="px-5 py-3.5">
+                  <AiScoreBadge score={lead.ai_score} category={lead.ai_category} />
                 </td>
                 <td className="px-5 py-3.5">
                   <StatusSelect
@@ -503,9 +509,10 @@ function MobileCards({ leads, onView, onConvert, onStatusChange, onDelete, editi
               options={statusList}
             />
           </div>
-          <div className="flex flex-wrap gap-2 text-xs text-white/30 mb-3">
-            {lead.email && <span className="truncate max-w-[180px]">{lead.email}</span>}
-            {lead.phone && <span>{lead.phone}</span>}
+          <div className="flex flex-wrap gap-2 text-xs mb-3">
+            <AiScoreBadge score={lead.ai_score} category={lead.ai_category} />
+            {lead.email && <span className="truncate max-w-[180px] text-white/30">{lead.email}</span>}
+            {lead.phone && <span className="text-white/30">{lead.phone}</span>}
           </div>
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-white/30 tabular-nums">{formatDate(lead.created_at)}</span>
@@ -614,6 +621,27 @@ function LeadFormModal({ open, lead, onClose, onSubmit }) {
   );
 }
 
+function AiScoreBadge({ score, category, size = "sm" }) {
+  if (score == null) return <span className="text-xs text-white/15">—</span>;
+
+  const color =
+    score >= 70 ? "text-green-400 border-green-400/20 bg-green-400/5" :
+    score >= 40 ? "text-yellow-400 border-yellow-400/20 bg-yellow-400/5" :
+    "text-red-400 border-red-400/20 bg-red-400/5";
+
+  const catClass = category === "spam" ? "text-red-400/60" : "text-white/30";
+  const isLg = size === "lg";
+
+  return (
+    <span className={`inline-flex items-center gap-1.5 border ${color} ${isLg ? "px-2.5 py-1" : "px-2 py-0.5"}`}>
+      <span className={`font-semibold tabular-nums ${isLg ? "text-sm" : "text-xs"}`}>{score}</span>
+      {category && (
+        <span className={`text-[10px] uppercase tracking-wider ${catClass}`}>{category}</span>
+      )}
+    </span>
+  );
+}
+
 function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converting }) {
   if (!lead) return null;
   const trapRef = useFocusTrap(!!lead);
@@ -670,6 +698,15 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
                   <StatusBadge status={lead.status} className="mt-0.5" />
                 </div>
               </div>
+
+              {lead.ai_score != null && (
+                <div className="flex items-center gap-3 border-b border-white/[0.04] pb-3">
+                  <AiScoreBadge score={lead.ai_score} category={lead.ai_category} size="lg" />
+                  {lead.ai_summary && (
+                    <span className="text-xs text-white/40 italic">{lead.ai_summary}</span>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-3">
                 {[

@@ -5,6 +5,8 @@ import { sendNewLeadNotification, sendLeadAutoReply } from "@/lib/email/email";
 import ReviewNotification from "@/emails/review-notification";
 import { resend } from "@/lib/email/resend";
 import { getSiteUrl } from "@/config/site-url";
+import { callAIJson } from "@/lib/ai/provider";
+import { scoreLeadPrompt } from "@/lib/ai/prompts";
 
 export async function createLead(data) {
   try {
@@ -47,6 +49,25 @@ export async function createLead(data) {
       }
     }
 
+    if (process.env.GOOGLE_API) {
+      try {
+        const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
+        if (aiRes && typeof aiRes.score === "number") {
+          await supabase
+            .from("leads")
+            .update({
+              ai_score: aiRes.score,
+              ai_category: aiRes.category || null,
+              ai_summary: aiRes.summary || null,
+            })
+            .eq("email", data.email)
+            .is("ai_score", null);
+        }
+      } catch (aiErr) {
+        console.warn("[ai] lead scoring failed:", aiErr?.message);
+      }
+    }
+
     return { success: true, emailError }
   } catch (err) {
     console.error("createLead error:", err)
@@ -78,6 +99,20 @@ export async function createReview(data) {
     if (error) {
       console.error("Supabase insert error:", error)
       return { success: false, error: error.message }
+    }
+
+    if (process.env.GOOGLE_API && data.content) {
+      try {
+        const { callAIJson } = await import("@/lib/ai/provider");
+        const { reviewModerationPrompt } = await import("@/lib/ai/prompts");
+        const prompt = reviewModerationPrompt(data);
+        const aiRes = await callAIJson(prompt.system, prompt.user);
+        if (aiRes && !aiRes.is_spam && aiRes.score >= 60) {
+          await supabase.from("reviews").update({ status: "approved" }).eq("email", data.email).eq("status", "pending");
+        }
+      } catch (aiErr) {
+        console.warn("[ai] review moderation skipped:", aiErr?.message);
+      }
     }
 
     if (process.env.RESEND_API_KEY) {
