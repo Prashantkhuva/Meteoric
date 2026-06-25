@@ -61,6 +61,8 @@ export default function LeadsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [bulkConfirm, setBulkConfirm] = useState(null);
   const [selected, setSelected] = useState(new Set());
+  const [exporting, setExporting] = useState(false);
+  const [bulkStatusLoading, setBulkStatusLoading] = useState(false);
   const deleteRef = useRef(null);
   const addToast = useToast();
   const searchRef = useRef(null);
@@ -124,6 +126,7 @@ export default function LeadsPage() {
   }
 
   async function handleBulkStatusChange(newStatus) {
+    setBulkStatusLoading(true);
     const ids = [...selected];
     try {
       await Promise.all(ids.map((id) => updateLeadStatus(id, newStatus)));
@@ -132,18 +135,25 @@ export default function LeadsPage() {
       setSelected(new Set());
     } catch (err) {
       addToast(err.message || "Failed to update", "error");
+    } finally {
+      setBulkStatusLoading(false);
     }
   }
 
   async function handleExportCSV() {
-    const supabase = createClient();
-    if (!supabase) return;
-    let query = supabase.from("leads").select("*");
-    if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
-    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
-    const { data } = await query;
-    downloadCSV(data || [], CSV_COLUMNS, `leads-${new Date().toISOString().slice(0, 10)}.csv`);
-    addToast("CSV exported", "success");
+    setExporting(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      let query = supabase.from("leads").select("*");
+      if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+      if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+      const { data } = await query;
+      downloadCSV(data || [], CSV_COLUMNS, `leads-${new Date().toISOString().slice(0, 10)}.csv`);
+      addToast("CSV exported", "success");
+    } finally {
+      setExporting(false);
+    }
   }
 
   async function handleStatusChange(leadId, newStatus) {
@@ -252,11 +262,12 @@ export default function LeadsPage() {
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total} searchRef={searchRef}>
         <button
           onClick={handleExportCSV}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          disabled={exporting}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors disabled:opacity-40 disabled:pointer-events-none"
           aria-label="Export CSV"
         >
-          <Download size={12} className="inline mr-1" />
-          CSV
+          {exporting ? <span className="h-3 w-3 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline-block mr-1" /> : <Download size={12} className="inline mr-1" />}
+          {exporting ? "Exporting..." : "CSV"}
         </button>
         <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all" })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
@@ -334,6 +345,7 @@ export default function LeadsPage() {
         onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={statusList}
+        loading={bulkStatusLoading}
       />
 
       <LeadFormModal key={formResetKey} open={showAddLead || !!editLead} lead={editLead} onClose={() => { setShowAddLead(false); setEditLead(null); setFormResetKey(k => k + 1); }} onSubmit={handleAddLead} />

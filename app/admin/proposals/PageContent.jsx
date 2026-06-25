@@ -76,6 +76,8 @@ export default function ProposalsPage() {
   const [sending, setSending] = useState(null);
   const [editingStatus, setEditingStatus] = useState(null);
   const [selected, setSelected] = useState(new Set());
+  const [exporting, setExporting] = useState(false);
+  const [bulkLoading, setBulkLoading] = useState(false);
   const router = useRouter();
   const addToast = useToast();
   const searchRef = useRef(null);
@@ -153,6 +155,7 @@ export default function ProposalsPage() {
 
   async function handleBulkStatusChange(newStatus) {
     const ids = [...selected];
+    setBulkLoading(true);
     try {
       await Promise.all(ids.map((id) => updateProposalStatus(id, newStatus)));
       setProposals((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
@@ -160,18 +163,25 @@ export default function ProposalsPage() {
       setSelected(new Set());
     } catch (err) {
       addToast(err.message || "Failed to update", "error");
+    } finally {
+      setBulkLoading(false);
     }
   }
 
   async function handleExportCSV() {
-    const supabase = createClient();
-    if (!supabase) return;
-    let query = supabase.from("proposals").select("*, lead:leads(name, email, phone, company)");
-    if (search) { query = query.or(`title.ilike.%${search}%,lead.name.ilike.%${search}%`); }
-    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
-    const { data } = await query;
-    downloadCSV(data || [], CSV_COLUMNS, `proposals-${new Date().toISOString().slice(0, 10)}.csv`);
-    addToast("CSV exported", "success");
+    setExporting(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      let query = supabase.from("proposals").select("*, lead:leads(name, email, phone, company)");
+      if (search) { query = query.or(`title.ilike.%${search}%,lead.name.ilike.%${search}%`); }
+      if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+      const { data } = await query;
+      downloadCSV(data || [], CSV_COLUMNS, `proposals-${new Date().toISOString().slice(0, 10)}.csv`);
+      addToast("CSV exported", "success");
+    } finally {
+      setExporting(false);
+    }
   }
 
   async function handleCreate(formData) {
@@ -289,10 +299,15 @@ export default function ProposalsPage() {
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total} searchRef={searchRef}>
         <button
           onClick={handleExportCSV}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          disabled={exporting}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors disabled:opacity-40 disabled:pointer-events-none"
           aria-label="Export CSV"
         >
-          <Download size={12} className="inline mr-1" />
+          {exporting ? (
+            <div className="h-3 w-3 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline mr-1" />
+          ) : (
+            <Download size={12} className="inline mr-1" />
+          )}
           CSV
         </button>
         <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", page: 1 })} visible={hasFilters} />
@@ -373,6 +388,7 @@ export default function ProposalsPage() {
         onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={statusList}
+        loading={bulkLoading}
       />
 
       <ProposalFormModal
@@ -823,6 +839,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
 function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onCreateInvoice, onStatusChange, sending }) {
   if (!proposal) return null;
   const trapRef = useFocusTrap(!!proposal);
+  const [statusLoading, setStatusLoading] = useState(false);
 
   useEffect(() => {
     if (!proposal) return;
@@ -968,18 +985,36 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
                 {proposal.status === "sent" && (
                   <>
                     <button
-                      onClick={() => onStatusChange(proposal.id, "accepted")}
-                      className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
+                      onClick={async () => {
+                        setStatusLoading(true);
+                        await onStatusChange(proposal.id, "accepted");
+                        setStatusLoading(false);
+                      }}
+                      disabled={statusLoading}
+                      className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                     >
-                      <CheckCircle2 size={13} />
-                      Accept
+                      {statusLoading ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                      ) : (
+                        <CheckCircle2 size={13} />
+                      )}
+                      {statusLoading ? "Accepting..." : "Accept"}
                     </button>
                     <button
-                      onClick={() => onStatusChange(proposal.id, "rejected")}
-                      className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06]"
+                      onClick={async () => {
+                        setStatusLoading(true);
+                        await onStatusChange(proposal.id, "rejected");
+                        setStatusLoading(false);
+                      }}
+                      disabled={statusLoading}
+                      className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                     >
-                      <XCircle size={13} />
-                      Reject
+                      {statusLoading ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                      ) : (
+                        <XCircle size={13} />
+                      )}
+                      {statusLoading ? "Rejecting..." : "Reject"}
                     </button>
                   </>
                 )}

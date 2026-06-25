@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, Trash2 } from "lucide-react";
 
-export function BulkActionBar({ selectedCount, onClear, onDelete, onStatusChange, statusOptions }) {
+export function BulkActionBar({ selectedCount, onClear, onDelete, onStatusChange, statusOptions, loading }) {
   const [status, setStatus] = useState("");
 
   if (selectedCount === 0) return null;
@@ -16,7 +16,8 @@ export function BulkActionBar({ selectedCount, onClear, onDelete, onStatusChange
       <div className="flex items-center gap-2">
         <button
           onClick={onClear}
-          className="rounded-lg border border-white/[0.08] px-3 py-1.5 text-xs text-white/40 hover:text-white/60 transition-colors"
+          disabled={loading}
+          className="rounded-lg border border-white/[0.08] px-3 py-1.5 text-xs text-white/40 hover:text-white/60 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <X size={12} className="inline mr-1" />
           Clear
@@ -24,7 +25,8 @@ export function BulkActionBar({ selectedCount, onClear, onDelete, onStatusChange
         {onDelete && (
           <button
             onClick={onDelete}
-            className="rounded-lg bg-red-500/10 border border-red-500/20 px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/20 transition-colors"
+            disabled={loading}
+            className="rounded-lg bg-red-500/10 border border-red-500/20 px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-40 disabled:pointer-events-none"
           >
             <Trash2 size={12} className="inline mr-1" />
             Delete
@@ -34,7 +36,8 @@ export function BulkActionBar({ selectedCount, onClear, onDelete, onStatusChange
           <select
             value={status}
             onChange={(e) => { onStatusChange(e.target.value); setStatus(""); }}
-            className="rounded-lg border border-white/[0.08] bg-black/60 px-3 py-1.5 text-xs text-white/60 outline-none"
+            disabled={loading}
+            className="rounded-lg border border-white/[0.08] bg-black/60 px-3 py-1.5 text-xs text-white/60 outline-none disabled:opacity-40 disabled:pointer-events-none"
             style={{ colorScheme: "dark" }}
           >
             <option value="">Change status...</option>

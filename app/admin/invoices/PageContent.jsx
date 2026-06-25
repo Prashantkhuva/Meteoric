@@ -92,6 +92,9 @@ export default function InvoicesPage() {
   const [editingStatus, setEditingStatus] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const [checkingOverdue, setCheckingOverdue] = useState(false);
+  const [actionLoading, setActionLoading] = useState(null);
+  const [exporting, setExporting] = useState(false);
+  const [bulkLoading, setBulkLoading] = useState(false);
   const addToast = useToast();
   const searchParams = useSearchParams();
   const searchRef = useRef(null);
@@ -209,6 +212,7 @@ export default function InvoicesPage() {
   }
 
   async function handleBulkStatusChange(newStatus) {
+    setBulkLoading(true);
     const ids = [...selected];
     try {
       await Promise.all(ids.map((id) => updateInvoiceStatus(id, newStatus)));
@@ -218,17 +222,24 @@ export default function InvoicesPage() {
     } catch (err) {
       addToast(err.message || "Failed to update", "error");
     }
+    setBulkLoading(false);
   }
 
   async function handleExportCSV() {
-    const supabase = createClient();
-    if (!supabase) return;
-    let query = supabase.from("invoices").select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)");
-    if (search) { query = query.or(`invoice_number.ilike.%${search}%,client.name.ilike.%${search}%`); }
-    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
-    const { data } = await query;
-    downloadCSV(data || [], CSV_COLUMNS, `invoices-${new Date().toISOString().slice(0, 10)}.csv`);
-    addToast("CSV exported", "success");
+    setExporting(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      let query = supabase.from("invoices").select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)");
+      if (search) { query = query.or(`invoice_number.ilike.%${search}%,client.name.ilike.%${search}%`); }
+      if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+      const { data } = await query;
+      downloadCSV(data || [], CSV_COLUMNS, `invoices-${new Date().toISOString().slice(0, 10)}.csv`);
+      addToast("CSV exported", "success");
+    } catch (err) {
+      addToast(err.message || "Failed to export CSV", "error");
+    }
+    setExporting(false);
   }
 
   async function handleCheckOverdue() {
@@ -299,6 +310,7 @@ export default function InvoicesPage() {
   }
 
   async function handleMarkAsPaid(id) {
+    setActionLoading("paid");
     const paidAt = new Date().toISOString();
     try {
       await markInvoiceAsPaid(id, paidAt);
@@ -310,9 +322,11 @@ export default function InvoicesPage() {
     } catch (err) {
       addToast(err.message || "Failed to mark as paid", "error");
     }
+    setActionLoading(null);
   }
 
   async function handleMarkAsOverdue(id) {
+    setActionLoading("overdue");
     try {
       await markInvoiceAsOverdue(id);
       setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "overdue" } : inv)));
@@ -323,10 +337,12 @@ export default function InvoicesPage() {
     } catch (err) {
       addToast(err.message || "Failed to mark as overdue", "error");
     }
+    setActionLoading(null);
   }
 
   async function handleCancelInvoice() {
     if (!viewInvoice) return;
+    setActionLoading("cancel");
     try {
       await cancelInvoice(viewInvoice.id);
       setInvoices((prev) => prev.map((inv) => (inv.id === viewInvoice.id ? { ...inv, status: "cancelled" } : inv)));
@@ -335,6 +351,7 @@ export default function InvoicesPage() {
     } catch (err) {
       addToast(err.message || "Failed to cancel invoice", "error");
     }
+    setActionLoading(null);
   }
 
   async function handleSend(id) {
@@ -394,11 +411,16 @@ export default function InvoicesPage() {
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total} searchRef={searchRef}>
         <button
           onClick={handleExportCSV}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          disabled={exporting}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors disabled:opacity-40 disabled:pointer-events-none"
           aria-label="Export CSV"
         >
-          <Download size={12} className="inline mr-1" />
-          CSV
+          {exporting ? (
+            <div className="h-3 w-3 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline mr-1" />
+          ) : (
+            <Download size={12} className="inline mr-1" />
+          )}
+          {exporting ? "Exporting..." : "CSV"}
         </button>
         <button
           onClick={handleCheckOverdue}
@@ -489,6 +511,7 @@ export default function InvoicesPage() {
         onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={statusList}
+        loading={bulkLoading}
       />
 
       <InvoiceFormModal
@@ -522,6 +545,7 @@ export default function InvoicesPage() {
         onDelete={setDeleteTarget}
         onCancel={handleCancelInvoice}
         sending={sending}
+        actionLoading={actionLoading}
       />
 
       <ConfirmDialog
@@ -1064,7 +1088,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   );
 }
 
-function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onMarkAsOverdue, onDelete, onCancel, sending }) {
+function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onMarkAsOverdue, onDelete, onCancel, sending, actionLoading }) {
   if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
   const scrollRef = useRef(null);
@@ -1282,28 +1306,43 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                 {(invoice.status === "sent" || invoice.status === "overdue") && (
                   <button
                     onClick={() => onMarkAsPaid(invoice.id)}
-                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97]"
+                    disabled={!!actionLoading}
+                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <CheckCircle size={13} />
-                    Mark as Paid
+                    {actionLoading === "paid" ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                    ) : (
+                      <CheckCircle size={13} />
+                    )}
+                    {actionLoading === "paid" ? "Marking..." : "Mark as Paid"}
                   </button>
                 )}
                 {invoice.status === "sent" && (
                   <button
                     onClick={() => onMarkAsOverdue(invoice.id)}
-                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06]"
+                    disabled={!!actionLoading}
+                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <Clock size={13} />
-                    Mark as Overdue
+                    {actionLoading === "overdue" ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                    ) : (
+                      <Clock size={13} />
+                    )}
+                    {actionLoading === "overdue" ? "Marking..." : "Mark as Overdue"}
                   </button>
                 )}
                 {(invoice.status === "sent" || invoice.status === "overdue") && (
                   <button
                     onClick={onCancel}
-                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06]"
+                    disabled={!!actionLoading}
+                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <XCircle size={13} />
-                    Cancel Invoice
+                    {actionLoading === "cancel" ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                    ) : (
+                      <XCircle size={13} />
+                    )}
+                    {actionLoading === "cancel" ? "Cancelling..." : "Cancel Invoice"}
                   </button>
                 )}
                 {invoice.status === "draft" && (

@@ -83,6 +83,8 @@ export default function ProjectsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [bulkConfirm, setBulkConfirm] = useState(null);
   const [editingStatus, setEditingStatus] = useState(null);
+  const [exporting, setExporting] = useState(false);
+  const [bulkUpdating, setBulkUpdating] = useState(false);
   const [selected, setSelected] = useState(new Set());
   const addToast = useToast();
   const searchRef = useRef(null);
@@ -150,14 +152,15 @@ export default function ProjectsPage() {
   }
 
   async function handleBulkStatusChange(newStatus) {
-    const ids = [...selected];
-    const formDatas = ids.map((id) => {
-      const fd = new FormData();
-      fd.set("id", id);
-      fd.set("status", newStatus);
-      return fd;
-    });
+    setBulkUpdating(true);
     try {
+      const ids = [...selected];
+      const formDatas = ids.map((id) => {
+        const fd = new FormData();
+        fd.set("id", id);
+        fd.set("status", newStatus);
+        return fd;
+      });
       await Promise.all(formDatas.map((fd) => updateProject(fd)));
       setProjects((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
       addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} updated`, "success");
@@ -165,17 +168,23 @@ export default function ProjectsPage() {
     } catch (err) {
       addToast(err.message || "Failed to update", "error");
     }
+    setBulkUpdating(false);
   }
 
   async function handleExportCSV() {
-    const supabase = createClient();
-    if (!supabase) return;
-    let query = supabase.from("projects").select("*, client:clients(name, email, company)");
-    if (search) { query = query.or(`name.ilike.%${search}%,client.name.ilike.%${search}%`); }
-    if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
-    const { data } = await query;
-    downloadCSV(data || [], CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);
-    addToast("CSV exported", "success");
+    setExporting(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      let query = supabase.from("projects").select("*, client:clients(name, email, company)");
+      if (search) { query = query.or(`name.ilike.%${search}%,client.name.ilike.%${search}%`); }
+      if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+      const { data } = await query;
+      downloadCSV(data || [], CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);
+      addToast("CSV exported", "success");
+    } finally {
+      setExporting(false);
+    }
   }
 
   async function handleCreate(formData) {
@@ -273,11 +282,16 @@ export default function ProjectsPage() {
       <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total} searchRef={searchRef}>
         <button
           onClick={handleExportCSV}
-          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+          disabled={exporting}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors disabled:opacity-40 disabled:pointer-events-none"
           aria-label="Export CSV"
         >
-          <Download size={12} className="inline mr-1" />
-          CSV
+          {exporting ? (
+            <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline mr-1" />
+          ) : (
+            <Download size={12} className="inline mr-1" />
+          )}
+          {exporting ? "Exporting..." : "CSV"}
         </button>
         <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", page: 1 })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
@@ -355,6 +369,7 @@ export default function ProjectsPage() {
         onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
         onStatusChange={handleBulkStatusChange}
         statusOptions={projectStatuses}
+        loading={bulkUpdating}
       />
 
       <ProjectFormModal
@@ -710,6 +725,7 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
 }
 
 function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChange }) {
+  const [statusLoading, setStatusLoading] = useState(false);
   if (!project) return null;
   const trapRef = useFocusTrap(!!project);
 
@@ -843,56 +859,80 @@ function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChang
               <div className="flex flex-wrap gap-2 border-t border-white/[0.06] pt-4">
                 {project.status === "planning" && (
                   <button
-                    onClick={() => onStatusChange(project.id, "in_progress")}
-                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06]"
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project.id, "in_progress"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <Play size={13} />
-                    Start Project
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <Play size={13} />}
+                    {statusLoading ? "Updating..." : "Start Project"}
                   </button>
                 )}
                 {project.status === "in_progress" && (
                   <button
-                    onClick={() => onStatusChange(project.id, "review")}
-                    className="inline-flex items-center gap-2 border border-cyan-400/20 px-4 py-2.5 text-xs font-semibold text-cyan-400/70 transition-all hover:bg-cyan-500/[0.06]"
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project.id, "review"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-cyan-400/20 px-4 py-2.5 text-xs font-semibold text-cyan-400/70 transition-all hover:bg-cyan-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <CheckCircle size={13} />
-                    Mark for Review
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <CheckCircle size={13} />}
+                    {statusLoading ? "Updating..." : "Mark for Review"}
                   </button>
                 )}
                 {project.status === "review" && (
                   <button
-                    onClick={() => onStatusChange(project.id, "completed")}
-                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97]"
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project.id, "completed"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <CheckCircle size={13} />
-                    Complete
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <CheckCircle size={13} />}
+                    {statusLoading ? "Updating..." : "Complete"}
                   </button>
                 )}
                 {["planning", "in_progress", "review"].includes(project.status) && (
                   <button
-                    onClick={() => onStatusChange(project.id, "on_hold")}
-                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06]"
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project.id, "on_hold"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <Pause size={13} />
-                    Put on Hold
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <Pause size={13} />}
+                    {statusLoading ? "Updating..." : "Put on Hold"}
                   </button>
                 )}
                 {project.status === "on_hold" && (
                   <button
-                    onClick={() => onStatusChange(project.id, "in_progress")}
-                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06]"
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project.id, "in_progress"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <Play size={13} />
-                    Resume
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <Play size={13} />}
+                    {statusLoading ? "Updating..." : "Resume"}
                   </button>
                 )}
                 {!["completed", "cancelled"].includes(project.status) && (
                   <button
-                    onClick={() => onStatusChange(project.id, "cancelled")}
-                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06]"
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project.id, "cancelled"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    <XCircle size={13} />
-                    Cancel Project
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <XCircle size={13} />}
+                    {statusLoading ? "Updating..." : "Cancel Project"}
                   </button>
                 )}
                 <button
