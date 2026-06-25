@@ -126,17 +126,17 @@ export default function TestimonialsSection() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
           {/* ── TESTIMONIALS ── */}
-          <div className="mb-20">
+          <div className="mb-28">
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-white/20 uppercase tracking-[0.3em] text-xs mb-12"
+              className="text-white/20 uppercase tracking-[0.3em] text-xs mb-14"
             >
               Client Stories
             </motion.p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
               {/* Left — quote card */}
               <div className="lg:col-span-3">
                 <div className="relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10">
@@ -234,31 +234,10 @@ export default function TestimonialsSection() {
                     ))}
                   </div>
                 </div>
-
-                {/* Inline review button on left */}
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.25 }}
-                  className="relative rounded-xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-5 mx-auto w-full max-w-sm"
-                >
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/4 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
-                  <p className="text-white/40 text-xs mb-3 text-center">Share your experience</p>
-                  <div className="flex justify-center">
-                    <button
-                      onClick={() => setShowForm(true)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#EAEFFF] text-black text-xs font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_16px_rgba(234,239,255,0.06)] hover:shadow-[0_0_24px_rgba(234,239,255,0.12)]"
-                    >
-                      <MessageSquareText size={11} />
-                      Write a review
-                    </button>
-                  </div>
-                </motion.div>
               </div>
 
-              {/* Right — trust */}
-              <div className="lg:col-span-2 flex flex-col gap-4">
+              {/* Right — trust + feedback */}
+              <div className="lg:col-span-2 flex flex-col gap-6">
                 <div className="grid grid-cols-2 gap-3">
                   {trustStats.map((stat, i) => {
                     const Icon = stat.icon;
@@ -280,6 +259,24 @@ export default function TestimonialsSection() {
                     );
                   })}
                 </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: 0.25 }}
+                  className="rounded-xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-5 text-center"
+                >
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/4 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
+                  <p className="text-white/40 text-xs mb-3">Share your experience</p>
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#EAEFFF] text-black text-xs font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_16px_rgba(234,239,255,0.06)] hover:shadow-[0_0_24px_rgba(234,239,255,0.12)]"
+                  >
+                    <MessageSquareText size={11} />
+                    Write a review
+                  </button>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -290,11 +287,11 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-white/20 uppercase tracking-[0.3em] text-xs mb-8"
+              className="text-white/20 uppercase tracking-[0.3em] text-xs mb-10"
             >
               FAQs
             </motion.p>
-            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-white mb-10 max-w-2xl">
+            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-white mb-12 max-w-2xl">
               Common questions
               <span className="text-white/25"> about working with us.</span>
             </h2>
