@@ -272,9 +272,11 @@ export async function updateBookingStatus(bookingId, status) {
   const key = process.env.CALCOM_API_KEY;
   if (!key) return { error: "CALCOM_API_KEY not set" };
 
+  const baseUrl = `https://api.cal.com/v2/bookings/${bookingId}`;
+
   const endpoint = status === "accepted"
-    ? `https://api.cal.com/v2/bookings/${bookingId}/confirm`
-    : `https://api.cal.com/v2/bookings/${bookingId}/reject`;
+    ? `${baseUrl}/confirm`
+    : `${baseUrl}/cancel`;
 
   try {
     const res = await fetch(endpoint, {
@@ -284,6 +286,7 @@ export async function updateBookingStatus(bookingId, status) {
         "cal-api-version": "2024-08-13",
         "Content-Type": "application/json",
       },
+      body: status === "rejected" ? JSON.stringify({ cancellationReason: "Cancelled by admin" }) : undefined,
     });
 
     if (!res.ok) {
