@@ -8,6 +8,7 @@ import { formatDate, formatShort, formatTime, formatDateLong } from "@/lib/supab
 import { cn } from "@/lib/utils"
 import { useToast } from "../components/ToastContext"
 import { BookingStatusBadge } from "../components/StatusBadge"
+import { StatusSelect } from "../components/StatusSelect"
 import { Toolbar, FilterChip, ClearFiltersButton, SortDropdown } from "../components/Toolbar"
 import { useFilters } from "@/hooks/useFilters"
 import { useFocusTrap } from "@/hooks/useFocusTrap"
@@ -15,6 +16,11 @@ import { useShortcuts } from "@/hooks/useShortcuts"
 import { downloadCSV } from "@/lib/csv-export"
 
 const EM = "\u2014"
+
+const bookingStatusOptions = [
+  { value: "accepted", label: "Accepted" },
+  { value: "rejected", label: "Rejected" },
+];
 
 const CSV_COLUMNS = [
   { label: "Title", accessor: (b) => b.title || "" },
@@ -91,6 +97,7 @@ export default function CalBookingsPage() {
   const [converting, setConverting] = useState(false)
   const [convertMsg, setConvertMsg] = useState(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [editingStatus, setEditingStatus] = useState(null)
   const [statusLoading, setStatusLoading] = useState(false)
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, col, dir } = filters;
@@ -200,6 +207,7 @@ export default function CalBookingsPage() {
     setStatusLoading(true)
     const result = await updateBookingStatus(bookingId, status);
     setStatusLoading(false)
+    setEditingStatus(null)
     if (result.error) {
       addToast(result.error, "error");
     } else {
@@ -207,6 +215,11 @@ export default function CalBookingsPage() {
       setRefreshKey(k => k + 1);
       addToast(`Booking ${status}`, "success");
     }
+  }
+
+  function handleInlineStatusChange(bookingId, value) {
+    setEditingStatus(bookingId)
+    handleBookingStatusUpdate(bookingId, value)
   }
 
   async function handleConvertToLead(e) {
@@ -337,8 +350,8 @@ export default function CalBookingsPage() {
           <BookingsTable
             bookings={filteredBookings}
             onSelect={setSelectedBooking}
-            onStatusUpdate={handleBookingStatusUpdate}
-            statusLoading={statusLoading}
+            onInlineStatusChange={handleInlineStatusChange}
+            editingStatus={editingStatus}
             col={col}
             dir={dir}
             onColSort={toggleColSort}
@@ -429,8 +442,13 @@ export default function CalBookingsPage() {
   )
 }
 
-function BookingsTable({ bookings, onSelect, onStatusUpdate, statusLoading, col, dir, onColSort }) {
-  const isPending = (s) => (s || "").toUpperCase() === "PENDING";
+function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus, col, dir, onColSort }) {
+  const isCancelled = (s) => (s || "").toUpperCase() === "CANCELLED";
+
+  function statusValue(status) {
+    const s = (status || "").toLowerCase();
+    return s === "accepted" ? "accepted" : s === "cancelled" ? "cancelled" : "";
+  }
 
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
@@ -453,20 +471,19 @@ function BookingsTable({ bookings, onSelect, onStatusUpdate, statusLoading, col,
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("duration")}>
                 Duration<SortIcon column="duration" col={col} dir={dir} />
               </th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-semibold tracking-wider text-white/30 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {bookings.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-5 py-12 text-center text-sm text-white/20">
+                <td colSpan={5} className="px-5 py-12 text-center text-sm text-white/20">
                   No bookings match your filters
                 </td>
               </tr>
             ) : (
               bookings.map((b) => {
                 const attendee = b.attendees?.[0]
-                const pending = isPending(b.status);
+                const cancelled = isCancelled(b.status);
                 return (
                   <tr
                     key={b.id}
@@ -489,8 +506,17 @@ function BookingsTable({ bookings, onSelect, onStatusUpdate, statusLoading, col,
                         <span className="text-xs text-white/25">{EM}</span>
                       )}
                     </td>
-                    <td className="px-5 py-3.5">
-                      <BookingStatusBadge status={b.status} />
+                    <td className="px-5 py-3.5" onClick={(e) => e.stopPropagation()}>
+                      {cancelled ? (
+                        <BookingStatusBadge status={b.status} />
+                      ) : (
+                        <StatusSelect
+                          value={statusValue(b.status)}
+                          onChange={(val) => onInlineStatusChange(b.uid, val)}
+                          disabled={editingStatus === b.uid}
+                          options={bookingStatusOptions}
+                        />
+                      )}
                     </td>
                     <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
                       <span className="flex items-center gap-1.5">
@@ -502,28 +528,6 @@ function BookingsTable({ bookings, onSelect, onStatusUpdate, statusLoading, col,
                       {b.duration ? `${b.duration} min` : b.start && b.end
                         ? `${Math.round((new Date(b.end) - new Date(b.start)) / 60000)} min`
                         : EM}
-                    </td>
-                    <td className="px-5 py-3.5 text-right">
-                      {pending && (
-                        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => onStatusUpdate(b.uid, "accepted")}
-                            disabled={statusLoading}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#81c784] transition-colors hover:text-[#a5d6a7] disabled:opacity-40"
-                          >
-                            <svg width="13" height="13" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.592L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.619 11.178 3.53795 11.4669 3.72684Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-                            Accept
-                          </button>
-                          <button
-                            onClick={() => onStatusUpdate(b.uid, "rejected")}
-                            disabled={statusLoading}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#e57373] transition-colors hover:text-[#ef9a9a] disabled:opacity-40"
-                          >
-                            <svg width="13" height="13" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-                            Reject
-                          </button>
-                        </div>
-                      )}
                     </td>
                   </tr>
                 )
