@@ -1,27 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
-
-let adminClient = null;
-
-export function getAdminClient() {
-  if (adminClient) return adminClient;
-
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) {
-    return null;
-  }
-
-  adminClient = createClient(url, key, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-
-  return adminClient;
-}
-
 export const STATUS = {
   new: { label: "New", color: "#34d399", bg: "rgba(52,211,153,0.08)", border: "rgba(52,211,153,0.2)" },
   contacted: { label: "Contacted", color: "#38bdf8", bg: "rgba(56,189,248,0.08)", border: "rgba(56,189,248,0.2)" },

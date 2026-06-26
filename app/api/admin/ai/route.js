@@ -21,47 +21,47 @@ const google = createGoogleGenerativeAI({
 const modelId = process.env.AI_MODEL || "gemini-2.0-flash";
 const model = google(modelId);
 
-const tools = {
-  getLeadStats: tool({
-    description: "Get total lead count grouped by status (new, inquiry, discovery, proposal, in_progress, completed, lost)",
-    parameters: z.object({}),
-    execute: getLeadStats,
-  }),
-  searchLeads: tool({
-    description: "Search leads by name, email, or company. Returns up to 10 matches.",
-    parameters: z.object({ query: z.string().describe("Search term") }),
-    execute: ({ query }) => searchLeads(query),
-  }),
-  getRecentLeads: tool({
-    description: "Get leads from the last N days. Default 7.",
-    parameters: z.object({ days: z.number().default(7).describe("Number of days to look back") }),
-    execute: ({ days }) => getRecentLeads(days),
-  }),
-  getRevenue: tool({
-    description: "Get invoice revenue totals: total, paid, overdue, pending amounts.",
-    parameters: z.object({}),
-    execute: getRevenue,
-  }),
-  getProposalStats: tool({
-    description: "Get proposal counts by status (draft, sent, viewed, accepted, rejected).",
-    parameters: z.object({}),
-    execute: getProposalStats,
-  }),
-  getOverdueInvoices: tool({
-    description: "Get all overdue invoices with client name and amount.",
-    parameters: z.object({}),
-    execute: getOverdueInvoices,
-  }),
-  getClientCount: tool({
-    description: "Get total number of clients.",
-    parameters: z.object({}),
-    execute: getClientCount,
-  }),
-};
-
 export async function POST(req) {
   try {
     const { messages } = await req.json();
+
+    const tools = {
+      getLeadStats: tool({
+        description: "Get total lead count grouped by status (new, inquiry, discovery, proposal, in_progress, completed, lost)",
+        parameters: z.object({}),
+        execute: getLeadStats,
+      }),
+      searchLeads: tool({
+        description: "Search leads by name, email, or company. Returns up to 10 matches.",
+        parameters: z.object({ query: z.string().describe("Search term") }),
+        execute: ({ query }) => searchLeads(query),
+      }),
+      getRecentLeads: tool({
+        description: "Get leads from the last N days. Default 7.",
+        parameters: z.object({ days: z.number().default(7).describe("Number of days to look back") }),
+        execute: ({ days }) => getRecentLeads(days),
+      }),
+      getRevenue: tool({
+        description: "Get invoice revenue totals: total, paid, overdue, pending amounts.",
+        parameters: z.object({}),
+        execute: getRevenue,
+      }),
+      getProposalStats: tool({
+        description: "Get proposal counts by status (draft, sent, viewed, accepted, rejected).",
+        parameters: z.object({}),
+        execute: getProposalStats,
+      }),
+      getOverdueInvoices: tool({
+        description: "Get all overdue invoices with client name and amount.",
+        parameters: z.object({}),
+        execute: getOverdueInvoices,
+      }),
+      getClientCount: tool({
+        description: "Get total number of clients.",
+        parameters: z.object({}),
+        execute: getClientCount,
+      }),
+    };
 
     const result = await generateText({
       model,
@@ -87,7 +87,8 @@ Current date: ${new Date().toLocaleDateString("en-US")}`,
     );
   } catch (err) {
     console.error("[ai/admin] error:", err);
-    return new Response(JSON.stringify({ error: err.message || "AI assistant unavailable" }), {
+    const message = err.message || "AI assistant unavailable";
+    return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
