@@ -29,7 +29,7 @@ export function LeadsTrendChart({ data }) {
   }
 
   return (
-    <div className="border border-white/[0.06] bg-[#0a0a0a] p-6">
+    <div className="overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6">
       <div className="flex items-center justify-between mb-1">
         <div>
           <h2 className="text-sm font-semibold text-white">Lead Trends</h2>
@@ -37,7 +37,7 @@ export function LeadsTrendChart({ data }) {
         </div>
       </div>
 
-      <ChartContainer config={chartConfig} className="mt-4 w-full h-64">
+      <ChartContainer config={chartConfig} className="mt-4 w-full" style={{ height: 260, aspectRatio: "unset" }}>
         <AreaChart
           accessibilityLayer
           data={data}
@@ -52,7 +52,7 @@ export function LeadsTrendChart({ data }) {
             dataKey="month"
             tickLine={false}
             axisLine={false}
-            tickMargin={10}
+            tickMargin={8}
             tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 11, fontWeight: 500 }}
           />
           <ChartTooltip
