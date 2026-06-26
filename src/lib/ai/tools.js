@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import { getAdminClient } from "@/lib/supabase/admin";
 
 async function getDb() {
-  const supabase = await createClient();
-  if (!supabase) throw new Error("Supabase not configured");
+  const supabase = getAdminClient();
+  if (!supabase) throw new Error("Supabase not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env");
   return supabase;
 }
 
