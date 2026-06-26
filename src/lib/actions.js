@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { sendNewLeadNotification, sendLeadAutoReply } from "@/lib/email/email";
+import { sendNewLeadNotification, sendLeadAutoReply, sendHotLeadAlert } from "@/lib/email/email";
 import ReviewNotification from "@/emails/review-notification";
 import { resend } from "@/lib/email/resend";
 import { getSiteUrl } from "@/config/site-url";
@@ -33,12 +33,45 @@ export async function createLead(data) {
       return { success: false, error: error.message }
     }
 
+    let aiCategory = null;
+    let aiScore = null;
+    let aiSummary = null;
+
+    if (process.env.GOOGLE_API) {
+      try {
+        const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
+        if (aiRes && typeof aiRes.score === "number") {
+          aiScore = aiRes.score;
+          aiCategory = aiRes.category || null;
+          aiSummary = aiRes.summary || null;
+          await supabase
+            .from("leads")
+            .update({ ai_score: aiScore, ai_category: aiCategory, ai_summary: aiSummary })
+            .eq("email", data.email)
+            .is("ai_score", null);
+        }
+      } catch (aiErr) {
+        console.warn("[ai] lead scoring failed:", aiErr?.message);
+      }
+    }
+
     let emailError = null
     if (process.env.RESEND_API_KEY) {
-      const results = await Promise.allSettled([
-        sendNewLeadNotification(data),
-        data.email ? sendLeadAutoReply(data) : Promise.resolve(),
-      ])
+      const emails = [];
+
+      if (aiCategory === "spam") {
+        // spam — no notification, no auto-reply
+      } else if (aiScore >= 70) {
+        // hot — priority alert + fast reply
+        emails.push(sendHotLeadAlert(data, aiScore, aiCategory, aiSummary));
+        if (data.email) emails.push(sendLeadAutoReply(data));
+      } else {
+        // warm/cold — standard notification + auto-reply
+        emails.push(sendNewLeadNotification(data));
+        if (data.email) emails.push(sendLeadAutoReply(data));
+      }
+
+      const results = await Promise.allSettled(emails);
       for (const r of results) {
         if (r.status === "rejected") {
           emailError = typeof r.reason === "string" ? r.reason : r.reason?.message || JSON.stringify(r.reason)
@@ -46,25 +79,6 @@ export async function createLead(data) {
           const err = r.value.error
           emailError = typeof err === "string" ? err : err?.message || JSON.stringify(err)
         }
-      }
-    }
-
-    if (process.env.GOOGLE_API) {
-      try {
-        const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
-        if (aiRes && typeof aiRes.score === "number") {
-          await supabase
-            .from("leads")
-            .update({
-              ai_score: aiRes.score,
-              ai_category: aiRes.category || null,
-              ai_summary: aiRes.summary || null,
-            })
-            .eq("email", data.email)
-            .is("ai_score", null);
-        }
-      } catch (aiErr) {
-        console.warn("[ai] lead scoring failed:", aiErr?.message);
       }
     }
 

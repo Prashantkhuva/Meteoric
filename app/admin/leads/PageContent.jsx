@@ -50,7 +50,7 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
-  const { search, status: statusFilter, sort, page, col, dir } = filters;
+  const { search, status: statusFilter, score: scoreFilter, sort, page, col, dir } = filters;
   const [viewLead, setViewLead] = useState(null);
   const [editLead, setEditLead] = useState(null);
   const [showAddLead, setShowAddLead] = useState(false);
@@ -81,7 +81,7 @@ export default function LeadsPage() {
 
   async function fetchLeads() {
     setLoading(true);
-    const result = await getLeadsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort });
+    const result = await getLeadsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, score: scoreFilter, col, dir, sort });
     if (result.error) { setError(result.error); }
     else { setLeads(result.data); setTotal(result.total); }
     setLoading(false);
@@ -89,7 +89,7 @@ export default function LeadsPage() {
 
   useEffect(() => {
     setSelected(new Set());
-  }, [page, search, statusFilter]);
+  }, [page, search, statusFilter, scoreFilter]);
 
   function toggleSelect(id) {
     setSelected((prev) => {
@@ -148,6 +148,11 @@ export default function LeadsPage() {
       let query = supabase.from("leads").select("*");
       if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
       if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+      if (scoreFilter === "hot") { query = query.gte("ai_score", 70); }
+      else if (scoreFilter === "warm") { query = query.gte("ai_score", 40).lt("ai_score", 70); }
+      else if (scoreFilter === "cold") { query = query.gte("ai_score", 0).lt("ai_score", 40); }
+      else if (scoreFilter === "scored") { query = query.not("ai_score", "is", null); }
+      else if (scoreFilter === "unscored") { query = query.is("ai_score", null); }
       const { data } = await query;
       downloadCSV(data || [], CSV_COLUMNS, `leads-${new Date().toISOString().slice(0, 10)}.csv`);
       addToast("CSV exported", "success");
@@ -241,7 +246,7 @@ export default function LeadsPage() {
     );
   }
 
-  const hasFilters = search || statusFilter !== "all";
+  const hasFilters = search || statusFilter !== "all" || scoreFilter !== "all";
 
   return (
     <div className="p-5 lg:p-8 space-y-5">
@@ -269,13 +274,18 @@ export default function LeadsPage() {
           {exporting ? <span className="h-3 w-3 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline-block mr-1" /> : <Download size={12} className="inline mr-1" />}
           {exporting ? "Exporting..." : "CSV"}
         </button>
-        <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all" })} visible={hasFilters} />
+        <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", score: "all" })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
         {statusList.map((s) => (
           <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setFilters({ status: s.value, page: 1 })}>
             {s.label}
           </FilterChip>
         ))}
+        <FilterChip active={scoreFilter === "all"} onClick={() => setFilters({ score: "all", page: 1 })}>All scores</FilterChip>
+        <FilterChip active={scoreFilter === "hot"} onClick={() => setFilters({ score: "hot", page: 1 })}>Hot (70+)</FilterChip>
+        <FilterChip active={scoreFilter === "warm"} onClick={() => setFilters({ score: "warm", page: 1 })}>Warm (40–69)</FilterChip>
+        <FilterChip active={scoreFilter === "cold"} onClick={() => setFilters({ score: "cold", page: 1 })}>Cold (0–39)</FilterChip>
+        <FilterChip active={scoreFilter === "unscored"} onClick={() => setFilters({ score: "unscored", page: 1 })}>Unscored</FilterChip>
         <SortDropdown
           value={sort}
           onChange={(v) => setFilters({ sort: v })}
@@ -636,17 +646,30 @@ function LeadFormModal({ open, lead, onClose, onSubmit }) {
 function AiScoreBadge({ score, category, size = "sm" }) {
   if (score == null) return <span className="text-xs text-white/15">—</span>;
 
-  const color =
-    score >= 70 ? "text-green-400 border-green-400/20 bg-green-400/5" :
-    score >= 40 ? "text-yellow-400 border-yellow-400/20 bg-yellow-400/5" :
-    "text-red-400 border-red-400/20 bg-red-400/5";
+  const barColor =
+    score >= 70 ? "bg-green-400" :
+    score >= 40 ? "bg-yellow-400" :
+    "bg-red-400";
+
+  const bgColor =
+    score >= 70 ? "border-green-400/20 bg-green-400/5" :
+    score >= 40 ? "border-yellow-400/20 bg-yellow-400/5" :
+    "border-red-400/20 bg-red-400/5";
+
+  const textColor =
+    score >= 70 ? "text-green-400" :
+    score >= 40 ? "text-yellow-400" :
+    "text-red-400";
 
   const catClass = category === "spam" ? "text-red-400/60" : "text-white/30";
   const isLg = size === "lg";
 
   return (
-    <span className={`inline-flex items-center gap-1.5 border ${color} ${isLg ? "px-2.5 py-1" : "px-2 py-0.5"}`}>
-      <span className={`font-semibold tabular-nums ${isLg ? "text-sm" : "text-xs"}`}>{score}</span>
+    <span className={`inline-flex items-center gap-2 border ${bgColor} ${isLg ? "px-3 py-1.5" : "px-2 py-0.5"}`}>
+      <span className={`flex items-center gap-1.5`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${barColor}`} />
+        <span className={`font-semibold tabular-nums ${isLg ? "text-sm" : "text-xs"} ${textColor}`}>{score}</span>
+      </span>
       {category && (
         <span className={`text-[10px] uppercase tracking-wider ${catClass}`}>{category}</span>
       )}

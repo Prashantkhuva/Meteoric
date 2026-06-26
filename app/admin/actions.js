@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
-import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome } from "@/lib/email/email";
+import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert } from "@/lib/email/email";
 import { callAIJson } from "@/lib/ai/provider";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import {
@@ -83,16 +83,23 @@ export async function addLead(formData) {
 
   if (error) throw error;
 
+  let aiScore = null;
+  let aiCategory = null;
+  let aiSummary = null;
+
   if (process.env.GOOGLE_API && data.email) {
     try {
       const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
       if (aiRes && typeof aiRes.score === "number") {
+        aiScore = aiRes.score;
+        aiCategory = aiRes.category || null;
+        aiSummary = aiRes.summary || null;
         await supabase
           .from("leads")
           .update({
-            ai_score: aiRes.score,
-            ai_category: aiRes.category || null,
-            ai_summary: aiRes.summary || null,
+            ai_score: aiScore,
+            ai_category: aiCategory,
+            ai_summary: aiSummary,
           })
           .eq("email", data.email)
           .is("ai_score", null);
@@ -100,6 +107,10 @@ export async function addLead(formData) {
     } catch (aiErr) {
       console.warn("[ai] lead scoring failed:", aiErr?.message);
     }
+  }
+
+  if (process.env.RESEND_API_KEY && aiScore >= 70 && aiCategory !== "spam") {
+    sendHotLeadAlert(data, aiScore, aiCategory, aiSummary).catch(() => {});
   }
 
   revalidateAdmin("/admin/leads");
@@ -798,7 +809,7 @@ export async function updateProjectStatus(id, newStatus) {
 function resolveOrder(col, dir, sort) {
   const validCols = [
     "name", "email", "status", "created_at", "invoice_number",
-    "total", "budget", "deadline", "title", "company", "phone",
+    "total", "budget", "deadline", "title", "company", "phone", "ai_score",
   ];
   if (col && validCols.includes(col)) {
     return { column: col, ascending: dir !== "desc" };
@@ -817,11 +828,16 @@ function resolveOrder(col, dir, sort) {
 
 export async function getLeadsPaginated(params) {
   const supabase = await getSupabase();
-  const { page, pageSize, search, status, col, dir, sort } = paginationSchema.parse(params);
+  const { page, pageSize, search, status, score: scoreFilter, col, dir, sort } = paginationSchema.parse(params);
 
   let query = supabase.from("leads").select("*", { count: "exact" });
   if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`);
   if (status !== "all") query = query.eq("status", status);
+  if (scoreFilter === "hot") query = query.gte("ai_score", 70);
+  else if (scoreFilter === "warm") query = query.gte("ai_score", 40).lt("ai_score", 70);
+  else if (scoreFilter === "cold") query = query.gte("ai_score", 0).lt("ai_score", 40);
+  else if (scoreFilter === "scored") query = query.not("ai_score", "is", null);
+  else if (scoreFilter === "unscored") query = query.is("ai_score", null);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
   const from = (page - 1) * pageSize;

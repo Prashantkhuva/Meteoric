@@ -1,5 +1,6 @@
 import { resend } from "@/lib/email/resend";
 import NewLeadEmail from "@/emails/new-lead-notification";
+import HotLeadAlert from "@/emails/hot-lead-alert";
 import LeadAutoReply from "@/emails/lead-autoreply";
 import ProposalEmail from "@/emails/proposal-email";
 import InvoiceEmail from "@/emails/invoice-email";
@@ -31,6 +32,18 @@ export async function sendNewLeadNotification(lead) {
     react: NewLeadEmail(lead),
   });
   if (result?.error) console.error("[resend] admin notification failed:", result.error);
+  return result;
+}
+
+export async function sendHotLeadAlert(lead, score, category, summary) {
+  if (!ADMIN) return;
+  const result = await resend.emails.send({
+    from: FROM,
+    to: [ADMIN],
+    subject: `🔥 Hot lead (${score}): ${lead.name || lead.email}`,
+    react: HotLeadAlert({ lead, score, category, summary }),
+  });
+  if (result?.error) console.error("[resend] hot lead alert failed:", result.error);
   return result;
 }
 

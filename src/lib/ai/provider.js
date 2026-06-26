@@ -19,20 +19,6 @@ function getModel() {
   });
 }
 
-export async function callAI(systemPrompt, userContent) {
-  const model = getModel();
-  if (!model) return null;
-
-  const result = await model.generateContent({
-    contents: [
-      { role: "user", parts: [{ text: `${systemPrompt}\n\n${userContent}` }] },
-    ],
-  });
-
-  const text = result.response?.text?.()?.trim();
-  return text || null;
-}
-
 export async function callAIJson(systemPrompt, userContent) {
   const model = getModel();
   if (!model) return null;

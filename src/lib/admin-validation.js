@@ -8,7 +8,7 @@ export const VALID_PROJECT_STATUSES = ["planning", "in_progress", "review", "com
 
 const VALID_COLUMNS = [
   "name", "email", "status", "created_at", "invoice_number", "total",
-  "budget", "deadline", "title", "company", "phone",
+  "budget", "deadline", "title", "company", "phone", "ai_score",
 ];
 
 const phoneRegex = /^[\d\s\-\+\(\)\.]{6,20}$/;
@@ -50,6 +50,7 @@ export const paginationSchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(15),
   search: z.string().max(200).default(""),
   status: z.string().max(50).default("all"),
+  score: z.string().max(50).default("all"),
   col: z
     .string()
     .refine((v) => v === "" || VALID_COLUMNS.includes(v), "Invalid sort column")
