@@ -446,8 +446,7 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
   const isCancelled = (s) => (s || "").toUpperCase() === "CANCELLED";
 
   function statusValue(status) {
-    const s = (status || "").toLowerCase();
-    return s === "accepted" ? "accepted" : s === "cancelled" ? "cancelled" : "";
+    return (status || "").toLowerCase();
   }
 
   return (
