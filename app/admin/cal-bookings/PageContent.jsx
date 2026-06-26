@@ -443,7 +443,7 @@ export default function CalBookingsPage() {
 }
 
 function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus, col, dir, onColSort }) {
-  const isCancelled = (s) => (s || "").toUpperCase() === "CANCELLED";
+  const isTerminal = (s) => { const u = (s || "").toUpperCase(); return u === "CANCELLED" || u === "ACCEPTED"; };
 
   function statusValue(status) {
     return (status || "").toLowerCase();
@@ -482,7 +482,7 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
             ) : (
               bookings.map((b) => {
                 const attendee = b.attendees?.[0]
-                const cancelled = isCancelled(b.status);
+                const terminal = isTerminal(b.status);
                 return (
                   <tr
                     key={b.id}
@@ -506,7 +506,7 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
                       )}
                     </td>
                     <td className="px-5 py-3.5" onClick={(e) => e.stopPropagation()}>
-                      {cancelled ? (
+                      {terminal ? (
                         <BookingStatusBadge status={b.status} />
                       ) : (
                         <StatusSelect
