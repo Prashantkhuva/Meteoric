@@ -7,7 +7,6 @@ import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { ToastProvider } from "./components/Toast";
 import ErrorBoundary from "@/components/sections/ErrorBoundary";
-import AIAssistant from "./components/AIAssistant";
 
 const pageTitles = {
   "/admin": "Dashboard",
@@ -23,7 +22,6 @@ export function AdminShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [aiOpen, setAIOpen] = useState(false);
   const [userName, setUserName] = useState("Admin");
   const [userEmail, setUserEmail] = useState(null);
   const [checking, setChecking] = useState(true);
@@ -82,15 +80,13 @@ export function AdminShell({ children }) {
         <Sidebar mobileOpen={mobileOpen} onMobileClose={closeMobile} userName={userName} userEmail={userEmail} />
 
         <div className="relative flex flex-1 flex-col min-w-0">
-          <TopBar title={title} onMenuClick={openMobile} onAIClick={() => setAIOpen(true)} />
+          <TopBar title={title} onMenuClick={openMobile} />
           <main className="flex-1 overflow-auto">
             <ErrorBoundary>
               {children}
             </ErrorBoundary>
           </main>
         </div>
-
-        <AIAssistant open={aiOpen} onClose={() => setAIOpen(false)} />
       </div>
     </ToastProvider>
   );
