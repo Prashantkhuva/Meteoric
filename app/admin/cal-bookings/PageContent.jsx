@@ -213,13 +213,14 @@ export default function CalBookingsPage() {
     e.preventDefault()
     setConverting(true)
     setConvertMsg(null)
-    try {
-      await createLeadFromBooking(new FormData(e.target))
+    const result = await createLeadFromBooking(new FormData(e.target))
+    if (result?.error) {
+      setConvertMsg({ type: "error", text: result.error })
+      addToast(result.error, "error")
+    } else {
       setConvertMsg({ type: "success", text: "Lead added successfully." })
       addToast("Lead created from booking", "success")
       setTimeout(() => { setShowConvertForm(false); setConvertMsg(null) }, 1500)
-    } catch (err) {
-      setConvertMsg({ type: "error", text: err.message })
     }
     setConverting(false)
   }

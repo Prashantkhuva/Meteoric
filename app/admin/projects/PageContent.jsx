@@ -136,38 +136,42 @@ export default function ProjectsPage() {
   async function handleBulkDelete() {
     const ids = [...selected];
     setIsDeleting(true);
-    try {
-      await Promise.all(ids.map((id) => deleteProject(id)));
-      setProjects((prev) => prev.filter((p) => !ids.includes(p.id)));
-      setTotal((prev) => Math.max(0, prev - ids.length));
-      if (viewProject && ids.includes(viewProject.id)) setViewProject(null);
-      addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} deleted`, "success");
-      setSelected(new Set());
+    const results = await Promise.all(ids.map((id) => deleteProject(id)));
+    const errors = results.filter((r) => r?.error);
+    if (errors.length > 0) {
+      addToast(errors[0].error, "error");
       setBulkConfirm(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete", "error");
-      setBulkConfirm(null);
+      setIsDeleting(false);
+      return;
     }
+    setProjects((prev) => prev.filter((p) => !ids.includes(p.id)));
+    setTotal((prev) => Math.max(0, prev - ids.length));
+    if (viewProject && ids.includes(viewProject.id)) setViewProject(null);
+    addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} deleted`, "success");
+    setSelected(new Set());
+    setBulkConfirm(null);
     setIsDeleting(false);
   }
 
   async function handleBulkStatusChange(newStatus) {
     setBulkUpdating(true);
-    try {
-      const ids = [...selected];
-      const formDatas = ids.map((id) => {
-        const fd = new FormData();
-        fd.set("id", id);
-        fd.set("status", newStatus);
-        return fd;
-      });
-      await Promise.all(formDatas.map((fd) => updateProject(fd)));
-      setProjects((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
-      addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} updated`, "success");
-      setSelected(new Set());
-    } catch (err) {
-      addToast(err.message || "Failed to update", "error");
+    const ids = [...selected];
+    const formDatas = ids.map((id) => {
+      const fd = new FormData();
+      fd.set("id", id);
+      fd.set("status", newStatus);
+      return fd;
+    });
+    const results = await Promise.all(formDatas.map((fd) => updateProject(fd)));
+    const errors = results.filter((r) => r?.error);
+    if (errors.length > 0) {
+      addToast(errors[0].error, "error");
+      setBulkUpdating(false);
+      return;
     }
+    setProjects((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
+    addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} updated`, "success");
+    setSelected(new Set());
     setBulkUpdating(false);
   }
 
@@ -188,55 +192,57 @@ export default function ProjectsPage() {
   }
 
   async function handleCreate(formData) {
-    try {
-      await createProject(formData);
-      setShowNew(false);
-      addToast("Project created", "success");
-      fetchData();
-    } catch (err) {
-      addToast(err.message || "Failed to create project", "error");
+    const result = await createProject(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
     }
+    setShowNew(false);
+    addToast("Project created", "success");
+    fetchData();
   }
 
   async function handleUpdate(formData) {
-    try {
-      await updateProject(formData);
-      setEditingProject(null);
-      addToast("Project updated", "success");
-      fetchData();
-    } catch (err) {
-      addToast(err.message || "Failed to update project", "error");
+    const result = await updateProject(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
     }
+    setEditingProject(null);
+    addToast("Project updated", "success");
+    fetchData();
   }
 
   async function handleDelete(id) {
     setIsDeleting(true);
-    try {
-      await deleteProject(id);
-      setProjects((prev) => prev.filter((p) => p.id !== id));
-      setTotal((prev) => Math.max(0, prev - 1));
-      if (viewProject?.id === id) setViewProject(null);
-      addToast("Project deleted", "success");
+    const result = await deleteProject(id);
+    if (result?.error) {
+      addToast(result.error, "error");
       setDeleteTarget(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete project", "error");
-      setDeleteTarget(null);
+      setIsDeleting(false);
+      return;
     }
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+    setTotal((prev) => Math.max(0, prev - 1));
+    if (viewProject?.id === id) setViewProject(null);
+    addToast("Project deleted", "success");
+    setDeleteTarget(null);
     setIsDeleting(false);
   }
 
   async function handleStatusChange(id, newStatus) {
     setEditingStatus(id);
-    try {
-      await updateProjectStatus(id, newStatus);
-      setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
-      if (viewProject?.id === id) {
-        setViewProject((prev) => prev ? { ...prev, status: newStatus } : null);
-      }
-      addToast("Status updated", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to update status", "error");
+    const result = await updateProjectStatus(id, newStatus);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setEditingStatus(null);
+      return;
     }
+    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
+    if (viewProject?.id === id) {
+      setViewProject((prev) => prev ? { ...prev, status: newStatus } : null);
+    }
+    addToast("Status updated", "success");
     setEditingStatus(null);
   }
 

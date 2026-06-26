@@ -138,34 +138,37 @@ export default function ProposalsPage() {
   async function handleBulkDelete() {
     const ids = [...selected];
     setIsDeleting(true);
-    try {
-      await Promise.all(ids.map((id) => deleteProposal(id)));
-      setProposals((prev) => prev.filter((p) => !ids.includes(p.id)));
-      setTotal((prev) => Math.max(0, prev - ids.length));
-      if (viewProposal && ids.includes(viewProposal.id)) setViewProposal(null);
-      addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} deleted`, "success");
-      setSelected(new Set());
+    const results = await Promise.all(ids.map((id) => deleteProposal(id)));
+    const firstError = results.find((r) => r?.error);
+    if (firstError) {
+      addToast(firstError.error || "Failed to delete", "error");
       setBulkConfirm(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete", "error");
-      setBulkConfirm(null);
+      setIsDeleting(false);
+      return;
     }
+    setProposals((prev) => prev.filter((p) => !ids.includes(p.id)));
+    setTotal((prev) => Math.max(0, prev - ids.length));
+    if (viewProposal && ids.includes(viewProposal.id)) setViewProposal(null);
+    addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} deleted`, "success");
+    setSelected(new Set());
+    setBulkConfirm(null);
     setIsDeleting(false);
   }
 
   async function handleBulkStatusChange(newStatus) {
     const ids = [...selected];
     setBulkLoading(true);
-    try {
-      await Promise.all(ids.map((id) => updateProposalStatus(id, newStatus)));
-      setProposals((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
-      addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} updated`, "success");
-      setSelected(new Set());
-    } catch (err) {
-      addToast(err.message || "Failed to update", "error");
-    } finally {
+    const results = await Promise.all(ids.map((id) => updateProposalStatus(id, newStatus)));
+    const firstError = results.find((r) => r?.error);
+    if (firstError) {
+      addToast(firstError.error || "Failed to update", "error");
       setBulkLoading(false);
+      return;
     }
+    setProposals((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
+    addToast(`${ids.length} proposal${ids.length > 1 ? "s" : ""} updated`, "success");
+    setSelected(new Set());
+    setBulkLoading(false);
   }
 
   async function handleExportCSV() {
@@ -185,40 +188,41 @@ export default function ProposalsPage() {
   }
 
   async function handleCreate(formData) {
-    try {
-      await createProposal(formData);
-      setShowNewProposal(false);
-      addToast("Proposal created", "success");
-      fetchData();
-    } catch (err) {
-      addToast(err.message || "Failed to create proposal", "error");
+    const result = await createProposal(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
     }
+    setShowNewProposal(false);
+    addToast("Proposal created", "success");
+    fetchData();
   }
 
   async function handleUpdate(formData) {
-    try {
-      await updateProposal(formData);
-      setEditingProposal(null);
-      addToast("Proposal updated", "success");
-      fetchData();
-    } catch (err) {
-      addToast(err.message || "Failed to update proposal", "error");
+    const result = await updateProposal(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
     }
+    setEditingProposal(null);
+    addToast("Proposal updated", "success");
+    fetchData();
   }
 
   async function handleDelete(id) {
     setIsDeleting(true);
-    try {
-      await deleteProposal(id);
-      setProposals((prev) => prev.filter((p) => p.id !== id));
-      setTotal((prev) => Math.max(0, prev - 1));
-      if (viewProposal?.id === id) setViewProposal(null);
-      addToast("Proposal deleted", "success");
+    const result = await deleteProposal(id);
+    if (result?.error) {
+      addToast(result.error, "error");
       setDeleteTarget(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete proposal", "error");
-      setDeleteTarget(null);
+      setIsDeleting(false);
+      return;
     }
+    setProposals((prev) => prev.filter((p) => p.id !== id));
+    setTotal((prev) => Math.max(0, prev - 1));
+    if (viewProposal?.id === id) setViewProposal(null);
+    addToast("Proposal deleted", "success");
+    setDeleteTarget(null);
     setIsDeleting(false);
   }
 
@@ -230,30 +234,31 @@ export default function ProposalsPage() {
   async function handleSend(id) {
     setSending(id);
     const result = await sendProposal(id);
-    if (result.success) {
+    if (result?.error) {
+      addToast(result.error, "error");
+    } else {
       setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status: "sent", sent_at: new Date().toISOString() } : p)));
       if (viewProposal?.id === id) {
         setViewProposal((prev) => prev ? { ...prev, status: "sent", sent_at: new Date().toISOString() } : null);
       }
       addToast("Proposal sent to lead", "success");
-    } else {
-      addToast(result.error || "Failed to send proposal", "error");
     }
     setSending(null);
   }
 
   async function handleStatusChange(id, newStatus) {
     setEditingStatus(id);
-    try {
-      await updateProposalStatus(id, newStatus);
-      setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
-      if (viewProposal?.id === id) {
-        setViewProposal((prev) => prev ? { ...prev, status: newStatus } : null);
-      }
-      addToast("Status updated", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to update status", "error");
+    const result = await updateProposalStatus(id, newStatus);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setEditingStatus(null);
+      return;
     }
+    setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
+    if (viewProposal?.id === id) {
+      setViewProposal((prev) => prev ? { ...prev, status: newStatus } : null);
+    }
+    addToast("Status updated", "success");
     setEditingStatus(null);
   }
 
@@ -692,7 +697,7 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
       if (draft.content) setContent(draft.content);
       if (draft.pricing) setPricingJson(draft.pricing);
     } catch (err) {
-      console.error("[ai] proposal generation failed:", err);
+      addToast(err?.message || "AI proposal generation failed", "error");
     }
     setGenerating(false);
   }

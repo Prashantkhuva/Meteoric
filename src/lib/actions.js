@@ -39,7 +39,8 @@ export async function createLead(data) {
 
     if (process.env.GOOGLE_API) {
       try {
-        const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
+        const prompt = scoreLeadPrompt(data);
+        const aiRes = await callAIJson(prompt.system, prompt.user);
         if (aiRes && typeof aiRes.score === "number") {
           aiScore = aiRes.score;
           aiCategory = aiRes.category || null;

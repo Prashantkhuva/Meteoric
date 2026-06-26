@@ -107,10 +107,9 @@ export default function ClientsPage() {
     setIsDeleting(true);
     let allSucceeded = true;
     for (const id of ids) {
-      try {
-        await deleteClient(id);
-      } catch (err) {
-        console.error("handleBulkDelete error for id", id, err);
+      const result = await deleteClient(id);
+      if (result?.error) {
+        console.error("handleBulkDelete error for id", id, result.error);
         allSucceeded = false;
       }
     }
@@ -130,16 +129,16 @@ export default function ClientsPage() {
   async function handleBulkStatusChange(newStatus) {
     setBulkStatusLoading(true);
     const ids = [...selected];
-    try {
-      await Promise.all(ids.map((id) => updateClientStatus(id, newStatus)));
+    const results = await Promise.all(ids.map((id) => updateClientStatus(id, newStatus)));
+    const err = results.find(r => r?.error);
+    if (err) {
+      addToast(err.error, "error");
+    } else {
       setClients((prev) => prev.map((c) => ids.includes(c.id) ? { ...c, status: newStatus } : c));
       addToast(`${ids.length} client${ids.length > 1 ? "s" : ""} updated`, "success");
       setSelected(new Set());
-    } catch (err) {
-      addToast(err.message || "Failed to update", "error");
-    } finally {
-      setBulkStatusLoading(false);
     }
+    setBulkStatusLoading(false);
   }
 
   async function handleExportCSV() {
@@ -160,44 +159,48 @@ export default function ClientsPage() {
 
   async function handleStatusChange(clientId, newStatus) {
     setEditingStatus(clientId);
-    try {
-      await updateClientStatus(clientId, newStatus);
+    const result = await updateClientStatus(clientId, newStatus);
+    if (result?.error) {
+      addToast(result.error, "error");
+    } else {
       setClients((prev) => prev.map((c) => (c.id === clientId ? { ...c, status: newStatus } : c)));
       addToast("Status updated", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to update status", "error");
     }
     setEditingStatus(null);
   }
 
   async function handleAdd(formData) {
-    try {
-      if (formData.get("id")) {
-        await updateClient(formData);
-        setEditClient(null);
-        addToast("Client updated", "success");
-      } else {
-        await addClient(formData);
-        setShowAdd(false);
-        addToast("Client added", "success");
+    if (formData.get("id")) {
+      const result = await updateClient(formData);
+      if (result?.error) {
+        addToast(result.error, "error");
+        return;
       }
-      fetchClients();
-    } catch (err) {
-      addToast(err.message || "Failed to save client", "error");
+      setEditClient(null);
+      addToast("Client updated", "success");
+    } else {
+      const result = await addClient(formData);
+      if (result?.error) {
+        addToast(result.error, "error");
+        return;
+      }
+      setShowAdd(false);
+      addToast("Client added", "success");
     }
+    fetchClients();
   }
 
   async function handleDelete(id) {
     setIsDeleting(true);
-    try {
-      await deleteClient(id);
+    const result = await deleteClient(id);
+    if (result?.error) {
+      console.error("handleDelete error:", result.error);
+      addToast(result.error, "error");
+    } else {
       setClients((prev) => prev.filter((c) => c.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewClient?.id === id) setViewClient(null);
       addToast("Client removed", "success");
-    } catch (err) {
-      console.error("handleDelete error:", err);
-      addToast(err.message || "Failed to delete", "error");
     }
     setDeleteTarget(null);
     setIsDeleting(false);

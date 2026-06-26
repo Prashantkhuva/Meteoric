@@ -111,25 +111,35 @@ export default function LeadsPage() {
     const ids = [...selected];
     setIsDeleting(true);
     try {
-      await Promise.all(ids.map((id) => deleteLead(id)));
+      const results = await Promise.all(ids.map((id) => deleteLead(id)));
+      const errorResult = results.find(r => r?.error);
+      if (errorResult) {
+        addToast(errorResult.error, "error");
+        return;
+      }
       setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
       setTotal((prev) => Math.max(0, prev - ids.length));
       if (viewLead && ids.includes(viewLead.id)) setViewLead(null);
       addToast(`${ids.length} lead${ids.length > 1 ? "s" : ""} deleted`, "success");
       setSelected(new Set());
-      setBulkConfirm(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+    } finally {
       setBulkConfirm(null);
+      setIsDeleting(false);
     }
-    setIsDeleting(false);
   }
 
   async function handleBulkStatusChange(newStatus) {
     setBulkStatusLoading(true);
     const ids = [...selected];
     try {
-      await Promise.all(ids.map((id) => updateLeadStatus(id, newStatus)));
+      const results = await Promise.all(ids.map((id) => updateLeadStatus(id, newStatus)));
+      const errorResult = results.find(r => r?.error);
+      if (errorResult) {
+        addToast(errorResult.error, "error");
+        return;
+      }
       setLeads((prev) => prev.map((l) => ids.includes(l.id) ? { ...l, status: newStatus } : l));
       addToast(`${ids.length} lead${ids.length > 1 ? "s" : ""} updated`, "success");
       setSelected(new Set());
@@ -164,25 +174,35 @@ export default function LeadsPage() {
   async function handleStatusChange(leadId, newStatus) {
     setEditingStatus(leadId);
     try {
-      await updateLeadStatus(leadId, newStatus);
+      const result = await updateLeadStatus(leadId, newStatus);
+      if (result?.error) {
+        addToast(result.error, "error");
+        return;
+      }
       setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)));
       addToast("Status updated", "success");
     } catch (err) {
       addToast(err.message || "Failed to update status", "error");
+    } finally {
+      setEditingStatus(null);
     }
-    setEditingStatus(null);
   }
 
   async function handleConvert(lead) {
     setConverting(lead.id);
     try {
-      await convertLeadToClient(lead.id);
+      const result = await convertLeadToClient(lead.id);
+      if (result?.error) {
+        addToast(result.error, "error");
+        return;
+      }
       setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status: "completed" } : l)));
       addToast(`${lead.name || "Lead"} converted to client`, "success");
     } catch (err) {
       addToast(err.message || "Failed to convert", "error");
+    } finally {
+      setConverting(null);
     }
-    setConverting(null);
   }
 
   function promptDelete(leadId) {
@@ -195,27 +215,39 @@ export default function LeadsPage() {
     if (!id) return;
     setIsDeleting(true);
     try {
-      await deleteLead(id);
+      const result = await deleteLead(id);
+      if (result?.error) {
+        addToast(result.error, "error");
+        return;
+      }
       setLeads((prev) => prev.filter((l) => l.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
       if (viewLead?.id === id) setViewLead(null);
       addToast("Lead deleted", "success");
-      setDeleteTarget(null);
     } catch (err) {
       addToast(err.message || "Failed to delete", "error");
+    } finally {
       setDeleteTarget(null);
+      setIsDeleting(false);
     }
-    setIsDeleting(false);
   }
 
   async function handleAddLead(formData) {
     try {
       if (formData.get("id")) {
-        await updateLead(formData);
+        const result = await updateLead(formData);
+        if (result?.error) {
+          addToast(result.error, "error");
+          return;
+        }
         setEditLead(null);
         addToast("Lead updated", "success");
       } else {
-        await addLead(formData);
+        const result = await addLead(formData);
+        if (result?.error) {
+          addToast(result.error, "error");
+          return;
+        }
         setShowAddLead(false);
         addToast("Lead added", "success");
       }

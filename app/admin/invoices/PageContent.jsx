@@ -153,12 +153,12 @@ export default function InvoicesPage() {
     });
 
     if (overdueIds.length > 0) {
-      try {
-        await markInvoiceAsOverdue(overdueIds);
+      const result = await markInvoiceAsOverdue(overdueIds);
+      if (!result?.error) {
         setInvoices((prev) => prev.map((inv) =>
           overdueIds.includes(inv.id) ? { ...inv, status: "overdue" } : inv
         ));
-      } catch {}
+      }
     }
   }
 
@@ -181,47 +181,52 @@ export default function InvoicesPage() {
   async function handleBulkDelete() {
     const ids = [...selected];
     setIsDeleting(true);
-    try {
-      await Promise.all(ids.map((id) => deleteInvoice(id)));
-      setInvoices((prev) => prev.filter((inv) => !ids.includes(inv.id)));
-      setTotal((prev) => Math.max(0, prev - ids.length));
-      if (viewInvoice && ids.includes(viewInvoice.id)) setViewInvoice(null);
-      addToast(`${ids.length} invoice${ids.length > 1 ? "s" : ""} deleted`, "success");
-      setSelected(new Set());
+    const results = await Promise.all(ids.map((id) => deleteInvoice(id)));
+    const errors = results.filter(r => r?.error);
+    if (errors.length > 0) {
+      addToast(errors[0].error, "error");
       setBulkConfirm(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete", "error");
-      setBulkConfirm(null);
+      setIsDeleting(false);
+      return;
     }
+    setInvoices((prev) => prev.filter((inv) => !ids.includes(inv.id)));
+    setTotal((prev) => Math.max(0, prev - ids.length));
+    if (viewInvoice && ids.includes(viewInvoice.id)) setViewInvoice(null);
+    addToast(`${ids.length} invoice${ids.length > 1 ? "s" : ""} deleted`, "success");
+    setSelected(new Set());
+    setBulkConfirm(null);
     setIsDeleting(false);
   }
 
   async function handleStatusChange(id, newStatus) {
     setEditingStatus(id);
-    try {
-      await updateInvoiceStatus(id, newStatus);
-      setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: newStatus } : inv)));
-      if (viewInvoice?.id === id) {
-        setViewInvoice((prev) => prev ? { ...prev, status: newStatus } : null);
-      }
-      addToast("Status updated", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to update status", "error");
+    const result = await updateInvoiceStatus(id, newStatus);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setEditingStatus(null);
+      return;
     }
+    setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: newStatus } : inv)));
+    if (viewInvoice?.id === id) {
+      setViewInvoice((prev) => prev ? { ...prev, status: newStatus } : null);
+    }
+    addToast("Status updated", "success");
     setEditingStatus(null);
   }
 
   async function handleBulkStatusChange(newStatus) {
     setBulkLoading(true);
     const ids = [...selected];
-    try {
-      await Promise.all(ids.map((id) => updateInvoiceStatus(id, newStatus)));
-      setInvoices((prev) => prev.map((inv) => ids.includes(inv.id) ? { ...inv, status: newStatus } : inv));
-      addToast(`${ids.length} invoice${ids.length > 1 ? "s" : ""} updated`, "success");
-      setSelected(new Set());
-    } catch (err) {
-      addToast(err.message || "Failed to update", "error");
+    const results = await Promise.all(ids.map((id) => updateInvoiceStatus(id, newStatus)));
+    const errors = results.filter(r => r?.error);
+    if (errors.length > 0) {
+      addToast(errors[0].error, "error");
+      setBulkLoading(false);
+      return;
     }
+    setInvoices((prev) => prev.map((inv) => ids.includes(inv.id) ? { ...inv, status: newStatus } : inv));
+    addToast(`${ids.length} invoice${ids.length > 1 ? "s" : ""} updated`, "success");
+    setSelected(new Set());
     setBulkLoading(false);
   }
 
@@ -272,70 +277,72 @@ export default function InvoicesPage() {
   }
 
   async function handleCreate(formData) {
-    try {
-      await createInvoice(formData);
-      setShowNewInvoice(false);
-      addToast("Invoice created", "success");
-      fetchData();
-    } catch (err) {
-      addToast(err.message || "Failed to create invoice", "error");
+    const result = await createInvoice(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
     }
+    setShowNewInvoice(false);
+    addToast("Invoice created", "success");
+    fetchData();
   }
 
   async function handleUpdate(formData) {
-    try {
-      await updateInvoice(formData);
-      setEditingInvoice(null);
-      addToast("Invoice updated", "success");
-      fetchData();
-    } catch (err) {
-      addToast(err.message || "Failed to update invoice", "error");
+    const result = await updateInvoice(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
     }
+    setEditingInvoice(null);
+    addToast("Invoice updated", "success");
+    fetchData();
   }
 
   async function handleDelete(id) {
     setIsDeleting(true);
-    try {
-      await deleteInvoice(id);
-      setInvoices((prev) => prev.filter((inv) => inv.id !== id));
-      setTotal((prev) => Math.max(0, prev - 1));
-      if (viewInvoice?.id === id) setViewInvoice(null);
-      addToast("Invoice deleted", "success");
+    const result = await deleteInvoice(id);
+    if (result?.error) {
+      addToast(result.error, "error");
       setDeleteTarget(null);
-    } catch (err) {
-      addToast(err.message || "Failed to delete invoice", "error");
-      setDeleteTarget(null);
+      setIsDeleting(false);
+      return;
     }
+    setInvoices((prev) => prev.filter((inv) => inv.id !== id));
+    setTotal((prev) => Math.max(0, prev - 1));
+    if (viewInvoice?.id === id) setViewInvoice(null);
+    addToast("Invoice deleted", "success");
+    setDeleteTarget(null);
     setIsDeleting(false);
   }
 
   async function handleMarkAsPaid(id) {
     setActionLoading("paid");
     const paidAt = new Date().toISOString();
-    try {
-      await markInvoiceAsPaid(id, paidAt);
-      setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "paid", paid_at: paidAt } : inv)));
-      if (viewInvoice?.id === id) {
-        setViewInvoice((prev) => prev ? { ...prev, status: "paid", paid_at: paidAt } : null);
-      }
-      addToast("Invoice marked as paid", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to mark as paid", "error");
+    const result = await markInvoiceAsPaid(id, paidAt);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setActionLoading(null);
+      return;
     }
+    setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "paid", paid_at: paidAt } : inv)));
+    if (viewInvoice?.id === id) {
+      setViewInvoice((prev) => prev ? { ...prev, status: "paid", paid_at: paidAt } : null);
+    }
+    addToast("Invoice marked as paid", "success");
     setActionLoading(null);
   }
 
   async function handleMarkAsOverdue(id) {
     setActionLoading("overdue");
-    try {
-      await markInvoiceAsOverdue(id);
+    const result = await markInvoiceAsOverdue(id);
+    if (result?.error) {
+      addToast(result.error, "error");
+    } else {
       setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "overdue" } : inv)));
       if (viewInvoice?.id === id) {
         setViewInvoice((prev) => prev ? { ...prev, status: "overdue" } : null);
       }
       addToast("Invoice marked as overdue", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to mark as overdue", "error");
     }
     setActionLoading(null);
   }
@@ -343,28 +350,29 @@ export default function InvoicesPage() {
   async function handleCancelInvoice() {
     if (!viewInvoice) return;
     setActionLoading("cancel");
-    try {
-      await cancelInvoice(viewInvoice.id);
-      setInvoices((prev) => prev.map((inv) => (inv.id === viewInvoice.id ? { ...inv, status: "cancelled" } : inv)));
-      setViewInvoice((prev) => prev ? { ...prev, status: "cancelled" } : null);
-      addToast("Invoice cancelled", "success");
-    } catch (err) {
-      addToast(err.message || "Failed to cancel invoice", "error");
+    const result = await cancelInvoice(viewInvoice.id);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setActionLoading(null);
+      return;
     }
+    setInvoices((prev) => prev.map((inv) => (inv.id === viewInvoice.id ? { ...inv, status: "cancelled" } : inv)));
+    setViewInvoice((prev) => prev ? { ...prev, status: "cancelled" } : null);
+    addToast("Invoice cancelled", "success");
     setActionLoading(null);
   }
 
   async function handleSend(id) {
     setSending(id);
     const result = await sendInvoice(id);
-    if (result.success) {
+    if (result?.error) {
+      addToast(result.error, "error");
+    } else {
       setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "sent", sent_at: new Date().toISOString() } : inv)));
       if (viewInvoice?.id === id) {
         setViewInvoice((prev) => prev ? { ...prev, status: "sent", sent_at: new Date().toISOString() } : null);
       }
       addToast("Invoice sent to client", "success");
-    } else {
-      addToast(result.error || "Failed to send invoice", "error");
     }
     setSending(null);
   }

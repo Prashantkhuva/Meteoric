@@ -45,22 +45,33 @@ export async function signOut() {
 }
 
 export async function updateLeadStatus(id, status) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
-  const safeStatus = statusSchema(VALID_LEAD_STATUSES).parse(status);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+    const safeStatus = statusSchema(VALID_LEAD_STATUSES).parse(status);
 
-  const { error } = await supabase
-    .from("leads")
-    .update({ status: safeStatus })
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("leads")
+      .update({ status: safeStatus })
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/leads");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/leads");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update lead status" };
+  }
 }
 
 export async function addLead(formData) {
   const supabase = await getSupabase();
-  const data = validateFormData(leadSchema, formData);
+
+  let data;
+  try {
+    data = validateFormData(leadSchema, formData);
+  } catch (err) {
+    return { error: err.message };
+  }
 
   if (data.email) {
     const safeEmail = emailSchema.parse(data.email);
@@ -69,7 +80,7 @@ export async function addLead(formData) {
       .select("id")
       .eq("email", safeEmail)
       .maybeSingle();
-    if (existing) throw new Error("A lead with this email already exists");
+    if (existing) return { error: "A lead with this email already exists" };
   }
 
   const { error } = await supabase.from("leads").insert({
@@ -81,7 +92,7 @@ export async function addLead(formData) {
     status: "inquiry",
   });
 
-  if (error) throw error;
+  if (error) return { error: error.message };
 
   let aiScore = null;
   let aiCategory = null;
@@ -89,7 +100,8 @@ export async function addLead(formData) {
 
   if (process.env.GOOGLE_API && data.email) {
     try {
-      const aiRes = await callAIJson(scoreLeadPrompt(data).system, scoreLeadPrompt(data).user);
+      const prompt = scoreLeadPrompt(data);
+      const aiRes = await callAIJson(prompt.system, prompt.user);
       if (aiRes && typeof aiRes.score === "number") {
         aiScore = aiRes.score;
         aiCategory = aiRes.category || null;
@@ -114,169 +126,205 @@ export async function addLead(formData) {
   }
 
   revalidateAdmin("/admin/leads");
+  return { success: true };
 }
 
 export async function updateLead(formData) {
   const supabase = await getSupabase();
   const raw = Object.fromEntries(formData.entries());
-  raw.id = idSchema.parse(raw.id);
-  const data = leadSchema.parse(raw);
 
-  const { error } = await supabase
-    .from("leads")
-    .update({
-      name: data.name,
-      email: data.email || null,
-      phone: data.phone,
-      services: data.services,
-      budget: data.budget,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", raw.id);
+  try {
+    raw.id = idSchema.parse(raw.id);
+    const data = leadSchema.parse(raw);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/leads");
+    const { error } = await supabase
+      .from("leads")
+      .update({
+        name: data.name,
+        email: data.email || null,
+        phone: data.phone,
+        services: data.services,
+        budget: data.budget,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", raw.id);
+
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/leads");
+  } catch (err) {
+    return { error: err.message || "Failed to update lead" };
+  }
 }
 
 export async function convertLeadToClient(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { data: lead, error: fetchError } = await supabase
-    .from("leads")
-    .select("name, email, phone, company, status")
-    .eq("id", safeId)
-    .single();
+    const { data: lead, error: fetchError } = await supabase
+      .from("leads")
+      .select("name, email, phone, company, status")
+      .eq("id", safeId)
+      .single();
 
-  if (fetchError || !lead) throw new Error("Lead not found");
-  if (lead.status === "completed") throw new Error("Lead has already been converted");
+    if (fetchError || !lead) return { error: "Lead not found" };
+    if (lead.status === "completed") return { error: "Lead has already been converted" };
 
-  if (lead.email) {
-    const safeEmail = emailSchema.parse(lead.email);
-    const { data: existing } = await supabase
-      .from("clients")
-      .select("id")
-      .eq("email", safeEmail)
-      .maybeSingle();
-    if (existing) throw new Error("A client with this email already exists");
-  }
-
-  const { error: insertError } = await supabase.from("clients").insert({
-    name: lead.name,
-    email: lead.email,
-    phone: lead.phone,
-    company: lead.company,
-    status: "onboarding",
-  });
-
-  if (insertError) throw new Error(insertError.message);
-
-  const { error: updateError } = await supabase
-    .from("leads")
-    .update({ status: "completed" })
-    .eq("id", safeId);
-
-  if (updateError) throw new Error(updateError.message);
-
-  if (process.env.RESEND_API_KEY && lead.email) {
-    try {
-      await sendClientWelcome({ name: lead.name, email: lead.email });
-    } catch (welcomeErr) {
-      console.warn("[email] client welcome failed:", welcomeErr?.message);
+    if (lead.email) {
+      const safeEmail = emailSchema.parse(lead.email);
+      const { data: existing } = await supabase
+        .from("clients")
+        .select("id")
+        .eq("email", safeEmail)
+        .maybeSingle();
+      if (existing) return { error: "A client with this email already exists" };
     }
-  }
 
-  revalidateAdmin("/admin/leads", "/admin/clients");
+    const { error: insertError } = await supabase.from("clients").insert({
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      company: lead.company,
+      status: "onboarding",
+    });
+
+    if (insertError) return { error: insertError.message };
+
+    const { error: updateError } = await supabase
+      .from("leads")
+      .update({ status: "completed" })
+      .eq("id", safeId);
+
+    if (updateError) return { error: updateError.message };
+
+    if (process.env.RESEND_API_KEY && lead.email) {
+      try {
+        await sendClientWelcome({ name: lead.name, email: lead.email });
+      } catch (welcomeErr) {
+        console.warn("[email] client welcome failed:", welcomeErr?.message);
+      }
+    }
+
+    revalidateAdmin("/admin/leads", "/admin/clients");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to convert lead to client" };
+  }
 }
 
 export async function deleteLead(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { error } = await supabase
-    .from("leads")
-    .delete()
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("leads")
+      .delete()
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/leads");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/leads");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete lead" };
+  }
 }
 
 export async function updateClientStatus(id, status) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
-  const safeStatus = statusSchema(VALID_CLIENT_STATUSES).parse(status);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+    const safeStatus = statusSchema(VALID_CLIENT_STATUSES).parse(status);
 
-  const { error } = await supabase
-    .from("clients")
-    .update({ status: safeStatus })
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("clients")
+      .update({ status: safeStatus })
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/clients");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/clients");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update client status" };
+  }
 }
 
 export async function addClient(formData) {
-  const supabase = await getSupabase();
-  const data = validateFormData(clientSchema, formData);
+  try {
+    const supabase = await getSupabase();
+    const data = validateFormData(clientSchema, formData);
 
-  if (data.email) {
-    const safeEmail = emailSchema.parse(data.email);
-    const { data: existing } = await supabase
-      .from("clients")
-      .select("id")
-      .eq("email", safeEmail)
-      .maybeSingle();
-    if (existing) throw new Error("A client with this email already exists");
-  }
+    if (data.email) {
+      const safeEmail = emailSchema.parse(data.email);
+      const { data: existing } = await supabase
+        .from("clients")
+        .select("id")
+        .eq("email", safeEmail)
+        .maybeSingle();
+      if (existing) return { error: "A client with this email already exists" };
+    }
 
-  const { error } = await supabase.from("clients").insert({
-    name: data.name,
-    email: data.email || null,
-    phone: data.phone,
-    company: data.company,
-    status: "onboarding",
-  });
-
-  if (error) throw error;
-  revalidateAdmin("/admin/clients");
-}
-
-export async function updateClient(formData) {
-  const supabase = await getSupabase();
-  const raw = Object.fromEntries(formData.entries());
-  raw.id = idSchema.parse(raw.id);
-  const data = clientSchema.parse(raw);
-
-  const { error } = await supabase
-    .from("clients")
-    .update({
+    const { error } = await supabase.from("clients").insert({
       name: data.name,
       email: data.email || null,
       phone: data.phone,
       company: data.company,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", raw.id);
+      status: "onboarding",
+    });
 
-  if (error) throw error;
-  revalidateAdmin("/admin/clients");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/clients");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to add client" };
+  }
+}
+
+export async function updateClient(formData) {
+  try {
+    const supabase = await getSupabase();
+    const raw = Object.fromEntries(formData.entries());
+    raw.id = idSchema.parse(raw.id);
+    const data = clientSchema.parse(raw);
+
+    const { error } = await supabase
+      .from("clients")
+      .update({
+        name: data.name,
+        email: data.email || null,
+        phone: data.phone,
+        company: data.company,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", raw.id);
+
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/clients");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update client" };
+  }
 }
 
 export async function deleteClient(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { data, error } = await supabase
-    .from("clients")
-    .delete()
-    .eq("id", safeId)
-    .select("id");
+    const { data, error } = await supabase
+      .from("clients")
+      .delete()
+      .eq("id", safeId)
+      .select("id");
 
-  if (error) throw error;
-  if (!data || data.length === 0) throw new Error("Client was not deleted (0 rows affected)");
+    if (error) return { error: error.message };
+    if (!data || data.length === 0) return { error: "Client was not deleted (0 rows affected)" };
 
-  revalidateAdmin("/admin/clients");
+    revalidateAdmin("/admin/clients");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete client" };
+  }
 }
 
 export async function updateBookingStatus(bookingId, status) {
@@ -314,20 +362,25 @@ export async function updateBookingStatus(bookingId, status) {
 }
 
 export async function createLeadFromBooking(formData) {
-  const supabase = await getSupabase();
-  const data = validateFormData(leadSchema, formData);
+  try {
+    const supabase = await getSupabase();
+    const data = validateFormData(leadSchema, formData);
 
-  const { error } = await supabase.from("leads").insert({
-    name: data.name,
-    email: data.email || "",
-    phone: data.phone || "",
-    services: data.services || "",
-    budget: data.budget || "",
-    status: "inquiry",
-  });
+    const { error } = await supabase.from("leads").insert({
+      name: data.name,
+      email: data.email || "",
+      phone: data.phone || "",
+      services: data.services || "",
+      budget: data.budget || "",
+      status: "inquiry",
+    });
 
-  if (error) throw error;
-  revalidateAdmin("/admin/leads");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/leads");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to create lead from booking" };
+  }
 }
 
 export async function getLeads() {
@@ -401,64 +454,79 @@ export async function getProposalPricing(id) {
 }
 
 export async function createProposal(formData) {
-  const supabase = await getSupabase();
-  const data = validateFormData(proposalSchema, formData);
+  try {
+    const supabase = await getSupabase();
+    const data = validateFormData(proposalSchema, formData);
 
-  const content = data.content
-    ? sanitizeProposalContent(data.content)
-    : null;
+    const content = data.content
+      ? sanitizeProposalContent(data.content)
+      : null;
 
-  const { error } = await supabase.from("proposals").insert({
-    lead_id: data.lead_id,
-    title: data.title,
-    status: "draft",
-    content,
-    pricing: data.pricing || [],
-    timeline: data.timeline,
-    terms: data.terms,
-  });
-
-  if (error) throw error;
-  revalidateAdmin("/admin/proposals");
-}
-
-export async function updateProposal(formData) {
-  const supabase = await getSupabase();
-  const data = validateFormData(proposalSchema, formData);
-
-  const content = data.content
-    ? sanitizeProposalContent(data.content)
-    : null;
-
-  const { error } = await supabase
-    .from("proposals")
-    .update({
+    const { error } = await supabase.from("proposals").insert({
       lead_id: data.lead_id,
       title: data.title,
-      status: data.status || "draft",
+      status: "draft",
       content,
       pricing: data.pricing || [],
       timeline: data.timeline,
       terms: data.terms,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", data.id);
+    });
 
-  if (error) throw error;
-  revalidateAdmin("/admin/proposals");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/proposals");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to create proposal" };
+  }
+}
+
+export async function updateProposal(formData) {
+  try {
+    const supabase = await getSupabase();
+    const data = validateFormData(proposalSchema, formData);
+
+    const content = data.content
+      ? sanitizeProposalContent(data.content)
+      : null;
+
+    const { error } = await supabase
+      .from("proposals")
+      .update({
+        lead_id: data.lead_id,
+        title: data.title,
+        status: data.status || "draft",
+        content,
+        pricing: data.pricing || [],
+        timeline: data.timeline,
+        terms: data.terms,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", data.id);
+
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/proposals");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update proposal" };
+  }
 }
 
 export async function deleteProposal(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { error } = await supabase
-    .from("proposals")
-    .delete()
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("proposals")
+      .delete()
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/proposals");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/proposals");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete proposal" };
+  }
 }
 
 export async function sendProposal(id) {
@@ -497,17 +565,22 @@ export async function sendProposal(id) {
 }
 
 export async function updateProposalStatus(id, status) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
-  const safeStatus = statusSchema(VALID_PROPOSAL_STATUSES).parse(status);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+    const safeStatus = statusSchema(VALID_PROPOSAL_STATUSES).parse(status);
 
-  const { error } = await supabase
-    .from("proposals")
-    .update({ status: safeStatus, updated_at: new Date().toISOString() })
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("proposals")
+      .update({ status: safeStatus, updated_at: new Date().toISOString() })
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/proposals");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/proposals");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update proposal status" };
+  }
 }
 
 function parseFormData(formData) {
@@ -523,58 +596,29 @@ function parseFormData(formData) {
 }
 
 export async function createInvoice(formData) {
-  const supabase = await getSupabase();
-  const data = invoiceSchema.parse(parseFormData(formData));
+  try {
+    const supabase = await getSupabase();
+    const data = invoiceSchema.parse(parseFormData(formData));
 
-  const { count } = await supabase
-    .from("invoices")
-    .select("*", { count: "exact", head: true });
+    const { count } = await supabase
+      .from("invoices")
+      .select("*", { count: "exact", head: true });
 
-  const nextNum = String((count || 0) + 1).padStart(4, "0");
-  const ts = Date.now().toString(36).toUpperCase();
-  const invoiceNumber = `INV-${nextNum}-${ts}`;
+    const nextNum = String((count || 0) + 1).padStart(4, "0");
+    const ts = Date.now().toString(36).toUpperCase();
+    const invoiceNumber = `INV-${nextNum}-${ts}`;
 
-  const subtotal = data.items.reduce(
-    (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
-    0
-  );
-  const total = subtotal + data.tax;
+    const subtotal = data.items.reduce(
+      (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
+      0
+    );
+    const total = subtotal + data.tax;
 
-  const { error } = await supabase.from("invoices").insert({
-    client_id: data.client_id,
-    proposal_id: data.proposal_id,
-    invoice_number: invoiceNumber,
-    status: "draft",
-    items: data.items,
-    subtotal,
-    tax: data.tax,
-    total,
-    currency: data.currency,
-    notes: data.notes,
-    terms: data.terms,
-    due_date: data.due_date,
-  });
-
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
-}
-
-export async function updateInvoice(formData) {
-  const supabase = await getSupabase();
-  const data = invoiceSchema.parse(parseFormData(formData));
-
-  const subtotal = data.items.reduce(
-    (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
-    0
-  );
-  const total = subtotal + data.tax;
-
-  const { error } = await supabase
-    .from("invoices")
-    .update({
+    const { error } = await supabase.from("invoices").insert({
       client_id: data.client_id,
       proposal_id: data.proposal_id,
-      status: data.status || "draft",
+      invoice_number: invoiceNumber,
+      status: "draft",
       items: data.items,
       subtotal,
       tax: data.tax,
@@ -583,25 +627,69 @@ export async function updateInvoice(formData) {
       notes: data.notes,
       terms: data.terms,
       due_date: data.due_date,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", data.id);
+    });
 
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to create invoice" };
+  }
+}
+
+export async function updateInvoice(formData) {
+  try {
+    const supabase = await getSupabase();
+    const data = invoiceSchema.parse(parseFormData(formData));
+
+    const subtotal = data.items.reduce(
+      (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
+      0
+    );
+    const total = subtotal + data.tax;
+
+    const { error } = await supabase
+      .from("invoices")
+      .update({
+        client_id: data.client_id,
+        proposal_id: data.proposal_id,
+        status: data.status || "draft",
+        items: data.items,
+        subtotal,
+        tax: data.tax,
+        total,
+        currency: data.currency,
+        notes: data.notes,
+        terms: data.terms,
+        due_date: data.due_date,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", data.id);
+
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update invoice" };
+  }
 }
 
 export async function deleteInvoice(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { error } = await supabase
-    .from("invoices")
-    .delete()
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("invoices")
+      .delete()
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete invoice" };
+  }
 }
 
 export async function checkOverdueInvoices() {
@@ -683,88 +771,87 @@ export async function sendInvoice(id) {
 }
 
 export async function markInvoiceAsPaid(id, paidAt) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
-  const safeDate = paidAt || new Date().toISOString();
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+    const safeDate = paidAt || new Date().toISOString();
 
-  const { error } = await supabase
-    .from("invoices")
-    .update({ status: "paid", paid_at: safeDate })
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("invoices")
+      .update({ status: "paid", paid_at: safeDate })
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to mark invoice as paid" };
+  }
 }
 
 export async function markInvoiceAsOverdue(ids) {
-  const supabase = await getSupabase();
-  const idList = Array.isArray(ids) ? ids : [ids];
-  const safeIds = idList.map((id) => idSchema.parse(id));
-  if (safeIds.length === 0) return;
+  try {
+    const supabase = await getSupabase();
+    const idList = Array.isArray(ids) ? ids : [ids];
+    const safeIds = idList.map((id) => idSchema.parse(id));
+    if (safeIds.length === 0) return { success: true };
 
-  const { error } = await supabase
-    .from("invoices")
-    .update({ status: "overdue" })
-    .in("id", safeIds);
+    const { error } = await supabase
+      .from("invoices")
+      .update({ status: "overdue" })
+      .in("id", safeIds);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to mark invoices as overdue" };
+  }
 }
 
 export async function cancelInvoice(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { error } = await supabase
-    .from("invoices")
-    .update({ status: "cancelled", updated_at: new Date().toISOString() })
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("invoices")
+      .update({ status: "cancelled", updated_at: new Date().toISOString() })
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to cancel invoice" };
+  }
 }
 
 export async function updateInvoiceStatus(id, status) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
-  const safeStatus = statusSchema(VALID_INVOICE_STATUSES).parse(status);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+    const safeStatus = statusSchema(VALID_INVOICE_STATUSES).parse(status);
 
-  const { error } = await supabase
-    .from("invoices")
-    .update({ status: safeStatus, updated_at: new Date().toISOString() })
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("invoices")
+      .update({ status: safeStatus, updated_at: new Date().toISOString() })
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/invoices");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/invoices");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update invoice status" };
+  }
 }
 
 export async function createProject(formData) {
-  const supabase = await getSupabase();
-  const data = validateFormData(projectSchema, formData);
+  try {
+    const supabase = await getSupabase();
+    const data = validateFormData(projectSchema, formData);
 
-  const { error } = await supabase.from("projects").insert({
-    client_id: data.client_id,
-    name: data.name,
-    description: data.description,
-    status: data.status || "planning",
-    start_date: data.start_date,
-    deadline: data.deadline,
-    budget: data.budget,
-    services: data.services || null,
-    notes: data.notes,
-  });
-
-  if (error) throw error;
-  revalidateAdmin("/admin/projects");
-}
-
-export async function updateProject(formData) {
-  const supabase = await getSupabase();
-  const data = validateFormData(projectSchema, formData);
-
-  const { error } = await supabase
-    .from("projects")
-    .update({
+    const { error } = await supabase.from("projects").insert({
       client_id: data.client_id,
       name: data.name,
       description: data.description,
@@ -774,36 +861,77 @@ export async function updateProject(formData) {
       budget: data.budget,
       services: data.services || null,
       notes: data.notes,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", data.id);
+    });
 
-  if (error) throw error;
-  revalidateAdmin("/admin/projects");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/projects");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to create project" };
+  }
+}
+
+export async function updateProject(formData) {
+  try {
+    const supabase = await getSupabase();
+    const data = validateFormData(projectSchema, formData);
+
+    const { error } = await supabase
+      .from("projects")
+      .update({
+        client_id: data.client_id,
+        name: data.name,
+        description: data.description,
+        status: data.status || "planning",
+        start_date: data.start_date,
+        deadline: data.deadline,
+        budget: data.budget,
+        services: data.services || null,
+        notes: data.notes,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", data.id);
+
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/projects");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update project" };
+  }
 }
 
 export async function deleteProject(id) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
 
-  const { error } = await supabase
-    .from("projects")
-    .delete()
-    .eq("id", safeId);
+    const { error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", safeId);
 
-  if (error) throw error;
-  revalidateAdmin("/admin/projects");
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/projects");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete project" };
+  }
 }
 
 export async function updateProjectStatus(id, newStatus) {
-  const supabase = await getSupabase();
-  const safeId = idSchema.parse(id);
-  const { error } = await supabase
-    .from("projects")
-    .update({ status: newStatus, updated_at: new Date().toISOString() })
-    .eq("id", safeId);
-  if (error) throw error;
-  revalidateAdmin("/admin/projects");
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+    const { error } = await supabase
+      .from("projects")
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq("id", safeId);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/projects");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update project status" };
+  }
 }
 
 function resolveOrder(col, dir, sort) {
