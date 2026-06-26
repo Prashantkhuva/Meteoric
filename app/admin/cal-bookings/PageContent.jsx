@@ -337,6 +337,8 @@ export default function CalBookingsPage() {
           <BookingsTable
             bookings={filteredBookings}
             onSelect={setSelectedBooking}
+            onStatusUpdate={handleBookingStatusUpdate}
+            statusLoading={statusLoading}
             col={col}
             dir={dir}
             onColSort={toggleColSort}
@@ -418,6 +420,7 @@ export default function CalBookingsPage() {
           handleConvertToLead={handleConvertToLead}
           converting={converting}
           convertMsg={convertMsg}
+          setConvertMsg={setConvertMsg}
           onStatusUpdate={handleBookingStatusUpdate}
           statusLoading={statusLoading}
         />
@@ -426,7 +429,9 @@ export default function CalBookingsPage() {
   )
 }
 
-function BookingsTable({ bookings, onSelect, col, dir, onColSort }) {
+function BookingsTable({ bookings, onSelect, onStatusUpdate, statusLoading, col, dir, onColSort }) {
+  const isPending = (s) => (s || "").toUpperCase() === "PENDING";
+
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
       <div className="overflow-x-auto">
@@ -448,18 +453,20 @@ function BookingsTable({ bookings, onSelect, col, dir, onColSort }) {
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("duration")}>
                 Duration<SortIcon column="duration" col={col} dir={dir} />
               </th>
+              <th className="px-5 py-3.5 text-right text-[10px] font-semibold tracking-wider text-white/30 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {bookings.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-5 py-12 text-center text-sm text-white/20">
+                <td colSpan={6} className="px-5 py-12 text-center text-sm text-white/20">
                   No bookings match your filters
                 </td>
               </tr>
             ) : (
               bookings.map((b) => {
                 const attendee = b.attendees?.[0]
+                const pending = isPending(b.status);
                 return (
                   <tr
                     key={b.id}
@@ -495,6 +502,28 @@ function BookingsTable({ bookings, onSelect, col, dir, onColSort }) {
                       {b.duration ? `${b.duration} min` : b.start && b.end
                         ? `${Math.round((new Date(b.end) - new Date(b.start)) / 60000)} min`
                         : EM}
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      {pending && (
+                        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => onStatusUpdate(b.uid, "accepted")}
+                            disabled={statusLoading}
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#81c784] transition-colors hover:text-[#a5d6a7] disabled:opacity-40"
+                          >
+                            <svg width="13" height="13" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.592L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.619 11.178 3.53795 11.4669 3.72684Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+                            Accept
+                          </button>
+                          <button
+                            onClick={() => onStatusUpdate(b.uid, "rejected")}
+                            disabled={statusLoading}
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#e57373] transition-colors hover:text-[#ef9a9a] disabled:opacity-40"
+                          >
+                            <svg width="13" height="13" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+                            Reject
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 )
@@ -584,35 +613,6 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
           )}
 
           <div className="flex flex-col gap-3 pt-3 border-t border-white/[0.06]">
-            {(booking.status || "").toUpperCase() === "PENDING" && (
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => onStatusUpdate(booking.uid, "accepted")}
-                  disabled={statusLoading}
-                  className="group inline-flex items-center justify-center gap-2.5 bg-[#EAEFFF] px-4 py-3 text-sm font-semibold text-[#121212] transition-all duration-200 hover:bg-white active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
-                >
-                  {statusLoading ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border border-[#121212]/20 border-t-[#121212]" />
-                  ) : (
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.592L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.619 11.178 3.53795 11.4669 3.72684Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-                  )}
-                  {statusLoading ? "Confirming..." : "Confirm Booking"}
-                </button>
-                <button
-                  onClick={() => onStatusUpdate(booking.uid, "rejected")}
-                  disabled={statusLoading}
-                  className="group inline-flex items-center justify-center gap-2.5 border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-sm font-medium text-white/40 transition-all duration-200 hover:border-red-500/20 hover:bg-red-500/[0.04] hover:text-red-400 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
-                >
-                  {statusLoading ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-red-400" />
-                  ) : (
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-                  )}
-                  {statusLoading ? "Cancelling..." : "Cancel Booking"}
-                </button>
-              </div>
-            )}
-
             {attendee?.email && !showConvertForm && (
               <button
                 onClick={() => setShowConvertForm(true)}
