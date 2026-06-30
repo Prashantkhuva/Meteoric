@@ -1,5 +1,6 @@
 import "../src/index.css";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import ClientLayout from "./client-layout";
 import { Inter, DM_Sans } from "next/font/google";
 import ErrorBoundary from "@/components/sections/ErrorBoundary";
@@ -111,6 +112,7 @@ export default function RootLayout({ children }) {
           <ClientLayout>{children}</ClientLayout>
         </ErrorBoundary>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
