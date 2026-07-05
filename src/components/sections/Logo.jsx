@@ -12,8 +12,15 @@ const Logo = memo(function Logo({ className = "" }) {
       }}
       aria-label="Meteoric"
     >
-      <span style={{ fontFamily: "var(--font-playfair)", fontStyle: "normal" }}>meteor</span>
-      <span style={{ fontFamily: "var(--font-inter)" }}>ic</span>
+      <span
+        className="py-1"
+        style={{ fontFamily: "var(--font-playfair)", fontStyle: "normal" }}
+      >
+        meteor
+      </span>
+      <span className="py-1" style={{ fontFamily: "var(--font-inter)" }}>
+        ic
+      </span>
     </span>
   );
 });

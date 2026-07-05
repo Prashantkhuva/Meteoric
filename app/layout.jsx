@@ -113,7 +113,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="font-primary">
+      <body className="font-primary" suppressHydrationWarning>
         <ErrorBoundary>
           <ClientLayout>{children}</ClientLayout>
         </ErrorBoundary>
