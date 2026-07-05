@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense } from "react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import Logo from "@/components/sections/Logo";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -60,10 +61,12 @@ export default function Footer() {
             {/* Footer Bottom */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">
               {/* Left Side */}
-
-              <p className="text-sm text-white/30 mt-1">
-                © 2026 Meteoric. All rights reserved.
-              </p>
+              <div className="flex items-center gap-4">
+                <Logo />
+                <p className="text-sm text-white/30">
+                  © 2026 Meteoric. All rights reserved.
+                </p>
+              </div>
 
               {/* Right Side */}
               <Link

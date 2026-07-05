@@ -20,13 +20,10 @@ export default function ReviewNotification({ name, email, role, company, project
       <Preview>New review from {name}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src={`${baseUrl}/meteoric-logo.png`}
-            alt="Meteoric"
-            width="168"
-            height="32"
-            style={logoImg}
-          />
+          <Text style={logoText}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "normal" }}>meteor</span>
+            <span style={{ fontFamily: "Inter, sans-serif" }}>ic</span>
+          </Text>
           <Heading style={h1}>New Review <span style={star}>✦</span></Heading>
           <Text style={muted}>
             {name} left a {rating}-star review
@@ -100,11 +97,11 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoImg = {
+const logoText = {
+  fontSize: "28px",
+  fontWeight: 500,
   marginBottom: "20px",
-  outline: "none",
-  border: "none",
-  textDecoration: "none",
+  lineHeight: "1",
 };
 
 const star = {

@@ -101,7 +101,10 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
 .invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
 .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-.brand img { height: 32px; width: 168px; display: block; }
+.brand { display: flex; align-items: center; }
+.brand-logo { font-size: 28px; font-weight: 500; background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.brand-logo span:first-child { font-family: "Playfair Display", serif; font-style: normal; }
+.brand-logo span:last-child { font-family: Inter, system-ui, sans-serif; }
 .meta { text-align: right; }
 .meta .number { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
 .meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: rgba(255,255,255,0.3); }
@@ -146,7 +149,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="invoice">
   <div class="header">
     <div class="brand">
-      <img src="/meteoric-logo.png" alt="Meteoric" />
+      <span class="brand-logo"><span>meteor</span><span>ic</span></span>
     </div>
     <div class="meta">
       <p class="number">${invoice.invoice_number}</p>

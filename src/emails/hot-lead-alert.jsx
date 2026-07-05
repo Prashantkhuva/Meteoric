@@ -20,13 +20,10 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
       <Preview>🔥 Hot lead ({score}): {lead.name || lead.email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src={`${baseUrl}/meteoric-logo.png`}
-            alt="Meteoric"
-            width="168"
-            height="32"
-            style={logoImg}
-          />
+          <Text style={logoText}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "normal" }}>meteor</span>
+            <span style={{ fontFamily: "Inter, sans-serif" }}>ic</span>
+          </Text>
           <Heading style={h1}>🔥 Hot Lead &mdash; {score}/100</Heading>
           {category && <Text style={badge}>Category: {category}</Text>}
           {summary && <Text style={summaryText}>"{summary}"</Text>}
@@ -111,11 +108,11 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoImg = {
+const logoText = {
+  fontSize: "28px",
+  fontWeight: 500,
   marginBottom: "20px",
-  outline: "none",
-  border: "none",
-  textDecoration: "none",
+  lineHeight: "1",
 };
 
 const h1 = {
