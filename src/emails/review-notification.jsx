@@ -9,7 +9,6 @@ import {
   Hr,
   Heading,
   Link,
-  Img,
 } from "react-email";
 
 export default function ReviewNotification({ name, email, role, company, project, rating, content, siteUrl }) {

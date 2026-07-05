@@ -6,7 +6,6 @@ export const posts = [
       "Agencies optimize for hours. Product studios optimize for outcomes. Here's why the difference matters when you're building something that needs to ship.",
     date: "June 24, 2026",
     readTime: "5 min read",
-    category: "Strategy",
     image: "/images/blog/blog-cover-1.png",
     content: [
       {
@@ -58,7 +57,6 @@ export const posts = [
       "After building landing pages and SaaS products for 12 different clients, here are the design principles that consistently drove the best results.",
     date: "June 12, 2026",
     readTime: "7 min read",
-    category: "Design",
     image: "/images/blog/blog-cover-2.png",
     content: [
       {
@@ -118,7 +116,6 @@ export const posts = [
       "How we took a fintech concept from whiteboard to working prototype in 21 days — and what we learned about shipping fast without breaking things.",
     date: "May 28, 2026",
     readTime: "8 min read",
-    category: "Case Study",
     image: "/images/blog/blog-cover-3.png",
     content: [
       {
@@ -174,7 +171,6 @@ export const posts = [
       "React vs Next.js? Tailwind vs CSS? Supabase vs Firebase? Here's our framework for making technology decisions that won't haunt you later.",
     date: "May 15, 2026",
     readTime: "6 min read",
-    category: "Engineering",
     image: "/images/blog/blog-cover-4.png",
     content: [
       {

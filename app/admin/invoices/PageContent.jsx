@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
@@ -10,8 +10,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import {
-  X, Plus, Eye, Trash2, Send, Receipt, Calendar, Building2, Mail,
-  Pencil, DollarSign, FileText, ArrowUpRight, PlusCircle, Printer, CheckCircle,
+  X, Plus, Eye, Trash2, Send, Receipt, Calendar,
+  Pencil, FileText, PlusCircle, Printer, CheckCircle,
   MessageCircle, Download, ChevronUp, ChevronDown, XCircle, Clock,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
@@ -83,7 +83,7 @@ export default function InvoicesPage() {
   const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewInvoice, setViewInvoice] = useState(null);
   const [editingInvoice, setEditingInvoice] = useState(null);
-  const [showNewInvoice, setShowNewInvoice] = useState(false);
+  const [showNewInvoice, setShowNewInvoice] = useState(() => searchParams.has("proposalId"));
   const [formResetKey, setFormResetKey] = useState(0);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -98,12 +98,6 @@ export default function InvoicesPage() {
   const addToast = useToast();
   const searchParams = useSearchParams();
   const searchRef = useRef(null);
-
-  useEffect(() => {
-    if (searchParams.has("proposalId")) {
-      setShowNewInvoice(true);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     fetchData();
@@ -795,7 +789,9 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
 
 function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, proposalId }) {
   const [submitting, setSubmitting] = useState(false);
-  const [items, setItems] = useState(invoice?.items || [{ description: "", quantity: 1, rate: 0 }]);
+  const [items, setItems] = useState(
+    invoice?.items?.length ? invoice.items : [{ description: "", quantity: 1, rate: 0 }]
+  );
   const [tax, setTax] = useState(invoice?.tax || 0);
   const [currency, setCurrency] = useState(invoice?.currency || "USD");
   const [currencyOpen, setCurrencyOpen] = useState(false);
@@ -815,28 +811,18 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   }
 
   useEffect(() => {
-    if (open && invoice) {
-      setItems(invoice.items?.length ? invoice.items : [{ description: "", quantity: 1, rate: 0 }]);
-      setTax(invoice.tax || 0);
+    if (open && !invoice && proposalId) {
+      getProposalPricing(proposalId).then((data) => {
+        if (data?.pricing?.length) {
+          setItems(data.pricing.map((p) => ({
+            description: p.description || p.title || "",
+            quantity: p.quantity || 1,
+            rate: p.rate || p.amount || 0,
+          })));
+        }
+      }).catch(() => {});
     }
-    if (open && !invoice) {
-      setItems([{ description: "", quantity: 1, rate: 0 }]);
-      setTax(0);
-
-      if (proposalId) {
-        getProposalPricing(proposalId).then((data) => {
-          if (data?.pricing?.length) {
-            const mapped = data.pricing.map((p) => ({
-              description: p.description || p.title || "",
-              quantity: p.quantity || 1,
-              rate: p.rate || p.amount || 0,
-            }));
-            setItems(mapped);
-          }
-        }).catch(() => {});
-      }
-    }
-  }, [open, invoice]);
+  }, [open, invoice, proposalId]);
 
   useEffect(() => {
     if (open) {
@@ -1097,9 +1083,17 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
 }
 
 function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onMarkAsOverdue, onDelete, onCancel, sending, actionLoading }) {
-  if (!invoice) return null;
   const trapRef = useFocusTrap(!!invoice);
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (!invoice) return;
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [invoice, onClose]);
+
+  if (!invoice) return null;
   const drawerCurrency = getCurrencySymbol(invoice.currency);
 
   function handleWheel(e) {
@@ -1111,13 +1105,6 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
     el.scrollTop += e.deltaY;
     e.preventDefault();
   }
-
-  useEffect(() => {
-    if (!invoice) return;
-    function handleKey(e) { if (e.key === "Escape") onClose(); }
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [invoice, onClose]);
 
   return (
     <AnimatePresence>

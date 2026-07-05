@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 
 export function Pagination({ current, total, pageSize, onChange }) {
   const totalPages = Math.ceil(total / pageSize);
-  if (totalPages <= 1) return null;
 
   const pages = useMemo(() => {
     const items = [];
@@ -20,6 +19,8 @@ export function Pagination({ current, total, pageSize, onChange }) {
     }
     return items;
   }, [totalPages, current]);
+
+  if (totalPages <= 1) return null;
 
   const start = total === 0 ? 0 : (current - 1) * pageSize + 1;
   const end = Math.min(current * pageSize, total);

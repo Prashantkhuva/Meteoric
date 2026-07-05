@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Quote, ChevronLeft, ChevronRight, Star, Plus, MessageSquareText, BadgeCheck, Sparkles, Globe, Zap } from "lucide-react";
+import { Quote, ChevronLeft, ChevronRight, Star, Plus, MessageSquareText, BadgeCheck, Globe, Zap } from "lucide-react";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";

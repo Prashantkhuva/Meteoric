@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   createProject, updateProject, deleteProject, updateProjectStatus, getClients, getProjectsPaginated,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, Plus, Trash2, Calendar, Building2, Pencil, FolderKanban,
-  DollarSign, Clock, Target, CheckCircle, AlertCircle, Download,
+  X, Plus, Trash2, Calendar, Pencil, FolderKanban,
+  DollarSign, Clock, Target, CheckCircle, Download,
   ChevronUp, ChevronDown, Play, Pause, XCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
@@ -102,6 +102,7 @@ export default function ProjectsPage() {
   );
 
   async function fetchData() {
+    setSelected(new Set());
     setLoading(true);
     const [result, clientsRes] = await Promise.all([
       getProjectsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
@@ -112,10 +113,6 @@ export default function ProjectsPage() {
     setClients(clientsRes);
     setLoading(false);
   }
-
-  useEffect(() => {
-    setSelected(new Set());
-  }, [page, search, statusFilter]);
 
   function toggleSelect(id) {
     setSelected((prev) => {
@@ -732,7 +729,6 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
 
 function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChange }) {
   const [statusLoading, setStatusLoading] = useState(false);
-  if (!project) return null;
   const trapRef = useFocusTrap(!!project);
 
   useEffect(() => {
@@ -741,6 +737,8 @@ function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChang
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [project, onClose]);
+
+  if (!project) return null;
 
   const statusInfo = projectStatuses.find((s) => s.value === project.status);
 

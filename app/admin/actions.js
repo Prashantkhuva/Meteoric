@@ -24,7 +24,6 @@ import {
   VALID_CLIENT_STATUSES,
   VALID_PROPOSAL_STATUSES,
   VALID_INVOICE_STATUSES,
-  VALID_PROJECT_STATUSES,
 } from "@/lib/admin-validation";
 
 async function getSupabase() {

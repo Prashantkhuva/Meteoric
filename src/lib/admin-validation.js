@@ -11,7 +11,7 @@ const VALID_COLUMNS = [
   "budget", "deadline", "title", "company", "phone", "ai_score",
 ];
 
-const phoneRegex = /^[\d\s\-\+\(\)\.]{6,20}$/;
+const phoneRegex = /^[\d\s\-+().]{6,20}$/;
 
 export const idSchema = z.union([z.number(), z.string()]).transform((v) => Number(v));
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { KPICard } from "./KPICard";
@@ -10,15 +10,10 @@ import { LeadsTrendChart } from "./LeadsTrendChart";
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 export default function DashboardClient({ stats, conversionRate, monthlyLeadData, userName, invoiceOutstanding, invoiceRevenue, overdueCount, invoiceCount, projectStats }) {
-  const [greeting, setGreeting] = useState("");
-  const [dateStr, setDateStr] = useState("");
-
-  useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
-    setGreeting(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening");
-    setDateStr(`${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`);
-  }, []);
+  const now = new Date();
+  const hour = now.getHours();
+  const [greeting] = useState(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening");
+  const [dateStr] = useState(`${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`);
 
   return (
     <div>

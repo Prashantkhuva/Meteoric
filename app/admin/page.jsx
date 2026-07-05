@@ -86,7 +86,6 @@ async function getStats() {
   (projectStatusData || []).forEach((p) => { if (projectBuckets[p.status] !== undefined) projectBuckets[p.status]++; });
 
   let totalOutstanding = 0;
-  let paidThisMonth = 0;
   let overdueCount = 0;
   let totalRevenue = 0;
   const monthStart = new Date();
@@ -145,7 +144,7 @@ export default async function AdminDashboard() {
         user?.user_metadata?.name ||
         user?.email?.split("@")[0] ||
         "Admin";
-    } catch {}
+    } catch { /* ignore auth errors */ }
   }
 
   if (!stats) {

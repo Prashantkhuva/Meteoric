@@ -1,0 +1,218 @@
+
+> meteoric@0.0.0 lint
+> eslint .
+
+
+D:\PROJECTS\Meteoric\app\(marketing)\about\page.jsx
+  8:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\app\(marketing)\blog\[slug]\page.jsx
+   6:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  10:23  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\app\(marketing)\blog\page.jsx
+  8:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\app\(marketing)\work\page.jsx
+  8:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\app\admin\clients\PageContent.jsx
+   67:6  warning  React Hook useEffect has a missing dependency: 'fetchClients'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+   74:9  warning  React Hook useMemo has a missing dependency: 'editClient'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/exhaustive-deps
+   86:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  84 |
+  85 |   useEffect(() => {
+> 86 |     setSelected(new Set());
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  87 |   }, [page, search, statusFilter]);
+  88 |
+  89 |   function toggleSelect(id) {  react-hooks/set-state-in-effect
+  637:3  error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/rules-of-hooks
+
+D:\PROJECTS\Meteoric\app\admin\components\Pagination.jsx
+  11:17  error  React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+D:\PROJECTS\Meteoric\app\admin\invoices\PageContent.jsx
+     3:48  error    'useCallback' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+    13:50  error    'Building2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               no-unused-vars
+    13:61  error    'Mail' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    no-unused-vars
+    14:11  error    'DollarSign' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+    14:33  error    'ArrowUpRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+   104:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  102 |   useEffect(() => {
+  103 |     if (searchParams.has("proposalId")) {
+> 104 |       setShowNewInvoice(true);
+      |       ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  105 |     }
+  106 |   }, [searchParams]);
+  107 |                                                                                      react-hooks/set-state-in-effect
+   110:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+   819:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  817 |   useEffect(() => {
+  818 |     if (open && invoice) {
+> 819 |       setItems(invoice.items?.length ? invoice.items : [{ description: "", quantity: 1, rate: 0 }]);
+      |       ^^^^^^^^ Avoid calling setState() directly within an effect
+  820 |       setTax(invoice.tax || 0);
+  821 |     }
+  822 |     if (open && !invoice) {  react-hooks/set-state-in-effect
+   839:6   warning  React Hook useEffect has a missing dependency: 'proposalId'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/exhaustive-deps
+  1115:3   error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/rules-of-hooks
+
+D:\PROJECTS\Meteoric\app\admin\leads\PageContent.jsx
+    3:48  error    'useCallback' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+   72:6   warning  React Hook useEffect has a missing dependency: 'fetchLeads'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/exhaustive-deps
+   79:9   warning  React Hook useMemo has a missing dependency: 'editLead'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/exhaustive-deps
+   91:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  89 |
+  90 |   useEffect(() => {
+> 91 |     setSelected(new Set());
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  92 |   }, [page, search, statusFilter, scoreFilter]);
+  93 |
+  94 |   function toggleSelect(id) {  react-hooks/set-state-in-effect
+  716:3   error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/rules-of-hooks
+
+D:\PROJECTS\Meteoric\app\admin\page.jsx
+   89:7   error  'paidThisMonth' is assigned a value but never used  no-unused-vars
+  148:13  error  Empty block statement                               no-empty
+
+D:\PROJECTS\Meteoric\app\admin\projects\PageContent.jsx
+    3:48  error    'useCallback' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+   10:30  error    'Building2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+   11:43  error    'AlertCircle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+   94:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+  117:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  115 |
+  116 |   useEffect(() => {
+> 117 |     setSelected(new Set());
+      |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  118 |   }, [page, search, statusFilter]);
+  119 |
+  120 |   function toggleSelect(id) {  react-hooks/set-state-in-effect
+  738:3   error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/rules-of-hooks
+
+D:\PROJECTS\Meteoric\app\admin\proposals\PageContent.jsx
+    11:51  error    'Building2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+    12:3   error    'ArrowUpRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+    96:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+   119:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  117 |
+  118 |   useEffect(() => {
+> 119 |     setSelected(new Set());
+      |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  120 |   }, [page, search, statusFilter]);
+  121 |
+  122 |   function toggleSelect(id) {                                                                                                      react-hooks/set-state-in-effect
+   665:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  663 |   useEffect(() => {
+  664 |     if (open && proposal) {
+> 665 |       setContent(proposal.content);
+      |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  666 |       setTitleVal(proposal.title || "");
+  667 |       setTimelineVal(proposal.timeline || "");
+  668 |       setTermsVal(proposal.terms || "");  react-hooks/set-state-in-effect
+   700:7   error    'addToast' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-undef
+   849:3   error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/rules-of-hooks
+  1102:9   error    Unexpected lexical declaration in case block                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-case-declarations
+
+D:\PROJECTS\Meteoric\app\layout.jsx
+  33:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\app\not-found.jsx
+  1:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\src\Components\pages\BlogPost.jsx
+  106:30  error  'ri' is defined but never used  no-unused-vars
+
+D:\PROJECTS\Meteoric\src\Components\sections\TestimonialsSection.jsx
+  3:56  error  'MessageSquareText' is defined but never used  no-unused-vars
+
+D:\PROJECTS\Meteoric\src\Components\ui\badge.jsx
+  33:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\src\Components\ui\button.jsx
+  47:18  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\PROJECTS\Meteoric\src\emails\client-welcome.jsx
+  1:58  error  'Link' is defined but never used  no-unused-vars
+
+D:\PROJECTS\Meteoric\src\emails\hot-lead-alert.jsx
+  12:3  error  'Img' is defined but never used  no-unused-vars
+
+D:\PROJECTS\Meteoric\src\emails\new-lead-notification.jsx
+  12:3  error  'Img' is defined but never used  no-unused-vars
+
+D:\PROJECTS\Meteoric\src\emails\review-notification.jsx
+  12:3  error  'Img' is defined but never used  no-unused-vars
+
+D:\PROJECTS\Meteoric\src\lib\admin-validation.js
+  14:29  error  Unnecessary escape character: \+  no-useless-escape
+  14:31  error  Unnecessary escape character: \(  no-useless-escape
+  14:33  error  Unnecessary escape character: \)  no-useless-escape
+  14:35  error  Unnecessary escape character: \.  no-useless-escape
+
+D:\PROJECTS\Meteoric\src\lib\email\email.js
+  100:5  error  There is no `cause` attached to the symptom error being thrown  preserve-caught-error
+  164:5  error  There is no `cause` attached to the symptom error being thrown  preserve-caught-error
+  202:5  error  There is no `cause` attached to the symptom error being thrown  preserve-caught-error
+
+D:\PROJECTS\Meteoric\src\lib\seo\jsonLd.js
+  1:28  error  'SITE_NAME' is defined but never used                 no-unused-vars
+  3:7   error  'SITE_WEBSITE_ID' is assigned a value but never used  no-unused-vars
+  4:7   error  'SITE_ORG_ID' is assigned a value but never used      no-unused-vars
+  5:7   error  'SITE_LOGO_URL' is assigned a value but never used    no-unused-vars
+
+D:\PROJECTS\Meteoric\tmp\testimonials-restore.jsx
+  3:87  error  'Sparkles' is defined but never used  no-unused-vars
+
+✖ 63 problems (55 errors, 8 warnings)
+

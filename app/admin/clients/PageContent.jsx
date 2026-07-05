@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { updateClientStatus, addClient, updateClient, deleteClient, getClientsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -75,16 +75,13 @@ export default function ClientsPage() {
   );
 
   async function fetchClients() {
+    setSelected(new Set());
     setLoading(true);
     const result = await getClientsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort });
     if (result.error) { setError(result.error); }
     else { setClients(result.data); setTotal(result.total); }
     setLoading(false);
   }
-
-  useEffect(() => {
-    setSelected(new Set());
-  }, [page, search, statusFilter]);
 
   function toggleSelect(id) {
     setSelected((prev) => {
@@ -631,7 +628,6 @@ function ClientFormModal({ open, client, onClose, onSubmit }) {
 
 function ClientDetailDrawer({ client, onClose, onEdit, onDelete }) {
   const [deleteLoading, setDeleteLoading] = useState(false);
-  if (!client) return null;
   const trapRef = useFocusTrap(!!client);
 
   useEffect(() => {
@@ -640,6 +636,8 @@ function ClientDetailDrawer({ client, onClose, onEdit, onDelete }) {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [client, onClose]);
+
+  if (!client) return null;
 
   return (
     <AnimatePresence>

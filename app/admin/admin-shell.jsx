@@ -33,7 +33,6 @@ export function AdminShell({ children }) {
   useEffect(() => {
     const supabase = createClient();
     if (!supabase) {
-      setChecking(false);
       return;
     }
     supabase.auth.getUser().then(({ data }) => {
@@ -49,8 +48,7 @@ export function AdminShell({ children }) {
         "Admin"
       );
       setUserEmail(user?.email);
-      setChecking(false);
-    });
+    }).finally(() => setChecking(false));
   }, [router]);
 
   if (checking) {

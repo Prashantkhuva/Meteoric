@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { updateLeadStatus, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -80,16 +80,13 @@ export default function LeadsPage() {
   );
 
   async function fetchLeads() {
+    setSelected(new Set());
     setLoading(true);
     const result = await getLeadsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, score: scoreFilter, col, dir, sort });
     if (result.error) { setError(result.error); }
     else { setLeads(result.data); setTotal(result.total); }
     setLoading(false);
   }
-
-  useEffect(() => {
-    setSelected(new Set());
-  }, [page, search, statusFilter, scoreFilter]);
 
   function toggleSelect(id) {
     setSelected((prev) => {
@@ -710,7 +707,6 @@ function AiScoreBadge({ score, category, size = "sm" }) {
 }
 
 function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converting }) {
-  if (!lead) return null;
   const trapRef = useFocusTrap(!!lead);
 
   useEffect(() => {
@@ -719,6 +715,8 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [lead, onClose]);
+
+  if (!lead) return null;
 
   return (
     <AnimatePresence>

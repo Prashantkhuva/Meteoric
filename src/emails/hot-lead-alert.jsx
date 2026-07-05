@@ -9,7 +9,6 @@ import {
   Hr,
   Heading,
   Link,
-  Img,
 } from "react-email";
 
 export default function HotLeadAlert({ lead, score, category, summary, siteUrl }) {

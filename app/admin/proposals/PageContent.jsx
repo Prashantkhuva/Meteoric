@@ -8,8 +8,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
-  X, Plus, Eye, Trash2, Send, FileText, Calendar, Building2, Pencil,
-  ArrowUpRight, MessageCircle, Download, ChevronUp, ChevronDown, Printer,
+  X, Plus, Eye, Trash2, Send, FileText, Calendar, Pencil,
+  MessageCircle, Download, ChevronUp, ChevronDown, Printer,
   CheckCircle2, XCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
@@ -104,6 +104,7 @@ export default function ProposalsPage() {
   );
 
   async function fetchData() {
+    setSelected(new Set());
     setLoading(true);
     const [result, leadsRes] = await Promise.all([
       getProposalsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
@@ -114,10 +115,6 @@ export default function ProposalsPage() {
     setLeads(leadsRes);
     setLoading(false);
   }
-
-  useEffect(() => {
-    setSelected(new Set());
-  }, [page, search, statusFilter]);
 
   function toggleSelect(id) {
     setSelected((prev) => {
@@ -652,30 +649,14 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
 function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) {
   const [submitting, setSubmitting] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(proposal?.content ?? null);
   const [titleVal, setTitleVal] = useState(proposal?.title || "");
   const [timelineVal, setTimelineVal] = useState(proposal?.timeline || "");
   const [termsVal, setTermsVal] = useState(proposal?.terms || "");
   const [leadId, setLeadId] = useState(proposal?.lead_id || "");
   const [pricingJson, setPricingJson] = useState(null);
+  const addToast = useToast();
   const trapRef = useFocusTrap(open);
-
-  useEffect(() => {
-    if (open && proposal) {
-      setContent(proposal.content);
-      setTitleVal(proposal.title || "");
-      setTimelineVal(proposal.timeline || "");
-      setTermsVal(proposal.terms || "");
-      setLeadId(proposal.lead_id || "");
-    }
-    if (open && !proposal) {
-      setContent(null);
-      setTitleVal("");
-      setTimelineVal("");
-      setTermsVal("");
-      setLeadId("");
-    }
-  }, [open, proposal]);
 
   useEffect(() => {
     if (open) {
@@ -842,7 +823,6 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
 }
 
 function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onCreateInvoice, onStatusChange, sending }) {
-  if (!proposal) return null;
   const trapRef = useFocusTrap(!!proposal);
   const [statusLoading, setStatusLoading] = useState(false);
 
@@ -852,6 +832,8 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [proposal, onClose]);
+
+  if (!proposal) return null;
 
   return (
     <AnimatePresence>
@@ -1064,7 +1046,7 @@ function renderTipTapNode(node, key) {
           {renderInlineContent(node.content)}
         </p>
       );
-    case "heading":
+    case "heading": {
       const Tag = `h${node.attrs?.level || 2}`;
       const headingSizes = { 1: "text-lg font-semibold text-white/80", 2: "text-base font-semibold text-white/70", 3: "text-sm font-semibold text-white/60" };
       return (
@@ -1072,6 +1054,7 @@ function renderTipTapNode(node, key) {
           {renderInlineContent(node.content)}
         </Tag>
       );
+    }
     case "bulletList":
       return (
         <ul key={key} className="list-disc pl-5 space-y-1 text-sm text-white/60">
@@ -1097,7 +1080,7 @@ function renderInlineContent(content) {
   if (!content) return null;
   return content.map((node, i) => {
     switch (node.type) {
-      case "text":
+      case "text": {
         let text = node.text || "";
         if (node.marks) {
           for (const mark of node.marks) {
@@ -1114,6 +1097,7 @@ function renderInlineContent(content) {
           }
         }
         return <span key={i}>{text}</span>;
+      }
       case "hardBreak":
         return <br key={i} />;
       default:

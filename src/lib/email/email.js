@@ -97,7 +97,7 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
     });
   } catch (raw) {
     console.error("[resend] proposal email threw:", raw);
-    throw new Error(raw?.message || "Failed to send proposal email");
+    throw new Error(raw?.message || "Failed to send proposal email", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send proposal email");
   return result;
@@ -161,7 +161,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
     });
   } catch (raw) {
     console.error("[resend] invoice email threw:", raw);
-    throw new Error(raw?.message || "Failed to send invoice email");
+    throw new Error(raw?.message || "Failed to send invoice email", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send invoice email");
   return result;
@@ -199,7 +199,7 @@ export async function sendOverdueReminder(invoice, client, previewUrl) {
     });
   } catch (raw) {
     console.error("[resend] overdue reminder threw:", raw);
-    throw new Error(raw?.message || "Failed to send overdue reminder");
+    throw new Error(raw?.message || "Failed to send overdue reminder", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send overdue reminder");
   return result;

@@ -246,12 +246,6 @@ function formatDate(d) {
 }
 
 function StatusBadge({ status }) {
-  const styleMap = {
-    overdue: styles.statusOverdue,
-    paid: styles.statusPaid,
-    sent: styles.statusSent,
-    draft: styles.statusDraft,
-  };
   const colorMap = {
     overdue: styles.statusOverdue,
     paid: styles.statusPaid,

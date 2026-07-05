@@ -55,21 +55,6 @@ async function fetchBookings() {
   }
 }
 
-function getMeetingUrl(booking) {
-  if (!booking.location) return null
-  if (typeof booking.location === "string") {
-    if (booking.location.startsWith("http://") || booking.location.startsWith("https://")) return booking.location
-    return null
-  }
-  if (typeof booking.location === "object") {
-    if (booking.location.url && (booking.location.url.startsWith("http://") || booking.location.url.startsWith("https://"))) return booking.location.url
-    if (booking.location.joinUrl) return booking.location.joinUrl
-    if (booking.location.meetingUrl) return booking.location.meetingUrl
-  }
-  if (booking.metadata?.videoCallUrl) return booking.metadata.videoCallUrl
-  return null
-}
-
 function getLocationLabel(booking) {
   const loc = booking.location
   if (!loc) return null
@@ -539,9 +524,8 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
   )
 }
 
-function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvertForm, handleConvertToLead, converting, convertMsg, setConvertMsg, onStatusUpdate, statusLoading }) {
+function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvertForm, handleConvertToLead, converting, convertMsg, setConvertMsg }) {
   const attendee = booking.attendees?.[0]
-  const meetingUrl = getMeetingUrl(booking)
   const trapRef = useFocusTrap(!!booking)
 
   useEffect(() => {

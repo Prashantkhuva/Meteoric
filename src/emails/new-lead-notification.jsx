@@ -9,7 +9,6 @@ import {
   Hr,
   Heading,
   Link,
-  Img,
 } from "react-email";
 
 export default function NewLeadNotification({ name, email, phone, services, details, budget, siteUrl }) {

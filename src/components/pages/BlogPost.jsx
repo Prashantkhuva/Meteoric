@@ -103,7 +103,7 @@ export default function BlogPostPage({ post }) {
             More insights
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
-            {related.map((r, ri) => (
+            {related.map((r) => (
               <Link key={r.slug} href={`/blog/${r.slug}`}>
                 <div className="group">
                   <div className="relative w-full overflow-hidden mb-4" style={{ aspectRatio: "1.26/1" }}>
