@@ -101,14 +101,14 @@ export default function ProcessSection() {
             Working Together
           </p>
 
-          <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-6xl">
+          <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-6xl [&>.gsap-proc-word:not(:last-child)]:mr-[0.25em]">
             {mainHeading.map((word, i) => (
-              <span key={i} className="gsap-proc-word inline-block">{word}{' '}</span>
+              <span key={i} className="gsap-proc-word inline-block">{word}</span>
             ))}
-            <span className="text-white/40 font-secondary-italic">
+            <span className="text-white/40 font-secondary-italic [&>.gsap-proc-word:not(:last-child)]:mr-[0.25em]">
               {" "}
               {mutedHeading.map((word, i) => (
-                <span key={i} className="gsap-proc-word inline-block">{word}{' '}</span>
+                <span key={i} className="gsap-proc-word inline-block">{word}</span>
               ))}
             </span>
           </h2>

@@ -97,7 +97,7 @@ export default function ServicesSection() {
             <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
               <span className="block">What we build</span>
               <span
-                className="block text-transparent bg-clip-text font-display-italic"
+                className="block text-transparent bg-clip-text font-secondary-italic"
                 style={{
                   backgroundImage: "linear-gradient(97deg, #fff 0%, #999 100%)",
                 }}
