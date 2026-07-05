@@ -127,7 +127,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsOpen(true)}
-              className="inline-flex items-center cursor-pointer relative flip-btn"
+              className="hidden md:inline-flex items-center cursor-pointer relative flip-btn"
             >
               <span className="front">Let&apos;s Chat!</span>
               <span className="back">Let&apos;s Chat!</span>
