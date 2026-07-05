@@ -1,5 +1,4 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
-import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
@@ -81,7 +80,7 @@ export default function Navbar() {
 
       <header
         className="fixed md:relative top-0 left-0 w-full z-50 py-4 md:pt-5"
-        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "none" }}
+        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "blur(20px)" }}
       >
         <div
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
@@ -139,9 +138,23 @@ export default function Navbar() {
               }
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen((open) => !open)}
-              className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/60 transition-all duration-300 hover:bg-white/10 hover:text-white"
+              className="md:hidden inline-flex h-6 w-6 flex-col items-center justify-center gap-[5px]"
+              style={{ background: "rgba(255,255,255,0)", borderRadius: 8 }}
             >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              <span
+                className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
+                style={{
+                  backgroundColor: "rgb(255,255,255)",
+                  transform: isMenuOpen ? "translateY(3.25px) rotate(45deg)" : "none",
+                }}
+              />
+              <span
+                className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
+                style={{
+                  backgroundColor: "rgb(255,255,255)",
+                  transform: isMenuOpen ? "translateY(-3.25px) rotate(-45deg)" : "none",
+                }}
+              />
             </button>
           </div>
         </div>
