@@ -2,22 +2,14 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { posts } from "@/data/blog";
-import BlogArt from "@/components/sections/BlogArt";
-
-const cardGradients = [
-  "from-indigo-950 via-purple-950 to-slate-900",
-  "from-emerald-950 via-teal-950 to-slate-900",
-  "from-amber-950 via-orange-950 to-slate-900",
-  "from-sky-950 via-blue-950 to-slate-900",
-];
 
 const cardAccents = ["#818cf8", "#34d399", "#f59e0b", "#38bdf8"];
 
 export default function BlogPostPage({ post }) {
   const idx = posts.findIndex((p) => p.slug === post.slug);
-  const gradient = cardGradients[idx >= 0 ? idx % cardGradients.length : 0];
   const accent = cardAccents[idx >= 0 ? idx % cardAccents.length : 0];
 
   const related = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
@@ -48,17 +40,25 @@ export default function BlogPostPage({ post }) {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className={`relative h-56 md:h-72 rounded-2xl overflow-hidden bg-gradient-to-br ${gradient} mb-10`}
+          className="relative h-56 md:h-72 rounded-2xl overflow-hidden mb-10"
         >
-          <BlogArt index={idx} className="absolute inset-0" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 800px"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-black/10" />
           <div className="absolute top-5 left-5">
             <span
-              className="text-xs uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border"
+              className="text-xs uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border backdrop-blur-sm"
               style={{
-                backgroundColor: `${accent}11`,
+                backgroundColor: `${accent}22`,
                 color: accent,
-                borderColor: `${accent}33`,
+                borderColor: `${accent}44`,
               }}
             >
               {post.category}
@@ -122,14 +122,21 @@ export default function BlogPostPage({ post }) {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {related.map((r, ri) => {
-              const rg = cardGradients[ri % cardGradients.length];
               const ra = cardAccents[ri % cardAccents.length];
               return (
                 <Link key={r.slug} href={`/blog/${r.slug}`}>
                   <div className="group rounded-xl border border-white/[0.06] overflow-hidden transition-all duration-300 hover:border-white/15">
-                    <div className={`h-24 bg-gradient-to-br ${rg} relative`}>
-                      <BlogArt index={ri} className="absolute inset-0" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    <div className="h-24 relative overflow-hidden">
+                      <Image
+                        src={r.image}
+                        alt={r.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 400px"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-black/10" />
                     </div>
                     <div className="p-4">
                       <div className="flex items-center gap-2 text-[11px] text-white/20 mb-1.5">

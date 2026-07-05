@@ -2,16 +2,9 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { posts } from "@/data/blog";
-import BlogArt from "@/components/sections/BlogArt";
-
-const cardGradients = [
-  "from-indigo-950 via-purple-950 to-slate-900",
-  "from-emerald-950 via-teal-950 to-slate-900",
-  "from-amber-950 via-orange-950 to-slate-900",
-  "from-sky-950 via-blue-950 to-slate-900",
-];
 
 const cardAccents = ["#818cf8", "#34d399", "#f59e0b", "#38bdf8"];
 
@@ -55,7 +48,6 @@ export default function BlogPage() {
       <section className="relative max-w-6xl mx-auto px-6 md:px-16 pb-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {posts.map((post, i) => {
-            const gradient = cardGradients[i % cardGradients.length];
             const accent = cardAccents[i % cardAccents.length];
 
             return (
@@ -66,18 +58,24 @@ export default function BlogPage() {
                   transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
                   className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent overflow-hidden transition-all duration-500 hover:border-[#EAEFFF]/15 h-full flex flex-col"
                 >
-                  <div
-                    className={`relative h-48 overflow-hidden bg-gradient-to-br ${gradient}`}
-                  >
-                    <BlogArt index={i} className="absolute inset-0" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      loading={i === 0 ? "eager" : "lazy"}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-black/20" />
                     <div className="absolute top-4 left-4">
                       <span
-                        className="text-[11px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border"
+                        className="text-[11px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border backdrop-blur-sm"
                         style={{
-                          backgroundColor: `${accent}11`,
+                          backgroundColor: `${accent}22`,
                           color: accent,
-                          borderColor: `${accent}33`,
+                          borderColor: `${accent}44`,
                         }}
                       >
                         {post.category}
