@@ -94,7 +94,10 @@ export default function ServicesSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
+            <h2
+              className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white"
+              style={{ fontFamily: "Inter, system-ui, sans-serif" }}
+            >
               <span className="block">What we build</span>
               <span
                 className="block text-transparent bg-clip-text font-secondary-italic"
@@ -153,7 +156,10 @@ export default function ServicesSection() {
                 }}
               >
                 {/* BG */}
-                <div className="absolute inset-0" style={{ backgroundColor: "rgb(0,0,0)" }} />
+                <div
+                  className="absolute inset-0"
+                  style={{ backgroundColor: "rgb(0,0,0)" }}
+                />
 
                 {/* Image */}
                 <div className="relative z-[1] w-[152px] h-[152px] md:w-[190px] md:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
@@ -166,9 +172,7 @@ export default function ServicesSection() {
                 </div>
 
                 {/* Hover Image Overlay */}
-                <div
-                  className="absolute z-[2] inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                >
+                <div className="absolute z-[2] inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-2xl">
                     <svg
                       viewBox="0 0 324 381"
@@ -225,7 +229,6 @@ export default function ServicesSection() {
                   >
                     {s.desc}
                   </p>
-
                 </div>
               </div>
             </motion.div>
