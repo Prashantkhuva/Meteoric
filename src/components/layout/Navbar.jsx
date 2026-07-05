@@ -79,7 +79,7 @@ export default function Navbar() {
       `}</style>
 
       <header
-        className="fixed md:relative top-0 left-0 w-full z-50 py-4 md:pt-5"
+        className="fixed md:relative top-0 left-0 w-full z-50 py-2 md:pt-5"
         style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "blur(20px)" }}
       >
         <div
@@ -165,8 +165,8 @@ export default function Navbar() {
           tabIndex={-1}
           className={`md:hidden mx-6 overflow-hidden rounded-2xl border border-white/[0.06] bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300 ${
             isMenuOpen
-              ? "pointer-events-auto translate-y-0 opacity-100"
-              : "pointer-events-none -translate-y-3 opacity-0"
+              ? "pointer-events-auto translate-y-0 opacity-100 max-h-[500px]"
+              : "pointer-events-none -translate-y-3 opacity-0 max-h-0"
           }`}
         >
           <div className="flex flex-col p-2">
