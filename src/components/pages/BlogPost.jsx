@@ -3,15 +3,10 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { posts } from "@/data/blog";
 
-const cardAccents = ["#818cf8", "#34d399", "#f59e0b", "#38bdf8"];
-
 export default function BlogPostPage({ post }) {
-  const idx = posts.findIndex((p) => p.slug === post.slug);
-  const accent = cardAccents[idx >= 0 ? idx % cardAccents.length : 0];
-
   const related = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   return (
@@ -40,7 +35,8 @@ export default function BlogPostPage({ post }) {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative h-56 md:h-72 rounded-2xl overflow-hidden mb-10"
+          className="relative w-full mb-12 overflow-hidden"
+          style={{ aspectRatio: "1.5/1" }}
         >
           <Image
             src={post.image}
@@ -50,20 +46,6 @@ export default function BlogPostPage({ post }) {
             sizes="(max-width: 768px) 100vw, 800px"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          <div className="absolute inset-0 bg-black/10" />
-          <div className="absolute top-5 left-5">
-            <span
-              className="text-xs uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border backdrop-blur-sm"
-              style={{
-                backgroundColor: `${accent}22`,
-                color: accent,
-                borderColor: `${accent}44`,
-              }}
-            >
-              {post.category}
-            </span>
-          </div>
         </motion.div>
 
         <motion.header
@@ -120,42 +102,31 @@ export default function BlogPostPage({ post }) {
           <p className="text-white/15 text-xs uppercase tracking-[0.25em] mb-6">
             More insights
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {related.map((r, ri) => {
-              const ra = cardAccents[ri % cardAccents.length];
-              return (
-                <Link key={r.slug} href={`/blog/${r.slug}`}>
-                  <div className="group rounded-xl border border-white/[0.06] overflow-hidden transition-all duration-300 hover:border-white/15">
-                    <div className="h-24 relative overflow-hidden">
-                      <Image
-                        src={r.image}
-                        alt={r.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 400px"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      <div className="absolute inset-0 bg-black/10" />
-                    </div>
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 text-[11px] text-white/20 mb-1.5">
-                        <span>{r.date}</span>
-                        <span className="w-px h-2.5 bg-white/10" />
-                        <span>{r.readTime}</span>
-                      </div>
-                      <h3 className="text-sm font-medium text-white/70 leading-snug group-hover:text-white transition-colors duration-300">
-                        {r.title}
-                      </h3>
-                      <div className="mt-2.5 flex items-center gap-1 text-white/20 text-[11px] group-hover:text-white/40 transition-colors duration-300">
-                        Read
-                        <ArrowUpRight size={10} />
-                      </div>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+            {related.map((r, ri) => (
+              <Link key={r.slug} href={`/blog/${r.slug}`}>
+                <div className="group">
+                  <div className="relative w-full overflow-hidden mb-4" style={{ aspectRatio: "1.26/1" }}>
+                    <Image
+                      src={r.image}
+                      alt={r.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      loading="lazy"
+                    />
                   </div>
-                </Link>
-              );
-            })}
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="text-base font-medium text-white/70 leading-snug group-hover:text-white transition-colors duration-300">
+                      {r.title}
+                    </h3>
+                    <span className="text-[11px] text-white/20 whitespace-nowrap shrink-0">
+                      {r.date}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </motion.div>
       </article>

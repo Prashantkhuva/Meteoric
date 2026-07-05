@@ -3,10 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import { posts } from "@/data/blog";
-
-const cardAccents = ["#818cf8", "#34d399", "#f59e0b", "#38bdf8"];
 
 export default function BlogPage() {
   return (
@@ -46,70 +43,37 @@ export default function BlogPage() {
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-16 pb-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {posts.map((post, i) => {
-            const accent = cardAccents[i % cardAccents.length];
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+          {posts.map((post, i) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`}>
+              <motion.article
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
+                className="group"
+              >
+                <div className="relative w-full overflow-hidden mb-5" style={{ aspectRatio: "1.26/1" }}>
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading={i === 0 ? "eager" : "lazy"}
+                  />
+                </div>
 
-            return (
-              <Link key={post.slug} href={`/blog/${post.slug}`}>
-                <motion.article
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
-                  className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent overflow-hidden transition-all duration-500 hover:border-[#EAEFFF]/15 h-full flex flex-col"
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      loading={i === 0 ? "eager" : "lazy"}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                    <div className="absolute inset-0 bg-black/20" />
-                    <div className="absolute top-4 left-4">
-                      <span
-                        className="text-[11px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border backdrop-blur-sm"
-                        style={{
-                          backgroundColor: `${accent}22`,
-                          color: accent,
-                          borderColor: `${accent}44`,
-                        }}
-                      >
-                        {post.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col flex-1 p-6">
-                    <div className="flex items-center gap-3 text-[11px] text-white/25 mb-3">
-                      <span>{post.date}</span>
-                      <span className="w-px h-3 bg-white/10" />
-                      <span>{post.readTime}</span>
-                    </div>
-
-                    <h2 className="text-lg font-semibold leading-snug tracking-tight text-white/85 mb-3 group-hover:text-white transition-colors duration-300">
-                      {post.title}
-                    </h2>
-
-                    <p className="text-white/35 text-sm leading-relaxed flex-1">
-                      {post.excerpt}
-                    </p>
-
-                    <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center gap-1.5 text-white/25 text-xs group-hover:text-white/50 transition-colors duration-300">
-                      Read Article
-                      <ArrowUpRight
-                        size={12}
-                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      />
-                    </div>
-                  </div>
-                </motion.article>
-              </Link>
-            );
-          })}
+                <div className="flex items-baseline justify-between gap-4">
+                  <h2 className="text-xl md:text-2xl font-medium leading-snug tracking-tight text-white/85 group-hover:text-white transition-colors duration-300">
+                    {post.title}
+                  </h2>
+                  <span className="text-xs text-white/20 whitespace-nowrap shrink-0">
+                    {post.date}
+                  </span>
+                </div>
+              </motion.article>
+            </Link>
+          ))}
         </div>
       </section>
     </div>
