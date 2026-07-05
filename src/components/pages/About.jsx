@@ -47,14 +47,17 @@ export default function AboutPage() {
 
       {/* ── HERO ── */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-white/25 uppercase tracking-[0.3em] text-xs mb-10"
+          className="flex items-center gap-3 mb-10"
         >
-          About Meteoric
-        </motion.p>
+          <span className="h-px w-8 bg-white/20" />
+          <span className="text-white/25 uppercase tracking-[0.3em] text-xs">
+            About Meteoric
+          </span>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
           {/* LEFT — photo */}
@@ -64,7 +67,12 @@ export default function AboutPage() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="relative"
           >
-            <div className="relative overflow-hidden rounded-2xl aspect-4/5 bg-[#111] ring-1 ring-white/10">
+            <div
+              className="relative overflow-hidden rounded-2xl aspect-4/5 bg-[#111] ring-1 ring-white/10"
+              style={{
+                boxShadow: "0 0 40px rgba(234,239,255,0.06), 0 0 80px rgba(234,239,255,0.03)",
+              }}
+            >
               <Image
                 src="/prashant.png"
                 alt="Prashant Khuva"
@@ -74,6 +82,9 @@ export default function AboutPage() {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
+              {/* Corner accent */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#EAEFFF]/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-[#EAEFFF]/10 to-transparent" />
             </div>
 
             {/* Founder badge */}
@@ -120,19 +131,24 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="h-px bg-white/5" />
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            {/* Stats — accent gradient numbers */}
+            <div className="grid grid-cols-3 gap-4 py-6 border-y border-white/[0.06]">
               {stats.map((s) => (
                 <div key={s.label}>
-                  <p className="text-2xl font-bold text-white">{s.value}</p>
-                  <p className="text-xs text-white/30 mt-1">{s.label}</p>
+                  <p
+                    className="text-3xl font-bold"
+                    style={{
+                      background: "linear-gradient(135deg, #fff 60%, rgba(255,255,255,0.3))",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    {s.value}
+                  </p>
+                  <p className="text-[11px] text-white/30 mt-1">{s.label}</p>
                 </div>
               ))}
             </div>
-
-            <div className="h-px bg-white/5" />
 
             {/* Contact info */}
             <div>
@@ -158,10 +174,8 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="h-px bg-white/5" />
-
-            {/* Links */}
-            <div className="flex gap-2 sm:gap-3">
+            {/* Social links — compact icon pills */}
+            <div className="flex gap-2">
               {[
                 {
                   label: "GitHub",
@@ -205,18 +219,18 @@ export default function AboutPage() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center justify-center gap-2 w-10 h-10 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/30 text-sm font-medium transition-all duration-300"
+                  className="group flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 hover:bg-white/[0.04] transition-all duration-300"
+                  aria-label={link.label}
                 >
-                  <span className="text-white/40 group-hover:text-white group-hover:scale-110 group-hover:-translate-y-0.5 transition-all duration-300">
+                  <span className="group-hover:scale-110 group-hover:-translate-y-0.5 transition-all duration-300">
                     {link.icon}
                   </span>
-                  <span className="hidden sm:inline">{link.label}</span>
                 </a>
               ))}
             </div>
 
             {/* CTA */}
-            <div className="mt-4">
+            <div className="mt-2">
               <a
                 href="#"
                 data-cal-namespace="let-s-build"
@@ -236,15 +250,25 @@ export default function AboutPage() {
 
       {/* ── HOW WE WORK ── */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="text-white/25 uppercase tracking-[0.3em] text-xs mb-10"
+          className="flex items-center gap-3 mb-12"
         >
-          How We Work
-        </motion.p>
+          <span className="h-px w-8 bg-white/20" />
+          <span
+            className="text-xs uppercase tracking-[0.3em]"
+            style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            How We Work
+          </span>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {values.map((item, i) => (
@@ -254,11 +278,26 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group rounded-2xl border border-white/10 bg-black p-8 hover:border-white/20 hover:shadow-[0_0_40px_rgba(234,239,255,0.04)] transition-all duration-500"
+              className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-8 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:shadow-[0_0_50px_rgba(234,239,255,0.04)]"
             >
-              <span className="text-white/10 text-5xl font-semibold tabular-nums leading-none mb-6 block">
+              {/* Accent top bar */}
+              <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* Number with accent */}
+              <span
+                className="text-5xl font-semibold tabular-nums leading-none mb-6 block"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
                 {String(i + 1).padStart(2, "0")}
               </span>
+
+              {/* Accent dot */}
+              <div className="w-6 h-px bg-white/10 mb-5" />
+
               <h2 className="text-lg font-semibold text-white mb-3 tracking-tight">
                 {item.title}
               </h2>
@@ -270,15 +309,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── BACKGROUND WORDMARK ── */}
-      <div className="relative overflow-hidden pb-24">
-        <div
-          className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold text-white/[0.03] select-none whitespace-nowrap text-center"
-          aria-hidden="true"
-        >
-          Meteoric
-        </div>
-      </div>
+
     </div>
   );
 }

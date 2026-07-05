@@ -23,18 +23,24 @@ export default function SmoothScroll() {
     lenisRef.current = lenis;
 
     function handleAnchorClick(event) {
-      const link = event.target.closest('a[href^="#"]');
+      const link = event.target.closest('a[href*="#"]');
 
       if (!link) return;
 
-      const hash = link.getAttribute("href");
+      const raw = link.getAttribute("href");
+      const hashIndex = raw.indexOf("#");
+      const hash = raw.slice(hashIndex);
+      const linkPath = raw.slice(0, hashIndex) || "/";
+
+      if (linkPath !== window.location.pathname) return;
+
       const target = hash === "#" ? document.body : document.querySelector(hash);
 
       if (!target) return;
 
       event.preventDefault();
       lenis.scrollTo(target);
-      window.history.pushState(null, "", hash);
+      window.history.replaceState(null, "", raw);
     }
 
     let frameId;
