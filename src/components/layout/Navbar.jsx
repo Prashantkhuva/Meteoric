@@ -139,9 +139,9 @@ export default function Navbar() {
               }
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen((open) => !open)}
-              className="md:hidden inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-white/60 transition-all duration-300 hover:bg-white/10 hover:text-white"
+              className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/60 transition-all duration-300 hover:bg-white/10 hover:text-white"
             >
-              {isMenuOpen ? <X size={16} /> : <Menu size={16} />}
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
