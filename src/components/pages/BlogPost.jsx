@@ -5,7 +5,20 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { posts } from "@/data/blog";
 
+const cardGradients = [
+  "from-indigo-950 via-purple-950 to-slate-900",
+  "from-emerald-950 via-teal-950 to-slate-900",
+  "from-amber-950 via-orange-950 to-slate-900",
+  "from-sky-950 via-blue-950 to-slate-900",
+];
+
+const cardAccents = ["#818cf8", "#34d399", "#f59e0b", "#38bdf8"];
+
 export default function BlogPostPage({ post }) {
+  const idx = posts.findIndex((p) => p.slug === post.slug);
+  const gradient = cardGradients[idx >= 0 ? idx % cardGradients.length : 0];
+  const accent = cardAccents[idx >= 0 ? idx % cardAccents.length : 0];
+
   const related = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   return (
@@ -15,7 +28,7 @@ export default function BlogPostPage({ post }) {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
       </div>
 
-      <article className="relative max-w-3xl mx-auto px-6 pt-32 pb-24">
+      <article className="relative max-w-3xl mx-auto px-6 md:px-16 pt-32 pb-24">
         {/* Back */}
         <motion.div
           initial={{ opacity: 0, x: -10 }}
@@ -25,29 +38,70 @@ export default function BlogPostPage({ post }) {
         >
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-white/30 hover:text-white text-sm transition-colors duration-200"
+            className="inline-flex items-center gap-2 text-white/25 hover:text-white text-sm transition-colors duration-200"
           >
             <ArrowLeft size={14} />
             Back to insights
           </Link>
         </motion.div>
 
+        {/* Abstract art header */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className={`relative h-56 md:h-72 rounded-2xl overflow-hidden bg-gradient-to-br ${gradient} mb-10`}
+        >
+          <div
+            className="absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-20"
+            style={{
+              background: `radial-gradient(circle, ${accent}44, transparent)`,
+            }}
+          />
+          <div
+            className="absolute -bottom-10 -left-10 w-36 h-36 rounded-full opacity-15"
+            style={{
+              background: `radial-gradient(circle, ${accent}33, transparent)`,
+            }}
+          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border border-white/5" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-white/[0.03]" />
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, white 0.5px, transparent 0.5px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          {/* Category badge */}
+          <div className="absolute top-5 left-5">
+            <span
+              className="text-xs uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border"
+              style={{
+                backgroundColor: `${accent}11`,
+                color: accent,
+                borderColor: `${accent}33`,
+              }}
+            >
+              {post.category}
+            </span>
+          </div>
+        </motion.div>
+
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
           <div className="flex items-center gap-3 text-xs text-white/25 mb-4">
-            <span className="px-3 py-1 rounded-full border border-white/10 text-white/40">
-              {post.category}
-            </span>
             <span>{post.date}</span>
             <span className="w-px h-3 bg-white/10" />
             <span>{post.readTime}</span>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-semibold leading-[1.15] tracking-tight mb-6">
+          <h1 className="text-3xl md:text-4xl font-semibold leading-[1.15] tracking-tight mb-8">
             {post.title}
           </h1>
         </motion.header>
@@ -56,15 +110,14 @@ export default function BlogPostPage({ post }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="prose-custom"
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
           {post.content.map((block, i) => {
             if (block.type === "heading") {
               return (
                 <h2
                   key={i}
-                  className="text-xl md:text-2xl font-semibold tracking-tight text-white mt-12 mb-4"
+                  className="text-xl md:text-2xl font-semibold tracking-tight text-white mt-14 mb-5"
                 >
                   {block.text}
                 </h2>
@@ -73,7 +126,7 @@ export default function BlogPostPage({ post }) {
             return (
               <p
                 key={i}
-                className="text-[#EAEFFF]/55 text-base md:text-lg leading-[1.8] mb-5"
+                className="text-white/45 text-base md:text-lg leading-[1.8] mb-6"
               >
                 {block.text}
               </p>
@@ -82,7 +135,7 @@ export default function BlogPostPage({ post }) {
         </motion.div>
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-16" />
+        <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent my-20" />
 
         {/* Related */}
         <motion.div
@@ -91,28 +144,52 @@ export default function BlogPostPage({ post }) {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-white/20 text-xs uppercase tracking-[0.2em] mb-6">
-            Related insights
+          <p className="text-white/15 text-xs uppercase tracking-[0.25em] mb-6">
+            More insights
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {related.map((r) => (
-              <Link key={r.slug} href={`/blog/${r.slug}`}>
-                <div className="group rounded-xl border border-white/[0.06] p-5 transition-all duration-300 hover:border-[#EAEFFF]/15 hover:shadow-[0_0_30px_rgba(234,239,255,0.03)]">
-                  <div className="flex items-center gap-2 text-[11px] text-white/20 mb-2">
-                    <span>{r.date}</span>
-                    <span className="w-px h-2.5 bg-white/10" />
-                    <span>{r.readTime}</span>
+            {related.map((r, ri) => {
+              const rg = cardGradients[ri % cardGradients.length];
+              const ra = cardAccents[ri % cardAccents.length];
+              return (
+                <Link key={r.slug} href={`/blog/${r.slug}`}>
+                  <div className="group rounded-xl border border-white/[0.06] overflow-hidden transition-all duration-300 hover:border-white/15">
+                    <div
+                      className={`h-24 bg-gradient-to-br ${rg} relative`}
+                    >
+                      <div
+                        className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-20"
+                        style={{
+                          background: `radial-gradient(circle, ${ra}44, transparent)`,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0 opacity-[0.04]"
+                        style={{
+                          backgroundImage:
+                            "radial-gradient(circle, white 0.5px, transparent 0.5px)",
+                          backgroundSize: "20px 20px",
+                        }}
+                      />
+                    </div>
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 text-[11px] text-white/20 mb-1.5">
+                        <span>{r.date}</span>
+                        <span className="w-px h-2.5 bg-white/10" />
+                        <span>{r.readTime}</span>
+                      </div>
+                      <h3 className="text-sm font-medium text-white/70 leading-snug group-hover:text-white transition-colors duration-300">
+                        {r.title}
+                      </h3>
+                      <div className="mt-2.5 flex items-center gap-1 text-white/20 text-[11px] group-hover:text-white/40 transition-colors duration-300">
+                        Read
+                        <ArrowUpRight size={10} />
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-sm font-medium text-white/70 leading-snug group-hover:text-white transition-colors duration-300">
-                    {r.title}
-                  </h3>
-                  <div className="mt-3 flex items-center gap-1 text-[#EAEFFF]/20 text-[11px] group-hover:text-[#EAEFFF]/40 transition-colors duration-300">
-                    Read
-                    <ArrowUpRight size={10} />
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </motion.div>
       </article>
