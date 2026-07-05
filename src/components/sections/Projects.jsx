@@ -135,6 +135,19 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
         {/* Tagline */}
         <p className="text-[12px] text-white/45 leading-relaxed">{project.tagline}</p>
 
+        {/* Description */}
+        <p className="text-[11px] text-white/35 leading-relaxed">{project.description}</p>
+
+        {/* Features */}
+        <div className="space-y-1">
+          {project.features.slice(0, 2).map((f, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <span className="w-1 h-1 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: project.accent }} />
+              <span className="text-[11px] text-white/35 leading-relaxed">{f}</span>
+            </div>
+          ))}
+        </div>
+
         {/* Tags row */}
         <div className="flex flex-wrap gap-1.5">
           {project.tags.slice(0, 3).map((tag) => (
