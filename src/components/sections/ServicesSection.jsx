@@ -129,7 +129,7 @@ export default function ServicesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4"
+          className="grid grid-cols-1 md:grid-cols-4"
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
           {services.map((s, idx) => (
