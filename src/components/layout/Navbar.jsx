@@ -81,7 +81,7 @@ export default function Navbar() {
       `}</style>
 
       <header
-        className="w-full"
+        className="fixed md:relative top-0 left-0 w-full z-50"
         style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "none", padding: "12px 0" }}
       >
         <div
@@ -127,7 +127,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsOpen(true)}
-              className="hidden md:inline-flex items-center cursor-pointer relative flip-btn"
+              className="inline-flex items-center cursor-pointer relative flip-btn"
             >
               <span className="front">Let&apos;s Chat!</span>
               <span className="back">Let&apos;s Chat!</span>
