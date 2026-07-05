@@ -81,12 +81,11 @@ export default function Navbar() {
       `}</style>
 
       <header
-        className="fixed top-0 left-0 w-full z-50"
-        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "none" }}
+        className="w-full"
+        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "none", padding: "12px 0" }}
       >
         <div
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
-          style={{ height: 96, paddingTop: 24 }}
         >
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center cursor-pointer">
@@ -102,7 +101,7 @@ export default function Navbar() {
               borderRadius: 100,
               boxShadow: "rgba(134,134,134,0.5) 0.5px 0.5px 0px 0px inset",
               gap: 56,
-              padding: "0 64px",
+              padding: "16px 32px",
               height: 54,
             }}
           >
@@ -148,7 +147,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile dropdown */}
+          {/* Mobile dropdown */}
         <div
           ref={menuRef}
           tabIndex={-1}
@@ -169,6 +168,15 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            <button
+              onClick={() => { setIsMenuOpen(false); setIsOpen(true); }}
+              className="mt-1 mx-2 rounded-xl px-4 py-3 text-sm font-medium text-black transition-all duration-200"
+              style={{
+                background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
+              }}
+            >
+              Let&apos;s Chat!
+            </button>
           </div>
         </div>
       </header>
