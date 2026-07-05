@@ -56,7 +56,7 @@ function Hero() {
       </div>
 
       {/* Content */}
-      <div ref={containerRef} className="relative pt-[72px] md:pt-0 z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
+      <div ref={containerRef} className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 md:-translate-y-[45px]">
         {/* Heading */}
         <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
           <span className="block [&>.gsap-word:not(:last-child)]:mr-[0.25em]">
