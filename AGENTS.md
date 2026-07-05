@@ -87,7 +87,7 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - Card background: `#0a0a0a`
 - Text: `rgba(255,255,255,0.85)`
 - Accent: `#EAEFFF`
-- Fonts: Inter (primary), DM Sans (secondary)
+- Fonts: Inter (primary), Playfair Display (secondary italic), Inter Display (small labels)
 - Border: `rgba(255,255,255,0.06)`
 
 ## Common Commands

@@ -2,7 +2,8 @@
 
 @theme {
   --font-primary: var(--font-inter), "Inter", sans-serif;
-  --font-secondary: var(--font-dm-sans), "DM Sans", sans-serif;
+  --font-secondary: var(--font-playfair), "Playfair Display", serif;
+  --font-tertiary: var(--font-inter-display), "Inter Display", sans-serif;
 }
 
 html,
@@ -12,8 +13,10 @@ body {
   position: relative;
   background: #070707;
   font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 24px;
   margin: 0;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgb(255, 255, 255);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

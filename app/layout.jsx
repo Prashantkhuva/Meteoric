@@ -2,7 +2,7 @@ import "../src/index.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ClientLayout from "./client-layout";
-import { Inter, DM_Sans } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import ErrorBoundary from "@/components/sections/ErrorBoundary";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
@@ -12,10 +12,16 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const dmSans = DM_Sans({
+const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-dm-sans",
+  variable: "--font-playfair",
+});
+
+const interDisplay = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter-display",
 });
 
 const metaTitle = "Meteoric — Web Development Agency for Startups & SaaS";
@@ -62,7 +68,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable} ${interDisplay.variable}`}>
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script
