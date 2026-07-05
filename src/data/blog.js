@@ -7,7 +7,7 @@ export const posts = [
     date: "June 24, 2026",
     readTime: "5 min read",
     category: "Strategy",
-    image: "/images/blog/why-your-startup-needs-a-product-studio-not-an-agency.png",
+    image: "/images/blog/blog-cover-1.png",
     content: [
       {
         type: "paragraph",
@@ -59,7 +59,7 @@ export const posts = [
     date: "June 12, 2026",
     readTime: "7 min read",
     category: "Design",
-    image: "/images/blog/designing-for-conversion-lessons-from-12-shipped-projects.png",
+    image: "/images/blog/blog-cover-2.png",
     content: [
       {
         type: "paragraph",
@@ -119,7 +119,7 @@ export const posts = [
     date: "May 28, 2026",
     readTime: "8 min read",
     category: "Case Study",
-    image: "/images/blog/building-a-saas-prototype-in-3-weeks-a-case-study.png",
+    image: "/images/blog/blog-cover-3.png",
     content: [
       {
         type: "paragraph",
@@ -175,7 +175,7 @@ export const posts = [
     date: "May 15, 2026",
     readTime: "6 min read",
     category: "Engineering",
-    image: "/images/blog/the-meteoric-guide-to-choosing-your-tech-stack.png",
+    image: "/images/blog/blog-cover-4.png",
     content: [
       {
         type: "paragraph",
