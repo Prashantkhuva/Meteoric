@@ -111,7 +111,7 @@ export default function CapabilitiesSection() {
               </p>
               <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white">
                 What we build
-                <span className="block text-white/30 mt-1">for founders.</span>
+                <span className="block text-white/30 mt-1 font-secondary-italic">for founders.</span>
               </h2>
             </div>
             <p className="text-[#EAEFFF]/40 text-sm leading-relaxed max-w-xs md:text-right">
@@ -174,7 +174,7 @@ export default function CapabilitiesSection() {
             </p>
             <h2 className="text-3xl md:text-4xl font-semibold leading-[1.05] tracking-tight text-white">
               What you can expect
-              <span className="text-white/30"> working with us.</span>
+              <span className="text-white/30 font-secondary-italic"> working with us.</span>
             </h2>
           </div>
 

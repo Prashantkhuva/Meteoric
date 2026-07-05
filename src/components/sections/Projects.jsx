@@ -258,7 +258,7 @@ function Projects() {
           Selected Work
         </p>
         <h2 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
-          Projects that <span className="text-white/30">actually shipped.</span>
+          Projects that <span className="text-white/30 font-secondary-italic">actually shipped.</span>
         </h2>
         <Link
           href="/work"

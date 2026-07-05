@@ -25,7 +25,7 @@ export default function Footer() {
 
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.0] tracking-tight text-white max-w-4xl">
               Ready to launch?
-              <span className="block text-white/25 mt-2">
+              <span className="block text-white/25 mt-2 font-secondary-italic">
                 Let's make it happen.
               </span>
             </h2>

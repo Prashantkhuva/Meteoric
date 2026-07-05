@@ -96,7 +96,7 @@ export default function TransitionSection() {
               {mainWords.map((word, i) => (
                 <span key={i} className="gsap-head-word inline-block">{word}</span>
               ))}
-              <span className="text-white/30 [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
+              <span className="text-white/30 font-secondary-italic [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
                 {" "}
                 {mutedWords.map((word, i) => (
                   <span key={i} className="gsap-head-word inline-block">{word}</span>

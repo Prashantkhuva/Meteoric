@@ -105,7 +105,7 @@ export default function ProcessSection() {
             {mainHeading.map((word, i) => (
               <span key={i} className="gsap-proc-word inline-block">{word}{' '}</span>
             ))}
-            <span className="text-white/40">
+            <span className="text-white/40 font-secondary-italic">
               {" "}
               {mutedHeading.map((word, i) => (
                 <span key={i} className="gsap-proc-word inline-block">{word}{' '}</span>

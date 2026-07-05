@@ -54,6 +54,11 @@ html.lenis {
   color: #EAEFFF;
 }
 
+.font-secondary-italic {
+  font-family: var(--font-secondary);
+  font-style: italic;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }

@@ -64,7 +64,7 @@ function Hero() {
               <span key={i} className="gsap-word inline-block">{word}</span>
             ))}
           </span>
-          <span className="block text-white/40 mt-2 [&>.gsap-word:not(:last-child)]:mr-[0.25em]">
+          <span className="block text-white/40 mt-2 font-secondary-italic [&>.gsap-word:not(:last-child)]:mr-[0.25em]">
             {mutedWords.map((word, i) => (
               <span key={i} className="gsap-word inline-block">{word}</span>
             ))}

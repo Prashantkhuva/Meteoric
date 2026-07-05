@@ -39,7 +39,7 @@ export default function WorkPage() {
             className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.1] tracking-tight max-w-4xl mb-6"
           >
             Projects that{" "}
-            <span className="text-white/30">actually shipped.</span>
+            <span className="text-white/30 font-secondary-italic">actually shipped.</span>
           </motion.h1>
 
           <motion.p
