@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { posts } from "@/data/blog";
+import BlogArt from "@/components/sections/BlogArt";
 
 const cardGradients = [
   "from-indigo-950 via-purple-950 to-slate-900",
@@ -23,13 +24,11 @@ export default function BlogPostPage({ post }) {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* background glow */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
       </div>
 
       <article className="relative max-w-3xl mx-auto px-6 md:px-16 pt-32 pb-24">
-        {/* Back */}
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
@@ -45,36 +44,14 @@ export default function BlogPostPage({ post }) {
           </Link>
         </motion.div>
 
-        {/* Abstract art header */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className={`relative h-56 md:h-72 rounded-2xl overflow-hidden bg-gradient-to-br ${gradient} mb-10`}
         >
-          <div
-            className="absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-20"
-            style={{
-              background: `radial-gradient(circle, ${accent}44, transparent)`,
-            }}
-          />
-          <div
-            className="absolute -bottom-10 -left-10 w-36 h-36 rounded-full opacity-15"
-            style={{
-              background: `radial-gradient(circle, ${accent}33, transparent)`,
-            }}
-          />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border border-white/5" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-white/[0.03]" />
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, white 0.5px, transparent 0.5px)",
-              backgroundSize: "20px 20px",
-            }}
-          />
-          {/* Category badge */}
+          <BlogArt index={idx} className="absolute inset-0" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
           <div className="absolute top-5 left-5">
             <span
               className="text-xs uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border"
@@ -89,7 +66,6 @@ export default function BlogPostPage({ post }) {
           </div>
         </motion.div>
 
-        {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -106,7 +82,6 @@ export default function BlogPostPage({ post }) {
           </h1>
         </motion.header>
 
-        {/* Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -134,10 +109,8 @@ export default function BlogPostPage({ post }) {
           })}
         </motion.div>
 
-        {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent my-20" />
 
-        {/* Related */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -154,23 +127,9 @@ export default function BlogPostPage({ post }) {
               return (
                 <Link key={r.slug} href={`/blog/${r.slug}`}>
                   <div className="group rounded-xl border border-white/[0.06] overflow-hidden transition-all duration-300 hover:border-white/15">
-                    <div
-                      className={`h-24 bg-gradient-to-br ${rg} relative`}
-                    >
-                      <div
-                        className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-20"
-                        style={{
-                          background: `radial-gradient(circle, ${ra}44, transparent)`,
-                        }}
-                      />
-                      <div
-                        className="absolute inset-0 opacity-[0.04]"
-                        style={{
-                          backgroundImage:
-                            "radial-gradient(circle, white 0.5px, transparent 0.5px)",
-                          backgroundSize: "20px 20px",
-                        }}
-                      />
+                    <div className={`h-24 bg-gradient-to-br ${rg} relative`}>
+                      <BlogArt index={ri} className="absolute inset-0" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                     </div>
                     <div className="p-4">
                       <div className="flex items-center gap-2 text-[11px] text-white/20 mb-1.5">

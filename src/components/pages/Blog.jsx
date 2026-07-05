@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { posts } from "@/data/blog";
+import BlogArt from "@/components/sections/BlogArt";
 
 const cardGradients = [
   "from-indigo-950 via-purple-950 to-slate-900",
@@ -17,12 +18,10 @@ const cardAccents = ["#818cf8", "#34d399", "#f59e0b", "#38bdf8"];
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* background glow */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
       </div>
 
-      {/* ── HERO ── */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-16 pt-32 pb-16 md:pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -48,13 +47,11 @@ export default function BlogPage() {
             </span>
           </h1>
           <p className="text-white/25 text-sm md:text-base mt-4 max-w-lg">
-            Thoughts on building, designing, and shipping products that
-            matter.
+            Thoughts on building, designing, and shipping products that matter.
           </p>
         </motion.div>
       </section>
 
-      {/* ── POSTS ── */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-16 pb-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {posts.map((post, i) => {
@@ -69,38 +66,14 @@ export default function BlogPage() {
                   transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
                   className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent overflow-hidden transition-all duration-500 hover:border-[#EAEFFF]/15 h-full flex flex-col"
                 >
-                  {/* Abstract art area */}
                   <div
                     className={`relative h-48 overflow-hidden bg-gradient-to-br ${gradient}`}
                   >
-                    {/* Decorative circles */}
-                    <div
-                      className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20"
-                      style={{
-                        background: `radial-gradient(circle, ${accent}44, transparent)`,
-                      }}
-                    />
-                    <div
-                      className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full opacity-15"
-                      style={{
-                        background: `radial-gradient(circle, ${accent}33, transparent)`,
-                      }}
-                    />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full border border-white/5" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-white/[0.03]" />
-                    {/* Grid dots */}
-                    <div
-                      className="absolute inset-0 opacity-[0.04]"
-                      style={{
-                        backgroundImage:
-                          "radial-gradient(circle, white 0.5px, transparent 0.5px)",
-                        backgroundSize: "20px 20px",
-                      }}
-                    />
-                    {/* Category badge */}
+                    <BlogArt index={i} className="absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                     <div className="absolute top-4 left-4">
                       <span
-                        className="text-[11px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border border-white/10"
+                        className="text-[11px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border"
                         style={{
                           backgroundColor: `${accent}11`,
                           color: accent,
@@ -112,7 +85,6 @@ export default function BlogPage() {
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div className="flex flex-col flex-1 p-6">
                     <div className="flex items-center gap-3 text-[11px] text-white/25 mb-3">
                       <span>{post.date}</span>

@@ -7,8 +7,9 @@ export function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const post = posts.find((p) => p.slug === params.slug);
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
   if (!post) return {};
 
   const title = `${post.title} — Meteoric Blog`;
@@ -49,8 +50,9 @@ const articleJsonLd = (post) => ({
   },
 });
 
-export default function BlogPost({ params }) {
-  const post = posts.find((p) => p.slug === params.slug);
+export default async function BlogPost({ params }) {
+  const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
 
   return (
