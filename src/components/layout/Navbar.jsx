@@ -46,7 +46,6 @@ export default function Navbar() {
           line-height: 1;
           text-align: center;
           letter-spacing: 0;
-          display: inline-block;
           text-decoration: none;
           cursor: pointer;
         }
