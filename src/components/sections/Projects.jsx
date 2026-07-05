@@ -93,131 +93,65 @@ export const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, is
 
 export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
   return (
-    <div className="rounded-3xl overflow-hidden border border-white/10
-      bg-gradient-to-b"
-      style={{ background: `${project.gradient}` }}
-    >
-
+    <div className="rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent">
       {/* Image area */}
-      <div className="relative h-52 w-full overflow-hidden">
+      <div className="relative h-48 w-full overflow-hidden">
+        <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
         <Image
           src={project.image}
           alt={project.name}
           fill
-          className="object-cover"
+          className="object-contain p-4"
           loading="lazy"
           sizes="(max-width: 768px) 100vw, 50vw"
           onError={() => {}}
         />
-
-        {/* Status pill — top right */}
-        <div className="absolute top-3 right-3 text-[10px] uppercase
-          tracking-widest px-2.5 py-1 rounded-full border border-white/15
-          bg-black/40 text-white/50 backdrop-blur-sm"
-        >
-          {project.status ?? "Live"}
+        {/* Status pill */}
+        <div className="absolute top-3 right-3 text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/15 bg-black/50 text-white/50 backdrop-blur-sm">
+          Featured
         </div>
-
-        {/* Bottom fade into content */}
-        <div className="absolute bottom-0 inset-x-0 h-20
-          bg-gradient-to-t from-black/70 to-transparent" />
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
       </div>
 
       {/* Content */}
-      <div className="px-5 pb-6 pt-4 space-y-4">
-
-        {/* Name + external link icon */}
+      <div className="px-4 pb-5 pt-3.5 space-y-3">
+        {/* Name + arrow */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div
-              className="w-2 h-2 rounded-full shrink-0 mt-1"
-              style={{ background: project.accent }}
-            />
-            <h3 className="text-[18px] font-semibold text-white leading-tight">
+            <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-1" style={{ background: project.accent }} />
+            <h3 className="text-base font-semibold text-white leading-tight">
               {project.name}
             </h3>
           </div>
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-7 h-7 rounded-full border border-white/12
-              bg-white/4 flex items-center justify-center
-              text-white/50 hover:text-white hover:border-white/30
-              hover:bg-white/8 transition-all shrink-0"
+          <a href={project.link} target="_blank" rel="noopener noreferrer"
+            className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all shrink-0"
             aria-label="View project"
           >
-            <ArrowUpRight size={13} />
+            <ArrowUpRight size={12} />
           </a>
         </div>
 
         {/* Tagline */}
-        <p className="text-[13px] text-white/50 leading-relaxed ml-4">
-          {project.tagline}
-        </p>
+        <p className="text-[12px] text-white/45 leading-relaxed">{project.tagline}</p>
 
-        {/* Description */}
-        <p className="text-[12px] text-white/35 leading-relaxed ml-4">
-          {project.description}
-        </p>
-
-        {/* Divider */}
-        <div className="h-px bg-white/6" />
-
-        {/* Features */}
-        <div>
-          <p className="text-[10px] uppercase tracking-widest
-            text-white/25 mb-2">Features</p>
-          <div className="flex flex-wrap gap-1.5">
-            {project.features.slice(0, 2).map((f, i) => (
-              <span
-                key={i}
-                className="text-[11px] px-2.5 py-1 rounded-md
-                  bg-white/5 border border-white/8 text-white/50"
-              >
-                {f}
-              </span>
-            ))}
-          </div>
+        {/* Tags row */}
+        <div className="flex flex-wrap gap-1.5">
+          {project.tags.slice(0, 3).map((tag) => (
+            <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full border text-white/35 font-mono" style={{ borderColor: `${project.accent}22`, backgroundColor: `${project.accent}08` }}>
+              {tag}
+            </span>
+          ))}
         </div>
 
-        {/* Tech stack */}
-        <div>
-          <p className="text-[10px] uppercase tracking-widest
-            text-white/25 mb-2">Stack</p>
-          <div className="flex flex-wrap gap-1.5">
-            {project.tags.slice(0, 4).map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] px-2 py-0.5 rounded-md font-mono
-                  border border-white/7 text-white/30"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA — white filled, black text */}
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group/btn flex items-center justify-center gap-2
-            w-full py-3 rounded-xl bg-white text-black
-            text-[13px] font-semibold tracking-wide
-            hover:bg-white/90 active:scale-[0.98]
-            transition-all duration-200"
+        {/* CTA */}
+        <a href={project.link} target="_blank" rel="noopener noreferrer"
+          className="group/btn flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-[12px] font-semibold tracking-wide transition-all duration-200 active:scale-[0.98]"
+          style={{ backgroundColor: project.accent, color: "#000" }}
         >
           View Project
-          <ArrowUpRight
-            size={15}
-            className="transition-transform duration-200
-              group-hover/btn:translate-x-0.5
-              group-hover/btn:-translate-y-0.5"
-          />
+          <ArrowUpRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
         </a>
-
       </div>
     </div>
   );
