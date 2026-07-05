@@ -1,7 +1,6 @@
 import { useState, lazy, Suspense } from "react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import Logo from "@/components/sections/Logo";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -52,21 +51,24 @@ export default function Footer() {
           <div className="pt-10 pb-6 overflow-hidden">
             {/* Huge Background Text */}
             <div
-              className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold text-white/[0.04] select-none whitespace-nowrap"
+              className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold select-none whitespace-nowrap"
               aria-hidden="true"
+              style={{
+                background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
-              Meteoric
+              <span style={{ fontFamily: "var(--font-playfair)", fontStyle: "normal" }}>meteor</span>
+              <span style={{ fontFamily: "var(--font-inter)" }}>ic</span>
             </div>
 
             {/* Footer Bottom */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">
               {/* Left Side */}
-              <div className="flex items-center gap-4">
-                <Logo />
-                <p className="text-sm text-white/30">
-                  © 2026 Meteoric. All rights reserved.
-                </p>
-              </div>
+              <p className="text-sm text-white/30">
+                © 2026 Meteoric. All rights reserved.
+              </p>
 
               {/* Right Side */}
               <Link
