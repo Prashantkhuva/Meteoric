@@ -80,8 +80,8 @@ export default function Navbar() {
       `}</style>
 
       <header
-        className="fixed md:relative top-0 left-0 w-full z-50"
-        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "none", padding: "12px 0" }}
+        className="fixed md:relative top-0 left-0 w-full z-50 p-0 md:pt-5"
+        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "none" }}
       >
         <div
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
