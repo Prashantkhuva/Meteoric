@@ -49,7 +49,7 @@ const itemVariants = {
 
 export default function ServicesSection() {
   return (
-    <section className="relative w-full bg-black px-6 md:px-16 py-28 md:py-36">
+    <section id="services" className="relative w-full bg-black px-6 md:px-16 py-28 md:py-36">
       <div className="max-w-7xl mx-auto">
         {/* Badge */}
         <motion.div
