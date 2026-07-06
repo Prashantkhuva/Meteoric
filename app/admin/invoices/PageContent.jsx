@@ -81,6 +81,7 @@ export default function InvoicesPage() {
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
+  const searchParams = useSearchParams();
   const [viewInvoice, setViewInvoice] = useState(null);
   const [editingInvoice, setEditingInvoice] = useState(null);
   const [showNewInvoice, setShowNewInvoice] = useState(() => searchParams.has("proposalId"));
@@ -96,7 +97,6 @@ export default function InvoicesPage() {
   const [exporting, setExporting] = useState(false);
   const [bulkLoading, setBulkLoading] = useState(false);
   const addToast = useToast();
-  const searchParams = useSearchParams();
   const searchRef = useRef(null);
 
   useEffect(() => {

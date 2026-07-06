@@ -17,6 +17,12 @@ import { downloadCSV } from "@/lib/csv-export"
 
 const EM = "\u2014"
 
+function shortTitle(title) {
+  if (!title) return "";
+  const idx = title.indexOf(" between ");
+  return idx > -1 ? title.slice(0, idx) : title;
+}
+
 const bookingStatusOptions = [
   { value: "accepted", label: "Accepted" },
   { value: "rejected", label: "Rejected" },
@@ -379,9 +385,9 @@ export default function CalBookingsPage() {
                 <div
                   key={b.id}
                   onClick={() => setSelectedBooking(b)}
-                  className="group cursor-pointer border border-white/[0.06] bg-[#0a0a0a] p-5 transition-all hover:border-white/[0.10]"
+                  className="group cursor-pointer border border-white/[0.06] bg-[#0a0a0a] p-5 md:p-6 transition-all hover:border-white/[0.10]"
                 >
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start justify-between gap-3 md:gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
                         <BookingStatusBadge status={b.status} />
@@ -389,14 +395,14 @@ export default function CalBookingsPage() {
                           {b.duration ? `${b.duration} min` : EM}
                         </span>
                       </div>
-                      <h3 className="text-sm text-white/80 font-medium truncate">{b.title || "Untitled Booking"}</h3>
+                      <h3 className="text-sm text-white/80 font-medium">{shortTitle(b.title) || "Untitled Booking"}</h3>
                       {attendee && (
                         <p className="text-xs text-white/30 mt-1">
                           {attendee.name}{attendee.email ? ` \u00b7 ${attendee.email}` : ""}
                         </p>
                       )}
                     </div>
-                    <div className="text-right shrink-0">
+                    <div className="text-right whitespace-nowrap">
                       <p className="text-sm text-white/60 font-medium tabular-nums">{formatTime(b.start)}</p>
                       <p className="text-xs text-white/30 tabular-nums">{formatTime(b.end)}</p>
                     </div>
@@ -437,7 +443,7 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full text-left text-sm min-w-[640px]">
           <thead>
             <tr className="border-b border-white/[0.06]">
               <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("title")}>
@@ -475,7 +481,7 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
                     className="cursor-pointer border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0"
                   >
                     <td className="px-5 py-3.5">
-                      <span className="text-sm text-white/80 font-medium">{b.title || EM}</span>
+                      <span className="text-sm text-white/80 font-medium">{shortTitle(b.title) || EM}</span>
                       {b.description && (
                         <span className="block text-xs text-white/25 mt-0.5 line-clamp-1">{b.description}</span>
                       )}
@@ -502,13 +508,13 @@ function BookingsTable({ bookings, onSelect, onInlineStatusChange, editingStatus
                         />
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
+                    <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums whitespace-nowrap">
                       <span className="flex items-center gap-1.5">
                         <CalendarIcon size={11} className="text-white/30" />
                         {formatDate(b.start)}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
+                    <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums whitespace-nowrap">
                       {b.duration ? `${b.duration} min` : b.start && b.end
                         ? `${Math.round((new Date(b.end) - new Date(b.start)) / 60000)} min`
                         : EM}
@@ -547,7 +553,7 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
       >
         <div className="sticky top-0 flex items-center justify-between border-b border-white/[0.06] bg-[#0c0c0c] px-6 py-4 z-10">
           <h2 id="booking-detail-title" className="text-base font-semibold text-white/90 truncate pr-4">
-            {booking.title || "Booking Details"}
+            {shortTitle(booking.title) || "Booking Details"}
           </h2>
           <button
             onClick={onClose}
@@ -614,7 +620,7 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
           {showConvertForm && (
             <form onSubmit={handleConvertToLead} className="space-y-4 pt-2 border-t border-white/[0.06]">
               <p className="text-xs font-semibold tracking-wider text-white/30 uppercase">New Lead</p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="conv-name" className="block text-[10px] font-medium text-white/35 uppercase mb-1">Name *</label>
                   <input
@@ -664,7 +670,7 @@ function BookingDetailDialog({ booking, onClose, showConvertForm, setShowConvert
                   placeholder="e.g. Web Design, SEO"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="conv-budget" className="block text-[10px] font-medium text-white/35 uppercase mb-1">Budget</label>
                   <input

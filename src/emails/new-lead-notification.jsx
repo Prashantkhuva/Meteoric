@@ -9,6 +9,7 @@ import {
   Hr,
   Heading,
   Link,
+  Img,
 } from "react-email";
 
 export default function NewLeadNotification({ name, email, phone, services, details, budget, siteUrl }) {
@@ -19,10 +20,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <Preview>New lead from {name || email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Text style={logoText}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "normal" }}>meteor</span>
-            <span style={{ fontFamily: "Inter, sans-serif" }}>ic</span>
-          </Text>
+          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>New Lead <span style={star}>✦</span></Heading>
           <Text style={muted}>
             A new lead has submitted the form on {baseUrl.replace("https://", "")}
@@ -97,11 +95,8 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoText = {
-  fontSize: "28px",
-  fontWeight: 500,
+const logoImg = {
   marginBottom: "20px",
-  lineHeight: "1",
 };
 
 const star = {

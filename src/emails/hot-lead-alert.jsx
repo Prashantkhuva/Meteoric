@@ -9,6 +9,7 @@ import {
   Hr,
   Heading,
   Link,
+  Img,
 } from "react-email";
 
 export default function HotLeadAlert({ lead, score, category, summary, siteUrl }) {
@@ -19,10 +20,7 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
       <Preview>🔥 Hot lead ({score}): {lead.name || lead.email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Text style={logoText}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "normal" }}>meteor</span>
-            <span style={{ fontFamily: "Inter, sans-serif" }}>ic</span>
-          </Text>
+          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>🔥 Hot Lead &mdash; {score}/100</Heading>
           {category && <Text style={badge}>Category: {category}</Text>}
           {summary && <Text style={summaryText}>"{summary}"</Text>}
@@ -107,11 +105,8 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoText = {
-  fontSize: "28px",
-  fontWeight: 500,
+const logoImg = {
   marginBottom: "20px",
-  lineHeight: "1",
 };
 
 const h1 = {

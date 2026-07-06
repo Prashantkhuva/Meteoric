@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export function Toolbar({ search, onSearchChange, children, resultCount, searchRef }) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="relative flex-1 max-w-xs">
+      <div className="relative flex-1 sm:max-w-xs">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none" />
         <input
           ref={searchRef}
@@ -27,7 +27,7 @@ export function Toolbar({ search, onSearchChange, children, resultCount, searchR
           </button>
         )}
       </div>
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-2 overflow-x-auto md:overflow-visible md:flex-wrap">
         {children}
       </div>
       {resultCount !== undefined && (

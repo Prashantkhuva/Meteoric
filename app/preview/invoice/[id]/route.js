@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import fs from "fs";
+import path from "path";
 
 const CURRENCIES = {
   USD: "$",
@@ -77,6 +79,11 @@ export async function GET(request, { params }) {
   const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : "";
   const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status;
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
+  let logoSrc = "";
+  try {
+    const logoBuf = fs.readFileSync(path.join(process.cwd(), "public", "meteoric.png"));
+    logoSrc = `data:image/png;base64,${logoBuf.toString("base64")}`;
+  } catch { /* logo file not found, fall back to text */ }
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -102,9 +109,7 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
 .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .brand { display: flex; align-items: center; }
-.brand-logo { font-size: 28px; font-weight: 500; background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.brand-logo span:first-child { font-family: "Playfair Display", serif; font-style: normal; }
-.brand-logo span:last-child { font-family: Inter, system-ui, sans-serif; }
+.brand-logo { height: 32px; width: auto; }
 .meta { text-align: right; }
 .meta .number { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
 .meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: rgba(255,255,255,0.3); }
@@ -117,6 +122,7 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .from p, .to p { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.6); }
 .from .name, .to .name { font-weight: 600; color: rgba(255,255,255,0.85); }
 .to { text-align: right; }
+.table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
 thead th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 thead th:not(:first-child) { text-align: right; }
@@ -129,6 +135,20 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 .footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
 .footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px; }
 .footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
+@media (max-width: 639px) {
+  body { padding: 16px 10px; }
+  .toolbar { gap: 8px; }
+  .toolbar a { white-space: nowrap; }
+  .print-btn { padding: 10px 16px; white-space: nowrap; }
+  .invoice { padding: 24px 16px; }
+  .header { flex-direction: column; gap: 12px; margin-bottom: 32px; padding-bottom: 24px; }
+  .brand-logo { height: 28px; }
+  .meta { text-align: left; }
+  .meta .number { font-size: 20px; }
+  .parties { flex-direction: column; gap: 20px; margin-bottom: 32px; }
+  .to { text-align: left; }
+  .footer { margin-top: 32px; padding-top: 24px; }
+}
 @media print {
   body { background: #070707; padding: 0; }
   .toolbar { display: none !important; }
@@ -149,7 +169,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="invoice">
   <div class="header">
     <div class="brand">
-      <span class="brand-logo"><span>meteor</span><span>ic</span></span>
+      ${logoSrc ? '<img class="brand-logo" src="' + logoSrc + '" alt="Meteoric" />' : '<span class="brand-logo" style="font-size:28px;font-weight:500;background:linear-gradient(135deg,#fff 0%,#a0a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><span style="font-family:\'Playfair Display\',serif;font-style:normal">meteor</span><span style="font-family:Inter,system-ui,sans-serif">ic</span></span>'}
     </div>
     <div class="meta">
       <p class="number">${invoice.invoice_number}</p>
@@ -175,7 +195,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
 
   ${items.length > 0 ? `
-  <table>
+  <div class="table-wrap"><table>
     <thead>
       <tr>
         <th style="width:auto">Description</th>
@@ -189,7 +209,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
         return "<tr><td>" + esc(item.description) + "</td><td>" + item.quantity + "</td><td>" + currency + Number(item.rate).toFixed(2) + "</td><td>" + currency + itemAmount(item) + "</td></tr>";
       }).join("")}
     </tbody>
-  </table>
+  </table></div>
   ` : ""}
 
   <div class="totals">

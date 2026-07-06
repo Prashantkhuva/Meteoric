@@ -923,7 +923,7 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
                 Created {formatDate(proposal.created_at)}
               </div>
 
-              <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">
+              <div className="flex items-center gap-2 overflow-x-auto border-t border-white/[0.06] pt-4">
                 <button
                   onClick={() => window.open(`/preview/proposal/${proposal.id}`, "_blank")}
                   className="inline-flex items-center gap-2 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"

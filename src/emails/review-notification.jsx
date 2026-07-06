@@ -9,6 +9,7 @@ import {
   Hr,
   Heading,
   Link,
+  Img,
 } from "react-email";
 
 export default function ReviewNotification({ name, email, role, company, project, rating, content, siteUrl }) {
@@ -19,10 +20,7 @@ export default function ReviewNotification({ name, email, role, company, project
       <Preview>New review from {name}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Text style={logoText}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "normal" }}>meteor</span>
-            <span style={{ fontFamily: "Inter, sans-serif" }}>ic</span>
-          </Text>
+          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>New Review <span style={star}>✦</span></Heading>
           <Text style={muted}>
             {name} left a {rating}-star review
@@ -96,11 +94,8 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoText = {
-  fontSize: "28px",
-  fontWeight: 500,
+const logoImg = {
   marginBottom: "20px",
-  lineHeight: "1",
 };
 
 const star = {

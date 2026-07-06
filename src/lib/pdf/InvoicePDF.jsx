@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 100,
-    height: 67,
+    height: 26,
   },
   metaCol: {
     alignItems: "flex-end",

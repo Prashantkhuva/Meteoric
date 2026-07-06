@@ -6,6 +6,7 @@ import {
   Container,
   Text,
   Hr,
+  Img,
 } from "react-email";
 
 export default function LeadAutoReply({ name, siteUrl }) {
@@ -16,10 +17,7 @@ export default function LeadAutoReply({ name, siteUrl }) {
       <Preview>Thank you for reaching out — we'll be in touch</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Text style={logoText}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "normal" }}>meteor</span>
-            <span style={{ fontFamily: "Inter, sans-serif" }}>ic</span>
-          </Text>
+          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
 
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
 
@@ -66,11 +64,8 @@ const container = {
   borderRadius: "16px",
 };
 
-const logoText = {
-  fontSize: "28px",
-  fontWeight: 500,
+const logoImg = {
   marginBottom: "20px",
-  lineHeight: "1",
 };
 
 const greeting = {
