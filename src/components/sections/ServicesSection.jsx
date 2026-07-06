@@ -123,7 +123,7 @@ export default function ServicesSection() {
             className="text-base md:text-lg leading-relaxed self-center max-w-md"
             style={{ color: "#999999" }}
           >
-            From a landing page to a full SaaS — we handle the entire stack.
+            From a landing page to a full SaaS — we handle the entire software development stack.
           </motion.p>
         </div>
 
@@ -166,7 +166,7 @@ export default function ServicesSection() {
                 <div className="relative z-[1] w-[152px] h-[152px] md:w-[190px] md:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
                   <Image
                     src={s.img}
-                    alt={s.title}
+                    alt={`${s.title} — software development`}
                     fill
                     sizes="(max-width: 768px) 152px, 190px"
                     className="object-contain"

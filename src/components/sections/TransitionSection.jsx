@@ -107,8 +107,8 @@ export default function TransitionSection() {
             </h2>
 
             <p className="mt-8 text-[#EAEFFF]/65 text-lg max-w-2xl leading-relaxed">
-              We help startups and brands build premium digital experiences
-              focused on performance, clarity, and strong visual identity.
+              We help startups and brands build premium software and digital
+              experiences focused on performance, clarity, and strong visual identity.
             </p>
           </div>
 

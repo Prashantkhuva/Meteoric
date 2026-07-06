@@ -5,7 +5,7 @@ const Logo = memo(function Logo({ className = "" }) {
   return (
     <Image
       src="/meteoric.png"
-      alt="Meteoric"
+      alt="Meteoric — software development agency"
       width={157}
       height={40}
       priority

@@ -6,8 +6,8 @@ import gsap from "gsap";
 import MeteorBackground from "./MeteorBackground";
 import Link from "next/link";
 
-const heroWords = "We design and ship high-performance websites".split(" ");
-const mutedWords = ["—", ..."in weeks, not months.".split(" ")];
+const heroWords = "We design and ship high-performance software".split(" ");
+const mutedWords = ["—", ..."websites and apps, fast.".split(" ")];
 
 function Hero() {
   const containerRef = useRef(null);
@@ -75,8 +75,9 @@ function Hero() {
 
         {/* Subtext */}
         <p ref={subtextRef} className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed">
-          Meteoric partners with founders to design, develop, and launch modern
-          websites and SaaS products that actually convert — not just look good.
+          Meteoric is a software development agency that partners with founders
+          to design, develop, and launch modern websites and SaaS products
+          that actually convert — not just look good.
         </p>
 
         {/* CTA Buttons */}

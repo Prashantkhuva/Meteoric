@@ -18,11 +18,11 @@ const playfairDisplay = Playfair_Display({
   variable: "--font-playfair",
 });
 
-const metaTitle = "Meteoric — Web Development Agency for Startups & SaaS";
+const metaTitle = "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const metaDesc =
-  "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
+  "Meteoric is a software development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
 const metaDescOg =
-  "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.";
+  "Meteoric is a software development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.";
 
 export const metadata = {
   title: metaTitle,
@@ -97,6 +97,7 @@ export default function RootLayout({ children }) {
                     "Full-stack web development, SaaS products, and landing pages for startups.",
                   areaServed: "Worldwide",
                   serviceType: [
+                    "Software Development",
                     "Web Development",
                     "SaaS Development",
                     "Landing Page Design",
