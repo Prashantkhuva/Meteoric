@@ -27,7 +27,7 @@ export function Toolbar({ search, onSearchChange, children, resultCount, searchR
           </button>
         )}
       </div>
-      <div className="flex items-center gap-2 overflow-x-auto md:overflow-visible md:flex-wrap">
+      <div className="flex items-center gap-2 overflow-visible flex-wrap">
         {children}
       </div>
       {resultCount !== undefined && (
@@ -42,7 +42,7 @@ export function FilterChip({ active, onClick, children }) {
     <button
       onClick={onClick}
       className={cn(
-        "rounded-full border px-3 py-1 text-xs font-medium transition-all",
+        "rounded-full border px-3 py-1 text-xs font-medium whitespace-nowrap transition-all",
         active
           ? "border-[#EAEFFF]/30 bg-[#EAEFFF]/8 text-[#EAEFFF]"
           : "border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white/60"
@@ -79,7 +79,7 @@ export function SortDropdown({ value, onChange, options, label }) {
         <ChevronDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 min-w-[130px] border border-white/[0.08] bg-[#0a0a0a] shadow-xl">
+        <div className="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 z-50 min-w-[130px] border border-white/[0.08] bg-[#0a0a0a] shadow-xl">
           {options.map((opt) => (
             <button
               key={opt.value}
