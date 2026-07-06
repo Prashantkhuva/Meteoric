@@ -18,12 +18,6 @@ const playfairDisplay = Playfair_Display({
   variable: "--font-playfair",
 });
 
-const interDisplay = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter-display",
-});
-
 const metaTitle = "Meteoric — Web Development Agency for Startups & SaaS";
 const metaDesc =
   "Meteoric is a web development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
@@ -68,7 +62,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable} ${interDisplay.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script

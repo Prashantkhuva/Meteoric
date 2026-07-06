@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const services = [
@@ -120,7 +121,7 @@ export default function ServicesSection() {
               ease: [0.25, 0.46, 0.45, 0.94],
             }}
             className="text-base md:text-lg leading-relaxed self-center max-w-md"
-            style={{ color: "#808080" }}
+            style={{ color: "#999999" }}
           >
             From a landing page to a full SaaS — we handle the entire stack.
           </motion.p>
@@ -163,11 +164,12 @@ export default function ServicesSection() {
 
                 {/* Image */}
                 <div className="relative z-[1] w-[152px] h-[152px] md:w-[190px] md:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
-                  <img
+                  <Image
                     src={s.img}
                     alt={s.title}
-                    className="w-full h-full object-contain"
-                    style={{ display: "block" }}
+                    fill
+                    sizes="(max-width: 768px) 152px, 190px"
+                    className="object-contain"
                   />
                 </div>
 
@@ -225,7 +227,7 @@ export default function ServicesSection() {
                   </h3>
                   <p
                     className="text-sm md:text-base leading-relaxed max-w-xs"
-                    style={{ color: "#808080" }}
+                    style={{ color: "#999" }}
                   >
                     {s.desc}
                   </p>

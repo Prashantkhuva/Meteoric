@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -105,7 +107,7 @@ export default function ProcessSection() {
             {mainHeading.map((word, i) => (
               <span key={i} className="gsap-proc-word inline-block">{word}</span>
             ))}
-            <span className="text-white/40 font-secondary-italic [&>.gsap-proc-word:not(:last-child)]:mr-[0.25em]">
+            <span className="text-white/55 font-secondary-italic [&>.gsap-proc-word:not(:last-child)]:mr-[0.25em]">
               {" "}
               {mutedHeading.map((word, i) => (
                 <span key={i} className="gsap-proc-word inline-block">{word}</span>

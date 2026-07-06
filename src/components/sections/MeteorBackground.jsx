@@ -178,11 +178,20 @@ function MeteorBackground({ showBrand = true }) {
       };
     }
 
-    animationFrameId = requestAnimationFrame(animate);
+    const startAnimation = () => {
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(startAnimation, { timeout: 500 });
+    } else {
+      setTimeout(startAnimation, 200);
+    }
+
     window.addEventListener("resize", resizeCanvas);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resizeCanvas);
       observer.disconnect();
     };

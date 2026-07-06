@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -96,7 +98,7 @@ export default function TransitionSection() {
               {mainWords.map((word, i) => (
                 <span key={i} className="gsap-head-word inline-block">{word}</span>
               ))}
-              <span className="text-white/30 font-secondary-italic [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
+              <span className="text-white/50 font-secondary-italic [&>.gsap-head-word:not(:last-child)]:mr-[0.25em]">
                 {" "}
                 {mutedWords.map((word, i) => (
                   <span key={i} className="gsap-head-word inline-block">{word}</span>
@@ -104,7 +106,7 @@ export default function TransitionSection() {
               </span>
             </h2>
 
-            <p className="mt-8 text-[#EAEFFF]/50 text-lg max-w-2xl leading-relaxed">
+            <p className="mt-8 text-[#EAEFFF]/65 text-lg max-w-2xl leading-relaxed">
               We help startups and brands build premium digital experiences
               focused on performance, clarity, and strong visual identity.
             </p>
@@ -325,7 +327,7 @@ export default function TransitionSection() {
                       {item.title}
                     </h3>
 
-                    <p className="text-[#EAEFFF]/55 text-sm font-medium leading-relaxed">
+                    <p className="text-[#EAEFFF]/70 text-sm font-medium leading-relaxed">
                       {item.short}
                     </p>
                   </div>

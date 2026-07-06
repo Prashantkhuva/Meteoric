@@ -1,11 +1,17 @@
+import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 import Projects from "@/components/sections/Projects";
 import TransitionSection from "@/components/sections/TransitionSection";
 import ProcessSection from "@/components/sections/ProcessSection";
-// import CapabilitiesSection from "@/components/sections/CapabilitySection";
-import TestimonialsSection from "@/components/sections/TestimonialsSection";
-import LeadCaptureSection from "@/components/sections/LeadCaptureSection";
 import ServicesSection from "../sections/ServicesSection";
+
+const TestimonialsSection = dynamic(
+  () => import("@/components/sections/TestimonialsSection"),
+);
+
+const LeadCaptureSection = dynamic(
+  () => import("@/components/sections/LeadCaptureSection"),
+);
 
 export default function Home() {
   return (
@@ -47,7 +53,6 @@ export default function Home() {
       <TransitionSection />
       <Projects />
       <ProcessSection />
-      {/* <CapabilitiesSection /> */}
       <TestimonialsSection />
       <LeadCaptureSection />
     </div>

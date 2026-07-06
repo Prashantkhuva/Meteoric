@@ -1,8 +1,5 @@
-"use client";
-
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
 import HomePage from "@/components/pages/Home";
+import HomeHashScroll from "./HomeHashScroll";
 import { SITE_URL } from "@/lib/seo/config";
 
 const breadcrumbJsonLd = {
@@ -14,18 +11,6 @@ const breadcrumbJsonLd = {
 };
 
 export default function Home() {
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (pathname === "/" && window.location.hash) {
-      const id = window.location.hash.replace("#", "");
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [pathname]);
-
   return (
     <>
       <script
@@ -33,6 +18,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <HomePage />
+      <HomeHashScroll />
     </>
   );
 }

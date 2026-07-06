@@ -3,7 +3,7 @@
 @theme {
   --font-primary: var(--font-inter), "Inter", sans-serif;
   --font-secondary: var(--font-playfair), "Playfair Display", serif;
-  --font-tertiary: var(--font-inter-display), "Inter Display", sans-serif;
+  --font-tertiary: var(--font-inter), "Inter", sans-serif;
 }
 
 html,

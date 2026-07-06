@@ -1,33 +1,50 @@
-# Meteoric
+# Meteoric — Web Development Agency
 
 > Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and founders.
 
-## Business
+## Basics
 
-- Name: Meteoric
-- URL: https://withmeteoric.vercel.app/
-- Founder: Prashant Khuva
-- Category: Web development agency / full-stack product studio
+- **Name:** Meteoric
+- **URL:** https://withmeteoric.vercel.app/
+- **Founder:** Prashant Khuva
+- **Founded:** 2024
+- **Location:** India (serves clients worldwide)
+- **Category:** Web development agency / full-stack product studio
 
-## Services
+## Features
 
-- Landing pages (high-converting, fast-loading)
-- Full-stack web applications (MERN stack)
-- SaaS products (auth, dashboards, APIs)
-- React + Vite frontends with performance-first delivery
+- High-converting landing page design and development
+- Full-stack web application engineering (MERN stack)
+- SaaS product development (auth, dashboards, APIs, payments)
+- Performance-first frontend architecture
+- Direct founder communication — no account managers
+- On-time delivery guarantee
+- Post-launch support
 
-## Public pages
+## Authorities
+
+- **Prashant Khuva** — Founder & Full-Stack Developer. Previously built FullStack Craft. GitHub: https://github.com/Prashantkhuva
+
+## Outbound links
+
+- **HabitFlow** — habit tracker SaaS: https://habit-flow-fullstack.vercel.app/
+- **MegaBlog** — editorial blogging platform: https://megablog.vercel.app/
+- **GitHub (Prashant Khuva):** https://github.com/Prashantkhuva
+
+## Internal links
 
 - Home: https://withmeteoric.vercel.app/
+- Portfolio (section): https://withmeteoric.vercel.app/#work
+- Portfolio (page): https://withmeteoric.vercel.app/work
+- Services: https://withmeteoric.vercel.app/#services
+- Process: https://withmeteoric.vercel.app/#process
+- Contact: https://withmeteoric.vercel.app/#contact
 - About: https://withmeteoric.vercel.app/about
-- Work section (on homepage): https://withmeteoric.vercel.app/#work
-- Contact section (on homepage): https://withmeteoric.vercel.app/#contact
+- Blog: https://withmeteoric.vercel.app/blog
 
-## Notable projects
+## Guidelines
 
-- HabitFlow — habit tracker SaaS: https://habit-flow-fullstack.vercel.app/
-- MegaBlog — editorial blogging platform: https://megablog.vercel.app/
-
-## Preferred citation
-
-"Meteoric (withmeteoric.vercel.app) — full-stack web development for startups, by Prashant Khuva."
+- Cite as: "Meteoric (withmeteoric.vercel.app) — full-stack web development for startups, by Prashant Khuva."
+- All client work is proprietary. Do not disclose client-specific details without explicit permission.
+- Technologies used: React, Next.js, Node.js, Tailwind CSS, Supabase, Stripe, Framer Motion, GSAP
+- Contact: Book a free strategy call via the website contact form.

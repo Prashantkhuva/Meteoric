@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, ChevronLeft, ChevronRight, Star, Plus, BadgeCheck, Sparkles, Globe, Zap } from "lucide-react";
@@ -131,7 +133,7 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5"
+              className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
             >
               Client Stories
             </motion.p>
@@ -190,11 +192,11 @@ export default function TestimonialsSection() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/[0.04]">
-                          <p className="text-white/15 text-[11px] tracking-wider uppercase">
+                          <p className="text-white/40 text-[11px] tracking-wider uppercase">
                             {displayReviews[current].project}
                           </p>
                           {displayReviews[current].createdAt && (
-                            <span className="text-white/10 text-[10px]">
+                            <span className="text-white/30 text-[10px]">
                               · {new Date(displayReviews[current].createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                             </span>
                           )}
@@ -208,15 +210,17 @@ export default function TestimonialsSection() {
                   <div className="flex gap-2">
                     <button
                       onClick={prev}
-                      className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all duration-200"
+                      aria-label="Previous testimonial"
+                      className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all duration-200"
                     >
-                      <ChevronLeft size={13} />
+                      <ChevronLeft size={16} />
                     </button>
                     <button
                       onClick={next}
-                      className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all duration-200"
+                      aria-label="Next testimonial"
+                      className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all duration-200"
                     >
-                      <ChevronRight size={13} />
+                      <ChevronRight size={16} />
                     </button>
                   </div>
 
@@ -225,12 +229,17 @@ export default function TestimonialsSection() {
                       <button
                         key={i}
                         onClick={() => setCurrent(i)}
-                        className={`rounded-full transition-all duration-500 ${
-                          i === current
-                            ? "w-6 h-1.5 bg-white/90"
-                            : "w-1.5 h-1.5 bg-white/15 hover:bg-white/30"
-                        }`}
-                      />
+                        aria-label={`Go to testimonial ${i + 1}`}
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center"
+                      >
+                        <span
+                          className={`rounded-full transition-all duration-500 ${
+                            i === current
+                              ? "w-6 h-1.5 bg-white/90"
+                              : "w-1.5 h-1.5 bg-white/15 hover:bg-white/30"
+                          }`}
+                        />
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -243,7 +252,7 @@ export default function TestimonialsSection() {
                   transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                   className="mt-10 inline-flex items-center gap-3"
                 >
-                  <span className="text-white/15 text-xs uppercase tracking-wider">
+                  <span className="text-white/40 text-xs uppercase tracking-wider">
                     Worked with us?
                   </span>
                   <button
@@ -270,11 +279,11 @@ export default function TestimonialsSection() {
                         transition={{ duration: 0.35, delay: i * 0.06 }}
                         className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5"
                       >
-                        <Icon size={14} className="text-white/20 mb-2.5" />
+                        <Icon size={14} className="text-white/30 mb-2.5" />
                         <p className="text-xl font-semibold text-white tracking-tight">
                           {stat.value}
                         </p>
-                        <p className="text-[11px] text-white/20 mt-0.5">{stat.label}</p>
+                        <p className="text-[11px] text-white/45 mt-0.5">{stat.label}</p>
                       </motion.div>
                     );
                   })}
@@ -289,7 +298,7 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5"
+              className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
             >
               FAQs
             </motion.p>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { ArrowUpRight, Check, Shield, Clock, MessageSquare, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
