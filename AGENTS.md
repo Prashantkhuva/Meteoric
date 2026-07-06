@@ -109,20 +109,22 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
   - `HowTo` (4-step process) — `src/components/sections/ProcessSection.jsx`
   - `CreativeWork` (portfolio projects) — `app/(marketing)/work/page.jsx`
   - `ProfessionalService` + `WebSite` with `SearchAction` — `app/layout.jsx`
-- Blog: 6 posts (data in `src/data/blog.js`), auto-discovered by sitemap
+- Blog: 9 posts (data in `src/data/blog.js`), auto-discovered by sitemap
 - Projects: 4 portfolio items with outcome metrics in descriptions
 - To run AI citation check: `node scripts/check-ai-citations.mjs`
 - To submit to IndexNow (Bing/ChatGPT index): `node scripts/submit-indexnow.mjs`
-- TODO: Create Wikidata entry for Meteoric (entity.simplator.com)
-- TODO: Add `dateModified` to blog post rendering (show "Updated" date if different from published)
-- TODO: Create `/services/saas-development` and `/services/startup-web-development` pillar pages
-- TODO: Write "Supabase vs Firebase 2026" comparison post (P0 keyword, 2,400/mo)
-- TODO: Write "How to Choose a Web Development Agency for Your Startup" decision guide (GEO-friendly)
-- TODO: Write "How Much Does a Startup Website Cost?" pricing guide (2,800/mo)
-- TODO: Add contextual internal links within all 6 blog posts
-- TODO: Add internal links to About.jsx and Work.jsx pages
-- TODO: Fix Navbar hash-link inconsistency (`/#work` → `/work`)
-- TODO: Replace placeholder blog cover images (blog-cover-5.png, blog-cover-6.png)
+- TODO: Create Wikidata entry for Meteoric (entity.simplator.com) — manual step
+- [x] Add `dateModified` to blog post rendering (show "Updated" date if different from published)
+- [x] Create `/services/saas-development` and `/services/startup-web-development` pillar pages
+- [x] Write "Supabase vs Firebase 2026" comparison post (P0 keyword, 2,400/mo)
+- [x] Write "How to Choose a Web Development Agency for Your Startup" decision guide (GEO-friendly)
+- [x] Write "How Much Does a Startup Website Cost?" pricing guide (2,800/mo)
+- [x] Add contextual internal links within all 6 blog posts
+- [x] Add internal links to About.jsx and Work.jsx pages
+- [x] Fix Navbar hash-link inconsistency (`/#work` → `/work`)
+- [x] Replace placeholder blog cover images (blog-cover-5.png, blog-cover-6.png)
+- New blog total: 9 posts (3 new: Supabase vs Firebase, Startup Website Cost, Choose Your Agency)
+- New cover images: blog-cover-5 through blog-cover-9 (themed gradients + brand labels)
 
 ## Research Files (memory/)
 - `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma

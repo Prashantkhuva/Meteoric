@@ -38,7 +38,7 @@ const articleJsonLd = (post) => ({
   headline: post.title,
   description: post.excerpt,
   datePublished: post.date,
-  dateModified: post.date,
+  dateModified: post.dateModified || post.date,
   image: `${SITE_URL}${post.image}`,
   mainEntityOfPage: {
     "@type": "WebPage",

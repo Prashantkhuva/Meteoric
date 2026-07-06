@@ -55,6 +55,12 @@ export default function BlogPostPage({ post }) {
         >
           <div className="flex items-center gap-3 text-xs text-white/25 mb-4">
             <span>{post.date}</span>
+            {post.dateModified && post.dateModified !== post.date && (
+              <>
+                <span className="w-px h-3 bg-white/10" />
+                <span>Updated {post.dateModified}</span>
+              </>
+            )}
             <span className="w-px h-3 bg-white/10" />
             <span>{post.readTime}</span>
           </div>
