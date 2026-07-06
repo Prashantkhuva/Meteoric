@@ -40,12 +40,43 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Prashant Khuva",
+  url: `${SITE_URL}/about`,
+  image: `${SITE_URL}/prashant.png`,
+  jobTitle: "Founder & Full-Stack Developer",
+  sameAs: [
+    "https://github.com/Prashantkhuva",
+    "https://www.linkedin.com/in/prashantkhuva",
+    "https://x.com/prashantkhuva_",
+    "https://www.instagram.com/prashant.khuva/",
+  ],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "Node.js",
+    "MERN Stack",
+    "SaaS Development",
+    "Web Development",
+    "Full-Stack Development",
+    "Product Design",
+  ],
+  description:
+    "Founder of Meteoric, a product development studio. Full-stack developer with expertise in React, Next.js, Node.js, and the MERN stack. Previously built FullStack Craft. Has shipped 12+ production projects for startups and founders.",
+};
+
 export default function About() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <AboutPage />
     </>

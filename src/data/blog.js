@@ -165,6 +165,192 @@ export const posts = [
     ],
   },
   {
+    slug: "mongodb-schema-design-for-saas-billing",
+    title: "MongoDB Schema Design for SaaS Billing — A Practical Guide",
+    excerpt:
+      "How to design MongoDB schemas for subscription billing, multi-tenant pricing, usage metering, and invoice history — with real examples used in production SaaS apps.",
+    date: "July 6, 2026",
+    readTime: "9 min read",
+    image: "/images/blog/blog-cover-5.png",
+    content: [
+      {
+        type: "paragraph",
+        text: "SaaS billing is one of those things that seems simple until you actually build it. A user signs up, pays monthly, gets access. But behind that flow lies a data model that needs to handle plan changes, proration, trial periods, coupon codes, failed payments, invoice generation, and usage metering — all without corrupting financial records.",
+      },
+      {
+        type: "paragraph",
+        text: "After building billing systems for multiple SaaS products at Meteoric, I've landed on a MongoDB schema design that handles most subscription scenarios without over-engineering. Here's the approach that's worked across production projects.",
+      },
+      {
+        type: "heading",
+        text: "The Core Collections",
+      },
+      {
+        type: "paragraph",
+        text: "We use four main collections for billing: organizations, subscriptions, invoices, and usage_events. Each serves a specific purpose and references the others through organization_id.",
+      },
+      {
+        type: "paragraph",
+        text: "The organizations collection stores the tenant — company name, billing email, default currency, and tax info. Subscriptions track the current plan, status (active/trialing/past_due/canceled), current period dates, and the Stripe subscription ID for synchronization.",
+      },
+      {
+        type: "paragraph",
+        text: "Invoices are generated per billing cycle and store line items, amounts, currency, status (pending/paid/overdue/refunded), and a PDF URL. Usage events track metered billing — API calls, storage used, seats occupied — with timestamps for accurate billing.",
+      },
+      {
+        type: "heading",
+        text: "Why Embedded Documents Beat References for Subscriptions",
+      },
+      {
+        type: "paragraph",
+        text: "A common mistake is storing the subscription as a separate collection with a reference to the organization. This works, but every page load that needs billing status requires a JOIN-like lookup. In MongoDB, embedding the active subscription inside the organization document eliminates this.",
+      },
+      {
+        type: "paragraph",
+        text: "The tradeoff is document size. If a single organization has hundreds of subscription history records, embedding everything becomes unwieldy. Our rule: embed the active subscription and last 3 invoices, reference the rest in a separate invoices collection with organization_id.",
+      },
+      {
+        type: "heading",
+        text: "Handling Plan Changes and Proration",
+      },
+      {
+        type: "paragraph",
+        text: "When a user upgrades or downgrades their plan, we create a proration record rather than modifying the existing subscription document. The proration calculates the credit for unused days on the old plan and the charge for remaining days on the new plan. This keeps an audit trail that accounting teams can verify.",
+      },
+      {
+        type: "paragraph",
+        text: "The proration calculation follows a simple formula: (daily_rate_old × days_unused) - (daily_rate_new × days_remaining). If the result is positive, the user gets a credit. If negative, they're charged the difference on the next invoice.",
+      },
+      {
+        type: "heading",
+        text: "Usage Metering at Scale",
+      },
+      {
+        type: "paragraph",
+        text: "For metered billing (e.g., pay-per-API-call), storing individual events in MongoDB works up to about 100,000 events per month. Beyond that, we aggregate hourly using MongoDB's $bucket aggregator and store rollups in a usage_summary collection. The raw events get archived to cold storage after 90 days.",
+      },
+      {
+        type: "paragraph",
+        text: "The aggregation pipeline groups events by organization_id and hour, then calculates the count. This gives us a hourly usage record that's fast to query for invoice generation and requires minimal storage.",
+      },
+      {
+        type: "heading",
+        text: "Invoice Generation Strategy",
+      },
+      {
+        type: "paragraph",
+        text: "We generate invoices reactively — when a subscription renews, we calculate line items and create the invoice document. Each invoice stores a snapshot of the pricing at that moment, not a reference to the current plan. This is critical: if you change a plan price later, past invoices should not change.",
+      },
+      {
+        type: "paragraph",
+        text: "The invoice document includes line_items as an array of embedded objects, each with description, quantity, unit_price, and total. This denormalization is intentional — it makes invoice rendering a single database read with no joins needed.",
+      },
+      {
+        type: "heading",
+        text: "What About Stripe?",
+      },
+      {
+        type: "paragraph",
+        text: "We use Stripe as the payment processor, not the source of truth for billing logic. Stripe handles payment collection, webhooks, and dispute management. But our MongoDB schema is the authoritative record of what was billed, when, and why. This dual approach means we're never locked into Stripe and can switch processors if needed.",
+      },
+      {
+        type: "paragraph",
+        text: "The key insight: Stripe webhooks update our local documents, but our local documents drive the billing UI and reporting. This gives users fast page loads (no Stripe API calls on every request) and a consistent billing history even if Stripe experiences downtime.",
+      },
+    ],
+  },
+  {
+    slug: "gsap-vs-framer-motion-production-guide",
+    title: "GSAP vs Framer Motion: When to Use Which for Production Websites",
+    excerpt:
+      "A practical comparison of GSAP and Framer Motion for production web projects — performance benchmarks, bundle size impact, use cases, and decision framework from a developer who ships both daily.",
+    date: "July 6, 2026",
+    readTime: "10 min read",
+    image: "/images/blog/blog-cover-6.png",
+    content: [
+      {
+        type: "paragraph",
+        text: "I use both GSAP and Framer Motion in production every week. Not because I can't choose — but because they solve fundamentally different problems. Picking the wrong one for your project means either fighting the tool or shipping a slower experience than you could have.",
+      },
+      {
+        type: "paragraph",
+        text: "Here's the honest take after shipping 12+ production projects with both libraries.",
+      },
+      {
+        type: "heading",
+        text: "The Short Answer",
+      },
+      {
+        type: "paragraph",
+        text: "Use GSAP for scroll-driven animations, complex timelines, SVG morphing, and canvas integrations. Use Framer Motion for component-level enter/exit animations, layout transitions, gesture-based interactions, and anything deeply integrated with React's component lifecycle.",
+      },
+      {
+        type: "paragraph",
+        text: "GSAP is a full animation engine. Framer Motion is a React animation library. They overlap in some areas but excel in different ones. Understanding where each shines is the difference between a smooth, performant site and a janky one.",
+      },
+      {
+        type: "heading",
+        text: "Bundle Size Reality Check",
+      },
+      {
+        type: "paragraph",
+        text: "This is where most advice gets it wrong. People say Framer Motion is \"heavy\" and GSAP is \"lightweight.\" The reality is more nuanced.",
+      },
+      {
+        type: "paragraph",
+        text: "GSAP core is about 14KB gzipped. But you rarely use just the core — you add ScrollTrigger (another 8KB), ScrollToPlugin, and sometimes SplitText or CustomEase. A full GSAP setup lands around 25-35KB gzipped. Framer Motion is around 30-40KB gzipped for the full library. The difference is smaller than most developers assume.",
+      },
+      {
+        type: "paragraph",
+        text: "The real bundle impact comes from HOW you import. With GSAP, you typically import globally. With Framer Motion, tree-shaking works well if you import specific components (motion.div instead of importing everything). In practice, both end up at similar weights for equivalent functionality.",
+      },
+      {
+        type: "heading",
+        text: "When GSAP Wins",
+      },
+      {
+        type: "paragraph",
+        text: "ScrollTrigger is GSAP's killer feature. If your site has parallax sections, progress-driven animations, or timeline-based scroll sequences, GSAP is the right choice. Framer Motion's useScroll and useInView are good, but they don't match ScrollTrigger's control over scrub direction, pinning, and timeline integration.",
+      },
+      {
+        type: "paragraph",
+        text: "GSAP also wins for complex timelines. Need to sequence 20 animation steps with overlapping, staggered, and nested timings? GSAP's timeline API is purpose-built for this. Framer Motion sequences work for simple chains but get unwieldy beyond 5-6 steps.",
+      },
+      {
+        type: "paragraph",
+        text: "SVG animation is another GSAP stronghold. Morphing, drawing, and path animations that would require custom React code in Framer Motion are a few lines in GSAP. For hero sections with animated illustrations, GSAP is significantly faster to implement.",
+      },
+      {
+        type: "heading",
+        text: "When Framer Motion Wins",
+      },
+      {
+        type: "paragraph",
+        text: "For component-level animations — modals opening, menus sliding, lists reordering — Framer Motion is the clear winner. Its AnimatePresence component handles mount/unmount animations that are genuinely painful to implement in GSAP.",
+      },
+      {
+        type: "paragraph",
+        text: "Layout animations (AnimateSharedLayout / layout prop) let you animate between positions when items reorder, which is extremely difficult in GSAP without manual measurement and DOM manipulation.",
+      },
+      {
+        type: "paragraph",
+        text: "Gesture-based interactions (drag, hover, tap, whileInView) integrate naturally with Framer Motion because they're declarative props on motion components. In GSAP, you'd need to add event listeners and manually trigger tweens — more code, more edge cases.",
+      },
+      {
+        type: "heading",
+        text: "Our Stack at Meteoric",
+      },
+      {
+        type: "paragraph",
+        text: "We use both. GSAP powers the landing page hero, scroll-triggered section reveals, and timeline-based animations. Framer Motion handles our modal transitions, card hover effects, testimonial carousel, and layout animations. Lenis provides smooth scrolling on top of both.",
+      },
+      {
+        type: "paragraph",
+        text: "The key insight: these libraries aren't competitors for the same job. They're complementary tools for different animation layers. GSAP is the engine for scroll-driven and timeline-based animation. Framer Motion is the React-native layer for component interactions. Using both intentionally gives you the best of both worlds.",
+      },
+    ],
+  },
+  {
     slug: "the-meteoric-guide-to-choosing-your-tech-stack",
     title: "The Meteoric Guide to Choosing Your Tech Stack",
     excerpt:

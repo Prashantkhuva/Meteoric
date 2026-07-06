@@ -96,6 +96,26 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - `npm run lint` — ESLint
 - `npm run generate:sitemap` — Rebuild sitemap
 
+## GEO (Generative Engine Optimization)
+- Goal: Get cited by ChatGPT, Claude, Perplexity, Gemini for queries about "web development agency", "SaaS development", etc.
+- `robots.txt` allows GPTBot, ClaudeBot, PerplexityBot (only blocks /admin and /login)
+- `public/llms.txt` — curated AI crawler index with all pages, blogs, projects, stats, and citation guidelines
+- **Schema markups deployed:**
+  - `Organization` with `sameAs` (GitHub, LinkedIn, X, Instagram) — `app/layout.jsx`
+  - `Person` for Prashant Khuva with `sameAs`, `knowsAbout`, `jobTitle` — `app/(marketing)/about/page.jsx`
+  - `BlogPosting` with `datePublished`, `dateModified`, `image`, `mainEntityOfPage` — `app/(marketing)/blog/[slug]/page.jsx`
+  - `BreadcrumbList` on Home, Blog, Work, About, and blog detail pages
+  - `Review` (star ratings) + `FAQPage` (5 Q&A) — `src/components/sections/TestimonialsSection.jsx`
+  - `HowTo` (4-step process) — `src/components/sections/ProcessSection.jsx`
+  - `CreativeWork` (portfolio projects) — `app/(marketing)/work/page.jsx`
+  - `ProfessionalService` + `WebSite` with `SearchAction` — `app/layout.jsx`
+- Blog: 6 posts (data in `src/data/blog.js`), auto-discovered by sitemap
+- Projects: 4 portfolio items with outcome metrics in descriptions
+- To run AI citation check: `node scripts/check-ai-citations.mjs`
+- To submit to IndexNow (Bing/ChatGPT index): `node scripts/submit-indexnow.mjs`
+- TODO: Create Wikidata entry for Meteoric (entity.simplator.com)
+- TODO: Add `dateModified` to blog post rendering (show "Updated" date if different from published)
+
 ## Environment Variables (.env)
 ```
 NEXT_PUBLIC_EMAILJS_*

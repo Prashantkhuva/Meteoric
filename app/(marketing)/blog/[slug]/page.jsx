@@ -38,6 +38,12 @@ const articleJsonLd = (post) => ({
   headline: post.title,
   description: post.excerpt,
   datePublished: post.date,
+  dateModified: post.date,
+  image: `${SITE_URL}${post.image}`,
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": `${SITE_URL}/blog/${post.slug}`,
+  },
   author: {
     "@type": "Person",
     name: "Prashant Khuva",
@@ -50,6 +56,21 @@ const articleJsonLd = (post) => ({
   },
 });
 
+const breadcrumbJsonLd = (post) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: post.title,
+      item: `${SITE_URL}/blog/${post.slug}`,
+    },
+  ],
+});
+
 export default async function BlogPost({ params }) {
   const { slug } = await params;
   const post = posts.find((p) => p.slug === slug);
@@ -60,6 +81,10 @@ export default async function BlogPost({ params }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(post)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(post)) }}
       />
       <BlogPostPage post={post} />
     </>

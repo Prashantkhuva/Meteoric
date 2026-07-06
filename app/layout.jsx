@@ -82,6 +82,12 @@ export default function RootLayout({ children }) {
                   url: SITE_URL,
                   logo: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
                   founder: { "@type": "Person", name: "Prashant Khuva" },
+                  sameAs: [
+                    "https://github.com/Prashantkhuva",
+                    "https://www.linkedin.com/in/prashantkhuva",
+                    "https://x.com/prashantkhuva_",
+                    "https://www.instagram.com/prashant.khuva/",
+                  ],
                 },
                 {
                   "@type": "WebSite",
@@ -90,6 +96,14 @@ export default function RootLayout({ children }) {
                   url: SITE_URL,
                   publisher: {
                     "@id": `${SITE_URL}/#organization`,
+                  },
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
                   },
                 },
                 {
