@@ -113,11 +113,26 @@ export default function TestimonialsSection() {
 
   const faqSchema = buildFaqJsonLd(faqs);
 
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@graph": fallbackTestimonials.map((t) => ({
+      "@type": "Review",
+      itemReviewed: { "@type": "Organization", name: "Meteoric" },
+      reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: "5" },
+      author: { "@type": "Person", name: t.author },
+      reviewBody: t.quote,
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
       <section
         onMouseEnter={() => setPaused(true)}

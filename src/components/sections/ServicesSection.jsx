@@ -21,7 +21,7 @@ const services = [
   {
     num: "03",
     title: "SaaS Products",
-    desc: "End-to-end SaaS platforms with authentication, dashboards, payments, and scalable architecture.",
+    desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
     tag: "Product Dev",
     img: "/we-do-3.avif",
   },

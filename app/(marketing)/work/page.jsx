@@ -1,9 +1,10 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import WorkPage from "@/components/pages/Work";
+import { projects } from "@/data/projects";
 
-const pageTitle = "Our Work — Meteoric Portfolio | Web Development Projects";
+const pageTitle = "Our Work — Meteoric Portfolio | Software & Web Development Projects";
 const pageDesc =
-  "Browse Meteoric's portfolio of shipped projects — landing pages, SaaS platforms, VS Code extensions, and more. Built for founders who ship.";
+  "Browse Meteoric's portfolio of shipped software and web development projects — SaaS platforms, landing pages, MVPs, and full-stack applications. Built for founders who ship.";
 
 export const metadata = {
   title: pageTitle,
@@ -40,12 +41,27 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const creativeWorkSchema = {
+  "@context": "https://schema.org",
+  "@graph": projects.map((p) => ({
+    "@type": "CreativeWork",
+    name: p.name,
+    description: p.description,
+    url: p.link,
+    keywords: p.tags.join(", "),
+  })),
+};
+
 export default function Work() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }}
       />
       <WorkPage />
     </>

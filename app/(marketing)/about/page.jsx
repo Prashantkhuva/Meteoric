@@ -1,9 +1,9 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import AboutPage from "@/components/pages/About";
 
-const pageTitle = "About Meteoric | Web Development Agency for Founders";
+const pageTitle = "About Meteoric | Web & Product Development Studio for Founders";
 const pageDesc =
-  "Meteoric is a product studio that partners with founders to design, develop, and launch modern web products. No bloat, no agencies — just production-ready work that ships on time.";
+  "Meteoric is a product development studio that partners with founders to design, build, and launch modern web products and SaaS platforms. No bloat, no agencies — just production-ready work that ships on time.";
 
 export const metadata = {
   title: pageTitle,

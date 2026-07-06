@@ -70,6 +70,15 @@ export default function Footer() {
                 © 2026 Meteoric. All rights reserved.
               </p>
 
+              {/* Center — internal links */}
+              <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
+                <Link href="/work" className="text-white/30 hover:text-white transition-colors duration-300">Work</Link>
+                <Link href="/blog" className="text-white/30 hover:text-white transition-colors duration-300">Blog</Link>
+                <Link href="/#services" className="text-white/30 hover:text-white transition-colors duration-300">Services</Link>
+                <Link href="/#process" className="text-white/30 hover:text-white transition-colors duration-300">Process</Link>
+                <Link href="/about" className="text-white/30 hover:text-white transition-colors duration-300">About</Link>
+              </nav>
+
               {/* Right Side */}
               <Link
                 href="/about"

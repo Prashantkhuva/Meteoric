@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE_URL, sitemapRoutes } from "../src/lib/seo/config.js";
+import { posts } from "../src/data/blog.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -20,9 +21,17 @@ function routeUrl(routePath) {
   return `${SITE_URL}${routePath}`;
 }
 
+const blogRoutes = posts.map((post) => ({
+  path: `/blog/${post.slug}`,
+  priority: "0.7",
+  changefreq: "monthly",
+}));
+
+const allRoutes = [...sitemapRoutes, ...blogRoutes];
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapRoutes
+${allRoutes
   .map(
     (route) => `  <url>
     <loc>${routeUrl(route.path)}</loc>
@@ -38,18 +47,28 @@ ${sitemapRoutes
 const robots = `# Meteoric — ${SITE_URL}
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /login
 
 User-agent: Googlebot
 Allow: /
+Disallow: /admin
+Disallow: /login
 
 User-agent: GPTBot
 Allow: /
+Disallow: /admin
+Disallow: /login
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /admin
+Disallow: /login
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin
+Disallow: /login
 
 Sitemap: ${SITE_URL}/sitemap.xml
 `;

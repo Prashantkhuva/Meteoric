@@ -107,7 +107,7 @@ export default function AboutPage() {
               <h1 className="text-4xl md:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
                 Prashant Khuva
                 <span className="block text-white/25 mt-1 text-3xl md:text-4xl">
-                  Founder — Meteoric
+                  Founder — Meteoric, a Web & Product Development Studio
                 </span>
               </h1>
             </div>

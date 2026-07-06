@@ -111,9 +111,9 @@ export const posts = [
   },
   {
     slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-    title: "Building a SaaS Prototype in 3 Weeks: A Case Study",
+    title: "Building an MVP in 3 Weeks: A SaaS Prototype Case Study",
     excerpt:
-      "How we took a fintech concept from whiteboard to working prototype in 21 days — and what we learned about shipping fast without breaking things.",
+      "How we took a fintech concept from whiteboard to working MVP prototype in 21 days — and what we learned about shipping fast without breaking things.",
     date: "May 28, 2026",
     readTime: "8 min read",
     image: "/images/blog/blog-cover-3.png",
@@ -128,7 +128,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "We started with a single day of whiteboarding. No slides, no decks — just a shared Figma file and honest conversation. What's the core feature? What can wait? What's the fastest path to something users can click through?",
+        text: "We started with a single day of whiteboarding. No slides, no decks — just a shared Figma file and honest conversation. What's the core feature? What can wait? What's the fastest path to an MVP users can click through?",
       },
       {
         type: "paragraph",
