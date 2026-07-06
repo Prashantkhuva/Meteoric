@@ -90,7 +90,7 @@ export default function TransitionSection() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
           {/* TOP */}
           <div ref={headingRef} className="max-w-4xl mb-20">
-            <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+            <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
               Beyond Just Development
             </p>
 

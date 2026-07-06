@@ -65,6 +65,10 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : ""} />
+        <link rel="dns-prefetch" href="https://cal.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

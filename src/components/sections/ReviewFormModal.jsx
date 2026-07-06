@@ -101,6 +101,7 @@ export default function ReviewFormModal({ open, onClose }) {
 
               <button
                 onClick={handleClose}
+                aria-label="Close review form"
                 className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-white/50 hover:text-white transition-colors z-10"
               >
                 <X size={16} />
@@ -115,14 +116,14 @@ export default function ReviewFormModal({ open, onClose }) {
                     <p className="text-white font-semibold text-xl mb-2 tracking-tight">
                       Thank you, {form.name.split(" ")[0]}!
                     </p>
-                    <p className="text-white/35 text-sm leading-relaxed max-w-sm mx-auto">
+                    <p className="text-white/55 text-sm leading-relaxed max-w-sm mx-auto">
                       Your review has been submitted and will appear on the site after review.
                       We appreciate your honest feedback.
                     </p>
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2 text-white/25 text-[11px] uppercase tracking-[0.2em] mb-1">
+                    <div className="flex items-center gap-2 text-white/50 text-[11px] uppercase tracking-[0.2em] mb-1">
                       <Sparkles size={11} className="text-[#EAEFFF]/40" />
                       Give Your Feedback
                     </div>
@@ -133,7 +134,7 @@ export default function ReviewFormModal({ open, onClose }) {
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                             Name <span className="text-red-400/50">*</span>
                           </label>
                           <input
@@ -147,7 +148,7 @@ export default function ReviewFormModal({ open, onClose }) {
                           />
                         </div>
                         <div>
-                          <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                             Email <span className="text-red-400/50">*</span>
                           </label>
                           <input
@@ -164,7 +165,7 @@ export default function ReviewFormModal({ open, onClose }) {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                             Role
                           </label>
                           <input
@@ -177,7 +178,7 @@ export default function ReviewFormModal({ open, onClose }) {
                           />
                         </div>
                         <div>
-                          <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                             Company
                           </label>
                           <input
@@ -192,7 +193,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       </div>
 
                       <div>
-                        <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                           Project
                         </label>
                         <input
@@ -206,7 +207,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       </div>
 
                       <div>
-                        <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                           Rating <span className="text-red-400/50">*</span>
                         </label>
                         <div className="flex gap-1.5">
@@ -220,6 +221,7 @@ export default function ReviewFormModal({ open, onClose }) {
                                 onMouseEnter={() => setHoveredStar(star)}
                                 onMouseLeave={() => setHoveredStar(0)}
                                 disabled={sending}
+                                aria-label={`Rate ${star} star${star === 1 ? "" : "s"} out of 5`}
                                 className={`p-1.5 rounded-lg transition-all duration-150 disabled:opacity-50 ${
                                   active ? "scale-100" : "scale-100 hover:scale-110"
                                 }`}
@@ -239,7 +241,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       </div>
 
                       <div>
-                        <label className="block text-white/30 text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
                           Your Review <span className="text-red-400/50">*</span>
                         </label>
                         <textarea

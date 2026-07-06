@@ -106,12 +106,12 @@ export default function CapabilitiesSection() {
           {/* ── SERVICES HEADER ── */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
             <div>
-              <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+              <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
                 Services
               </p>
               <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white">
                 What we build
-                <span className="block text-white/30 mt-1 font-secondary-italic">for founders.</span>
+                <span className="block text-white/50 mt-1 font-secondary-italic">for founders.</span>
               </h2>
             </div>
             <p className="text-[#EAEFFF]/40 text-sm leading-relaxed max-w-xs md:text-right">
@@ -149,13 +149,13 @@ export default function CapabilitiesSection() {
                 </div>
 
                 {/* Middle */}
-                <p className="text-[#EAEFFF]/45 text-sm leading-relaxed md:w-1/2 md:max-w-md">
+                <p className="text-[#EAEFFF]/55 text-sm leading-relaxed md:w-1/2 md:max-w-md">
                   {item.description}
                 </p>
 
                 {/* Right */}
                 <div className="flex items-center gap-3 md:justify-end md:w-1/6">
-                  <span className="text-xs px-3 py-1 rounded-full border border-[#EAEFFF]/8 bg-[#EAEFFF]/4 text-[#EAEFFF]/30">
+                  <span className="text-xs px-3 py-1 rounded-full border border-[#EAEFFF]/8 bg-[#EAEFFF]/4 text-[#EAEFFF]/50">
                     {item.tag}
                   </span>
                   <ArrowUpRight
@@ -169,12 +169,12 @@ export default function CapabilitiesSection() {
 
           {/* ── HOW WE WORK ── */}
           <div className="mb-12">
-            <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+            <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
               How We Work
             </p>
             <h2 className="text-3xl md:text-4xl font-semibold leading-[1.05] tracking-tight text-white">
               What you can expect
-              <span className="text-white/30 font-secondary-italic"> working with us.</span>
+              <span className="text-white/50 font-secondary-italic"> working with us.</span>
             </h2>
           </div>
 
@@ -194,7 +194,7 @@ export default function CapabilitiesSection() {
                 <h3 className="text-sm font-semibold text-[#EAEFFF] mb-2 tracking-tight">
                   {item.title}
                 </h3>
-                <p className="text-[#EAEFFF]/45 text-xs leading-relaxed">
+                <p className="text-[#EAEFFF]/55 text-xs leading-relaxed">
                   {item.description}
                 </p>
               </motion.div>
@@ -252,13 +252,13 @@ export default function CapabilitiesSection() {
                   {activeService.icon}
                 </div>
                 <div>
-                  <p className="text-[#EAEFFF]/30 text-xs uppercase tracking-widest mb-0.5">{activeService.tag}</p>
+                  <p className="text-[#EAEFFF]/50 text-xs uppercase tracking-widest mb-0.5">{activeService.tag}</p>
                   <h3 id="service-modal-title" className="text-xl font-semibold text-[#EAEFFF] tracking-tight">{activeService.title}</h3>
                 </div>
               </div>
 
               {/* Details */}
-              <p className="text-[#EAEFFF]/50 text-sm leading-relaxed mb-7">
+              <p className="text-[#EAEFFF]/55 text-sm leading-relaxed mb-7">
                 {activeService.details}
               </p>
 

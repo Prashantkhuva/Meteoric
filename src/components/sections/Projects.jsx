@@ -49,6 +49,7 @@ export const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, is
                 e.stopPropagation();
                 window.open(project.link, "_blank");
               }}
+              aria-label={`View ${project.name} project`}
               className="group/btn relative overflow-hidden rounded-full text-sm font-medium transition-all duration-300 hover:scale-[1.02] shrink-0 opacity-0 group-hover:opacity-100"
             >
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/20">
@@ -125,7 +126,7 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
             </h3>
           </div>
           <a href={project.link} target="_blank" rel="noopener noreferrer"
-            className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all shrink-0"
+            className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/55 hover:text-white hover:border-white/30 transition-all shrink-0"
             aria-label="View project"
           >
             <ArrowUpRight size={12} />
@@ -133,17 +134,17 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
         </div>
 
         {/* Tagline */}
-        <p className="text-[12px] text-white/45 leading-relaxed">{project.tagline}</p>
+        <p className="text-[12px] text-white/55 leading-relaxed">{project.tagline}</p>
 
         {/* Description */}
-        <p className="text-[11px] text-white/35 leading-relaxed">{project.description}</p>
+        <p className="text-[11px] text-white/55 leading-relaxed">{project.description}</p>
 
         {/* Features */}
         <div className="space-y-1">
           {project.features.slice(0, 2).map((f, i) => (
             <div key={i} className="flex items-start gap-2">
               <span className="w-1 h-1 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: project.accent }} />
-              <span className="text-[11px] text-white/35 leading-relaxed">{f}</span>
+              <span className="text-[11px] text-white/55 leading-relaxed">{f}</span>
             </div>
           ))}
         </div>
@@ -151,7 +152,7 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
         {/* Tags row */}
         <div className="flex flex-wrap gap-1.5">
           {project.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full border text-white/35 font-mono" style={{ borderColor: `${project.accent}22`, backgroundColor: `${project.accent}08` }}>
+            <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full border text-white/55 font-mono" style={{ borderColor: `${project.accent}22`, backgroundColor: `${project.accent}08` }}>
               {tag}
             </span>
           ))}
@@ -201,11 +202,11 @@ function Projects() {
     <section id="work" className="bg-black py-24 sm:py-28 lg:py-32 px-6 md:px-12">
       {/* Section header */}
       <div className="max-w-7xl mx-auto mb-16">
-        <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+        <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
           Selected Work
         </p>
         <h2 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
-          Projects that <span className="text-white/30 font-secondary-italic">actually shipped.</span>
+          Projects that <span className="text-white/50 font-secondary-italic">actually shipped.</span>
         </h2>
         <Link
           href="/work"
@@ -265,7 +266,7 @@ function Projects() {
                 </div>
 
                 {/* Description */}
-                <p className="text-white/45 text-sm leading-relaxed mb-8">
+                <p className="text-white/55 text-sm leading-relaxed mb-8">
                   {active.description}
                 </p>
 
@@ -285,7 +286,7 @@ function Projects() {
                       >
                         &#x25B8;
                       </span>
-                      <p className="text-white/45 text-sm">{f}</p>
+                      <p className="text-white/55 text-sm">{f}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -297,7 +298,7 @@ function Projects() {
                       key={tag}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="text-[11px] px-2.5 py-1 rounded-md border border-white/[0.08] bg-white/[0.03] text-white/40 font-medium"
+                      className="text-[11px] px-2.5 py-1 rounded-md border border-white/[0.08] bg-white/[0.03] text-white/55 font-medium"
                     >
                       {tag}
                     </motion.span>

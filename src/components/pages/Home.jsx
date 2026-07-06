@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 import Projects from "@/components/sections/Projects";
 import TransitionSection from "@/components/sections/TransitionSection";
-import ProcessSection from "@/components/sections/ProcessSection";
 import ServicesSection from "../sections/ServicesSection";
 
 const TestimonialsSection = dynamic(
@@ -11,6 +10,10 @@ const TestimonialsSection = dynamic(
 
 const LeadCaptureSection = dynamic(
   () => import("@/components/sections/LeadCaptureSection"),
+);
+
+const ProcessSection = dynamic(
+  () => import("@/components/sections/ProcessSection"),
 );
 
 export default function Home() {

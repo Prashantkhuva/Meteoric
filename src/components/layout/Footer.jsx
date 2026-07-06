@@ -19,7 +19,7 @@ export default function Footer() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
           {/* ── CTA BLOCK ── */}
           <div className="py-24 sm:py-28 lg:py-32 border-b border-white/5">
-            <p className="text-white/25 uppercase tracking-[0.3em] text-xs mb-10">
+            <p className="text-white/50 uppercase tracking-[0.3em] text-xs mb-10">
               Start a Project
             </p>
 
@@ -66,23 +66,23 @@ export default function Footer() {
             {/* Footer Bottom */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">
               {/* Left Side */}
-              <p className="text-sm text-white/30">
+              <p className="text-sm text-white/50">
                 © 2026 Meteoric. All rights reserved.
               </p>
 
               {/* Center — internal links */}
               <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
-                <Link href="/work" className="text-white/30 hover:text-white transition-colors duration-300">Work</Link>
-                <Link href="/blog" className="text-white/30 hover:text-white transition-colors duration-300">Blog</Link>
-                <Link href="/#services" className="text-white/30 hover:text-white transition-colors duration-300">Services</Link>
-                <Link href="/#process" className="text-white/30 hover:text-white transition-colors duration-300">Process</Link>
-                <Link href="/about" className="text-white/30 hover:text-white transition-colors duration-300">About</Link>
+                <Link href="/work" className="text-white/50 hover:text-white transition-colors duration-300">Work</Link>
+                <Link href="/blog" className="text-white/50 hover:text-white transition-colors duration-300">Blog</Link>
+                <Link href="/#services" className="text-white/50 hover:text-white transition-colors duration-300">Services</Link>
+                <Link href="/#process" className="text-white/50 hover:text-white transition-colors duration-300">Process</Link>
+                <Link href="/about" className="text-white/50 hover:text-white transition-colors duration-300">About</Link>
               </nav>
 
               {/* Right Side */}
               <Link
                 href="/about"
-                className="group text-sm text-white/30 hover:text-white transition-colors duration-300"
+                className="group text-sm text-white/50 hover:text-white transition-colors duration-300"
               >
                 Built & Designed by{" "}
                 <span className="text-white font-medium inline-flex items-center gap-1">
