@@ -53,39 +53,15 @@ export default function ServicesSection() {
     <section id="services" className="relative w-full bg-black px-6 md:px-16 py-28 md:py-36">
       <div className="max-w-7xl mx-auto">
         {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2.5 rounded-full px-5 py-2"
-          style={{
-            backgroundColor: "#1b1b1b",
-            boxShadow: "inset 1.5px 1.5px 2px 0px rgba(255,255,255,0.15)",
-          }}
+          className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
         >
-          <svg
-            role="presentation"
-            viewBox="0 0 24 24"
-            style={{ opacity: 1 }}
-            width={24}
-            height={24}
-            fill="none"
-            stroke="rgba(255,255,255,0.6)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-            <path d="m15 5 4 4" />
-          </svg>
-          <span
-            className="text-xs font-normal uppercase tracking-[0.15em]"
-            style={{ color: "#eee" }}
-          >
-            Our Services
-          </span>
-        </motion.div>
+          Our Services
+        </motion.p>
 
         {/* Heading + Description */}
         <div className="grid md:grid-cols-2 gap-10 mb-20 mt-14">
