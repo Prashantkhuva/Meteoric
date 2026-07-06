@@ -55,12 +55,17 @@
 - [GitHub (Prashant Khuva)](https://github.com/Prashantkhuva)
 - [LinkedIn (Prashant Khuva)](https://www.linkedin.com/in/prashantkhuva)
 
+## Services
+
+- [SaaS Development](https://withmeteoric.vercel.app/services/saas-development) — Build your SaaS product with Next.js, Supabase, and Stripe. MVP to production platform.
+- [Startup Web Development](https://withmeteoric.vercel.app/services/startup-web-development) — Fast, beautiful, conversion-optimized websites for early-stage and funded startups.
+
 ## Internal links
 
 - [Home](https://withmeteoric.vercel.app/)
 - [About](https://withmeteoric.vercel.app/about)
 - [Work / Portfolio](https://withmeteoric.vercel.app/work)
-- [Services](https://withmeteoric.vercel.app/#services)
+- [Services](https://withmeteoric.vercel.app/services/saas-development)
 - [Process](https://withmeteoric.vercel.app/#process)
 - [Contact](https://withmeteoric.vercel.app/#contact)
 - [Blog](https://withmeteoric.vercel.app/blog)

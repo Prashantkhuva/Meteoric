@@ -115,6 +115,28 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - To submit to IndexNow (Bing/ChatGPT index): `node scripts/submit-indexnow.mjs`
 - TODO: Create Wikidata entry for Meteoric (entity.simplator.com)
 - TODO: Add `dateModified` to blog post rendering (show "Updated" date if different from published)
+- TODO: Create `/services/saas-development` and `/services/startup-web-development` pillar pages
+- TODO: Write "Supabase vs Firebase 2026" comparison post (P0 keyword, 2,400/mo)
+- TODO: Write "How to Choose a Web Development Agency for Your Startup" decision guide (GEO-friendly)
+- TODO: Write "How Much Does a Startup Website Cost?" pricing guide (2,800/mo)
+- TODO: Add contextual internal links within all 6 blog posts
+- TODO: Add internal links to About.jsx and Work.jsx pages
+- TODO: Fix Navbar hash-link inconsistency (`/#work` → `/work`)
+- TODO: Replace placeholder blog cover images (blog-cover-5.png, blog-cover-6.png)
+
+## Research Files (memory/)
+- `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma
+- `memory/research/keyword-research/2026-07-06-meteoric-target-queries.md` — 45 keywords across 5 clusters + SERP + GEO analysis
+- `memory/audits/2026-07-06-core-eeat-top-3-blog-posts.md` — CORE-EEAT audit: MongoDB billing (72/100), GSAP vs FM (70/100), MVP case study (65/100)
+- `memory/audits/2026-07-06-internal-linking-optimizer.md` — Link score (60/100), orphan/disposition analysis, repair plan
+
+## Key Research Findings
+- **Top competitors**: Naturaily (highest overlap, same Next.js/SaaS audience), Big Human, Superside, DePalma, Standard Beagle
+- **Biggest content gap**: No dedicated service pages, no comparison posts (except GSAP vs FM), no pricing content, no GEO-targeted definitions
+- **Top P0 keywords**: `saas development agency` (1,900/mo), `startup web development agency` (1,800/mo), `Next.js development agency` (1,300/mo), `Supabase vs Firebase` (2,400/mo), `how to choose a web development agency` (800/mo), `startup website cost` (2,800/mo)
+- **CORE-EEAT avg score**: 69/100 — strongest in Trust (80), weakest in Authority (55) and Referenceability (58)
+- **Internal linking score**: 60/100 — zero contextual links in blog content, About/Work pages are content dead ends
+- **GEO gap**: Missing definition, comparison, and pricing content that AI chatbots prefer to cite
 
 ## Environment Variables (.env)
 ```

@@ -92,6 +92,16 @@ export default function WorkPage() {
           ))}
         </div>
       </section>
+
+      {/* Internal links */}
+      <section className="relative max-w-7xl mx-auto px-6 md:px-12 pb-24">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-white/30 text-xs uppercase tracking-[0.2em]">Explore:</span>
+          <a href="/about" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">How we work →</a>
+          <a href="/blog" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Latest insights →</a>
+        </div>
+      </section>
+
     </div>
   );
 }

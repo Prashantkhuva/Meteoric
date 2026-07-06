@@ -84,9 +84,8 @@ export default function BlogPostPage({ post }) {
               <p
                 key={i}
                 className="text-white/45 text-base md:text-lg leading-[1.8] mb-6"
-              >
-                {block.text}
-              </p>
+                dangerouslySetInnerHTML={{ __html: block.text }}
+              />
             );
           })}
         </motion.div>

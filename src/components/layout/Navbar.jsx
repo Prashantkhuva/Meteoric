@@ -6,8 +6,8 @@ import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
 const navItems = [
-  { label: "Work", to: "/#work" },
-  { label: "Services", to: "/#services" },
+  { label: "Work", to: "/work" },
+  { label: "Services", to: "/services" },
   { label: "Blog", to: "/blog" },
   { label: "About", to: "/about" },
 ];

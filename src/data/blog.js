@@ -46,7 +46,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "If you're building a startup, you don't need an agency that treats you like a ticket in a queue. You need a partner who treats your product like their own.",
+        text: "If you're building a startup, you don't need an agency that treats you like a ticket in a queue. You need a partner who treats your product like their own. See how this approach played out in our <a href=\"/blog/building-a-saas-prototype-in-3-weeks-a-case-study\">MVP case study</a> and browse our <a href=\"/work\">shipped portfolio</a>.",
       },
     ],
   },
@@ -105,7 +105,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "Great conversion design is invisible. Users shouldn't think about the design — they should think about the decision. Clear messaging, focused layouts, and purposeful interactions will always outperform trendy aesthetics.",
+        text: "Great conversion design is invisible. Users shouldn't think about the design — they should think about the decision. Clear messaging, focused layouts, and purposeful interactions will always outperform trendy aesthetics. See these principles applied across our <a href=\"/work\">portfolio projects</a>, or read why <a href=\"/blog/why-your-startup-needs-a-product-studio-not-an-agency\">a product studio</a> approaches conversion differently than a traditional agency.",
       },
     ],
   },
@@ -160,7 +160,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "In 21 days, the founder had a working prototype they could show to investors and beta users. The product validated, the seed round closed, and the full build started immediately after. Three weeks of focused work saved months of uncertainty.",
+        text: "In 21 days, the founder had a working prototype they could show to investors and beta users. The product validated, the seed round closed, and the full build started immediately after. Three weeks of focused work saved months of uncertainty. This project was built using our <a href=\"/blog/the-meteoric-guide-to-choosing-your-tech-stack\">default tech stack</a>. For a deeper look at the backend decisions, read our <a href=\"/blog/mongodb-schema-design-for-saas-billing\">MongoDB billing schema guide</a>.",
       },
     ],
   },
@@ -255,7 +255,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "The key insight: Stripe webhooks update our local documents, but our local documents drive the billing UI and reporting. This gives users fast page loads (no Stripe API calls on every request) and a consistent billing history even if Stripe experiences downtime.",
+        text: "The key insight: Stripe webhooks update our local documents, but our local documents drive the billing UI and reporting. This gives users fast page loads (no Stripe API calls on every request) and a consistent billing history even if Stripe experiences downtime. For a broader look at how we build full-stack SaaS products, see our <a href=\"/blog/the-meteoric-guide-to-choosing-your-tech-stack\">tech stack philosophy</a> and the <a href=\"/blog/building-a-saas-prototype-in-3-weeks-a-case-study\">MVP case study</a> that uses these patterns.",
       },
     ],
   },
@@ -346,7 +346,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "The key insight: these libraries aren't competitors for the same job. They're complementary tools for different animation layers. GSAP is the engine for scroll-driven and timeline-based animation. Framer Motion is the React-native layer for component interactions. Using both intentionally gives you the best of both worlds.",
+        text: "The key insight: these libraries aren't competitors for the same job. They're complementary tools for different animation layers. GSAP is the engine for scroll-driven and timeline-based animation. Framer Motion is the React-native layer for component interactions. Using both intentionally gives you the best of both worlds. See these animations in action on our <a href=\"/work\">portfolio site</a> and read <a href=\"/blog/the-meteoric-guide-to-choosing-your-tech-stack\">our tech stack guide</a> for the full picture of our frontend decisions.",
       },
     ],
   },
@@ -393,7 +393,7 @@ export const posts = [
       },
       {
         type: "paragraph",
-        text: "The best tech stack is the one you never have to think about. If you're spending more time configuring your tools than building your product, you've chosen wrong. Pick boring technology that works, and focus your energy on what actually matters: your users.",
+        text: "The best tech stack is the one you never have to think about. If you're spending more time configuring your tools than building your product, you've chosen wrong. Pick boring technology that works, and focus your energy on what actually matters: your users. For deep dives on specific stack components, see our <a href=\"/blog/mongodb-schema-design-for-saas-billing\">MongoDB billing schema guide</a> and <a href=\"/blog/gsap-vs-framer-motion-production-guide\">GSAP vs Framer Motion comparison</a>.",
       },
     ],
   },
