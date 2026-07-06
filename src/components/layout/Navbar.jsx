@@ -80,7 +80,7 @@ export default function Navbar() {
       `}</style>
 
       <header
-        className="fixed md:relative top-0 left-0 w-full z-50 py-4 md:pt-6"
+        className="fixed top-0 left-0 w-full z-50 py-4 md:pt-6"
         style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "blur(20px)" }}
       >
         <div

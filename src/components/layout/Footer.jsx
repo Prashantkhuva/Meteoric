@@ -67,11 +67,11 @@ export default function Footer() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">
               {/* Left Side */}
               <p className="text-sm text-white/60">
-                © 2026 Meteoric. All rights reserved.
+                &copy; 2026 Meteoric. All rights reserved.
               </p>
 
-              {/* Center — internal links */}
-              <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
+              {/* Center &mdash; internal links */}
+              <nav className="flex flex-wrap gap-x-4 lg:gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
                 <Link href="/work" className="text-white/60 hover:text-white transition-colors duration-300">Work</Link>
                 <Link href="/blog" className="text-white/60 hover:text-white transition-colors duration-300">Blog</Link>
                 <Link href="/services" className="text-white/60 hover:text-white transition-colors duration-300">Services</Link>

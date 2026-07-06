@@ -50,7 +50,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden bg-black flex items-center px-6 md:px-16 pt-28 md:pt-0"
+      className="relative min-h-screen w-full overflow-hidden bg-black flex items-center px-6 md:px-16 pt-28 md:pt-24"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">

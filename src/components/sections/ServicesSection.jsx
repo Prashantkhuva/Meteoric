@@ -109,7 +109,7 @@ export default function ServicesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
           {services.map((s, idx) => (
@@ -121,6 +121,10 @@ export default function ServicesSection() {
                 borderRight:
                   idx % 4 !== 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
+                [`@media (min-width: 640px) and (max-width: 1023px)`]: {
+                  borderRight:
+                    idx % 2 !== 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                },
               }}
             >
               {/* Card Inner */}
@@ -139,12 +143,12 @@ export default function ServicesSection() {
                 />
 
                 {/* Image */}
-                <div className="relative z-[1] w-[152px] h-[152px] md:w-[190px] md:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
+                <div className="relative z-[1] w-[152px] h-[152px] sm:w-[160px] sm:h-[160px] lg:w-[190px] lg:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
                   <Image
                     src={s.img}
                     alt={`${s.title} — software development`}
                     fill
-                    sizes="(max-width: 768px) 152px, 190px"
+                    sizes="(max-width: 640px) 152px, (max-width: 1024px) 160px, 190px"
                     className="object-contain"
                   />
                 </div>

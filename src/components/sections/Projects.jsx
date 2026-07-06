@@ -219,18 +219,18 @@ function Projects() {
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-10">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
         {/* LEFT — scrollable cards */}
-        <div className="w-full md:w-1/2 space-y-8">
+        <div className="w-full lg:w-1/2 space-y-8">
           {projects.map((project, i) => (
             <div key={project.id} ref={(el) => (sectionRefs.current[i] = el)} data-index={i}>
-              {/* Mobile */}
-              <div className="md:hidden">
+              {/* Mobile (up to lg — includes tablet) */}
+              <div className="lg:hidden">
                 <ProjectCardMobile project={project} />
               </div>
 
-              {/* Desktop */}
-              <div className="hidden md:flex items-start py-12 h-180">
+              {/* Desktop (lg+) */}
+              <div className="hidden lg:flex items-start py-12 h-180">
                 <div className="w-full">
                   <ProjectCardDesktop
                     project={project}
@@ -242,8 +242,8 @@ function Projects() {
           ))}
         </div>
 
-        {/* RIGHT — sticky detail panel (desktop only) */}
-        <div className="hidden md:block md:w-1/2">
+        {/* RIGHT — sticky detail panel (large screens only) */}
+        <div className="hidden lg:block lg:w-1/2">
           <div className="sticky top-32 py-12">
             <AnimatePresence mode="wait">
               <motion.div

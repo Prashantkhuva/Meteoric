@@ -153,9 +153,9 @@ export default function TestimonialsSection() {
               Client Stories
             </motion.p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-10 lg:gap-14 items-center">
               {/* Left — quote card */}
-              <div className="lg:col-span-3">
+              <div className="md:col-span-3">
                 <div className="relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10">
                   <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                   <Quote size={40} className="text-white/[0.04] absolute top-6 left-8" />
@@ -281,7 +281,7 @@ export default function TestimonialsSection() {
               </div>
 
               {/* Right — trust */}
-              <div className="lg:col-span-2 flex flex-col gap-4">
+              <div className="md:col-span-2 flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-3">
                   {trustStats.map((stat, i) => {
                     const Icon = stat.icon;

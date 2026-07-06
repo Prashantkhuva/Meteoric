@@ -79,13 +79,13 @@ export default function WorkPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 * i }}
             >
-              {/* Mobile */}
-              <div className="md:hidden">
+              {/* Mobile (up to lg — includes tablet) */}
+              <div className="lg:hidden">
                 <ProjectCardMobile project={project} />
               </div>
 
-              {/* Desktop */}
-              <div className="hidden md:block">
+              {/* Desktop (lg+) */}
+              <div className="hidden lg:block">
                 <DesktopProjectCard project={project} index={i} />
               </div>
             </motion.div>
