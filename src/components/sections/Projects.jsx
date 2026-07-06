@@ -127,7 +127,7 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
           </div>
           <a href={project.link} target="_blank" rel="noopener noreferrer"
             className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/55 hover:text-white hover:border-white/30 transition-all shrink-0"
-            aria-label="View project"
+            aria-hidden="true" tabIndex={-1}
           >
             <ArrowUpRight size={12} />
           </a>

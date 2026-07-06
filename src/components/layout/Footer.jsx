@@ -66,23 +66,23 @@ export default function Footer() {
             {/* Footer Bottom */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">
               {/* Left Side */}
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-white/60">
                 © 2026 Meteoric. All rights reserved.
               </p>
 
               {/* Center — internal links */}
               <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
-                <Link href="/work" className="text-white/50 hover:text-white transition-colors duration-300">Work</Link>
-                <Link href="/blog" className="text-white/50 hover:text-white transition-colors duration-300">Blog</Link>
-                <Link href="/#services" className="text-white/50 hover:text-white transition-colors duration-300">Services</Link>
-                <Link href="/#process" className="text-white/50 hover:text-white transition-colors duration-300">Process</Link>
-                <Link href="/about" className="text-white/50 hover:text-white transition-colors duration-300">About</Link>
+                <Link href="/work" className="text-white/60 hover:text-white transition-colors duration-300">Work</Link>
+                <Link href="/blog" className="text-white/60 hover:text-white transition-colors duration-300">Blog</Link>
+                <Link href="/services" className="text-white/60 hover:text-white transition-colors duration-300">Services</Link>
+                <Link href="/#process" className="text-white/60 hover:text-white transition-colors duration-300">Process</Link>
+                <Link href="/about" className="text-white/60 hover:text-white transition-colors duration-300">About</Link>
               </nav>
 
               {/* Right Side */}
               <Link
                 href="/about"
-                className="group text-sm text-white/50 hover:text-white transition-colors duration-300"
+                className="group text-sm text-white/60 hover:text-white transition-colors duration-300"
               >
                 Built & Designed by{" "}
                 <span className="text-white font-medium inline-flex items-center gap-1">

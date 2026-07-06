@@ -248,7 +248,7 @@ const styles = {
   },
   tagline: {
     margin: "18px 0 0",
-    color: "#555",
+    color: "#9A9A9A",
     fontFamily:
       "var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     fontSize: "12px",
