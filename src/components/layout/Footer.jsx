@@ -63,37 +63,46 @@ export default function Footer() {
               <span style={{ fontFamily: "var(--font-inter)" }}>ic</span>
             </div>
 
-            {/* Footer Bottom */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-6">
-              {/* Left Side */}
-              <p className="text-sm text-white/60">
-                &copy; 2026 Meteoric. All rights reserved.
-              </p>
-              <div className="flex gap-4 text-sm">
-                <Link href="/privacy" className="text-white/40 hover:text-white transition-colors duration-300">Privacy</Link>
-                <Link href="/terms" className="text-white/40 hover:text-white transition-colors duration-300">Terms</Link>
+            {/* Grouped Nav Columns */}
+            <nav className="flex justify-center gap-10 lg:gap-16 mt-10 mb-8 text-sm" aria-label="Footer navigation">
+              <div>
+                <p className="text-white/20 text-[10px] uppercase tracking-[0.15em] mb-3">Services</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/services/saas-development" className="text-white/50 hover:text-white transition-colors duration-300">SaaS Dev</Link>
+                  <Link href="/services/startup-web-development" className="text-white/50 hover:text-white transition-colors duration-300">Startup Web</Link>
+                  <Link href="/services" className="text-white/50 hover:text-white transition-colors duration-300">All Services</Link>
+                </div>
               </div>
+              <div>
+                <p className="text-white/20 text-[10px] uppercase tracking-[0.15em] mb-3">Technologies</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/technologies/react" className="text-white/50 hover:text-white transition-colors duration-300">React</Link>
+                  <Link href="/technologies/next-js" className="text-white/50 hover:text-white transition-colors duration-300">Next.js</Link>
+                  <Link href="/technologies/node-js" className="text-white/50 hover:text-white transition-colors duration-300">Node.js</Link>
+                  <Link href="/technologies/supabase" className="text-white/50 hover:text-white transition-colors duration-300">Supabase</Link>
+                </div>
+              </div>
+              <div>
+                <p className="text-white/20 text-[10px] uppercase tracking-[0.15em] mb-3">General</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/work" className="text-white/50 hover:text-white transition-colors duration-300">Work</Link>
+                  <Link href="/case-studies" className="text-white/50 hover:text-white transition-colors duration-300">Case Studies</Link>
+                  <Link href="/blog" className="text-white/50 hover:text-white transition-colors duration-300">Blog</Link>
+                  <Link href="/about" className="text-white/50 hover:text-white transition-colors duration-300">About</Link>
+                </div>
+              </div>
+            </nav>
 
-              {/* Center &mdash; internal links */}
-              <nav className="flex flex-wrap gap-x-4 lg:gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
-                <Link href="/work" className="text-white/60 hover:text-white transition-colors duration-300">Work</Link>
-                <Link href="/case-studies" className="text-white/60 hover:text-white transition-colors duration-300">Case Studies</Link>
-                <Link href="/blog" className="text-white/60 hover:text-white transition-colors duration-300">Blog</Link>
-                <Link href="/services" className="text-white/60 hover:text-white transition-colors duration-300">Services</Link>
-                <Link href="/services/saas-development" className="text-white/60 hover:text-white transition-colors duration-300">SaaS Dev</Link>
-                <Link href="/services/startup-web-development" className="text-white/60 hover:text-white transition-colors duration-300">Startup Web</Link>
-                <Link href="/technologies/react" className="text-white/60 hover:text-white transition-colors duration-300">React</Link>
-                <Link href="/technologies/next-js" className="text-white/60 hover:text-white transition-colors duration-300">Next.js</Link>
-                <Link href="/technologies/node-js" className="text-white/60 hover:text-white transition-colors duration-300">Node.js</Link>
-                <Link href="/technologies/supabase" className="text-white/60 hover:text-white transition-colors duration-300">Supabase</Link>
-                <Link href="/#process" className="text-white/60 hover:text-white transition-colors duration-300">Process</Link>
-                <Link href="/about" className="text-white/60 hover:text-white transition-colors duration-300">About</Link>
-              </nav>
-
-              {/* Right Side */}
+            {/* Footer Bottom */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
+              <div className="flex items-center gap-4 text-sm">
+                <p className="text-white/40">&copy; 2026 Meteoric.</p>
+                <Link href="/privacy" className="text-white/30 hover:text-white transition-colors duration-300">Privacy</Link>
+                <Link href="/terms" className="text-white/30 hover:text-white transition-colors duration-300">Terms</Link>
+              </div>
               <Link
                 href="/about"
-                className="group text-sm text-white/60 hover:text-white transition-colors duration-300"
+                className="group text-sm text-white/40 hover:text-white transition-colors duration-300"
               >
                 Built & Designed by{" "}
                 <span className="text-white font-medium inline-flex items-center gap-1">

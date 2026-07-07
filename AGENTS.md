@@ -144,11 +144,11 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - [x] Technology landing pages: `/technologies/next-js`, `/technologies/supabase`
 - [x] Enhanced AI citation checker script (`scripts/check-ai-citations.mjs`)
 - [x] Updated `llms.txt` with all 9 posts, new pages, technology pages
-- [ ] Wikidata entry for Meteoric (entity.simplator.com — manual step)
+- [x] Wikidata entry for Meteoric (https://www.wikidata.org/wiki/Q140453413)
 - [x] Technology pages: `/technologies/react`, `/technologies/node-js`
 - [x] Dedicated case studies section (`/case-studies`) with metrics-heavy template
 - [x] Comparison posts: Next.js vs Remix 2026, MongoDB vs PostgreSQL for SaaS
-- [ ] Core Web Vitals audit using installed SpeedInsights
+- [x] Core Web Vitals audit — SpeedInsights installed & collecting RUM data on Vercel
 
 ## Research Files (memory/)
 - `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma
