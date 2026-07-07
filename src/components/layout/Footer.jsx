@@ -47,9 +47,8 @@ export default function Footer() {
             </button>
           </div>
 
-          {/* ── WORDMARK + COPYRIGHT ── */}
-          <div className="pt-10 pb-6 overflow-hidden">
-            {/* Huge Background Text */}
+          {/* ── WORDMARK ── */}
+          <div className="pt-10 overflow-hidden">
             <div
               className="text-[18vw] md:text-[14vw] leading-none tracking-[-0.08em] font-semibold select-none whitespace-nowrap"
               aria-hidden="true"
@@ -62,55 +61,25 @@ export default function Footer() {
               <span style={{ fontFamily: "var(--font-playfair)", fontStyle: "normal" }}>meteor</span>
               <span style={{ fontFamily: "var(--font-inter)" }}>ic</span>
             </div>
+          </div>
 
-            {/* Grouped Nav Columns */}
-            <nav className="flex justify-center gap-10 lg:gap-16 mt-10 mb-8 text-sm" aria-label="Footer navigation">
-              <div>
-                <p className="text-white/20 text-[10px] uppercase tracking-[0.15em] mb-3">Services</p>
-                <div className="flex flex-col gap-1.5">
-                  <Link href="/services/saas-development" className="text-white/50 hover:text-white transition-colors duration-300">SaaS Dev</Link>
-                  <Link href="/services/startup-web-development" className="text-white/50 hover:text-white transition-colors duration-300">Startup Web</Link>
-                  <Link href="/services" className="text-white/50 hover:text-white transition-colors duration-300">All Services</Link>
-                </div>
-              </div>
-              <div>
-                <p className="text-white/20 text-[10px] uppercase tracking-[0.15em] mb-3">Technologies</p>
-                <div className="flex flex-col gap-1.5">
-                  <Link href="/technologies/react" className="text-white/50 hover:text-white transition-colors duration-300">React</Link>
-                  <Link href="/technologies/next-js" className="text-white/50 hover:text-white transition-colors duration-300">Next.js</Link>
-                  <Link href="/technologies/node-js" className="text-white/50 hover:text-white transition-colors duration-300">Node.js</Link>
-                  <Link href="/technologies/supabase" className="text-white/50 hover:text-white transition-colors duration-300">Supabase</Link>
-                </div>
-              </div>
-              <div>
-                <p className="text-white/20 text-[10px] uppercase tracking-[0.15em] mb-3">General</p>
-                <div className="flex flex-col gap-1.5">
-                  <Link href="/work" className="text-white/50 hover:text-white transition-colors duration-300">Work</Link>
-                  <Link href="/case-studies" className="text-white/50 hover:text-white transition-colors duration-300">Case Studies</Link>
-                  <Link href="/blog" className="text-white/50 hover:text-white transition-colors duration-300">Blog</Link>
-                  <Link href="/about" className="text-white/50 hover:text-white transition-colors duration-300">About</Link>
-                </div>
-              </div>
-            </nav>
-
-            {/* Footer Bottom */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
-              <div className="flex items-center gap-4 text-sm">
-                <p className="text-white/40">&copy; 2026 Meteoric.</p>
-                <Link href="/privacy" className="text-white/30 hover:text-white transition-colors duration-300">Privacy</Link>
-                <Link href="/terms" className="text-white/30 hover:text-white transition-colors duration-300">Terms</Link>
-              </div>
-              <Link
-                href="/about"
-                className="group text-sm text-white/40 hover:text-white transition-colors duration-300"
-              >
-                Built & Designed by{" "}
-                <span className="text-white font-medium inline-flex items-center gap-1">
-                  Prashant
-                  <span className="translate-y-px group-hover:translate-x-1 transition-transform duration-300">
-                    <ArrowUpRight size={12} />
-                  </span>
-                </span>
+          {/* ── BOTTOM BAR ── */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-8 border-t border-white/5">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
+              <Link href="/work" className="text-white/40 hover:text-white transition-colors">Work</Link>
+              <Link href="/case-studies" className="text-white/40 hover:text-white transition-colors">Case Studies</Link>
+              <Link href="/services" className="text-white/40 hover:text-white transition-colors">Services</Link>
+              <Link href="/blog" className="text-white/40 hover:text-white transition-colors">Blog</Link>
+              <Link href="/about" className="text-white/40 hover:text-white transition-colors">About</Link>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <p className="text-white/30">&copy; 2026 Meteoric.</p>
+              <Link href="/privacy" className="text-white/30 hover:text-white transition-colors">Privacy</Link>
+              <span className="text-white/10">/</span>
+              <Link href="/terms" className="text-white/30 hover:text-white transition-colors">Terms</Link>
+              <span className="text-white/10">/</span>
+              <Link href="/about" className="text-white/30 hover:text-white transition-colors group inline-flex items-center gap-1">
+                Built by Prashant <ArrowUpRight size={10} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
             </div>
           </div>
