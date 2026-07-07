@@ -2,121 +2,139 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://withmeteoric.vercel.app/</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/about</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/work</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/services</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/services/saas-development</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/services/startup-web-development</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/privacy</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/terms</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/technologies/next-js</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/technologies/supabase</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://withmeteoric.vercel.app/technologies/react</loc>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://withmeteoric.vercel.app/technologies/node-js</loc>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://withmeteoric.vercel.app/case-studies</loc>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://withmeteoric.vercel.app/blog/why-your-startup-needs-a-product-studio-not-an-agency</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/designing-for-conversion-lessons-from-12-shipped-projects</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/building-a-saas-prototype-in-3-weeks-a-case-study</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/mongodb-schema-design-for-saas-billing</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/gsap-vs-framer-motion-production-guide</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/the-meteoric-guide-to-choosing-your-tech-stack</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/supabase-vs-firebase-2026-comparison</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/how-much-does-a-startup-website-cost</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://withmeteoric.vercel.app/blog/how-to-choose-a-web-development-agency</loc>
-    <lastmod>2026-07-07T00:20:58.851Z</lastmod>
+    <lastmod>2026-07-07T00:25:56.501Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

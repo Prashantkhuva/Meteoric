@@ -77,11 +77,14 @@ export default function Footer() {
               {/* Center &mdash; internal links */}
               <nav className="flex flex-wrap gap-x-4 lg:gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
                 <Link href="/work" className="text-white/60 hover:text-white transition-colors duration-300">Work</Link>
+                <Link href="/case-studies" className="text-white/60 hover:text-white transition-colors duration-300">Case Studies</Link>
                 <Link href="/blog" className="text-white/60 hover:text-white transition-colors duration-300">Blog</Link>
                 <Link href="/services" className="text-white/60 hover:text-white transition-colors duration-300">Services</Link>
                 <Link href="/services/saas-development" className="text-white/60 hover:text-white transition-colors duration-300">SaaS Dev</Link>
                 <Link href="/services/startup-web-development" className="text-white/60 hover:text-white transition-colors duration-300">Startup Web</Link>
+                <Link href="/technologies/react" className="text-white/60 hover:text-white transition-colors duration-300">React</Link>
                 <Link href="/technologies/next-js" className="text-white/60 hover:text-white transition-colors duration-300">Next.js</Link>
+                <Link href="/technologies/node-js" className="text-white/60 hover:text-white transition-colors duration-300">Node.js</Link>
                 <Link href="/technologies/supabase" className="text-white/60 hover:text-white transition-colors duration-300">Supabase</Link>
                 <Link href="/#process" className="text-white/60 hover:text-white transition-colors duration-300">Process</Link>
                 <Link href="/about" className="text-white/60 hover:text-white transition-colors duration-300">About</Link>

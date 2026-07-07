@@ -14,6 +14,9 @@ export const sitemapRoutes = [
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
   { path: "/technologies/next-js", priority: "0.8", changefreq: "monthly" },
   { path: "/technologies/supabase", priority: "0.8", changefreq: "monthly" },
+  { path: "/technologies/react", priority: "0.8", changefreq: "monthly" },
+  { path: "/technologies/node-js", priority: "0.8", changefreq: "monthly" },
+  { path: "/case-studies", priority: "0.9", changefreq: "monthly" },
 ];
 
 
