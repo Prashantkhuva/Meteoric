@@ -10,6 +10,8 @@ export const sitemapRoutes = [
   { path: "/services", priority: "0.8", changefreq: "monthly" },
   { path: "/services/saas-development", priority: "0.9", changefreq: "monthly" },
   { path: "/services/startup-web-development", priority: "0.9", changefreq: "monthly" },
+  { path: "/services/ui-ux-design", priority: "0.8", changefreq: "monthly" },
+  { path: "/services/technical-consulting", priority: "0.8", changefreq: "monthly" },
   { path: "/privacy", priority: "0.3", changefreq: "yearly" },
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
   { path: "/technologies/next-js", priority: "0.8", changefreq: "monthly" },

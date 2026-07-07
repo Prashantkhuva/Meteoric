@@ -24,14 +24,14 @@ const serviceItems = [
     num: "03",
     title: "UI/UX Design",
     desc: "Clean, conversion-focused interfaces designed for your users. From wireframes to high-fidelity prototypes — we design experiences that feel intuitive.",
-    href: "/services",
+    href: "/services/ui-ux-design",
   },
   {
     icon: <Lightbulb size={20} />,
     num: "04",
     title: "Technical Consulting",
     desc: "Stack selection, architecture planning, and code audits. We help founders make the right technical decisions before writing a single line of code.",
-    href: "/services",
+    href: "/services/technical-consulting",
   },
 ];
 
