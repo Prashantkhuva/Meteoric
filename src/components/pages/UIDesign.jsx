@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Palette, Layout, PenTool, Eye } from "lucide-react";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 
 const services = [
   {
@@ -226,42 +227,28 @@ export default function UIDesignPage() {
           </span>
         </motion.div>
 
-        <div className="space-y-6">
-          {[
-            {
-              q: "What does a UI/UX design agency do?",
-              a: "A UI/UX design agency creates user interfaces and experiences for digital products. UI (User Interface) focuses on the visual design — colors, typography, layouts, and interactive elements. UX (User Experience) focuses on the overall feel — user flows, information architecture, usability, and how users accomplish their goals. At Meteoric, we handle both, designing interfaces that are both beautiful and functional.",
-            },
-            {
-              q: "Do you design for both marketing sites and web apps?",
-              a: "Yes. We design landing pages, marketing sites, SaaS dashboards, onboarding flows, and complex web applications. Our design process adapts to the context — conversion-focused for marketing, clarity-focused for product interfaces.",
-            },
-            {
-              q: "What tools do you use for design?",
-              a: "We design exclusively in Figma for prototyping, collaboration, and developer handoff. We also use Tailwind CSS design tokens to ensure pixel-perfect alignment between design and code.",
-            },
-            {
-              q: "Do you provide design-only services, or only full builds?",
-              a: "We offer both. You can engage us for design-only (wireframes, prototypes, UI kits) or full design + development. Many clients start with design, then extend into build once the vision is clear.",
-            },
-            {
-              q: "How long does the design phase typically take?",
-              a: "A standard 5-page website design takes 1-2 weeks. SaaS dashboard and app design typically takes 2-4 weeks depending on complexity. We work in sprint cycles with regular reviews.",
-            },
-          ].map((faq, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6"
-            >
-              <h2 className="text-sm font-semibold text-white mb-3 tracking-tight">{faq.q}</h2>
-              <p className="text-[#EAEFFF]/45 text-sm leading-relaxed">{faq.a}</p>
-            </motion.div>
-          ))}
-        </div>
+        <FaqAccordion items={[
+          {
+            q: "What does a UI/UX design agency do?",
+            a: "A UI/UX design agency creates user interfaces and experiences for digital products. UI (User Interface) focuses on the visual design — colors, typography, layouts, and interactive elements. UX (User Experience) focuses on the overall feel — user flows, information architecture, usability, and how users accomplish their goals. At Meteoric, we handle both, designing interfaces that are both beautiful and functional.",
+          },
+          {
+            q: "Do you design for both marketing sites and web apps?",
+            a: "Yes. We design landing pages, marketing sites, SaaS dashboards, onboarding flows, and complex web applications. Our design process adapts to the context — conversion-focused for marketing, clarity-focused for product interfaces.",
+          },
+          {
+            q: "What tools do you use for design?",
+            a: "We design exclusively in Figma for prototyping, collaboration, and developer handoff. We also use Tailwind CSS design tokens to ensure pixel-perfect alignment between design and code.",
+          },
+          {
+            q: "Do you provide design-only services, or only full builds?",
+            a: "We offer both. You can engage us for design-only (wireframes, prototypes, UI kits) or full design + development. Many clients start with design, then extend into build once the vision is clear.",
+          },
+          {
+            q: "How long does the design phase typically take?",
+            a: "A standard 5-page website design takes 1-2 weeks. SaaS dashboard and app design typically takes 2-4 weeks depending on complexity. We work in sprint cycles with regular reviews.",
+          },
+        ]} />
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Lightbulb, Shield, TrendingUp, Cpu } from "lucide-react";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 
 const services = [
   {
@@ -231,42 +232,28 @@ export default function TechnicalConsultingPage() {
           </span>
         </motion.div>
 
-        <div className="space-y-6">
-          {[
-            {
-              q: "What is technical consulting for startups?",
-              a: "Technical consulting helps startups make informed decisions about technology stack, architecture, infrastructure, and engineering strategy. It is particularly valuable for non-technical founders who need guidance without hiring a full-time CTO, and for technical founders who want a second opinion on critical architecture decisions.",
-            },
-            {
-              q: "How is this different from hiring a CTO?",
-              a: "Fractional CTO consulting gives you access to experienced technical leadership on an as-needed basis — without the salary commitment of a full-time executive. You get strategy, code reviews, and roadmap guidance when you need it, and you only pay for the time you use.",
-            },
-            {
-              q: "What does a code audit include?",
-              a: "We review your codebase for architecture quality, security vulnerabilities, performance bottlenecks, and technical debt. You get a prioritized list of issues with estimated effort and recommended fixes. Typical audits cover 10-20 key files plus overall architecture review.",
-            },
-            {
-              q: "How long does a typical consulting engagement last?",
-              a: "Engagements range from a single 2-hour strategy session to ongoing monthly advisory. Most founders start with a deep-dive session (2-4 hours) to establish the technical strategy, then move to a lighter monthly check-in cadence.",
-            },
-            {
-              q: "Do you only consult on projects you build?",
-              a: "No. We are happy to review existing codebases, advise on projects built by other teams, or help you evaluate vendors. Our consulting is independent and focused on what is best for your specific situation.",
-            },
-          ].map((faq, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6"
-            >
-              <h2 className="text-sm font-semibold text-white mb-3 tracking-tight">{faq.q}</h2>
-              <p className="text-[#EAEFFF]/45 text-sm leading-relaxed">{faq.a}</p>
-            </motion.div>
-          ))}
-        </div>
+        <FaqAccordion items={[
+          {
+            q: "What is technical consulting for startups?",
+            a: "Technical consulting helps startups make informed decisions about technology stack, architecture, infrastructure, and engineering strategy. It is particularly valuable for non-technical founders who need guidance without hiring a full-time CTO, and for technical founders who want a second opinion on critical architecture decisions.",
+          },
+          {
+            q: "How is this different from hiring a CTO?",
+            a: "Fractional CTO consulting gives you access to experienced technical leadership on an as-needed basis — without the salary commitment of a full-time executive. You get strategy, code reviews, and roadmap guidance when you need it, and you only pay for the time you use.",
+          },
+          {
+            q: "What does a code audit include?",
+            a: "We review your codebase for architecture quality, security vulnerabilities, performance bottlenecks, and technical debt. You get a prioritized list of issues with estimated effort and recommended fixes. Typical audits cover 10-20 key files plus overall architecture review.",
+          },
+          {
+            q: "How long does a typical consulting engagement last?",
+            a: "Engagements range from a single 2-hour strategy session to ongoing monthly advisory. Most founders start with a deep-dive session (2-4 hours) to establish the technical strategy, then move to a lighter monthly check-in cadence.",
+          },
+          {
+            q: "Do you only consult on projects you build?",
+            a: "No. We are happy to review existing codebases, advise on projects built by other teams, or help you evaluate vendors. Our consulting is independent and focused on what is best for your specific situation.",
+          },
+        ]} />
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">

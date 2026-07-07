@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Globe, Smartphone, Search, BarChart } from "lucide-react";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 
 const services = [
   {
@@ -233,42 +234,28 @@ export default function StartupWebDevelopmentPage() {
           </span>
         </motion.div>
 
-        <div className="space-y-6">
-          {[
-            {
-              q: "What does a startup web development agency do?",
-              a: "A startup web development agency builds websites and web applications specifically for early-stage and growing startups. Unlike traditional agencies that build brochure sites, startup agencies focus on speed, conversion, SEO readiness, and growth infrastructure. At Meteoric, we build using Next.js and Tailwind CSS for maximum performance and developer velocity.",
-            },
-            {
-              q: "How fast can you build a startup website?",
-              a: "Most startup websites launch in 3-6 weeks. A standard 5-page site with blog, SEO setup, and analytics typically takes 3-4 weeks. More complex projects with custom functionality take 5-6 weeks. See our <a href=\"/work\" class=\"text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200\">portfolio</a> for examples.",
-            },
-            {
-              q: "Do you build both marketing sites and web apps?",
-              a: "Yes. We build marketing sites, landing pages, documentation hubs, and full SaaS web applications. Our stack (Next.js + Supabase) handles everything from a 5-page startup site to a multi-tenant SaaS platform.",
-            },
-            {
-              q: "Do you handle SEO and analytics setup?",
-              a: "Every project ships with technical SEO (structured data, meta tags, sitemaps), Core Web Vitals optimization, and analytics infrastructure. We also offer GEO (Generative Engine Optimization) to make your site citeable by AI chatbots like ChatGPT and Claude.",
-            },
-            {
-              q: "How much does a startup website cost?",
-              a: "A standard startup marketing site starts around $5,000-$12,000. Complex web applications and custom platforms range from $15,000-$50,000. We provide a transparent quote after understanding your needs.",
-            },
-          ].map((faq, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6"
-            >
-              <h2 className="text-sm font-semibold text-white mb-3 tracking-tight">{faq.q}</h2>
-              <p className="text-[#EAEFFF]/45 text-sm leading-relaxed [&_a]:text-white/60 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-colors [&_a]:duration-200 hover:[&_a]:text-white" dangerouslySetInnerHTML={{ __html: faq.a }} />
-            </motion.div>
-          ))}
-        </div>
+        <FaqAccordion items={[
+          {
+            q: "What does a startup web development agency do?",
+            a: "A startup web development agency builds websites and web applications specifically for early-stage and growing startups. Unlike traditional agencies that build brochure sites, startup agencies focus on speed, conversion, SEO readiness, and growth infrastructure. At Meteoric, we build using Next.js and Tailwind CSS for maximum performance and developer velocity.",
+          },
+          {
+            q: "How fast can you build a startup website?",
+            a_html: 'Most startup websites launch in 3-6 weeks. A standard 5-page site with blog, SEO setup, and analytics typically takes 3-4 weeks. More complex projects with custom functionality take 5-6 weeks. See our <a href="/work" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">portfolio</a> for examples.',
+          },
+          {
+            q: "Do you build both marketing sites and web apps?",
+            a: "Yes. We build marketing sites, landing pages, documentation hubs, and full SaaS web applications. Our stack (Next.js + Supabase) handles everything from a 5-page startup site to a multi-tenant SaaS platform.",
+          },
+          {
+            q: "Do you handle SEO and analytics setup?",
+            a: "Every project ships with technical SEO (structured data, meta tags, sitemaps), Core Web Vitals optimization, and analytics infrastructure. We also offer GEO (Generative Engine Optimization) to make your site citeable by AI chatbots like ChatGPT and Claude.",
+          },
+          {
+            q: "How much does a startup website cost?",
+            a: "A standard startup marketing site starts around $5,000-$12,000. Complex web applications and custom platforms range from $15,000-$50,000. We provide a transparent quote after understanding your needs.",
+          },
+        ]} />
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">

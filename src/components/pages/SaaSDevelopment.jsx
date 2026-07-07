@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Code, Database, Palette, Rocket } from "lucide-react";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 
 const services = [
   {
@@ -231,42 +232,28 @@ export default function SaaSDevelopmentPage() {
           </span>
         </motion.div>
 
-        <div className="space-y-6">
-          {[
-            {
-              q: "What is a SaaS development agency?",
-              a: "A SaaS development agency specializes in building cloud-based software products delivered via subscription. Unlike general web development agencies, SaaS agencies understand multi-tenant architecture, subscription billing, usage metering, and the unique challenges of building products that need to scale from 10 to 10,000 users. At Meteoric, we build SaaS products end-to-end using modern stacks like Next.js and Supabase.",
-            },
-            {
-              q: "How long does it take to build a SaaS MVP?",
-              a: "Most SaaS MVPs take 3-6 weeks depending on scope. Our record is 21 days for a fintech prototype that went on to close a seed round. We focus on the core 20% of features that deliver 80% of the value and ship fast. Read our <a href=\"/blog/building-a-saas-prototype-in-3-weeks-a-case-study\" class=\"text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200\">MVP case study</a> for the full breakdown.",
-            },
-            {
-              q: "What makes Meteoric different from other SaaS agencies?",
-              a: "Every project ships directly with the founder — no account managers, no layers. We work like a product studio, not an agency. This means faster decisions, fewer meetings, and a final product that actually reflects your vision. See our <a href=\"/work\" class=\"text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200\">portfolio</a> for shipped projects.",
-            },
-            {
-              q: "Do you handle ongoing maintenance after launch?",
-              a: "Yes. After launch, we offer retainer-based maintenance, feature additions, and performance optimization. We treat every project as a long-term partnership — not a handoff.",
-            },
-            {
-              q: "How much does a SaaS development agency cost?",
-              a: "Costs vary widely based on scope. A focused MVP typically starts around $15,000-$30,000. Full production platforms range from $30,000-$80,000 depending on complexity. We provide a detailed scope and fixed-price quote after our free strategy call.",
-            },
-          ].map((faq, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6"
-            >
-              <h2 className="text-sm font-semibold text-white mb-3 tracking-tight">{faq.q}</h2>
-              <p className="text-[#EAEFFF]/45 text-sm leading-relaxed [&_a]:text-white/60 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-colors [&_a]:duration-200 hover:[&_a]:text-white" dangerouslySetInnerHTML={{ __html: faq.a }} />
-            </motion.div>
-          ))}
-        </div>
+        <FaqAccordion items={[
+          {
+            q: "What is a SaaS development agency?",
+            a: "A SaaS development agency specializes in building cloud-based software products delivered via subscription. Unlike general web development agencies, SaaS agencies understand multi-tenant architecture, subscription billing, usage metering, and the unique challenges of building products that need to scale from 10 to 10,000 users. At Meteoric, we build SaaS products end-to-end using modern stacks like Next.js and Supabase.",
+          },
+          {
+            q: "How long does it take to build a SaaS MVP?",
+            a_html: 'Most SaaS MVPs take 3-6 weeks depending on scope. Our record is 21 days for a fintech prototype that went on to close a seed round. We focus on the core 20% of features that deliver 80% of the value and ship fast. Read our <a href="/blog/building-a-saas-prototype-in-3-weeks-a-case-study" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">MVP case study</a> for the full breakdown.',
+          },
+          {
+            q: "What makes Meteoric different from other SaaS agencies?",
+            a_html: 'Every project ships directly with the founder — no account managers, no layers. We work like a product studio, not an agency. This means faster decisions, fewer meetings, and a final product that actually reflects your vision. See our <a href="/work" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">portfolio</a> for shipped projects.',
+          },
+          {
+            q: "Do you handle ongoing maintenance after launch?",
+            a: "Yes. After launch, we offer retainer-based maintenance, feature additions, and performance optimization. We treat every project as a long-term partnership — not a handoff.",
+          },
+          {
+            q: "How much does a SaaS development agency cost?",
+            a: "Costs vary widely based on scope. A focused MVP typically starts around $15,000-$30,000. Full production platforms range from $30,000-$80,000 depending on complexity. We provide a detailed scope and fixed-price quote after our free strategy call.",
+          },
+        ]} />
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">
