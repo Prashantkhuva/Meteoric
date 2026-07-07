@@ -709,4 +709,248 @@ export const posts = [
       },
     ],
   },
+  {
+    slug: "nextjs-vs-remix-2026-comparison",
+    title: "Next.js vs Remix in 2026: Which React Framework Should You Build On?",
+    excerpt:
+      "A detailed comparison of Next.js 16 (App Router, Server Components) and Remix (React Router v7) for production web applications — performance, developer experience, data loading, and when to choose each in 2026.",
+    date: "July 7, 2026",
+    readTime: "10 min read",
+    author: "Prashant Khuva",
+    image: "/images/blog/blog-cover-10.png",
+    content: [
+      {
+        type: "paragraph",
+        text: 'If you\'re building a React web application in 2026, the framework decision comes down to two choices: Next.js 16 with its App Router and React Server Components, or Remix (now React Router v7 under Shopify). Both are production-grade. Both have passionate communities. But they approach the same problems with fundamentally different philosophies — and the wrong choice will shape every architectural decision you make for years.',
+      },
+      {
+        type: "paragraph",
+        text: "After shipping 12+ production projects at Meteoric — most on Next.js, but with enough Remix experience to know where it excels — here's our honest assessment of where each framework stands in 2026.",
+      },
+      {
+        type: "heading",
+        text: "The Short Answer",
+      },
+      {
+        type: "paragraph",
+        text: "Use Next.js if you want the most mature React framework with Server Components, static generation, and a massive ecosystem. Use Remix (React Router v7) if you want progressive enhancement, simpler data loading, and no client-side JavaScript for pages that don't need it.",
+      },
+      {
+        type: "paragraph",
+        text: "Next.js is the default for most teams because it handles everything — SSG, SSR, ISR, API routes, middleware, and image optimization — out of the box. Remix is the better choice for content-heavy sites and teams that want to minimize JavaScript and maximize web standards.",
+      },
+      {
+        type: "heading",
+        text: "Data Loading: Server Components vs Loaders",
+      },
+      {
+        type: "paragraph",
+        text: "This is the biggest philosophical difference. Next.js 16's App Router uses React Server Components — components that run on the server and send only HTML to the client. Data fetching happens inside the component tree, co-located with the UI that needs it. The mental model is \"fetch what you need where you need it.\"",
+      },
+      {
+        type: "paragraph",
+        text: "Remix uses loader functions — exported async functions that run on the server and return data to the route component. The mental model is \"declare your data dependencies at the route level.\" This is closer to traditional MVC frameworks like Rails or Laravel.",
+      },
+      {
+        type: "paragraph",
+        text: "Server Components give you more granular control — different parts of a page can fetch data independently, streaming in as they resolve. Route loaders give you cleaner separation of concerns — one data fetch per route, always available when the component renders.",
+      },
+      {
+        type: "paragraph",
+        text: "In practice, Server Components shine for dashboard-style pages with independent data sections. Route loaders excel for content pages where the entire page depends on a single data source. For most startup projects, both work well — the difference is in developer preference.",
+      },
+      {
+        type: "heading",
+        text: "Performance and Bundle Size",
+      },
+      {
+        type: "paragraph",
+        text: "Next.js App Router's biggest performance advantage is automatic code splitting at the component level. Server Components send zero JavaScript to the client, meaning pages with heavy data processing or large dependencies never ship those dependencies to the browser.",
+      },
+      {
+        type: "paragraph",
+        text: "Remix's performance story is progressive enhancement. Pages render without JavaScript by default — the framework works as a traditional server-rendered app until you add interactivity. This means content pages load fast even on slow connections, with JavaScript only loading for pages that need it.",
+      },
+      {
+        type: "paragraph",
+        text: "Bundle size comparison for a typical marketing page: Next.js Server Components deliver roughly 40-60KB of JavaScript (framework + minimal hydration). Remix delivers roughly 10-20KB for a static page (no JS needed). For a full SaaS dashboard, both end up around 80-120KB depending on component complexity.",
+      },
+      {
+        type: "heading",
+        text: "Ecosystem and Tooling",
+      },
+      {
+        type: "paragraph",
+        text: "Next.js has the largest ecosystem of any React framework. Vercel's platform integration (analytics, Speed Insights, Edge Functions, KV, Blob) creates a seamless deployment experience. The plugin ecosystem includes everything from MDX blogs to e-commerce frameworks.",
+      },
+      {
+        type: "paragraph",
+        text: "Remix (React Router v7) benefits from Shopify's backing, meaning tight integration with Shopify's commerce ecosystem. The framework is smaller and more focused — fewer features, less configuration, less to learn. The tradeoff is fewer third-party templates and community resources.",
+      },
+      {
+        type: "heading",
+        text: "When to Choose Next.js",
+      },
+      {
+        type: "paragraph",
+        text: "Choose Next.js when you need maximum flexibility: static sites, server-rendered apps, incremental static regeneration, API routes, image optimization, and middleware all in one framework. It's the Swiss Army knife of React frameworks — not the best at any one thing, but capable of everything.",
+      },
+      {
+        type: "paragraph",
+        text: "Next.js is also the better choice for teams that want to grow into Vercel's platform. The analytics, edge functions, and observability tooling are best-in-class when you're on Vercel. And Next.js's Server Components give you the most future-proof architecture as React continues evolving.",
+      },
+      {
+        type: "heading",
+        text: "When to Choose Remix / React Router v7",
+      },
+      {
+        type: "paragraph",
+        text: "Choose Remix when progressive enhancement is a core requirement. If your users include regions with slow internet connections, the zero-JS-by-default approach delivers a fundamentally better experience. Remix also wins for content-heavy sites where loaders provide a simpler mental model than Server Components.",
+      },
+      {
+        type: "paragraph",
+        text: "Remix's nested routing is genuinely better for complex layouts — each route segment can have its own data loading and error boundaries, making it easier to build pages with independent sections. If you're building a deeply nested application with complex layout hierarchies, Remix's routing model is cleaner.",
+      },
+      {
+        type: "heading",
+        text: "Our Verdict at Meteoric",
+      },
+      {
+        type: "paragraph",
+        text: "We use Next.js as our default framework at Meteoric — it's what we've built on for 12+ projects, and it powers this very website. The combination of Server Components, App Router, and Vercel deployment gives us the fastest path from prototype to production for most startup projects.",
+      },
+      {
+        type: "paragraph",
+        text: "But Remix (React Router v7) is a strong choice for specific use cases: content-first sites, apps targeting low-bandwidth users, and teams that prefer simpler data loading patterns. The framework competition is healthy — both push each other forward, and React developers benefit from having two excellent options.",
+      },
+      {
+        type: "paragraph",
+        text: 'For our full perspective on frontend technology, see <a href="/blog/the-meteoric-guide-to-choosing-your-tech-stack">our tech stack guide</a> and the <a href="/blog/gsap-vs-framer-motion-production-guide">GSAP vs Framer Motion comparison</a>. Browse our <a href="/work">portfolio</a> to see Next.js in production, or read our <a href="/technologies/next-js">Next.js technology page</a> for what we build with it.',
+      },
+    ],
+  },
+  {
+    slug: "mongodb-vs-postgresql-for-saas",
+    title: "MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?",
+    excerpt:
+      "A practical comparison of MongoDB and PostgreSQL for SaaS applications — data modeling, performance at scale, query capabilities, pricing, and a decision framework based on real production experience.",
+    date: "July 7, 2026",
+    readTime: "9 min read",
+    author: "Prashant Khuva",
+    image: "/images/blog/blog-cover-11.png",
+    content: [
+      {
+        type: "paragraph",
+        text: 'Every SaaS founder faces the database question early: MongoDB or PostgreSQL? It seems like a technical detail, but it\'s one of the most consequential decisions you\'ll make. Your database shapes your data model, your query patterns, your scaling strategy, and your team\'s hiring requirements.',
+      },
+      {
+        type: "paragraph",
+        text: "After building production SaaS applications on both at Meteoric — MongoDB for our habit tracking app, PostgreSQL (via Supabase) for our agency platform — here's a practical comparison based on real shipping experience, not benchmarks.",
+      },
+      {
+        type: "heading",
+        text: "The Short Answer",
+      },
+      {
+        type: "paragraph",
+        text: "Use PostgreSQL for anything with financial data, complex relationships, or reporting requirements. Use MongoDB for flexible document structures, fast prototyping with evolving schemas, and hierarchical data that maps naturally to nested documents.",
+      },
+      {
+        type: "paragraph",
+        text: "PostgreSQL is the safe default for most SaaS applications in 2026. The gap between document and relational databases has narrowed significantly — PostgreSQL now supports JSONB, full-text search, and array columns that cover many use cases that previously required MongoDB.",
+      },
+      {
+        type: "heading",
+        text: "Data Modeling: Schema vs Flexibility",
+      },
+      {
+        type: "paragraph",
+        text: "PostgreSQL is a relational database with a fixed schema. You define tables, columns, types, constraints, and relationships upfront. Migrations are explicit and version-controlled. This discipline prevents a class of bugs that plague early-stage startups — inconsistent data, missing fields, and type errors that only surface in production.",
+      },
+      {
+        type: "paragraph",
+        text: "MongoDB is a document database with a flexible schema. Each document can have different fields, arrays, and nested objects. This is liberating during early development when you're still figuring out your data model, but it becomes a liability as your product matures. Without schema enforcement, every application-level bug can silently corrupt data.",
+      },
+      {
+        type: "paragraph",
+        text: "In production, the flexibility advantage of MongoDB diminishes rapidly. By the time you have 50+ collections and 200+ API endpoints, you want the compiler — or in this case, the database — to catch your mistakes. PostgreSQL's schema enforcement catches field name typos, wrong types, and missing required fields before they reach users.",
+      },
+      {
+        type: "heading",
+        text: "Query Capabilities: SQL vs Aggregation Pipeline",
+      },
+      {
+        type: "paragraph",
+        text: "SQL is the most universally portable skill in software engineering. Every developer who knows SQL can work with PostgreSQL. MongoDB's aggregation pipeline is powerful but proprietary — and the cognitive load of translating business logic into pipeline stages ($match, $group, $lookup, $unwind, $project) is significantly higher than writing a SQL query.",
+      },
+      {
+        type: "paragraph",
+        text: "PostgreSQL's query planner optimizes complex JOINs, subqueries, window functions, and CTEs efficiently. MongoDB's $lookup (the equivalent of JOIN) performs poorly at scale and requires careful index design. For any application with more than 3-4 related data types, PostgreSQL's relational model produces simpler, faster queries.",
+      },
+      {
+        type: "paragraph",
+        text: "PostgreSQL also has features that MongoDB doesn't match: recursive CTEs for hierarchical data, window functions for analytics, materialized views for pre-computed aggregations, and full ACID transactions across multiple documents. For SaaS billing, analytics dashboards, and reporting features, these capabilities are essential.",
+      },
+      {
+        type: "heading",
+        text: "Performance at Scale",
+      },
+      {
+        type: "paragraph",
+        text: "MongoDB's original advantage was horizontal scaling via sharding. It's designed from the ground up to distribute data across clusters. PostgreSQL traditionally scaled vertically (bigger servers), but this has changed significantly. PostgreSQL 16+ supports native sharding via FDW (Foreign Data Wrappers) and Citus extension for distributed tables.",
+      },
+      {
+        type: "paragraph",
+        text: "For 95% of SaaS applications, neither database will be the bottleneck until you reach millions of users. At Meteoric, we've never needed to shard a database for a client project. Proper indexing, connection pooling, and query optimization keep both databases performant well into the growth stage.",
+      },
+      {
+        type: "paragraph",
+        text: "Where MongoDB genuinely wins is write-heavy workloads with simple access patterns. If you're storing event logs, user activity streams, or time-series data where every write is independent, MongoDB's document model and lack of JOINs make writes faster. For read-heavy applications with complex queries, PostgreSQL is consistently faster.",
+      },
+      {
+        type: "heading",
+        text: "Ecosystem and Tooling",
+      },
+      {
+        type: "paragraph",
+        text: "PostgreSQL's ecosystem is unmatched. Supabase provides a managed PostgreSQL platform with authentication, realtime subscriptions, storage, and edge functions. Prisma and Drizzle offer type-safe ORMs. pgAdmin, DataGrip, and TablePlus provide excellent GUI tools. The extension ecosystem includes PostGIS (geospatial), pgvector (vector search), TimescaleDB (time-series), and pg_cron.",
+      },
+      {
+        type: "paragraph",
+        text: "MongoDB's ecosystem centers around MongoDB Atlas (managed cloud) and Mongoose (ODM). Atlas provides a polished experience with automated backups, monitoring, and scaling. The tooling is mature but less extensive than PostgreSQL's. MongoDB Charts and Compass are solid GUI tools, and Realm provides mobile sync.",
+      },
+      {
+        type: "paragraph",
+        text: "The Supabase + PostgreSQL combination is particularly powerful for startups. You get a managed database, authentication, realtime subscriptions, and file storage in a single platform with predictable pricing. At Meteoric, this stack powers most of our client projects.",
+      },
+      {
+        type: "heading",
+        text: "When to Choose Each",
+      },
+      {
+        type: "paragraph",
+        text: "Choose PostgreSQL for: billing and financial systems, multi-tenant SaaS with complex relationships, analytics and reporting features, applications requiring full-text search, geospatial queries (PostGIS), vector embeddings (pgvector), or any project where data integrity is critical.",
+      },
+      {
+        type: "paragraph",
+        text: "Choose MongoDB for: rapidly prototyping with evolving schema, event logging and activity streams, real-time collaborative apps (shared with Firestore or Supabase Realtime), content management with deeply nested documents, applications with known, simple query patterns.",
+      },
+      {
+        type: "heading",
+        text: "Our Verdict at Meteoric",
+      },
+      {
+        type: "paragraph",
+        text: "PostgreSQL (via Supabase) is our default database for client projects. The combination of relational integrity, modern tooling, and the Supabase platform gives us the fastest path to production without compromising on data quality. We use MongoDB when a project genuinely needs document flexibility — typically content management systems and event-logging services.",
+      },
+      {
+        type: "paragraph",
+        text: 'The most important insight: your database choice matters far less than your data modeling discipline. A well-designed MongoDB schema with proper indexing outperforms a poorly-designed PostgreSQL schema every time. Pick the tool that matches your team\'s expertise and your data\'s shape, then invest in doing it right.',
+      },
+      {
+        type: "paragraph",
+        text: 'For more database insights, read our <a href="/blog/mongodb-schema-design-for-saas-billing">MongoDB billing schema guide</a> and our <a href="/blog/supabase-vs-firebase-2026-comparison">Supabase vs Firebase comparison</a>. See our <a href="/blog/the-meteoric-guide-to-choosing-your-tech-stack">tech stack philosophy</a> and browse our <a href="/technologies/supabase">Supabase technology page</a> for how we use PostgreSQL in production.',
+      },
+    ],
+  },
 ];

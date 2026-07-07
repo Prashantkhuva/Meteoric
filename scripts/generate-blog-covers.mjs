@@ -39,6 +39,18 @@ const covers = [
     gradient: ["#0a0a1a", "#070707"],
     accent: "#818CF8",
   },
+  {
+    file: "blog-cover-10.png",
+    label: "NEXT.JS VS REMIX 2026",
+    gradient: ["#0f0f23", "#070707"],
+    accent: "#EAEFFF",
+  },
+  {
+    file: "blog-cover-11.png",
+    label: "MONGODB VS POSTGRESQL FOR SAAS",
+    gradient: ["#0a1a0a", "#070707"],
+    accent: "#47A248",
+  },
 ];
 
 function makeFullSVG({ gradient: [top, bottom], accent, label }) {

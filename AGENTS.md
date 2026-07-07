@@ -145,9 +145,9 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - [x] Enhanced AI citation checker script (`scripts/check-ai-citations.mjs`)
 - [x] Updated `llms.txt` with all 9 posts, new pages, technology pages
 - [ ] Wikidata entry for Meteoric (entity.simplator.com — manual step)
-- [ ] Technology pages: `/technologies/react`, `/technologies/node-js`
-- [ ] Comparison posts: Next.js vs Remix 2026, MongoDB vs PostgreSQL for SaaS
-- [ ] Dedicated case studies section with metrics-heavy template
+- [x] Technology pages: `/technologies/react`, `/technologies/node-js`
+- [x] Dedicated case studies section (`/case-studies`) with metrics-heavy template
+- [x] Comparison posts: Next.js vs Remix 2026, MongoDB vs PostgreSQL for SaaS
 - [ ] Core Web Vitals audit using installed SpeedInsights
 
 ## Research Files (memory/)

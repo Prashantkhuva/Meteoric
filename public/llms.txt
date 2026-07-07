@@ -45,6 +45,8 @@
 - [Supabase vs Firebase in 2026: Which Backend Should You Build On?](https://withmeteoric.vercel.app/blog/supabase-vs-firebase-2026-comparison) — A comparison of Supabase and Firebase covering pricing, realtime, auth, vendor lock-in, and when to choose each.
 - [How Much Does a Startup Website Cost? (2026 Pricing Guide)](https://withmeteoric.vercel.app/blog/how-much-does-a-startup-website-cost) — A transparent breakdown of startup website costs with pricing ranges and what determines the final bill.
 - [How to Choose a Web Development Agency for Your Startup](https://withmeteoric.vercel.app/blog/how-to-choose-a-web-development-agency) — A step-by-step framework for evaluating web development agencies, red flags to watch for, and how to pick the right partner.
+- [Next.js vs Remix in 2026: Which React Framework Should You Build On?](https://withmeteoric.vercel.app/blog/nextjs-vs-remix-2026-comparison) — A detailed comparison of Next.js 16 and Remix (React Router v7) covering Server Components, loaders, bundle size, and decision framework.
+- [MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?](https://withmeteoric.vercel.app/blog/mongodb-vs-postgresql-for-saas) — A practical comparison of MongoDB and PostgreSQL for SaaS applications — data modeling, performance, query capabilities, and decision framework.
 
 ## Portfolio
 
