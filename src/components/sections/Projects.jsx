@@ -244,7 +244,7 @@ function Projects() {
 
         {/* RIGHT — sticky detail panel (large screens only) */}
         <div className="hidden lg:block lg:w-1/2">
-          <div className="sticky top-32 py-12">
+          <div className="sticky top-32 pb-12">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
