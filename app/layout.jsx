@@ -129,6 +129,21 @@ export default function RootLayout({ children }) {
                     "Landing Page Design",
                   ],
                 },
+                {
+                  "@type": "SiteNavigationElement",
+                  "@id": `${SITE_URL}/#navigation`,
+                  name: "Main Navigation",
+                  description: "Primary site navigation links",
+                  url: SITE_URL,
+                  hasPart: [
+                    { "@type": "SiteNavigationElement", name: "Work", url: `${SITE_URL}/work` },
+                    { "@type": "SiteNavigationElement", name: "Services", url: `${SITE_URL}/services` },
+                    { "@type": "SiteNavigationElement", name: "Blog", url: `${SITE_URL}/blog` },
+                    { "@type": "SiteNavigationElement", name: "About", url: `${SITE_URL}/about` },
+                    { "@type": "SiteNavigationElement", name: "Next.js Development", url: `${SITE_URL}/technologies/next-js` },
+                    { "@type": "SiteNavigationElement", name: "Supabase Development", url: `${SITE_URL}/technologies/supabase` },
+                  ],
+                },
               ],
             }),
           }}

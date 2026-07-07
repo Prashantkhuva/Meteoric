@@ -81,6 +81,8 @@ export default function Footer() {
                 <Link href="/services" className="text-white/60 hover:text-white transition-colors duration-300">Services</Link>
                 <Link href="/services/saas-development" className="text-white/60 hover:text-white transition-colors duration-300">SaaS Dev</Link>
                 <Link href="/services/startup-web-development" className="text-white/60 hover:text-white transition-colors duration-300">Startup Web</Link>
+                <Link href="/technologies/next-js" className="text-white/60 hover:text-white transition-colors duration-300">Next.js</Link>
+                <Link href="/technologies/supabase" className="text-white/60 hover:text-white transition-colors duration-300">Supabase</Link>
                 <Link href="/#process" className="text-white/60 hover:text-white transition-colors duration-300">Process</Link>
                 <Link href="/about" className="text-white/60 hover:text-white transition-colors duration-300">About</Link>
               </nav>

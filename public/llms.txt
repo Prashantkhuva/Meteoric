@@ -73,6 +73,8 @@
 - [Services](https://withmeteoric.vercel.app/services)
 - [SaaS Development](https://withmeteoric.vercel.app/services/saas-development)
 - [Startup Web Development](https://withmeteoric.vercel.app/services/startup-web-development)
+- [Next.js Development](https://withmeteoric.vercel.app/technologies/next-js)
+- [Supabase Development](https://withmeteoric.vercel.app/technologies/supabase)
 - [Process](https://withmeteoric.vercel.app/#process)
 - [Contact](https://withmeteoric.vercel.app/#contact)
 - [Blog](https://withmeteoric.vercel.app/blog)

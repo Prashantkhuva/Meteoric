@@ -126,6 +126,30 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - New blog total: 9 posts (3 new: Supabase vs Firebase, Startup Website Cost, Choose Your Agency)
 - New cover images: blog-cover-5 through blog-cover-9 (themed gradients + brand labels)
 
+## SEO/GEO/AEO Optimization Status (2026-07-07)
+- [x] Canonical tags on all 10 public pages (root layout + 9 pages)
+- [x] Blog OG/Twitter images use post-specific covers instead of default
+- [x] `/services`, `/privacy`, `/terms`, `/technologies/*` in sitemap
+- [x] IndexNow key-file typo fixed + key file created at `public/meteoric-indexnow-key.txt`
+- [x] Service pages + technology pages in Footer navigation
+- [x] `article:published_time`, `article:modified_time`, `article:author` OG tags on blog posts
+- [x] `twitter:creator` (`@prashantkhuva_`) on all pages
+- [x] `Blog` schema (CollectionPage) on `/blog` listing page
+- [x] `SiteNavigationElement` schema in root layout
+- [x] `theme-color` (#070707) + `referrer` policy in root layout
+- [x] Privacy Policy (`/privacy`) and Terms of Service (`/terms`) pages
+- [x] Internal links from Work page to service pages
+- [x] Author bylines (Prashant Khuva) on all 9 blog posts
+- [x] `security.txt` at `public/.well-known/security.txt`
+- [x] Technology landing pages: `/technologies/next-js`, `/technologies/supabase`
+- [x] Enhanced AI citation checker script (`scripts/check-ai-citations.mjs`)
+- [x] Updated `llms.txt` with all 9 posts, new pages, technology pages
+- [ ] Wikidata entry for Meteoric (entity.simplator.com — manual step)
+- [ ] Technology pages: `/technologies/react`, `/technologies/node-js`
+- [ ] Comparison posts: Next.js vs Remix 2026, MongoDB vs PostgreSQL for SaaS
+- [ ] Dedicated case studies section with metrics-heavy template
+- [ ] Core Web Vitals audit using installed SpeedInsights
+
 ## Research Files (memory/)
 - `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma
 - `memory/research/keyword-research/2026-07-06-meteoric-target-queries.md` — 45 keywords across 5 clusters + SERP + GEO analysis

@@ -12,6 +12,8 @@ export const sitemapRoutes = [
   { path: "/services/startup-web-development", priority: "0.9", changefreq: "monthly" },
   { path: "/privacy", priority: "0.3", changefreq: "yearly" },
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
+  { path: "/technologies/next-js", priority: "0.8", changefreq: "monthly" },
+  { path: "/technologies/supabase", priority: "0.8", changefreq: "monthly" },
 ];
 
 
