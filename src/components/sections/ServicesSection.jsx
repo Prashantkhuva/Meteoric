@@ -32,6 +32,34 @@ const services = [
     tag: "MERN Stack",
     img: "/we-do-4.avif",
   },
+  {
+    num: "05",
+    title: "UI/UX Design",
+    desc: "Wireframes, prototypes, and polished interfaces designed for clarity and conversion.",
+    tag: "Design",
+    img: "/we-do-5.svg",
+  },
+  {
+    num: "06",
+    title: "API & Backend",
+    desc: "RESTful and GraphQL APIs with secure authentication, database design, and third-party integrations.",
+    tag: "Backend",
+    img: "/we-do-6.svg",
+  },
+  {
+    num: "07",
+    title: "E-Commerce",
+    desc: "Custom online stores and checkout flows built for performance, security, and conversion.",
+    tag: "Full-Stack",
+    img: "/we-do-7.svg",
+  },
+  {
+    num: "08",
+    title: "Performance Optimization",
+    desc: "Core Web Vitals audits, bundle analysis, lazy loading, CDN config, and image optimization.",
+    tag: "DevOps",
+    img: "/we-do-8.svg",
+  },
 ];
 
 const containerVariants = {

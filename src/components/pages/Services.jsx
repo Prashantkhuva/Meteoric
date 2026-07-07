@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Code, Globe } from "lucide-react";
+import { ArrowUpRight, Code, Globe, Palette, Lightbulb } from "lucide-react";
 
 const serviceItems = [
   {
@@ -18,6 +18,20 @@ const serviceItems = [
     desc: "Conversion-optimized websites for early-stage and funded startups. Fast-loading, SEO-ready, and designed to tell your story.",
     href: "/services/startup-web-development",
     keyword: "startup web development agency",
+  },
+  {
+    icon: <Palette size={24} />,
+    title: "UI/UX Design",
+    desc: "Clean, conversion-focused interfaces designed for your users. From wireframes to high-fidelity prototypes — we design experiences that feel intuitive.",
+    href: "/services",
+    keyword: "ui ux design agency",
+  },
+  {
+    icon: <Lightbulb size={24} />,
+    title: "Technical Consulting",
+    desc: "Stack selection, architecture planning, and code audits. We help founders make the right technical decisions before writing a single line of code.",
+    href: "/services",
+    keyword: "technical consulting for startups",
   },
 ];
 
