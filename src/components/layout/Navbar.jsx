@@ -81,7 +81,7 @@ export default function Navbar() {
 
       <header
         className="fixed top-0 left-0 w-full z-50 py-4 md:pt-6"
-        style={{ backgroundColor: "rgba(0,0,0,0)", backdropFilter: "blur(20px)" }}
+        style={{ backgroundColor: "rgb(0,0,0)" }}
       >
         <div
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
