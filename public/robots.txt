@@ -1,4 +1,4 @@
-# Meteoric — https://withmeteoric.vercel.app
+# Meteoric — https://withmeteoric.com
 User-agent: *
 Allow: /
 Disallow: /admin
@@ -24,4 +24,4 @@ Allow: /
 Disallow: /admin
 Disallow: /login
 
-Sitemap: https://withmeteoric.vercel.app/sitemap.xml
+Sitemap: https://withmeteoric.com/sitemap.xml

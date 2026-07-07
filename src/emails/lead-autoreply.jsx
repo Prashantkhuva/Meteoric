@@ -10,7 +10,7 @@ import {
 } from "react-email";
 
 export default function LeadAutoReply({ name, siteUrl }) {
-  const baseUrl = siteUrl || "https://withmeteoric.vercel.app";
+  const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
     <Html>
       <Head />

@@ -13,7 +13,7 @@ import {
 } from "react-email";
 
 export default function ReviewNotification({ name, email, role, company, project, rating, content, siteUrl }) {
-  const baseUrl = siteUrl || "https://withmeteoric.vercel.app";
+  const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
     <Html>
       <Head />

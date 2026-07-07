@@ -2,14 +2,14 @@
 // ChatGPT uses Bing's index, so this helps ChatGPT cite your content faster.
 // Run: node scripts/submit-indexnow.mjs
 
-const SITEMAP_URL = "https://withmeteoric.vercel.app/sitemap.xml";
+const SITEMAP_URL = "https://withmeteoric.com/sitemap.xml";
 const INDEXNOW_URL = "https://www.bing.com/indexnow";
 
 async function submit() {
   const payload = {
-    host: "withmeteoric.vercel.app",
+    host: "withmeteoric.com",
     key: "meteoric-indexnow-key",
-    keyLocation: "https://withmeteoric.vercel.app/meteoric-indexnow-key.txt",
+    keyLocation: "https://withmeteoric.com/meteoric-indexnow-key.txt",
     urlList: [SITEMAP_URL],
   };
 

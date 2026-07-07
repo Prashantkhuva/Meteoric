@@ -13,7 +13,7 @@ import {
 } from "react-email";
 
 export default function HotLeadAlert({ lead, score, category, summary, siteUrl }) {
-  const baseUrl = siteUrl || "https://withmeteoric.vercel.app";
+  const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
     <Html>
       <Head />

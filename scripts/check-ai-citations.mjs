@@ -14,7 +14,7 @@ const TARGET_QUERIES = [
   "product studio vs agency",
 ];
 
-const SITE = "withmeteoric.vercel.app";
+const SITE = "withmeteoric.com";
 const SITE_NAME = "Meteoric";
 
 function formatDate() {
@@ -31,7 +31,7 @@ async function checkGoogle(query) {
       {
         headers: {
           "User-Agent":
-            "Mozilla/5.0 (compatible; MeteoricCitationChecker/1.0; +https://withmeteoric.vercel.app)",
+            "Mozilla/5.0 (compatible; MeteoricCitationChecker/1.0; +https://withmeteoric.com)",
           Accept: "text/html",
         },
       },
@@ -57,7 +57,7 @@ async function checkBing(query) {
       {
         headers: {
           "User-Agent":
-            "Mozilla/5.0 (compatible; MeteoricCitationChecker/1.0; +https://withmeteoric.vercel.app)",
+            "Mozilla/5.0 (compatible; MeteoricCitationChecker/1.0; +https://withmeteoric.com)",
           Accept: "text/html",
         },
       },
@@ -120,7 +120,7 @@ function printResults(allResults) {
   lines.push("    Or sign in → Settings → Data controls → Export");
   lines.push("");
   lines.push("  To check Claude:");
-  lines.push("    Ask: 'Have you heard of Meteoric (withmeteoric.vercel.app)?'");
+  lines.push("    Ask: 'Have you heard of Meteoric (withmeteoric.com)?'");
   lines.push("    Then: 'Does it appear for [query]?'");
   lines.push("");
   lines.push("  To check Gemini:");
