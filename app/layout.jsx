@@ -95,6 +95,7 @@ export default function RootLayout({ children }) {
                     "https://www.linkedin.com/in/prashantkhuva",
                     "https://x.com/prashantkhuva_",
                     "https://www.instagram.com/prashant.khuva/",
+                    "https://www.wikidata.org/wiki/Q140453413",
                   ],
                 },
                 {
