@@ -9,6 +9,9 @@ const pageDesc =
 export const metadata = {
   title: pageTitle,
   description: pageDesc,
+  alternates: {
+    canonical: `${SITE_URL}/work`,
+  },
   openGraph: {
     title: pageTitle,
     description: pageDesc,
@@ -26,6 +29,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
+    creator: "@prashantkhuva_",
     title: pageTitle,
     description: pageDesc,
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],

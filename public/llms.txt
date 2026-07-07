@@ -40,6 +40,11 @@
 - [Designing for Conversion: Lessons From 12 Shipped Projects](https://withmeteoric.vercel.app/blog/designing-for-conversion-lessons-from-12-shipped-projects) — Design principles that drive conversions: clarity over creativity, reducing cognitive load, and purposeful motion.
 - [Building an MVP in 3 Weeks: A SaaS Prototype Case Study](https://withmeteoric.vercel.app/blog/building-a-saas-prototype-in-3-weeks-a-case-study) — How Meteoric built a fintech SaaS MVP prototype in 21 days using Next.js, Tailwind CSS, and Supabase.
 - [The Meteoric Guide to Choosing Your Tech Stack](https://withmeteoric.vercel.app/blog/the-meteoric-guide-to-choosing-your-tech-stack) — Meteoric's default tech stack and decision framework for choosing the right tools for your project.
+- [MongoDB Schema Design for SaaS Billing](https://withmeteoric.vercel.app/blog/mongodb-schema-design-for-saas-billing) — A practical guide to designing MongoDB schemas for subscription billing, multi-tenant pricing, and usage metering in production SaaS apps.
+- [GSAP vs Framer Motion: When to Use Which for Production Websites](https://withmeteoric.vercel.app/blog/gsap-vs-framer-motion-production-guide) — A practical comparison of GSAP and Framer Motion with bundle size benchmarks, use cases, and decision framework.
+- [Supabase vs Firebase in 2026: Which Backend Should You Build On?](https://withmeteoric.vercel.app/blog/supabase-vs-firebase-2026-comparison) — A comparison of Supabase and Firebase covering pricing, realtime, auth, vendor lock-in, and when to choose each.
+- [How Much Does a Startup Website Cost? (2026 Pricing Guide)](https://withmeteoric.vercel.app/blog/how-much-does-a-startup-website-cost) — A transparent breakdown of startup website costs with pricing ranges and what determines the final bill.
+- [How to Choose a Web Development Agency for Your Startup](https://withmeteoric.vercel.app/blog/how-to-choose-a-web-development-agency) — A step-by-step framework for evaluating web development agencies, red flags to watch for, and how to pick the right partner.
 
 ## Portfolio
 
@@ -65,10 +70,14 @@
 - [Home](https://withmeteoric.vercel.app/)
 - [About](https://withmeteoric.vercel.app/about)
 - [Work / Portfolio](https://withmeteoric.vercel.app/work)
-- [Services](https://withmeteoric.vercel.app/services/saas-development)
+- [Services](https://withmeteoric.vercel.app/services)
+- [SaaS Development](https://withmeteoric.vercel.app/services/saas-development)
+- [Startup Web Development](https://withmeteoric.vercel.app/services/startup-web-development)
 - [Process](https://withmeteoric.vercel.app/#process)
 - [Contact](https://withmeteoric.vercel.app/#contact)
 - [Blog](https://withmeteoric.vercel.app/blog)
+- [Privacy Policy](https://withmeteoric.vercel.app/privacy)
+- [Terms of Service](https://withmeteoric.vercel.app/terms)
 
 ## Guidelines
 

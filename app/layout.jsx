@@ -28,6 +28,9 @@ export const metadata = {
   title: metaTitle,
   description: metaDesc,
   metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: `${SITE_URL}/`,
+  },
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",
@@ -54,9 +57,14 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
+    creator: "@prashantkhuva_",
     title: metaTitle,
     description: metaDescOg,
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
+  },
+  other: {
+    "theme-color": "#070707",
+    "referrer": "origin-when-cross-origin",
   },
 };
 

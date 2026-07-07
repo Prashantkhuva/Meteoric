@@ -63,6 +63,12 @@ export default function BlogPostPage({ post }) {
             )}
             <span className="w-px h-3 bg-white/10" />
             <span>{post.readTime}</span>
+            {post.author && (
+              <>
+                <span className="w-px h-3 bg-white/10" />
+                <span>By {post.author}</span>
+              </>
+            )}
           </div>
 
           <h1 className="text-3xl md:text-4xl font-semibold leading-[1.15] tracking-tight mb-8">

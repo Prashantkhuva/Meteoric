@@ -9,7 +9,7 @@ async function submit() {
   const payload = {
     host: "withmeteoric.vercel.app",
     key: "meteoric-indexnow-key",
-    keyLocation: "https://withmeteoric.vercel.app/metoric-indexnow-key.txt",
+    keyLocation: "https://withmeteoric.vercel.app/meteoric-indexnow-key.txt",
     urlList: [SITEMAP_URL],
   };
 

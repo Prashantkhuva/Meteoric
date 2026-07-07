@@ -8,6 +8,7 @@ export const posts = [
     dateModified: "July 6, 2026",
     readTime: "5 min read",
     image: "/images/blog/blog-cover-1.png",
+    author: "Prashant Khuva",
     content: [
       {
         type: "paragraph",
@@ -59,6 +60,7 @@ export const posts = [
     date: "June 12, 2026",
     dateModified: "July 6, 2026",
     readTime: "7 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-2.png",
     content: [
       {
@@ -118,6 +120,7 @@ export const posts = [
       "How we took a fintech concept from whiteboard to working MVP prototype in 21 days — and what we learned about shipping fast without breaking things.",
     date: "May 28, 2026",
     readTime: "8 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-3.png",
     content: [
       {
@@ -173,6 +176,7 @@ export const posts = [
       "How to design MongoDB schemas for subscription billing, multi-tenant pricing, usage metering, and invoice history — with real examples used in production SaaS apps.",
     date: "July 6, 2026",
     readTime: "9 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-5.png",
     content: [
       {
@@ -268,6 +272,7 @@ export const posts = [
       "A practical comparison of GSAP and Framer Motion for production web projects — performance benchmarks, bundle size impact, use cases, and decision framework from a developer who ships both daily.",
     date: "July 6, 2026",
     readTime: "10 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-6.png",
     content: [
       {
@@ -359,6 +364,7 @@ export const posts = [
       "React vs Next.js? Tailwind vs CSS? Supabase vs Firebase? Here's our framework for making technology decisions that won't haunt you later.",
     date: "May 15, 2026",
     readTime: "6 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-4.png",
     content: [
       {
@@ -406,6 +412,7 @@ export const posts = [
       "A practical comparison of Supabase and Firebase for production applications — pricing, realtime, auth, vendor lock-in, and when to choose each in 2026.",
     date: "July 6, 2026",
     readTime: "8 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-7.png",
     content: [
       {
@@ -529,6 +536,7 @@ export const posts = [
       "A transparent breakdown of startup website costs — landing pages, SaaS dashboards, MVPs, and e-commerce — with pricing ranges and what determines the final bill.",
     date: "July 6, 2026",
     readTime: "9 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-8.png",
     content: [
       {
@@ -620,6 +628,7 @@ export const posts = [
       "A step-by-step framework for evaluating web development agencies — what to ask, red flags to watch for, and how to pick the right partner for your stage.",
     date: "July 6, 2026",
     readTime: "7 min read",
+    author: "Prashant Khuva",
     image: "/images/blog/blog-cover-9.png",
     content: [
       {

@@ -1,10 +1,15 @@
 import { notFound } from "next/navigation";
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { SITE_URL } from "@/lib/seo/config";
 import { posts } from "@/data/blog";
 import BlogPostPage from "@/components/pages/BlogPost";
 
 export function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
+}
+
+function toIsoDate(dateStr) {
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? dateStr : d.toISOString();
 }
 
 export async function generateMetadata({ params }) {
@@ -13,21 +18,30 @@ export async function generateMetadata({ params }) {
   if (!post) return {};
 
   const title = `${post.title} — Meteoric Blog`;
+  const ogImage = `${SITE_URL}${post.image}`;
   return {
     title,
     description: post.excerpt,
+    alternates: {
+      canonical: `${SITE_URL}/blog/${post.slug}`,
+    },
     openGraph: {
       title,
       description: post.excerpt,
       url: `${SITE_URL}/blog/${post.slug}`,
-      images: [{ url: `${SITE_URL}${DEFAULT_OG_IMAGE}`, width: 1635, height: 962, alt: title }],
+      type: "article",
+      publishedTime: toIsoDate(post.date),
+      modifiedTime: toIsoDate(post.dateModified || post.date),
+      authors: [`${SITE_URL}/about`],
+      images: [{ url: ogImage, width: 1635, height: 962, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
       site: "@prashantkhuva_",
+      creator: "@prashantkhuva_",
       title,
       description: post.excerpt,
-      images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
+      images: [ogImage],
     },
   };
 }

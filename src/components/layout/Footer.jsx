@@ -69,12 +69,18 @@ export default function Footer() {
               <p className="text-sm text-white/60">
                 &copy; 2026 Meteoric. All rights reserved.
               </p>
+              <div className="flex gap-4 text-sm">
+                <Link href="/privacy" className="text-white/40 hover:text-white transition-colors duration-300">Privacy</Link>
+                <Link href="/terms" className="text-white/40 hover:text-white transition-colors duration-300">Terms</Link>
+              </div>
 
               {/* Center &mdash; internal links */}
               <nav className="flex flex-wrap gap-x-4 lg:gap-x-6 gap-y-2 text-sm" aria-label="Footer navigation">
                 <Link href="/work" className="text-white/60 hover:text-white transition-colors duration-300">Work</Link>
                 <Link href="/blog" className="text-white/60 hover:text-white transition-colors duration-300">Blog</Link>
                 <Link href="/services" className="text-white/60 hover:text-white transition-colors duration-300">Services</Link>
+                <Link href="/services/saas-development" className="text-white/60 hover:text-white transition-colors duration-300">SaaS Dev</Link>
+                <Link href="/services/startup-web-development" className="text-white/60 hover:text-white transition-colors duration-300">Startup Web</Link>
                 <Link href="/#process" className="text-white/60 hover:text-white transition-colors duration-300">Process</Link>
                 <Link href="/about" className="text-white/60 hover:text-white transition-colors duration-300">About</Link>
               </nav>

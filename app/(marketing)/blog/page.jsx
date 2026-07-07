@@ -1,4 +1,5 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { posts } from "@/data/blog";
 import BlogPage from "@/components/pages/Blog";
 
 const pageTitle = "Blog — Meteoric Insights | Web Dev & Design";
@@ -8,6 +9,9 @@ const pageDesc =
 export const metadata = {
   title: pageTitle,
   description: pageDesc,
+  alternates: {
+    canonical: `${SITE_URL}/blog`,
+  },
   openGraph: {
     title: pageTitle,
     description: pageDesc,
@@ -17,6 +21,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
+    creator: "@prashantkhuva_",
     title: pageTitle,
     description: pageDesc,
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
@@ -32,12 +37,37 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const blogSchemaJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": `${SITE_URL}/blog`,
+  name: "Meteoric Blog",
+  description: pageDesc,
+  url: `${SITE_URL}/blog`,
+  publisher: {
+    "@type": "Organization",
+    name: "Meteoric",
+    url: SITE_URL,
+  },
+  blogPost: posts.map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.title,
+    url: `${SITE_URL}/blog/${post.slug}`,
+    datePublished: post.date,
+    dateModified: post.dateModified || post.date,
+  })),
+};
+
 export default function Blog() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchemaJsonLd) }}
       />
       <BlogPage />
     </>
