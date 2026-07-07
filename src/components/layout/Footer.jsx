@@ -72,7 +72,7 @@ export default function Footer() {
               <Link href="/blog" className="text-white/40 hover:text-white transition-colors">Blog</Link>
               <Link href="/about" className="text-white/40 hover:text-white transition-colors">About</Link>
             </div>
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
               <p className="text-white/30">&copy; 2026 Meteoric.</p>
               <Link href="/privacy" className="text-white/30 hover:text-white transition-colors">Privacy</Link>
               <span className="text-white/10">/</span>
