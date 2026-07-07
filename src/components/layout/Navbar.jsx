@@ -79,10 +79,7 @@ export default function Navbar() {
         }
       `}</style>
 
-      <header
-        className="fixed top-0 left-0 w-full z-50 py-4 md:pt-6"
-        style={{ backgroundColor: "rgb(0,0,0)" }}
-      >
+      <header className="fixed top-0 left-0 w-full z-50 py-4 md:pt-6">
         <div
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
         >
@@ -164,26 +161,26 @@ export default function Navbar() {
         <div
           ref={menuRef}
           tabIndex={-1}
-          className={`md:hidden mx-6 overflow-hidden rounded-2xl border border-white/[0.06] bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300 ${
+          className={`md:hidden mx-6 overflow-hidden rounded-xl border border-white/[0.06] bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300 ${
             isMenuOpen
-              ? "pointer-events-auto translate-y-0 opacity-100 max-h-[500px]"
+              ? "pointer-events-auto translate-y-0 opacity-100 max-h-[320px]"
               : "pointer-events-none -translate-y-3 opacity-0 max-h-0"
           }`}
         >
-          <div className="flex flex-col p-2">
+          <div className="flex flex-col p-1">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 href={item.to}
                 onClick={() => setIsMenuOpen(false)}
-                className="group relative rounded-xl px-4 py-3 text-sm font-medium text-white/60 transition-all duration-200 hover:bg-white/[0.06] hover:text-white"
+                className="group relative rounded-lg px-3 py-2 text-sm font-medium text-white/60 transition-all duration-200 hover:bg-white/[0.06] hover:text-white"
               >
                 {item.label}
               </Link>
             ))}
             <button
               onClick={() => { setIsMenuOpen(false); setIsOpen(true); }}
-              className="mt-1 mx-2 rounded-xl px-4 py-3 text-sm font-medium text-black transition-all duration-200"
+              className="mt-0.5 mx-1 rounded-lg px-3 py-2 text-sm font-medium text-black transition-all duration-200"
               style={{
                 background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
               }}
