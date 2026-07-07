@@ -46,20 +46,7 @@ const services = [
     tag: "Backend",
     img: "/we-do-6.svg",
   },
-  {
-    num: "07",
-    title: "E-Commerce",
-    desc: "Custom online stores and checkout flows built for performance, security, and conversion.",
-    tag: "Full-Stack",
-    img: "/we-do-7.svg",
-  },
-  {
-    num: "08",
-    title: "Performance Optimization",
-    desc: "Core Web Vitals audits, bundle analysis, lazy loading, CDN config, and image optimization.",
-    tag: "DevOps",
-    img: "/we-do-8.svg",
-  },
+
 ];
 
 const containerVariants = {
