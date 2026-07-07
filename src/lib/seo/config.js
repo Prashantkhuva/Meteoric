@@ -1,4 +1,4 @@
-export const SITE_URL = "https://withmeteoric.vercel.app";
+export const SITE_URL = "https://withmeteoric.com";
 export const SITE_NAME = "Meteoric";
 export const DEFAULT_OG_IMAGE = "/og-image.png?v=20260706";
 

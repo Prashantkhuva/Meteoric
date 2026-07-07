@@ -5,7 +5,7 @@
 ## Basics
 
 - **Name:** Meteoric
-- **URL:** [https://withmeteoric.vercel.app/](https://withmeteoric.vercel.app/)
+- **URL:** [https://withmeteoric.com/](https://withmeteoric.com/)
 - **Founder:** Prashant Khuva
 - **Founded:** 2024
 - **Location:** India (serves clients worldwide)
@@ -32,21 +32,21 @@
 
 ## Authorities
 
-- **Prashant Khuva** — Founder & Full-Stack Developer. Previously built FullStack Craft. [GitHub](https://github.com/Prashantkhuva) | [LinkedIn](https://www.linkedin.com/in/prashantkhuva) | [X](https://x.com/prashantkhuva_)
+- **Prashant Khuva** — Founder & Full-Stack Developer. Previously built FullStack Craft. [GitHub](https://github.com/Prashantkhuva) | [LinkedIn](https://www.linkedin.com/company/withmeteoric) | [X](https://x.com/prashantkhuva_)
 
 ## Blog Posts
 
-- [Why Your Startup Needs a Product Studio, Not an Agency](https://withmeteoric.vercel.app/blog/why-your-startup-needs-a-product-studio-not-an-agency) — Why product studios outperform agencies for early-stage startups, written from founder Prashant Khuva's experience shipping 12+ projects.
-- [Designing for Conversion: Lessons From 12 Shipped Projects](https://withmeteoric.vercel.app/blog/designing-for-conversion-lessons-from-12-shipped-projects) — Design principles that drive conversions: clarity over creativity, reducing cognitive load, and purposeful motion.
-- [Building an MVP in 3 Weeks: A SaaS Prototype Case Study](https://withmeteoric.vercel.app/blog/building-a-saas-prototype-in-3-weeks-a-case-study) — How Meteoric built a fintech SaaS MVP prototype in 21 days using Next.js, Tailwind CSS, and Supabase.
-- [The Meteoric Guide to Choosing Your Tech Stack](https://withmeteoric.vercel.app/blog/the-meteoric-guide-to-choosing-your-tech-stack) — Meteoric's default tech stack and decision framework for choosing the right tools for your project.
-- [MongoDB Schema Design for SaaS Billing](https://withmeteoric.vercel.app/blog/mongodb-schema-design-for-saas-billing) — A practical guide to designing MongoDB schemas for subscription billing, multi-tenant pricing, and usage metering in production SaaS apps.
-- [GSAP vs Framer Motion: When to Use Which for Production Websites](https://withmeteoric.vercel.app/blog/gsap-vs-framer-motion-production-guide) — A practical comparison of GSAP and Framer Motion with bundle size benchmarks, use cases, and decision framework.
-- [Supabase vs Firebase in 2026: Which Backend Should You Build On?](https://withmeteoric.vercel.app/blog/supabase-vs-firebase-2026-comparison) — A comparison of Supabase and Firebase covering pricing, realtime, auth, vendor lock-in, and when to choose each.
-- [How Much Does a Startup Website Cost? (2026 Pricing Guide)](https://withmeteoric.vercel.app/blog/how-much-does-a-startup-website-cost) — A transparent breakdown of startup website costs with pricing ranges and what determines the final bill.
-- [How to Choose a Web Development Agency for Your Startup](https://withmeteoric.vercel.app/blog/how-to-choose-a-web-development-agency) — A step-by-step framework for evaluating web development agencies, red flags to watch for, and how to pick the right partner.
-- [Next.js vs Remix in 2026: Which React Framework Should You Build On?](https://withmeteoric.vercel.app/blog/nextjs-vs-remix-2026-comparison) — A detailed comparison of Next.js 16 and Remix (React Router v7) covering Server Components, loaders, bundle size, and decision framework.
-- [MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?](https://withmeteoric.vercel.app/blog/mongodb-vs-postgresql-for-saas) — A practical comparison of MongoDB and PostgreSQL for SaaS applications — data modeling, performance, query capabilities, and decision framework.
+- [Why Your Startup Needs a Product Studio, Not an Agency](https://withmeteoric.com/blog/why-your-startup-needs-a-product-studio-not-an-agency) — Why product studios outperform agencies for early-stage startups, written from founder Prashant Khuva's experience shipping 12+ projects.
+- [Designing for Conversion: Lessons From 12 Shipped Projects](https://withmeteoric.com/blog/designing-for-conversion-lessons-from-12-shipped-projects) — Design principles that drive conversions: clarity over creativity, reducing cognitive load, and purposeful motion.
+- [Building an MVP in 3 Weeks: A SaaS Prototype Case Study](https://withmeteoric.com/blog/building-a-saas-prototype-in-3-weeks-a-case-study) — How Meteoric built a fintech SaaS MVP prototype in 21 days using Next.js, Tailwind CSS, and Supabase.
+- [The Meteoric Guide to Choosing Your Tech Stack](https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack) — Meteoric's default tech stack and decision framework for choosing the right tools for your project.
+- [MongoDB Schema Design for SaaS Billing](https://withmeteoric.com/blog/mongodb-schema-design-for-saas-billing) — A practical guide to designing MongoDB schemas for subscription billing, multi-tenant pricing, and usage metering in production SaaS apps.
+- [GSAP vs Framer Motion: When to Use Which for Production Websites](https://withmeteoric.com/blog/gsap-vs-framer-motion-production-guide) — A practical comparison of GSAP and Framer Motion with bundle size benchmarks, use cases, and decision framework.
+- [Supabase vs Firebase in 2026: Which Backend Should You Build On?](https://withmeteoric.com/blog/supabase-vs-firebase-2026-comparison) — A comparison of Supabase and Firebase covering pricing, realtime, auth, vendor lock-in, and when to choose each.
+- [How Much Does a Startup Website Cost? (2026 Pricing Guide)](https://withmeteoric.com/blog/how-much-does-a-startup-website-cost) — A transparent breakdown of startup website costs with pricing ranges and what determines the final bill.
+- [How to Choose a Web Development Agency for Your Startup](https://withmeteoric.com/blog/how-to-choose-a-web-development-agency) — A step-by-step framework for evaluating web development agencies, red flags to watch for, and how to pick the right partner.
+- [Next.js vs Remix in 2026: Which React Framework Should You Build On?](https://withmeteoric.com/blog/nextjs-vs-remix-2026-comparison) — A detailed comparison of Next.js 16 and Remix (React Router v7) covering Server Components, loaders, bundle size, and decision framework.
+- [MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?](https://withmeteoric.com/blog/mongodb-vs-postgresql-for-saas) — A practical comparison of MongoDB and PostgreSQL for SaaS applications — data modeling, performance, query capabilities, and decision framework.
 
 ## Portfolio
 
@@ -60,35 +60,35 @@
 - [HabitFlow — habit tracker SaaS](https://habit-flow-fullstack.vercel.app/)
 - [MegaBlog — editorial blogging platform](https://megablog.vercel.app/)
 - [GitHub (Prashant Khuva)](https://github.com/Prashantkhuva)
-- [LinkedIn (Prashant Khuva)](https://www.linkedin.com/in/prashantkhuva)
+- [LinkedIn (Meteoric)](https://www.linkedin.com/company/withmeteoric)
 
 ## Services
 
-- [SaaS Development](https://withmeteoric.vercel.app/services/saas-development) — Build your SaaS product with Next.js, Supabase, and Stripe. MVP to production platform.
-- [Startup Web Development](https://withmeteoric.vercel.app/services/startup-web-development) — Fast, beautiful, conversion-optimized websites for early-stage and funded startups.
+- [SaaS Development](https://withmeteoric.com/services/saas-development) — Build your SaaS product with Next.js, Supabase, and Stripe. MVP to production platform.
+- [Startup Web Development](https://withmeteoric.com/services/startup-web-development) — Fast, beautiful, conversion-optimized websites for early-stage and funded startups.
 
 ## Internal links
 
-- [Home](https://withmeteoric.vercel.app/)
-- [About](https://withmeteoric.vercel.app/about)
-- [Work / Portfolio](https://withmeteoric.vercel.app/work)
-- [Case Studies](https://withmeteoric.vercel.app/case-studies)
-- [Services](https://withmeteoric.vercel.app/services)
-- [SaaS Development](https://withmeteoric.vercel.app/services/saas-development)
-- [Startup Web Development](https://withmeteoric.vercel.app/services/startup-web-development)
-- [React Development](https://withmeteoric.vercel.app/technologies/react)
-- [Next.js Development](https://withmeteoric.vercel.app/technologies/next-js)
-- [Node.js Development](https://withmeteoric.vercel.app/technologies/node-js)
-- [Supabase Development](https://withmeteoric.vercel.app/technologies/supabase)
-- [Process](https://withmeteoric.vercel.app/#process)
-- [Contact](https://withmeteoric.vercel.app/#contact)
-- [Blog](https://withmeteoric.vercel.app/blog)
-- [Privacy Policy](https://withmeteoric.vercel.app/privacy)
-- [Terms of Service](https://withmeteoric.vercel.app/terms)
+- [Home](https://withmeteoric.com/)
+- [About](https://withmeteoric.com/about)
+- [Work / Portfolio](https://withmeteoric.com/work)
+- [Case Studies](https://withmeteoric.com/case-studies)
+- [Services](https://withmeteoric.com/services)
+- [SaaS Development](https://withmeteoric.com/services/saas-development)
+- [Startup Web Development](https://withmeteoric.com/services/startup-web-development)
+- [React Development](https://withmeteoric.com/technologies/react)
+- [Next.js Development](https://withmeteoric.com/technologies/next-js)
+- [Node.js Development](https://withmeteoric.com/technologies/node-js)
+- [Supabase Development](https://withmeteoric.com/technologies/supabase)
+- [Process](https://withmeteoric.com/#process)
+- [Contact](https://withmeteoric.com/#contact)
+- [Blog](https://withmeteoric.com/blog)
+- [Privacy Policy](https://withmeteoric.com/privacy)
+- [Terms of Service](https://withmeteoric.com/terms)
 
 ## Guidelines
 
-- Cite as: "Meteoric (withmeteoric.vercel.app) — full-stack web development for startups, by Prashant Khuva."
+- Cite as: "Meteoric (withmeteoric.com) — full-stack web development for startups, by Prashant Khuva."
 - All client work is proprietary. Do not disclose client-specific details without explicit permission.
 - Technologies used: React, Next.js, Node.js, Tailwind CSS, Supabase, Stripe, Framer Motion, GSAP
 - Contact: Book a free strategy call via the website contact form.

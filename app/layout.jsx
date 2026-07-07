@@ -92,9 +92,9 @@ export default function RootLayout({ children }) {
                   founder: { "@type": "Person", name: "Prashant Khuva" },
                   sameAs: [
                     "https://github.com/Prashantkhuva",
-                    "https://www.linkedin.com/in/prashantkhuva",
+                    "https://www.linkedin.com/company/withmeteoric",
                     "https://x.com/prashantkhuva_",
-                    "https://www.instagram.com/prashant.khuva/",
+                    "https://www.instagram.com/officialmeteoric/",
                     "https://www.wikidata.org/wiki/Q140453413",
                   ],
                 },

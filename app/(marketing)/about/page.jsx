@@ -53,9 +53,9 @@ const personJsonLd = {
   jobTitle: "Founder & Full-Stack Developer",
   sameAs: [
     "https://github.com/Prashantkhuva",
-    "https://www.linkedin.com/in/prashantkhuva",
+    "https://www.linkedin.com/company/withmeteoric",
     "https://x.com/prashantkhuva_",
-    "https://www.instagram.com/prashant.khuva/",
+    "https://www.instagram.com/officialmeteoric/",
   ],
   knowsAbout: [
     "React",
