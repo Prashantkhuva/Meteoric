@@ -1,16 +1,32 @@
-# React + Vite
+# Meteoric
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-performance web development agency website built with Next.js 16, React 19, Tailwind CSS v4, and Supabase.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** Next.js 16 + React 19 (JavaScript/JSX)
+- **Styling:** Tailwind CSS v4 with CSS-first `@theme` config
+- **UI:** shadcn/ui + Radix primitives + lucide-react icons
+- **Animations:** GSAP (hero/scroll), Framer Motion (UI), Lenis (smooth scroll)
+- **Backend:** Supabase (Auth, Database, Storage)
+- **Email:** Resend (transactional)
+- **Charts:** Recharts
+- **Rich Text:** TipTap
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+## Scripts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `npm run dev` — Start dev server
+- `npm run build` — Production build
+- `npm run lint` — ESLint
+- `npm run generate:sitemap` — Rebuild sitemap
+
+## Environment
+
+Copy `.env.example` to `.env.local` and fill in the required variables (Supabase, Resend, EmailJS, Cal.com).
