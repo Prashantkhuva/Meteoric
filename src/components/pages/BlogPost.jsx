@@ -15,7 +15,7 @@ export default function BlogPostPage({ post }) {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
       </div>
 
-      <article className="relative max-w-3xl mx-auto px-6 md:px-16 pt-32 pb-24">
+      <article className="relative max-w-4xl mx-auto px-6 md:px-8 pt-32 pb-24">
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}

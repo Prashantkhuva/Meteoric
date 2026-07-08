@@ -12,7 +12,7 @@ export default function BlogPage() {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
       </div>
 
-      <section className="relative max-w-6xl mx-auto px-6 md:px-16 pt-32 pb-16 md:pb-24">
+      <section className="relative max-w-6xl mx-auto px-6 md:px-8 pt-32 pb-16 md:pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -42,7 +42,7 @@ export default function BlogPage() {
         </motion.div>
       </section>
 
-      <section className="relative max-w-6xl mx-auto px-6 md:px-16 pb-32">
+      <section className="relative max-w-6xl mx-auto px-6 md:px-8 pb-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
           {posts.map((post, i) => (
             <Link key={post.slug} href={`/blog/${post.slug}`}>
