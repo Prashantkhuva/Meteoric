@@ -391,7 +391,7 @@ export const posts = [
     author: "Prashant Khuva",
     tag: "Technical",
     section: "Database",
-    image: "/images/blog/blog-cover-5.png",
+    image: "/images/blog/blog-cover-5.jpg",
     content: [
       {
         type: "paragraph",
@@ -489,7 +489,7 @@ export const posts = [
     author: "Prashant Khuva",
     tag: "Technical",
     section: "Animation",
-    image: "/images/blog/blog-cover-6.png",
+    image: "/images/blog/blog-cover-6.jpg",
     content: [
       {
         type: "paragraph",
@@ -633,7 +633,7 @@ export const posts = [
     author: "Prashant Khuva",
     tag: "Comparison",
     section: "Backend",
-    image: "/images/blog/blog-cover-7.png",
+    image: "/images/blog/blog-cover-7.jpg",
     content: [
       {
         type: "paragraph",
@@ -759,7 +759,7 @@ export const posts = [
     author: "Prashant Khuva",
     tag: "Pricing",
     section: "Business",
-    image: "/images/blog/blog-cover-8.png",
+    image: "/images/blog/blog-cover-8.jpg",
     content: [
       {
         type: "paragraph",
@@ -853,7 +853,7 @@ export const posts = [
     author: "Prashant Khuva",
     tag: "Agency",
     section: "Business Strategy",
-    image: "/images/blog/blog-cover-9.png",
+    image: "/images/blog/blog-cover-9.jpg",
     content: [
       {
         type: "paragraph",
@@ -943,7 +943,7 @@ export const posts = [
     author: "Prashant Khuva",
     tag: "Comparison",
     section: "Framework",
-    image: "/images/blog/blog-cover-10.png",
+    image: "/images/blog/blog-cover-10.jpg",
     content: [
       {
         type: "paragraph",
