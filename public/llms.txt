@@ -36,8 +36,8 @@
 
 ## Blog Posts
 
-- [Why Your Startup Needs a Product Studio, Not an Agency](https://withmeteoric.com/blog/why-your-startup-needs-a-product-studio-not-an-agency) — Why product studios outperform agencies for early-stage startups, written from founder Prashant Khuva's experience shipping 12+ projects.
-- [Designing for Conversion: Lessons From 12 Shipped Projects](https://withmeteoric.com/blog/designing-for-conversion-lessons-from-12-shipped-projects) — Design principles that drive conversions: clarity over creativity, reducing cognitive load, and purposeful motion.
+- [What Is a Web Development Agency? (2026 Guide for Startup Founders)](https://withmeteoric.com/blog/what-is-a-web-development-agency) — A comprehensive guide to what web development agencies do, how they differ from freelancers, pricing ranges, and how to choose the right one for your startup.
+- [How to Build a SaaS MVP: A Step-by-Step Guide for Founders](https://withmeteoric.com/blog/how-to-build-a-saas-mvp-step-by-step-guide) — A practical 7-step process for building a SaaS MVP from scoping features to launching, with a typical 3-week timeline and common mistakes to avoid.
 - [Building an MVP in 3 Weeks: A SaaS Prototype Case Study](https://withmeteoric.com/blog/building-a-saas-prototype-in-3-weeks-a-case-study) — How Meteoric built a fintech SaaS MVP prototype in 21 days using Next.js, Tailwind CSS, and Supabase.
 - [The Meteoric Guide to Choosing Your Tech Stack](https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack) — Meteoric's default tech stack and decision framework for choosing the right tools for your project.
 - [MongoDB Schema Design for SaaS Billing](https://withmeteoric.com/blog/mongodb-schema-design-for-saas-billing) — A practical guide to designing MongoDB schemas for subscription billing, multi-tenant pricing, and usage metering in production SaaS apps.
