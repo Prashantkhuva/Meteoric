@@ -79,7 +79,7 @@ export default function Navbar() {
         }
       `}</style>
 
-      <header className="fixed md:static top-0 left-0 w-full z-50 py-4 md:pt-6 bg-black/80 md:bg-transparent backdrop-blur-2xl md:backdrop-blur-none">
+      <header className="fixed md:static top-0 left-0 w-full z-50 py-4 md:pt-6 bg-transparent md:bg-transparent">
         <div
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
         >
