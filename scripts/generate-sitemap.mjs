@@ -29,17 +29,26 @@ const blogRoutes = posts.map((post) => ({
 
 const allRoutes = [...sitemapRoutes, ...blogRoutes];
 
+const blogPostByPath = Object.fromEntries(
+  posts.map((p) => [`/blog/${p.slug}`, p]),
+);
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${allRoutes
-  .map(
-    (route) => `  <url>
+  .map((route) => {
+    const post = blogPostByPath[route.path];
+    const imageTag = post
+      ? `\n    <image:image>\n      <image:loc>${SITE_URL}${post.image}</image:loc>\n    </image:image>`
+      : "";
+    return `  <url>
     <loc>${routeUrl(route.path)}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
-    <priority>${route.priority}</priority>
-  </url>`,
-  )
+    <priority>${route.priority}</priority>${imageTag}
+  </url>`;
+  })
   .join("\n")}
 </urlset>
 `;

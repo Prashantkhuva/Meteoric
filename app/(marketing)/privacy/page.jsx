@@ -31,7 +31,7 @@ export const metadata = {
     description: pageDesc,
     images: [`${SITE_URL}/og-image.png?v=20260706`],
   },
-  robots: "index, follow",
+  robots: "noindex, follow",
 };
 
 export default function Privacy() {

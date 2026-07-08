@@ -96,6 +96,10 @@ export default function RootLayout({ children }) {
                     "https://x.com/prashantkhuva_",
                     "https://www.instagram.com/officialmeteoric/",
                     "https://www.wikidata.org/wiki/Q140453413",
+                    "https://withmeteoric.com/technologies/next-js",
+                    "https://withmeteoric.com/technologies/supabase",
+                    "https://withmeteoric.com/technologies/react",
+                    "https://withmeteoric.com/technologies/node-js",
                   ],
                 },
                 {
@@ -131,6 +135,17 @@ export default function RootLayout({ children }) {
                   ],
                 },
                 {
+                  "@type": "Product",
+                  "@id": `${SITE_URL}/#product`,
+                  "name": "SaaS Development Services",
+                  "description": "End-to-end SaaS development from MVP to production platform for startups.",
+                  "offers": {
+                    "@type": "Offer",
+                    "price": "5000",
+                    "priceCurrency": "USD",
+                  },
+                },
+                {
                   "@type": "SiteNavigationElement",
                   "@id": `${SITE_URL}/#navigation`,
                   name: "Main Navigation",
@@ -149,6 +164,8 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
+        <link rel="alternate" hrefLang="en" href={SITE_URL} />
+        <link rel="alternate" hrefLang="x-default" href={SITE_URL} />
       </head>
       <body className="font-primary" suppressHydrationWarning>
         <ErrorBoundary>

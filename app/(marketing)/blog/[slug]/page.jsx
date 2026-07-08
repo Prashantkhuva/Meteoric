@@ -33,6 +33,8 @@ export async function generateMetadata({ params }) {
       publishedTime: toIsoDate(post.date),
       modifiedTime: toIsoDate(post.dateModified || post.date),
       authors: [`${SITE_URL}/about`],
+      section: post.section || "Blog",
+      tags: post.tag ? [post.tag] : [],
       images: [{ url: ogImage, width: 1635, height: 962, alt: title }],
     },
     twitter: {
@@ -58,10 +60,12 @@ const articleJsonLd = (post) => ({
     "@type": "WebPage",
     "@id": `${SITE_URL}/blog/${post.slug}`,
   },
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".post-headline", ".post-excerpt"],
+  },
   author: {
-    "@type": "Person",
-    name: "Prashant Khuva",
-    url: `${SITE_URL}/about`,
+    "@id": `${SITE_URL}/about#person`,
   },
   publisher: {
     "@type": "Organization",

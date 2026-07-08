@@ -7,6 +7,9 @@ export const posts = [
     date: "June 24, 2026",
     dateModified: "July 6, 2026",
     readTime: "5 min read",
+    author: "Prashant Khuva",
+    tag: "Agency",
+    section: "Business Strategy",
     image: "/images/blog/blog-cover-1.png",
     author: "Prashant Khuva",
     content: [
@@ -61,6 +64,8 @@ export const posts = [
     dateModified: "July 6, 2026",
     readTime: "7 min read",
     author: "Prashant Khuva",
+    tag: "Design",
+    section: "Design Best Practices",
     image: "/images/blog/blog-cover-2.png",
     content: [
       {
@@ -121,6 +126,8 @@ export const posts = [
     date: "May 28, 2026",
     readTime: "8 min read",
     author: "Prashant Khuva",
+    tag: "Case Study",
+    section: "Development",
     image: "/images/blog/blog-cover-3.png",
     content: [
       {
@@ -177,6 +184,8 @@ export const posts = [
     date: "July 6, 2026",
     readTime: "9 min read",
     author: "Prashant Khuva",
+    tag: "Technical",
+    section: "Database",
     image: "/images/blog/blog-cover-5.png",
     content: [
       {
@@ -273,6 +282,8 @@ export const posts = [
     date: "July 6, 2026",
     readTime: "10 min read",
     author: "Prashant Khuva",
+    tag: "Technical",
+    section: "Animation",
     image: "/images/blog/blog-cover-6.png",
     content: [
       {
@@ -365,6 +376,8 @@ export const posts = [
     date: "May 15, 2026",
     readTime: "6 min read",
     author: "Prashant Khuva",
+    tag: "Technical",
+    section: "Tech Stack",
     image: "/images/blog/blog-cover-4.png",
     content: [
       {
@@ -413,6 +426,8 @@ export const posts = [
     date: "July 6, 2026",
     readTime: "8 min read",
     author: "Prashant Khuva",
+    tag: "Comparison",
+    section: "Backend",
     image: "/images/blog/blog-cover-7.png",
     content: [
       {
@@ -537,6 +552,8 @@ export const posts = [
     date: "July 6, 2026",
     readTime: "9 min read",
     author: "Prashant Khuva",
+    tag: "Pricing",
+    section: "Business",
     image: "/images/blog/blog-cover-8.png",
     content: [
       {
@@ -629,6 +646,8 @@ export const posts = [
     date: "July 6, 2026",
     readTime: "7 min read",
     author: "Prashant Khuva",
+    tag: "Agency",
+    section: "Business Strategy",
     image: "/images/blog/blog-cover-9.png",
     content: [
       {
@@ -717,6 +736,8 @@ export const posts = [
     date: "July 7, 2026",
     readTime: "10 min read",
     author: "Prashant Khuva",
+    tag: "Comparison",
+    section: "Framework",
     image: "/images/blog/blog-cover-10.png",
     content: [
       {
@@ -837,6 +858,8 @@ export const posts = [
     date: "July 7, 2026",
     readTime: "9 min read",
     author: "Prashant Khuva",
+    tag: "Comparison",
+    section: "Database",
     image: "/images/blog/blog-cover-11.png",
     content: [
       {

@@ -47,6 +47,7 @@ const breadcrumbJsonLd = {
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${SITE_URL}/about#person`,
   name: "Prashant Khuva",
   url: `${SITE_URL}/about`,
   image: `${SITE_URL}/prashant.png`,

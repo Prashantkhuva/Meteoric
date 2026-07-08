@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const services = [
   {
@@ -10,6 +11,7 @@ const services = [
     desc: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
     tag: "Design + Dev",
     img: "/we-do-1.avif",
+    href: "/services/landing-pages",
   },
   {
     num: "02",
@@ -17,6 +19,7 @@ const services = [
     desc: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
     tag: "Full-Stack",
     img: "/we-do-2.avif",
+    href: "/services/web-applications",
   },
   {
     num: "03",
@@ -24,6 +27,7 @@ const services = [
     desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
     tag: "Product Dev",
     img: "/we-do-3.avif",
+    href: "/services/saas-development",
   },
   {
     num: "04",
@@ -31,6 +35,7 @@ const services = [
     desc: "Complete frontend and backend development — from database design to polished UI.",
     tag: "MERN Stack",
     img: "/we-do-4.avif",
+    href: "/services/startup-web-development",
   },
   {
     num: "05",
@@ -38,6 +43,7 @@ const services = [
     desc: "Wireframes, prototypes, and polished interfaces designed for clarity and conversion.",
     tag: "Design",
     img: "/we-do-5.svg",
+    href: "/services/ui-ux-design",
   },
   {
     num: "06",
@@ -45,8 +51,8 @@ const services = [
     desc: "RESTful and GraphQL APIs with secure authentication, database design, and third-party integrations.",
     tag: "Backend",
     img: "/we-do-6.svg",
+    href: "/services/technical-consulting",
   },
-
 ];
 
 const containerVariants = {
@@ -138,92 +144,94 @@ export default function ServicesSection() {
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
               }}
             >
-              {/* Card Inner */}
-              <div
-                className="relative p-8 md:p-10"
-                style={{
-                  border: "1px solid rgb(47, 47, 47)",
-                  margin: -1,
-                  background: "rgb(0,0,0)",
-                }}
-              >
-                {/* BG */}
+              <Link href={s.href}>
+                {/* Card Inner */}
                 <div
-                  className="absolute inset-0"
-                  style={{ backgroundColor: "rgb(0,0,0)" }}
-                />
-
-                {/* Image */}
-                <div className="relative z-[1] w-[152px] h-[152px] sm:w-[160px] sm:h-[160px] lg:w-[190px] lg:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
-                  <Image
-                    src={s.img}
-                    alt={`${s.title} — software development`}
-                    fill
-                    sizes="(max-width: 640px) 152px, (max-width: 1024px) 160px, 190px"
-                    className="object-contain"
+                  className="relative p-8 md:p-10"
+                  style={{
+                    border: "1px solid rgb(47, 47, 47)",
+                    margin: -1,
+                    background: "rgb(0,0,0)",
+                  }}
+                >
+                  {/* BG */}
+                  <div
+                    className="absolute inset-0"
+                    style={{ backgroundColor: "rgb(0,0,0)" }}
                   />
-                </div>
 
-                {/* Hover Image Overlay */}
-                <div className="absolute z-[2] inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-2xl">
-                    <svg
-                      viewBox="0 0 324 381"
-                      className="w-[202px] h-[238px] md:w-[260px] md:h-[306px]"
-                      style={{ opacity: 0.2 }}
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  {/* Image */}
+                  <div className="relative z-[1] w-[152px] h-[152px] sm:w-[160px] sm:h-[160px] lg:w-[190px] lg:h-[190px] mb-8 overflow-hidden rounded-2xl mx-auto">
+                    <Image
+                      src={s.img}
+                      alt={`${s.title} — software development`}
+                      fill
+                      sizes="(max-width: 640px) 152px, (max-width: 1024px) 160px, 190px"
+                      className="object-contain"
+                    />
+                  </div>
+
+                  {/* Hover Image Overlay */}
+                  <div className="absolute z-[2] inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-2xl">
+                      <svg
+                        viewBox="0 0 324 381"
+                        className="w-[202px] h-[238px] md:w-[260px] md:h-[306px]"
+                        style={{ opacity: 0.2 }}
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M162 0L323.5 95.5V286.5L162 381L0.5 286.5V95.5L162 0Z"
+                          stroke="rgba(255,255,255,0.15)"
+                          strokeWidth="0.5"
+                        />
+                        <path
+                          d="M162 20L304 106V276L162 361L20 276V106L162 20Z"
+                          stroke="rgba(255,255,255,0.08)"
+                          strokeWidth="0.5"
+                        />
+                        <path
+                          d="M162 40L284 116V256L162 341L40 256V116L162 40Z"
+                          stroke="rgba(255,255,255,0.04)"
+                          strokeWidth="0.5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Hover BG Gradient */}
+                  <div
+                    className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 46%)",
+                    }}
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-[3]">
+                    <p
+                      className="text-sm font-mono tracking-wider mb-3"
+                      style={{ color: "#eee" }}
                     >
-                      <path
-                        d="M162 0L323.5 95.5V286.5L162 381L0.5 286.5V95.5L162 0Z"
-                        stroke="rgba(255,255,255,0.15)"
-                        strokeWidth="0.5"
-                      />
-                      <path
-                        d="M162 20L304 106V276L162 361L20 276V106L162 20Z"
-                        stroke="rgba(255,255,255,0.08)"
-                        strokeWidth="0.5"
-                      />
-                      <path
-                        d="M162 40L284 116V256L162 341L40 256V116L162 40Z"
-                        stroke="rgba(255,255,255,0.04)"
-                        strokeWidth="0.5"
-                      />
-                    </svg>
+                      {s.num}
+                    </p>
+                    <h3
+                      className="text-xl md:text-2xl font-semibold mb-3"
+                      style={{ color: "#eee" }}
+                    >
+                      {s.title}
+                    </h3>
+                    <p
+                      className="text-sm md:text-base leading-relaxed max-w-xs"
+                      style={{ color: "#999" }}
+                    >
+                      {s.desc}
+                    </p>
                   </div>
                 </div>
-
-                {/* Hover BG Gradient */}
-                <div
-                  className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 46%)",
-                  }}
-                />
-
-                {/* Content */}
-                <div className="relative z-[3]">
-                  <p
-                    className="text-sm font-mono tracking-wider mb-3"
-                    style={{ color: "#eee" }}
-                  >
-                    {s.num}
-                  </p>
-                  <h3
-                    className="text-xl md:text-2xl font-semibold mb-3"
-                    style={{ color: "#eee" }}
-                  >
-                    {s.title}
-                  </h3>
-                  <p
-                    className="text-sm md:text-base leading-relaxed max-w-xs"
-                    style={{ color: "#999" }}
-                  >
-                    {s.desc}
-                  </p>
-                </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
