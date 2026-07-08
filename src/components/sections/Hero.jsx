@@ -50,7 +50,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden bg-black flex items-center px-6 md:px-16 pt-28 md:pt-24"
+      className="relative min-h-screen w-full overflow-hidden bg-black flex items-center px-6 md:px-16 pt-28 md:pt-16"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -58,7 +58,7 @@ function Hero() {
       </div>
 
       {/* Content */}
-      <div ref={containerRef} className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 md:-translate-y-[45px]">
+      <div ref={containerRef} className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8">
         {/* Heading */}
         <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
           <span className="block [&>.gsap-word:not(:last-child)]:mr-[0.25em]">
