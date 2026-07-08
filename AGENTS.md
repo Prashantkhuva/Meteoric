@@ -153,6 +153,7 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 ## Research Files (memory/)
 - `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma
 - `memory/research/keyword-research/2026-07-06-meteoric-target-queries.md` — 45 keywords across 5 clusters + SERP + GEO analysis
+- `memory/research/off-page-authority-plan/2026-07-08-meteoric-off-page-priority.md` — Off-page authority plan (ON HOLD): GBP, directories, HARO, GitHub, competitor backlinks
 - `memory/audits/2026-07-06-core-eeat-top-3-blog-posts.md` — CORE-EEAT audit: MongoDB billing (72/100), GSAP vs FM (70/100), MVP case study (65/100)
 - `memory/audits/2026-07-06-internal-linking-optimizer.md` — Link score (60/100), orphan/disposition analysis, repair plan
 
