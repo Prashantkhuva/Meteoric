@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/seo/config";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import NextJsPage from "@/components/pages/NextJsTech";
 
 const pageTitle = "Next.js Development Agency | Meteoric — React & Next.js Experts";
@@ -17,8 +17,8 @@ export const metadata = {
     url: `${SITE_URL}/technologies/next-js`,
     images: [
       {
-        url: `${SITE_URL}/og-image.png?v=20260706`,
-        secureUrl: `${SITE_URL}/og-image.png?v=20260706`,
+        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         width: 1635,
         height: 962,
         alt: pageTitle,
@@ -31,7 +31,7 @@ export const metadata = {
     creator: "@prashantkhuva_",
     title: pageTitle,
     description: pageDesc,
-    images: [`${SITE_URL}/og-image.png?v=20260706`],
+    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
 };
 

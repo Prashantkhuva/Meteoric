@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/seo/config";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const pageTitle = "Privacy Policy — Meteoric";
 const pageDesc =
@@ -16,7 +16,7 @@ export const metadata = {
     url: `${SITE_URL}/privacy`,
     images: [
       {
-        url: `${SITE_URL}/og-image.png?v=20260706`,
+        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         width: 1635,
         height: 962,
         alt: pageTitle,
@@ -29,7 +29,7 @@ export const metadata = {
     creator: "@prashantkhuva_",
     title: pageTitle,
     description: pageDesc,
-    images: [`${SITE_URL}/og-image.png?v=20260706`],
+    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
   robots: "noindex, follow",
 };

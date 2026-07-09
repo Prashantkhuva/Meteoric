@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/seo/config";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import CaseStudiesPage from "@/components/pages/CaseStudies";
 import { caseStudies } from "@/data/case-studies";
 
@@ -14,9 +14,9 @@ export const metadata = {
     title: pageTitle,
     description: pageDesc,
     url: `${SITE_URL}/case-studies`,
-    images: [{ url: `${SITE_URL}/og-image.png?v=20260706`, width: 1635, height: 962, alt: pageTitle }],
+    images: [{ url: `${SITE_URL}${DEFAULT_OG_IMAGE}`, width: 1635, height: 962, alt: pageTitle }],
   },
-  twitter: { card: "summary_large_image", site: "@prashantkhuva_", creator: "@prashantkhuva_", title: pageTitle, description: pageDesc, images: [`${SITE_URL}/og-image.png?v=20260706`] },
+  twitter: { card: "summary_large_image", site: "@prashantkhuva_", creator: "@prashantkhuva_", title: pageTitle, description: pageDesc, images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`] },
 };
 
 const breadcrumbJsonLd = {
