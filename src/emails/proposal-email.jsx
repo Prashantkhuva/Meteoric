@@ -7,7 +7,10 @@ import {
   Text,
   Hr,
   Link,
+  Img,
 } from "react-email";
+
+const SITE_URL = "https://withmeteoric.com";
 
 export default function ProposalEmail({ name, title, timeline, terms, previewUrl }) {
   return (
@@ -16,6 +19,14 @@ export default function ProposalEmail({ name, title, timeline, terms, previewUrl
       <Preview>Proposal: {title}</Preview>
       <Body style={main}>
         <Container style={container}>
+          <Img
+            src={`${SITE_URL}/meteoric.png`}
+            alt="Meteoric"
+            width={120}
+            height={30}
+            style={logo}
+          />
+
           <Text style={greeting}>Hi {name || "there"},</Text>
 
           <Text style={paragraph}>
@@ -76,6 +87,10 @@ const container = {
   padding: "32px",
   backgroundColor: "#0a0a0a",
   border: "1px solid rgba(234, 239, 255, 0.1)",
+};
+
+const logo = {
+  marginBottom: "24px",
 };
 
 const strong = {

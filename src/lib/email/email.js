@@ -11,6 +11,8 @@ import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 const FROM =
   process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>";
 const ADMIN = process.env.ADMIN_EMAIL;
+const ADMIN_FROM = `Meteoric <${process.env.ADMIN_CONTACT_EMAIL || "admin@withmeteoric.com"}>`;
+const BILLING_FROM = `Meteoric <${process.env.BILLING_EMAIL || "billing@withmeteoric.com"}>`;
 const DOMAIN = (FROM || "").match(/@([^>]+)/)?.[1];
 
 function isTestMode() {
@@ -26,7 +28,7 @@ function testModeWarning(recipient) {
 
 export async function sendNewLeadNotification(lead) {
   const result = await resend.emails.send({
-    from: FROM,
+    from: ADMIN_FROM,
     to: [ADMIN],
     subject: `New lead from ${lead.name || lead.email}`,
     react: NewLeadEmail(lead),
@@ -38,7 +40,7 @@ export async function sendNewLeadNotification(lead) {
 export async function sendHotLeadAlert(lead, score, category, summary) {
   if (!ADMIN) return;
   const result = await resend.emails.send({
-    from: FROM,
+    from: ADMIN_FROM,
     to: [ADMIN],
     subject: `🔥 Hot lead (${score}): ${lead.name || lead.email}`,
     react: HotLeadAlert({ lead, score, category, summary }),
@@ -78,7 +80,7 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
   let result;
   try {
     result = await resend.emails.send({
-      from: FROM,
+      from: ADMIN_FROM,
       to: lead.email,
       subject: `Proposal: ${proposal.title}`,
       react: ProposalEmail({
@@ -142,7 +144,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
   let result;
   try {
     result = await resend.emails.send({
-      from: FROM,
+      from: BILLING_FROM,
       to: client.email,
       subject: `Invoice ${invoice.invoice_number} from Meteoric`,
       react: InvoiceEmail({
@@ -185,7 +187,7 @@ export async function sendOverdueReminder(invoice, client, previewUrl) {
   let result;
   try {
     result = await resend.emails.send({
-      from: FROM,
+      from: BILLING_FROM,
       to: client.email,
       subject: `Overdue: Invoice ${invoice.invoice_number} — ${daysOverdue} day${daysOverdue !== 1 ? "s" : ""} past due`,
       react: OverdueReminder({

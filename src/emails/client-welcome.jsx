@@ -1,4 +1,6 @@
-import { Html, Head, Preview, Body, Container, Text, Hr } from "react-email";
+import { Html, Head, Preview, Body, Container, Text, Hr, Img } from "react-email";
+
+const SITE_URL = "https://withmeteoric.com";
 
 export default function ClientWelcome({ name }) {
   return (
@@ -7,6 +9,14 @@ export default function ClientWelcome({ name }) {
       <Preview>Welcome to Meteoric — Let's Build Something Great</Preview>
       <Body style={main}>
         <Container style={container}>
+          <Img
+            src={`${SITE_URL}/meteoric.png`}
+            alt="Meteoric"
+            width={120}
+            height={30}
+            style={logo}
+          />
+
           <Text style={greeting}>Hi {name || "there"},</Text>
 
           <Text style={paragraph}>
@@ -60,6 +70,10 @@ const container = {
   padding: "32px",
   backgroundColor: "#0a0a0a",
   border: "1px solid rgba(234, 239, 255, 0.1)",
+};
+
+const logo = {
+  marginBottom: "24px",
 };
 
 const greeting = {
