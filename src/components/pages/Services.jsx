@@ -2,36 +2,36 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Code, Globe, Palette, Lightbulb } from "lucide-react";
+import { ArrowUpRight, LayoutDashboard, Rocket, AppWindow, Code2 } from "lucide-react";
 
 const serviceItems = [
   {
-    icon: <Code size={20} />,
+    icon: <LayoutDashboard size={20} />,
     num: "01",
+    title: "Landing Page",
+    desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO and conversion.",
+    href: "/services/landing-pages",
+  },
+  {
+    icon: <Rocket size={20} />,
+    num: "02",
     title: "SaaS Development",
     desc: "From MVP prototypes to production SaaS platforms. We build with Next.js, Supabase, and Stripe — shipped fast, built to scale.",
     href: "/services/saas-development",
   },
   {
-    icon: <Globe size={20} />,
-    num: "02",
-    title: "Startup Web Development",
-    desc: "Conversion-optimized websites for early-stage and funded startups. Fast-loading, SEO-ready, and designed to tell your story.",
-    href: "/services/startup-web-development",
-  },
-  {
-    icon: <Palette size={20} />,
+    icon: <AppWindow size={20} />,
     num: "03",
-    title: "UI/UX Design",
-    desc: "Clean, conversion-focused interfaces designed for your users. From wireframes to high-fidelity prototypes — we design experiences that feel intuitive.",
-    href: "/services/ui-ux-design",
+    title: "Web Apps",
+    desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform.",
+    href: "/services/web-applications",
   },
   {
-    icon: <Lightbulb size={20} />,
+    icon: <Code2 size={20} />,
     num: "04",
-    title: "Technical Consulting",
-    desc: "Stack selection, architecture planning, and code audits. We help founders make the right technical decisions before writing a single line of code.",
-    href: "/services/technical-consulting",
+    title: "Full-Stack Development",
+    desc: "Frontend to backend, database to deployment. We build complete systems with APIs, auth, integrations, and polished interfaces.",
+    href: "/services/full-stack-development",
   },
 ];
 

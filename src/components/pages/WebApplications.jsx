@@ -2,30 +2,47 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Layers, Workflow, Shield, Gauge } from "lucide-react";
+import { ArrowUpRight, Layers, Workflow, Shield, Gauge, PanelRight, Database } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 
 const services = [
   {
     icon: <Layers size={20} />,
-    title: "Full-Stack Web Applications",
+    title: "Full-Stack Web Apps",
     desc: "Custom web applications built with Next.js, React, and Node.js — from internal tools to customer-facing platforms. Authentication, databases, and real-time features included.",
   },
   {
-    icon: <Workflow size={20} />,
-    title: "Dashboard & Admin Panels",
+    icon: <PanelRight size={20} />,
+    title: "Dashboards & Admin Panels",
     desc: "Data-rich dashboards with real-time analytics, charts, filtering, and export capabilities. Built for clarity and speed, so your team can make decisions faster.",
   },
   {
+    icon: <Workflow size={20} />,
+    title: "API-First Architecture",
+    desc: "Headless backends with well-documented REST and GraphQL APIs. Designed for scalability, security, and seamless third-party integration.",
+  },
+  {
+    icon: <Database size={20} />,
+    title: "Data & Analytics Tools",
+    desc: "Custom analytics pipelines, reporting dashboards, and data visualization tools. Transform raw data into actionable insights with beautiful, interactive charts.",
+  },
+  {
     icon: <Shield size={20} />,
-    title: "API-First Application Architecture",
-    desc: "Headless backends with well-documented REST and GraphQL APIs. Designed for scalability, security, and easy integration with third-party services.",
+    title: "Enterprise-Grade Security",
+    desc: "JWT auth, role-based access, input validation, rate limiting, and audit logging. Every application follows security best practices from day one.",
   },
   {
     icon: <Gauge size={20} />,
-    title: "Performance & Reliability",
-    desc: "Sub-100ms response times, automatic failover, CDN caching, and database optimization. Every application is built to handle growth from day one.",
+    title: "Performance Optimization",
+    desc: "Sub-100ms response times, CDN caching, database optimization, and auto-scaling infrastructure. Built to handle growth from day one.",
   },
+];
+
+const stats = [
+  { value: "2-4", label: "Weeks to MVP" },
+  { value: "99.9%", label: "Uptime guarantee" },
+  { value: "<100ms", label: "Avg response time" },
+  { value: "100%", label: "Client satisfaction" },
 ];
 
 const relatedPosts = [
@@ -39,17 +56,13 @@ const relatedPosts = [
   },
   {
     slug: "mongodb-vs-postgresql-for-saas",
-    title: "MongoDB vs PostgreSQL for SaaS — Which One Should You Choose?",
+    title: "MongoDB vs PostgreSQL for SaaS",
   },
 ];
 
-export default function WebApplicationsPage() {
+export default function WebAppsPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
-      </div>
-
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -59,7 +72,7 @@ export default function WebApplicationsPage() {
         >
           <span className="h-px w-8 bg-white/20" />
           <span className="text-white/25 uppercase tracking-[0.3em] text-xs">
-            Web Applications
+            Web Apps
           </span>
         </motion.div>
 
@@ -69,7 +82,7 @@ export default function WebApplicationsPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.1] tracking-tight max-w-4xl mb-6"
         >
-          Web Application{" "}
+          Web App{" "}
           <span className="font-secondary-italic" style={{
             background: "linear-gradient(135deg, #fff 0%, #a0a0a0 100%)",
             WebkitBackgroundClip: "text",
@@ -85,9 +98,9 @@ export default function WebApplicationsPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-white/40 text-base md:text-lg max-w-2xl mb-8"
         >
-          We build custom web applications that are fast, scalable, and a joy to
-          use. From internal dashboards to customer-facing platforms — every
-          project is crafted for real-world performance.
+          Custom web applications that are fast, scalable, and a joy to use.
+          From internal dashboards to customer-facing platforms — built for
+          real-world performance, not demo-day polish.
         </motion.p>
 
         <motion.p
@@ -96,9 +109,9 @@ export default function WebApplicationsPage() {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-white/30 text-sm max-w-2xl mb-12"
         >
-          Meteoric is a web application development company that works directly
-          with founders and product teams. Modern stack, modern practices — no
-          legacy code, no bloated frameworks, no nonsense.
+          Meteoric builds web apps that ship fast and perform under load.
+          Modern stack, clean architecture, and production-grade reliability —
+          no legacy code, no bloated frameworks, no nonsense.
         </motion.p>
 
         <motion.div
@@ -129,6 +142,24 @@ export default function WebApplicationsPage() {
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6 text-center"
+            >
+              <p className="text-3xl md:text-4xl font-semibold text-white mb-1">{stat.value}</p>
+              <p className="text-xs text-white/40 uppercase tracking-wider">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,20 +177,22 @@ export default function WebApplicationsPage() {
           </span>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((item, i) => (
             <motion.div
               key={item.title}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-8 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:shadow-[0_0_50px_rgba(234,239,255,0.04)]"
             >
               <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[#EAEFFF]/60">{item.icon}</span>
-                <h2 className="text-lg font-semibold text-white tracking-tight">{item.title}</h2>
+                <span className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[#EAEFFF]/70 shrink-0">
+                  {item.icon}
+                </span>
+                <h2 className="text-base font-semibold text-white tracking-tight">{item.title}</h2>
               </div>
               <p className="text-[#EAEFFF]/45 text-sm leading-relaxed">{item.desc}</p>
             </motion.div>
@@ -181,7 +214,7 @@ export default function WebApplicationsPage() {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}>
-            Our Application Stack
+            Our Stack
           </span>
         </motion.div>
 
@@ -238,7 +271,7 @@ export default function WebApplicationsPage() {
           },
           {
             q: "How long does it take to build a web application?",
-            a_html: "A typical MVP can be shipped in 2-4 weeks. More complex applications with real-time features, dashboards, and multiple user roles typically take 6-10 weeks. We provide a detailed timeline after our free scoping call. See our <a href=\"/blog/building-a-saas-prototype-in-3-weeks-a-case-study\" class=\"text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200\">MVP case study</a> for a real example.",
+            a_html: 'A typical MVP can be shipped in 2-4 weeks. More complex applications with real-time features, dashboards, and multiple user roles typically take 6-10 weeks. See our <a href="/blog/building-a-saas-prototype-in-3-weeks-a-case-study" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">MVP case study</a>.',
           },
           {
             q: "Do you work with existing codebases?",
@@ -246,11 +279,11 @@ export default function WebApplicationsPage() {
           },
           {
             q: "What does a web application cost?",
-            a: "Pricing depends on complexity. A focused internal tool or dashboard starts around $10,000-$20,000. Full-featured customer-facing applications range from $25,000-$60,000. We provide a fixed-price quote after understanding your requirements.",
+            a: "Pricing depends on complexity. A focused internal tool or dashboard starts around $10,000-$20,000. Full-featured customer-facing applications range from $25,000-$60,000.",
           },
           {
             q: "How do you handle scalability?",
-            a: "Every application is built with scalability in mind from day one. We use serverless infrastructure (Vercel, Supabase) that auto-scales, implement database indexing and query optimization, and set up monitoring and alerting so you know before users do.",
+            a: "Every application is built with scalability in mind from day one. We use serverless infrastructure that auto-scales, implement database indexing and query optimization, and set up monitoring and alerting.",
           },
         ]} />
       </section>

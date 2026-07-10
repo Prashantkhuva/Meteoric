@@ -8,24 +8,31 @@ import FaqAccordion from "@/components/sections/FaqAccordion";
 const services = [
   {
     icon: <Target size={20} />,
-    title: "Conversion-Optimized Landing Pages",
+    title: "Conversion-Optimized Pages",
     desc: "Purpose-built landing pages designed for one metric — conversion. Clean copy, clear CTAs, and layouts that guide visitors from hello to sign-up.",
   },
   {
     icon: <Palette size={20} />,
     title: "Brand & Marketing Sites",
-    desc: "Full marketing websites that tell your story and showcase your product. Built with Next.js, animated with GSAP and Framer Motion, and designed to be remembered.",
+    desc: "Full marketing websites that tell your story and showcase your product. Built with Next.js, animated with GSAP and Framer Motion.",
   },
   {
     icon: <TrendingUp size={20} />,
-    title: "SEO & GEO-Ready Landing Pages",
-    desc: "Pages optimized for both traditional search engines and AI chatbots. Structured data, semantic HTML, fast load times, and content designed to get cited.",
+    title: "SEO & GEO-Ready",
+    desc: "Optimized for search engines and AI chatbots. Structured data, semantic HTML, fast load times, and content designed to get cited by ChatGPT and Perplexity.",
   },
   {
     icon: <Smartphone size={20} />,
-    title: "Product Launch & Waitlist Pages",
-    desc: "High-impact launch pages for product debuts, beta signups, and fundraising milestones. Countdown timers, email capture, and social proof that builds anticipation.",
+    title: "Launch & Waitlist Pages",
+    desc: "High-impact pages for product debuts, beta signups, and fundraising. Countdown timers, email capture, and social proof that builds anticipation.",
   },
+];
+
+const stats = [
+  { value: "3-7", label: "Days to launch" },
+  { value: "4k+", label: "Avg starting cost" },
+  { value: "95+", label: "Lighthouse score" },
+  { value: "100%", label: "Client satisfaction" },
 ];
 
 const relatedPosts = [
@@ -38,18 +45,14 @@ const relatedPosts = [
     title: "The Meteoric Guide to Choosing Your Tech Stack",
   },
   {
-    slug: "why-your-startup-needs-a-product-studio-not-an-agency",
-    title: "Why Your Startup Needs a Product Studio, Not an Agency",
+    slug: "how-to-choose-a-web-development-agency",
+    title: "How to Choose a Web Development Agency",
   },
 ];
 
 export default function LandingPagesPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
-      </div>
-
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -59,7 +62,7 @@ export default function LandingPagesPage() {
         >
           <span className="h-px w-8 bg-white/20" />
           <span className="text-white/25 uppercase tracking-[0.3em] text-xs">
-            Landing Pages
+            Landing Page
           </span>
         </motion.div>
 
@@ -85,10 +88,8 @@ export default function LandingPagesPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-white/40 text-base md:text-lg max-w-2xl mb-8"
         >
-          We design and build landing pages that convert. Fast-loading,
-          beautifully animated, and crafted to turn visitors into customers —
-          whether you&apos;re launching a product, collecting beta signups, or
-          growing your brand.
+          High-converting, beautifully animated landing pages that turn visitors
+          into customers. Every pixel is purposeful, every interaction intentional.
         </motion.p>
 
         <motion.p
@@ -97,8 +98,9 @@ export default function LandingPagesPage() {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-white/30 text-sm max-w-2xl mb-12"
         >
-          Meteoric is a landing page design and development agency that builds
-          for performance and conversion. Every pixel has a purpose.
+          Meteoric builds landing pages for startups that need to make a strong
+          first impression. Fast-loading, SEO-optimized, and designed to convert —
+          shipped in days, not months.
         </motion.p>
 
         <motion.div
@@ -126,6 +128,24 @@ export default function LandingPagesPage() {
             View Portfolio
           </Link>
         </motion.div>
+      </section>
+
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6 text-center"
+            >
+              <p className="text-3xl md:text-4xl font-semibold text-white mb-1">{stat.value}</p>
+              <p className="text-xs text-white/40 uppercase tracking-wider">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
@@ -158,7 +178,9 @@ export default function LandingPagesPage() {
             >
               <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[#EAEFFF]/60">{item.icon}</span>
+                <span className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[#EAEFFF]/70 shrink-0">
+                  {item.icon}
+                </span>
                 <h2 className="text-lg font-semibold text-white tracking-tight">{item.title}</h2>
               </div>
               <p className="text-[#EAEFFF]/45 text-sm leading-relaxed">{item.desc}</p>
@@ -207,9 +229,6 @@ export default function LandingPagesPage() {
               </div>
             ))}
           </div>
-          <p className="text-[#EAEFFF]/35 text-xs mt-6">
-            Read more about our <Link href="/blog/the-meteoric-guide-to-choosing-your-tech-stack" className="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">tech stack philosophy</Link>.
-          </p>
         </div>
       </section>
 
@@ -234,15 +253,15 @@ export default function LandingPagesPage() {
         <FaqAccordion items={[
           {
             q: "How long does it take to design and build a landing page?",
-            a_html: "A single landing page typically takes 5-10 days from kickoff to launch. Multi-page marketing sites take 2-4 weeks. We move fast without sacrificing quality. Check our <a href=\"/work\" class=\"text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200\">portfolio</a> for examples of projects shipped on tight deadlines.",
+            a_html: "A single landing page typically takes 5-10 days from kickoff to launch. Multi-page marketing sites take 2-4 weeks. Check our <a href=\"/work\" class=\"text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200\">portfolio</a> for examples.",
           },
           {
             q: "Do you optimize landing pages for SEO?",
-            a: "Yes. Every landing page ships with proper semantic HTML, meta tags, Open Graph cards, structured data (JSON-LD), and fast Core Web Vitals. We also optimize for GEO (Generative Engine Optimization) to get cited by AI chatbots like ChatGPT and Perplexity.",
+            a: "Yes. Every landing page ships with proper semantic HTML, meta tags, Open Graph cards, structured data (JSON-LD), and fast Core Web Vitals. We also optimize for GEO to get cited by AI chatbots like ChatGPT and Perplexity.",
           },
           {
             q: "Can you redesign an existing landing page?",
-            a: "Absolutely. We regularly audit and redesign existing pages to improve conversion rates, load speed, and visual impact. We keep what works and elevate what doesn't.",
+            a: "Absolutely. We regularly audit and redesign existing pages to improve conversion rates, load speed, and visual impact.",
           },
           {
             q: "How much does a landing page cost?",
@@ -250,7 +269,7 @@ export default function LandingPagesPage() {
           },
           {
             q: "Do you include animations?",
-            a: "Yes — it's what we're known for. Scroll-triggered animations, micro-interactions, and page transitions using GSAP and Framer Motion. Every animation is purposeful and performance-optimized, never decorative fluff.",
+            a: "Yes — it's what we're known for. Scroll-triggered animations, micro-interactions, and page transitions using GSAP and Framer Motion. Every animation is purposeful and performance-optimized.",
           },
         ]} />
       </section>

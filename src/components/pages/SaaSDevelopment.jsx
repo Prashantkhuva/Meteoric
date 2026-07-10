@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Code, Database, Palette, Rocket } from "lucide-react";
+import { ArrowUpRight, Code, Database, Palette, Rocket, Users, BarChart } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 
 const services = [
@@ -14,18 +14,35 @@ const services = [
   {
     icon: <Code size={20} />,
     title: "Full-Stack SaaS Build",
-    desc: "Production-ready SaaS platforms with Next.js, Supabase, and modern tooling. Authentication, billing, dashboards, and APIs — all built to scale.",
+    desc: "Production-ready SaaS platforms with Next.js, Supabase, and modern tooling. Authentication, billing, dashboards, and APIs — built to scale.",
   },
   {
     icon: <Database size={20} />,
-    title: "SaaS Architecture & Backend",
-    desc: "Database design (MongoDB, PostgreSQL), API architecture, Stripe integration, multi-tenant schemas, and usage metering that your accounting team will love.",
+    title: "Architecture & Backend",
+    desc: "Database design, API architecture, Stripe integration, multi-tenant schemas, and usage metering. The foundation your product needs to grow.",
   },
   {
     icon: <Palette size={20} />,
     title: "SaaS Landing Pages & UX",
     desc: "Conversion-optimized landing pages, onboarding flows, and dashboard interfaces designed to reduce churn and drive activation.",
   },
+  {
+    icon: <Users size={20} />,
+    title: "Multi-Tenant Architecture",
+    desc: "Isolated data per tenant, shared infrastructure for efficiency. Team management, role-based access, and white-label options for enterprise readiness.",
+  },
+  {
+    icon: <BarChart size={20} />,
+    title: "Analytics & Billing",
+    desc: "Usage tracking, subscription management, metered billing, and revenue analytics. Stripe Billing integration with webhooks for real-time updates.",
+  },
+];
+
+const stats = [
+  { value: "3-6", label: "Weeks to MVP" },
+  { value: "12+", label: "SaaS projects shipped" },
+  { value: "100%", label: "Client satisfaction" },
+  { value: "24/7", label: "Post-launch support" },
 ];
 
 const relatedPosts = [
@@ -35,7 +52,7 @@ const relatedPosts = [
   },
   {
     slug: "mongodb-schema-design-for-saas-billing",
-    title: "MongoDB Schema Design for SaaS Billing — A Practical Guide",
+    title: "MongoDB Schema Design for SaaS Billing",
   },
   {
     slug: "the-meteoric-guide-to-choosing-your-tech-stack",
@@ -46,10 +63,6 @@ const relatedPosts = [
 export default function SaaSDevelopmentPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
-      </div>
-
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -85,9 +98,8 @@ export default function SaaSDevelopmentPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-white/40 text-base md:text-lg max-w-2xl mb-8"
         >
-          We design, build, and launch SaaS products for funded startups and
-          founded founders. From MVP prototypes to production platforms —
-          shipped fast, built to scale, and optimized for conversion.
+          From MVP to production platform. We design, build, and launch SaaS
+          products for founders who want to ship fast and scale with confidence.
         </motion.p>
 
         <motion.p
@@ -96,10 +108,9 @@ export default function SaaSDevelopmentPage() {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-white/30 text-sm max-w-2xl mb-12"
         >
-          Meteoric is a SaaS development agency that partners directly with
-          founders. No account managers, no layers — just one conversation
-          from vision to launch. Every project ships with the same care as if
-          it were our own product.
+          Meteoric is a SaaS development agency that works like a product studio.
+          Direct founder involvement, no account managers, and a stack optimized
+          for velocity. Every project ships as if it were our own product.
         </motion.p>
 
         <motion.div
@@ -130,6 +141,24 @@ export default function SaaSDevelopmentPage() {
       </section>
 
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6 text-center"
+            >
+              <p className="text-3xl md:text-4xl font-semibold text-white mb-1">{stat.value}</p>
+              <p className="text-xs text-white/40 uppercase tracking-wider">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -147,20 +176,22 @@ export default function SaaSDevelopmentPage() {
           </span>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((item, i) => (
             <motion.div
               key={item.title}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               className="group relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-8 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:shadow-[0_0_50px_rgba(234,239,255,0.04)]"
             >
               <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[#EAEFFF]/60">{item.icon}</span>
-                <h2 className="text-lg font-semibold text-white tracking-tight">{item.title}</h2>
+                <span className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[#EAEFFF]/70 shrink-0">
+                  {item.icon}
+                </span>
+                <h2 className="text-base font-semibold text-white tracking-tight">{item.title}</h2>
               </div>
               <p className="text-[#EAEFFF]/45 text-sm leading-relaxed">{item.desc}</p>
             </motion.div>
@@ -188,7 +219,7 @@ export default function SaaSDevelopmentPage() {
 
         <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-8 md:p-12">
           <p className="text-[#EAEFFF]/45 text-sm leading-relaxed mb-6">
-            After shipping 12+ SaaS projects, we&apos;ve settled on a stack that
+            After shipping 12+ SaaS projects, we've settled on a stack that
             eliminates decisions and maximizes velocity:
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -235,23 +266,23 @@ export default function SaaSDevelopmentPage() {
         <FaqAccordion items={[
           {
             q: "What is a SaaS development agency?",
-            a: "A SaaS development agency specializes in building cloud-based software products delivered via subscription. Unlike general web development agencies, SaaS agencies understand multi-tenant architecture, subscription billing, usage metering, and the unique challenges of building products that need to scale from 10 to 10,000 users. At Meteoric, we build SaaS products end-to-end using modern stacks like Next.js and Supabase.",
+            a: "A SaaS development agency builds cloud-based software products delivered via subscription. Unlike general web development agencies, SaaS agencies understand multi-tenant architecture, subscription billing, usage metering, and the unique challenges of building products that scale.",
           },
           {
             q: "How long does it take to build a SaaS MVP?",
-            a_html: 'Most SaaS MVPs take 3-6 weeks depending on scope. Our record is 21 days for a fintech prototype that went on to close a seed round. We focus on the core 20% of features that deliver 80% of the value and ship fast. Read our <a href="/blog/building-a-saas-prototype-in-3-weeks-a-case-study" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">MVP case study</a> for the full breakdown.',
+            a_html: 'Most SaaS MVPs take 3-6 weeks depending on scope. Our record is 21 days for a fintech prototype. We focus on the core 20% of features that deliver 80% of the value. Read our <a href="/blog/building-a-saas-prototype-in-3-weeks-a-case-study" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">MVP case study</a>.',
           },
           {
             q: "What makes Meteoric different from other SaaS agencies?",
-            a_html: 'Every project ships directly with the founder — no account managers, no layers. We work like a product studio, not an agency. This means faster decisions, fewer meetings, and a final product that actually reflects your vision. See our <a href="/work" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">portfolio</a> for shipped projects.',
+            a: "Every project ships directly with the founder — no account managers, no layers. We work like a product studio, not an agency. This means faster decisions, fewer meetings, and a final product that actually reflects your vision.",
           },
           {
             q: "Do you handle ongoing maintenance after launch?",
-            a: "Yes. After launch, we offer retainer-based maintenance, feature additions, and performance optimization. We treat every project as a long-term partnership — not a handoff.",
+            a: "Yes. After launch, we offer retainer-based maintenance, feature additions, and performance optimization. We treat every project as a long-term partnership.",
           },
           {
             q: "How much does a SaaS development agency cost?",
-            a: "Costs vary widely based on scope. A focused MVP typically starts around $15,000-$30,000. Full production platforms range from $30,000-$80,000 depending on complexity. We provide a detailed scope and fixed-price quote after our free strategy call.",
+            a: "Costs vary widely based on scope. A focused MVP typically starts around $15,000-$30,000. Full production platforms range from $30,000-$80,000. We provide a detailed scope and fixed-price quote after our free strategy call.",
           },
         ]} />
       </section>

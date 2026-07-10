@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import StepIndicator from "./StepIndicator";
 
-const SERVICES = ["Landing Page", "SaaS App", "Full Website"];
+const SERVICES = ["Landing Page", "SaaS Development", "Web Apps", "Full-Stack Development"];
 
 function Step1({ step, setStep, formData, setFormData }) {
   const step1Valid = formData.services.length > 0;
