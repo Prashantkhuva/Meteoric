@@ -139,6 +139,11 @@ export default function RootLayout({ children }) {
                   "@id": `${SITE_URL}/#product`,
                   "name": "SaaS Development Services",
                   "description": "End-to-end SaaS development from MVP to production platform for startups.",
+                  "image": `${SITE_URL}/og.png`,
+                  "brand": {
+                    "@type": "Organization",
+                    "name": SITE_NAME
+                  },
                   "review": {
                     "@type": "Review",
                     "reviewRating": {
