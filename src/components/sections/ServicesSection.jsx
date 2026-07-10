@@ -114,7 +114,7 @@ export default function ServicesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
           {services.map((s, idx) => (
@@ -124,7 +124,7 @@ export default function ServicesSection() {
               className="group relative overflow-hidden"
               style={{
                 borderRight:
-                  idx % 3 !== 2 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                  idx % 4 !== 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
               }}
             >
