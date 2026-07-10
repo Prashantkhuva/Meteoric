@@ -32,7 +32,7 @@ const services = [
   {
     num: "04",
     title: "Full-Stack Development",
-    desc: "Complete frontend and backend development — from APIs and databases to polished UI. We handle the full stack so you don't need multiple teams.",
+    desc: "Complete frontend and backend development — from APIs and databases to polished UI. Full stack, one team.",
     tag: "Full-Stack + API",
     img: "/we-do-4.avif",
     href: "/services/full-stack-development",
