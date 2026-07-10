@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import StepIndicator from "./StepIndicator";
@@ -10,6 +11,14 @@ const CURRENCIES = [
   { label: "AUD", symbol: "A$" },
 ];
 
+const BASE_USD = 499;
+const OVERRIDES = { USD: 499, INR: 29999 };
+const FALLBACK = { USD: 499, INR: 29999, EUR: 400, GBP: 350, AUD: 750 };
+
+function formatNum(n) {
+  return Number(n).toLocaleString("en-IN");
+}
+
 function Step3({
   step,
   setStep,
@@ -21,11 +30,36 @@ function Step3({
   currencyOpen,
   setCurrencyOpen,
 }) {
-  const step3Valid = formData.budget && !sending;
+  const [rates, setRates] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("https://open.er-api.com/v6/latest/USD")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled && data.rates) setRates(data.rates);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  function getMinPrice(currency) {
+    if (OVERRIDES[currency]) return OVERRIDES[currency];
+    if (rates && rates[currency]) {
+      return Math.round(BASE_USD * rates[currency]);
+    }
+    return FALLBACK[currency] || 0;
+  }
+
+  const minPrice = getMinPrice(formData.currency);
+  const budgetNum = Number(String(formData.budget).replace(/[^0-9]/g, ""));
+  const belowMin = formData.budget && budgetNum < minPrice;
+  const step3Valid = formData.budget && !belowMin && !sending;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const cleaned = value.replace(/[^0-9]/g, "");
+    setFormData((prev) => ({ ...prev, [name]: cleaned }));
   };
 
   return (
@@ -73,6 +107,9 @@ function Step3({
                   >
                     <span>{c.symbol}</span>
                     <span>{c.label}</span>
+                    <span className="ml-auto text-white/20 text-xs">
+                      Min {c.symbol}{formatNum(getMinPrice(c.label))}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -87,9 +124,20 @@ function Step3({
             name="budget"
             value={formData.budget}
             onChange={handleChange}
-            placeholder="2,000"
-            className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#EAEFFF]/30 transition-colors text-sm"
+            placeholder={`Min ${CURRENCIES.find((c) => c.label === formData.currency)?.symbol || "$"}${formatNum(minPrice)}`}
+            className={`w-full px-4 py-3 bg-black border rounded-xl text-white placeholder:text-white/20 focus:outline-none transition-colors text-sm ${
+              belowMin
+                ? "border-red-500/40 focus:border-red-500/60"
+                : "border-[#EAEFFF]/10 focus:border-[#EAEFFF]/30"
+            }`}
           />
+          {belowMin && (
+            <p className="text-red-400/70 text-xs mt-1.5">
+              Minimum budget is{" "}
+              {CURRENCIES.find((c) => c.label === formData.currency)?.symbol}
+              {formatNum(minPrice)} {formData.currency}
+            </p>
+          )}
         </div>
       </div>
       <div className="bg-black p-4 rounded-xl mb-6 border border-[#EAEFFF]/10">
