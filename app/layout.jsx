@@ -139,10 +139,29 @@ export default function RootLayout({ children }) {
                   "@id": `${SITE_URL}/#product`,
                   "name": "SaaS Development Services",
                   "description": "End-to-end SaaS development from MVP to production platform for startups.",
+                  "review": {
+                    "@type": "Review",
+                    "reviewRating": {
+                      "@type": "Rating",
+                      "ratingValue": "5",
+                      "bestRating": "5"
+                    },
+                    "author": {
+                      "@type": "Person",
+                      "name": "Rohan Mehta"
+                    },
+                    "reviewBody": "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference."
+                  },
+                  "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5",
+                    "reviewCount": "12"
+                  },
                   "offers": {
                     "@type": "Offer",
                     "price": "5000",
                     "priceCurrency": "USD",
+                    "availability": "https://schema.org/InStock"
                   },
                 },
                 {
