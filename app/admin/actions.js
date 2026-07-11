@@ -1119,19 +1119,27 @@ export async function sendCustomEmailAction(formData) {
 
     const files = formData.getAll("attachments");
     const uploaded = [];
+    const attachmentBuffers = [];
     for (const file of files) {
       if (!file || typeof file === "string" || file.size === 0) continue;
       try {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
         const path = `attachments/${Date.now()}-${file.name}`;
         const { data, error: uploadErr } = await supabase.storage
           .from("email-attachments")
-          .upload(path, file);
+          .upload(path, buffer, {
+            contentType: file.type || "application/octet-stream",
+          });
         if (!uploadErr && data) {
           const { data: urlData } = supabase.storage
             .from("email-attachments")
             .getPublicUrl(data.path);
           uploaded.push({ name: file.name, size: file.size, url: urlData.publicUrl });
+        } else if (uploadErr) {
+          console.warn("[actions] storage upload error:", uploadErr.message);
         }
+        attachmentBuffers.push({ filename: file.name, content: buffer });
       } catch (uploadErr) {
         console.warn("[actions] file upload failed, continuing without:", uploadErr.message);
       }
@@ -1144,10 +1152,7 @@ export async function sendCustomEmailAction(formData) {
         to,
         subject,
         html: body,
-        attachments: uploaded.map((f) => ({
-          filename: f.name,
-          content: f.url,
-        })),
+        attachments: attachmentBuffers,
       });
     } catch (sendErr) {
       console.error("[actions] sendCustomEmail failed:", sendErr);
