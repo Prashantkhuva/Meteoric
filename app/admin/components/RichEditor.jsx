@@ -2,8 +2,6 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import LinkExtension from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Bold, Italic, Underline as UnderlineIcon, Heading1, Heading2, List, ListOrdered, Link as LinkIcon } from "lucide-react";
 
@@ -88,9 +86,8 @@ export function RichEditor({ content, onChange, placeholder = "Start writing..."
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
+        link: { openOnClick: false },
       }),
-      Underline,
-      LinkExtension.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder }),
     ],
     content: content || "",
