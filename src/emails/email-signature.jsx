@@ -35,7 +35,7 @@ export default function EmailSignature({ name = "Prashant Khuva", title = "Found
 const wrapper = {
   display: "flex",
   alignItems: "center",
-  gap: "10px",
+  gap: "16px",
   marginTop: "12px",
   paddingTop: "16px",
 };
