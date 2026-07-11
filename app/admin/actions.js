@@ -1102,46 +1102,45 @@ export async function getRecipients() {
   }
 }
 
-export async function sendCustomEmailAction(formData) {
+export async function sendCustomEmailAction(data) {
   try {
     const supabase = await getSupabase();
-    const from = formData.get("from");
-    const toRaw = formData.get("to");
-    const to = toRaw ? JSON.parse(toRaw) : [];
-    const subject = formData.get("subject");
-    const body = formData.get("body");
-    const leadId = formData.get("lead_id") || null;
-    const clientId = formData.get("client_id") || null;
+    const from = data.from;
+    const to = data.to ? JSON.parse(data.to) : [];
+    const subject = data.subject;
+    const body = data.body;
+    const leadId = data.lead_id || null;
+    const clientId = data.client_id || null;
 
     if (!from || !to.length || !subject || !body) {
       return { error: "From, to, subject, and body are required" };
     }
 
-    const files = formData.getAll("attachments");
+    const files = data.files ? JSON.parse(data.files) : [];
     const uploaded = [];
     const attachmentBuffers = [];
     for (const file of files) {
-      if (!file || typeof file === "string" || file.size === 0) continue;
+      if (!file || !file.data) continue;
       try {
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        const buffer = Buffer.from(file.data, "base64");
+        attachmentBuffers.push({ filename: file.name, content: buffer });
+
         const path = `attachments/${Date.now()}-${file.name}`;
-        const { data, error: uploadErr } = await supabase.storage
+        const { data: uploadData, error: uploadErr } = await supabase.storage
           .from("email-attachments")
           .upload(path, buffer, {
             contentType: file.type || "application/octet-stream",
           });
-        if (!uploadErr && data) {
+        if (!uploadErr && uploadData) {
           const { data: urlData } = supabase.storage
             .from("email-attachments")
-            .getPublicUrl(data.path);
+            .getPublicUrl(uploadData.path);
           uploaded.push({ name: file.name, size: file.size, url: urlData.publicUrl });
         } else if (uploadErr) {
           console.warn("[actions] storage upload error:", uploadErr.message);
         }
-        attachmentBuffers.push({ filename: file.name, content: buffer });
       } catch (uploadErr) {
-        console.warn("[actions] file upload failed, continuing without:", uploadErr.message);
+        console.warn("[actions] file processing failed:", uploadErr.message);
       }
     }
 

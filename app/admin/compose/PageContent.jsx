@@ -105,14 +105,23 @@ export default function ComposePageContent() {
 
     setSending(true);
     try {
-      const fd = new FormData();
-      fd.append("from", from);
-      fd.append("to", JSON.stringify(to));
-      fd.append("subject", subject.trim());
-      fd.append("body", body);
-      files.forEach((f) => fd.append("attachments", f));
+      const fileData = await Promise.all(
+        files.map(async (f) => {
+          const arrayBuffer = await f.arrayBuffer();
+          const base64 = btoa(
+            new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
+          );
+          return { name: f.name, type: f.type, size: f.size, data: base64 };
+        })
+      );
 
-      const result = await sendCustomEmailAction(fd);
+      const result = await sendCustomEmailAction({
+        from,
+        to: JSON.stringify(to),
+        subject: subject.trim(),
+        body,
+        files: JSON.stringify(fileData),
+      });
 
       if (result.error) {
         addToast(result.error, "error");
