@@ -10,7 +10,7 @@ import { Send, Paperclip, X, ChevronDown, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const SENDER_OPTIONS = [
-  { value: "contact", label: "General", email: "contact@withmeteoric.com" },
+  { value: "contact", label: "Contact", email: "contact@withmeteoric.com" },
   { value: "admin", label: "Admin", email: "admin@withmeteoric.com" },
   { value: "billing", label: "Billing", email: "billing@withmeteoric.com" },
   { value: "support", label: "Support", email: "support@withmeteoric.com" },
