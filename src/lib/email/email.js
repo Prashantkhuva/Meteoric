@@ -6,6 +6,7 @@ import ProposalEmail from "@/emails/proposal-email";
 import InvoiceEmail from "@/emails/invoice-email";
 import OverdueReminder from "@/emails/overdue-reminder";
 import ClientWelcome from "@/emails/client-welcome";
+import CustomEmail from "@/emails/custom-email";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 
 const FROM =
@@ -238,7 +239,7 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
       from: `Meteoric <${fromAddress}>`,
       to,
       subject,
-      html,
+      react: CustomEmail({ html }),
       reply_to: fromAddress,
       attachments: safeAttachments.length > 0 ? safeAttachments : undefined,
     });
