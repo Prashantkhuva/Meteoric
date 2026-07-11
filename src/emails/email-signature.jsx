@@ -6,10 +6,10 @@ export default function EmailSignature({ name = "Prashant Khuva", title = "Found
   return (
     <div style={wrapper}>
       <Img
-        src={`${SITE_URL}/m.svg`}
+        src={`${SITE_URL}/m.png`}
         alt="Meteoric"
-        width={28}
-        height={28}
+        width={40}
+        height={40}
         style={logo}
       />
       <div style={textBlock}>
