@@ -35,7 +35,7 @@ export const metadata = {
     icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
-  manifest: `${SITE_URL}/site.webmanifest`,
+  manifest: "/site.webmanifest",
   robots: "index, follow",
   openGraph: {
     siteName: SITE_NAME,
