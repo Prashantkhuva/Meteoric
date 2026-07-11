@@ -11,6 +11,7 @@ import {
   Link,
   Img,
 } from "react-email";
+import EmailSignature from "./email-signature";
 
 export default function ReviewNotification({ name, email, role, company, project, rating, content, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
@@ -72,6 +73,7 @@ export default function ReviewNotification({ name, email, role, company, project
               Approve or reject in Admin
             </Link>
           </Text>
+          <EmailSignature />
         </Container>
       </Body>
     </Html>

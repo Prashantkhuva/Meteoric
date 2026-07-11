@@ -1,4 +1,5 @@
 import { Html, Head, Preview, Body, Container, Text, Hr, Link } from "react-email";
+import EmailSignature from "./email-signature";
 
 export default function OverdueReminder({ name, invoiceNumber, total, dueDate, daysOverdue, previewUrl }) {
   return (
@@ -48,11 +49,7 @@ export default function OverdueReminder({ name, invoiceNumber, total, dueDate, d
             Thank you for your prompt attention to this matter.
           </Text>
 
-          <Text style={footer}>
-            Meteoric Agency
-            <br />
-            contact@withmeteoric.com
-          </Text>
+          <EmailSignature />
         </Container>
       </Body>
     </Html>
@@ -140,10 +137,4 @@ const button = {
 const hr = {
   borderColor: "rgba(234, 239, 255, 0.08)",
   margin: "24px 0",
-};
-
-const footer = {
-  fontSize: "13px",
-  color: "rgba(255, 255, 255, 0.35)",
-  lineHeight: "1.5",
 };

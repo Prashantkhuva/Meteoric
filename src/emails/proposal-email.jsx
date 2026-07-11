@@ -9,6 +9,7 @@ import {
   Link,
   Img,
 } from "react-email";
+import EmailSignature from "./email-signature";
 
 const SITE_URL = "https://withmeteoric.com";
 
@@ -63,11 +64,7 @@ export default function ProposalEmail({ name, title, timeline, terms, previewUrl
             feel free to reply to this email.
           </Text>
 
-          <Text style={footer}>
-            Best regards,
-            <br />
-            Meteoric Team
-          </Text>
+          <EmailSignature />
         </Container>
       </Body>
     </Html>
@@ -133,10 +130,4 @@ const button = {
 const hr = {
   borderColor: "rgba(234, 239, 255, 0.08)",
   margin: "24px 0",
-};
-
-const footer = {
-  fontSize: "13px",
-  color: "rgba(255, 255, 255, 0.35)",
-  lineHeight: "1.5",
 };

@@ -11,6 +11,7 @@ import {
   Link,
   Img,
 } from "react-email";
+import EmailSignature from "./email-signature";
 
 export default function HotLeadAlert({ lead, score, category, summary, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
@@ -83,6 +84,7 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
               View in Admin &rarr;
             </Link>
           </Text>
+          <EmailSignature />
         </Container>
       </Body>
     </Html>

@@ -11,6 +11,7 @@ import {
   Link,
   Img,
 } from "react-email";
+import EmailSignature from "./email-signature";
 
 export default function NewLeadNotification({ name, email, phone, services, details, budget, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
@@ -73,6 +74,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
               View in Admin
             </Link>
           </Text>
+          <EmailSignature />
         </Container>
       </Body>
     </Html>
