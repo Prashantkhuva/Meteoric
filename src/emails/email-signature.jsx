@@ -18,9 +18,6 @@ export default function EmailSignature({ name = "Prashant Khuva", title = "Found
             <strong>Meteoric</strong>
           </Link>
         </Text>
-        <Text style={roleStyle}>
-          Rajkot, India
-        </Text>
         <Text style={contactStyle}>
           <Link href="mailto:contact@withmeteoric.com" style={contactLink}>
             contact@withmeteoric.com
