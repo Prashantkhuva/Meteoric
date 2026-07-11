@@ -6,13 +6,13 @@ export default function EmailSignature({ name = "Prashant Khuva", title = "Found
   return (
     <div style={wrapper}>
       <Img
-        src={`${SITE_URL}/m.png`}
+        src={`${SITE_URL}/m.svg`}
         alt="Meteoric"
-        width={32}
-        height={32}
+        width={28}
+        height={28}
         style={logo}
       />
-      <div>
+      <div style={textBlock}>
         <Text style={nameStyle}>
           <Link href={SITE_URL} style={nameLink}>
             <strong>Meteoric</strong>
@@ -35,12 +35,17 @@ export default function EmailSignature({ name = "Prashant Khuva", title = "Found
 const wrapper = {
   display: "flex",
   alignItems: "center",
-  gap: "12px",
-  marginTop: "8px",
+  gap: "10px",
+  marginTop: "12px",
+  paddingTop: "16px",
 };
 
 const logo = {
   flexShrink: 0,
+};
+
+const textBlock = {
+  lineHeight: "1.3",
 };
 
 const nameStyle = {
@@ -54,13 +59,6 @@ const nameStyle = {
 const nameLink = {
   color: "#ffffff",
   textDecoration: "none",
-};
-
-const roleStyle = {
-  fontSize: "12px",
-  color: "rgba(255, 255, 255, 0.45)",
-  margin: "0 0 2px 0",
-  lineHeight: "1.4",
 };
 
 const contactStyle = {
