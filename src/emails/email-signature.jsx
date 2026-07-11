@@ -1,7 +1,7 @@
 import { Img, Link, Text } from "react-email";
 
 const SITE_URL = "https://withmeteoric.com";
-const GRAVATAR_URL = "https://gravatar.com/coffeefortunately42043072f7?utm_source=email_signature";
+const GRAVATAR_URL = "https://withmeteoric.com/avatar-meteoric.png";
 
 export default function EmailSignature({ name = "Prashant Khuva", title = "Founder" }) {
   return (
@@ -20,7 +20,7 @@ export default function EmailSignature({ name = "Prashant Khuva", title = "Found
           </Link>
         </Text>
         <Text style={roleStyle}>
-          {name} · {title}
+          Rajkot, India
         </Text>
         <Text style={contactStyle}>
           <Link href="mailto:contact@withmeteoric.com" style={contactLink}>
