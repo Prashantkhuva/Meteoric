@@ -1106,7 +1106,8 @@ export async function sendCustomEmailAction(formData) {
   try {
     const supabase = await getSupabase();
     const from = formData.get("from");
-    const to = JSON.parse(formData.get("to") || "[]");
+    const toRaw = formData.get("to");
+    const to = toRaw ? JSON.parse(toRaw) : [];
     const subject = formData.get("subject");
     const body = formData.get("body");
     const leadId = formData.get("lead_id") || null;
@@ -1119,41 +1120,55 @@ export async function sendCustomEmailAction(formData) {
     const files = formData.getAll("attachments");
     const uploaded = [];
     for (const file of files) {
-      if (!file || file.size === 0) continue;
-      const path = `attachments/${Date.now()}-${file.name}`;
-      const { data, error: uploadErr } = await supabase.storage
-        .from("email-attachments")
-        .upload(path, file);
-      if (!uploadErr && data) {
-        const { data: urlData } = supabase.storage
+      if (!file || typeof file === "string" || file.size === 0) continue;
+      try {
+        const path = `attachments/${Date.now()}-${file.name}`;
+        const { data, error: uploadErr } = await supabase.storage
           .from("email-attachments")
-          .getPublicUrl(data.path);
-        uploaded.push({ name: file.name, size: file.size, url: urlData.publicUrl });
+          .upload(path, file);
+        if (!uploadErr && data) {
+          const { data: urlData } = supabase.storage
+            .from("email-attachments")
+            .getPublicUrl(data.path);
+          uploaded.push({ name: file.name, size: file.size, url: urlData.publicUrl });
+        }
+      } catch (uploadErr) {
+        console.warn("[actions] file upload failed, continuing without:", uploadErr.message);
       }
     }
 
-    const result = await sendCustomEmail({
-      from,
-      to,
-      subject,
-      html: body,
-      attachments: uploaded.map((f) => ({
-        filename: f.name,
-        content: f.url,
-      })),
-    });
+    let result;
+    try {
+      result = await sendCustomEmail({
+        from,
+        to,
+        subject,
+        html: body,
+        attachments: uploaded.map((f) => ({
+          filename: f.name,
+          content: f.url,
+        })),
+      });
+    } catch (sendErr) {
+      console.error("[actions] sendCustomEmail failed:", sendErr);
+      return { error: sendErr.message || "Failed to send email via Resend" };
+    }
 
-    await supabase.from("sent_emails").insert({
-      from_address: `${from}@withmeteoric.com`,
-      to_addresses: to,
-      subject,
-      body,
-      attachments: uploaded.length ? uploaded : null,
-      resend_id: result?.data?.id || null,
-      status: "sent",
-      lead_id: leadId,
-      client_id: clientId,
-    });
+    try {
+      await supabase.from("sent_emails").insert({
+        from_address: `${from}@withmeteoric.com`,
+        to_addresses: to,
+        subject,
+        body,
+        attachments: uploaded.length ? uploaded : null,
+        resend_id: result?.data?.id || null,
+        status: "sent",
+        lead_id: leadId,
+        client_id: clientId,
+      });
+    } catch (logErr) {
+      console.warn("[actions] failed to log sent email:", logErr.message);
+    }
 
     return { success: true, id: result?.data?.id };
   } catch (err) {

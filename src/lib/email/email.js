@@ -225,6 +225,13 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
     }
   }
 
+  const safeAttachments = (attachments || []).filter(
+    (a) => a && a.filename && a.content
+  ).map((a) => ({
+    filename: a.filename,
+    content: a.content,
+  }));
+
   let result;
   try {
     result = await resend.emails.send({
@@ -233,7 +240,7 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
       subject,
       html,
       reply_to: fromAddress,
-      attachments: attachments || [],
+      attachments: safeAttachments.length > 0 ? safeAttachments : undefined,
     });
   } catch (raw) {
     console.error("[resend] custom email threw:", raw);
