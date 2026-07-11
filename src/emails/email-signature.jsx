@@ -1,17 +1,16 @@
 import { Img, Link, Text } from "react-email";
 
 const SITE_URL = "https://withmeteoric.com";
-const GRAVATAR_URL = "https://withmeteoric.com/avatar-meteoric.png";
 
 export default function EmailSignature({ name = "Prashant Khuva", title = "Founder" }) {
   return (
     <div style={wrapper}>
       <Img
-        src={GRAVATAR_URL}
-        alt={name}
-        width={40}
-        height={40}
-        style={avatar}
+        src={`${SITE_URL}/m.png`}
+        alt="Meteoric"
+        width={32}
+        height={32}
+        style={logo}
       />
       <div>
         <Text style={nameStyle}>
@@ -43,8 +42,7 @@ const wrapper = {
   marginTop: "8px",
 };
 
-const avatar = {
-  borderRadius: "50%",
+const logo = {
   flexShrink: 0,
 };
 
