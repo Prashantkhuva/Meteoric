@@ -42,6 +42,7 @@ const wrapper = {
 
 const logo = {
   flexShrink: 0,
+  borderRadius: "50%",
 };
 
 const textBlock = {
