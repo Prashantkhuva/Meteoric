@@ -15,6 +15,13 @@ const ADMIN_FROM = `Meteoric <${process.env.ADMIN_CONTACT_EMAIL || "admin@withme
 const BILLING_FROM = `Meteoric <${process.env.BILLING_EMAIL || "billing@withmeteoric.com"}>`;
 const DOMAIN = (FROM || "").match(/@([^>]+)/)?.[1];
 
+const SENDER_MAP = {
+  contact: process.env.ADMIN_CONTACT_EMAIL || "contact@withmeteoric.com",
+  admin: process.env.ADMIN_CONTACT_EMAIL || "admin@withmeteoric.com",
+  billing: process.env.BILLING_EMAIL || "billing@withmeteoric.com",
+  support: process.env.SUPPORT_EMAIL || "support@withmeteoric.com",
+};
+
 function isTestMode() {
   return DOMAIN === "resend.dev";
 }
@@ -204,5 +211,34 @@ export async function sendOverdueReminder(invoice, client, previewUrl) {
     throw new Error(raw?.message || "Failed to send overdue reminder", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send overdue reminder");
+  return result;
+}
+
+export async function sendCustomEmail({ from, to, subject, html, attachments }) {
+  const fromAddress = SENDER_MAP[from] || SENDER_MAP.contact;
+
+  if (isTestMode()) {
+    const nonAdmin = to.find((e) => e !== ADMIN);
+    if (nonAdmin) {
+      testModeWarning(nonAdmin);
+      throw new Error("Cannot send — verify a custom domain in Resend first (test mode only delivers to admin)");
+    }
+  }
+
+  let result;
+  try {
+    result = await resend.emails.send({
+      from: `Meteoric <${fromAddress}>`,
+      to,
+      subject,
+      html,
+      reply_to: fromAddress,
+      attachments: attachments || [],
+    });
+  } catch (raw) {
+    console.error("[resend] custom email threw:", raw);
+    throw new Error(raw?.message || "Failed to send custom email", { cause: raw });
+  }
+  if (result?.error) throw new Error(result.error.message || "Failed to send custom email");
   return result;
 }

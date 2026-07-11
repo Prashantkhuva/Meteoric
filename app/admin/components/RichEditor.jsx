@@ -83,7 +83,7 @@ function Toolbar({ editor }) {
   );
 }
 
-export function RichEditor({ content, onChange, placeholder = "Start writing..." }) {
+export function RichEditor({ content, onChange, placeholder = "Start writing...", outputFormat = "json" }) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -95,7 +95,7 @@ export function RichEditor({ content, onChange, placeholder = "Start writing..."
     ],
     content: content || "",
     onUpdate: ({ editor: ed }) => {
-      onChange(ed.getJSON());
+      onChange(outputFormat === "html" ? ed.getHTML() : ed.getJSON());
     },
     editorProps: {
       attributes: {

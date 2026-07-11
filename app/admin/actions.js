@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
-import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert } from "@/lib/email/email";
+import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail } from "@/lib/email/email";
 import { callAIJson } from "@/lib/ai/provider";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import {
@@ -1080,5 +1080,101 @@ export async function ensureShareToken(type, id) {
     return { token };
   } catch {
     return { token: null };
+  }
+}
+
+export async function getRecipients() {
+  try {
+    const supabase = await getSupabase();
+    const [leads, clients] = await Promise.all([
+      supabase.from("leads").select("id, name, email").not("email", "is", null),
+      supabase.from("clients").select("id, name, email").not("email", "is", null),
+    ]);
+
+    const recipients = [
+      ...(leads.data || []).map((l) => ({ id: l.id, name: l.name, email: l.email, type: "lead" })),
+      ...(clients.data || []).map((c) => ({ id: c.id, name: c.name, email: c.email, type: "client" })),
+    ].filter((r) => r.email);
+
+    return { data: recipients };
+  } catch {
+    return { data: [] };
+  }
+}
+
+export async function sendCustomEmailAction(formData) {
+  try {
+    const supabase = await getSupabase();
+    const from = formData.get("from");
+    const to = JSON.parse(formData.get("to") || "[]");
+    const subject = formData.get("subject");
+    const body = formData.get("body");
+    const leadId = formData.get("lead_id") || null;
+    const clientId = formData.get("client_id") || null;
+
+    if (!from || !to.length || !subject || !body) {
+      return { error: "From, to, subject, and body are required" };
+    }
+
+    const files = formData.getAll("attachments");
+    const uploaded = [];
+    for (const file of files) {
+      if (!file || file.size === 0) continue;
+      const path = `attachments/${Date.now()}-${file.name}`;
+      const { data, error: uploadErr } = await supabase.storage
+        .from("email-attachments")
+        .upload(path, file);
+      if (!uploadErr && data) {
+        const { data: urlData } = supabase.storage
+          .from("email-attachments")
+          .getPublicUrl(data.path);
+        uploaded.push({ name: file.name, size: file.size, url: urlData.publicUrl });
+      }
+    }
+
+    const result = await sendCustomEmail({
+      from,
+      to,
+      subject,
+      html: body,
+      attachments: uploaded.map((f) => ({
+        filename: f.name,
+        content: f.url,
+      })),
+    });
+
+    await supabase.from("sent_emails").insert({
+      from_address: `${from}@withmeteoric.com`,
+      to_addresses: to,
+      subject,
+      body,
+      attachments: uploaded.length ? uploaded : null,
+      resend_id: result?.data?.id || null,
+      status: "sent",
+      lead_id: leadId,
+      client_id: clientId,
+    });
+
+    return { success: true, id: result?.data?.id };
+  } catch (err) {
+    console.error("[actions] sendCustomEmailAction failed:", err);
+    return { error: err.message || "Failed to send email" };
+  }
+}
+
+export async function getSentEmails(page = 1, pageSize = 15) {
+  try {
+    const supabase = await getSupabase();
+    const from = (page - 1) * pageSize;
+
+    const { data, count } = await supabase
+      .from("sent_emails")
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, from + pageSize - 1);
+
+    return { data: data || [], total: count || 0 };
+  } catch {
+    return { data: [], total: 0 };
   }
 }

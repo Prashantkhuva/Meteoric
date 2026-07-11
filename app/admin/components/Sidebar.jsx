@@ -11,6 +11,8 @@ import {
   FileText,
   FolderKanban,
   Receipt,
+  PenSquare,
+  Mail,
   LogOut,
   X,
 } from "lucide-react";
@@ -28,6 +30,8 @@ const links = [
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
   { href: "/admin/invoices", label: "Invoices", icon: Receipt },
   { href: "/admin/cal-bookings", label: "Bookings", icon: Calendar },
+  { href: "/admin/compose", label: "Compose", icon: PenSquare },
+  { href: "/admin/sent-emails", label: "Sent Emails", icon: Mail },
 ];
 
 export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {

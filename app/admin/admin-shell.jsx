@@ -16,6 +16,8 @@ const pageTitles = {
   "/admin/proposals": "Proposals",
   "/admin/projects": "Projects",
   "/admin/invoices": "Invoices",
+  "/admin/compose": "Compose Email",
+  "/admin/sent-emails": "Sent Emails",
 };
 
 export function AdminShell({ children }) {
