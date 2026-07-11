@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getRecipients, sendCustomEmailAction } from "../actions";
 import { RichEditor } from "../components/RichEditor";
@@ -19,6 +20,7 @@ const MAX_FILES = 5;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export default function ComposePageContent() {
+  const router = useRouter();
   const addToast = useToast();
   const fileInputRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -133,10 +135,7 @@ export default function ComposePageContent() {
         addToast(result.error, "error");
       } else {
         addToast("Email sent successfully", "success");
-        setTo([]);
-        setSubject("");
-        setBody("");
-        setFiles([]);
+        router.push("/admin/sent-emails");
       }
     } catch (err) {
       addToast(err.message || "Failed to send", "error");

@@ -16,7 +16,7 @@ const BILLING_FROM = `Meteoric <${process.env.BILLING_EMAIL || "billing@withmete
 const DOMAIN = (FROM || "").match(/@([^>]+)/)?.[1];
 
 const SENDER_MAP = {
-  contact: process.env.ADMIN_CONTACT_EMAIL || "contact@withmeteoric.com",
+  contact: "contact@withmeteoric.com",
   admin: process.env.ADMIN_CONTACT_EMAIL || "admin@withmeteoric.com",
   billing: process.env.BILLING_EMAIL || "billing@withmeteoric.com",
   support: process.env.SUPPORT_EMAIL || "support@withmeteoric.com",
