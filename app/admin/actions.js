@@ -1117,30 +1117,26 @@ export async function sendCustomEmailAction(data) {
     }
 
     const files = data.files ? JSON.parse(data.files) : [];
-    const uploaded = [];
     const attachmentBuffers = [];
     for (const file of files) {
-      if (!file || !file.data) continue;
+      if (!file || !file.path) continue;
       try {
-        const buffer = Buffer.from(file.data, "base64");
-        attachmentBuffers.push({ filename: file.name, content: buffer });
-
-        const path = `attachments/${Date.now()}-${file.name}`;
-        const { data: uploadData, error: uploadErr } = await supabase.storage
+        const { data: signedUrlData, error: urlErr } = await supabase.storage
           .from("email-attachments")
-          .upload(path, buffer, {
-            contentType: file.type || "application/octet-stream",
-          });
-        if (!uploadErr && uploadData) {
-          const { data: urlData } = supabase.storage
-            .from("email-attachments")
-            .getPublicUrl(uploadData.path);
-          uploaded.push({ name: file.name, size: file.size, url: urlData.publicUrl });
-        } else if (uploadErr) {
-          console.warn("[actions] storage upload error:", uploadErr.message);
+          .createSignedUrl(file.path, 300);
+        if (urlErr || !signedUrlData?.signedUrl) {
+          console.warn("[actions] signed URL error:", urlErr?.message);
+          continue;
         }
-      } catch (uploadErr) {
-        console.warn("[actions] file processing failed:", uploadErr.message);
+        const response = await fetch(signedUrlData.signedUrl);
+        if (!response.ok) {
+          console.warn("[actions] file fetch failed:", response.status);
+          continue;
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        attachmentBuffers.push({ filename: file.name, content: Buffer.from(arrayBuffer) });
+      } catch (fileErr) {
+        console.warn("[actions] file download failed:", fileErr.message);
       }
     }
 
@@ -1158,13 +1154,14 @@ export async function sendCustomEmailAction(data) {
       return { error: sendErr.message || "Failed to send email via Resend" };
     }
 
+    const uploadedMeta = files.map((f) => ({ name: f.name, size: f.size, path: f.path }));
     try {
       await supabase.from("sent_emails").insert({
         from_address: `${from}@withmeteoric.com`,
         to_addresses: to,
         subject,
         body,
-        attachments: uploaded.length ? uploaded : null,
+        attachments: uploadedMeta.length ? uploadedMeta : null,
         resend_id: result?.data?.id || null,
         status: "sent",
         lead_id: leadId,

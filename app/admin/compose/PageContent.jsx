@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { getRecipients, sendCustomEmailAction } from "../actions";
 import { RichEditor } from "../components/RichEditor";
 import { useToast } from "../components/ToastContext";
@@ -105,22 +106,27 @@ export default function ComposePageContent() {
 
     setSending(true);
     try {
-      const fileData = await Promise.all(
-        files.map(async (f) => {
-          const arrayBuffer = await f.arrayBuffer();
-          const base64 = btoa(
-            new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
-          );
-          return { name: f.name, type: f.type, size: f.size, data: base64 };
-        })
-      );
+      const supabase = createClient();
+      const uploadedFiles = [];
+
+      for (const f of files) {
+        const path = `attachments/${Date.now()}-${f.name}`;
+        const { data, error } = await supabase.storage
+          .from("email-attachments")
+          .upload(path, f, { contentType: f.type || "application/octet-stream" });
+        if (error) {
+          console.warn("Storage upload failed:", error.message);
+          continue;
+        }
+        uploadedFiles.push({ name: f.name, size: f.size, path: data.path });
+      }
 
       const result = await sendCustomEmailAction({
         from,
         to: JSON.stringify(to),
         subject: subject.trim(),
         body,
-        files: JSON.stringify(fileData),
+        files: JSON.stringify(uploadedFiles),
       });
 
       if (result.error) {
