@@ -25,8 +25,8 @@ export async function generateProposalPdf(proposal, lead) {
   );
 }
 
-export async function generateInvoicePdf(invoice, client) {
+export async function generateInvoicePdf(invoice, client, wiseCurrency) {
   return renderToBuffer(
-    <InvoicePDF invoice={invoice} client={client} logo={getLogo()} />
+    <InvoicePDF invoice={invoice} client={client} logo={getLogo()} wiseCurrency={wiseCurrency} />
   );
 }

@@ -49,7 +49,7 @@ export async function GET(request, { params }) {
     }
     const invoice = typeof data === "string" ? JSON.parse(data) : data;
 
-    const pdfBuffer = await generateInvoicePdf(invoice, invoice.client);
+    const pdfBuffer = await generateInvoicePdf(invoice, invoice.client, invoice.currency || "USD");
     const filename = `Invoice-${invoice.invoice_number}.pdf`;
 
     return new Response(pdfBuffer, {

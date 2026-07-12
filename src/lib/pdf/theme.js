@@ -8,8 +8,13 @@ export const colors = {
   accent: "#E8E4FF",
   accentMuted: "#222225",
   success: "#4ade80",
+  successMuted: "rgba(74,222,128,0.10)",
   warning: "#fbbf24",
+  warningMuted: "rgba(251,191,36,0.10)",
   danger: "#f87171",
+  dangerMuted: "rgba(248,113,113,0.10)",
+  wiseGreen: "#9FE870",
+  wiseGreenDark: "#7ABF52",
 };
 
 export const fonts = {

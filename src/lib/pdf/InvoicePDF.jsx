@@ -1,5 +1,7 @@
-import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image, Link, StyleSheet } from "@react-pdf/renderer";
 import { colors, fonts, fontSizes, spacing } from "./theme";
+
+const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
 
 const styles = StyleSheet.create({
   page: {
@@ -40,33 +42,58 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   statusPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 3,
-    marginTop: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 4,
+    marginTop: 12,
     alignSelf: "flex-end",
+    borderWidth: 1,
+  },
+  statusDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    marginRight: 6,
   },
   statusText: {
-    fontSize: 9,
+    fontSize: 8,
     fontFamily: fonts.bold,
     textTransform: "uppercase",
-    letterSpacing: 1.5,
+    letterSpacing: 1.8,
   },
   statusSent: {
     backgroundColor: colors.accentMuted,
+    borderColor: "rgba(232,228,255,0.12)",
     color: colors.accent,
   },
+  statusSentDot: {
+    backgroundColor: colors.accent,
+  },
   statusPaid: {
-    backgroundColor: "rgba(74,222,128,0.12)",
+    backgroundColor: colors.successMuted,
+    borderColor: "rgba(74,222,128,0.18)",
     color: colors.success,
   },
+  statusPaidDot: {
+    backgroundColor: colors.success,
+  },
   statusOverdue: {
-    backgroundColor: "rgba(248,113,113,0.12)",
+    backgroundColor: colors.dangerMuted,
+    borderColor: "rgba(248,113,113,0.18)",
     color: colors.danger,
   },
+  statusOverdueDot: {
+    backgroundColor: colors.danger,
+  },
   statusDraft: {
-    backgroundColor: colors.accentMuted,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderColor: "rgba(255,255,255,0.08)",
     color: colors.textMuted,
+  },
+  statusDraftDot: {
+    backgroundColor: colors.textMuted,
   },
   dates: {
     fontSize: fontSizes.small,
@@ -191,6 +218,30 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.accent,
   },
+  wiseSection: {
+    marginTop: 24,
+    alignItems: "center",
+  },
+  wiseButton: {
+    backgroundColor: colors.wiseGreen,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 4,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  wiseButtonText: {
+    fontSize: 11,
+    fontFamily: fonts.bold,
+    color: "#0a0a0a",
+    letterSpacing: 0.5,
+  },
+  wiseNote: {
+    fontSize: fontSizes.small,
+    color: colors.textMuted,
+    marginTop: 8,
+    textAlign: "center",
+  },
   footerSection: {
     marginTop: 36,
     paddingTop: 22,
@@ -247,22 +298,22 @@ function formatDate(d) {
 
 function StatusBadge({ status }) {
   const colorMap = {
-    overdue: styles.statusOverdue,
-    paid: styles.statusPaid,
-    sent: styles.statusSent,
-    draft: styles.statusDraft,
+    overdue: { pill: styles.statusOverdue, dot: styles.statusOverdueDot },
+    paid: { pill: styles.statusPaid, dot: styles.statusPaidDot },
+    sent: { pill: styles.statusSent, dot: styles.statusSentDot },
+    draft: { pill: styles.statusDraft, dot: styles.statusDraftDot },
   };
   const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
+  const mapped = colorMap[status] || colorMap.sent;
   return (
-    <View style={[styles.statusPill, colorMap[status] || styles.statusSent]}>
-      <Text style={[styles.statusText, { color: (colorMap[status] || styles.statusSent).color }]}>
-        {label}
-      </Text>
+    <View style={[styles.statusPill, mapped.pill]}>
+      <View style={[styles.statusDot, mapped.dot]} />
+      <Text style={styles.statusText}>{label}</Text>
     </View>
   );
 }
 
-export default function InvoicePDF({ invoice, client, logo }) {
+export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   const items = invoice.items || [];
   const subtotal = items.reduce(
     (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
@@ -270,6 +321,9 @@ export default function InvoicePDF({ invoice, client, logo }) {
   );
   const tax = Number(invoice.tax) || 0;
   const total = Number(invoice.total) || subtotal + tax;
+  const curr = wiseCurrency || invoice.currency || "USD";
+  const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${total.toFixed(2)}`;
+  const isPaid = invoice.status === "paid";
 
   return (
     <Document>
@@ -361,6 +415,15 @@ export default function InvoicePDF({ invoice, client, logo }) {
             </View>
           </View>
         </View>
+
+        {!isPaid && (
+          <View style={styles.wiseSection}>
+            <Link src={wiseUrl} style={styles.wiseButton}>
+              <Text style={styles.wiseButtonText}>Pay ${total.toFixed(2)} with Wise</Text>
+            </Link>
+            <Text style={styles.wiseNote}>Click to pay directly via Wise</Text>
+          </View>
+        )}
 
         {(invoice.notes || invoice.terms) && (
           <View style={styles.footerSection}>

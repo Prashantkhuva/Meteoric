@@ -147,7 +147,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
       })
     : null;
 
-  const pdfBuffer = await generateInvoicePdf(invoice, client);
+  const pdfBuffer = await generateInvoicePdf(invoice, client, invoice.currency || "USD");
 
   let result;
   try {
@@ -159,6 +159,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
         name: client.name,
         invoiceNumber: invoice.invoice_number,
         total: invoice.total,
+        currency: invoice.currency || "USD",
         dueDate,
         previewUrl,
       }),

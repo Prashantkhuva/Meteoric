@@ -12,8 +12,12 @@ import {
 import EmailSignature from "./email-signature";
 
 const SITE_URL = "https://withmeteoric.com";
+const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
 
-export default function InvoiceEmail({ name, invoiceNumber, total, dueDate, previewUrl }) {
+export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl }) {
+  const curr = currency || "USD";
+  const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
+
   return (
     <Html>
       <Head />
@@ -52,9 +56,15 @@ export default function InvoiceEmail({ name, invoiceNumber, total, dueDate, prev
             )}
           </div>
 
-          <Link href={previewUrl} style={button}>
-            View Invoice & Pay Online
+          <Link href={wiseUrl} style={wiseButton}>
+            Pay ${Number(total).toFixed(2)} with Wise
           </Link>
+
+          <div style={{ marginTop: "8px" }}>
+            <Link href={previewUrl} style={button}>
+              View Invoice
+            </Link>
+          </div>
 
           <Text style={paragraph}>
             Please remit payment by the due date. If you have any questions
@@ -146,10 +156,21 @@ const divider = {
 const button = {
   display: "inline-block",
   padding: "12px 24px",
-  backgroundColor: "#EAEFFF",
-  color: "#121212",
+  backgroundColor: "rgba(255, 255, 255, 0.08)",
+  color: "rgba(255, 255, 255, 0.6)",
   fontSize: "14px",
   fontWeight: 600,
+  textDecoration: "none",
+  border: "1px solid rgba(234, 239, 255, 0.1)",
+};
+
+const wiseButton = {
+  display: "inline-block",
+  padding: "12px 24px",
+  backgroundColor: "#9FE870",
+  color: "#0a0a0a",
+  fontSize: "14px",
+  fontWeight: 700,
   textDecoration: "none",
   margin: "16px 0",
 };

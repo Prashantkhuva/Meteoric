@@ -76,8 +76,8 @@ export async function GET(request, { params }) {
     return ((Number(item.quantity) || 0) * (Number(item.rate) || 0)).toFixed(2);
   }
 
-  const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : "";
-  const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status;
+  const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : invoice.status === "sent" ? "sent" : "draft";
+  const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status === "sent" ? "Sent" : invoice.status === "draft" ? "Draft" : invoice.status;
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
@@ -106,15 +106,25 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .toolbar a:hover { color: rgba(255,255,255,0.7); }
 .print-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.08); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
 .print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
+.wise-btn { background: #9FE870; color: #0a0a0a; border: none; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
+.wise-btn:hover { background: #8BD660; }
+.toolbar-right { display: flex; gap: 10px; align-items: center; }
 .invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
 .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .brand { display: flex; align-items: center; }
 .brand-logo { height: 32px; width: auto; }
 .meta { text-align: right; }
 .meta .number { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
-.meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: rgba(255,255,255,0.3); }
-.meta .status.paid { color: #34d399; }
-.meta .status.overdue { color: #f87171; }
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 4px; margin-top: 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; border: 1px solid; }
+.status-badge .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.status-badge.draft { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); }
+.status-badge.draft .dot { background: rgba(255,255,255,0.3); }
+.status-badge.sent { background: rgba(34,34,37,1); border-color: rgba(232,228,255,0.12); color: #E8E4FF; }
+.status-badge.sent .dot { background: #E8E4FF; }
+.status-badge.paid { background: rgba(74,222,128,0.10); border-color: rgba(74,222,128,0.18); color: #4ade80; }
+.status-badge.paid .dot { background: #4ade80; }
+.status-badge.overdue { background: rgba(248,113,113,0.10); border-color: rgba(248,113,113,0.18); color: #f87171; }
+.status-badge.overdue .dot { background: #f87171; }
 .meta .dates { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 8px; line-height: 1.6; }
 .meta .dates .paid { color: #34d399; font-weight: 600; }
 .parties { display: flex; justify-content: space-between; margin-bottom: 48px; gap: 40px; }
@@ -160,10 +170,13 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <body>
 <div class="toolbar">
   <a href="/admin/invoices">&larr; Back to Invoices</a>
-  <button class="print-btn" onclick="window.print()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    Download PDF
-  </button>
+  <div class="toolbar-right">
+    ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Pay with Wise</a>' : ""}
+    <button class="print-btn" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Download PDF
+    </button>
+  </div>
 </div>
 
 <div class="invoice">
@@ -173,7 +186,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     </div>
     <div class="meta">
       <p class="number">${invoice.invoice_number}</p>
-      <p class="status${statusClass ? " " + statusClass : ""}">${statusLabel}</p>
+      <span class="status-badge ${statusClass || "draft"}"><span class="dot"></span>${statusLabel}</span>
       <div class="dates">
         ${invoice.created_at ? "<p>Issued: " + fmt(invoice.created_at) + "</p>" : ""}
         ${invoice.due_date ? "<p>Due: " + fmt(invoice.due_date) + "</p>" : ""}
