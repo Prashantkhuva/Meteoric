@@ -106,7 +106,7 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .toolbar a:hover { color: rgba(255,255,255,0.7); }
 .print-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.08); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
 .print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
-.wise-btn { background: #9FE870; color: #0a0a0a; border: none; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
+.wise-btn { background: #9FE870; color: #0a0a0a !important; border: none; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
 .wise-btn:hover { background: #8BD660; }
 .toolbar-right { display: flex; gap: 10px; align-items: center; }
 .invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
