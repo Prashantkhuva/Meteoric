@@ -67,32 +67,32 @@ const styles = StyleSheet.create({
     letterSpacing: 1.8,
   },
   statusSent: {
-    backgroundColor: "#EAEFFF",
-    color: "#1a1a2e",
+    backgroundColor: "#1a1a2e",
+    color: "#EAEFFF",
   },
   statusSentDot: {
-    backgroundColor: "#1a1a2e",
+    backgroundColor: "#EAEFFF",
   },
   statusPaid: {
-    backgroundColor: "#EAEFFF",
-    color: "#0D2818",
+    backgroundColor: "#0D2818",
+    color: "#4ade80",
   },
   statusPaidDot: {
-    backgroundColor: "#0D2818",
+    backgroundColor: "#4ade80",
   },
   statusOverdue: {
-    backgroundColor: "#EAEFFF",
-    color: "#5C1F26",
+    backgroundColor: "#2D1215",
+    color: "#f87171",
   },
   statusOverdueDot: {
-    backgroundColor: "#5C1F26",
+    backgroundColor: "#f87171",
   },
   statusDraft: {
-    backgroundColor: "#EAEFFF",
-    color: "#6B6B6B",
+    backgroundColor: "#161616",
+    color: "#999999",
   },
   statusDraftDot: {
-    backgroundColor: "#6B6B6B",
+    backgroundColor: "#999999",
   },
   dates: {
     fontSize: fontSizes.small,
@@ -234,8 +234,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   wiseLogo: {
-    width: 60,
-    height: 14,
+    width: 48,
+    height: 11,
   },
   paypalButton: {
     backgroundColor: "#0070BA",
