@@ -38,66 +38,13 @@ const styles = StyleSheet.create({
   metaCol: {
     alignItems: "flex-end",
     maxWidth: "60%",
+    gap: 12,
   },
   invoiceNumber: {
     fontSize: fontSizes.h1,
     fontFamily: fonts.bold,
     color: colors.accent,
     letterSpacing: -0.5,
-  },
-  statusPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-end",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 4,
-    marginTop: 10,
-    borderWidth: 1,
-  },
-  statusDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 3,
-    marginRight: 6,
-  },
-  statusText: {
-    fontSize: 9,
-    fontFamily: fonts.bold,
-    textTransform: "uppercase",
-    letterSpacing: 1.2,
-  },
-  statusSent: {
-    backgroundColor: "#222225",
-    borderColor: "#E8E4FF",
-    color: "#E8E4FF",
-  },
-  statusSentDot: {
-    backgroundColor: "#E8E4FF",
-  },
-  statusPaid: {
-    backgroundColor: "#0D2818",
-    borderColor: "#4ade80",
-    color: "#4ade80",
-  },
-  statusPaidDot: {
-    backgroundColor: "#4ade80",
-  },
-  statusOverdue: {
-    backgroundColor: "#2D1215",
-    borderColor: "#f87171",
-    color: "#f87171",
-  },
-  statusOverdueDot: {
-    backgroundColor: "#f87171",
-  },
-  statusDraft: {
-    backgroundColor: "#161616",
-    borderColor: "#333333",
-    color: "#999999",
-  },
-  statusDraftDot: {
-    backgroundColor: "#999999",
   },
   dates: {
     fontSize: fontSizes.small,
@@ -347,7 +294,6 @@ function StatusBadge({ status }) {
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 4,
-        marginTop: 12,
         borderWidth: 1,
         borderColor: c.border,
         backgroundColor: c.bg,
@@ -360,6 +306,7 @@ function StatusBadge({ status }) {
           height: 5,
           borderRadius: 3,
           backgroundColor: c.dot,
+          marginTop: 1,
         }}
       />
       <Text
@@ -369,6 +316,7 @@ function StatusBadge({ status }) {
           textTransform: "uppercase",
           letterSpacing: 1.2,
           color: c.color,
+          marginTop: -1,
         }}
       >
         {label}
