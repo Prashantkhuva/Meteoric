@@ -310,18 +310,69 @@ function formatDate(d) {
 }
 
 function StatusBadge({ status }) {
-  const colorMap = {
-    overdue: { pill: styles.statusOverdue, dot: styles.statusOverdueDot, textColor: "#f87171" },
-    paid: { pill: styles.statusPaid, dot: styles.statusPaidDot, textColor: "#4ade80" },
-    sent: { pill: styles.statusSent, dot: styles.statusSentDot, textColor: "#E8E4FF" },
-    draft: { pill: styles.statusDraft, dot: styles.statusDraftDot, textColor: "#999999" },
+  const config = {
+    draft: {
+      bg: "#161616",
+      border: "#333333",
+      color: "#999999",
+      dot: "#999999",
+    },
+    sent: {
+      bg: "#222225",
+      border: "#E8E4FF",
+      color: "#E8E4FF",
+      dot: "#E8E4FF",
+    },
+    paid: {
+      bg: "#0D2818",
+      border: "#4ade80",
+      color: "#4ade80",
+      dot: "#4ade80",
+    },
+    overdue: {
+      bg: "#2D1215",
+      border: "#f87171",
+      color: "#f87171",
+      dot: "#f87171",
+    },
   };
+  const c = config[status] || config.sent;
   const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
-  const mapped = colorMap[status] || colorMap.sent;
   return (
-    <View style={[styles.statusPill, mapped.pill]}>
-      <View style={[styles.statusDot, mapped.dot]} />
-      <Text style={[styles.statusText, { color: mapped.textColor }]}>{label}</Text>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-end",
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 4,
+        marginTop: 12,
+        borderWidth: 1,
+        borderColor: c.border,
+        backgroundColor: c.bg,
+        gap: 6,
+      }}
+    >
+      <View
+        style={{
+          width: 5,
+          height: 5,
+          borderRadius: 3,
+          backgroundColor: c.dot,
+        }}
+      />
+      <Text
+        style={{
+          fontSize: 9,
+          fontFamily: fonts.bold,
+          textTransform: "uppercase",
+          letterSpacing: 1.2,
+          color: c.color,
+        }}
+      >
+        {label}
+      </Text>
     </View>
   );
 }
