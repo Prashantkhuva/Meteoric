@@ -13,10 +13,12 @@ import EmailSignature from "./email-signature";
 
 const SITE_URL = "https://withmeteoric.com";
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
+const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 
 export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl }) {
   const curr = currency || "USD";
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
+  const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}`;
 
   return (
     <Html>
@@ -56,11 +58,24 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
             )}
           </div>
 
-          <Link href={wiseUrl} style={wiseButton}>
-            Pay ${Number(total).toFixed(2)} with Wise
-          </Link>
+          <table style={{ marginBottom: "12px" }} cellPadding="0" cellSpacing="8">
+            <tbody>
+              <tr>
+                <td>
+                  <Link href={wiseUrl} style={wiseButton}>
+                    Pay with Wise
+                  </Link>
+                </td>
+                <td>
+                  <Link href={paypalUrl} style={paypalButton}>
+                    Pay with PayPal
+                  </Link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-          <div style={{ marginTop: "8px" }}>
+          <div style={{ marginTop: "4px" }}>
             <Link href={previewUrl} style={button}>
               View Invoice
             </Link>
@@ -172,7 +187,16 @@ const wiseButton = {
   fontSize: "14px",
   fontWeight: 700,
   textDecoration: "none",
-  margin: "16px 0",
+};
+
+const paypalButton = {
+  display: "inline-block",
+  padding: "12px 24px",
+  backgroundColor: "#0070BA",
+  color: "#ffffff",
+  fontSize: "14px",
+  fontWeight: 700,
+  textDecoration: "none",
 };
 
 const hr = {

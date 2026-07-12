@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, Link, StyleSheet } from "@react-pdf/
 import { colors, fonts, fontSizes, spacing } from "./theme";
 
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
+const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 
 const styles = StyleSheet.create({
   page: {
@@ -220,7 +221,9 @@ const styles = StyleSheet.create({
   },
   wiseSection: {
     marginTop: 24,
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 12,
   },
   wiseButton: {
     backgroundColor: colors.wiseGreen,
@@ -241,6 +244,20 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 8,
     textAlign: "center",
+  },
+  paypalButton: {
+    backgroundColor: "#0070BA",
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 4,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  paypalButtonText: {
+    fontSize: 11,
+    fontFamily: fonts.bold,
+    color: "#ffffff",
+    letterSpacing: 0.5,
   },
   footerSection: {
     marginTop: 36,
@@ -323,6 +340,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   const total = Number(invoice.total) || subtotal + tax;
   const curr = wiseCurrency || invoice.currency || "USD";
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${total.toFixed(2)}`;
+  const paypalUrl = `${PAYPAL_ME}/${total.toFixed(2)}`;
   const isPaid = invoice.status === "paid";
 
   return (
@@ -419,9 +437,11 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
         {!isPaid && (
           <View style={styles.wiseSection}>
             <Link src={wiseUrl} style={styles.wiseButton}>
-              <Text style={styles.wiseButtonText}>Pay ${total.toFixed(2)} with Wise</Text>
+              <Text style={styles.wiseButtonText}>Pay with Wise</Text>
             </Link>
-            <Text style={styles.wiseNote}>Click to pay directly via Wise</Text>
+            <Link src={paypalUrl} style={styles.paypalButton}>
+              <Text style={styles.paypalButtonText}>Pay with PayPal</Text>
+            </Link>
           </View>
         )}
 
