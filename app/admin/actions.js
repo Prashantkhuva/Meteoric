@@ -1,6 +1,7 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -24,6 +25,7 @@ import {
   VALID_CLIENT_STATUSES,
   VALID_PROPOSAL_STATUSES,
   VALID_INVOICE_STATUSES,
+  VALID_PROJECT_STATUSES,
 } from "@/lib/admin-validation";
 
 async function getSupabase() {
@@ -35,6 +37,14 @@ async function getSupabase() {
 function revalidateAdmin(...paths) {
   paths.forEach((p) => revalidatePath(p));
   revalidatePath("/admin");
+}
+
+function sanitizeSearch(input) {
+  if (!input) return "";
+  return input.replace(/[\\(%)_]/g, (c) => {
+    if (c === "\\") return "\\\\";
+    return `\\${c}`;
+  });
 }
 
 export async function signOut() {
@@ -773,7 +783,12 @@ export async function markInvoiceAsPaid(id, paidAt) {
   try {
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
-    const safeDate = paidAt || new Date().toISOString();
+    const safeDate = z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}/, "Invalid date format")
+      .optional()
+      .transform((v) => v || new Date().toISOString())
+      .parse(paidAt);
 
     const { error } = await supabase
       .from("invoices")
@@ -921,9 +936,10 @@ export async function updateProjectStatus(id, newStatus) {
   try {
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
+    const safeStatus = statusSchema(VALID_PROJECT_STATUSES).parse(newStatus);
     const { error } = await supabase
       .from("projects")
-      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .update({ status: safeStatus, updated_at: new Date().toISOString() })
       .eq("id", safeId);
     if (error) return { error: error.message };
     revalidateAdmin("/admin/projects");
@@ -958,7 +974,7 @@ export async function getLeadsPaginated(params) {
   const { page, pageSize, search, status, score: scoreFilter, col, dir, sort } = paginationSchema.parse(params);
 
   let query = supabase.from("leads").select("*", { count: "exact" });
-  if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`);
+  if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
   if (scoreFilter === "hot") query = query.gte("ai_score", 70);
   else if (scoreFilter === "warm") query = query.gte("ai_score", 40).lt("ai_score", 70);
@@ -980,7 +996,7 @@ export async function getClientsPaginated(params) {
   const { page, pageSize, search, status, col, dir, sort } = paginationSchema.parse(params);
 
   let query = supabase.from("clients").select("*", { count: "exact" });
-  if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`);
+  if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -999,7 +1015,7 @@ export async function getProposalsPaginated(params) {
   let query = supabase
     .from("proposals")
     .select("*, lead:leads(name, email, phone, company)", { count: "exact" });
-  if (search) query = query.or(`title.ilike.%${search}%,lead.name.ilike.%${search}%`);
+  if (search) query = query.or(`title.ilike.%${sanitizeSearch(search)}%,lead.name.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -1018,7 +1034,7 @@ export async function getInvoicesPaginated(params) {
   let query = supabase
     .from("invoices")
     .select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)", { count: "exact" });
-  if (search) query = query.or(`invoice_number.ilike.%${search}%,client.name.ilike.%${search}%`);
+  if (search) query = query.or(`invoice_number.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -1037,7 +1053,7 @@ export async function getProjectsPaginated(params) {
   let query = supabase
     .from("projects")
     .select("*, client:clients(name, email, company)", { count: "exact" });
-  if (search) query = query.or(`name.ilike.%${search}%,client.name.ilike.%${search}%`);
+  if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -1106,17 +1122,46 @@ export async function sendCustomEmailAction(data) {
   try {
     const supabase = await getSupabase();
     const from = data.from;
-    const to = data.to ? JSON.parse(data.to) : [];
     const subject = data.subject;
     const body = data.body;
     const leadId = data.lead_id || null;
     const clientId = data.client_id || null;
 
-    if (!from || !to.length || !subject || !body) {
-      return { error: "From, to, subject, and body are required" };
+    if (!from || !subject || !body) {
+      return { error: "From, subject, and body are required" };
     }
 
-    const files = data.files ? JSON.parse(data.files) : [];
+    let to = [];
+    try {
+      to = data.to ? JSON.parse(data.to) : [];
+    } catch {
+      return { error: "Invalid recipient list" };
+    }
+    if (!Array.isArray(to) || to.length === 0) {
+      return { error: "At least one recipient is required" };
+    }
+    if (to.length > 50) {
+      return { error: "Cannot send to more than 50 recipients" };
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    for (const addr of to) {
+      if (!emailRegex.test(addr)) {
+        return { error: `Invalid email address: ${addr}` };
+      }
+    }
+
+    const validSenders = ["contact", "admin", "billing", "support"];
+    if (!validSenders.includes(from)) {
+      return { error: "Invalid sender" };
+    }
+
+    let files = [];
+    try {
+      files = data.files ? JSON.parse(data.files) : [];
+    } catch {
+      return { error: "Invalid file list" };
+    }
+    if (!Array.isArray(files)) files = [];
     const attachmentBuffers = [];
     for (const file of files) {
       if (!file || !file.path) continue;

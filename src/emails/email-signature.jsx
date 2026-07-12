@@ -2,7 +2,7 @@ import { Img, Link, Text } from "react-email";
 
 const SITE_URL = "https://withmeteoric.com";
 
-export default function EmailSignature({ name = "Prashant Khuva", title = "Founder" }) {
+export default function EmailSignature() {
   return (
     <div style={wrapper}>
       <Img

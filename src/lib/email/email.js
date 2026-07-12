@@ -23,6 +23,11 @@ const SENDER_MAP = {
   support: process.env.SUPPORT_EMAIL || "support@withmeteoric.com",
 };
 
+function sanitizeFilename(name) {
+  if (!name) return "attachment";
+  return name.replace(/[^a-zA-Z0-9._-]/g, "_").replace(/_{2,}/g, "_").slice(0, 100);
+}
+
 function isTestMode() {
   return DOMAIN === "resend.dev";
 }
@@ -100,7 +105,7 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
       }),
       attachments: [
         {
-          filename: `Proposal-${proposal.title.replace(/[^a-zA-Z0-9]/g, "-")}.pdf`,
+          filename: sanitizeFilename(`Proposal-${proposal.title}.pdf`),
           content: pdfBuffer,
         },
       ],
@@ -165,7 +170,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
       }),
       attachments: [
         {
-          filename: `Invoice-${invoice.invoice_number}.pdf`,
+          filename: sanitizeFilename(`Invoice-${invoice.invoice_number}.pdf`),
           content: pdfBuffer,
         },
       ],
@@ -230,7 +235,7 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
   const safeAttachments = (attachments || []).filter(
     (a) => a && a.filename && a.content
   ).map((a) => ({
-    filename: a.filename,
+    filename: sanitizeFilename(a.filename),
     content: a.content,
   }));
 
