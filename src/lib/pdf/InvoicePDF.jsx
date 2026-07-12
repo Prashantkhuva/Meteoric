@@ -286,42 +286,47 @@ function StatusBadge({ status }) {
   const c = config[status] || config.sent;
   const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        alignSelf: "flex-end",
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: c.border,
-        backgroundColor: c.bg,
-        gap: 6,
-      }}
-    >
       <View
         style={{
-          width: 5,
-          height: 5,
-          borderRadius: 3,
-          backgroundColor: c.dot,
-          marginTop: 1,
-        }}
-      />
-      <Text
-        style={{
-          fontSize: 9,
-          fontFamily: fonts.bold,
-          textTransform: "uppercase",
-          letterSpacing: 1.2,
-          color: c.color,
-          marginTop: -1,
+          flexDirection: "row",
+          alignItems: "center",
+          alignSelf: "flex-end",
+          paddingHorizontal: 12,
+          paddingVertical: 6,
+          borderRadius: 4,
+          marginTop: 14,
+          borderWidth: 1,
+          borderColor: c.border,
+          backgroundColor: c.bg,
         }}
       >
-        {label}
-      </Text>
-    </View>
+        <View
+          style={{
+            width: 5,
+            height: 5,
+            borderRadius: 3,
+            backgroundColor: c.dot,
+          }}
+        />
+        <View
+          style={{
+            marginLeft: 6,
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 9,
+              fontFamily: fonts.bold,
+              textTransform: "uppercase",
+              letterSpacing: 1.2,
+              color: c.color,
+            }}
+          >
+            {label}
+          </Text>
+        </View>
+      </View>
   );
 }
 
