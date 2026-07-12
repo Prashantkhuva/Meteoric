@@ -822,9 +822,9 @@ export async function markInvoiceAsPaid(id, paidAt) {
 
         if (invoice.client.phone) {
           const phone = invoice.client.phone.replace(/[^0-9]/g, "");
-          const previewUrl = t ? `${getSiteUrl()}/preview/invoice/${invoice.id}?token=${t}` : "";
+          const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : "";
           const msg = encodeURIComponent(
-            `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${previewUrl ? `\n\n📎 View receipt:\n${previewUrl}` : ""}`
+            `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
           );
           whatsappUrl = `https://wa.me/${phone}?text=${msg}`;
         }
@@ -870,9 +870,9 @@ export async function sendPaymentConfirmationAction(id) {
     let whatsappUrl = null;
     if (invoice.client.phone) {
       const phone = invoice.client.phone.replace(/[^0-9]/g, "");
-      const previewUrl = t ? `${getSiteUrl()}/preview/invoice/${invoice.id}?token=${t}` : "";
+      const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : "";
       const msg = encodeURIComponent(
-        `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${previewUrl ? `\n\n📎 View receipt:\n${previewUrl}` : ""}`
+        `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
       );
       whatsappUrl = `https://wa.me/${phone}?text=${msg}`;
     }

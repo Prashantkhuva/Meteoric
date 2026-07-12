@@ -536,8 +536,8 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, onStatusChange,
                     <IconButton
 onClick={async () => {
                 const t = p.share_token || (await ensureShareToken("proposal", p.id)).token;
-                const previewUrl = t ? `${getSiteUrl()}/preview/proposal/${p.id}?token=${t}` : "";
-                window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}! 👋\n\nI've sent you a proposal: ${p.title}\n\nView proposal:\n${previewUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`)}`, "_blank")}
+                const pdfUrl = t ? `${getSiteUrl()}/api/pdf/proposal/${p.id}?token=${t}` : "";
+                window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}! 👋\n\nI've sent you a proposal: ${p.title}\n\nView proposal:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`)}`, "_blank")}
               }
                       icon={MessageCircle}
                       label="Share via WhatsApp"
@@ -615,8 +615,8 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
                 <IconButton
                   onClick={async () => {
                     const t = p.share_token || (await ensureShareToken("proposal", p.id)).token;
-                    const previewUrl = t ? `${getSiteUrl()}/preview/proposal/${p.id}?token=${t}` : "";
-                    window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}! 👋\n\nI've sent you a proposal: ${p.title}\n\nView proposal:\n${previewUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`)}`, "_blank")}
+                    const pdfUrl = t ? `${getSiteUrl()}/api/pdf/proposal/${p.id}?token=${t}` : "";
+                    window.open(`https://wa.me/${p.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${p.lead.name}! 👋\n\nI've sent you a proposal: ${p.title}\n\nView proposal:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`)}`, "_blank")}
                   }
                   icon={MessageCircle}
                   label="Share via WhatsApp"
@@ -937,8 +937,8 @@ function ProposalDetailDrawer({ proposal, onClose, onEdit, onSend, onDelete, onC
                   <button
                     onClick={async () => {
                       const t = proposal.share_token || (await ensureShareToken("proposal", proposal.id)).token;
-                      const previewUrl = t ? `${getSiteUrl()}/preview/proposal/${proposal.id}?token=${t}` : "";
-                      window.open(`https://wa.me/${proposal.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${proposal.lead.name}! 👋\n\nI've sent you a proposal: ${proposal.title}\n\nView proposal:\n${previewUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`)}`, "_blank")}
+                      const pdfUrl = t ? `${getSiteUrl()}/api/pdf/proposal/${proposal.id}?token=${t}` : "";
+                      window.open(`https://wa.me/${proposal.lead.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${proposal.lead.name}! 👋\n\nI've sent you a proposal: ${proposal.title}\n\nView proposal:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`)}`, "_blank")}
                     }
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
                   >
