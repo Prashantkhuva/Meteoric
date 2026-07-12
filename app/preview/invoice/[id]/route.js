@@ -108,8 +108,10 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
 .wise-btn { background: #9FE870; color: #0a0a0a !important; border: none; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
 .wise-btn:hover { background: #8BD660; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(159, 232, 112, 0.25); }
+.wise-btn img { filter: brightness(0); }
 .paypal-btn { background: #0070BA; color: #ffffff !important; border: none; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
 .paypal-btn:hover { background: #005C99; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 112, 186, 0.35); }
+.paypal-btn img { filter: brightness(0) invert(1); }
 .toolbar-right { display: flex; gap: 10px; align-items: center; }
 .invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
 .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -173,8 +175,8 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="toolbar">
   <a href="/admin/invoices">&larr; Back to Invoices</a>
   <div class="toolbar-right">
-    ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" fill="#0a0a0a" opacity="0.15"/><path d="M7.5 8.5L12 6l4.5 2.5L12 11 7.5 8.5z" fill="#0a0a0a"/><path d="M12 11v6.5" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/></svg> Pay with Wise</a>' : ""}
-    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + '" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 21h2.5l1-6H8.5c-2 0-3.5-.5-4.5-2C3 11.5 3 9.5 4 8c1-1.5 3-2.5 5-2.5h4l1 6h-3c-1 0-2 .5-2.5 1.5L7 21z" fill="#ffffff"/><path d="M13 21h2.5l1-6H14c-2 0-3.5-.5-4.5-2-.5-1-.5-3 .5-4.5.5-.8 1.5-1.5 3-1.5h5l1 6h-3c-1 0-2 .5-2.5 1.5L13 21z" fill="#ffffff" opacity="0.6"/></svg> Pay with PayPal</a>' : ""}
+    ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank"><img src="/wiselogo.svg" alt="Wise" width="18" height="18" /> Pay with Wise</a>' : ""}
+    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + '" target="_blank"><img src="/paypal.svg" alt="PayPal" width="18" height="18" /> Pay with PayPal</a>' : ""}
     <button class="print-btn" onclick="window.print()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Download PDF
