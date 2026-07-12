@@ -194,6 +194,27 @@ export default function InvoicesPage() {
 
   async function handleStatusChange(id, newStatus) {
     setEditingStatus(id);
+
+    if (newStatus === "paid") {
+      const paidAt = new Date().toISOString();
+      const result = await markInvoiceAsPaid(id, paidAt);
+      if (result?.error) {
+        addToast(result.error, "error");
+        setEditingStatus(null);
+        return;
+      }
+      setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status: "paid", paid_at: paidAt } : inv)));
+      if (viewInvoice?.id === id) {
+        setViewInvoice((prev) => prev ? { ...prev, status: "paid", paid_at: paidAt } : null);
+      }
+      addToast("Invoice marked as paid — confirmation email sent", "success");
+      if (result?.whatsappUrl) {
+        window.open(result.whatsappUrl, "_blank");
+      }
+      setEditingStatus(null);
+      return;
+    }
+
     const result = await updateInvoiceStatus(id, newStatus);
     if (result?.error) {
       addToast(result.error, "error");
@@ -687,7 +708,11 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, onStatusChange,
                     <IconButton
                       onClick={async () => {
                         const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
-                        window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                        const pdfUrl = t ? ` ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : "";
+                        const waMsg = inv.status === "paid"
+                          ? `Hi ${inv.client.name}, payment received for Invoice ${inv.invoice_number} — ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}. Thank you!${pdfUrl ? `\nReceipt:${pdfUrl}` : ""}`
+                          : `Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}.${pdfUrl ? ` Download:${pdfUrl}` : " Check your email for the PDF."}`;
+                        window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(waMsg)}`, "_blank")}
                       }
                       icon={MessageCircle}
                       label="Share via WhatsApp"
@@ -771,7 +796,11 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
               <IconButton
                 onClick={async () => {
                   const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
-                  window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                  const pdfUrl = t ? ` ${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : "";
+                  const waMsg = inv.status === "paid"
+                    ? `Hi ${inv.client.name}, payment received for Invoice ${inv.invoice_number} — ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}. Thank you!${pdfUrl ? `\nReceipt:${pdfUrl}` : ""}`
+                    : `Hi ${inv.client.name}, an invoice has been issued: ${inv.invoice_number} for ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}.${pdfUrl ? ` Download:${pdfUrl}` : " Check your email for the PDF."}`;
+                  window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(waMsg)}`, "_blank")}
                 }
                 icon={MessageCircle}
                 label="Share via WhatsApp"
@@ -1289,7 +1318,11 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                   <button
                     onClick={async () => {
                       const t = invoice.share_token || (await ensureShareToken("invoice", invoice.id)).token;
-                      window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for ${drawerCurrency}${Number(invoice.total).toFixed(2)}.${t ? ` Download: ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : " Check your email for the PDF."}`)}`, "_blank")}
+                      const pdfUrl = t ? ` ${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : "";
+                      const waMsg = invoice.status === "paid"
+                        ? `Hi ${invoice.client.name}, payment received for Invoice ${invoice.invoice_number} — ${drawerCurrency}${Number(invoice.total).toFixed(2)}. Thank you!${pdfUrl ? `\nReceipt:${pdfUrl}` : ""}`
+                        : `Hi ${invoice.client.name}, an invoice has been issued: ${invoice.invoice_number} for ${drawerCurrency}${Number(invoice.total).toFixed(2)}.${pdfUrl ? ` Download:${pdfUrl}` : " Check your email for the PDF."}`;
+                      window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(waMsg)}`, "_blank")}
                     }
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
                   >
