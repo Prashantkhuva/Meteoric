@@ -312,6 +312,7 @@ function StatusBadge({ status }) {
           style={{
             marginLeft: 6,
             justifyContent: "center",
+            marginBottom: 1,
           }}
         >
           <Text
