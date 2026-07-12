@@ -60,15 +60,13 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
 
           <div style={{ marginBottom: "12px" }}>
             <Link href={wiseUrl} style={wiseButton}>
-              <Img src={`${SITE_URL}/wiselogo.svg`} alt="Wise" width={20} height={20} style={{ verticalAlign: "middle", marginRight: "10px" }} />
-              <span style={{ verticalAlign: "middle" }}>Pay with Wise</span>
+              <Img src={`${SITE_URL}/wiselogo.svg`} alt="Pay with Wise" width={22} height={22} />
             </Link>
           </div>
 
           <div style={{ marginBottom: "16px" }}>
             <Link href={paypalUrl} style={paypalButton}>
-              <Img src={`${SITE_URL}/paypal.svg`} alt="PayPal" width={20} height={20} style={{ verticalAlign: "middle", marginRight: "10px" }} />
-              <span style={{ verticalAlign: "middle" }}>Pay with PayPal</span>
+              <Img src={`${SITE_URL}/paypal.svg`} alt="Pay with PayPal" width={22} height={22} />
             </Link>
           </div>
 
@@ -178,7 +176,7 @@ const button = {
 
 const wiseButton = {
   display: "inline-block",
-  padding: "14px 28px",
+  padding: "12px 18px",
   backgroundColor: "#9FE870",
   color: "#0a0a0a",
   fontSize: "14px",
@@ -190,7 +188,7 @@ const wiseButton = {
 
 const paypalButton = {
   display: "inline-block",
-  padding: "14px 28px",
+  padding: "12px 18px",
   backgroundColor: "#0070BA",
   color: "#ffffff",
   fontSize: "14px",

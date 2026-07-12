@@ -431,10 +431,10 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
         {!isPaid && (
           <View style={styles.wiseSection}>
             <Link src={wiseUrl} style={styles.wiseButton}>
-              <Text style={styles.wiseButtonText}>Pay with Wise</Text>
+              <Text style={styles.wiseButtonText}>Wise</Text>
             </Link>
             <Link src={paypalUrl} style={styles.paypalButton}>
-              <Text style={styles.paypalButtonText}>Pay with PayPal</Text>
+              <Text style={styles.paypalButtonText}>PayPal</Text>
             </Link>
           </View>
         )}

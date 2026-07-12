@@ -106,12 +106,12 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 .toolbar a:hover { color: rgba(255,255,255,0.7); }
 .print-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.08); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
 .print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
-.wise-btn { background: #9FE870; color: #0a0a0a !important; border: none; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
+.wise-btn { background: #9FE870; color: #0a0a0a !important; border: none; padding: 10px 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
 .wise-btn:hover { background: #8BD660; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(159, 232, 112, 0.25); }
-.wise-btn img { filter: brightness(0); }
-.paypal-btn { background: #0070BA; color: #ffffff !important; border: none; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
+.wise-btn img { filter: brightness(0); display: block; }
+.paypal-btn { background: #0070BA; color: #ffffff !important; border: none; padding: 10px 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
 .paypal-btn:hover { background: #005C99; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 112, 186, 0.35); }
-.paypal-btn img { filter: brightness(0) invert(1); }
+.paypal-btn img { filter: brightness(0) invert(1); display: block; }
 .toolbar-right { display: flex; gap: 10px; align-items: center; }
 .invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
 .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -175,8 +175,8 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="toolbar">
   <a href="/admin/invoices">&larr; Back to Invoices</a>
   <div class="toolbar-right">
-    ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank"><img src="/wiselogo.svg" alt="Wise" width="18" height="18" /> Pay with Wise</a>' : ""}
-    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + '" target="_blank"><img src="/paypal.svg" alt="PayPal" width="18" height="18" /> Pay with PayPal</a>' : ""}
+    ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="20" height="20" /></a>' : ""}
+    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
     <button class="print-btn" onclick="window.print()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Download PDF
