@@ -64,36 +64,36 @@ const styles = StyleSheet.create({
     letterSpacing: 1.8,
   },
   statusSent: {
-    backgroundColor: colors.accentMuted,
-    borderColor: "rgba(232,228,255,0.12)",
+    backgroundColor: "#1A1A2E",
+    borderColor: "#2E2E4A",
     color: colors.accent,
   },
   statusSentDot: {
     backgroundColor: colors.accent,
   },
   statusPaid: {
-    backgroundColor: colors.successMuted,
-    borderColor: "rgba(74,222,128,0.18)",
+    backgroundColor: "#0D2818",
+    borderColor: "#1A5C32",
     color: colors.success,
   },
   statusPaidDot: {
     backgroundColor: colors.success,
   },
   statusOverdue: {
-    backgroundColor: colors.dangerMuted,
-    borderColor: "rgba(248,113,113,0.18)",
+    backgroundColor: "#2D1215",
+    borderColor: "#5C1F26",
     color: colors.danger,
   },
   statusOverdueDot: {
     backgroundColor: colors.danger,
   },
   statusDraft: {
-    backgroundColor: "rgba(255,255,255,0.04)",
-    borderColor: "rgba(255,255,255,0.08)",
-    color: colors.textMuted,
+    backgroundColor: "#161616",
+    borderColor: "#2A2A2A",
+    color: "#6B6B6B",
   },
   statusDraftDot: {
-    backgroundColor: colors.textMuted,
+    backgroundColor: "#6B6B6B",
   },
   dates: {
     fontSize: fontSizes.small,
@@ -298,17 +298,17 @@ function formatDate(d) {
 
 function StatusBadge({ status }) {
   const colorMap = {
-    overdue: { pill: styles.statusOverdue, dot: styles.statusOverdueDot },
-    paid: { pill: styles.statusPaid, dot: styles.statusPaidDot },
-    sent: { pill: styles.statusSent, dot: styles.statusSentDot },
-    draft: { pill: styles.statusDraft, dot: styles.statusDraftDot },
+    overdue: { pill: styles.statusOverdue, dot: styles.statusOverdueDot, textColor: colors.danger },
+    paid: { pill: styles.statusPaid, dot: styles.statusPaidDot, textColor: colors.success },
+    sent: { pill: styles.statusSent, dot: styles.statusSentDot, textColor: colors.accent },
+    draft: { pill: styles.statusDraft, dot: styles.statusDraftDot, textColor: "#6B6B6B" },
   };
   const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
   const mapped = colorMap[status] || colorMap.sent;
   return (
     <View style={[styles.statusPill, mapped.pill]}>
       <View style={[styles.statusDot, mapped.dot]} />
-      <Text style={styles.statusText}>{label}</Text>
+      <Text style={[styles.statusText, { color: mapped.textColor }]}>{label}</Text>
     </View>
   );
 }
