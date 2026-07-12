@@ -6,6 +6,7 @@ import ProposalEmail from "@/emails/proposal-email";
 import InvoiceEmail from "@/emails/invoice-email";
 import OverdueReminder from "@/emails/overdue-reminder";
 import ClientWelcome from "@/emails/client-welcome";
+import PaymentConfirmation from "@/emails/payment-confirmation";
 import CustomEmail from "@/emails/custom-email";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 
@@ -254,5 +255,43 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
     throw new Error(raw?.message || "Failed to send custom email", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send custom email");
+  return result;
+}
+
+export async function sendPaymentConfirmation(invoice, client) {
+  if (!client?.email) throw new Error("Client has no email address");
+
+  if (isTestMode() && client.email !== ADMIN) {
+    testModeWarning(client.email);
+    throw new Error("Cannot send — verify a custom domain in Resend first (test mode only delivers to admin)");
+  }
+
+  const pdfBuffer = await generateInvoicePdf(invoice, client, invoice.currency || "USD");
+
+  let result;
+  try {
+    result = await resend.emails.send({
+      from: BILLING_FROM,
+      to: client.email,
+      subject: `Payment Confirmed — Invoice ${invoice.invoice_number}`,
+      react: PaymentConfirmation({
+        name: client.name,
+        invoiceNumber: invoice.invoice_number,
+        total: invoice.total,
+        currency: invoice.currency || "USD",
+        paidAt: invoice.paid_at,
+      }),
+      attachments: [
+        {
+          filename: sanitizeFilename(`Invoice-${invoice.invoice_number}-PAID.pdf`),
+          content: pdfBuffer,
+        },
+      ],
+    });
+  } catch (raw) {
+    console.error("[resend] payment confirmation threw:", raw);
+    throw new Error(raw?.message || "Failed to send payment confirmation", { cause: raw });
+  }
+  if (result?.error) throw new Error(result.error.message || "Failed to send payment confirmation");
   return result;
 }

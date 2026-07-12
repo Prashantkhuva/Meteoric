@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
-import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail } from "@/lib/email/email";
+import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail, sendPaymentConfirmation } from "@/lib/email/email";
 import { callAIJson } from "@/lib/ai/provider";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import {
@@ -796,10 +796,89 @@ export async function markInvoiceAsPaid(id, paidAt) {
       .eq("id", safeId);
 
     if (error) return { error: error.message };
+
+    let whatsappUrl = null;
+    try {
+      const { data: invoice } = await supabase
+        .from("invoices")
+        .select("*, client:clients(name, email, phone)")
+        .eq("id", safeId)
+        .single();
+
+      if (invoice?.client) {
+        const shareToken = invoice.share_token || randomUUID();
+        const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
+
+        await supabase
+          .from("invoices")
+          .update({ share_token: shareToken })
+          .eq("id", safeId)
+          .is("share_token", null);
+
+        await sendPaymentConfirmation(
+          { ...invoice, paid_at: safeDate },
+          invoice.client
+        );
+
+        if (invoice.client.phone) {
+          const phone = invoice.client.phone.replace(/[^0-9]/g, "");
+          const msg = encodeURIComponent(
+            `Hi ${invoice.client.name || "there"}, payment received for Invoice ${invoice.invoice_number} — ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}. Thank you!\nReceipt: ${pdfUrl}`
+          );
+          whatsappUrl = `https://wa.me/${phone}?text=${msg}`;
+        }
+      }
+    } catch (notifyErr) {
+      console.warn("[markInvoiceAsPaid] confirmation send failed:", notifyErr.message);
+    }
+
     revalidateAdmin("/admin/invoices");
-    return { success: true };
+    return { success: true, whatsappUrl };
   } catch (err) {
     return { error: err.message || "Failed to mark invoice as paid" };
+  }
+}
+
+export async function sendPaymentConfirmationAction(id) {
+  try {
+    const supabase = await getSupabase();
+    const safeId = idSchema.parse(id);
+
+    const { data: invoice, error: fetchError } = await supabase
+      .from("invoices")
+      .select("*, client:clients(name, email, phone)")
+      .eq("id", safeId)
+      .single();
+
+    if (fetchError) return { error: fetchError.message };
+    if (!invoice) return { error: "Invoice not found" };
+    if (!invoice.client?.email) return { error: "Client has no email address" };
+    if (invoice.status !== "paid") return { error: "Invoice is not marked as paid" };
+
+    const shareToken = invoice.share_token || randomUUID();
+    const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
+
+    await supabase
+      .from("invoices")
+      .update({ share_token: shareToken })
+      .eq("id", safeId)
+      .is("share_token", null);
+
+    await sendPaymentConfirmation(invoice, invoice.client);
+
+    let whatsappUrl = null;
+    if (invoice.client.phone) {
+      const phone = invoice.client.phone.replace(/[^0-9]/g, "");
+      const msg = encodeURIComponent(
+        `Hi ${invoice.client.name || "there"}, payment received for Invoice ${invoice.invoice_number} — ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}. Thank you!\nReceipt: ${pdfUrl}`
+      );
+      whatsappUrl = `https://wa.me/${phone}?text=${msg}`;
+    }
+
+    revalidateAdmin("/admin/invoices");
+    return { success: true, whatsappUrl };
+  } catch (err) {
+    return { error: err.message || "Failed to send payment confirmation" };
   }
 }
 

@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
   markInvoiceAsPaid, markInvoiceAsOverdue, cancelInvoice, updateInvoiceStatus, getClients, getInvoicesPaginated, ensureShareToken,
-  checkOverdueInvoices, getProposalPricing,
+  checkOverdueInvoices, getProposalPricing, sendPaymentConfirmationAction,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -322,7 +322,24 @@ export default function InvoicesPage() {
     if (viewInvoice?.id === id) {
       setViewInvoice((prev) => prev ? { ...prev, status: "paid", paid_at: paidAt } : null);
     }
-    addToast("Invoice marked as paid", "success");
+    addToast("Invoice marked as paid — confirmation email sent", "success");
+    if (result?.whatsappUrl) {
+      window.open(result.whatsappUrl, "_blank");
+    }
+    setActionLoading(null);
+  }
+
+  async function handleSendConfirmation(id) {
+    setActionLoading("confirm");
+    const result = await sendPaymentConfirmationAction(id);
+    if (result?.error) {
+      addToast(result.error, "error");
+    } else {
+      addToast("Payment confirmation sent", "success");
+      if (result?.whatsappUrl) {
+        window.open(result.whatsappUrl, "_blank");
+      }
+    }
     setActionLoading(null);
   }
 
@@ -543,6 +560,7 @@ export default function InvoicesPage() {
         onEdit={setEditingInvoice}
         onSend={handleSend}
         onMarkAsPaid={handleMarkAsPaid}
+        onSendConfirmation={handleSendConfirmation}
         onMarkAsOverdue={handleMarkAsOverdue}
         onDelete={setDeleteTarget}
         onCancel={handleCancelInvoice}
@@ -1082,7 +1100,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   );
 }
 
-function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onMarkAsOverdue, onDelete, onCancel, sending, actionLoading }) {
+function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, onSendConfirmation, onMarkAsOverdue, onDelete, onCancel, sending, actionLoading }) {
   const trapRef = useFocusTrap(!!invoice);
   const scrollRef = useRef(null);
 
@@ -1310,6 +1328,20 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                       <CheckCircle size={13} />
                     )}
                     {actionLoading === "paid" ? "Marking..." : "Mark as Paid"}
+                  </button>
+                )}
+                {invoice.status === "paid" && (
+                  <button
+                    onClick={() => onSendConfirmation(invoice.id)}
+                    disabled={!!actionLoading}
+                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {actionLoading === "confirm" ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                    ) : (
+                      <CheckCircle size={13} />
+                    )}
+                    {actionLoading === "confirm" ? "Sending..." : "Send Confirmation"}
                   </button>
                 )}
                 {invoice.status === "sent" && (
