@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
   wiseButton: {
     backgroundColor: colors.wiseGreen,
-    paddingHorizontal: 28,
+    paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 6,
     flexDirection: "row",
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   paypalButton: {
     backgroundColor: "#0070BA",
-    paddingHorizontal: 28,
+    paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 6,
     flexDirection: "row",

@@ -60,7 +60,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
 
           <div style={{ marginBottom: "12px" }}>
             <Link href={wiseUrl} style={wiseButton}>
-              <Img src={`${SITE_URL}/wiselogo.svg`} alt="Pay with Wise" width={22} height={22} />
+              <Img src={`${SITE_URL}/wiselogo.svg`} alt="Pay with Wise" width={80} height={18} />
             </Link>
           </div>
 
@@ -176,7 +176,7 @@ const button = {
 
 const wiseButton = {
   display: "inline-block",
-  padding: "12px 18px",
+  padding: "14px 24px",
   backgroundColor: "#9FE870",
   color: "#0a0a0a",
   fontSize: "14px",
@@ -188,7 +188,7 @@ const wiseButton = {
 
 const paypalButton = {
   display: "inline-block",
-  padding: "12px 18px",
+  padding: "14px 24px",
   backgroundColor: "#0070BA",
   color: "#ffffff",
   fontSize: "14px",
