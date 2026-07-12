@@ -269,15 +269,15 @@ export default function BankAccountsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-5 lg:p-8 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight text-white/90">Bank Accounts</h1>
-          <p className="text-xs text-white/35 mt-1">Manage bank accounts for invoice payments</p>
+          <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Bank Accounts</h1>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{accounts.length} account{accounts.length !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 bg-[#EAEFFF] px-4 py-2 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+          className="flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
         >
           <Plus size={14} />
           Add Account
