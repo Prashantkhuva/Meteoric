@@ -151,9 +151,13 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 .footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
-  .toolbar { gap: 8px; }
-  .toolbar a { white-space: nowrap; }
-  .print-btn { padding: 10px 16px; white-space: nowrap; }
+  .toolbar { flex-wrap: wrap; gap: 8px; }
+  .toolbar-right { flex-wrap: wrap; gap: 8px; }
+  .wise-btn { padding: 10px 14px; }
+  .wise-btn img { width: 56px; height: 13px; }
+  .paypal-btn { padding: 10px 12px; }
+  .paypal-btn img { width: 16px; height: 16px; }
+  .print-btn { padding: 10px 14px; font-size: 12px; }
   .invoice { padding: 24px 16px; }
   .header { flex-direction: column; gap: 12px; margin-bottom: 32px; padding-bottom: 24px; }
   .brand-logo { height: 28px; }

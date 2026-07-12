@@ -342,9 +342,9 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.topBar} />
+        <View style={styles.topBar} fixed/>
 
-        <View style={styles.header}>
+        <View style={styles.header} fixed>
           <View style={styles.logoCol}>
             {logo && <Image style={styles.logo} src={logo} />}
           </View>
