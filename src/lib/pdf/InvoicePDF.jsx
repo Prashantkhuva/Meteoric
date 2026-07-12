@@ -186,32 +186,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  paidStamp: {
-    position: "absolute",
-    top: "40%",
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    borderWidth: 4,
-    borderStyle: "solid",
-    borderColor: "#4ade80",
-    borderRadius: 8,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    backgroundColor: "rgba(74, 222, 128, 0.06)",
-    alignSelf: "center",
-    marginLeft: "25%",
-    marginRight: "25%",
-  },
-  paidStampText: {
-    fontSize: 48,
-    fontFamily: fonts.bold,
-    color: "#4ade80",
-    letterSpacing: 8,
-    textTransform: "uppercase",
-    lineHeight: 1,
-    opacity: 0.35,
-  },
   wiseButton: {
     backgroundColor: colors.wiseGreen,
     paddingHorizontal: 24,
@@ -386,12 +360,6 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.topBar} fixed />
-
-        {isPaid && (
-          <View style={styles.paidStamp} fixed>
-            <Text style={styles.paidStampText}>PAID</Text>
-          </View>
-        )}
 
         <View style={styles.header}>
           <View style={styles.logoCol}>
