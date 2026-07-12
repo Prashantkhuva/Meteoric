@@ -139,11 +139,13 @@ export default function RootLayout({ children }) {
                   "@id": `${SITE_URL}/#product`,
                   "name": "SaaS Development Services",
                   "description": "End-to-end SaaS development from MVP to production platform for startups.",
-                  "image": `${SITE_URL}/og.png`,
+                  "image": `${SITE_URL}/og-image.png`,
                   "brand": {
                     "@type": "Organization",
                     "name": SITE_NAME
                   },
+                  "sku": "MET-SAAS-001",
+                  "gtin13": "0000000000000",
                   "review": {
                     "@type": "Review",
                     "reviewRating": {
@@ -166,7 +168,42 @@ export default function RootLayout({ children }) {
                     "@type": "Offer",
                     "price": "5000",
                     "priceCurrency": "USD",
-                    "availability": "https://schema.org/InStock"
+                    "availability": "https://schema.org/InStock",
+                    "url": SITE_URL,
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "hasMerchantReturnPolicy": {
+                      "@type": "MerchantReturnPolicy",
+                      "applicableCountry": "IN",
+                      "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+                      "merchantReturnDays": 0
+                    },
+                    "shippingDetails": {
+                      "@type": "OfferShippingDetails",
+                      "shippingRate": {
+                        "@type": "MonetaryAmount",
+                        "value": "0",
+                        "currency": "USD"
+                      },
+                      "shippingDestination": {
+                        "@type": "DefinedRegion",
+                        "addressCountry": "WW"
+                      },
+                      "deliveryTime": {
+                        "@type": "ShippingDeliveryTime",
+                        "handlingTime": {
+                          "@type": "QuantitativeValue",
+                          "minValue": 1,
+                          "maxValue": 5,
+                          "unitCode": "DAY"
+                        },
+                        "transitTime": {
+                          "@type": "QuantitativeValue",
+                          "minValue": 0,
+                          "maxValue": 0,
+                          "unitCode": "DAY"
+                        }
+                      }
+                    }
                   },
                 },
                 {
