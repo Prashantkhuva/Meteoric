@@ -239,8 +239,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   wiseLogo: {
-    width: 80,
-    height: 18,
+    width: 60,
+    height: 14,
   },
   paypalButton: {
     backgroundColor: "#0070BA",
