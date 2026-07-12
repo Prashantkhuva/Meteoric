@@ -4,6 +4,9 @@ import { colors, fonts, fontSizes, spacing } from "./theme";
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
 const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 
+const WISE_LOGO = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiPjxwYXRoIGZpbGw9IiMxNjMzMDAiIGQ9Ik01OC43Mzc3LjM1ODgwM2g2LjQ5ODJMNjEuOTY2OCAyMy42ODFoLTYuNDk4M0w1OC43Mzc3LjM1ODgwM1ptLTguMTkyMiAwTDQ2LjE2MDIgMTMuNzk0IDQ0LjI0NjUuMzU4ODAzaC00LjU0NDhMMzMuOTYwOCAxMy43NTQxIDMzLjI0MzMuMzU4ODAzaC02LjI5OTFMMjkuMTM2OSAyMy42ODFoNS4yMjI2TDQwLjgxOCA4LjkzMDIyIDQzLjA5MDQgMjMuNjgxaDUuMTQyOEw1Ni43MjQ5LjM1ODgwM2gtNi4xNzk0Wk0xMDUuMTAzIDEzLjkxMzZIODkuNjc0NGMuMDc5OCAzLjAyOTkgMS44OTM3IDUuMDIzMyA0LjU2NDggNS4wMjMzIDIuMDEzMyAwIDMuNjA4LTEuMDc2NSA0Ljg0MzktMy4xMjk2bDUuMjA3OSAyLjM2NzRDMTAyLjUwMSAyMS43MDE3IDk4LjcyOSAyNCA5NC4wNzk4IDI0IDg3Ljc0MSAyNCA4My41MzUgMTkuNzM0MiA4My41MzUgMTIuODc3MSA4My41MzUgNS4zNDIyMSA4OC40Nzg0IDAgOTUuNDU1MiAwYzYuMTM5OCAwIDEwLjAwNjggNC4xNDYxOCAxMC4wMDY4IDEwLjYwNDYgMCAxLjA3NjUtLjEyIDIuMTUyOC0uMzU5IDMuMzA5Wm0tNS43ODA3LTQuNDY1MTJjMC0yLjcxMDk1LTEuNTE1LTQuNDI1MjUtMy45NDY4LTQuNDI1MjUtMi41MTE3IDAtNC41ODQ4IDEuNzk0MDItNS4xNDMgNC40MjUyNWg5LjA4OThaTTYuNjMzMjYgNy4zODY4NSAwIDE1LjEzODloMTEuODQ0bDEuMzMwOS0zLjY1NTNIOC4wOTk2NWwzLjEwMTA1LTMuNTg1NTUuMDEtLjA5NTExTDkuMTk0MjQgNC4zMzE5aDkuMDcxOTZsLTcuMDMyMyAxOS4zNDkyaDQuODEyNEwyNC41MzguMzU4ODIzSDIuNjAwMjFMNi42MzMyNiA3LjM4Njg1Wm02OS4xNjc0NC0yLjM2MzZjMi4yOTIzIDAgNC4zMDEgMS4yMzI3MyA2LjA1NTEgMy4zNDU2NWwuOTIxNi02LjU3NDg4QzgxLjE0MjkuNjg3NzA3IDc4LjkzMDMgMCA3NiAwYy01LjgyMDUgMC05LjA4OTYgMy40MDg2NS05LjA4OTYgNy43MzQyMSAwIDIuOTk5OTkgMS42NzQ0IDQuODMzODkgNC40MjUyIDYuMDE5ODlsMS4zMTU2LjU5OGMyLjQ1MTggMS4wNDY2IDMuMTA5NyAxLjU2NDkgMy4xMDk3IDIuNjcxMiAwIDEuMTQ2MS0xLjEwNjQgMS44NzM3LTIuNzkwNyAxLjg3MzctMi43ODA4LjAxLTUuMDMzMi0xLjQxNTMtNi43Mjc2LTMuODQ3MmwtLjkzOSA2LjY5OUM2Ny4yMzMyIDIzLjIyMDEgNjkuNzA2NyAyNCA3Mi45NzAyIDI0YzUuNTMxNSAwIDguOTMwMi0zLjE4OTQgOC45MzAyLTcuNjE0NyAwLTMuMDA5OS0xLjMzNTUtNC45NDM0LTQuNzA0NC02LjQ1ODRsLTEuNDM1MS0uNjc3NzJjLTEuOTkzNC0uODg3MDgtMi42NzExLTEuMzc1NDMtMi42NzExLTIuMzUyMTYgMC0xLjA1NjQ3LjkyNjktMS44NzM3NyAyLjcxMDktMS44NzM3N1oiLz48L3N2Zz4=";
+const PAYPAL_LOGO = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0OCA0OCI+DQogIDxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjQ1IiBkPSJNMTYuMTMgMzkuMTE1SDguMzY3YTEuMDQxIDEuMDQxIDAgMCAxLTEuMDI2LTEuMmw1LjIzNC0zMy4xNzZhMS4yNzkgMS4yNzkgMCAwIDEgMS4yNjEtMS4wNzloMTMuMzM1YzYuMzE1IDAgMTAuOTA5IDQuNTkyIDEwLjggMTAuMTU3IDMuNzM1IDEuOTUgNS45MTUgNS45MSA1LjIzNCAxMC4yNDdhMTIuNTQ4IDEyLjU0OCAwIDAgMS0xMi4zOSAxMC42MkgyNi44OWExLjI3NSAxLjI3NSAwIDAgMC0xLjI2MSAxLjA4TDIzLjg3IDQ2LjlhMS4yNzYgMS4yNzYgMCAwIDEtMS4yNjIgMS4wNzlIMTUuOTRhMS4wNCAxLjA0IDAgMCAxLTEuMDI2LTEuMTk5bDEuMjE1LTcuNjY0di0uMDAyWiIvPg0KICA8cGF0aCBmaWxsPSIjZmZmIiBmaWwsLW9wYWNpdHk9Ii40NSIgZD0iTTM3Ljk3MyAxMy44MTdhMTEuNjY4IDExLjY2OCAwIDAgMC01LjQ0MS0xLjI5NEgyMS40MTRhMS4yNzcgMS4yNzcgMCAwIDAtMS4yNjEgMS4wOGwtMi4wOTggMTMuMjkzLjAwNi0uMDM1YTEuMjggMS4yOCAwIDAgMSAxLjI1Ni0xLjA0Mmg2LjE0NGExMi41NTMgMTIuNTUzIDAgMCAwIDEyLjM5LTEwLjYyYy4wNzEtLjQ1Ny4xMTMtLjkyLjEyMi0xLjM4MloiLz4NCiAgPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE2LjEzMyAzOS4xMTVIOC4zNjhhMS4wNDEgMS4wNDEgMCAwIDEtMS4wMjYtMS4ybDUuMjM0LTMzLjE3NmExLjI3OSAxLjI3OSAwIDAgMSAxLjI2MS0xLjA3OWgxMy4zMzVjNi4zMTUgMCAxMC45MDkgNC41OTIgMTAuODAxIDEwLjE1N2ExMS42NyAxMS42NyAwIDAgMC01LjQ0MS0xLjI5NEgyMS40MTRhMS4yNzcgMS4yNzcgMCAwIDAtMS4yNjEgMS4wOGwtMi4wOTggMTMuMjkzLjAwNi0uMDM1LTEuOTI4IDEyLjI1NFoiLz4NCjwvc3ZnPg==";
+
 const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.background,
@@ -219,39 +222,38 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.accent,
   },
-  wiseSection: {
+  paySection: {
     marginTop: 28,
-    flexDirection: "column",
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: 12,
   },
   wiseButton: {
     backgroundColor: colors.wiseGreen,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 4,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 6,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
-  wiseButtonText: {
-    fontSize: 12,
-    fontFamily: fonts.bold,
-    color: "#0a0a0a",
-    letterSpacing: 0.5,
+  wiseLogo: {
+    width: 72,
+    height: 16,
   },
   paypalButton: {
     backgroundColor: "#0070BA",
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 4,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 6,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
-  paypalButtonText: {
-    fontSize: 12,
-    fontFamily: fonts.bold,
-    color: "#ffffff",
-    letterSpacing: 0.5,
+  paypalLogo: {
+    width: 22,
+    height: 22,
   },
   footerSection: {
     marginTop: 36,
@@ -429,12 +431,12 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
         </View>
 
         {!isPaid && (
-          <View style={styles.wiseSection}>
+          <View style={styles.paySection}>
             <Link src={wiseUrl} style={styles.wiseButton}>
-              <Text style={styles.wiseButtonText}>Wise</Text>
+              <Image src={WISE_LOGO} style={styles.wiseLogo} />
             </Link>
             <Link src={paypalUrl} style={styles.paypalButton}>
-              <Text style={styles.paypalButtonText}>PayPal</Text>
+              <Image src={PAYPAL_LOGO} style={styles.paypalLogo} />
             </Link>
           </View>
         )}
