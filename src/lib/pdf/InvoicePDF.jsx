@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "flex-end",
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 6,
     borderRadius: 3,
     marginTop: 10,
   },
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   paypalLogo: {
-    width: 22,
-    height: 22,
+    width: 18,
+    height: 18,
   },
   footerSection: {
     marginTop: 36,
