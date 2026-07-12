@@ -300,6 +300,15 @@ function StatusBadge({ status }) {
           backgroundColor: c.bg,
         }}
       >
+        <View
+          style={{
+            width: 5,
+            height: 5,
+            borderRadius: 3,
+            backgroundColor: c.dot,
+            marginRight: 6,
+          }}
+        />
         <Text
           style={{
             fontSize: 9,
@@ -307,10 +316,10 @@ function StatusBadge({ status }) {
             textTransform: "uppercase",
             letterSpacing: 1.2,
             color: c.color,
-            lineHeight: 9,
+            lineHeight: 14,
           }}
         >
-          {"●  "}{label}
+          {label}
         </Text>
       </View>
   );
