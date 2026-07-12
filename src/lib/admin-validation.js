@@ -117,7 +117,7 @@ export const bankAccountSchema = z.object({
   ifsc: z.string().max(20).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   currency: z.string().max(10).optional().default("USD"),
   country: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
-  is_default: z.boolean().optional().default(false),
+  is_default: z.coerce.boolean().optional().default(false),
 });
 
 export const projectSchema = z.object({
