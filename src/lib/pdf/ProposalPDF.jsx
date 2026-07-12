@@ -1,4 +1,12 @@
-import { Document, Page, View, Text, Image, Link, StyleSheet } from "@react-pdf/renderer";
+import {
+  Document,
+  Page,
+  View,
+  Text,
+  Image,
+  Link,
+  StyleSheet,
+} from "@react-pdf/renderer";
 import { colors, fonts, fontSizes, spacing } from "./theme";
 
 const styles = StyleSheet.create({
@@ -243,13 +251,40 @@ function InlineContent({ content }) {
       let text = esc(node.text);
       if (node.marks) {
         for (const mark of node.marks) {
-          if (mark.type === "bold") text = <Text key={i} style={{ fontFamily: fonts.bold, color: colors.text }}>{text}</Text>;
-          else if (mark.type === "italic") text = <Text key={i} style={{ fontFamily: fonts.oblique }}>{text}</Text>;
-          else if (mark.type === "underline") text = <Text key={i} style={{ textDecoration: "underline" }}>{text}</Text>;
+          if (mark.type === "bold")
+            text = (
+              <Text
+                key={i}
+                style={{ fontFamily: fonts.bold, color: colors.text }}
+              >
+                {text}
+              </Text>
+            );
+          else if (mark.type === "italic")
+            text = (
+              <Text key={i} style={{ fontFamily: fonts.oblique }}>
+                {text}
+              </Text>
+            );
+          else if (mark.type === "underline")
+            text = (
+              <Text key={i} style={{ textDecoration: "underline" }}>
+                {text}
+              </Text>
+            );
           else if (mark.type === "link") {
             const href = mark.attrs?.href || "";
-            const safe = href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:") ? href : "";
-            text = <Link key={i} src={safe} style={styles.link}>{text}</Link>;
+            const safe =
+              href.startsWith("http://") ||
+              href.startsWith("https://") ||
+              href.startsWith("mailto:")
+                ? href
+                : "";
+            text = (
+              <Link key={i} src={safe} style={styles.link}>
+                {text}
+              </Link>
+            );
           }
         }
       }
@@ -270,12 +305,11 @@ function formatDate(d) {
 
 function StatusBadge({ status }) {
   const style = status === "sent" ? styles.statusSent : styles.statusDraft;
-  const label = status === "sent" ? "Sent" : status === "draft" ? "Draft" : status;
+  const label =
+    status === "sent" ? "Sent" : status === "draft" ? "Draft" : status;
   return (
     <View style={[styles.statusPill, style]}>
-      <Text style={[styles.statusText, { color: style.color }]}>
-        {label}
-      </Text>
+      <Text style={[styles.statusText, { color: style.color }]}>{label}</Text>
     </View>
   );
 }
@@ -286,7 +320,7 @@ export default function ProposalPDF({ proposal, lead, logo }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.topBar} />
+        <View style={styles.topBar} fixed />
 
         <View style={styles.header}>
           <View style={styles.logoCol}>
@@ -296,10 +330,14 @@ export default function ProposalPDF({ proposal, lead, logo }) {
             <Text style={styles.title}>{esc(proposal.title)}</Text>
             <StatusBadge status={proposal.status} />
             {proposal.created_at && (
-              <Text style={styles.dateRow}>Created: {formatDate(proposal.created_at)}</Text>
+              <Text style={styles.dateRow}>
+                Created: {formatDate(proposal.created_at)}
+              </Text>
             )}
             {proposal.sent_at && (
-              <Text style={styles.dateRow}>Sent: {formatDate(proposal.sent_at)}</Text>
+              <Text style={styles.dateRow}>
+                Sent: {formatDate(proposal.sent_at)}
+              </Text>
             )}
           </View>
         </View>
@@ -312,14 +350,21 @@ export default function ProposalPDF({ proposal, lead, logo }) {
           {lead && (
             <>
               <Text style={styles.toName}>{esc(lead.name)}</Text>
-              {lead.email && <Text style={styles.toContact}>{esc(lead.email)}</Text>}
+              {lead.email && (
+                <Text style={styles.toContact}>{esc(lead.email)}</Text>
+              )}
             </>
           )}
         </View>
 
         <View style={styles.contentBlock}>
-          {content && typeof content === "object" && content.type === "doc" && content.content
-            ? content.content.map((node, i) => <ProposalContentNode key={i} node={node} />)
+          {content &&
+          typeof content === "object" &&
+          content.type === "doc" &&
+          content.content
+            ? content.content.map((node, i) => (
+                <ProposalContentNode key={i} node={node} />
+              ))
             : typeof content === "string" && (
                 <Text style={styles.paragraph}>{esc(content)}</Text>
               )}
