@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
   markInvoiceAsPaid, markInvoiceAsOverdue, cancelInvoice, updateInvoiceStatus, getClients, getInvoicesPaginated, ensureShareToken,
-  checkOverdueInvoices, getProposalPricing, sendPaymentConfirmationAction,
+  checkOverdueInvoices, getProposalPricing, sendPaymentConfirmationAction, getBankAccounts,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -96,6 +96,7 @@ export default function InvoicesPage() {
   const [actionLoading, setActionLoading] = useState(null);
   const [exporting, setExporting] = useState(false);
   const [bulkLoading, setBulkLoading] = useState(false);
+  const [bankAccounts, setBankAccounts] = useState([]);
   const addToast = useToast();
   const searchRef = useRef(null);
 
@@ -116,9 +117,10 @@ export default function InvoicesPage() {
   async function fetchData() {
     setLoading(true);
 
-    const [result, clientsRes] = await Promise.all([
+    const [result, clientsRes, bankRes] = await Promise.all([
       getInvoicesPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
       getClients().catch(() => []),
+      getBankAccounts().then((r) => r.data || []).catch(() => []),
     ]);
 
     if (result.error) { setError(result.error); setLoading(false); return; }
@@ -126,6 +128,7 @@ export default function InvoicesPage() {
     setInvoices(result.data);
     setTotal(result.total);
     setClients(clientsRes);
+    setBankAccounts(bankRes);
     setLoading(false);
 
     if (checkedOverdue.current) return;
@@ -560,6 +563,7 @@ export default function InvoicesPage() {
         onClose={() => { setShowNewInvoice(false); setFormResetKey(k => k + 1); window.history.replaceState(null, "", "/admin/invoices"); }}
         onSubmit={handleCreate}
         clients={clients}
+        bankAccounts={bankAccounts}
         proposalId={searchParams.get("proposalId")}
         title="New Invoice"
       />
@@ -570,6 +574,7 @@ export default function InvoicesPage() {
           onClose={() => setEditingInvoice(null)}
           onSubmit={handleUpdate}
           clients={clients}
+          bankAccounts={bankAccounts}
           invoice={editingInvoice}
           title="Edit Invoice"
         />
@@ -834,7 +839,7 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
   );
 }
 
-function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, proposalId }) {
+function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invoice, title, proposalId }) {
   const [submitting, setSubmitting] = useState(false);
   const [items, setItems] = useState(
     invoice?.items?.length ? invoice.items : [{ description: "", quantity: 1, rate: 0 }]
@@ -842,6 +847,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
   const [tax, setTax] = useState(invoice?.tax || 0);
   const [currency, setCurrency] = useState(invoice?.currency || "USD");
   const [currencyOpen, setCurrencyOpen] = useState(false);
+  const [bankAccountId, setBankAccountId] = useState(invoice?.bank_account_id || "");
   const trapRef = useFocusTrap(open);
   const scrollRef = useRef(null);
 
@@ -901,6 +907,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
     fd.set("items", JSON.stringify(items.filter((i) => i.description.trim())));
     fd.set("tax", String(tax));
     fd.set("currency", currency);
+    fd.set("bank_account_id", bankAccountId);
     if (invoice) fd.set("id", invoice.id);
     if (proposalId) fd.set("proposal_id", proposalId);
     await onSubmit(fd);
@@ -1075,6 +1082,25 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, invoice, title, pr
                   defaultValue={invoice?.due_date || ""}
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white transition-all focus:border-[#EAEFFF]/20 outline-none"
                 />
+              </div>
+              <div>
+                <label htmlFor="field-bank_account" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Bank Account
+                </label>
+                <select
+                  id="field-bank_account"
+                  value={bankAccountId}
+                  onChange={(e) => setBankAccountId(e.target.value)}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  style={{ colorScheme: "dark" }}
+                >
+                  <option value="">No bank account</option>
+                  {(bankAccounts || []).map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.label}{b.bank_name ? ` — ${b.bank_name}` : ""}{b.currency ? ` (${b.currency})` : ""}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

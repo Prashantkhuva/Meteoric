@@ -168,6 +168,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
         currency: invoice.currency || "USD",
         dueDate,
         previewUrl,
+        bankAccount: invoice.bank_account || null,
       }),
       attachments: [
         {

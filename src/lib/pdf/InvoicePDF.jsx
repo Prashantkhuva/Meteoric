@@ -179,6 +179,29 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.accent,
   },
+  bankSection: {
+    marginTop: 20,
+    padding: 16,
+    backgroundColor: colors.cardBg,
+    border: `1px solid ${colors.border}`,
+  },
+  bankTitle: {
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.bold,
+    color: colors.accent,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  bankLine: {
+    fontSize: fontSizes.small,
+    color: colors.textSecondary,
+    lineHeight: 1.8,
+  },
+  bankLabel: {
+    fontFamily: fonts.bold,
+    color: colors.textMuted,
+  },
   paySection: {
     marginTop: 28,
     flexDirection: "row",
@@ -355,6 +378,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${total.toFixed(2)}`;
   const paypalUrl = `${PAYPAL_ME}/${total.toFixed(2)}`;
   const isPaid = invoice.status === "paid";
+  const bank = invoice.bank_account || null;
 
   return (
     <Document>
@@ -479,6 +503,22 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
             </View>
           </View>
         </View>
+
+        {!isPaid && bank && (
+          <View style={styles.bankSection}>
+            <Text style={styles.bankTitle}>Bank Transfer Details</Text>
+            {bank.label && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Account: </Text>{esc(bank.label)}</Text>}
+            {bank.bank_name && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Bank: </Text>{esc(bank.bank_name)}</Text>}
+            {bank.account_holder && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Name: </Text>{esc(bank.account_holder)}</Text>}
+            {bank.account_number && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Account No: </Text>{esc(bank.account_number)}</Text>}
+            {bank.iban && <Text style={styles.bankLine}><Text style={styles.bankLabel}>IBAN: </Text>{esc(bank.iban)}</Text>}
+            {bank.swift_bic && <Text style={styles.bankLine}><Text style={styles.bankLabel}>SWIFT/BIC: </Text>{esc(bank.swift_bic)}</Text>}
+            {bank.routing_number && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Routing: </Text>{esc(bank.routing_number)}</Text>}
+            {bank.ifsc && <Text style={styles.bankLine}><Text style={styles.bankLabel}>IFSC: </Text>{esc(bank.ifsc)}</Text>}
+            {bank.currency && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Currency: </Text>{esc(bank.currency)}</Text>}
+            {bank.country && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Country: </Text>{esc(bank.country)}</Text>}
+          </View>
+        )}
 
         {!isPaid && (
           <View style={styles.paySection}>

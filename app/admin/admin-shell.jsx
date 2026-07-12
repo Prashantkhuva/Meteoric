@@ -16,6 +16,7 @@ const pageTitles = {
   "/admin/proposals": "Proposals",
   "/admin/projects": "Projects",
   "/admin/invoices": "Invoices",
+  "/admin/bank-accounts": "Bank Accounts",
   "/admin/compose": "Compose Email",
   "/admin/sent-emails": "Sent Emails",
 };

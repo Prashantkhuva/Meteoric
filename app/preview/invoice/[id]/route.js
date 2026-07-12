@@ -48,7 +48,7 @@ export async function GET(request, { params }) {
 
     const { data, error } = await supabase
       .from("invoices")
-      .select("*, client:clients(name, email, company)")
+      .select("*, client:clients(name, email, company), bank_account:bank_accounts(*)")
       .eq("id", id)
       .single();
 
@@ -149,6 +149,10 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 .footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
 .footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px; }
 .footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
+.bank-section { margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); }
+.bank-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 10px; }
+.bank-line { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.8; }
+.bank-line strong { color: rgba(255,255,255,0.35); }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
   .toolbar { flex-wrap: wrap; gap: 8px; }
@@ -239,6 +243,22 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     ${tax > 0 ? '<div class="row"><span>Tax</span><span>' + currency + tax.toFixed(2) + "</span></div>" : ""}
     <div class="row total"><span>Total</span><span>${currency}${total.toFixed(2)}</span></div>
   </div>
+
+  ${invoice.status !== "paid" && invoice.bank_account ? `
+  <div class="bank-section">
+    <h4>Bank Transfer Details</h4>
+    ${invoice.bank_account.label ? '<p class="bank-line"><strong>Account:</strong> ' + esc(invoice.bank_account.label) + "</p>" : ""}
+    ${invoice.bank_account.bank_name ? '<p class="bank-line"><strong>Bank:</strong> ' + esc(invoice.bank_account.bank_name) + "</p>" : ""}
+    ${invoice.bank_account.account_holder ? '<p class="bank-line"><strong>Name:</strong> ' + esc(invoice.bank_account.account_holder) + "</p>" : ""}
+    ${invoice.bank_account.account_number ? '<p class="bank-line"><strong>Account No:</strong> ' + esc(invoice.bank_account.account_number) + "</p>" : ""}
+    ${invoice.bank_account.iban ? '<p class="bank-line"><strong>IBAN:</strong> ' + esc(invoice.bank_account.iban) + "</p>" : ""}
+    ${invoice.bank_account.swift_bic ? '<p class="bank-line"><strong>SWIFT/BIC:</strong> ' + esc(invoice.bank_account.swift_bic) + "</p>" : ""}
+    ${invoice.bank_account.routing_number ? '<p class="bank-line"><strong>Routing:</strong> ' + esc(invoice.bank_account.routing_number) + "</p>" : ""}
+    ${invoice.bank_account.ifsc ? '<p class="bank-line"><strong>IFSC:</strong> ' + esc(invoice.bank_account.ifsc) + "</p>" : ""}
+    ${invoice.bank_account.currency ? '<p class="bank-line"><strong>Currency:</strong> ' + esc(invoice.bank_account.currency) + "</p>" : ""}
+    ${invoice.bank_account.country ? '<p class="bank-line"><strong>Country:</strong> ' + esc(invoice.bank_account.country) + "</p>" : ""}
+  </div>
+  ` : ""}
 
   ${(invoice.notes || invoice.terms) ? `
   <div class="footer">

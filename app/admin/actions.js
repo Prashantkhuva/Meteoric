@@ -17,6 +17,7 @@ import {
   proposalSchema,
   invoiceSchema,
   projectSchema,
+  bankAccountSchema,
   paginationSchema,
   statusSchema,
   validateFormData,
@@ -626,6 +627,7 @@ export async function createInvoice(formData) {
     const { error } = await supabase.from("invoices").insert({
       client_id: data.client_id,
       proposal_id: data.proposal_id,
+      bank_account_id: data.bank_account_id,
       invoice_number: invoiceNumber,
       status: "draft",
       items: data.items,
@@ -662,6 +664,7 @@ export async function updateInvoice(formData) {
       .update({
         client_id: data.client_id,
         proposal_id: data.proposal_id,
+        bank_account_id: data.bank_account_id,
         status: data.status || "draft",
         items: data.items,
         subtotal,
@@ -706,7 +709,7 @@ export async function checkOverdueInvoices() {
 
   const { data: overdue, error } = await supabase
     .from("invoices")
-    .select("*, client:clients(name, email, phone, company)")
+    .select("*, client:clients(name, email, phone, company), bank_account:bank_accounts(*)")
     .eq("status", "sent")
     .lt("due_date", new Date().toISOString())
     .or(`last_reminder_sent_at.is.null,last_reminder_sent_at.lt.${new Date(Date.now() - 86400000 * 3).toISOString()}`);
@@ -751,7 +754,7 @@ export async function sendInvoice(id) {
 
     const { data: invoice, error: fetchError } = await supabase
       .from("invoices")
-      .select("*, client:clients(name, email, phone)")
+      .select("*, client:clients(name, email, phone), bank_account:bank_accounts(*)")
       .eq("id", safeId)
       .single();
 
@@ -801,13 +804,12 @@ export async function markInvoiceAsPaid(id, paidAt) {
     try {
       const { data: invoice } = await supabase
         .from("invoices")
-        .select("*, client:clients(name, email, phone)")
+        .select("*, client:clients(name, email, phone), bank_account:bank_accounts(*)")
         .eq("id", safeId)
         .single();
 
       if (invoice?.client) {
         const shareToken = invoice.share_token || randomUUID();
-        const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
 
         await supabase
           .from("invoices")
@@ -822,7 +824,7 @@ export async function markInvoiceAsPaid(id, paidAt) {
 
         if (invoice.client.phone) {
           const phone = invoice.client.phone.replace(/[^0-9]/g, "");
-          const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : "";
+          const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
           const msg = encodeURIComponent(
             `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
           );
@@ -847,7 +849,7 @@ export async function sendPaymentConfirmationAction(id) {
 
     const { data: invoice, error: fetchError } = await supabase
       .from("invoices")
-      .select("*, client:clients(name, email, phone)")
+      .select("*, client:clients(name, email, phone), bank_account:bank_accounts(*)")
       .eq("id", safeId)
       .single();
 
@@ -857,7 +859,6 @@ export async function sendPaymentConfirmationAction(id) {
     if (invoice.status !== "paid") return { error: "Invoice is not marked as paid" };
 
     const shareToken = invoice.share_token || randomUUID();
-    const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
 
     await supabase
       .from("invoices")
@@ -870,7 +871,7 @@ export async function sendPaymentConfirmationAction(id) {
     let whatsappUrl = null;
     if (invoice.client.phone) {
       const phone = invoice.client.phone.replace(/[^0-9]/g, "");
-      const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : "";
+      const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
       const msg = encodeURIComponent(
         `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
       );
@@ -1114,7 +1115,7 @@ export async function getInvoicesPaginated(params) {
 
   let query = supabase
     .from("invoices")
-    .select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)", { count: "exact" });
+    .select("*, client:clients(name, email, phone, company), proposal:proposals(id, title), bank_account:bank_accounts(*)", { count: "exact" });
   if (search) query = query.or(`invoice_number.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
@@ -1318,5 +1319,98 @@ export async function getSentEmails(page = 1, pageSize = 15) {
     return { data: data || [], total: count || 0 };
   } catch {
     return { data: [], total: 0 };
+  }
+}
+
+// ─── Bank Accounts ────────────────────────────────────────────────────────────
+
+export async function getBankAccounts() {
+  try {
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("bank_accounts")
+      .select("*")
+      .order("is_default", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (error) return { error: error.message };
+    return { data: data || [] };
+  } catch (err) {
+    return { error: err.message || "Failed to fetch bank accounts" };
+  }
+}
+
+export async function createBankAccount(formData) {
+  try {
+    const supabase = await getSupabase();
+    const data = bankAccountSchema.parse(parseFormData(formData));
+
+    if (data.is_default) {
+      await supabase.from("bank_accounts").update({ is_default: false }).eq("is_default", true);
+    }
+
+    const { error } = await supabase.from("bank_accounts").insert({
+      label: data.label,
+      bank_name: data.bank_name,
+      account_holder: data.account_holder,
+      account_number: data.account_number,
+      iban: data.iban,
+      swift_bic: data.swift_bic,
+      routing_number: data.routing_number,
+      ifsc: data.ifsc,
+      currency: data.currency,
+      country: data.country,
+      is_default: data.is_default,
+    });
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/bank-accounts");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to create bank account" };
+  }
+}
+
+export async function updateBankAccount(formData) {
+  try {
+    const supabase = await getSupabase();
+    const data = bankAccountSchema.parse(parseFormData(formData));
+    if (!data.id) return { error: "Bank account ID is required" };
+
+    if (data.is_default) {
+      await supabase.from("bank_accounts").update({ is_default: false }).eq("is_default", true);
+    }
+
+    const { error } = await supabase
+      .from("bank_accounts")
+      .update({
+        label: data.label,
+        bank_name: data.bank_name,
+        account_holder: data.account_holder,
+        account_number: data.account_number,
+        iban: data.iban,
+        swift_bic: data.swift_bic,
+        routing_number: data.routing_number,
+        ifsc: data.ifsc,
+        currency: data.currency,
+        country: data.country,
+        is_default: data.is_default,
+      })
+      .eq("id", data.id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/bank-accounts");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update bank account" };
+  }
+}
+
+export async function deleteBankAccount(id) {
+  try {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("bank_accounts").delete().eq("id", id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/bank-accounts");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete bank account" };
   }
 }

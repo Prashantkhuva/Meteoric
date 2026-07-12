@@ -95,6 +95,7 @@ export const invoiceSchema = z.object({
   id: idSchema.optional(),
   client_id: z.string().optional().or(z.literal("")).transform((v) => v || null),
   proposal_id: z.string().optional().or(z.literal("")).transform((v) => v || null),
+  bank_account_id: z.string().optional().or(z.literal("")).transform((v) => v || null),
   status: statusSchema(VALID_INVOICE_STATUSES).optional(),
   items: z.array(invoiceItemSchema).optional().default([]),
   tax: z.coerce.number().min(0).max(9999999).optional().default(0),
@@ -102,6 +103,21 @@ export const invoiceSchema = z.object({
   notes: z.string().max(5000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   terms: z.string().max(10000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   due_date: z.string().max(20).optional().or(z.literal("")).transform((v) => v || null),
+});
+
+export const bankAccountSchema = z.object({
+  id: idSchema.optional(),
+  label: z.string().min(1).max(100),
+  bank_name: z.string().max(100).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  account_holder: z.string().min(1).max(200),
+  account_number: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  iban: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  swift_bic: z.string().max(20).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  routing_number: z.string().max(30).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  ifsc: z.string().max(20).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  currency: z.string().max(10).optional().default("USD"),
+  country: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  is_default: z.boolean().optional().default(false),
 });
 
 export const projectSchema = z.object({

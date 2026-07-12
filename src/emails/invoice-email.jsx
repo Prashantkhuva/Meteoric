@@ -15,7 +15,7 @@ const SITE_URL = "https://withmeteoric.com";
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
 const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 
-export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl }) {
+export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl, bankAccount }) {
   const curr = currency || "USD";
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
   const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}`;
@@ -57,6 +57,22 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
               </>
             )}
           </div>
+
+          {bankAccount && (
+            <div style={bankSection}>
+              <Text style={bankTitle}>Bank Transfer Details</Text>
+              {bankAccount.label && <Text style={bankLine}><Text style={bankLabel}>Account: </Text>{bankAccount.label}</Text>}
+              {bankAccount.bank_name && <Text style={bankLine}><Text style={bankLabel}>Bank: </Text>{bankAccount.bank_name}</Text>}
+              {bankAccount.account_holder && <Text style={bankLine}><Text style={bankLabel}>Name: </Text>{bankAccount.account_holder}</Text>}
+              {bankAccount.account_number && <Text style={bankLine}><Text style={bankLabel}>Account No: </Text>{bankAccount.account_number}</Text>}
+              {bankAccount.iban && <Text style={bankLine}><Text style={bankLabel}>IBAN: </Text>{bankAccount.iban}</Text>}
+              {bankAccount.swift_bic && <Text style={bankLine}><Text style={bankLabel}>SWIFT/BIC: </Text>{bankAccount.swift_bic}</Text>}
+              {bankAccount.routing_number && <Text style={bankLine}><Text style={bankLabel}>Routing: </Text>{bankAccount.routing_number}</Text>}
+              {bankAccount.ifsc && <Text style={bankLine}><Text style={bankLabel}>IFSC: </Text>{bankAccount.ifsc}</Text>}
+              {bankAccount.currency && <Text style={bankLine}><Text style={bankLabel}>Currency: </Text>{bankAccount.currency}</Text>}
+              {bankAccount.country && <Text style={bankLine}><Text style={bankLabel}>Country: </Text>{bankAccount.country}</Text>}
+            </div>
+          )}
 
           <div style={{ marginBottom: "12px" }}>
             <Link href={wiseUrl} style={wiseButton}>
@@ -201,4 +217,32 @@ const paypalButton = {
 const hr = {
   borderColor: "rgba(234, 239, 255, 0.08)",
   margin: "24px 0",
+};
+
+const bankSection = {
+  backgroundColor: "rgba(255, 255, 255, 0.03)",
+  border: "1px solid rgba(234, 239, 255, 0.08)",
+  padding: "16px",
+  marginBottom: "20px",
+};
+
+const bankTitle = {
+  fontSize: "10px",
+  fontWeight: 700,
+  color: "#EAEFFF",
+  textTransform: "uppercase",
+  letterSpacing: "0.1em",
+  marginBottom: "10px",
+};
+
+const bankLine = {
+  fontSize: "12px",
+  color: "rgba(255, 255, 255, 0.5)",
+  lineHeight: "1.8",
+  margin: 0,
+};
+
+const bankLabel = {
+  color: "rgba(255, 255, 255, 0.35)",
+  fontWeight: 600,
 };

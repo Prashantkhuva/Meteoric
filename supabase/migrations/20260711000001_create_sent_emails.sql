@@ -14,6 +14,10 @@ create table if not exists sent_emails (
 
 alter table sent_emails enable row level security;
 
-create policy "Authenticated can manage sent_emails"
-  on sent_emails for all
-  using (auth.role() = 'authenticated');
+do $$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'sent_emails' and policyname = 'Authenticated can manage sent_emails') then
+    create policy "Authenticated can manage sent_emails"
+      on sent_emails for all
+      using (auth.role() = 'authenticated');
+  end if;
+end $$;
