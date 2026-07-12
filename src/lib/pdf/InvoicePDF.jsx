@@ -49,32 +49,35 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-end",
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 4,
-    marginTop: 14,
-    gap: 8,
+    marginTop: 10,
+    borderWidth: 1,
+    gap: 6,
   },
   statusDot: {
-    width: 6,
-    height: 6,
+    width: 5,
+    height: 5,
     borderRadius: 3,
   },
   statusText: {
     fontSize: 9,
     fontFamily: fonts.bold,
     textTransform: "uppercase",
-    letterSpacing: 2,
+    letterSpacing: 1.2,
   },
   statusSent: {
-    backgroundColor: "#1a1a2e",
-    color: "#EAEFFF",
+    backgroundColor: "#222225",
+    borderColor: "#E8E4FF",
+    color: "#E8E4FF",
   },
   statusSentDot: {
-    backgroundColor: "#EAEFFF",
+    backgroundColor: "#E8E4FF",
   },
   statusPaid: {
     backgroundColor: "#0D2818",
+    borderColor: "#4ade80",
     color: "#4ade80",
   },
   statusPaidDot: {
@@ -82,13 +85,15 @@ const styles = StyleSheet.create({
   },
   statusOverdue: {
     backgroundColor: "#2D1215",
+    borderColor: "#f87171",
     color: "#f87171",
   },
   statusOverdueDot: {
     backgroundColor: "#f87171",
   },
   statusDraft: {
-    backgroundColor: "#1C1C1C",
+    backgroundColor: "transparent",
+    borderColor: "#333333",
     color: "#999999",
   },
   statusDraftDot: {
