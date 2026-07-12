@@ -1,11 +1,21 @@
-import { Document, Page, View, Text, Image, Link, StyleSheet } from "@react-pdf/renderer";
+import {
+  Document,
+  Page,
+  View,
+  Text,
+  Image,
+  Link,
+  StyleSheet,
+} from "@react-pdf/renderer";
 import { colors, fonts, fontSizes, spacing } from "./theme";
 
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
 const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 
-const WISE_LOGO = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDYgMjQiIGZpbGw9Im5vbmUiPjxwYXRoIGZpbGw9IiMxNjMzMDAiIGQ9Ik01OC43Mzc3LjM1ODgwM2g2LjQ5ODJMNjEuOTY2OCAyMy42ODFoLTYuNDk4M0w1OC43Mzc3LjM1ODgwM1ptLTguMTkyMiAwTDQ2LjE2MDIgMTMuNzk0IDQ0LjI0NjUuMzU4ODAzaC00LjU0NDhMMzMuOTYwOCAxMy43NTQxIDMzLjI0MzMuMzU4ODAzaC02LjI5OTFMMjkuMTM2OSAyMy42ODFoNS4yMjI2TDQwLjgxOCA4LjkzMDIyIDQzLjA5MDQgMjMuNjgxaDUuMTQyOEw1Ni43MjQ5LjM1ODgwM2gtNi4xNzk0Wk0xMDUuMTAzIDEzLjkxMzZIODkuNjc0NGMuMDc5OCAzLjAyOTkgMS44OTM3IDUuMDIzMyA0LjU2NDggNS4wMjMzIDIuMDEzMyAwIDMuNjA4LTEuMDc2NSA0Ljg0MzktMy4xMjk2bDUuMjA3OSAyLjM2NzRDMTAyLjUwMSAyMS43MDE3IDk4LjcyOSAyNCA5NC4wNzk4IDI0IDg3Ljc0MSAyNCA4My41MzUgMTkuNzM0MiA4My41MzUgMTIuODc3MSA4My41MzUgNS4zNDIyMSA4OC40Nzg0IDAgOTUuNDU1MiAwYzYuMTM5OCAwIDEwLjAwNjggNC4xNDYxOCAxMC4wMDY4IDEwLjYwNDYgMCAxLjA3NjUtLjEyIDIuMTUyOC0uMzU5IDMuMzA5Wm0tNS43ODA3LTQuNDY1MTJjMC0yLjcxMDk1LTEuNTE1LTQuNDI1MjUtMy45NDY4LTQuNDI1MjUtMi41MTE3IDAtNC41ODQ4IDEuNzk0MDItNS4xNDMgNC40MjUyNWg5LjA4OThaTTYuNjMzMjYgNy4zODY4NSAwIDE1LjEzODloMTEuODQ0bDEuMzMwOS0zLjY1NTNIOC4wOTk2NWwzLjEwMTA1LTMuNTg1NTUuMDEtLjA5NTExTDkuMTk0MjQgNC4zMzE5aDkuMDcxOTZsLTcuMDMyMyAxOS4zNDkyaDQuODEyNEwyNC41MzguMzU4ODIzSDIuNjAwMjFMNi42MzMyNiA3LjM4Njg1Wm02OS4xNjc0NC0yLjM2MzZjMi4yOTIzIDAgNC4zMDEgMS4yMzI3MyA2LjA1NTEgMy4zNDU2NWwuOTIxNi02LjU3NDg4QzgxLjE0MjkuNjg3NzA3IDc4LjkzMDMgMCA3NiAwYy01LjgyMDUgMC05LjA4OTYgMy40MDg2NS05LjA4OTYgNy43MzQyMSAwIDIuOTk5OTkgMS42NzQ0IDQuODMzODkgNC40MjUyIDYuMDE5ODlsMS4zMTU2LjU5OGMyLjQ1MTggMS4wNDY2IDMuMTA5NyAxLjU2NDkgMy4xMDk3IDIuNjcxMiAwIDEuMTQ2MS0xLjEwNjQgMS44NzM3LTIuNzkwNyAxLjg3MzctMi43ODA4LjAxLTUuMDMzMi0xLjQxNTMtNi43Mjc2LTMuODQ3MmwtLjkzOSA2LjY5OUM2Ny4yMzMyIDIzLjIyMDEgNjkuNzA2NyAyNCA3Mi45NzAyIDI0YzUuNTMxNSAwIDguOTMwMi0zLjE4OTQgOC45MzAyLTcuNjE0NyAwLTMuMDA5OS0xLjMzNTUtNC45NDM0LTQuNzA0NC02LjQ1ODRsLTEuNDM1MS0uNjc3NzJjLTEuOTkzNC0uODg3MDgtMi42NzExLTEuMzc1NDMtMi42NzExLTIuMzUyMTYgMC0xLjA1NjQ3LjkyNjktMS44NzM3NyAyLjcxMDktMS44NzM3N1oiLz48L3N2Zz4=";
-const PAYPAL_LOGO = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0OCA0OCI+DQogIDxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjQ1IiBkPSJNMTYuMTMgMzkuMTE1SDguMzY3YTEuMDQxIDEuMDQxIDAgMCAxLTEuMDI2LTEuMmw1LjIzNC0zMy4xNzZhMS4yNzkgMS4yNzkgMCAwIDEgMS4yNjEtMS4wNzloMTMuMzM1YzYuMzE1IDAgMTAuOTA5IDQuNTkyIDEwLjggMTAuMTU3IDMuNzM1IDEuOTUgNS45MTUgNS45MSA1LjIzNCAxMC4yNDdhMTIuNTQ4IDEyLjU0OCAwIDAgMS0xMi4zOSAxMC42MkgyNi44OWExLjI3NSAxLjI3NSAwIDAgMC0xLjI2MSAxLjA4TDIzLjg3IDQ2LjlhMS4yNzYgMS4yNzYgMCAwIDEtMS4yNjIgMS4wNzlIMTUuOTRhMS4wNCAxLjA0IDAgMCAxLTEuMDI2LTEuMTk5bDEuMjE1LTcuNjY0di0uMDAyWiIvPg0KICA8cGF0aCBmaWxsPSIjZmZmIiBmaWwsLW9wYWNpdHk9Ii40NSIgZD0iTTM3Ljk3MyAxMy44MTdhMTEuNjY4IDExLjY2OCAwIDAgMC01LjQ0MS0xLjI5NEgyMS40MTRhMS4yNzcgMS4yNzcgMCAwIDAtMS4yNjEgMS4wOGwtMi4wOTggMTMuMjkzLjAwNi0uMDM1YTEuMjggMS4yOCAwIDAgMSAxLjI1Ni0xLjA0Mmg2LjE0NGExMi41NTMgMTIuNTUzIDAgMCAwIDEyLjM5LTEwLjYyYy4wNzEtLjQ1Ny4xMTMtLjkyLjEyMi0xLjM4MloiLz4NCiAgPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE2LjEzMyAzOS4xMTVIOC4zNjhhMS4wNDEgMS4wNDEgMCAwIDEtMS4wMjYtMS4ybDUuMjM0LTMzLjE3NmExLjI3OSAxLjI3OSAwIDAgMSAxLjI2MS0xLjA3OWgxMy4zMzVjNi4zMTUgMCAxMC45MDkgNC41OTIgMTAuODAxIDEwLjE1N2ExMS42NyAxMS42NyAwIDAgMC01LjQ0MS0xLjI5NEgyMS40MTRhMS4yNzcgMS4yNzcgMCAwIDAtMS4yNjEgMS4wOGwtMi4wOTggMTMuMjkzLjAwNi0uMDM1LTEuOTI4IDEyLjI1NFoiLz4NCjwvc3ZnPg==";
+const WISE_LOGO =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDYgMjQiIGZpbGw9Im5vbmUiPjxwYXRoIGZpbGw9IiMxNjMzMDAiIGQ9Ik01OC43Mzc3LjM1ODgwM2g2LjQ5ODJMNjEuOTY2OCAyMy42ODFoLTYuNDk4M0w1OC43Mzc3LjM1ODgwM1ptLTguMTkyMiAwTDQ2LjE2MDIgMTMuNzk0IDQ0LjI0NjUuMzU4ODAzaC00LjU0NDhMMzMuOTYwOCAxMy43NTQxIDMzLjI0MzMuMzU4ODAzaC02LjI5OTFMMjkuMTM2OSAyMy42ODFoNS4yMjI2TDQwLjgxOCA4LjkzMDIyIDQzLjA5MDQgMjMuNjgxaDUuMTQyOEw1Ni43MjQ5LjM1ODgwM2gtNi4xNzk0Wk0xMDUuMTAzIDEzLjkxMzZIODkuNjc0NGMuMDc5OCAzLjAyOTkgMS44OTM3IDUuMDIzMyA0LjU2NDggNS4wMjMzIDIuMDEzMyAwIDMuNjA4LTEuMDc2NSA0Ljg0MzktMy4xMjk2bDUuMjA3OSAyLjM2NzRDMTAyLjUwMSAyMS43MDE3IDk4LjcyOSAyNCA5NC4wNzk4IDI0IDg3Ljc0MSAyNCA4My41MzUgMTkuNzM0MiA4My41MzUgMTIuODc3MSA4My41MzUgNS4zNDIyMSA4OC40Nzg0IDAgOTUuNDU1MiAwYzYuMTM5OCAwIDEwLjAwNjggNC4xNDYxOCAxMC4wMDY4IDEwLjYwNDYgMCAxLjA3NjUtLjEyIDIuMTUyOC0uMzU5IDMuMzA5Wm0tNS43ODA3LTQuNDY1MTJjMC0yLjcxMDk1LTEuNTE1LTQuNDI1MjUtMy45NDY4LTQuNDI1MjUtMi41MTE3IDAtNC41ODQ4IDEuNzk0MDItNS4xNDMgNC40MjUyNWg5LjA4OThaTTYuNjMzMjYgNy4zODY4NSAwIDE1LjEzODloMTEuODQ0bDEuMzMwOS0zLjY1NTNIOC4wOTk2NWwzLjEwMTA1LTMuNTg1NTUuMDEtLjA5NTExTDkuMTk0MjQgNC4zMzE5aDkuMDcxOTZsLTcuMDMyMyAxOS4zNDkyaDQuODEyNEwyNC41MzguMzU4ODIzSDIuNjAwMjFMNi42MzMyNiA3LjM4Njg1Wm02OS4xNjc0NC0yLjM2MzZjMi4yOTIzIDAgNC4zMDEgMS4yMzI3MyA2LjA1NTEgMy4zNDU2NWwuOTIxNi02LjU3NDg4QzgxLjE0MjkuNjg3NzA3IDc4LjkzMDMgMCA3NiAwYy01LjgyMDUgMC05LjA4OTYgMy40MDg2NS05LjA4OTYgNy43MzQyMSAwIDIuOTk5OTkgMS42NzQ0IDQuODMzODkgNC40MjUyIDYuMDE5ODlsMS4zMTU2LjU5OGMyLjQ1MTggMS4wNDY2IDMuMTA5NyAxLjU2NDkgMy4xMDk3IDIuNjcxMiAwIDEuMTQ2MS0xLjEwNjQgMS44NzM3LTIuNzkwNyAxLjg3MzctMi43ODA4LjAxLTUuMDMzMi0xLjQxNTMtNi43Mjc2LTMuODQ3MmwtLjkzOSA2LjY5OUM2Ny4yMzMyIDIzLjIyMDEgNjkuNzA2NyAyNCA3Mi45NzAyIDI0YzUuNTMxNSAwIDguOTMwMi0zLjE4OTQgOC45MzAyLTcuNjE0NyAwLTMuMDA5OS0xLjMzNTUtNC45NDM0LTQuNzA0NC02LjQ1ODRsLTEuNDM1MS0uNjc3NzJjLTEuOTkzNC0uODg3MDgtMi42NzExLTEuMzc1NDMtMi42NzExLTIuMzUyMTYgMC0xLjA1NjQ3LjkyNjktMS44NzM3NyAyLjcxMDktMS44NzM3N1oiLz48L3N2Zz4=";
+const PAYPAL_LOGO =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0OCA0OCI+DQogIDxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjQ1IiBkPSJNMTYuMTMgMzkuMTE1SDguMzY3YTEuMDQxIDEuMDQxIDAgMCAxLTEuMDI2LTEuMmw1LjIzNC0zMy4xNzZhMS4yNzkgMS4yNzkgMCAwIDEgMS4yNjEtMS4wNzloMTMuMzM1YzYuMzE1IDAgMTAuOTA5IDQuNTkyIDEwLjggMTAuMTU3IDMuNzM1IDEuOTUgNS45MTUgNS45MSA1LjIzNCAxMC4yNDdhMTIuNTQ4IDEyLjU0OCAwIDAgMS0xMi4zOSAxMC42MkgyNi44OWExLjI3NSAxLjI3NSAwIDAgMC0xLjI2MSAxLjA4TDIzLjg3IDQ2LjlhMS4yNzYgMS4yNzYgMCAwIDEtMS4yNjIgMS4wNzlIMTUuOTRhMS4wNCAxLjA0IDAgMCAxLTEuMDI2LTEuMTk5bDEuMjE1LTcuNjY0di0uMDAyWiIvPg0KICA8cGF0aCBmaWxsPSIjZmZmIiBmaWwsLW9wYWNpdHk9Ii40NSIgZD0iTTM3Ljk3MyAxMy44MTdhMTEuNjY4IDExLjY2OCAwIDAgMC01LjQ0MS0xLjI5NEgyMS40MTRhMS4yNzcgMS4yNzcgMCAwIDAtMS4yNjEgMS4wOGwtMi4wOTggMTMuMjkzLjAwNi0uMDM1YTEuMjggMS4yOCAwIDAgMSAxLjI1Ni0xLjA0Mmg2LjE0NGExMi41NTMgMTIuNTUzIDAgMCAwIDEyLjM5LTEwLjYyYy4wNzEtLjQ1Ny4xMTMtLjkyLjEyMi0xLjM4MloiLz4NCiAgPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE2LjEzMyAzOS4xMTVIOC4zNjhhMS4wNDEgMS4wNDEgMCAwIDEtMS4wMjYtMS4ybDUuMjM0LTMzLjE3NmExLjI3OSAxLjI3OSAwIDAgMSAxLjI2MS0xLjA3OWgxMy4zMzVjNi4zMTUgMCAxMC45MDkgNC41OTIgMTAuODAxIDEwLjE1N2ExMS42NyAxMS42NyAwIDAgMC01LjQ0MS0xLjI5NEgyMS40MTRhMS4yNzcgMS4yNzcgMCAwIDAtMS4yNjEgMS4wOGwtMi4wOTggMTMuMjkzLjAwNi0uMDM1LTEuOTI4IDEyLjI1NFoiLz4NCjwvc3ZnPg==";
 
 const styles = StyleSheet.create({
   page: {
@@ -284,7 +294,14 @@ function StatusBadge({ status }) {
     },
   };
   const c = config[status] || config.sent;
-  const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
+  const label =
+    status === "overdue"
+      ? "Overdue"
+      : status === "paid"
+        ? "Paid"
+        : status === "draft"
+          ? "Draft"
+          : "Sent";
   return (
     <View
       style={{
@@ -330,7 +347,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   const items = invoice.items || [];
   const subtotal = items.reduce(
     (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
-    0
+    0,
   );
   const tax = Number(invoice.tax) || 0;
   const total = Number(invoice.total) || subtotal + tax;
@@ -342,20 +359,31 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.topBar} fixed/>
+        <View style={styles.topBar} fixed />
 
-        <View style={styles.header} fixed>
+        <View style={styles.header}>
           <View style={styles.logoCol}>
             {logo && <Image style={styles.logo} src={logo} />}
           </View>
           <View style={styles.metaCol}>
-            <Text style={styles.invoiceNumber}>{esc(invoice.invoice_number)}</Text>
+            <Text style={styles.invoiceNumber}>
+              {esc(invoice.invoice_number)}
+            </Text>
             <StatusBadge status={invoice.status} />
             <View style={styles.dates}>
-              {invoice.created_at && <Text>Issued: {formatDate(invoice.created_at)}</Text>}
-              {invoice.due_date && <Text>Due: {formatDate(invoice.due_date)}</Text>}
+              {invoice.created_at && (
+                <Text>Issued: {formatDate(invoice.created_at)}</Text>
+              )}
+              {invoice.due_date && (
+                <Text>Due: {formatDate(invoice.due_date)}</Text>
+              )}
               {invoice.paid_at && (
-                <Text>Paid: <Text style={styles.dateHighlight}>{formatDate(invoice.paid_at)}</Text></Text>
+                <Text>
+                  Paid:{" "}
+                  <Text style={styles.dateHighlight}>
+                    {formatDate(invoice.paid_at)}
+                  </Text>
+                </Text>
               )}
             </View>
           </View>
@@ -374,7 +402,9 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
           <View style={[styles.partyBlock, styles.toBlock]}>
             <Text style={styles.partyLabel}>To</Text>
             <View style={[styles.partyAccent, { alignSelf: "flex-end" }]} />
-            <Text style={styles.partyName}>{esc(client?.name || "\u2014")}</Text>
+            <Text style={styles.partyName}>
+              {esc(client?.name || "\u2014")}
+            </Text>
             {client?.company && (
               <Text style={styles.partyDetail}>{esc(client.company)}</Text>
             )}
@@ -389,22 +419,42 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
         {items.length > 0 && (
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderCell, styles.cellDesc]}>Description</Text>
+              <Text style={[styles.tableHeaderCell, styles.cellDesc]}>
+                Description
+              </Text>
               <Text style={[styles.tableHeaderCell, styles.cellQty]}>Qty</Text>
-              <Text style={[styles.tableHeaderCell, styles.cellRate]}>Rate</Text>
-              <Text style={[styles.tableHeaderCell, styles.cellAmount]}>Amount</Text>
+              <Text style={[styles.tableHeaderCell, styles.cellRate]}>
+                Rate
+              </Text>
+              <Text style={[styles.tableHeaderCell, styles.cellAmount]}>
+                Amount
+              </Text>
             </View>
             {items.map((item, i) => (
-              <View key={i} style={[styles.tableRow, i % 2 === 1 && styles.tableRowAlt]}>
-                <Text style={[styles.tableCell, styles.tableCellFirst, styles.cellDesc]}>
+              <View
+                key={i}
+                style={[styles.tableRow, i % 2 === 1 && styles.tableRowAlt]}
+              >
+                <Text
+                  style={[
+                    styles.tableCell,
+                    styles.tableCellFirst,
+                    styles.cellDesc,
+                  ]}
+                >
                   {esc(item.description)}
                 </Text>
-                <Text style={[styles.tableCell, styles.cellQty]}>{item.quantity}</Text>
+                <Text style={[styles.tableCell, styles.cellQty]}>
+                  {item.quantity}
+                </Text>
                 <Text style={[styles.tableCell, styles.cellRate]}>
                   ${Number(item.rate).toFixed(2)}
                 </Text>
                 <Text style={[styles.tableCell, styles.cellAmount]}>
-                  ${((Number(item.quantity) || 0) * (Number(item.rate) || 0)).toFixed(2)}
+                  $
+                  {(
+                    (Number(item.quantity) || 0) * (Number(item.rate) || 0)
+                  ).toFixed(2)}
                 </Text>
               </View>
             ))}
