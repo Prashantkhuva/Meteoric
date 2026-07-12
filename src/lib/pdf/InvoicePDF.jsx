@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 10,
     borderWidth: 1,
-    gap: 6,
   },
   statusDot: {
     width: 5,
     height: 5,
     borderRadius: 3,
+    marginRight: 6,
   },
   statusText: {
     fontSize: 9,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f87171",
   },
   statusDraft: {
-    backgroundColor: "transparent",
+    backgroundColor: "#161616",
     borderColor: "#333333",
     color: "#999999",
   },
@@ -311,10 +311,10 @@ function formatDate(d) {
 
 function StatusBadge({ status }) {
   const colorMap = {
-    overdue: { pill: styles.statusOverdue, dot: styles.statusOverdueDot, textColor: colors.danger },
-    paid: { pill: styles.statusPaid, dot: styles.statusPaidDot, textColor: colors.success },
-    sent: { pill: styles.statusSent, dot: styles.statusSentDot, textColor: colors.accent },
-    draft: { pill: styles.statusDraft, dot: styles.statusDraftDot, textColor: "#6B6B6B" },
+    overdue: { pill: styles.statusOverdue, dot: styles.statusOverdueDot, textColor: "#f87171" },
+    paid: { pill: styles.statusPaid, dot: styles.statusPaidDot, textColor: "#4ade80" },
+    sent: { pill: styles.statusSent, dot: styles.statusSentDot, textColor: "#E8E4FF" },
+    draft: { pill: styles.statusDraft, dot: styles.statusDraftDot, textColor: "#999999" },
   };
   const label = status === "overdue" ? "Overdue" : status === "paid" ? "Paid" : status === "draft" ? "Draft" : "Sent";
   const mapped = colorMap[status] || colorMap.sent;
