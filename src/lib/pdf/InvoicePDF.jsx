@@ -317,6 +317,7 @@ function StatusBadge({ status }) {
           textTransform: "uppercase",
           letterSpacing: 1.2,
           color: c.color,
+          lineHeight: 1,
         }}
       >
         {label}
