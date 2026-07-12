@@ -58,24 +58,32 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
             )}
           </div>
 
-          <table style={{ marginBottom: "12px" }} cellPadding="0" cellSpacing="8">
-            <tbody>
-              <tr>
-                <td>
-                  <Link href={wiseUrl} style={wiseButton}>
-                    Pay with Wise
-                  </Link>
-                </td>
-                <td>
-                  <Link href={paypalUrl} style={paypalButton}>
-                    Pay with PayPal
-                  </Link>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div style={{ marginBottom: "12px" }}>
+            <Link href={wiseUrl} style={wiseButton}>
+              <span style={{ display: "inline-block", verticalAlign: "middle", marginRight: "10px" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" fill="#0a0a0a" opacity="0.15"/>
+                  <path d="M7.5 8.5L12 6l4.5 2.5L12 11 7.5 8.5z" fill="#0a0a0a"/>
+                  <path d="M12 11v6.5" stroke="#0a0a0a" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </span>
+              <span style={{ verticalAlign: "middle" }}>Pay with Wise</span>
+            </Link>
+          </div>
 
-          <div style={{ marginTop: "4px" }}>
+          <div style={{ marginBottom: "16px" }}>
+            <Link href={paypalUrl} style={paypalButton}>
+              <span style={{ display: "inline-block", verticalAlign: "middle", marginRight: "10px" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 21h2.5l1-6H8.5c-2 0-3.5-.5-4.5-2C3 11.5 3 9.5 4 8c1-1.5 3-2.5 5-2.5h4l1 6h-3c-1 0-2 .5-2.5 1.5L7 21z" fill="#ffffff"/>
+                  <path d="M13 21h2.5l1-6H14c-2 0-3.5-.5-4.5-2-.5-1-.5-3 .5-4.5.5-.8 1.5-1.5 3-1.5h5l1 6h-3c-1 0-2 .5-2.5 1.5L13 21z" fill="#ffffff" opacity="0.6"/>
+                </svg>
+              </span>
+              <span style={{ verticalAlign: "middle" }}>Pay with PayPal</span>
+            </Link>
+          </div>
+
+          <div style={{ marginBottom: "4px" }}>
             <Link href={previewUrl} style={button}>
               View Invoice
             </Link>
@@ -181,22 +189,26 @@ const button = {
 
 const wiseButton = {
   display: "inline-block",
-  padding: "12px 24px",
+  padding: "14px 28px",
   backgroundColor: "#9FE870",
   color: "#0a0a0a",
   fontSize: "14px",
   fontWeight: 700,
+  letterSpacing: "0.02em",
   textDecoration: "none",
+  borderRadius: "6px",
 };
 
 const paypalButton = {
   display: "inline-block",
-  padding: "12px 24px",
+  padding: "14px 28px",
   backgroundColor: "#0070BA",
   color: "#ffffff",
   fontSize: "14px",
   fontWeight: 700,
+  letterSpacing: "0.02em",
   textDecoration: "none",
+  borderRadius: "6px",
 };
 
 const hr = {
