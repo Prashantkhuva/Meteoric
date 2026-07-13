@@ -150,7 +150,7 @@ function Projects() {
         </div>
 
         {/* Project Grid — 2 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-16">
           {projects.map((project, i) => (
             <a
               key={project.id}
@@ -161,7 +161,7 @@ function Projects() {
             >
               {/* Image */}
               <div className="relative rounded-2xl overflow-hidden mb-5">
-                <div className={`relative aspect-video bg-gradient-to-b ${project.gradient}`}>
+                <div className={`relative aspect-[4/3] bg-gradient-to-b ${project.gradient}`}>
                   <Image
                     src={project.image}
                     alt={project.name}
@@ -171,14 +171,14 @@ function Projects() {
                     loading="lazy"
                   />
                   {/* Hover arrow */}
-                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                    <ArrowUpRight size={16} className="text-white" />
+                  <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                    <ArrowUpRight size={14} className="text-white" />
                   </div>
                 </div>
               </div>
 
               {/* Name + category */}
-              <h3 className="text-xl md:text-2xl font-semibold text-white mb-1 group-hover:text-white/80 transition-colors duration-300">
+              <h3 className="text-lg md:text-xl font-display text-white mb-1 group-hover:text-white/80 transition-colors duration-300">
                 {project.name}
               </h3>
               <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
