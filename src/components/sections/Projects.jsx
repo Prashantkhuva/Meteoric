@@ -11,7 +11,7 @@ import { projects as allProjects } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const projects = allProjects.slice(0, 4);
+const projects = allProjects.slice(0, 2);
 
 const projMainWords = "Selected Works".split(" ");
 
@@ -153,11 +153,11 @@ function Projects() {
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group block ${i % 2 === 1 ? "md:mt-24" : ""}`}
+              className={`group block ${i % 2 === 1 ? "md:mt-12" : ""}`}
             >
               {/* Image */}
               <div className="relative rounded-2xl overflow-hidden mb-5">
-                <div className={`relative aspect-[4/3] bg-gradient-to-b ${project.gradient}`}>
+                <div className={`relative aspect-video bg-gradient-to-b ${project.gradient}`}>
                   <Image
                     src={project.image}
                     alt={project.name}
