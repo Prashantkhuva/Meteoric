@@ -91,8 +91,8 @@ export default function WorkPage() {
               className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700"
             >
               {/* Image — alternating side */}
-              <div className={`relative overflow-hidden ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-                <div className={`relative aspect-video bg-gradient-to-b ${project.gradient} flex items-center justify-center`}>
+              <div className={`relative overflow-hidden bg-white/[0.03] ${i % 2 === 1 ? "lg:order-2" : ""}`}>
+                <div className="relative aspect-video">
                   <Image
                     src={project.image}
                     alt={project.name}
@@ -100,13 +100,6 @@ export default function WorkPage() {
                     className="object-contain p-6 transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     loading={i === 0 ? "eager" : "lazy"}
-                  />
-                  {/* Corner accent */}
-                  <div
-                    className="absolute top-0 left-0 w-24 h-24"
-                    style={{
-                      background: `linear-gradient(135deg, ${project.accent}22, transparent)`,
-                    }}
                   />
                 </div>
               </div>
@@ -187,10 +180,7 @@ export default function WorkPage() {
                     color: project.accent,
                   }}
                 >
-                  <div
-                    className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300"
-                    style={{ backgroundColor: project.accent }}
-                  />
+                  <span className="fill-circle" style={{ backgroundColor: project.accent }} />
                   <span className="relative z-10 group-hover/btn:text-black flex items-center gap-2 transition-colors duration-300">
                     View Live Project <ArrowUpRight size={15} />
                   </span>

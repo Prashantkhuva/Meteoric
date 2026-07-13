@@ -238,7 +238,7 @@ export default function AboutPage() {
                 data-cal-config='{"layout":"month_view"}'
                 className="group relative inline-flex items-center gap-2 overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-7 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02]"
               >
-                <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+                <span className="fill-circle bg-[#EAEFFF]" />
                 <span className="relative z-10 group-hover:text-black">
                   Start a Project
                 </span>
