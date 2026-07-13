@@ -93,28 +93,36 @@ function Hero() {
             data-cal-namespace="let-s-build"
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
-            className="mfb relative inline-flex items-center gap-1 px-8 py-4 rounded-full border-2 border-[#EAEFFF] overflow-hidden cursor-pointer group"
+            className="mfb relative inline-flex items-center overflow-hidden cursor-pointer group"
+            style={{ padding: "14px 6px 14px 20px", borderRadius: 999, border: "none", background: "#070707" }}
           >
             <style>{`
               .mfb { perspective: 400px; }
-              .mfb .mfb-text { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 0.25rem; font-size: 14px; font-weight: 600; color: #EAEFFF; }
-              .mfb .mfb-text-default { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(1); }
-              .mfb .mfb-text-hover { position: absolute; inset: 0; display: inline-flex; align-items: center; gap: 0.25rem; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(0.1); opacity: 0; }
-              .mfb .mfb-dot { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border-radius: 9999px; background: #EAEFFF; transform: translate(-50%, -50%) scale(1); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
-              .mfb .mfb-arrow { position: relative; z-index: 2; opacity: 0; transform: rotate(-90deg) scale(0.5); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); color: #070707; }
-              .mfb:hover .mfb-text-default { transform: scale(0.1); }
-              .mfb:hover .mfb-text-hover { transform: scale(1); opacity: 1; }
-              .mfb:hover .mfb-dot { transform: translate(-50%, -50%) scale(60); }
-              .mfb:hover .mfb-arrow { opacity: 1; transform: rotate(0deg) scale(1); }
+              .mfb-text-wrap { position: relative; z-index: 2; height: 1.2em; overflow: hidden; margin-right: 4px; }
+              .mfb-label { display: flex; align-items: center; height: 1.2em; font-size: 15px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+              .mfb-label-default { color: #EAEFFF; transform: translateY(0); opacity: 1; }
+              .mfb-label-hover { position: absolute; inset: 0; color: #070707; transform: translateY(110%); opacity: 0; }
+              .mfb-dot-area { position: relative; z-index: 2; display: flex; align-items: center; padding: 0 10px 0 6px; }
+              .mfb-dot { width: 8px; height: 8px; border-radius: 9999px; background: #EAEFFF; position: relative; z-index: 2; transition: opacity 0.3s ease; }
+              .mfb-expander { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border-radius: 9999px; background: #EAEFFF; transform: translate(-50%, -50%); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
+              .mfb-arrow { width: 18px; height: 18px; color: #EAEFFF; opacity: 0; transform: rotate(-90deg) scale(0.5); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 2; flex-shrink: 0; }
+              .mfb:hover .mfb-label-default { transform: translateY(-110%); opacity: 0; }
+              .mfb:hover .mfb-label-hover { transform: translateY(0); opacity: 1; }
+              .mfb:hover .mfb-expander { width: 600px; height: 600px; }
+              .mfb:hover .mfb-dot { opacity: 0; }
+              .mfb:hover .mfb-arrow { opacity: 1; transform: rotate(0deg) scale(1); color: #070707; }
             `}</style>
-            <span className="mfb-dot" />
-            <span className="mfb-text">
-              <span className="mfb-text-default">Book a Free Strategy Call</span>
-              <span className="mfb-text-hover">Book a Free Strategy Call</span>
+            <span className="mfb-text-wrap">
+              <span className="mfb-label mfb-label-default">Book a Free Strategy Call</span>
+              <span className="mfb-label mfb-label-hover">Book a Free Strategy Call</span>
             </span>
-            <svg className="mfb-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 17L17 7" /><path d="M7 7h10v10" />
-            </svg>
+            <span className="mfb-dot-area">
+              <span className="mfb-expander" />
+              <span className="mfb-dot" />
+              <svg className="mfb-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M7 17L17 7" /><path d="M7 7h10v10" />
+              </svg>
+            </span>
           </a>
 
           {/* Secondary CTA */}
