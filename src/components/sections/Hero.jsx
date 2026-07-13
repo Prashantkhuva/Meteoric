@@ -95,11 +95,15 @@ function Hero() {
             data-cal-namespace="let-s-build"
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
-            className="relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] group"
+            className="mfb relative inline-flex items-center border-2 border-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer"
             onMouseEnter={() => setCtaHovered(true)}
             onMouseLeave={() => setCtaHovered(false)}
           >
-            <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+            <style>{`
+              .mfb-fill { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: #EAEFFF; border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; pointer-events: none; }
+              .mfb:hover .mfb-fill { transform: translate(-50%, -50%) scale(80); }
+            `}</style>
+            <span className="mfb-fill" />
             <span className="relative z-10">
               <StaggerText hovered={ctaHovered} hoverColor="#070707">
                 {"Book a Free Strategy Call"}

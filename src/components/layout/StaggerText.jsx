@@ -37,8 +37,8 @@ export default function StaggerText({ children, hoverColor, hovered: externalHov
         {...rest}
       >
         {chars.map((char, i) => {
-          const delay = `${i * 35}ms`;
-          const dur = "320ms";
+          const delay = `${i * 20}ms`;
+          const dur = "220ms";
           const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
           const wrap = { display: "inline-block", position: "relative", height: "1.25em", overflow: "hidden", verticalAlign: "top" };
           if (char === " ") Object.assign(wrap, { width: "0.35em", minWidth: "0.35em" });
