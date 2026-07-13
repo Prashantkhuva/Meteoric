@@ -19,6 +19,7 @@ const pageTitles = {
   "/admin/bank-accounts": "Bank Accounts",
   "/admin/compose": "Compose Email",
   "/admin/sent-emails": "Sent Emails",
+  "/admin/settings": "Settings",
 };
 
 export function AdminShell({ children }) {

@@ -14,6 +14,7 @@ import {
   Receipt,
   PenSquare,
   Mail,
+  Settings,
   LogOut,
   X,
 } from "lucide-react";
@@ -34,6 +35,7 @@ const links = [
   { href: "/admin/cal-bookings", label: "Bookings", icon: Calendar },
   { href: "/admin/compose", label: "Compose", icon: PenSquare },
   { href: "/admin/sent-emails", label: "Sent Emails", icon: Mail },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
