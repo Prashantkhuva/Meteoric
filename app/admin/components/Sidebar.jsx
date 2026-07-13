@@ -17,12 +17,15 @@ import {
   Settings,
   LogOut,
   X,
+  ChevronRight,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
 import Logo from "@/components/sections/Logo";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+
+const STORAGE_KEY = "meteo_sidebar_collapsed";
 
 const sections = [
   {
@@ -64,9 +67,56 @@ const bottomLinks = [
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
+function loadCollapsed() {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return new Set(JSON.parse(raw));
+  } catch {
+    // ignore parse errors
+  }
+  return new Set();
+}
+
+function saveCollapsed(set) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+  } catch {
+    // ignore storage errors
+  }
+}
+
 export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const pathname = usePathname();
   const mobileTrapRef = useFocusTrap(mobileOpen);
+  const [collapsed, setCollapsed] = useState(() => {
+    const saved = loadCollapsed();
+    // Auto-expand any section that contains the current active link
+    sections.forEach((section, i) => {
+      if (section.label && section.items.some((item) => pathname === item.href)) {
+        saved.delete(i);
+      }
+    });
+    return saved;
+  });
+
+  const isSectionActive = useCallback(
+    (section) => section.items.some((item) => pathname === item.href),
+    [pathname]
+  );
+
+  // Persist collapsed state
+  useEffect(() => {
+    saveCollapsed(collapsed);
+  }, [collapsed]);
+
+  function toggleSection(index) {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index); else next.add(index);
+      return next;
+    });
+  }
 
   useEffect(() => {
     function handleKey(e) {
@@ -85,40 +135,99 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
       </div>
 
       <div className="flex-1 py-3 px-2.5 overflow-y-auto">
-        {sections.map((section, si) => (
-          <div key={si} className={si > 0 ? "mt-4" : ""}>
-            {section.label && (
-              <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/20">
-                {section.label}
-              </p>
-            )}
-            <div className="space-y-0.5">
-              {section.items.map((link) => {
-                const active = pathname === link.href;
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={onMobileClose}
-                    className={cn(
-                      "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
-                      active
-                        ? "bg-[#EAEFFF]/[0.06] text-[#EAEFFF]"
-                        : "text-white/40 hover:text-white/65 hover:bg-white/[0.025]"
-                    )}
+        {sections.map((section, si) => {
+          const isCollapsed = collapsed.has(si);
+          const active = isSectionActive(section);
+          const isSingle = !section.label;
+
+          if (isSingle) {
+            return (
+              <div key={si} className="mb-2">
+                {section.items.map((link) => {
+                  const linkActive = pathname === link.href;
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={onMobileClose}
+                      className={cn(
+                        "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
+                        linkActive
+                          ? "bg-[#EAEFFF]/[0.06] text-[#EAEFFF]"
+                          : "text-white/40 hover:text-white/65 hover:bg-white/[0.025]"
+                      )}
+                    >
+                      {linkActive && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
+                      )}
+                      <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} />
+                      <span>{link.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            );
+          }
+
+          return (
+            <div key={si} className={si > 0 ? "mt-1" : ""}>
+              <button
+                onClick={() => toggleSection(si)}
+                className={cn(
+                  "w-full flex items-center justify-between px-3 py-[5px] text-[10px] font-semibold uppercase tracking-[0.12em] rounded-md transition-colors",
+                  active ? "text-[#EAEFFF]/50 hover:text-[#EAEFFF]/70" : "text-white/20 hover:text-white/35 hover:bg-white/[0.015]"
+                )}
+              >
+                <span>{section.label}</span>
+                <motion.span
+                  animate={{ rotate: isCollapsed ? 0 : 90 }}
+                  transition={{ duration: 0.15 }}
+                  className="opacity-50"
+                >
+                  <ChevronRight size={10} />
+                </motion.span>
+              </button>
+              <AnimatePresence initial={false}>
+                {!isCollapsed && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    className="overflow-hidden"
                   >
-                    {active && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
-                    )}
-                    <Icon size={15} strokeWidth={active ? 2 : 1.5} />
-                    <span>{link.label}</span>
-                  </Link>
-                );
-              })}
+                    <div className="space-y-0.5 pb-1">
+                      {section.items.map((link) => {
+                        const linkActive = pathname === link.href;
+                        const Icon = link.icon;
+                        return (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={onMobileClose}
+                            className={cn(
+                              "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
+                              linkActive
+                                ? "bg-[#EAEFFF]/[0.06] text-[#EAEFFF]"
+                                : "text-white/40 hover:text-white/65 hover:bg-white/[0.025]"
+                            )}
+                          >
+                            {linkActive && (
+                              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
+                            )}
+                            <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} />
+                            <span>{link.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="border-t border-white/[0.04] shrink-0">

@@ -68,7 +68,7 @@ export function AdminShell({ children }) {
 
   return (
     <ToastProvider>
-      <div className="flex min-h-dvh bg-[#070707]">
+      <div className="flex h-dvh overflow-hidden bg-[#070707]">
         <div className="fixed inset-0 pointer-events-none" aria-hidden="true">
           <div
             className="absolute inset-0 opacity-[0.025]"
