@@ -495,7 +495,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
             {tax > 0 && (
               <View style={styles.totalRow}>
                 <Text>Tax</Text>
-                <Text>${tax.toFixed(2)}</Text>
+                <Text>{sym}{tax.toFixed(2)}</Text>
               </View>
             )}
             <View style={styles.totalRowFinal}>

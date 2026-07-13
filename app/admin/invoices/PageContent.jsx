@@ -844,7 +844,13 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
   const [items, setItems] = useState(
     invoice?.items?.length ? invoice.items : [{ description: "", quantity: 1, rate: 0 }]
   );
-  const [tax, setTax] = useState(invoice?.tax || 0);
+  const [taxRate, setTaxRate] = useState(() => {
+    if (invoice?.tax && invoice?.items) {
+      const sub = invoice.items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
+      return sub > 0 ? (Number(invoice.tax) / sub) * 100 : 0;
+    }
+    return 0;
+  });
   const [currency, setCurrency] = useState(invoice?.currency || "USD");
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [bankAccountId, setBankAccountId] = useState(invoice?.bank_account_id || "");
@@ -886,7 +892,8 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
   }, [open, onClose]);
 
   const subtotal = items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
-  const total = subtotal + Number(tax);
+  const taxAmount = subtotal * (Number(taxRate) / 100);
+  const total = subtotal + taxAmount;
 
   function addItem() {
     setItems((prev) => [...prev, { description: "", quantity: 1, rate: 0 }]);
@@ -905,7 +912,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
     setSubmitting(true);
     const fd = new FormData(e.target);
     fd.set("items", JSON.stringify(items.filter((i) => i.description.trim())));
-    fd.set("tax", String(tax));
+    fd.set("tax", String(taxAmount.toFixed(2)));
     fd.set("currency", currency);
     fd.set("bank_account_id", bankAccountId);
     if (invoice) fd.set("id", invoice.id);
@@ -1055,14 +1062,22 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-xs text-white/30">Tax</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={tax}
-                  onChange={(e) => setTax(Number(e.target.value))}
-                  className="w-28 bg-transparent text-sm text-white/80 text-right outline-none border-b border-white/[0.06]"
-                />
+                <div className="relative w-28">
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.5"
+                    value={taxRate || ""}
+                    onChange={(e) => setTaxRate(Number(e.target.value))}
+                    placeholder="0"
+                    className="w-full bg-transparent text-sm text-white/80 text-right outline-none border-b border-white/[0.06] pr-5"
+                  />
+                  <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs text-white/30">%</span>
+                </div>
+                {taxAmount > 0 && (
+                  <span className="text-xs text-white/25 tabular-nums w-20 text-right">{currencySymbol}{taxAmount.toFixed(2)}</span>
+                )}
               </div>
               <div className="flex items-center gap-4 text-sm font-semibold border-t border-white/[0.06] pt-1.5">
                 <span className="text-xs text-white/50">Total</span>
