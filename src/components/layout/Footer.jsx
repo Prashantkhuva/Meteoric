@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense } from "react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import StaggerText from "./StaggerText";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -38,13 +39,16 @@ export default function Footer() {
 
             <button
               onClick={() => setIsOpen(true)}
-              className="group mt-12 inline-flex items-center gap-2 overflow-hidden border border-white/20 text-white px-7 py-3.5 rounded-full text-sm font-medium transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
+              className="group relative mt-12 inline-flex items-center gap-2 overflow-hidden border border-white/20 text-white px-7 py-3.5 rounded-full text-sm font-medium transition-all duration-300 hover:border-transparent hover:scale-[1.02]"
             >
-              Start a Project
-              <ArrowUpRight
-                size={16}
-                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
+              <span className="fill-circle bg-white" />
+              <span className="relative z-10 flex items-center gap-2 group-hover:text-black transition-colors duration-300">
+                <StaggerText hoverColor="#000">Start a Project</StaggerText>
+                <ArrowUpRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </span>
             </button>
           </div>
 
