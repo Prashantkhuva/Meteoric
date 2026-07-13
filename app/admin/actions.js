@@ -1322,6 +1322,18 @@ export async function getSentEmails(page = 1, pageSize = 15) {
   }
 }
 
+export async function deleteSentEmail(id) {
+  try {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("sent_emails").delete().eq("id", id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/sent-emails");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete email" };
+  }
+}
+
 // ─── Bank Accounts ────────────────────────────────────────────────────────────
 
 export async function getBankAccounts() {

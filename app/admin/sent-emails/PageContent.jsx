@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSentEmails } from "../actions";
+import { getSentEmails, deleteSentEmail } from "../actions";
 import { Pagination } from "../components/Pagination";
+import { BulkActionBar } from "../components/BulkActionBar";
+import { ConfirmDialog } from "../components/ConfirmDialog";
+import Checkbox from "../components/Checkbox";
+import { useToast } from "../components/ToastContext";
 import { Mail, Paperclip, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,28 +25,72 @@ function formatTime(dateStr) {
 }
 
 export default function SentEmailsPageContent() {
+  const addToast = useToast();
   const [emails, setEmails] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
+  const [selected, setSelected] = useState(new Set());
+  const [bulkConfirm, setBulkConfirm] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    const controller = new AbortController();
     getSentEmails(page, PAGE_SIZE).then((res) => {
       if (!cancelled) {
         setEmails(res.data);
         setTotal(res.total);
         setLoading(false);
+        setSelected(new Set());
       }
     });
-    return () => { cancelled = true; controller.abort(); };
+    return () => { cancelled = true; };
   }, [page]);
 
   const toggleExpand = (id) => {
     setExpanded(expanded === id ? null : id);
   };
+
+  function toggleSelect(id) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === emails.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(emails.map((e) => e.id)));
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = [...selected];
+    setIsDeleting(true);
+    try {
+      const results = await Promise.all(ids.map((id) => deleteSentEmail(id)));
+      const errorResult = results.find((r) => r?.error);
+      if (errorResult) {
+        addToast(errorResult.error, "error");
+        return;
+      }
+      setEmails((prev) => prev.filter((e) => !ids.includes(e.id)));
+      setTotal((prev) => Math.max(0, prev - ids.length));
+      addToast(`${ids.length} email${ids.length > 1 ? "s" : ""} deleted`, "success");
+      setSelected(new Set());
+    } catch (err) {
+      addToast(err.message || "Failed to delete", "error");
+    } finally {
+      setBulkConfirm(null);
+      setIsDeleting(false);
+    }
+  }
+
+  const allSelected = emails.length > 0 && selected.size === emails.length;
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
@@ -73,7 +121,8 @@ export default function SentEmailsPageContent() {
       ) : (
         <div className="border border-white/[0.06] bg-[#0a0a0a] rounded-xl overflow-hidden">
           {/* Table Header */}
-          <div className="grid grid-cols-[140px_140px_1fr_1fr_80px_60px] gap-4 px-5 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium">
+          <div className="grid grid-cols-[36px_140px_140px_1fr_1fr_80px_60px] gap-3 px-4 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium items-center">
+            <Checkbox checked={allSelected} onChange={toggleSelectAll} label="Select all" />
             <span>Date</span>
             <span>From</span>
             <span>To</span>
@@ -86,16 +135,19 @@ export default function SentEmailsPageContent() {
           {emails.map((email) => (
             <div key={email.id}>
               <div
-                className="grid grid-cols-[140px_140px_1fr_1fr_80px_60px] gap-4 px-5 py-3 border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors cursor-pointer items-center"
+                className="grid grid-cols-[36px_140px_140px_1fr_1fr_80px_60px] gap-3 px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors cursor-pointer items-center"
                 onClick={() => toggleExpand(email.id)}
               >
+                <div onClick={(e) => e.stopPropagation()}>
+                  <Checkbox checked={selected.has(email.id)} onChange={() => toggleSelect(email.id)} label={`Select email ${email.subject || ""}`} />
+                </div>
                 <div>
                   <p className="text-sm text-white/60">{formatDate(email.created_at)}</p>
                   <p className="text-[10px] text-white/30">{formatTime(email.created_at)}</p>
                 </div>
                 <p className="text-sm text-white/50 truncate">{email.from_address}</p>
                 <p className="text-sm text-white/50 truncate">
-                  {email.to_addresses?.join(", ") || "—"}
+                  {email.to_addresses?.join(", ") || "\u2014"}
                 </p>
                 <p className="text-sm text-white/70 truncate">{email.subject}</p>
                 <div className="flex items-center justify-center">
@@ -105,7 +157,7 @@ export default function SentEmailsPageContent() {
                       {email.attachments.length}
                     </span>
                   ) : (
-                    <span className="text-white/15">—</span>
+                    <span className="text-white/15">\u2014</span>
                   )}
                 </div>
                 <div className="flex items-center justify-center">
@@ -160,6 +212,23 @@ export default function SentEmailsPageContent() {
           <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={setPage} />
         </div>
       )}
+
+      <BulkActionBar
+        selectedCount={selected.size}
+        onClear={() => setSelected(new Set())}
+        onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
+      />
+
+      <ConfirmDialog
+        open={bulkConfirm === "delete"}
+        title="Delete emails"
+        message={`Are you sure you want to delete ${selected.size} email${selected.size !== 1 ? "s" : ""}? This action cannot be undone.`}
+        confirmLabel="Delete All"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => { if (!isDeleting) setBulkConfirm(null); }}
+      />
     </div>
   );
 }
