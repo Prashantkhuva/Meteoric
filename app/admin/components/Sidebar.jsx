@@ -134,7 +134,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
         </Link>
       </div>
 
-      <div className="flex-1 py-3 px-2.5 overflow-y-auto overscroll-contain">
+      <div className="flex-1 py-3 px-2.5 overflow-y-auto">
         {sections.map((section, si) => {
           const isCollapsed = collapsed.has(si);
           const active = isSectionActive(section);
@@ -284,7 +284,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-56 xl:w-60 h-full border-r border-white/[0.04] bg-[#070707] shrink-0">
+      <aside className="hidden lg:flex lg:flex-col lg:w-56 xl:w-60 h-full overflow-hidden border-r border-white/[0.04] bg-[#070707] shrink-0">
         {nav}
       </aside>
 
