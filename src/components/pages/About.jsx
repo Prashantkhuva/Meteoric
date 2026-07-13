@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import StaggerText from "@/components/layout/StaggerText";
 
 const values = [
   {
@@ -239,8 +240,8 @@ export default function AboutPage() {
                 className="group relative inline-flex items-center gap-2 overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-7 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02]"
               >
                 <span className="fill-circle bg-[#EAEFFF]" />
-                <span className="relative z-10 group-hover:text-black">
-                  Start a Project
+                <span className="relative z-10">
+                  <StaggerText hoverColor="#000">Start a Project</StaggerText>
                 </span>
               </a>
             </div>

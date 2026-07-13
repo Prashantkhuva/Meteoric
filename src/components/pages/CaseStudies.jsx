@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Timer, Target, Users, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import StaggerText from "@/components/layout/StaggerText";
 import { caseStudies } from "@/data/case-studies";
 
 const iconMap = {
@@ -137,8 +138,9 @@ export default function CaseStudiesPage() {
                   {/* CTA */}
                   <a href={cs.link} target="_blank" rel="noopener noreferrer" className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5" style={{ border: `1.5px solid ${cs.accent}`, color: cs.accent }}>
                     <span className="fill-circle" style={{ backgroundColor: cs.accent }} />
-                    <span className="relative z-10 group-hover/btn:text-black flex items-center gap-2 transition-colors duration-300">
-                      View Live Project <ArrowUpRight size={15} />
+                    <span className="relative z-10 flex items-center gap-2">
+                      <StaggerText hoverColor="#000">View Live Project</StaggerText>
+                      <ArrowUpRight size={15} />
                     </span>
                   </a>
                 </div>

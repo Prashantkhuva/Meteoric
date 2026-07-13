@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -92,12 +93,13 @@ export default function WorkPage() {
             >
               {/* Image — alternating side */}
               <div className={`relative overflow-hidden bg-white/[0.03] ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-                <div className="relative aspect-video">
+                <div className="relative w-full h-full min-h-[20rem] flex items-center justify-center p-8">
                   <Image
                     src={project.image}
                     alt={project.name}
-                    fill
-                    className="object-contain p-6 transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    width={640}
+                    height={360}
+                    className="w-full h-auto max-h-full object-contain transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     loading={i === 0 ? "eager" : "lazy"}
                   />
@@ -181,8 +183,9 @@ export default function WorkPage() {
                   }}
                 >
                   <span className="fill-circle" style={{ backgroundColor: project.accent }} />
-                  <span className="relative z-10 group-hover/btn:text-black flex items-center gap-2 transition-colors duration-300">
-                    View Live Project <ArrowUpRight size={15} />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <StaggerText hoverColor="#000">View Live Project</StaggerText>
+                    <ArrowUpRight size={15} />
                   </span>
                 </a>
               </div>

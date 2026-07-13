@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Code, Database, Palette, Rocket, Users, BarChart } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
+import StaggerText from "@/components/layout/StaggerText";
 
 const services = [
   {
@@ -112,8 +113,9 @@ export default function SaaSDevelopmentPage() {
             className="group relative inline-flex items-center gap-2 overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-7 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02]"
           >
             <span className="fill-circle bg-[#EAEFFF]" />
-            <span className="relative z-10 group-hover:text-black flex items-center gap-2">
-              Start Your SaaS Project <ArrowUpRight size={15} />
+            <span className="relative z-10 flex items-center gap-2">
+              <StaggerText hoverColor="#000">Start Your SaaS Project</StaggerText>
+              <ArrowUpRight size={15} />
             </span>
           </a>
           <Link
