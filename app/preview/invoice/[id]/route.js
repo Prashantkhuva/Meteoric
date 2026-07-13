@@ -151,8 +151,8 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 .footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
 .bank-section { margin-top: 24px; padding: 16px; background: #111111; border: 1px solid #222222; }
 .bank-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 10px; }
-.bank-line { font-size: 12px; color: #b3b3b3; line-height: 1.8; }
-.bank-line strong { color: #777777; }
+.bank-line { font-size: 12px; color: #e0e0e0; line-height: 1.8; }
+.bank-line strong { color: #aaaaaa; }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
   .toolbar { flex-wrap: wrap; gap: 8px; }

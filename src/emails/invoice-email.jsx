@@ -240,12 +240,12 @@ const bankTitle = {
 
 const bankLine = {
   fontSize: "12px",
-  color: "#b3b3b3",
+  color: "#e0e0e0",
   lineHeight: "1.8",
   margin: 0,
 };
 
 const bankLabel = {
-  color: "#777777",
+  color: "#aaaaaa",
   fontWeight: 600,
 };
