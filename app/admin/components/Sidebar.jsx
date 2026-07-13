@@ -134,7 +134,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
         </Link>
       </div>
 
-      <div className="flex-1 py-3 px-2.5 overflow-y-auto">
+      <div className="flex-1 py-3 px-2.5 overflow-y-auto overscroll-contain">
         {sections.map((section, si) => {
           const isCollapsed = collapsed.has(si);
           const active = isSectionActive(section);
