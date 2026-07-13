@@ -203,6 +203,7 @@ function Projects() {
       {/* Section header */}
       <div className="max-w-7xl mx-auto mb-16">
         <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
+          <span className="font-display text-white/30 not-italic mr-2">04</span>
           Selected Work
         </p>
         <h2 className="text-4xl md:text-5xl font-semibold text-white leading-tight">

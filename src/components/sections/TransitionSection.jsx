@@ -91,6 +91,7 @@ export default function TransitionSection() {
           {/* TOP */}
           <div ref={headingRef} className="max-w-4xl mb-20">
             <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
+              <span className="font-display text-white/30 not-italic mr-2">02</span>
               Beyond Just Development
             </p>
 

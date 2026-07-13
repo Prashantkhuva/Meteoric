@@ -150,6 +150,7 @@ export default function TestimonialsSection() {
               viewport={{ once: true }}
               className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
             >
+              <span className="font-display text-white/30 not-italic mr-2">05</span>
               Client Stories
             </motion.p>
 

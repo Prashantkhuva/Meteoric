@@ -100,6 +100,7 @@ export default function ProcessSection() {
         {/* TOP */}
         <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
           <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+            <span className="font-display text-white/30 not-italic mr-2">03</span>
             Working Together
           </p>
 
@@ -167,7 +168,7 @@ export default function ProcessSection() {
 
                 {/* CONTENT */}
                 <div className="min-w-0 pb-10 sm:pb-12 md:pb-16">
-                  <h3 className="mb-5 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:mb-8 md:text-5xl">
+                  <h3 className="mb-5 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:mb-8 md:text-5xl font-display">
                     {item.title}
                   </h3>
 

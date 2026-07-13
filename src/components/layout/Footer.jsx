@@ -20,10 +20,11 @@ export default function Footer() {
           {/* ── CTA BLOCK ── */}
           <div className="py-24 sm:py-28 lg:py-32 border-b border-white/5">
             <p className="text-white/50 uppercase tracking-[0.3em] text-xs mb-10">
+              <span className="font-display text-white/30 not-italic mr-2">06</span>
               Start a Project
             </p>
 
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.0] tracking-tight text-white max-w-4xl">
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.0] tracking-tight text-white max-w-4xl font-display">
               Ready to launch?
               <span className="block text-white/25 mt-2 font-secondary-italic">
                 Let's make it happen.

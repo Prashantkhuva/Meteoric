@@ -13,51 +13,57 @@ export default function SmoothScroll() {
 
     if (prefersReduced) return;
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      smoothWheel: true,
-      wheelMultiplier: 0.8,
-      touchMultiplier: 1.5,
-      infinite: false,
-    });
-    lenisRef.current = lenis;
+    // ponytail: dynamic import avoids SSR crash — gsap + ScrollTrigger only exist in browser
+    let cleanupScrollTrigger = () => {};
 
-    function handleAnchorClick(event) {
-      const link = event.target.closest('a[href*="#"]');
+    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
+      ([{ default: gsap }, { ScrollTrigger }]) => {
+        gsap.registerPlugin(ScrollTrigger);
 
-      if (!link) return;
+        const lenis = new Lenis({
+          duration: 1.2,
+          smoothWheel: true,
+          wheelMultiplier: 0.8,
+          touchMultiplier: 1.5,
+          infinite: false,
+        });
+        lenisRef.current = lenis;
 
-      const raw = link.getAttribute("href");
-      const hashIndex = raw.indexOf("#");
-      const hash = raw.slice(hashIndex);
-      const linkPath = raw.slice(0, hashIndex) || "/";
+        // Wire Lenis ↔ ScrollTrigger so pin/scrub work with smooth scroll
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+          lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
 
-      if (linkPath !== window.location.pathname) return;
+        function handleAnchorClick(event) {
+          const link = event.target.closest('a[href*="#"]');
+          if (!link) return;
+          const raw = link.getAttribute("href");
+          const hashIndex = raw.indexOf("#");
+          const hash = raw.slice(hashIndex);
+          const linkPath = raw.slice(0, hashIndex) || "/";
+          if (linkPath !== window.location.pathname) return;
+          const target =
+            hash === "#" ? document.body : document.querySelector(hash);
+          if (!target) return;
+          event.preventDefault();
+          lenis.scrollTo(target);
+          window.history.replaceState(null, "", raw);
+        }
 
-      const target = hash === "#" ? document.body : document.querySelector(hash);
+        document.addEventListener("click", handleAnchorClick);
 
-      if (!target) return;
-
-      event.preventDefault();
-      lenis.scrollTo(target);
-      window.history.replaceState(null, "", raw);
-    }
-
-    let frameId;
-
-    function raf(time) {
-      lenis.raf(time);
-      frameId = requestAnimationFrame(raf);
-    }
-
-    document.addEventListener("click", handleAnchorClick);
-    frameId = requestAnimationFrame(raf);
+        cleanupScrollTrigger = () => {
+          document.removeEventListener("click", handleAnchorClick);
+          lenis.destroy();
+          lenisRef.current = null;
+        };
+      },
+    );
 
     return () => {
-      document.removeEventListener("click", handleAnchorClick);
-      cancelAnimationFrame(frameId);
-      lenis.destroy();
-      lenisRef.current = null;
+      cleanupScrollTrigger();
     };
   }, []);
 
