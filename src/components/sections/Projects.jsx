@@ -160,13 +160,13 @@ function Projects() {
               className={`group block ${i % 2 === 1 ? "md:mt-12" : ""}`}
             >
               {/* Image */}
-              <div className="relative rounded-2xl overflow-hidden mb-5">
-                <div className={`relative aspect-[4/3] bg-gradient-to-b ${project.gradient}`}>
+              <div className="relative rounded-2xl overflow-hidden mb-5 bg-white/[0.03]">
+                <div className="relative aspect-[16/10]">
                   <Image
                     src={project.image}
                     alt={project.name}
                     fill
-                    className="object-contain transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    className="object-contain p-4 transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
