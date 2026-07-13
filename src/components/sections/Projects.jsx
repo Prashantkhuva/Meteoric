@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import StaggerText from "@/components/layout/StaggerText";
 import { projects as allProjects } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -129,7 +130,7 @@ function Projects() {
                 <span key={i} className="gsap-proj-word inline-block">{w} </span>
               ))}
             </p>
-            <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-white [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
+            <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight text-white [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
               {projMainWords.map((w, i) => (
                 <span key={i} className="gsap-proj-word inline-block">{w} </span>
               ))}
@@ -138,10 +139,13 @@ function Projects() {
 
           <Link
             href="/work"
-            className="group relative overflow-hidden border border-white/20 text-white/60 px-6 py-3 rounded-full text-xs uppercase tracking-[0.2em] font-bold transition-all duration-300 hover:border-white/40 hover:text-white inline-flex items-center gap-2"
+            className="group relative inline-flex items-center gap-2 text-white/60 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300 hover:text-white"
           >
-            Explore All Work
-            <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <span className="relative inline-flex items-center gap-2">
+              <StaggerText text="Explore All Work" />
+              <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
+            <span className="absolute left-0 -bottom-1 h-px w-0 bg-white/40 group-hover:w-full transition-all duration-500" />
           </Link>
         </div>
 
@@ -204,7 +208,7 @@ function Projects() {
                   <span className="text-white/20 text-xs font-mono w-6">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-lg md:text-xl text-white/80 group-hover:text-white transition-colors duration-300">
+                  <span className="text-lg md:text-xl font-display text-white/80 group-hover:text-white transition-colors duration-300">
                     {project.name}
                   </span>
                 </div>
