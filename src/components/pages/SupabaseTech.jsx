@@ -27,11 +27,6 @@ const features = [
   },
 ];
 
-const relatedPosts = [
-  { slug: "supabase-vs-firebase-2026-comparison", title: "Supabase vs Firebase in 2026: Which Backend Should You Build On?" },
-  { slug: "building-a-saas-prototype-in-3-weeks-a-case-study", title: "Building an MVP in 3 Weeks: A SaaS Prototype Case Study" },
-];
-
 export default function SupabasePage() {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -80,17 +75,7 @@ export default function SupabasePage() {
         </motion.div>
       </section>
 
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
-        <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-16" />
-        <p className="text-white/15 text-xs uppercase tracking-[0.25em] mb-6">Related Reading</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {relatedPosts.map((r) => (
-            <Link key={r.slug} href={`/blog/${r.slug}`} className="group p-6 rounded-2xl bg-white/[0.02] ring-1 ring-white/[0.06] hover:ring-[#EAEFFF]/20 transition-all duration-300">
-              <h3 className="text-sm font-medium text-white/70 group-hover:text-white transition-colors duration-300">{r.title}</h3>
-            </Link>
-          ))}
-        </div>
-      </section>
+
     </div>
   );
 }

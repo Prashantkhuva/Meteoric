@@ -316,7 +316,6 @@ export default function AboutPage() {
           <a href="/work" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Portfolio →</a>
           <a href="/services/saas-development" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">SaaS Development →</a>
           <a href="/case-studies" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Case Studies →</a>
-          <a href="/blog" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Blog →</a>
           <a href="/technologies/next-js" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Next.js →</a>
         </div>
       </section>

@@ -34,20 +34,6 @@
 
 - **Prashant Khuva** — Founder & Full-Stack Developer. Previously built FullStack Craft. [GitHub](https://github.com/Prashantkhuva) | [LinkedIn](https://www.linkedin.com/company/withmeteoric) | [X](https://x.com/prashantkhuva_)
 
-## Blog Posts
-
-- [What Is a Web Development Agency? (2026 Guide for Startup Founders)](https://withmeteoric.com/blog/what-is-a-web-development-agency) — A comprehensive guide to what web development agencies do, how they differ from freelancers, pricing ranges, and how to choose the right one for your startup.
-- [How to Build a SaaS MVP: A Step-by-Step Guide for Founders](https://withmeteoric.com/blog/how-to-build-a-saas-mvp-step-by-step-guide) — A practical 7-step process for building a SaaS MVP from scoping features to launching, with a typical 3-week timeline and common mistakes to avoid.
-- [Building an MVP in 3 Weeks: A SaaS Prototype Case Study](https://withmeteoric.com/blog/building-a-saas-prototype-in-3-weeks-a-case-study) — How Meteoric built a fintech SaaS MVP prototype in 21 days using Next.js, Tailwind CSS, and Supabase.
-- [The Meteoric Guide to Choosing Your Tech Stack](https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack) — Meteoric's default tech stack and decision framework for choosing the right tools for your project.
-- [MongoDB Schema Design for SaaS Billing](https://withmeteoric.com/blog/mongodb-schema-design-for-saas-billing) — A practical guide to designing MongoDB schemas for subscription billing, multi-tenant pricing, and usage metering in production SaaS apps.
-- [GSAP vs Framer Motion: When to Use Which for Production Websites](https://withmeteoric.com/blog/gsap-vs-framer-motion-production-guide) — A practical comparison of GSAP and Framer Motion with bundle size benchmarks, use cases, and decision framework.
-- [Supabase vs Firebase in 2026: Which Backend Should You Build On?](https://withmeteoric.com/blog/supabase-vs-firebase-2026-comparison) — A comparison of Supabase and Firebase covering pricing, realtime, auth, vendor lock-in, and when to choose each.
-- [How Much Does a Startup Website Cost? (2026 Pricing Guide)](https://withmeteoric.com/blog/how-much-does-a-startup-website-cost) — A transparent breakdown of startup website costs with pricing ranges and what determines the final bill.
-- [How to Choose a Web Development Agency for Your Startup](https://withmeteoric.com/blog/how-to-choose-a-web-development-agency) — A step-by-step framework for evaluating web development agencies, red flags to watch for, and how to pick the right partner.
-- [Next.js vs Remix in 2026: Which React Framework Should You Build On?](https://withmeteoric.com/blog/nextjs-vs-remix-2026-comparison) — A detailed comparison of Next.js 16 and Remix (React Router v7) covering Server Components, loaders, bundle size, and decision framework.
-- [MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?](https://withmeteoric.com/blog/mongodb-vs-postgresql-for-saas) — A practical comparison of MongoDB and PostgreSQL for SaaS applications — data modeling, performance, query capabilities, and decision framework.
-
 ## Portfolio
 
 - [Let'em Know — Premium agency website](https://agency-v2-theta.vercel.app/) — High-performance marketing agency site with canvas particle hero, GSAP scroll animations, and Lenis smooth scroll.
@@ -86,7 +72,6 @@
 - [Supabase Development](https://withmeteoric.com/technologies/supabase)
 - [Process](https://withmeteoric.com/#process)
 - [Contact](https://withmeteoric.com/#contact)
-- [Blog](https://withmeteoric.com/blog)
 - [Privacy Policy](https://withmeteoric.com/privacy)
 - [Terms of Service](https://withmeteoric.com/terms)
 

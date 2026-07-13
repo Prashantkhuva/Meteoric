@@ -27,11 +27,6 @@ const features = [
   },
 ];
 
-const relatedPosts = [
-  { slug: "the-meteoric-guide-to-choosing-your-tech-stack", title: "The Meteoric Guide to Choosing Your Tech Stack" },
-  { slug: "gsap-vs-framer-motion-production-guide", title: "GSAP vs Framer Motion: Production Guide" },
-];
-
 export default function NextJsPage() {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -80,17 +75,7 @@ export default function NextJsPage() {
         </motion.div>
       </section>
 
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-24">
-        <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-16" />
-        <p className="text-white/15 text-xs uppercase tracking-[0.25em] mb-6">Related Reading</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {relatedPosts.map((r) => (
-            <Link key={r.slug} href={`/blog/${r.slug}`} className="group p-6 rounded-2xl bg-white/[0.02] ring-1 ring-white/[0.06] hover:ring-[#EAEFFF]/20 transition-all duration-300">
-              <h3 className="text-sm font-medium text-white/70 group-hover:text-white transition-colors duration-300">{r.title}</h3>
-            </Link>
-          ))}
-        </div>
-      </section>
+
     </div>
   );
 }

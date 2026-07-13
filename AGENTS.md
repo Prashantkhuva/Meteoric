@@ -99,62 +99,44 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 ## GEO (Generative Engine Optimization)
 - Goal: Get cited by ChatGPT, Claude, Perplexity, Gemini for queries about "web development agency", "SaaS development", etc.
 - `robots.txt` allows GPTBot, ClaudeBot, PerplexityBot (only blocks /admin and /login)
-- `public/llms.txt` — curated AI crawler index with all pages, blogs, projects, stats, and citation guidelines
+- `public/llms.txt` — curated AI crawler index with all pages, projects, stats, and citation guidelines
 - **Schema markups deployed:**
   - `Organization` with `sameAs` (GitHub, LinkedIn, X, Instagram) — `app/layout.jsx`
   - `Person` for Prashant Khuva with `sameAs`, `knowsAbout`, `jobTitle` — `app/(marketing)/about/page.jsx`
-  - `BlogPosting` with `datePublished`, `dateModified`, `image`, `mainEntityOfPage` — `app/(marketing)/blog/[slug]/page.jsx`
-  - `BreadcrumbList` on Home, Blog, Work, About, and blog detail pages
+  - `BreadcrumbList` on Home, Work, About pages
   - `Review` (star ratings) + `FAQPage` (5 Q&A) — `src/components/sections/TestimonialsSection.jsx`
   - `HowTo` (4-step process) — `src/components/sections/ProcessSection.jsx`
   - `CreativeWork` (portfolio projects) — `app/(marketing)/work/page.jsx`
   - `ProfessionalService` + `WebSite` with `SearchAction` — `app/layout.jsx`
-- Blog: 9 posts (data in `src/data/blog.js`), auto-discovered by sitemap
 - Projects: 4 portfolio items with outcome metrics in descriptions
 - To run AI citation check: `node scripts/check-ai-citations.mjs`
 - To submit to IndexNow (Bing/ChatGPT index): `node scripts/submit-indexnow.mjs`
 - TODO: Create Wikidata entry for Meteoric (entity.simplator.com) — manual step
-- [x] Add `dateModified` to blog post rendering (show "Updated" date if different from published)
 - [x] Create `/services/saas-development` and `/services/startup-web-development` pillar pages
-- [x] Write "Supabase vs Firebase 2026" comparison post (P0 keyword, 2,400/mo)
-- [x] Write "How to Choose a Web Development Agency for Your Startup" decision guide (GEO-friendly)
-- [x] Write "How Much Does a Startup Website Cost?" pricing guide (2,800/mo)
-- [x] Add contextual internal links within all 6 blog posts
-- [x] Add internal links to About.jsx and Work.jsx pages
-- [x] Fix Navbar hash-link inconsistency (`/#work` → `/work`)
-- [x] Replace placeholder blog cover images (blog-cover-5.png, blog-cover-6.png)
-- New blog total: 9 posts (3 new: Supabase vs Firebase, Startup Website Cost, Choose Your Agency)
-- New cover images: blog-cover-5 through blog-cover-9 (themed gradients + brand labels)
 
 ## SEO/GEO/AEO Optimization Status (2026-07-07)
 - [x] Canonical tags on all 10 public pages (root layout + 9 pages)
-- [x] Blog OG/Twitter images use post-specific covers instead of default
 - [x] `/services`, `/privacy`, `/terms`, `/technologies/*` in sitemap
 - [x] IndexNow key-file typo fixed + key file created at `public/meteoric-indexnow-key.txt`
 - [x] Service pages + technology pages in Footer navigation
-- [x] `article:published_time`, `article:modified_time`, `article:author` OG tags on blog posts
 - [x] `twitter:creator` (`@prashantkhuva_`) on all pages
-- [x] `Blog` schema (CollectionPage) on `/blog` listing page
 - [x] `SiteNavigationElement` schema in root layout
 - [x] `theme-color` (#070707) + `referrer` policy in root layout
 - [x] Privacy Policy (`/privacy`) and Terms of Service (`/terms`) pages
 - [x] Internal links from Work page to service pages
-- [x] Author bylines (Prashant Khuva) on all 9 blog posts
 - [x] `security.txt` at `public/.well-known/security.txt`
 - [x] Technology landing pages: `/technologies/next-js`, `/technologies/supabase`
 - [x] Enhanced AI citation checker script (`scripts/check-ai-citations.mjs`)
-- [x] Updated `llms.txt` with all 9 posts, new pages, technology pages
+- [x] Updated `llms.txt` with new pages, technology pages
 - [x] Wikidata entry for Meteoric (https://www.wikidata.org/wiki/Q140453413)
 - [x] Technology pages: `/technologies/react`, `/technologies/node-js`
 - [x] Dedicated case studies section (`/case-studies`) with metrics-heavy template
-- [x] Comparison posts: Next.js vs Remix 2026, MongoDB vs PostgreSQL for SaaS
 - [x] Core Web Vitals audit — SpeedInsights installed & collecting RUM data on Vercel
 
 ## Research Files (memory/)
 - `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma
 - `memory/research/keyword-research/2026-07-06-meteoric-target-queries.md` — 45 keywords across 5 clusters + SERP + GEO analysis
 - `memory/research/off-page-authority-plan/2026-07-08-meteoric-off-page-priority.md` — Off-page authority plan (ON HOLD): GBP, directories, HARO, GitHub, competitor backlinks
-- `memory/audits/2026-07-06-core-eeat-top-3-blog-posts.md` — CORE-EEAT audit: MongoDB billing (72/100), GSAP vs FM (70/100), MVP case study (65/100)
 - `memory/audits/2026-07-06-internal-linking-optimizer.md` — Link score (60/100), orphan/disposition analysis, repair plan
 
 ## Key Research Findings
@@ -162,7 +144,7 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - **Biggest content gap**: No dedicated service pages, no comparison posts (except GSAP vs FM), no pricing content, no GEO-targeted definitions
 - **Top P0 keywords**: `saas development agency` (1,900/mo), `startup web development agency` (1,800/mo), `Next.js development agency` (1,300/mo), `Supabase vs Firebase` (2,400/mo), `how to choose a web development agency` (800/mo), `startup website cost` (2,800/mo)
 - **CORE-EEAT avg score**: 69/100 — strongest in Trust (80), weakest in Authority (55) and Referenceability (58)
-- **Internal linking score**: 60/100 — zero contextual links in blog content, About/Work pages are content dead ends
+- **Internal linking score**: 60/100 — About/Work pages are content dead ends
 - **GEO gap**: Missing definition, comparison, and pricing content that AI chatbots prefer to cite
 
 ## Environment Variables (.env)

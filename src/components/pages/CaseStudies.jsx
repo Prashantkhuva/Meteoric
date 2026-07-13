@@ -156,7 +156,6 @@ export default function CaseStudiesPage() {
           <Link href="/work" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">View all projects →</Link>
           <Link href="/services/saas-development" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">SaaS Development →</Link>
           <Link href="/services/full-stack-development" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Full-Stack →</Link>
-          <Link href="/blog" className="text-xs text-white/50 hover:text-white border border-white/[0.06] rounded-full px-4 py-2 transition-colors duration-300">Latest insights →</Link>
         </div>
       </section>
     </div>

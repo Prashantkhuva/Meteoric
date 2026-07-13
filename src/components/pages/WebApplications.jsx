@@ -45,21 +45,6 @@ const stats = [
   { value: "100%", label: "Client satisfaction" },
 ];
 
-const relatedPosts = [
-  {
-    slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-    title: "Building an MVP in 3 Weeks: A SaaS Prototype Case Study",
-  },
-  {
-    slug: "the-meteoric-guide-to-choosing-your-tech-stack",
-    title: "The Meteoric Guide to Choosing Your Tech Stack",
-  },
-  {
-    slug: "mongodb-vs-postgresql-for-saas",
-    title: "MongoDB vs PostgreSQL for SaaS",
-  },
-];
-
 export default function WebAppsPage() {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -240,9 +225,7 @@ export default function WebAppsPage() {
               </div>
             ))}
           </div>
-          <p className="text-[#EAEFFF]/35 text-xs mt-6">
-            Read more about our <Link href="/blog/the-meteoric-guide-to-choosing-your-tech-stack" className="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">tech stack philosophy</Link>.
-          </p>
+
         </div>
       </section>
 
@@ -271,7 +254,7 @@ export default function WebAppsPage() {
           },
           {
             q: "How long does it take to build a web application?",
-            a_html: 'A typical MVP can be shipped in 2-4 weeks. More complex applications with real-time features, dashboards, and multiple user roles typically take 6-10 weeks. See our <a href="/blog/building-a-saas-prototype-in-3-weeks-a-case-study" class="text-white/60 hover:text-white underline underline-offset-2 transition-colors duration-200">MVP case study</a>.',
+            a: "A typical MVP can be shipped in 2-4 weeks. More complex applications with real-time features, dashboards, and multiple user roles typically take 6-10 weeks.",
           },
           {
             q: "Do you work with existing codebases?",
@@ -288,45 +271,7 @@ export default function WebAppsPage() {
         ]} />
       </section>
 
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-32">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="flex items-center gap-3 mb-8"
-        >
-          <span className="h-px w-8 bg-white/20" />
-          <span className="text-xs uppercase tracking-[0.3em]" style={{
-            background: "linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2))",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>
-            Related Reading
-          </span>
-        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {relatedPosts.map((post, i) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`}>
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="group rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-6 transition-all duration-500 hover:border-[#EAEFFF]/15 hover:shadow-[0_0_50px_rgba(234,239,255,0.04)]"
-              >
-                <p className="text-[#EAEFFF]/60 text-sm leading-relaxed group-hover:text-white transition-colors duration-300">
-                  {post.title}
-                </p>
-                <span className="inline-flex items-center gap-1 text-[11px] text-white/20 mt-3 group-hover:text-white/50 transition-colors duration-300">
-                  Read more <ArrowUpRight size={11} />
-                </span>
-              </motion.div>
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
