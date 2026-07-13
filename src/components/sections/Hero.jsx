@@ -95,12 +95,12 @@ function Hero() {
             data-cal-namespace="let-s-build"
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
-            className="mfb relative inline-flex items-center overflow-hidden border-2 border-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer"
+            className="mfb relative inline-flex items-center overflow-hidden border-2 border-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-transform duration-300 ease-out hover:scale-[1.03]"
             onMouseEnter={() => setCtaHovered(true)}
             onMouseLeave={() => setCtaHovered(false)}
           >
             <style>{`
-              .mfb-fill { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: #EAEFFF; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease; z-index: 1; pointer-events: none; }
+              .mfb-fill { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: #EAEFFF; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease; z-index: 1; pointer-events: none; }
               .mfb:hover .mfb-fill { transform: translate(-50%, -50%) scale(80); opacity: 1; }
             `}</style>
             <span className="mfb-fill" />
