@@ -15,8 +15,12 @@ const SITE_URL = "https://withmeteoric.com";
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
 const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 
+const CURRENCY_SYMBOLS = { USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" };
+function getSymbol(c) { return CURRENCY_SYMBOLS[c] || c || "$"; }
+
 export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl, bankAccount }) {
   const curr = currency || "USD";
+  const sym = getSymbol(curr);
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
   const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}`;
 
@@ -47,7 +51,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
             <div style={divider} />
 
             <Text style={invoiceLabel}>Total Amount</Text>
-            <Text style={invoiceAmount}>${Number(total).toFixed(2)}</Text>
+            <Text style={invoiceAmount}>{sym}{Number(total).toFixed(2)}</Text>
 
             {dueDate && (
               <>

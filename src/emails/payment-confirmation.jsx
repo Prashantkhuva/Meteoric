@@ -3,6 +3,9 @@ import EmailSignature from "./email-signature";
 
 const SITE_URL = "https://withmeteoric.com";
 
+const CURRENCY_SYMBOLS = { USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" };
+function getSymbol(c) { return CURRENCY_SYMBOLS[c] || c || "$"; }
+
 export default function PaymentConfirmation({
   name,
   invoiceNumber,
@@ -18,7 +21,7 @@ export default function PaymentConfirmation({
       })
     : "today";
 
-  const formattedTotal = `${currency === "USD" ? "$" : currency + " "}${Number(total).toFixed(2)}`;
+  const formattedTotal = `${getSymbol(currency)}${Number(total).toFixed(2)}`;
 
   return (
     <Html>

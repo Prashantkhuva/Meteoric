@@ -375,6 +375,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   const tax = Number(invoice.tax) || 0;
   const total = Number(invoice.total) || subtotal + tax;
   const curr = wiseCurrency || invoice.currency || "USD";
+  const sym = ({ USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" })[curr] || "$";
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${total.toFixed(2)}`;
   const paypalUrl = `${PAYPAL_ME}/${total.toFixed(2)}`;
   const isPaid = invoice.status === "paid";
@@ -472,10 +473,10 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
                   {item.quantity}
                 </Text>
                 <Text style={[styles.tableCell, styles.cellRate]}>
-                  ${Number(item.rate).toFixed(2)}
+                  {sym}{Number(item.rate).toFixed(2)}
                 </Text>
                 <Text style={[styles.tableCell, styles.cellAmount]}>
-                  $
+                  {sym}
                   {(
                     (Number(item.quantity) || 0) * (Number(item.rate) || 0)
                   ).toFixed(2)}
@@ -489,7 +490,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
           <View style={styles.totalsInner}>
             <View style={styles.totalRow}>
               <Text>Subtotal</Text>
-              <Text>${subtotal.toFixed(2)}</Text>
+              <Text>{sym}{subtotal.toFixed(2)}</Text>
             </View>
             {tax > 0 && (
               <View style={styles.totalRow}>
@@ -499,7 +500,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
             )}
             <View style={styles.totalRowFinal}>
               <Text style={styles.totalLabelFinal}>Total Due</Text>
-              <Text style={styles.totalValueFinal}>${total.toFixed(2)}</Text>
+              <Text style={styles.totalValueFinal}>{sym}{total.toFixed(2)}</Text>
             </View>
           </View>
         </View>
