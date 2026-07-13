@@ -121,13 +121,12 @@ export default function SentEmailsPageContent() {
       ) : (
         <div className="border border-white/[0.06] bg-[#0a0a0a] rounded-xl overflow-hidden">
           {/* Table Header */}
-          <div className="grid grid-cols-[36px_140px_140px_1fr_1fr_80px_60px] gap-3 px-4 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium items-center">
+          <div className="grid grid-cols-[36px_140px_140px_1fr_60px] gap-3 px-4 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium items-center">
             <Checkbox checked={allSelected} onChange={toggleSelectAll} label="Select all" />
             <span>Date</span>
             <span>From</span>
             <span>To</span>
             <span>Subject</span>
-            <span className="text-center">Files</span>
             <span></span>
           </div>
 
@@ -135,7 +134,7 @@ export default function SentEmailsPageContent() {
           {emails.map((email) => (
             <div key={email.id}>
               <div
-                className="grid grid-cols-[36px_140px_140px_1fr_1fr_80px_60px] gap-3 px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors cursor-pointer items-center"
+                className="grid grid-cols-[36px_140px_140px_1fr_60px] gap-3 px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors cursor-pointer items-center"
                 onClick={() => toggleExpand(email.id)}
               >
                 <div onClick={(e) => e.stopPropagation()}>
@@ -149,15 +148,10 @@ export default function SentEmailsPageContent() {
                 <p className="text-sm text-white/50 truncate">
                   {email.to_addresses?.join(", ") || "\u2014"}
                 </p>
-                <p className="text-sm text-white/70 truncate">{email.subject}</p>
-                <div className="flex items-center justify-center">
-                  {email.attachments?.length ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] text-white/30">
-                      <Paperclip size={11} />
-                      {email.attachments.length}
-                    </span>
-                  ) : (
-                    <span className="text-white/15">\u2014</span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <p className="text-sm text-white/70 truncate">{email.subject}</p>
+                  {email.attachments?.length > 0 && (
+                    <Paperclip size={11} className="text-white/25 shrink-0" />
                   )}
                 </div>
                 <div className="flex items-center justify-center">
