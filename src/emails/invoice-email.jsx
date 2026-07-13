@@ -61,7 +61,6 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
           {bankAccount && (
             <div style={bankSection}>
               <Text style={bankTitle}>Bank Transfer Details</Text>
-              {bankAccount.label && <Text style={bankLine}><Text style={bankLabel}>Account: </Text>{bankAccount.label}</Text>}
               {bankAccount.bank_name && <Text style={bankLine}><Text style={bankLabel}>Bank: </Text>{bankAccount.bank_name}</Text>}
               {bankAccount.account_holder && <Text style={bankLine}><Text style={bankLabel}>Name: </Text>{bankAccount.account_holder}</Text>}
               {bankAccount.account_number && <Text style={bankLine}><Text style={bankLabel}>Account No: </Text>{bankAccount.account_number}</Text>}
@@ -220,8 +219,8 @@ const hr = {
 };
 
 const bankSection = {
-  backgroundColor: "rgba(255, 255, 255, 0.03)",
-  border: "1px solid rgba(234, 239, 255, 0.08)",
+  backgroundColor: "#111111",
+  border: "1px solid #222222",
   padding: "16px",
   marginBottom: "20px",
 };
@@ -237,12 +236,12 @@ const bankTitle = {
 
 const bankLine = {
   fontSize: "12px",
-  color: "rgba(255, 255, 255, 0.5)",
+  color: "#b3b3b3",
   lineHeight: "1.8",
   margin: 0,
 };
 
 const bankLabel = {
-  color: "rgba(255, 255, 255, 0.35)",
+  color: "#777777",
   fontWeight: 600,
 };

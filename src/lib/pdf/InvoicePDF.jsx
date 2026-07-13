@@ -507,7 +507,6 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
         {!isPaid && bank && (
           <View style={styles.bankSection}>
             <Text style={styles.bankTitle}>Bank Transfer Details</Text>
-            {bank.label && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Account: </Text>{esc(bank.label)}</Text>}
             {bank.bank_name && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Bank: </Text>{esc(bank.bank_name)}</Text>}
             {bank.account_holder && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Name: </Text>{esc(bank.account_holder)}</Text>}
             {bank.account_number && <Text style={styles.bankLine}><Text style={styles.bankLabel}>Account No: </Text>{esc(bank.account_number)}</Text>}
