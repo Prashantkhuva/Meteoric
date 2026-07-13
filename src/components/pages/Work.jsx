@@ -183,7 +183,7 @@ export default function WorkPage() {
                   }}
                 >
                   <span className="fill-circle" style={{ backgroundColor: project.accent }} />
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center gap-2 group-hover/btn:text-black transition-colors duration-300">
                     <StaggerText hoverColor="#000">View Live Project</StaggerText>
                     <ArrowUpRight size={15} />
                   </span>

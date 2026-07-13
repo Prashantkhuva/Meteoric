@@ -138,7 +138,7 @@ export default function CaseStudiesPage() {
                   {/* CTA */}
                   <a href={cs.link} target="_blank" rel="noopener noreferrer" className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5" style={{ border: `1.5px solid ${cs.accent}`, color: cs.accent }}>
                     <span className="fill-circle" style={{ backgroundColor: cs.accent }} />
-                    <span className="relative z-10 flex items-center gap-2">
+                    <span className="relative z-10 flex items-center gap-2 group-hover/btn:text-black transition-colors duration-300">
                       <StaggerText hoverColor="#000">View Live Project</StaggerText>
                       <ArrowUpRight size={15} />
                     </span>
