@@ -192,9 +192,8 @@ export default function ServicesSection() {
           {services.map((s) => {
             const Icon = s.icon;
             return (
-              <Link
+              <div
                 key={s.num}
-                href={s.href}
                 className="service-card group relative flex-shrink-0 w-[80vw] lg:w-[60vw] xl:w-[48vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02] backdrop-blur-md p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
               >
                 {/* Ghost number */}
@@ -237,7 +236,10 @@ export default function ServicesSection() {
                       </span>
                     ))}
                   </div>
-                  <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 border-b border-white/15 pb-1 group-hover:text-white/60 group-hover:border-white/30 transition-colors duration-300">
+                  <Link
+                    href={s.href}
+                    className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 border-b border-white/15 pb-1 group-hover:text-white/60 group-hover:border-white/30 transition-colors duration-300"
+                  >
                     The full picture
                     <svg
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -250,9 +252,9 @@ export default function ServicesSection() {
                     >
                       <path d="M7 17L17 7M7 7h10v10" />
                     </svg>
-                  </span>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             );
           })}
 

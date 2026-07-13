@@ -3,91 +3,91 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://withmeteoric.com/</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/about</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/work</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/services</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/services/saas-development</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/services/full-stack-development</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/services/web-applications</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/services/landing-pages</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/privacy</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/terms</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/technologies/next-js</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/technologies/supabase</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/technologies/react</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/technologies/node-js</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://withmeteoric.com/case-studies</loc>
-    <lastmod>2026-07-13T16:00:16.805Z</lastmod>
+    <lastmod>2026-07-13T16:09:04.553Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
