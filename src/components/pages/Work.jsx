@@ -92,12 +92,12 @@ export default function WorkPage() {
             >
               {/* Image — alternating side */}
               <div className={`relative overflow-hidden ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-                <div className={`relative aspect-video lg:aspect-auto lg:h-full min-h-[20rem] bg-gradient-to-b ${project.gradient}`}>
+                <div className={`relative aspect-video bg-gradient-to-b ${project.gradient}`}>
                   <Image
                     src={project.image}
                     alt={project.name}
                     fill
-                    className="object-cover transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    className="object-contain transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     loading={i === 0 ? "eager" : "lazy"}
                   />
