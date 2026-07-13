@@ -94,29 +94,26 @@ function Hero() {
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
             className="mfb relative inline-flex items-center cursor-pointer"
-            style={{ padding: "14px 8px 14px 22px", borderRadius: 999, border: "2px solid #EAEFFF" }}
+            style={{ padding: "14px 10px 14px 22px", borderRadius: 999, border: "2px solid #EAEFFF" }}
           >
             <style>{`
-              .mfb-text-wrap { position: relative; z-index: 3; height: 1.2em; overflow: hidden; margin-right: 4px; }
-              .mfb-label { display: flex; align-items: center; height: 1.2em; font-size: 15px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), color 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+              .mfb-text-wrap { position: relative; z-index: 2; height: 1.2em; overflow: hidden; margin-right: 2px; }
+              .mfb-label { display: block; height: 1.2em; line-height: 1.2em; font-size: 15px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
               .mfb-label-default { color: #EAEFFF; }
-              .mfb-label-hover { position: absolute; inset: 0; color: #070707; transform: translateY(110%); }
-              .mfb-dot-area { position: relative; z-index: 3; display: flex; align-items: center; padding-left: 6px; }
-              .mfb-expander { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border-radius: 9999px; background: #EAEFFF; transform: translate(-50%, -50%); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; pointer-events: none; }
-              .mfb-dot { width: 8px; height: 8px; border-radius: 9999px; background: #EAEFFF; position: relative; z-index: 2; transition: opacity 0.3s ease; flex-shrink: 0; }
-              .mfb-arrow { width: 18px; height: 18px; color: #EAEFFF; opacity: 0; transform: rotate(-90deg) scale(0.5); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 3; flex-shrink: 0; }
+              .mfb-label-hover { position: absolute; top: 0; left: 0; color: #070707; transform: translateY(110%); }
+              .mfb-dot-wrap { position: relative; z-index: 2; display: flex; align-items: center; padding-left: 6px; gap: 8px; }
+              .mfb-dot { width: 8px; height: 8px; border-radius: 50%; background: #EAEFFF; flex-shrink: 0; transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
+              .mfb-arrow { width: 18px; height: 18px; flex-shrink: 0; opacity: 0; transform: rotate(-90deg) scale(0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+              .mfb:hover .mfb-dot { transform: scale(30); }
               .mfb:hover .mfb-label-default { transform: translateY(-110%); }
               .mfb:hover .mfb-label-hover { transform: translateY(0); }
-              .mfb:hover .mfb-expander { width: 600px; height: 600px; }
-              .mfb:hover .mfb-dot { opacity: 0; }
               .mfb:hover .mfb-arrow { opacity: 1; transform: rotate(0deg) scale(1); color: #070707; }
             `}</style>
             <span className="mfb-text-wrap">
               <span className="mfb-label mfb-label-default">Book a Free Strategy Call</span>
               <span className="mfb-label mfb-label-hover">Book a Free Strategy Call</span>
             </span>
-            <span className="mfb-dot-area">
-              <span className="mfb-expander" />
+            <span className="mfb-dot-wrap">
               <span className="mfb-dot" />
               <svg className="mfb-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M7 17L17 7" /><path d="M7 7h10v10" />
