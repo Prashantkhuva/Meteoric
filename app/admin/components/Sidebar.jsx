@@ -149,19 +149,19 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
         </div>
 
         <div className="px-3 pb-3">
-          <div className="flex items-center gap-2.5 px-2 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+          <div className="flex items-center gap-2.5 px-2 py-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
             <div className="h-7 w-7 rounded-full bg-[#EAEFFF] flex items-center justify-center text-[10px] font-bold text-[#121212] shrink-0">
               {(userName || "A").charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white/60 truncate leading-tight">{userName || "Admin"}</p>
-              <p className="text-[10px] text-white/25 truncate leading-tight mt-0.5">{userEmail || ""}</p>
+              <p className="text-xs font-medium text-white/70 truncate leading-tight">{userName || "Admin"}</p>
+              <p className="text-[10px] text-white/35 truncate leading-tight mt-0.5">{userEmail || ""}</p>
             </div>
           </div>
           <form action={signOut} className="mt-1">
             <button
               type="submit"
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-[7px] text-[12px] text-white/25 hover:text-white/50 hover:bg-white/[0.025] transition-all"
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-[7px] text-[12px] text-white/35 hover:text-white/60 hover:bg-white/[0.025] transition-all"
             >
               <LogOut size={14} />
               Sign out
@@ -175,7 +175,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-56 xl:w-60 border-r border-white/[0.04] bg-[#070707] shrink-0">
+      <aside className="hidden lg:flex lg:flex-col lg:w-56 xl:w-60 h-full border-r border-white/[0.04] bg-[#070707] shrink-0">
         {nav}
       </aside>
 
