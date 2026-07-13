@@ -192,7 +192,7 @@ function Projects() {
           </div>
 
           <div className="space-y-0">
-            {projects.map((project, i) => (
+            {allProjects.map((project, i) => (
               <a
                 key={project.id}
                 href={project.link}
@@ -228,7 +228,7 @@ function Projects() {
             >
               <div className="flex items-center gap-6 md:gap-10">
                 <span className="text-white/20 text-xs font-mono w-6">
-                  {String(projects.length + 1).padStart(2, "0")}
+                  {String(allProjects.length + 1).padStart(2, "0")}
                 </span>
                 <span className="text-lg md:text-xl text-white/40 font-secondary-italic group-hover:text-white/70 transition-colors duration-300">
                   Your project
