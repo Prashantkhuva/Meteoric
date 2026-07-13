@@ -2,79 +2,56 @@
 
 import { useState } from "react";
 
-export default function StaggerText({ children, hoverColor, hovered: externalHovered, className, style, ...rest }) {
+export default function StaggerText({ text, children, hoverColor, hovered: externalHovered, className, style, ...rest }) {
   const [internalHovered, setInternalHovered] = useState(false);
   const hovered = externalHovered !== undefined ? externalHovered : internalHovered;
-  const text = typeof children === "string" ? children : "";
-  const chars = text.split("");
+  const content = text || (typeof children === "string" ? children : "");
+  const words = content.split(" ");
 
   return (
     <>
       <style>{`
-        .stag-char { display: block; will-change: transform, opacity; backface-visibility: hidden; line-height: 1.25; transform-origin: center center; }
-        @keyframes stagExitUp {
-          0%   { transform: translateY(0%) rotateX(0deg); opacity: 1; }
-          100% { transform: translateY(-110%) rotateX(45deg); opacity: 0; }
-        }
-        @keyframes stagEnterUp {
-          0%   { transform: translateY(110%) rotateX(-45deg); opacity: 0; }
-          100% { transform: translateY(0%) rotateX(0deg); opacity: 1; }
-        }
-        @keyframes stagResetExit {
-          0%   { transform: translateY(-110%) rotateX(45deg); opacity: 0; }
-          100% { transform: translateY(0%) rotateX(0deg); opacity: 1; }
-        }
-        @keyframes stagResetEnter {
-          0%   { transform: translateY(0%) rotateX(0deg); opacity: 1; }
-          100% { transform: translateY(110%) rotateX(-45deg); opacity: 0; }
-        }
+        .st-word { display: inline-flex; margin-right: 0.3em; }
+        .st-word:last-child { margin-right: 0; }
+        .st-char-wrap { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
+        .st-char { display: inline-block; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
+        .st-char.exit { transform: translateY(-110%); }
+        .st-char-enter { display: inline-block; position: absolute; top: 0; left: 0; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; transform: translateY(110%); }
+        .st-char-enter.enter { transform: translateY(0%); }
       `}</style>
       <span
         className={className}
-        style={{ ...style, perspective: "400px", perspectiveOrigin: "50% 50%" }}
+        style={{ ...style, lineHeight: 1.25 }}
         onMouseEnter={() => setInternalHovered(true)}
         onMouseLeave={() => setInternalHovered(false)}
         {...rest}
       >
-        {chars.map((char, i) => {
-          const delay = `${i * 20}ms`;
-          const dur = "220ms";
-          const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
-          const wrap = { display: "inline-block", position: "relative", height: "1.25em", overflow: "hidden", verticalAlign: "top" };
-          if (char === " ") Object.assign(wrap, { width: "0.35em", minWidth: "0.35em" });
+        {words.map((word, wi) => (
+          <span key={wi} className="st-word">
+            {word.split("").map((char, ci) => {
+              const delay = `${(wi * word.length + ci) * 30}ms`;
+              const charStyle = { transitionDelay: delay };
+              const enterStyle = { transitionDelay: delay, color: hoverColor };
 
-          return (
-            <span key={i} style={wrap}>
-              <span
-                className="stag-char"
-                style={{
-                  animation: hovered
-                    ? `stagExitUp ${dur} ${delay} ${ease} forwards`
-                    : `stagResetExit ${dur} ${delay} ${ease} forwards`,
-                }}
-              >
-                {char === " " ? "\u00a0" : char}
-              </span>
-              <span
-                className="stag-char"
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  animation: hovered
-                    ? `stagEnterUp ${dur} ${delay} ${ease} forwards`
-                    : `stagResetEnter ${dur} ${delay} ${ease} forwards`,
-                  transform: "translateY(110%)",
-                  opacity: 0,
-                  color: hoverColor,
-                }}
-              >
-                {char === " " ? "\u00a0" : char}
-              </span>
-            </span>
-          );
-        })}
+              return (
+                <span key={ci} className="st-char-wrap" style={{ height: "1.25em" }}>
+                  <span
+                    className={`st-char ${hovered ? "exit" : ""}`}
+                    style={charStyle}
+                  >
+                    {char}
+                  </span>
+                  <span
+                    className={`st-char-enter ${hovered ? "enter" : ""}`}
+                    style={enterStyle}
+                  >
+                    {char}
+                  </span>
+                </span>
+              );
+            })}
+          </span>
+        ))}
       </span>
     </>
   );
