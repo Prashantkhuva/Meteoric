@@ -2,6 +2,7 @@ import { useState, lazy, Suspense, useRef, useEffect } from "react";
 import Link from "next/link";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
+import StaggerLink from "./StaggerLink";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -102,20 +103,22 @@ export default function Navbar() {
             }}
           >
             {navItems.map((item) => (
-              <Link
+              <StaggerLink
                 key={item.to}
                 href={item.to}
                 onClick={() => setIsMenuOpen(false)}
-                className="relative transition-all duration-500 hover:text-white/90 after:absolute after:bottom-[-2px] after:left-1/2 after:h-[1px] after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-white/60 after:transition-all after:duration-500 after:ease-out hover:after:w-full"
+                hoverColor="white"
                 style={{
                   fontSize: 12,
                   fontWeight: 400,
                   color: "rgb(128,128,128)",
                   letterSpacing: "normal",
+                  textDecoration: "none",
+                  cursor: "pointer",
                 }}
               >
                 {item.label}
-              </Link>
+              </StaggerLink>
             ))}
           </nav>
 
