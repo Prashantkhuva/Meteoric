@@ -3,6 +3,7 @@ import Link from "next/link";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import StaggerLink from "./StaggerLink";
+import StaggerText from "./StaggerText";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -41,42 +42,11 @@ export default function Navbar() {
           padding: 10px 28px;
           border: none;
           border-radius: 100px;
-          perspective: 400px;
           background: linear-gradient(180deg, #fff 0%, #cecece 100%);
           outline: 0;
           line-height: 1;
           text-align: center;
-          letter-spacing: 0;
-          text-decoration: none;
           cursor: pointer;
-        }
-        .flip-btn .front {
-          display: block;
-          opacity: 1;
-          color: #1b1b1b;
-          transform: translateY(0) rotateX(0);
-          transition: 0.5s;
-        }
-        .flip-btn .back {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          background: #000;
-          color: #fff;
-          border-radius: 100px;
-          transform: translateY(-50%) rotateX(90deg);
-          transition: 0.5s;
-        }
-        .flip-btn:hover .front {
-          opacity: 0;
-          transform: translateY(50%) rotateX(90deg);
-        }
-        .flip-btn:hover .back {
-          opacity: 1;
-          transform: translateY(0) rotateX(0);
         }
       `}</style>
 
@@ -126,10 +96,11 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsOpen(true)}
-              className="hidden md:inline-flex items-center cursor-pointer relative flip-btn"
+              className="hidden md:inline-flex items-center cursor-pointer flip-btn"
             >
-              <span className="front">Let&apos;s Chat!</span>
-              <span className="back">Let&apos;s Chat!</span>
+              <StaggerText hoverColor="#1b1b1b" style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}>
+                {"Let's Chat!"}
+              </StaggerText>
             </button>
 
             <button
