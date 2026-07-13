@@ -1,101 +1,23 @@
 "use client";
 
-import { useState, useEffect, useRef, memo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { projects as allProjects } from "@/data/projects";
 
-const projects = allProjects.slice(0, 3);
+gsap.registerPlugin(ScrollTrigger);
 
-export const ProjectCardDesktop = memo(function ProjectCardDesktop({ project, isActive }) {
-  return (
-    <div
-      onClick={() => window.open(project.link, "_blank")}
-      className={`block rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 group relative ${
-        isActive
-          ? "ring-1 ring-white/20 shadow-[0_0_60px_rgba(234,239,255,0.06)]"
-          : "ring-1 ring-transparent"
-      }`}
-    >
-      {/* Top accent bar */}
-      <div
-        className="absolute top-0 left-0 right-0 z-20 h-0.5 opacity-60"
-        style={{ backgroundColor: project.accent }}
-      />
+const projects = allProjects.slice(0, 4);
 
-      <div
-        className={`bg-gradient-to-b ${project.gradient} flex flex-col w-full min-h-125 relative`}
-      >
-        {/* Top overlay — badge + arrow */}
-        <div className="absolute top-0 left-0 right-0 z-10 p-8">
-          <div className="flex items-start justify-between">
-            <div>
-              {/* Number */}
-              <span
-                className="text-[11px] font-mono tracking-wider"
-                style={{ color: project.accent }}
-              >
-                {String(project.id).padStart(2, "0")}
-              </span>
-              {/* Tagline */}
-              <p className="text-white font-semibold text-lg leading-snug max-w-[75%] mt-1">
-                {project.tagline}
-              </p>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(project.link, "_blank");
-              }}
-              aria-label={`View ${project.name} project`}
-              className="group/btn relative overflow-hidden rounded-full text-sm font-medium transition-all duration-300 hover:scale-[1.02] shrink-0 opacity-0 group-hover:opacity-100"
-            >
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/20">
-                <ArrowUpRight size={16} className="text-white" />
-              </div>
-            </button>
-          </div>
-        </div>
+const projMainWords = "Selected Works".split(" ");
 
-        {/* Image */}
-        <motion.div
-          className="relative flex-1 overflow-hidden rounded-2xl flex items-center justify-center mt-20 mx-4 mb-4"
-          whileHover={{ rotate: -3, scale: 1.04 }}
-          transition={{ type: "spring", stiffness: 180, damping: 18 }}
-        >
-          <Image
-            src={project.image}
-            alt={project.name}
-            fill
-            className="object-contain p-4"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            loading="lazy"
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
-        </motion.div>
-
-        {/* Bottom gradient fade for name badge */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/50 to-transparent z-10" />
-
-        {/* Name badge at bottom */}
-        <div className="absolute bottom-4 left-4 z-20">
-          <p className="text-white font-bold text-lg drop-shadow-lg">
-            {project.name}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-});
-
-export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
+export const ProjectCardMobile = function ProjectCardMobile({ project }) {
   return (
     <div className="rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent">
-      {/* Image area */}
       <div className="relative h-48 w-full overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
         <Image
@@ -105,19 +27,14 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
           className="object-contain p-4"
           loading="lazy"
           sizes="(max-width: 768px) 100vw, 50vw"
-          onError={() => {}}
         />
-        {/* Status pill */}
         <div className="absolute top-3 right-3 text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/15 bg-black/50 text-white/50 backdrop-blur-sm">
           Featured
         </div>
-        {/* Bottom fade */}
         <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
       </div>
 
-      {/* Content */}
       <div className="px-4 pb-5 pt-3.5 space-y-3">
-        {/* Name + arrow */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-1" style={{ background: project.accent }} />
@@ -133,13 +50,9 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
           </a>
         </div>
 
-        {/* Tagline */}
         <p className="text-[12px] text-white/55 leading-relaxed">{project.tagline}</p>
-
-        {/* Description */}
         <p className="text-[11px] text-white/55 leading-relaxed">{project.description}</p>
 
-        {/* Features */}
         <div className="space-y-1">
           {project.features.slice(0, 2).map((f, i) => (
             <div key={i} className="flex items-start gap-2">
@@ -149,7 +62,6 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
           ))}
         </div>
 
-        {/* Tags row */}
         <div className="flex flex-wrap gap-1.5">
           {project.tags.slice(0, 3).map((tag) => (
             <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full border text-white/55 font-mono" style={{ borderColor: `${project.accent}22`, backgroundColor: `${project.accent}08` }}>
@@ -158,7 +70,6 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
           ))}
         </div>
 
-        {/* CTA */}
         <a href={project.link} target="_blank" rel="noopener noreferrer"
           className="group/btn flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-[12px] font-semibold tracking-wide transition-all duration-200 active:scale-[0.98]"
           style={{ backgroundColor: project.accent, color: "#000" }}
@@ -169,155 +80,171 @@ export const ProjectCardMobile = memo(function ProjectCardMobile({ project }) {
       </div>
     </div>
   );
-});
-
+};
 
 function Projects() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const sectionRefs = useRef([]);
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.dataset.index);
-            if (!isNaN(idx)) setActiveIndex(idx);
-          }
-        }
+  useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      headingRef.current?.querySelectorAll(".gsap-proj-word").forEach((el) => {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+      return;
+    }
+
+    gsap.fromTo(
+      headingRef.current?.querySelectorAll(".gsap-proj-word"),
+      { yPercent: 110, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        stagger: 0.03,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          end: "top 40%",
+          scrub: 1,
+        },
       },
-      { threshold: 0.5 },
     );
-
-    sectionRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const active = projects[activeIndex];
+  }, { scope: sectionRef });
 
   return (
-    <section id="work" className="bg-black py-24 sm:py-28 lg:py-32 px-6 md:px-12">
-      {/* Section header */}
-      <div className="max-w-7xl mx-auto mb-16">
-        <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5">
-          <span className="font-display text-white/30 not-italic mr-2">04</span>
-          Selected Work
-        </p>
-        <h2 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
-          Projects that <span className="text-white/50 font-secondary-italic">actually shipped.</span>
-        </h2>
-        <Link
-          href="/work"
-          className="group relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] mt-6 px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
-        >
-          <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-          <span className="relative z-10 group-hover:text-black flex items-center gap-2">
-            View All Projects <ArrowUpRight size={16} />
-          </span>
-        </Link>
-      </div>
+    <section
+      ref={sectionRef}
+      id="work"
+      className="relative bg-black py-24 sm:py-28 lg:py-32 overflow-hidden"
+    >
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+        {/* Header */}
+        <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+          <div>
+            <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
+              <span className="font-display text-white/30 not-italic mr-2">03</span>
+              {"Curated Portfolio".split(" ").map((w, i) => (
+                <span key={i} className="gsap-proj-word inline-block">{w} </span>
+              ))}
+            </p>
+            <h2 className="text-4xl md:text-6xl leading-[1.05] font-semibold tracking-tight text-white [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
+              {projMainWords.map((w, i) => (
+                <span key={i} className="gsap-proj-word inline-block">{w} </span>
+              ))}
+            </h2>
+          </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
-        {/* LEFT — scrollable cards */}
-        <div className="w-full lg:w-1/2 space-y-8">
+          <Link
+            href="/work"
+            className="group relative overflow-hidden border border-white/20 text-white/60 px-6 py-3 rounded-full text-xs uppercase tracking-[0.2em] font-bold transition-all duration-300 hover:border-white/40 hover:text-white inline-flex items-center gap-2"
+          >
+            Explore All Work
+            <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
+        </div>
+
+        {/* Project Grid — 2 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-24">
           {projects.map((project, i) => (
-            <div key={project.id} ref={(el) => (sectionRefs.current[i] = el)} data-index={i}>
-              {/* Mobile (up to lg — includes tablet) */}
-              <div className="lg:hidden">
-                <ProjectCardMobile project={project} />
-              </div>
-
-              {/* Desktop (lg+) */}
-              <div className="hidden lg:flex items-start py-12 h-180">
-                <div className="w-full">
-                  <ProjectCardDesktop
-                    project={project}
-                    isActive={activeIndex === i}
+            <a
+              key={project.id}
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group block ${i % 2 === 1 ? "md:mt-24" : ""}`}
+            >
+              {/* Image */}
+              <div className="relative rounded-2xl overflow-hidden mb-5">
+                <div className={`relative aspect-[4/3] bg-gradient-to-b ${project.gradient}`}>
+                  <Image
+                    src={project.image}
+                    alt={project.name}
+                    fill
+                    className="object-cover transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="lazy"
                   />
+                  {/* Hover arrow */}
+                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                    <ArrowUpRight size={16} className="text-white" />
+                  </div>
                 </div>
               </div>
-            </div>
+
+              {/* Name + category */}
+              <h3 className="text-xl md:text-2xl font-semibold text-white mb-1 group-hover:text-white/80 transition-colors duration-300">
+                {project.name}
+              </h3>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
+                {project.tagline}
+              </p>
+            </a>
           ))}
         </div>
 
-        {/* RIGHT — sticky detail panel (large screens only) */}
-        <div className="hidden lg:block lg:w-1/2">
-          <div className="sticky top-32 pb-12">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="p-8 rounded-2xl border border-[#EAEFFF]/8 bg-gradient-to-b from-white/[0.02] to-transparent shadow-[0_0_44px_rgba(234,239,255,0.035)]"
+        {/* Project Index — like flowiee */}
+        <div>
+          <div className="flex items-end justify-between mb-8">
+            <span className="text-white/40 uppercase tracking-[0.2em] text-xs font-bold">Project Index</span>
+            <span className="text-white/25 text-[10px] uppercase tracking-[0.3em]">Hover to preview</span>
+          </div>
+
+          <div className="space-y-0">
+            {projects.map((project, i) => (
+              <a
+                key={project.id}
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between py-5 border-b border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
               >
-                {/* Accent line + name */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div
-                    className="h-0.5 w-10 rounded-full"
-                    style={{ backgroundColor: active.accent }}
-                  />
-                  <h3 className="text-2xl font-bold text-white">
-                    {active.name}
-                  </h3>
-                </div>
-
-                {/* Description */}
-                <p className="text-white/55 text-sm leading-relaxed mb-8">
-                  {active.description}
-                </p>
-
-                {/* Features */}
-                <div className="space-y-3 mb-8">
-                  {active.features.map((f, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.07 }}
-                      className="flex items-start gap-3"
-                    >
-                      <span
-                        className="mt-0.5 text-[10px] font-mono shrink-0"
-                        style={{ color: active.accent }}
-                      >
-                        &#x25B8;
-                      </span>
-                      <p className="text-white/55 text-sm">{f}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Tech stack */}
-                <div className="flex flex-wrap gap-1.5 mb-8">
-                  {active.tags.map((tag) => (
-                    <motion.span
-                      key={tag}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="text-[11px] px-2.5 py-1 rounded-md border border-white/[0.08] bg-white/[0.03] text-white/55 font-medium"
-                    >
-                      {tag}
-                    </motion.span>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <button
-                  onClick={() => window.open(active.link, "_blank")}
-                  className="group/btn relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-8 py-4 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2"
-                >
-                  <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300" />
-                  <span className="relative z-10 group-hover/btn:text-black flex items-center gap-2">
-                    View Live Project <ArrowUpRight size={16} />
+                <div className="flex items-center gap-6 md:gap-10">
+                  <span className="text-white/20 text-xs font-mono w-6">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                </button>
-              </motion.div>
-            </AnimatePresence>
+                  <span className="text-lg md:text-xl text-white/80 group-hover:text-white transition-colors duration-300">
+                    {project.name}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4 md:gap-8">
+                  <span className="hidden md:block text-xs uppercase tracking-[0.15em] text-white/30">
+                    {project.tags[0]}
+                  </span>
+                  <ArrowUpRight
+                    size={16}
+                    className="text-white/20 group-hover:text-white/60 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </div>
+              </a>
+            ))}
+
+            {/* "Your project" row */}
+            <Link
+              href="/#contact"
+              className="group flex items-center justify-between py-5 border-b border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
+            >
+              <div className="flex items-center gap-6 md:gap-10">
+                <span className="text-white/20 text-xs font-mono w-6">
+                  {String(projects.length + 1).padStart(2, "0")}
+                </span>
+                <span className="text-lg md:text-xl text-white/40 font-secondary-italic group-hover:text-white/70 transition-colors duration-300">
+                  Your project
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4 md:gap-8">
+                <span className="hidden md:block text-xs uppercase tracking-[0.15em] text-white/20">
+                  Let&apos;s write it together
+                </span>
+                <ArrowUpRight
+                  size={16}
+                  className="text-white/15 group-hover:text-white/50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </div>
+            </Link>
           </div>
         </div>
       </div>

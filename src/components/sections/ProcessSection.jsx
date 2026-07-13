@@ -105,7 +105,7 @@ export default function ProcessSection() {
         {/* TOP */}
         <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
           <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
-            <span className="font-display text-white/30 not-italic mr-2">03</span>
+            <span className="font-display text-white/30 not-italic mr-2">02</span>
             Working Together
           </p>
 

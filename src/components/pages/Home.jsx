@@ -2,11 +2,6 @@ import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 import Projects from "@/components/sections/Projects";
 import ServicesSection from "../sections/ServicesSection";
-import TechMarquee from "../sections/TechMarquee";
-
-const TransitionSection = dynamic(
-  () => import("@/components/sections/TransitionSection"),
-);
 
 const TestimonialsSection = dynamic(
   () => import("@/components/sections/TestimonialsSection"),
@@ -57,8 +52,6 @@ export default function Home() {
       </div>
       <Hero />
       <ServicesSection />
-      <TechMarquee />
-      <TransitionSection />
       <Projects />
       <ProcessSection />
       <TestimonialsSection />

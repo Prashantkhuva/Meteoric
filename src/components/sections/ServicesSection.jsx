@@ -49,7 +49,6 @@ export default function ServicesSection() {
   const sectionRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const cardsWrapRef = useRef(null);
-  const progressRef = useRef(null);
   const headingRef = useRef(null);
   const [ctaHovered, setCtaHovered] = useState(false);
 
@@ -95,11 +94,6 @@ export default function ServicesSection() {
         pin: true,
         scrub: 1,
         invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          if (progressRef.current) {
-            progressRef.current.style.transform = `scaleX(${self.progress})`;
-          }
-        },
       },
     });
 
@@ -299,15 +293,6 @@ export default function ServicesSection() {
             </div>
           </div>
         </div>
-
-        {/* Progress bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.04]">
-          <div
-            ref={progressRef}
-            className="h-full bg-gradient-to-r from-[#EAEFFF]/40 to-[#EAEFFF]/80 origin-left"
-            style={{ transform: "scaleX(0)" }}
-          />
-        </div>
       </div>
 
       {/* Mobile: vertical cards */}
@@ -358,6 +343,38 @@ export default function ServicesSection() {
               </Link>
             );
           })}
+
+          {/* CTA card — mobile */}
+          <div className="relative rounded-2xl overflow-hidden border border-[#EAEFFF]/10 bg-[#EAEFFF]/[0.04] backdrop-blur-md p-6">
+            <span className="absolute top-4 right-4 text-[80px] font-display leading-none text-[#EAEFFF]/[0.03] select-none pointer-events-none" aria-hidden="true">
+              05
+            </span>
+
+            <div className="relative z-10">
+              <span className="text-[10px] tracking-[0.3em] font-bold text-[#EAEFFF]/30 uppercase block mb-4">
+                And then some
+              </span>
+              <h3 className="text-xl font-display text-white mb-2">
+                Something custom in mind?
+              </h3>
+              <p className="text-sm leading-relaxed text-white/45 mb-5">
+                Every project begins with understanding your vision.
+              </p>
+            </div>
+
+            <div className="relative z-10">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center justify-center flip-btn"
+                onMouseEnter={() => setCtaHovered(true)}
+                onMouseLeave={() => setCtaHovered(false)}
+              >
+                <StaggerText hovered={ctaHovered} hoverColor="#1b1b1b" style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}>
+                  {"Start a conversation"}
+                </StaggerText>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
