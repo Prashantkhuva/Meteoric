@@ -17,7 +17,7 @@ const services = [
     desc: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
     tags: ["Strategy", "UX/UI", "Responsive", "Conversion"],
     icon: Smartphone,
-    href: "/services/landing-pages",
+    href: "/services",
   },
   {
     num: "02",
@@ -25,7 +25,7 @@ const services = [
     desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
     tags: ["Auth", "Dashboards", "Payments", "Scalable"],
     icon: Monitor,
-    href: "/services/saas-development",
+    href: "/services",
   },
   {
     num: "03",
@@ -33,7 +33,7 @@ const services = [
     desc: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
     tags: ["Frontend", "Backend", "Real-time", "API"],
     icon: Code2,
-    href: "/services/web-applications",
+    href: "/services",
   },
   {
     num: "04",
@@ -41,7 +41,7 @@ const services = [
     desc: "Complete frontend and backend development — from APIs and databases to polished UI. Full stack, one team.",
     tags: ["APIs", "Databases", "UI", "DevOps"],
     icon: Layers,
-    href: "/services/full-stack-development",
+    href: "/services",
   },
 ];
 
