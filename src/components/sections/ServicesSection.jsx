@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "framer-motion";
 import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
+import StaggerText from "@/components/layout/StaggerText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,11 +50,33 @@ export default function ServicesSection() {
   const scrollContainerRef = useRef(null);
   const cardsWrapRef = useRef(null);
   const progressRef = useRef(null);
+  const headingRef = useRef(null);
+  const [ctaHovered, setCtaHovered] = useState(false);
+
+  const svcMainWords = "What we build".split(" ");
+  const svcMutedWords = "for founders.".split(" ");
 
   useGSAP(() => {
     const prefersReduced =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
+
+    // Heading word reveal — scrub
+    gsap.fromTo(headingRef.current?.querySelectorAll(".gsap-svc-word"),
+      { yPercent: 110, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        stagger: 0.03,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          end: "top 40%",
+          scrub: 1,
+        },
+      },
+    );
 
     const cardsWrap = cardsWrapRef.current;
     const container = scrollContainerRef.current;
@@ -115,46 +137,37 @@ export default function ServicesSection() {
       className="relative w-full bg-black"
     >
       {/* Header */}
-      <div className="px-6 md:px-16 pt-28 md:pt-36 pb-12 md:pb-16 max-w-7xl mx-auto">
+      <div ref={headingRef} className="px-6 md:px-16 pt-28 md:pt-36 pb-12 md:pb-16 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-4">
           <div>
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
-            >
+            <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
               <span className="font-display text-white/30 not-italic mr-2">
                 01
               </span>
-              Our Services
-            </motion.p>
+              {"Our Services".split(" ").map((w, i) => (
+                <span key={i} className="gsap-svc-word inline-block">{w}</span>
+              ))}
+            </p>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white"
-            >
-              <span className="block">What we build</span>
-              <span
-                className="block text-transparent bg-clip-text font-secondary-italic"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(97deg, #fff 0%, #999 100%)",
-                }}
-              >
-                for founders.
+            <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
+              {svcMainWords.map((w, i) => (
+                <span key={i} className="gsap-svc-word inline-block">{w} </span>
+              ))}
+              <span className="block font-secondary-italic [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
+                {svcMutedWords.map((w, i) => (
+                  <span
+                    key={i}
+                    className="gsap-svc-word inline-block text-transparent bg-clip-text"
+                    style={{ backgroundImage: "linear-gradient(97deg, #fff 0%, #999 100%)" }}
+                  >
+                    {w}{" "}
+                  </span>
+                ))}
               </span>
-            </motion.h2>
+            </h2>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+          <div
             className="hidden md:flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 pb-2"
           >
             <span>Scroll to explore</span>
@@ -169,18 +182,18 @@ export default function ServicesSection() {
             >
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Horizontal scroll area — pinned on desktop */}
       <div
         ref={scrollContainerRef}
-        className="relative overflow-hidden hidden md:block"
+        className="relative overflow-hidden hidden md:flex min-h-screen items-center"
       >
         <div
           ref={cardsWrapRef}
-          className="flex gap-6 px-6 md:px-16 py-4 pb-12"
+          className="flex gap-6 px-6 md:px-16 w-max"
         >
           {services.map((s) => {
             const Icon = s.icon;
@@ -275,9 +288,13 @@ export default function ServicesSection() {
             <div className="relative z-10">
               <Link
                 href="/#contact"
-                className="inline-block bg-[#EAEFFF] text-black px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors duration-300"
+                className="inline-flex items-center justify-center flip-btn"
+                onMouseEnter={() => setCtaHovered(true)}
+                onMouseLeave={() => setCtaHovered(false)}
               >
-                Start a conversation
+                <StaggerText hovered={ctaHovered} hoverColor="#1b1b1b" style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}>
+                  {"Start a conversation"}
+                </StaggerText>
               </Link>
             </div>
           </div>

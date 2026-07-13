@@ -71,15 +71,20 @@ export default function ProcessSection() {
       return;
     }
     gsap.fromTo(headingRef.current?.querySelectorAll(".gsap-proc-word"),
-      { y: 40, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, stagger: 0.03, ease: "power3.out",
-      scrollTrigger: {
-        trigger: headingRef.current,
-        start: "top 88%",
-        end: "top 50%",
-        toggleActions: "play none none none",
+      { yPercent: 110, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        stagger: 0.03,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          end: "top 40%",
+          scrub: 1,
+        },
       },
-    });
+    );
   }, { scope: sectionRef });
 
   return (

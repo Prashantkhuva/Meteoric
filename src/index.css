@@ -94,7 +94,7 @@ body::after {
   .animate-pulse {
     animation: none;
   }
-  .gsap-word, .gsap-head-word, .gsap-proc-word, .gsap-card {
+  .gsap-word, .gsap-head-word, .gsap-proc-word, .gsap-svc-word, .gsap-card {
     opacity: 1 !important;
     transform: none !important;
   }
