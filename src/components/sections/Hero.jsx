@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import MeteorBackground from "./MeteorBackground";
 import Link from "next/link";
+import StaggerText from "@/components/layout/StaggerText";
 
 const heroWords = "We design and ship high-performance software".split(" ");
 const mutedWords = ["—", ..."websites and apps, fast.".split(" ")];
@@ -13,6 +14,7 @@ function Hero() {
   const containerRef = useRef(null);
   const subtextRef = useRef(null);
   const ctaRef = useRef(null);
+  const [ctaHovered, setCtaHovered] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -94,10 +96,14 @@ function Hero() {
             data-cal-link="prashantkhuva/let-s-build"
             data-cal-config='{"layout":"month_view"}'
             className="relative overflow-hidden border-2 border-[#EAEFFF] text-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] group"
+            onMouseEnter={() => setCtaHovered(true)}
+            onMouseLeave={() => setCtaHovered(false)}
           >
             <div className="absolute inset-0 bg-[#EAEFFF] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-            <span className="relative z-10 group-hover:text-black">
-              Book a Free Strategy Call
+            <span className="relative z-10">
+              <StaggerText hovered={ctaHovered} hoverColor="#070707">
+                {"Book a Free Strategy Call"}
+              </StaggerText>
             </span>
           </a>
 

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 
-export default function StaggerText({ children, hoverColor, className, style, ...rest }) {
-  const [hovered, setHovered] = useState(false);
+export default function StaggerText({ children, hoverColor, hovered: externalHovered, className, style, ...rest }) {
+  const [internalHovered, setInternalHovered] = useState(false);
+  const hovered = externalHovered !== undefined ? externalHovered : internalHovered;
   const text = typeof children === "string" ? children : "";
   const chars = text.split("");
 
@@ -31,8 +32,8 @@ export default function StaggerText({ children, hoverColor, className, style, ..
       <span
         className={className}
         style={{ ...style, perspective: "400px", perspectiveOrigin: "50% 50%" }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseEnter={() => setInternalHovered(true)}
+        onMouseLeave={() => setInternalHovered(false)}
         {...rest}
       >
         {chars.map((char, i) => {
