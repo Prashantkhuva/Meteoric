@@ -22,7 +22,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
   const curr = currency || "USD";
   const sym = getSymbol(curr);
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
-  const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}`;
+  const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}${curr}`;
 
   return (
     <Html>

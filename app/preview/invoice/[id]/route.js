@@ -184,7 +184,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   <a href="/admin/invoices">&larr; Back to Invoices</a>
   <div class="toolbar-right">
     ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
-    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
+    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
     <button class="print-btn" onclick="window.print()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Download PDF

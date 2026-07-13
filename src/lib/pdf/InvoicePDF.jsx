@@ -377,7 +377,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
   const curr = wiseCurrency || invoice.currency || "USD";
   const sym = ({ USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" })[curr] || "$";
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${total.toFixed(2)}`;
-  const paypalUrl = `${PAYPAL_ME}/${total.toFixed(2)}`;
+  const paypalUrl = `${PAYPAL_ME}/${total.toFixed(2)}${curr}`;
   const isPaid = invoice.status === "paid";
   const bank = invoice.bank_account || null;
 
