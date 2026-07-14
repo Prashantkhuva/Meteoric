@@ -77,23 +77,6 @@ body::after {
   background-size: 180px;
 }
 
-@keyframes meteor-fall {
-  0% {
-    transform: rotate(var(--m-angle, 215deg)) translateX(0);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(var(--m-angle, 215deg)) translateX(calc(var(--m-dist, 500) * -1px));
-    opacity: 0;
-  }
-}
-
 @keyframes marquee-left {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
