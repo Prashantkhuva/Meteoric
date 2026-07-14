@@ -129,10 +129,9 @@ export default function ServicesSection() {
       if (stackCards.length === 0) return;
 
       const totalCards = stackCards.length;
-      // Each card gets an equal slice of the total scroll to exit
-      const pinScroll = (totalCards - 1) * window.innerHeight * 0.75;
+      const cardH = stackCards[0].getBoundingClientRect().height;
+      const pinScroll = (totalCards - 1) * cardH * 0.6;
 
-      // Create a timeline pinned to the stack container
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: stack,
@@ -144,7 +143,6 @@ export default function ServicesSection() {
         },
       });
 
-      // Each card exits in sequence: translate up, fade, scale down
       stackCards.forEach((card, i) => {
         const exitStart = i / totalCards;
         const exitEnd = (i + 1) / totalCards;
@@ -353,68 +351,61 @@ export default function ServicesSection() {
         className="md:hidden relative"
         style={{ height: "100dvh" }}
       >
-        <div className="absolute inset-0 px-6 flex flex-col justify-center">
+        <div className="absolute inset-0 px-5 flex flex-col justify-center">
           {services.map((s, i) => {
             const Icon = s.icon;
             return (
               <div
                 key={s.num}
-                className="svc-mob-card absolute inset-x-6 rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col"
+                className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-7 flex flex-col"
                 style={{
-                  height: "calc(100dvh - 120px)",
-                  zIndex: i + 1,
+                  height: "min(440px, 56dvh)",
+                  zIndex: services.length - i,
                 }}
               >
                 {/* Ghost number */}
                 <span
-                  className="absolute top-4 right-4 text-[80px] font-display leading-none text-white/[0.02] select-none pointer-events-none"
+                  className="absolute top-4 right-5 text-[100px] font-display leading-none text-white/[0.02] select-none pointer-events-none"
                   aria-hidden="true"
                 >
                   {s.num}
                 </span>
 
-                <div className="relative z-10 flex items-center justify-between mb-4">
-                  <span className="text-[10px] tracking-[0.3em] font-bold text-white/30 uppercase">
-                    Service — {s.num}
-                  </span>
-                  <div className="w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/40">
-                    <Icon size={18} strokeWidth={1.5} />
-                  </div>
-                </div>
-
-                <h3 className="relative z-10 text-xl font-display text-white mb-2">
-                  {s.title}
-                </h3>
-                <p className="relative z-10 text-sm leading-relaxed text-white/45 mb-4">
-                  {s.desc}
-                </p>
-
-                <div className="relative z-10 flex flex-wrap gap-2 mt-auto">
-                  {s.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2.5 py-1 rounded-full border border-white/10 text-[9px] uppercase tracking-[0.15em] text-white/30"
-                    >
-                      {tag}
+                <div>
+                  <div className="flex items-center justify-between mb-10">
+                    <span className="text-[10px] tracking-[0.3em] font-bold text-white/30 uppercase">
+                      Service — {s.num}
                     </span>
-                  ))}
+                    <div className="w-12 h-12 rounded-full bg-white/[0.03] flex items-center justify-center text-white/40">
+                      <Icon size={22} strokeWidth={1.5} />
+                    </div>
+                  </div>
+
+                  <h3 className="text-[28px] font-secondary-italic text-white leading-[1.1] mb-6">
+                    {s.title}
+                  </h3>
+                  <p className="text-white/50 text-[13px] leading-relaxed max-w-[280px]">
+                    {s.desc}
+                  </p>
                 </div>
 
-                <div className="relative z-10 mt-4">
+                <div className="mt-auto">
+                  <div className="flex flex-wrap gap-2 mt-10 mb-8">
+                    {s.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1.5 rounded-full border border-white/[0.08] text-[10px] uppercase tracking-[0.15em] text-white/35"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                   <Link
                     href={s.href}
-                    className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 border-b border-white/15 pb-1"
+                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-white/40 border-b border-white/[0.12] pb-1 hover:text-white/60 hover:border-white/25 transition-colors"
                   >
                     The full picture
-                    <svg
-                      className="w-3.5 h-3.5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M7 17L17 7M7 7h10v10" />
                     </svg>
                   </Link>
@@ -423,40 +414,39 @@ export default function ServicesSection() {
             );
           })}
 
-          {/* CTA card — mobile, sits behind all service cards */}
+          {/* CTA card */}
           <div
-            className="svc-mob-card absolute inset-x-6 rounded-2xl overflow-hidden border border-[#EAEFFF]/10 bg-[#0a0a0a] p-6 flex flex-col"
+            className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-7 flex flex-col"
             style={{
-              height: "calc(100dvh - 120px)",
-              zIndex: services.length + 1,
+              height: "min(440px, 56dvh)",
+              zIndex: 0,
             }}
           >
-            <span className="absolute top-4 right-4 text-[80px] font-display leading-none text-[#EAEFFF]/[0.03] select-none pointer-events-none" aria-hidden="true">
+            <span
+              className="absolute top-4 right-5 text-[100px] font-display leading-none text-[#EAEFFF]/[0.02] select-none pointer-events-none"
+              aria-hidden="true"
+            >
               05
             </span>
 
-            <div className="relative z-10 flex-1 flex flex-col justify-center">
-              <span className="text-[10px] tracking-[0.3em] font-bold text-[#EAEFFF]/30 uppercase block mb-4">
+            <div>
+              <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block mb-10">
                 And then some
               </span>
-              <h3 className="text-xl font-display text-white mb-2">
+              <h3 className="text-[28px] font-secondary-italic text-white leading-[1.1] mb-6">
                 Something custom in mind?
               </h3>
-              <p className="text-sm leading-relaxed text-white/45 mb-5">
+              <p className="text-white/50 text-[13px] leading-relaxed max-w-[280px]">
                 Every project begins with understanding your vision.
               </p>
             </div>
 
-            <div className="relative z-10">
+            <div className="mt-auto pt-10">
               <Link
                 href="/#contact"
-                className="inline-flex items-center justify-center flip-btn"
-                onMouseEnter={() => setCtaHovered(true)}
-                onMouseLeave={() => setCtaHovered(false)}
+                className="inline-block bg-white text-black px-8 py-3 rounded-full text-xs uppercase tracking-[0.2em] font-bold hover:bg-white/90 transition-colors"
               >
-                <StaggerText hovered={ctaHovered} hoverColor="#1b1b1b" style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}>
-                  {"Start a conversation"}
-                </StaggerText>
+                Start a conversation
               </Link>
             </div>
           </div>
