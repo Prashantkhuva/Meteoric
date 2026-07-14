@@ -381,14 +381,14 @@ export default function ServicesSection() {
           {services.map((s, i) => {
             const Icon = s.icon;
             return (
-              <div
-                key={s.num}
-                className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-6 flex flex-col"
-                style={{
-                  height: "clamp(420px, 60dvh, 480px)",
+                <div
+                  key={s.num}
+                  className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-6 flex flex-col gap-4"
+                  style={{
+                  height: "clamp(360px, 50dvh, 420px)",
                   zIndex: services.length - i,
-                }}
-              >
+                  }}
+                >
                 {/* Ghost number */}
                 <span
                   className="absolute top-4 right-5 text-[100px] font-display leading-none text-white/[0.02] select-none pointer-events-none"
@@ -397,26 +397,24 @@ export default function ServicesSection() {
                   {s.num}
                 </span>
 
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-[10px] tracking-[0.3em] font-bold text-white/30 uppercase">
-                      Service — {s.num}
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center text-white/40">
-                      <Icon size={18} strokeWidth={1.5} />
-                    </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] tracking-[0.3em] font-bold text-white/30 uppercase">
+                    Service — {s.num}
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center text-white/40">
+                    <Icon size={18} strokeWidth={1.5} />
                   </div>
-
-                  <h3 className="text-[24px] font-secondary-italic text-white leading-[1.1] mb-4">
-                    {s.title}
-                  </h3>
-                  <p className="text-white/50 text-[12px] leading-relaxed max-w-[260px]">
-                    {s.desc}
-                  </p>
                 </div>
 
+                <h3 className="text-[22px] font-secondary-italic text-white leading-[1.1]">
+                  {s.title}
+                </h3>
+                <p className="text-white/50 text-[12px] leading-relaxed">
+                  {s.desc}
+                </p>
+
                 <div className="mt-auto">
-                  <div className="flex flex-wrap gap-1.5 mt-6 mb-5">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
                     {s.tags.map((tag) => (
                       <span
                         key={tag}
@@ -442,9 +440,9 @@ export default function ServicesSection() {
 
           {/* CTA card */}
           <div
-            className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-6 flex flex-col"
+            className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-6 flex flex-col gap-4"
             style={{
-              height: "clamp(420px, 60dvh, 480px)",
+              height: "clamp(360px, 50dvh, 420px)",
               zIndex: 0,
             }}
           >
@@ -455,19 +453,17 @@ export default function ServicesSection() {
               05
             </span>
 
-            <div>
-              <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block mb-6">
-                And then some
-              </span>
-              <h3 className="text-[24px] font-secondary-italic text-white leading-[1.1] mb-4">
-                Something custom in mind?
-              </h3>
-              <p className="text-white/50 text-[12px] leading-relaxed max-w-[260px]">
-                Every project begins with understanding your vision.
-              </p>
-            </div>
+            <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block">
+              And then some
+            </span>
+            <h3 className="text-[22px] font-secondary-italic text-white leading-[1.1]">
+              Something custom in mind?
+            </h3>
+            <p className="text-white/50 text-[12px] leading-relaxed">
+              Every project begins with understanding your vision.
+            </p>
 
-            <div className="mt-auto pt-6">
+            <div className="mt-auto">
               <Link
                 href="/#contact"
                 className="inline-flex items-center justify-center flip-btn"
