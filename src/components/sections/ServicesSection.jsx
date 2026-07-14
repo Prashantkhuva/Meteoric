@@ -129,14 +129,15 @@ export default function ServicesSection() {
       if (stackCards.length === 0) return;
 
       const totalCards = stackCards.length;
-      const cardH = stackCards[0].getBoundingClientRect().height;
-      const pinScroll = (totalCards - 1) * cardH * 0.6;
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: stack,
           start: "top top",
-          end: () => `+=${pinScroll}`,
+          end: () => {
+            const cardH = stackCards[0].getBoundingClientRect().height;
+            return `+=${(totalCards - 1) * cardH * 0.6}`;
+          },
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
@@ -167,6 +168,12 @@ export default function ServicesSection() {
         tl.kill();
       };
     });
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+      });
+    }
 
     return () => {
       scrollTween.scrollTrigger?.kill();
