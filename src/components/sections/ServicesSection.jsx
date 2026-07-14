@@ -78,49 +78,56 @@ export default function ServicesSection() {
       },
     );
 
-    const cardsWrap = cardsWrapRef.current;
-    const container = scrollContainerRef.current;
-    if (!cardsWrap || !container) return;
-
-    const getScrollDistance = () =>
-      cardsWrap.scrollWidth - container.offsetWidth;
-
-    const scrollTween = gsap.to(cardsWrap, {
-      x: () => -getScrollDistance(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: () => `+=${getScrollDistance()}`,
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    // Per-card entrance
-    const cards = cardsWrap.querySelectorAll(".service-card");
-    cards.forEach((card) => {
-      gsap.fromTo(
-        card,
-        { opacity: 0.3, scale: 0.96 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          scrollTrigger: {
-            containerAnimation: scrollTween,
-            trigger: card,
-            start: "left 85%",
-            end: "left 50%",
-            scrub: true,
-          },
-        },
-      );
-    });
-
     // Mobile: stacked cards scroll animation
     const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      const cardsWrap = cardsWrapRef.current;
+      const container = scrollContainerRef.current;
+      if (!cardsWrap || !container) return;
+
+      const getScrollDistance = () =>
+        cardsWrap.scrollWidth - container.offsetWidth;
+
+      const scrollTween = gsap.to(cardsWrap, {
+        x: () => -getScrollDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: () => `+=${getScrollDistance()}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Per-card entrance
+      const cards = cardsWrap.querySelectorAll(".service-card");
+      cards.forEach((card) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0.3, scale: 0.96 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.3,
+            scrollTrigger: {
+              containerAnimation: scrollTween,
+              trigger: card,
+              start: "left 85%",
+              end: "left 50%",
+              scrub: true,
+            },
+          },
+        );
+      });
+
+      return () => {
+        scrollTween.scrollTrigger?.kill();
+        scrollTween.kill();
+      };
+    });
+
     mm.add("(max-width: 767px)", () => {
       const stack = mobileStackRef.current;
       if (!stack) return;
@@ -175,8 +182,6 @@ export default function ServicesSection() {
     }
 
     return () => {
-      scrollTween.scrollTrigger?.kill();
-      scrollTween.kill();
       mm?.revert?.();
     };
   }, { scope: sectionRef });
