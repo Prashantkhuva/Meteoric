@@ -49,6 +49,7 @@ export default function ServicesSection() {
   const sectionRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const cardsWrapRef = useRef(null);
+  const mobileStackRef = useRef(null);
   const headingRef = useRef(null);
   const [ctaHovered, setCtaHovered] = useState(false);
 
@@ -118,9 +119,58 @@ export default function ServicesSection() {
       );
     });
 
+    // Mobile: stacked cards scroll animation
+    const mm = gsap.matchMedia();
+    mm.add("(max-width: 767px)", () => {
+      const stack = mobileStackRef.current;
+      if (!stack) return;
+
+      const stackCards = stack.querySelectorAll(".svc-mob-card");
+      if (stackCards.length === 0) return;
+
+      const totalCards = stackCards.length;
+      // Each card gets an equal slice of the total scroll to exit
+      const pinScroll = (totalCards - 1) * window.innerHeight * 0.75;
+
+      // Create a timeline pinned to the stack container
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: stack,
+          start: "top top",
+          end: () => `+=${pinScroll}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Each card exits in sequence: translate up, fade, scale down
+      stackCards.forEach((card, i) => {
+        const exitStart = i / totalCards;
+        const exitEnd = (i + 1) / totalCards;
+        tl.to(
+          card,
+          {
+            y: "-100%",
+            opacity: 0,
+            scale: 0.95,
+            ease: "power3.inOut",
+            duration: exitEnd - exitStart,
+          },
+          exitStart,
+        );
+      });
+
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
+    });
+
     return () => {
       scrollTween.scrollTrigger?.kill();
       scrollTween.kill();
+      mm?.revert?.();
     };
   }, { scope: sectionRef });
 
@@ -297,16 +347,23 @@ export default function ServicesSection() {
         </div>
       </div>
 
-      {/* Mobile: vertical cards */}
-      <div className="md:hidden px-6 pb-28">
-        <div className="space-y-4">
-          {services.map((s) => {
+      {/* Mobile: stacked cards with scroll animation */}
+      <div
+        ref={mobileStackRef}
+        className="md:hidden relative"
+        style={{ height: "100dvh" }}
+      >
+        <div className="absolute inset-0 px-6 flex flex-col justify-center">
+          {services.map((s, i) => {
             const Icon = s.icon;
             return (
-              <Link
+              <div
                 key={s.num}
-                href={s.href}
-                className="group relative block rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02] backdrop-blur-md p-6 transition-colors duration-300 hover:border-white/[0.12]"
+                className="svc-mob-card absolute inset-x-6 rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col"
+                style={{
+                  height: "calc(100dvh - 120px)",
+                  zIndex: i + 1,
+                }}
               >
                 {/* Ghost number */}
                 <span
@@ -332,7 +389,7 @@ export default function ServicesSection() {
                   {s.desc}
                 </p>
 
-                <div className="relative z-10 flex flex-wrap gap-2">
+                <div className="relative z-10 flex flex-wrap gap-2 mt-auto">
                   {s.tags.map((tag) => (
                     <span
                       key={tag}
@@ -342,17 +399,43 @@ export default function ServicesSection() {
                     </span>
                   ))}
                 </div>
-              </Link>
+
+                <div className="relative z-10 mt-4">
+                  <Link
+                    href={s.href}
+                    className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 border-b border-white/15 pb-1"
+                  >
+                    The full picture
+                    <svg
+                      className="w-3.5 h-3.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M7 17L17 7M7 7h10v10" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
             );
           })}
 
-          {/* CTA card — mobile */}
-          <div className="relative rounded-2xl overflow-hidden border border-[#EAEFFF]/10 bg-[#EAEFFF]/[0.04] backdrop-blur-md p-6">
+          {/* CTA card — mobile, sits behind all service cards */}
+          <div
+            className="svc-mob-card absolute inset-x-6 rounded-2xl overflow-hidden border border-[#EAEFFF]/10 bg-[#0a0a0a] p-6 flex flex-col"
+            style={{
+              height: "calc(100dvh - 120px)",
+              zIndex: services.length + 1,
+            }}
+          >
             <span className="absolute top-4 right-4 text-[80px] font-display leading-none text-[#EAEFFF]/[0.03] select-none pointer-events-none" aria-hidden="true">
               05
             </span>
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex-1 flex flex-col justify-center">
               <span className="text-[10px] tracking-[0.3em] font-bold text-[#EAEFFF]/30 uppercase block mb-4">
                 And then some
               </span>
