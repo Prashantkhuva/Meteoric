@@ -278,7 +278,7 @@ export default function ServicesPage() {
           <div className="absolute right-0 top-0 w-24 md:w-48 h-full bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
           <div className="marquee">
-            <div className="flex gap-12 md:gap-20 whitespace-nowrap animate-marquee-left">
+            <div className="flex w-max gap-12 md:gap-20 whitespace-nowrap animate-marquee-left">
               {[...techStack, ...techStack].map((tech, i) => (
                 <span
                   key={i}
