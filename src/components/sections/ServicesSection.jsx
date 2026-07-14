@@ -141,6 +141,8 @@ export default function ServicesSection() {
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
+          onLeave: () => gsap.set(stack, { height: 0 }),
+          onEnterBack: () => gsap.set(stack, { height: "100dvh" }),
         },
       });
 
@@ -159,9 +161,6 @@ export default function ServicesSection() {
           exitStart,
         );
       });
-
-      // Collapse container height after all cards exit so no blank space remains in flow
-      tl.set(stack, { height: 0 }, 1);
 
       return () => {
         tl.scrollTrigger?.kill();
