@@ -49,6 +49,7 @@ export default function ServicesSection() {
   const sectionRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const cardsWrapRef = useRef(null);
+  const mobileScrollRef = useRef(null);
   const mobileStackRef = useRef(null);
   const headingRef = useRef(null);
   const [ctaHovered, setCtaHovered] = useState(false);
@@ -129,29 +130,32 @@ export default function ServicesSection() {
     });
 
     mm.add("(max-width: 767px)", () => {
+      const scrollContainer = mobileScrollRef.current;
       const stack = mobileStackRef.current;
-      if (!stack) return;
+      if (!stack || !scrollContainer) return;
 
-      const stackCards = stack.querySelectorAll(".svc-mob-card");
-      if (stackCards.length === 0) return;
+      const allCards = stack.querySelectorAll(".svc-mob-card");
+      if (allCards.length === 0) return;
 
-      const totalCards = stackCards.length;
+      const serviceCards = stack.querySelectorAll(".svc-mob-card:not(:last-child)");
+      const totalCards = serviceCards.length;
+      const cardH = allCards[0].getBoundingClientRect().height;
+      const scrollDistance = (totalCards - 1) * cardH * 0.6;
+
+      // Wrapper height: just enough for sticky to unstick when last card exits
+      scrollContainer.style.height = `calc(100dvh + ${scrollDistance}px)`;
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: stack,
+          trigger: scrollContainer,
           start: "top top",
-          end: () => {
-            const cardH = stackCards[0].getBoundingClientRect().height;
-            return `+=${(totalCards - 1) * cardH * 0.6}`;
-          },
-          pin: true,
+          end: "bottom bottom",
           scrub: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      stackCards.forEach((card, i) => {
+      serviceCards.forEach((card, i) => {
         const exitStart = i / totalCards;
         const exitEnd = (i + 1) / totalCards;
         tl.to(
@@ -358,12 +362,9 @@ export default function ServicesSection() {
       </div>
 
       {/* Mobile: stacked cards with scroll animation */}
-      <div
-        ref={mobileStackRef}
-        className="md:hidden relative"
-        style={{ height: "100dvh" }}
-      >
-        <div className="absolute inset-0 px-5 flex flex-col justify-center">
+      <div ref={mobileScrollRef} className="md:hidden">
+        <div ref={mobileStackRef} className="sticky top-0 h-dvh relative">
+          <div className="absolute inset-0 px-5 flex flex-col justify-center">
           {services.map((s, i) => {
             const Icon = s.icon;
             return (
@@ -461,6 +462,7 @@ export default function ServicesSection() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
