@@ -148,20 +148,6 @@ export default function ServicesSection() {
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
-          onLeave: () => {
-            gsap.set(stack, { height: 0, overflow: "hidden" });
-            const spacer = stack.parentElement;
-            if (spacer?.classList.contains("pin-spacer")) {
-              gsap.set(spacer, { height: 0, padding: 0, overflow: "hidden" });
-            }
-          },
-          onEnterBack: () => {
-            gsap.set(stack, { height: "100dvh", overflow: "" });
-            const spacer = stack.parentElement;
-            if (spacer?.classList.contains("pin-spacer")) {
-              gsap.set(spacer, { clearProps: "all" });
-            }
-          },
         },
       });
 
