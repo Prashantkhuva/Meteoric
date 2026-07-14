@@ -117,10 +117,10 @@ export default function LeadCaptureSection() {
               <p role="alert" className="text-red-400/80 text-xs text-center mt-4">
                 Something went wrong. Please email us directly at{" "}
                 <a
-                  href="mailto:work.prashantkhuva@gmail.com"
+                  href="mailto:contact@withmeteoric.com"
                   className="underline hover:text-red-300"
                 >
-                  work.prashantkhuva@gmail.com
+                  contact@withmeteoric.com
                 </a>
               </p>
             )}

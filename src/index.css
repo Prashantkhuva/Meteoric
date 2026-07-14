@@ -11,7 +11,7 @@ body {
   height: 100%;
   min-height: 100%;
   position: relative;
-  background: #070707;
+  background: #000;
   font-family: var(--font-primary);
   font-size: 16px;
   line-height: 24px;

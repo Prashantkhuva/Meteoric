@@ -34,60 +34,101 @@ export const metadata = {
   robots: "noindex, follow",
 };
 
+const sections = [
+  {
+    num: "01",
+    title: "Services",
+    content: `Meteoric provides software development services including but not limited to web development, SaaS product development, landing page design, and technical consulting. The specific scope, timeline, and pricing for each engagement will be outlined in a separate proposal or agreement.`,
+  },
+  {
+    num: "02",
+    title: "Intellectual Property",
+    content: `Upon full payment for services, all intellectual property rights to the deliverables (code, designs, and assets) created specifically for your project are transferred to you. Meteoric retains the right to display the work in our portfolio and use the underlying techniques and methodologies in future projects.`,
+  },
+  {
+    num: "03",
+    title: "Payments",
+    content: `Payment terms are specified in the project proposal or agreement. Typical terms include a deposit upfront with the balance due upon completion or milestone-based payments. Late payments may result in project delays or suspension of work.`,
+  },
+  {
+    num: "04",
+    title: "Revisions and Changes",
+    content: `Projects include the revision cycles specified in the proposal. Additional revisions or scope changes beyond the agreed terms will be billed at our standard hourly rate. Scope changes that significantly alter the project timeline will be documented in a change order.`,
+  },
+  {
+    num: "05",
+    title: "Confidentiality",
+    content: `Both parties agree to keep confidential any proprietary information shared during the engagement. This includes business plans, technical specifications, and any non-public data. This obligation survives the termination of the agreement.`,
+  },
+  {
+    num: "06",
+    title: "Limitation of Liability",
+    content: `Meteoric's liability is limited to the amount paid for the specific project component giving rise to the claim. We are not liable for consequential damages, lost profits, or business interruption, even if advised of the possibility of such damages.`,
+  },
+  {
+    num: "07",
+    title: "Website Use",
+    content: `This website is provided for informational purposes. You agree not to use this site for any unlawful purpose or in violation of these terms. We reserve the right to update these terms at any time.`,
+  },
+  {
+    num: "08",
+    title: "Contact",
+    content: `For questions about these terms, contact us at contact@withmeteoric.com.`,
+  },
+];
+
 export default function Terms() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
-      </div>
+      <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
+        {/* Header */}
+        <div className="mb-16">
+          <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+            Legal
+          </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6">
+            Terms of Service
+          </h1>
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-white/10" />
+            <span className="text-white/20 text-xs font-mono tracking-wider">
+              Last updated — July 6, 2026
+            </span>
+          </div>
+        </div>
 
-      <main className="relative max-w-3xl mx-auto px-6 md:px-16 pt-32 pb-24">
-        <h1 className="text-3xl md:text-4xl font-semibold leading-[1.15] tracking-tight mb-12">
-          Terms of Service
-        </h1>
+        {/* Sections */}
+        <div className="space-y-0">
+          {sections.map((section) => (
+            <section
+              key={section.num}
+              className="py-10 border-t border-white/[0.06]"
+            >
+              <div className="flex gap-6 md:gap-10">
+                {/* Number */}
+                <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
+                  {section.num}
+                </span>
 
-        <p className="text-white/40 text-sm mb-8">Last updated: July 6, 2026</p>
+                {/* Content */}
+                <div>
+                  <h2 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-4">
+                    {section.title}
+                  </h2>
+                  <p className="text-white/35 text-[15px] leading-[1.8]">
+                    {section.content}
+                  </p>
+                </div>
+              </div>
+            </section>
+          ))}
+        </div>
 
-        <div className="space-y-8 text-white/45 text-base leading-[1.8]">
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">1. Services</h2>
-            <p>Meteoric provides software development services including but not limited to web development, SaaS product development, landing page design, and technical consulting. The specific scope, timeline, and pricing for each engagement will be outlined in a separate proposal or agreement.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">2. Intellectual Property</h2>
-            <p>Upon full payment for services, all intellectual property rights to the deliverables (code, designs, and assets) created specifically for your project are transferred to you. Meteoric retains the right to display the work in our portfolio and use the underlying techniques and methodologies in future projects.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">3. Payments</h2>
-            <p>Payment terms are specified in the project proposal or agreement. Typical terms include a deposit upfront with the balance due upon completion or milestone-based payments. Late payments may result in project delays or suspension of work.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">4. Revisions and Changes</h2>
-            <p>Projects include the revision cycles specified in the proposal. Additional revisions or scope changes beyond the agreed terms will be billed at our standard hourly rate. Scope changes that significantly alter the project timeline will be documented in a change order.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">5. Confidentiality</h2>
-            <p>Both parties agree to keep confidential any proprietary information shared during the engagement. This includes business plans, technical specifications, and any non-public data. This obligation survives the termination of the agreement.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">6. Limitation of Liability</h2>
-            <p>Meteoric's liability is limited to the amount paid for the specific project component giving rise to the claim. We are not liable for consequential damages, lost profits, or business interruption, even if advised of the possibility of such damages.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">7. Website Use</h2>
-            <p>This website is provided for informational purposes. You agree not to use this site for any unlawful purpose or in violation of these terms. We reserve the right to update these terms at any time.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-4">8. Contact</h2>
-            <p>For questions about these terms, contact us at work.prashantkhuva@gmail.com.</p>
-          </section>
+        {/* Footer note */}
+        <div className="mt-16 pt-8 border-t border-white/[0.06]">
+          <p className="text-white/15 text-xs font-mono tracking-wider">
+            Meteoric · withmeteoric.com
+          </p>
         </div>
       </main>
     </div>

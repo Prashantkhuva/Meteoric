@@ -260,10 +260,10 @@ export default function ReviewFormModal({ open, onClose }) {
                           <span className="w-1 h-1 rounded-full bg-red-400/50 shrink-0" />
                           Something went wrong. Email us at{" "}
                           <a
-                            href="mailto:work.prashantkhuva@gmail.com"
+                            href="mailto:contact@withmeteoric.com"
                             className="underline hover:text-red-300 transition-colors"
                           >
-                            work.prashantkhuva@gmail.com
+                            contact@withmeteoric.com
                           </a>
                         </p>
                       )}

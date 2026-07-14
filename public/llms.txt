@@ -50,10 +50,7 @@
 
 ## Services
 
-- [Landing Page](https://withmeteoric.com/services/landing-pages) — High-converting, fast-loading landing pages designed for startups and founders.
-- [SaaS Development](https://withmeteoric.com/services/saas-development) — Build your SaaS product with Next.js, Supabase, and Stripe. MVP to production platform.
-- [Web Apps](https://withmeteoric.com/services/web-applications) — Custom web applications, dashboards, and internal tools built for performance.
-- [Full-Stack Development](https://withmeteoric.com/services/full-stack-development) — Complete frontend and backend development, APIs, databases, and integrations.
+- [Services](https://withmeteoric.com/services) — Web & SaaS development services for startups and founders. Landing pages, SaaS products, web apps, and full-stack development.
 
 ## Internal links
 
@@ -62,14 +59,6 @@
 - [Work / Portfolio](https://withmeteoric.com/work)
 - [Case Studies](https://withmeteoric.com/case-studies)
 - [Services](https://withmeteoric.com/services)
-- [Landing Page](https://withmeteoric.com/services/landing-pages)
-- [SaaS Development](https://withmeteoric.com/services/saas-development)
-- [Web Apps](https://withmeteoric.com/services/web-applications)
-- [Full-Stack Development](https://withmeteoric.com/services/full-stack-development)
-- [React Development](https://withmeteoric.com/technologies/react)
-- [Next.js Development](https://withmeteoric.com/technologies/next-js)
-- [Node.js Development](https://withmeteoric.com/technologies/node-js)
-- [Supabase Development](https://withmeteoric.com/technologies/supabase)
 - [Process](https://withmeteoric.com/#process)
 - [Contact](https://withmeteoric.com/#contact)
 - [Privacy Policy](https://withmeteoric.com/privacy)

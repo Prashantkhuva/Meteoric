@@ -71,7 +71,7 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 ## Email (Resend)
 - Test mode (`onboarding@resend.dev`) only delivers to `ADMIN_EMAIL`
 - `FROM_EMAIL="Meteoric <onboarding@resend.dev>"` — must change to verified domain for production
-- `ADMIN_EMAIL=work.prashantkhuva@gmail.com`
+- `ADMIN_EMAIL=contact@withmeteoric.com`
 - Proposal + invoice emails send via server actions after email success (status unchanged on failure)
 
 ## WhatsApp Sharing

@@ -1,116 +1,298 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { ArrowUpRight, LayoutDashboard, Rocket, AppWindow, Code2 } from "lucide-react";
 
-const serviceItems = [
+const services = [
   {
-    icon: <LayoutDashboard size={20} />,
     num: "01",
-    title: "Landing Page",
-    desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO and conversion.",
-    href: "/services/landing-pages",
+    title: ["Landing", "Pages"],
+    desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
+    process: {
+      intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
+      steps: [
+        {
+          title: "Strategy & Wireframe",
+          desc: "We map your audience, message, and conversion flow before a single pixel is designed. Every section has a job — no filler, no decoration.",
+        },
+        {
+          title: "Design & Animate",
+          desc: "Visual identity meets motion design. We craft scroll-triggered animations, micro-interactions, and a layout that guides the eye exactly where it needs to go.",
+        },
+        {
+          title: "Build & Optimize",
+          desc: "Next.js, Tailwind CSS, GSAP. Blazing fast load times, perfect Lighthouse scores, and SEO foundations baked in from day one.",
+        },
+      ],
+    },
   },
   {
-    icon: <Rocket size={20} />,
     num: "02",
-    title: "SaaS Development",
-    desc: "From MVP prototypes to production SaaS platforms. We build with Next.js, Supabase, and Stripe — shipped fast, built to scale.",
-    href: "/services/saas-development",
+    title: ["SaaS", "Development"],
+    desc: "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
+    process: {
+      intro: "We build SaaS like a product studio, not an agency. Founder-level involvement, no account managers, and a technical stack built to scale.",
+      steps: [
+        {
+          title: "Scope & Architect",
+          desc: "We define your core 20% — the features that deliver 80% of value. Database schema, API design, auth flows, and subscription billing mapped out before development begins.",
+        },
+        {
+          title: "Build & Ship MVP",
+          desc: "Full-stack development with Next.js, Supabase, and Stripe. Auth, dashboards, real-time features, and payment integration — production-ready in 3-6 weeks.",
+        },
+        {
+          title: "Scale & Iterate",
+          desc: "Post-launch support, feature additions, performance optimization, and ongoing maintenance. We treat every project as a long-term partnership.",
+        },
+      ],
+    },
   },
   {
-    icon: <AppWindow size={20} />,
     num: "03",
-    title: "Web Apps",
-    desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform.",
-    href: "/services/web-applications",
+    title: ["Web", "Applications"],
+    desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
+    process: {
+      intro: "Whether it's an internal dashboard or a customer-facing platform, we build web apps that are fast, reliable, and a pleasure to use.",
+      steps: [
+        {
+          title: "Discover & Map",
+          desc: "User research, competitor analysis, and journey mapping. We understand how your users think and what they need before we design a single screen.",
+        },
+        {
+          title: "Design & Prototype",
+          desc: "Wireframes → high-fidelity design → interactive prototype. We test and refine until the experience feels natural from the first click.",
+        },
+        {
+          title: "Develop & Deploy",
+          desc: "Clean, efficient code with Next.js, Node.js, and Supabase. Real-time features, API integrations, and deployment to Vercel with monitoring baked in.",
+        },
+      ],
+    },
   },
   {
-    icon: <Code2 size={20} />,
     num: "04",
-    title: "Full-Stack Development",
-    desc: "Frontend to backend, database to deployment. We build complete systems with APIs, auth, integrations, and polished interfaces.",
-    href: "/services/full-stack-development",
+    title: ["Full-Stack", "Development"],
+    desc: "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
+    process: {
+      intro: "No coordinating multiple vendors. We handle the entire stack — from the database schema to the pixel-perfect UI — so you get one cohesive product.",
+      steps: [
+        {
+          title: "Architecture & Planning",
+          desc: "Technical stack selection, system architecture, and database design. We plan for performance, scalability, and security from day one — no retrofitting.",
+        },
+        {
+          title: "Build & Integrate",
+          desc: "Frontend, backend, APIs, third-party integrations. Stripe, Resend, Supabase, Cal.com — everything built to work together seamlessly with proper error handling.",
+        },
+        {
+          title: "Launch & Optimize",
+          desc: "Performance optimization, SEO foundations, accessibility checks, and speed audits. Your app launches strong and stays fast as it grows.",
+        },
+      ],
+    },
   },
 ];
+
+const techStack = [
+  "Next.js",
+  "React",
+  "Supabase",
+  "Node.js",
+  "Tailwind CSS",
+  "TypeScript",
+  "GSAP",
+  "Stripe",
+  "PostgreSQL",
+  "Framer Motion",
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] },
+  }),
+};
 
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#EAEFFF]/[0.02] blur-[160px] rounded-full" />
-      </div>
-
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
-        <motion.div
+      {/* Hero */}
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-32 flex flex-col items-center text-center">
+        <motion.span
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex items-center gap-3 mb-10"
+          className="text-[#EAEFFF]/40 uppercase tracking-[0.3em] text-xs font-bold block mb-6"
         >
-          <span className="h-px w-8 bg-white/20" />
-          <span className="text-white/25 uppercase tracking-[0.3em] text-xs">
-            Services
-          </span>
-        </motion.div>
+          Our Expertise
+        </motion.span>
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.1] tracking-tight max-w-4xl mb-6"
+          className="text-5xl md:text-7xl lg:text-8xl font-secondary-italic font-normal leading-[1.1] tracking-tight max-w-4xl mb-8"
         >
-          What We{" "}
-          <span className="font-secondary-italic" style={{
-            background: "linear-gradient(135deg, #fff 0%, #a0a0a0 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>
-            Build
-          </span>
+          Design. Build.{" "}
+          <span className="font-secondary-italic font-normal">Launch.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-white/40 text-base md:text-lg max-w-2xl mb-16"
+          className="text-white/40 text-base md:text-lg max-w-2xl font-light leading-relaxed mb-10"
         >
           We partner with founders to design, build, and launch modern web
           products. Every project ships with the same care as if it were our
           own — because it is.
         </motion.p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {serviceItems.map((item, i) => (
-            <Link key={item.href + item.num} href={item.href}>
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                className="group relative rounded-2xl border border-white/[0.06] p-7 transition-all duration-500 hover:border-[#EAEFFF]/20 hover:shadow-[0_0_60px_rgba(234,239,255,0.06)]"
-                style={{ background: "#0a0a0a" }}
-              >
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="flex items-start justify-between mb-5">
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[#EAEFFF]/70 shrink-0">
-                      {item.icon}
-                    </span>
-                    <h2 className="text-lg font-semibold text-white tracking-tight">{item.title}</h2>
-                  </div>
-                  <span className="text-[11px] font-mono tracking-wider text-white/15 mt-1">{item.num}</span>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent"
+        />
+      </section>
+
+      {/* Service Sections */}
+      {services.map((svc, idx) => {
+        const isReversed = idx % 2 === 1;
+        return (
+          <section
+            key={svc.num}
+            className="py-20 md:py-28 relative border-t border-white/[0.06]"
+          >
+            <div className="max-w-6xl mx-auto px-6 md:px-12">
+              <div className={`grid md:grid-cols-12 gap-10 md:gap-12 items-start ${isReversed ? "" : ""}`}>
+                {/* Left: Sticky text */}
+                <div
+                  className={`md:col-span-5 md:sticky md:top-32 ${
+                    isReversed ? "md:order-last" : ""
+                  }`}
+                >
+                  <motion.span
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    className="text-6xl md:text-8xl font-secondary-italic text-[#EAEFFF]/[0.08] mb-6 block leading-none"
+                  >
+                    {svc.num}.
+                  </motion.span>
+
+                  <motion.h2
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    custom={1}
+                    className="text-3xl md:text-5xl lg:text-[clamp(2.25rem,4vw,3.5rem)] font-secondary-italic font-normal leading-[1.15] tracking-tight mb-6"
+                  >
+                    {svc.title[0]}
+                    <br />
+                    {svc.title[1]}
+                  </motion.h2>
+
+                  <motion.p
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    custom={2}
+                    className="text-white/40 text-base leading-relaxed"
+                  >
+                    {svc.desc}
+                  </motion.p>
                 </div>
-                <p className="text-white/45 text-sm leading-relaxed mb-5">{item.desc}</p>
-                <span className="inline-flex items-center gap-1.5 text-xs text-white/25 group-hover:text-[#EAEFFF]/60 transition-colors duration-300 font-medium">
-                  Learn more <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+
+                {/* Right: Process card */}
+                <motion.div
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                  custom={2}
+                  className="md:col-span-7 rounded-2xl border border-white/[0.06] p-10 md:p-14 lg:p-16"
+                  style={{ background: "#0a0a0a" }}
+                >
+                  <h3 className="text-xl md:text-2xl font-secondary-italic text-white/80 mb-4">
+                    Our Process
+                  </h3>
+                  <p className="text-white/35 text-sm leading-relaxed mb-8">
+                    {svc.process.intro}
+                  </p>
+
+                  <div className="space-y-6">
+                    {svc.process.steps.map((step, si) => (
+                      <div
+                        key={si}
+                        className="border-l-2 border-[#EAEFFF]/10 pl-6 hover:border-[#EAEFFF]/30 transition-colors duration-300"
+                      >
+                        <h4 className="uppercase tracking-widest text-[11px] font-bold text-white/50 mb-2">
+                          {step.title}
+                        </h4>
+                        <p className="text-sm text-white/30 leading-relaxed">
+                          {step.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
+      {/* Tech Stack Marquee */}
+      <section className="py-20 md:py-28 relative border-t border-white/[0.06] overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 mb-12 text-center">
+          <motion.span
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-[#EAEFFF]/40 uppercase tracking-widest text-xs font-bold block mb-4"
+          >
+            Our Stack
+          </motion.span>
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={1}
+            className="text-3xl md:text-5xl font-secondary-italic"
+          >
+            Technologies We Master
+          </motion.h2>
+        </div>
+
+        <div className="relative w-full overflow-hidden py-6 flex items-center">
+          {/* Edge masks */}
+          <div className="absolute left-0 top-0 w-24 md:w-48 h-full bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 w-24 md:w-48 h-full bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+
+          <div className="marquee">
+            <div className="flex gap-12 md:gap-20 whitespace-nowrap">
+              {[...techStack, ...techStack].map((tech, i) => (
+                <span
+                  key={i}
+                  className="text-3xl md:text-5xl font-secondary-italic text-white/[0.08] hover:text-white/40 transition-colors duration-500"
+                >
+                  {tech}
                 </span>
-              </motion.div>
-            </Link>
-          ))}
+              ))}
+            </div>
+          </div>
         </div>
       </section>
+
+
     </div>
   );
 }

@@ -74,8 +74,6 @@ export default function Footer() {
               <Link href="/work" className="text-white/40 hover:text-white transition-colors">Work</Link>
               <Link href="/case-studies" className="text-white/40 hover:text-white transition-colors">Case Studies</Link>
               <Link href="/services" className="text-white/40 hover:text-white transition-colors">Services</Link>
-              <Link href="/technologies/react" className="text-white/40 hover:text-white transition-colors">React</Link>
-              <Link href="/technologies/node-js" className="text-white/40 hover:text-white transition-colors">Node.js</Link>
               <Link href="/about" className="text-white/40 hover:text-white transition-colors">About</Link>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">

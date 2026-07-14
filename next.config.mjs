@@ -7,12 +7,12 @@ const nextConfig = {
     return [
       {
         source: "/services/startup-web-development",
-        destination: "/services/full-stack-development",
+        destination: "/services",
         permanent: true,
       },
       {
         source: "/services/api-development",
-        destination: "/services/full-stack-development",
+        destination: "/services",
         permanent: true,
       },
       {
@@ -22,6 +22,26 @@ const nextConfig = {
       },
       {
         source: "/services/technical-consulting",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/services/landing-pages",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/services/saas-development",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/services/web-applications",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/services/full-stack-development",
         destination: "/services",
         permanent: true,
       },

@@ -63,7 +63,7 @@ export const metadata = {
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
   other: {
-    "theme-color": "#070707",
+    "theme-color": "#000000",
     "referrer": "origin-when-cross-origin",
   },
 };
@@ -96,10 +96,6 @@ export default function RootLayout({ children }) {
                     "https://x.com/prashantkhuva_",
                     "https://www.instagram.com/officialmeteoric/",
                     "https://www.wikidata.org/wiki/Q140453413",
-                    "https://withmeteoric.com/technologies/next-js",
-                    "https://withmeteoric.com/technologies/supabase",
-                    "https://withmeteoric.com/technologies/react",
-                    "https://withmeteoric.com/technologies/node-js",
                   ],
                 },
                 {
@@ -144,8 +140,6 @@ export default function RootLayout({ children }) {
                     { "@type": "SiteNavigationElement", name: "Work", url: `${SITE_URL}/work` },
                     { "@type": "SiteNavigationElement", name: "Services", url: `${SITE_URL}/services` },
                     { "@type": "SiteNavigationElement", name: "About", url: `${SITE_URL}/about` },
-                    { "@type": "SiteNavigationElement", name: "Next.js Development", url: `${SITE_URL}/technologies/next-js` },
-                    { "@type": "SiteNavigationElement", name: "Supabase Development", url: `${SITE_URL}/technologies/supabase` },
                   ],
                 },
               ],

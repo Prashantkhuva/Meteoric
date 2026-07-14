@@ -1,6 +1,49 @@
 # Deleted Routes — Remove from Google Search Console
 
-Blog removed from Meteoric on 2026-07-13. Remove these URLs from GSC → Removals tool.
+## Services sub-routes removed 2026-07-14
+
+Single `/services` page kept. Remove these from GSC → Removals tool.
+
+```
+https://withmeteoric.com/services/landing-pages
+https://withmeteoric.com/services/saas-development
+https://withmeteoric.com/services/web-applications
+https://withmeteoric.com/services/full-stack-development
+```
+
+### What was deleted
+
+- Route files: `app/(marketing)/services/{landing-pages,saas-development,web-applications,full-stack-development}/`
+- Components: `src/components/pages/{LandingPages,SaaSDevelopment,WebApplications,FullStackDevelopment}.jsx`
+- Sitemap entries removed from `src/lib/seo/config.js`
+- llms.txt references removed
+- 301 redirects added in `next.config.mjs` → `/services`
+- Cross-references in About.jsx and CaseStudies.jsx updated
+
+## Technology pages removed 2026-07-14
+
+```
+https://withmeteoric.com/technologies/next-js
+https://withmeteoric.com/technologies/supabase
+https://withmeteoric.com/technologies/react
+https://withmeteoric.com/technologies/node-js
+```
+
+### What was deleted
+
+- Route files: `app/(marketing)/technologies/{next-js,supabase,react,node-js}/`
+- Components: `src/components/pages/{NextJsTech,SupabaseTech,ReactTech,NodeJsTech}.jsx`
+- Sitemap entries removed from `src/lib/seo/config.js`
+- llms.txt references removed
+- Schema sameAs + SiteNavigationElement entries removed from `app/layout.jsx`
+- Footer links removed from `src/components/layout/Footer.jsx`
+- About.jsx cross-reference removed
+
+---
+
+## Blog removed 2026-07-13
+
+Remove these URLs from GSC → Removals tool.
 
 ## Routes to remove (12 URLs)
 
