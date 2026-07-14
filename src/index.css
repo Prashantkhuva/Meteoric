@@ -11,7 +11,7 @@ body {
   height: 100%;
   min-height: 100%;
   position: relative;
-  background: #000;
+  background: #070707;
   font-family: var(--font-primary);
   font-size: 16px;
   line-height: 24px;
@@ -77,32 +77,24 @@ body::after {
   background-size: 180px;
 }
 
-@keyframes marquee-left {
+@keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
-@keyframes marquee-right {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0%); }
-}
-
-@utility animate-marquee-left {
-  animation: marquee-left var(--duration, 40s) linear infinite;
-}
-
-@utility animate-marquee-right {
-  animation: marquee-right var(--duration, 40s) linear infinite;
+.marquee {
+  width: max-content;
+  animation: marquee 30s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee-left, .animate-marquee-right {
-    animation: none !important;
+  .marquee {
+    animation: none;
   }
   .animate-pulse {
     animation: none;
   }
-  .gsap-word, .gsap-head-word, .gsap-proc-word, .gsap-svc-word, .gsap-proj-word, .gsap-work-word, .gsap-card {
+  .gsap-word, .gsap-head-word, .gsap-proc-word, .gsap-card {
     opacity: 1 !important;
     transform: none !important;
   }
@@ -148,25 +140,5 @@ input[type="number"] {
 
 input[type="number"]:hover::-webkit-inner-spin-button,
 input[type="number"]:hover::-webkit-outer-spin-button {
-  opacity: 1;
-}
-
-/* Center-expand fill for buttons */
-.fill-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
-  z-index: 1;
-  pointer-events: none;
-}
-.group:hover > .fill-circle,
-.group\/btn:hover > .fill-circle {
-  transform: translate(-50%, -50%) scale(80);
   opacity: 1;
 }
