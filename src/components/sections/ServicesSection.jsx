@@ -150,7 +150,7 @@ export default function ServicesSection() {
           trigger: scrollContainer,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 0.3,
           invalidateOnRefresh: true,
         },
       });
@@ -163,8 +163,7 @@ export default function ServicesSection() {
           {
             y: "-100%",
             opacity: 0,
-            scale: 0.95,
-            ease: "power3.inOut",
+            ease: "power2.inOut",
             duration: exitEnd - exitStart,
           },
           exitStart,
@@ -363,14 +362,14 @@ export default function ServicesSection() {
 
       {/* Mobile: stacked cards with scroll animation */}
       <div ref={mobileScrollRef} className="md:hidden">
-        <div ref={mobileStackRef} className="sticky top-0 h-dvh relative">
+        <div ref={mobileStackRef} className="sticky top-0 h-dvh relative will-change-transform">
           <div className="absolute inset-0 px-5 flex flex-col justify-center">
           {services.map((s, i) => {
             const Icon = s.icon;
             return (
                 <div
                   key={s.num}
-                  className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-6 flex flex-col gap-4"
+                  className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
                   style={{
                   height: "clamp(360px, 50dvh, 420px)",
                   zIndex: services.length - i,
@@ -427,7 +426,7 @@ export default function ServicesSection() {
 
           {/* CTA card */}
           <div
-            className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl p-6 flex flex-col gap-4"
+            className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
             style={{
               height: "clamp(360px, 50dvh, 420px)",
               zIndex: 0,
