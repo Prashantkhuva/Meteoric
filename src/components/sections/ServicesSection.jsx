@@ -159,6 +159,9 @@ export default function ServicesSection() {
         );
       });
 
+      // Collapse container height after all cards exit so no blank space remains in flow
+      tl.set(stack, { height: 0 }, 1);
+
       return () => {
         tl.scrollTrigger?.kill();
         tl.kill();
@@ -348,7 +351,8 @@ export default function ServicesSection() {
       {/* Mobile: stacked cards with scroll animation */}
       <div
         ref={mobileStackRef}
-        className="md:hidden relative h-[min(440px,56dvh)]"
+        className="md:hidden relative"
+        style={{ height: "100dvh" }}
       >
         <div className="absolute inset-0 px-5 flex flex-col justify-center">
           {services.map((s, i) => {
