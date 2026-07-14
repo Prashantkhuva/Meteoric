@@ -206,7 +206,7 @@ export default function TestimonialsSection() {
 
           {/* ── Marquee Row 1 — scrolls left ── */}
           <div className="relative flex w-full items-center overflow-hidden mb-4">
-            <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
+            <div className="group flex p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
               <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
                 {[...Array(4)].map((_, setIndex) =>
                   displayReviews.map((t, i) => (
@@ -221,7 +221,7 @@ export default function TestimonialsSection() {
 
           {/* ── Marquee Row 2 — scrolls right ── */}
           <div className="relative flex w-full items-center overflow-hidden mb-12">
-            <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
+            <div className="group flex p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
               <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
                 {[...Array(4)].map((_, setIndex) =>
                   displayReviews.map((t, i) => (
