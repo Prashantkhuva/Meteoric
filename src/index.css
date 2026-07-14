@@ -77,19 +77,27 @@ body::after {
   background-size: 180px;
 }
 
-@keyframes marquee {
+@keyframes marquee-left {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
-.marquee {
-  width: max-content;
-  animation: marquee 30s linear infinite;
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@utility animate-marquee-left {
+  animation: marquee-left var(--duration, 40s) linear infinite;
+}
+
+@utility animate-marquee-right {
+  animation: marquee-right var(--duration, 40s) linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee {
-    animation: none;
+  .animate-marquee-left, .animate-marquee-right {
+    animation: none !important;
   }
   .animate-pulse {
     animation: none;
