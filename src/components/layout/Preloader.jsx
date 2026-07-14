@@ -8,6 +8,7 @@ const CHARS = "METEORIC".split("");
 export default function Preloader() {
   const overlayRef = useRef(null);
   const counterRef = useRef(null);
+  const counterWrapRef = useRef(null);
   const charsRef = useRef([]);
   const cometRef = useRef(null);
   const trailRef = useRef(null);
@@ -61,8 +62,8 @@ export default function Preloader() {
       {
         yPercent: 0,
         opacity: 1,
-        duration: 0.5,
-        stagger: 0.06,
+        duration: 0.6,
+        stagger: 0.05,
         ease: "power3.out",
       },
       "-=0.5",
@@ -71,25 +72,28 @@ export default function Preloader() {
     // 3) tagline fades in
     tl.fromTo(
       tagRef.current,
-      { opacity: 0, y: 10 },
+      { opacity: 0, y: 8 },
       { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
       "-=0.2",
     );
 
-    // 4) count 0 → 100
-    tl.to(
-      counter,
-      {
-        textContent: 100,
-        duration: 1,
-        snap: { textContent: 1 },
-        ease: "power1.inOut",
-      },
-      "-=0.3",
+    // 4) counter wraps in, then counts
+    tl.fromTo(
+      counterWrapRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.3, ease: "power2.out" },
+      "-=0.1",
     );
 
+    tl.to(counter, {
+      textContent: 100,
+      duration: 1,
+      snap: { textContent: 1 },
+      ease: "power1.inOut",
+    });
+
     // 5) pause
-    tl.to({}, { duration: 0.25 });
+    tl.to({}, { duration: 0.2 });
 
     // 6) everything fades out
     tl.to([overlay], {
@@ -161,14 +165,21 @@ export default function Preloader() {
         Digital Craftsmanship
       </span>
 
-      {/* counter */}
-      <span
-        ref={counterRef}
-        className="mt-6 text-xs tracking-[0.25em] text-white/30 tabular-nums"
-        style={{ fontFamily: "var(--font-primary)" }}
+      {/* counter — hidden until it starts counting */}
+      <div
+        ref={counterWrapRef}
+        className="mt-8 flex items-center gap-3 opacity-0"
       >
-        0
-      </span>
+        <div className="w-12 h-[1px] bg-white/10" />
+        <span
+          ref={counterRef}
+          className="text-sm tracking-[0.2em] text-white/40 tabular-nums"
+          style={{ fontFamily: "var(--font-primary)" }}
+        >
+          0
+        </span>
+        <div className="w-12 h-[1px] bg-white/10" />
+      </div>
     </div>
   );
 }
