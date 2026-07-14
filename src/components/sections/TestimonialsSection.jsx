@@ -205,26 +205,30 @@ export default function TestimonialsSection() {
           </div>
 
           {/* ── Marquee Row 1 — scrolls left ── */}
-          <div className="group relative flex w-full items-center overflow-hidden mb-4">
-            <div className="flex w-max shrink-0 justify-around [gap:0.75rem] animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
-              {[...Array(4)].map((_, setIndex) =>
-                displayReviews.map((t, i) => (
-                  <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
-                ))
-              )}
+          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-4">
+            <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
+              <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
+                {[...Array(4)].map((_, setIndex) =>
+                  displayReviews.map((t, i) => (
+                    <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
+                  ))
+                )}
+              </div>
             </div>
             <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
           </div>
 
           {/* ── Marquee Row 2 — scrolls right ── */}
-          <div className="group relative flex w-full items-center overflow-hidden mb-12">
-            <div className="flex w-max shrink-0 justify-around [gap:0.75rem] animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
-              {[...Array(4)].map((_, setIndex) =>
-                displayReviews.map((t, i) => (
-                  <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
-                ))
-              )}
+          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12">
+            <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
+              <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
+                {[...Array(4)].map((_, setIndex) =>
+                  displayReviews.map((t, i) => (
+                    <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
+                  ))
+                )}
+              </div>
             </div>
             <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
