@@ -93,7 +93,7 @@ export default function CaseStudiesPage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 custom={1}
-                className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14"
+                className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14 bg-white/[0.03]"
               >
                 <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-8">
                   <Image
@@ -101,7 +101,7 @@ export default function CaseStudiesPage() {
                     alt={cs.name}
                     width={800}
                     height={400}
-                    className="object-contain w-full h-full rounded-2xl"
+                    className="object-contain w-full h-full"
                     priority={idx === 0}
                   />
                 </div>
