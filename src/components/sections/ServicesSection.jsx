@@ -446,7 +446,9 @@ export default function ServicesSection() {
               Something custom in mind?
             </h3>
             <p className="text-white/50 text-[12px] leading-relaxed">
-              Every project begins with understanding your vision.
+              Every project begins with understanding your vision. Whether it's
+              a landing page, SaaS, or a full-stack app — we'll build it
+              tailored to your goals.
             </p>
 
             <div className="mt-auto">
