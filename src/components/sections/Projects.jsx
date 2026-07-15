@@ -161,12 +161,12 @@ function Projects() {
             >
               {/* Image */}
               <div className="relative rounded-2xl overflow-hidden mb-5 bg-white/[0.03]">
-                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.name}
-                    fill
-                    className="object-contain p-4 md:p-10 transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    width={800}
+                    height={500}
+                    className="w-full h-auto transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
@@ -174,7 +174,6 @@ function Projects() {
                   <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
                     <ArrowUpRight size={14} className="text-white" />
                   </div>
-                </div>
               </div>
 
               {/* Name + category */}
