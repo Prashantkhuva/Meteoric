@@ -95,7 +95,7 @@ export default function CaseStudiesPage() {
                 custom={1}
                 className="relative rounded-2xl overflow-hidden aspect-[16/7] mb-10 md:mb-14"
               >
-                <div className="absolute inset-0 flex items-center justify-center p-8 md:p-12">
+                <div className="absolute inset-0 flex items-center justify-center p-4 md:p-12">
                   <Image
                     src={cs.image}
                     alt={cs.name}
