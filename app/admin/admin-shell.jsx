@@ -74,7 +74,7 @@ export function AdminShell({ children }) {
 
   return (
     <ToastProvider>
-      <div className="flex h-dvh overflow-hidden bg-[#070707]">
+      <div className="flex h-dvh min-h-0 overflow-hidden bg-[#070707]">
         <div className="fixed inset-0 pointer-events-none" aria-hidden="true">
           <div
             className="absolute inset-0 opacity-[0.025]"
@@ -87,9 +87,9 @@ export function AdminShell({ children }) {
 
         <Sidebar mobileOpen={mobileOpen} onMobileClose={closeMobile} userName={userName} userEmail={userEmail} />
 
-        <div className="relative flex flex-1 flex-col min-w-0 h-full overflow-hidden">
+        <div className="relative flex flex-1 flex-col min-w-0 min-h-0 h-full overflow-hidden">
           <TopBar title={title} onMenuClick={openMobile} />
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 min-h-0 overflow-auto">
             <ErrorBoundary>
               {children}
             </ErrorBoundary>
