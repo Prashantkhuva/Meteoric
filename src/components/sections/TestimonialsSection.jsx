@@ -289,12 +289,13 @@ export default function TestimonialsSection() {
                       </span>
                     </button>
                     <div
-                      className="overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-                      style={{ maxHeight: openFaq === i ? "200px" : "0px" }}
+                      className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${openFaq === i ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                     >
-                      <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 -mt-1 max-w-2xl">
-                        {faq.answer}
-                      </p>
+                      <div className="overflow-hidden">
+                        <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl">
+                          {faq.answer}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
