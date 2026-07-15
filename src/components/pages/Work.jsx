@@ -5,7 +5,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
@@ -191,70 +190,6 @@ export default function WorkPage() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Project Index — flowiee style */}
-        <div>
-          <div className="flex items-end justify-between mb-8">
-            <span className="text-white/40 uppercase tracking-[0.2em] text-xs font-bold">Project Index</span>
-            <span className="text-white/25 text-[10px] uppercase tracking-[0.3em]">Click to view</span>
-          </div>
-
-          <div className="space-y-0">
-            {projects.map((project, i) => (
-              <a
-                key={project.id}
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between py-5 border-b border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
-              >
-                <div className="flex items-center gap-6 md:gap-10">
-                  <span className="text-white/20 text-xs font-mono w-6">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-lg md:text-xl font-display text-white/80 group-hover:text-white transition-colors duration-300">
-                    {project.name}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 md:gap-8">
-                  <span className="hidden md:block text-xs uppercase tracking-[0.15em] text-white/30">
-                    {project.tags[0]}
-                  </span>
-                  <ArrowUpRight
-                    size={16}
-                    className="text-white/20 group-hover:text-white/60 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </div>
-              </a>
-            ))}
-
-            {/* "Your project" row */}
-            <Link
-              href="/#contact"
-              className="group flex items-center justify-between py-5 border-b border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
-            >
-              <div className="flex items-center gap-6 md:gap-10">
-                <span className="text-white/20 text-xs font-mono w-6">
-                  {String(projects.length + 1).padStart(2, "0")}
-                </span>
-                <span className="text-lg md:text-xl text-white/40 font-secondary-italic group-hover:text-white/70 transition-colors duration-300">
-                  Your project
-                </span>
-              </div>
-
-              <div className="flex items-center gap-4 md:gap-8">
-                <span className="hidden md:block text-xs uppercase tracking-[0.15em] text-white/20">
-                  Let&apos;s write it together
-                </span>
-                <ArrowUpRight
-                  size={16}
-                  className="text-white/15 group-hover:text-white/50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </div>
-            </Link>
-          </div>
         </div>
       </section>
     </div>

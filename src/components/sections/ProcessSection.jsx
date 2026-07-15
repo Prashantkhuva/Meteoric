@@ -96,7 +96,7 @@ export default function ProcessSection() {
       <section
         ref={sectionRef}
         id="process"
-        className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
+        className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32 bg-black"
       >
       {/* background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />

@@ -202,7 +202,7 @@ export default function ServicesSection() {
           <div>
             <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
               <span className="font-display text-white/30 not-italic mr-2">
-                01
+                02
               </span>
               {"Our Services".split(" ").map((w, i) => (
                 <span key={i} className="gsap-svc-word inline-block">{w}</span>
@@ -260,7 +260,7 @@ export default function ServicesSection() {
             return (
               <div
                 key={s.num}
-                className="service-card group relative flex-shrink-0 w-[80vw] lg:w-[60vw] xl:w-[48vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02] backdrop-blur-md p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
+                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02] backdrop-blur-md p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
               >
                 {/* Ghost number */}
                 <span
@@ -325,14 +325,7 @@ export default function ServicesSection() {
           })}
 
           {/* CTA card */}
-          <div className="flex-shrink-0 w-[80vw] lg:w-[60vw] xl:w-[48vw] rounded-2xl overflow-hidden border border-[#EAEFFF]/10 bg-[#EAEFFF]/[0.04] backdrop-blur-md p-8 md:p-10 flex flex-col justify-between min-h-[420px]">
-            <span
-              className="absolute top-6 right-8 text-[120px] md:text-[180px] font-display leading-none text-[#EAEFFF]/[0.03] select-none pointer-events-none"
-              aria-hidden="true"
-            >
-              05
-            </span>
-
+          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-[#EAEFFF]/10 bg-[#EAEFFF]/[0.04] backdrop-blur-md p-8 md:p-10 flex flex-col justify-between min-h-[420px]">
             <div className="relative z-10">
               <span className="text-[10px] tracking-[0.3em] font-bold text-[#EAEFFF]/30 uppercase block mb-10">
                 And then some
@@ -429,13 +422,6 @@ export default function ServicesSection() {
             className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
             style={{ zIndex: 0, width: "calc(100vw - 40px)" }}
           >
-            <span
-              className="absolute top-4 right-5 text-[100px] font-display leading-none text-[#EAEFFF]/[0.02] select-none pointer-events-none"
-              aria-hidden="true"
-            >
-              05
-            </span>
-
             <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block">
               And then some
             </span>

@@ -160,13 +160,13 @@ function Projects() {
               className={`group block ${i % 2 === 1 ? "md:mt-12" : ""}`}
             >
               {/* Image */}
-              <div className="relative rounded-2xl overflow-hidden mb-5 bg-white/[0.03]">
+              <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">
                   <Image
                     src={project.image}
                     alt={project.name}
                     width={800}
                     height={500}
-                    className="w-full h-auto transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
@@ -185,70 +185,6 @@ function Projects() {
               </p>
             </a>
           ))}
-        </div>
-
-        {/* Project Index — like flowiee */}
-        <div>
-          <div className="flex items-end justify-between mb-8">
-            <span className="text-white/40 uppercase tracking-[0.2em] text-xs font-bold">Project Index</span>
-            <span className="text-white/25 text-[10px] uppercase tracking-[0.3em]">Hover to preview</span>
-          </div>
-
-          <div className="space-y-0">
-            {allProjects.map((project, i) => (
-              <a
-                key={project.id}
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between py-5 border-b border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
-              >
-                <div className="flex items-center gap-6 md:gap-10">
-                  <span className="text-white/20 text-xs font-mono w-6">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-lg md:text-xl font-display text-white/80 group-hover:text-white transition-colors duration-300">
-                    {project.name}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 md:gap-8">
-                  <span className="hidden md:block text-xs uppercase tracking-[0.15em] text-white/30">
-                    {project.tags[0]}
-                  </span>
-                  <ArrowUpRight
-                    size={16}
-                    className="text-white/20 group-hover:text-white/60 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </div>
-              </a>
-            ))}
-
-            {/* "Your project" row */}
-            <Link
-              href="/#contact"
-              className="group flex items-center justify-between py-5 border-b border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
-            >
-              <div className="flex items-center gap-6 md:gap-10">
-                <span className="text-white/20 text-xs font-mono w-6">
-                  {String(allProjects.length + 1).padStart(2, "0")}
-                </span>
-                <span className="text-lg md:text-xl text-white/40 font-secondary-italic group-hover:text-white/70 transition-colors duration-300">
-                  Your project
-                </span>
-              </div>
-
-              <div className="flex items-center gap-4 md:gap-8">
-                <span className="hidden md:block text-xs uppercase tracking-[0.15em] text-white/20">
-                  Let&apos;s write it together
-                </span>
-                <ArrowUpRight
-                  size={16}
-                  className="text-white/15 group-hover:text-white/50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </div>
-            </Link>
-          </div>
         </div>
       </div>
     </section>
