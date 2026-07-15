@@ -118,7 +118,7 @@ export default function CaseStudiesPage() {
                     whileInView="visible"
                     viewport={{ once: true, margin: "-60px" }}
                     custom={2}
-                    className="grid grid-cols-3 gap-4 mb-8 pb-8 border-b border-white/[0.06]"
+                    className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 mb-8 pb-8 border-b border-white/[0.06]"
                   >
                     <div>
                       <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-1">Client</p>
