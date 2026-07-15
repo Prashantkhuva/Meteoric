@@ -369,7 +369,7 @@ export default function ServicesSection() {
             return (
                 <div
                   key={s.num}
-                  className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
+                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
                   style={{ zIndex: services.length - i, width: "calc(100vw - 40px)", height: "min(420px, 50dvh)" }}
                 >
                 {/* Ghost number */}
@@ -423,7 +423,7 @@ export default function ServicesSection() {
 
           {/* CTA card */}
           <div
-            className="svc-mob-card absolute inset-x-5 top-0 bottom-0 my-auto rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
+            className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4 will-change-transform"
             style={{ zIndex: 0, width: "calc(100vw - 40px)", height: "min(420px, 50dvh)" }}
           >
             <span
