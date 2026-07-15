@@ -19,13 +19,13 @@ const projMainWords = "Selected Works".split(" ");
 export const ProjectCardMobile = function ProjectCardMobile({ project }) {
   return (
     <div className="rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent">
-      <div className="relative h-48 w-full overflow-hidden">
+      <div className="relative h-64 sm:h-72 w-full overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
         <Image
           src={project.image}
           alt={project.name}
           fill
-          className="object-contain p-4"
+          className="object-contain p-6"
           loading="lazy"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
