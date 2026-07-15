@@ -27,7 +27,7 @@ const productJsonLd = {
   "@type": "Product",
   name: "SaaS Development Services",
   description: "End-to-end SaaS development from MVP to production platform for startups.",
-  image: `${SITE_URL}/og-image.png`,
+  image: `${SITE_URL}/og.png`,
   brand: {
     "@type": "Organization",
     name: "Meteoric",

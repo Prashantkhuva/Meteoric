@@ -1,6 +1,6 @@
 export const SITE_URL = "https://withmeteoric.com";
 export const SITE_NAME = "Meteoric";
-export const DEFAULT_OG_IMAGE = "/og-image.png?v=20260709";
+export const DEFAULT_OG_IMAGE = "/og.png";
 
 export const sitemapRoutes = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
