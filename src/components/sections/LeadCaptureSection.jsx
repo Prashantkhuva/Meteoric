@@ -1,14 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(false);
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+
+  useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    gsap.fromTo(contentRef.current, { y: 24, opacity: 0 }, {
+      y: 0, opacity: 1, ease: "power2.out", duration: 0.7,
+      scrollTrigger: { trigger: sectionRef.current, start: "top 85%", toggleActions: "play none none none" },
+    });
+  }, { scope: sectionRef });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,11 +56,12 @@ export default function LeadCaptureSection() {
   return (
     <section
       id="contact"
+      ref={sectionRef}
       className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black scroll-mt-24"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
+      <div ref={contentRef} className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
         <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
           Start a Project
         </p>

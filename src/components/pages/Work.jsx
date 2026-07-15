@@ -43,6 +43,22 @@ export default function WorkPage() {
         },
       },
     );
+
+    gsap.fromTo(
+      cardsRef.current?.querySelectorAll(".gsap-work-card"),
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: cardsRef.current?.querySelector(".gsap-work-card"),
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      },
+    );
   }, { scope: sectionRef });
 
   return (
@@ -88,7 +104,7 @@ export default function WorkPage() {
           {projects.map((project, i) => (
             <div
               key={project.id}
-              className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700"
+              className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700 gsap-work-card"
             >
               {/* Image — alternating side */}
               <div className={`relative overflow-hidden bg-black ${i % 2 === 1 ? "lg:order-2" : ""}`}>

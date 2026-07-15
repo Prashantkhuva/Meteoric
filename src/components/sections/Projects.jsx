@@ -112,6 +112,22 @@ function Projects() {
         },
       },
     );
+
+    gsap.fromTo(
+      sectionRef.current?.querySelectorAll(".gsap-proj-card"),
+      { y: 30, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.15,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current?.querySelector(".gsap-proj-card"),
+          start: "top 88%",
+          toggleActions: "play none none none",
+        },
+      },
+    );
   }, { scope: sectionRef });
 
   return (
@@ -157,7 +173,7 @@ function Projects() {
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group block ${i % 2 === 1 ? "md:mt-12" : ""}`}
+              className={`group block gsap-proj-card ${i % 2 === 1 ? "md:mt-12" : ""}`}
             >
               {/* Image */}
               <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">

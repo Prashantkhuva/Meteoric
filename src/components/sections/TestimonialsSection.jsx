@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Star, Plus, BadgeCheck, Sparkles, Globe, Zap } from "lucide-react";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const fallbackTestimonials = [
   {
@@ -113,6 +118,11 @@ export default function TestimonialsSection() {
   const [reviews, setReviews] = useState(null);
   const [openFaq, setOpenFaq] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const statsRef = useRef(null);
+  const faqHeaderRef = useRef(null);
+  const faqListRef = useRef(null);
 
   const displayReviews = reviews
     ? [...reviews, ...fallbackTestimonials]
@@ -139,6 +149,28 @@ export default function TestimonialsSection() {
     load();
   }, []);
 
+  useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const fadeUp = (target, trigger, opts = {}) =>
+      gsap.fromTo(target, { y: 20, opacity: 0 }, {
+        y: 0, opacity: 1, ease: "power2.out", duration: 0.6,
+        scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none none none", ...opts },
+      });
+
+    fadeUp(headerRef.current, headerRef.current);
+    fadeUp(statsRef.current, statsRef.current);
+    fadeUp(faqHeaderRef.current, faqHeaderRef.current);
+    gsap.fromTo(
+      faqListRef.current?.querySelectorAll(".gsap-faq-item"),
+      { y: 16, opacity: 0 },
+      {
+        y: 0, opacity: 1, stagger: 0.06, ease: "power2.out",
+        scrollTrigger: { trigger: faqListRef.current, start: "top 90%", toggleActions: "play none none none" },
+      },
+    );
+  }, { scope: sectionRef });
+
   const faqSchema = buildFaqJsonLd(faqs);
 
   const reviewSchema = {
@@ -162,12 +194,12 @@ export default function TestimonialsSection() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
-      <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
+      <section ref={sectionRef} className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(234,239,255,0.03),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(234,239,255,0.015),transparent_60%)]" />
 
         <div className="relative z-10">
           {/* ── Header ── */}
-          <div className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
+          <div ref={headerRef} className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
             <p
               className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
             >
@@ -182,7 +214,7 @@ export default function TestimonialsSection() {
                 <span className="text-white/40">who build the future.</span>
               </h2>
 
-              <div className="flex gap-3">
+              <div ref={statsRef} className="flex gap-3">
                 {trustStats.map((stat) => {
                   const Icon = stat.icon;
                   return (
@@ -251,21 +283,23 @@ export default function TestimonialsSection() {
           {/* ── FAQ ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
             <div className="max-w-4xl">
-              <p
-                className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
-              >
-                FAQs
-            </p>
-              <h2 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-10 max-w-2xl">
-                Common questions
-                <span className="text-white/25"> about working with us.</span>
-              </h2>
+              <div ref={faqHeaderRef}>
+                <p
+                  className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
+                >
+                  FAQs
+                </p>
+                <h2 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-10 max-w-2xl">
+                  Common questions
+                  <span className="text-white/25"> about working with us.</span>
+                </h2>
+              </div>
 
-              <div className="space-y-2.5">
+              <div ref={faqListRef} className="space-y-2.5">
                 {faqs.map((faq, i) => (
                   <div
                     key={i}
-                    className={`group rounded-xl border transition-all duration-300 ${
+                    className={`group rounded-xl border transition-all duration-300 gsap-faq-item ${
                       openFaq === i
                         ? "border-white/[0.12] bg-gradient-to-b from-white/[0.03] to-transparent"
                         : "border-white/[0.06] bg-white/[0.02] hover:border-white/10"
