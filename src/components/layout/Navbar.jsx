@@ -134,28 +134,47 @@ export default function Navbar() {
         <div
           ref={menuRef}
           tabIndex={-1}
-          className={`md:hidden mx-6 overflow-hidden rounded-xl border border-white/[0.06] bg-black/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300 ${
+          className={`md:hidden mx-4 overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.6)] transition-all duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
             isMenuOpen
-              ? "pointer-events-auto translate-y-0 opacity-100 max-h-[320px]"
-              : "pointer-events-none -translate-y-3 opacity-0 max-h-0"
+              ? "pointer-events-auto translate-y-0 opacity-100 max-h-[400px]"
+              : "pointer-events-none -translate-y-4 opacity-0 max-h-0"
           }`}
+          style={{
+            background: "linear-gradient(180deg, rgba(12,12,12,0.97) 0%, rgba(7,7,7,0.98) 100%)",
+            backdropFilter: "blur(40px) saturate(1.2)",
+          }}
         >
-          <div className="flex flex-col p-1">
-            {navItems.map((item) => (
+          <div className="flex flex-col p-2 mt-14">
+            {navItems.map((item, i) => (
               <Link
                 key={item.to}
                 href={item.to}
                 onClick={() => setIsMenuOpen(false)}
-                className="group relative rounded-lg px-3 py-2 text-sm font-medium text-white/60 transition-all duration-200 hover:bg-white/[0.06] hover:text-white"
+                className="group relative flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-medium text-white/50 transition-all duration-200 hover:bg-white/[0.04] hover:text-white/90"
+                style={{
+                  transitionDelay: isMenuOpen ? `${i * 40}ms` : "0ms",
+                  opacity: isMenuOpen ? 1 : 0,
+                  transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                  transition: "opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, color 0.2s ease",
+                }}
               >
-                {item.label}
+                <span>{item.label}</span>
+                <svg className="w-4 h-4 text-white/20 group-hover:text-white/40 transition-all duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
               </Link>
             ))}
+
+            <div className="h-px bg-white/[0.06] mx-3 my-2" />
+
             <button
               onClick={() => { setIsMenuOpen(false); setIsOpen(true); }}
-              className="mt-0.5 mx-1 rounded-lg px-3 py-2 text-sm font-medium text-black transition-all duration-200"
+              className="mx-1 rounded-xl px-4 py-3 text-sm font-semibold tracking-wide text-black transition-all duration-200 active:scale-[0.98]"
               style={{
                 background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
+                opacity: isMenuOpen ? 1 : 0,
+                transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                transition: "opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s",
               }}
             >
               Let&apos;s Chat!
