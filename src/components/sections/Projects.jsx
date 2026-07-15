@@ -166,7 +166,7 @@ function Projects() {
                     src={project.image}
                     alt={project.name}
                     fill
-                    className="object-contain p-4 transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    className="object-contain p-4 md:p-10 transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
