@@ -161,7 +161,7 @@ function Projects() {
             >
               {/* Image */}
               <div className="relative rounded-2xl overflow-hidden mb-5 bg-white/[0.03]">
-                <div className="relative aspect-[16/10]">
+                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.name}
