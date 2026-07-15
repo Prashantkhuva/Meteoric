@@ -92,7 +92,7 @@ export default function WorkPage() {
             >
               {/* Image — alternating side */}
               <div className={`relative overflow-hidden bg-black ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-                <div className="relative w-full h-full min-h-[20rem] flex items-center justify-center p-8">
+                <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8">
                   <Image
                     src={project.image}
                     alt={project.name}
