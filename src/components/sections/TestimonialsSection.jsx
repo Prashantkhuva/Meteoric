@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Star, Plus, BadgeCheck, Sparkles, Globe, Zap } from "lucide-react";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { getApprovedReviews } from "@/lib/actions";
@@ -169,15 +168,12 @@ export default function TestimonialsSection() {
         <div className="relative z-10">
           {/* ── Header ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <p
               className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
             >
               <span className="font-display text-white/30 not-italic mr-2">04</span>
               Client Stories
-            </motion.p>
+              </p>
 
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <h2 className="text-3xl md:text-5xl font-secondary-italic text-white tracking-tight leading-[1.1]">
@@ -236,11 +232,7 @@ export default function TestimonialsSection() {
 
           {/* ── Review CTA ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
+            <div
               className="inline-flex items-center gap-3"
             >
               <span className="text-white/40 text-xs uppercase tracking-wider">
@@ -253,20 +245,17 @@ export default function TestimonialsSection() {
                 <Sparkles size={11} className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors" />
                 Leave a review
               </button>
-            </motion.div>
+            </div>
           </div>
 
           {/* ── FAQ ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
             <div className="max-w-4xl">
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+              <p
                 className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
               >
                 FAQs
-              </motion.p>
+            </p>
               <h2 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-10 max-w-2xl">
                 Common questions
                 <span className="text-white/25"> about working with us.</span>
@@ -299,21 +288,14 @@ export default function TestimonialsSection() {
                         <Plus size={12} />
                       </span>
                     </button>
-                    <AnimatePresence>
-                      {openFaq === i && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 -mt-1 max-w-2xl">
-                            {faq.answer}
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <div
+                      className="overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                      style={{ maxHeight: openFaq === i ? "200px" : "0px" }}
+                    >
+                      <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 -mt-1 max-w-2xl">
+                        {faq.answer}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -16,21 +16,32 @@ export default function ManifestoSection() {
 
   useGSAP(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".gsap-mani-word").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      headingRef.current?.querySelectorAll(".mani-word").forEach(el => {
+        el.style.filter = "none";
+        el.style.opacity = "1";
+      });
       return;
     }
-    gsap.fromTo(headingRef.current?.querySelectorAll(".gsap-mani-word"),
-      { yPercent: 110, opacity: 0 },
+
+    const words = headingRef.current?.querySelectorAll(".mani-word");
+    if (!words?.length) return;
+
+    gsap.fromTo(words,
+      { filter: "blur(8px)", opacity: 0.1 },
       {
-        yPercent: 0,
+        filter: "blur(0px)",
         opacity: 1,
-        stagger: 0.03,
-        ease: "power3.out",
+        stagger: {
+          each: 1 / words.length,
+          ease: "none",
+        },
+        ease: "none",
         scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-          end: "top 40%",
-          scrub: 1,
+          trigger: sectionRef.current,
+          start: "top 80%",
+          end: "bottom 60%",
+          scrub: 0.5,
+          invalidateOnRefresh: true,
         },
       },
     );
@@ -39,7 +50,7 @@ export default function ManifestoSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-black py-24 sm:py-28 lg:py-32"
+      className="relative bg-black py-32 sm:py-40 lg:py-48"
     >
       <div className="max-w-5xl mx-auto px-6 md:px-12">
         <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-10">
@@ -47,16 +58,13 @@ export default function ManifestoSection() {
           Our Philosophy
         </p>
 
-        <h2
-          ref={headingRef}
-          className="text-3xl md:text-5xl font-secondary-italic leading-snug text-white/80 [&>.gsap-mani-word:not(:last-child)]:mr-[0.25em]"
-        >
+        <h2 ref={headingRef} className="text-3xl md:text-5xl font-secondary-italic leading-snug text-white/80 [&>.mani-word:not(:last-child)]:mr-[0.25em]">
           {mainWords.map((word, i) => (
-            <span key={i} className="gsap-mani-word inline-block">{word} </span>
+            <span key={i} className="mani-word inline-block">{word} </span>
           ))}
-          <span className="block mt-2 text-white/40 [&>.gsap-mani-word:not(:last-child)]:mr-[0.25em]">
+          <span className="block mt-2 text-white/40 [&>.mani-word:not(:last-child)]:mr-[0.25em]">
             {mutedWords.map((word, i) => (
-              <span key={i} className="gsap-mani-word inline-block">{word} </span>
+              <span key={i} className="mani-word inline-block">{word} </span>
             ))}
           </span>
         </h2>

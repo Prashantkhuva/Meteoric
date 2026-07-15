@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { buildHowToJsonLd } from "@/lib/seo/jsonLd";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -48,15 +47,9 @@ const mutedHeading = "modern product development.".split(" ");
 
 export default function ProcessSection() {
   const sectionRef = useRef(null);
-  const ref = useRef(null);
+  const timelineRef = useRef(null);
+  const progressRef = useRef(null);
   const headingRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 10%", "end 90%"],
-  });
-
-  const height = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   const howToSteps = process.map((step) => ({
     name: step.title,
@@ -68,8 +61,12 @@ export default function ProcessSection() {
   useGSAP(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       headingRef.current?.querySelectorAll(".gsap-proc-word").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      progressRef.current.style.height = "100%";
+      timelineRef.current?.querySelectorAll(".proc-step").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
       return;
     }
+
+    // Heading word reveal
     gsap.fromTo(headingRef.current?.querySelectorAll(".gsap-proc-word"),
       { yPercent: 110, opacity: 0 },
       {
@@ -85,6 +82,38 @@ export default function ProcessSection() {
         },
       },
     );
+
+    // Timeline progress bar
+    gsap.to(progressRef.current, {
+      height: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: timelineRef.current,
+        start: "top 10%",
+        end: "bottom 90%",
+        scrub: 0.3,
+      },
+    });
+
+    // Step reveals
+    const steps = timelineRef.current?.querySelectorAll(".proc-step");
+    if (steps?.length) {
+      gsap.fromTo(steps,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    }
   }, { scope: sectionRef });
 
   return (
@@ -128,31 +157,25 @@ export default function ProcessSection() {
         </div>
 
         {/* TIMELINE */}
-        <div ref={ref} className="relative">
+        <div ref={timelineRef} className="relative">
           {/* timeline line */}
           <div className="absolute left-4 top-0 h-full w-0.5 overflow-hidden sm:left-5">
             {/* base line */}
             <div className="absolute inset-0 bg-white/10" />
 
             {/* animated progress */}
-            <motion.div
-              style={{ height }}
+            <div
+              ref={progressRef}
               className="absolute top-0 left-0 w-full rounded-full bg-linear-to-b from-[#EAEFFF] via-[#EAEFFF]/60 to-transparent shadow-[0_0_14px_rgba(234,239,255,0.35)]"
+              style={{ height: "0%" }}
             />
           </div>
 
           <div className="space-y-16 sm:space-y-24 lg:space-y-32">
-            {process.map((item, index) => (
-              <motion.div
+            {process.map((item) => (
+              <div
                 key={item.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.08,
-                }}
-                viewport={{ once: true }}
-                className="relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-5 sm:grid-cols-[40px_minmax(0,1fr)] sm:gap-x-6 md:grid-cols-[140px_minmax(0,1fr)] md:gap-x-24"
+                className="proc-step relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-5 sm:grid-cols-[40px_minmax(0,1fr)] sm:gap-x-6 md:grid-cols-[140px_minmax(0,1fr)] md:gap-x-24"
               >
                 {/* LEFT SIDE */}
                 <div className="relative flex items-start">
@@ -193,7 +216,7 @@ export default function ProcessSection() {
                     ))}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
