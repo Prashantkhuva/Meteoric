@@ -15,8 +15,8 @@ export const caseStudies = [
     ],
     link: "https://agency-v2-theta.vercel.app/",
     image: "/lete'm-know.png",
-    gradient: "from-emerald-950 to-teal-900",
-    accent: "#34d399",
+    gradient: "from-white/[0.04] to-white/[0.01]",
+    accent: "#EAEFFF",
     tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
     features: [
       "Canvas particle system hero animation",
@@ -42,8 +42,8 @@ export const caseStudies = [
     ],
     link: "https://habitflow.indevs.in/",
     image: "/habit-flow.png",
-    gradient: "from-violet-950 to-indigo-900",
-    accent: "#7c6aff",
+    gradient: "from-white/[0.04] to-white/[0.01]",
+    accent: "#EAEFFF",
     tags: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
     features: [
       "Streak tracking with daily check-ins",
@@ -69,8 +69,8 @@ export const caseStudies = [
     ],
     link: "https://megablog.vercel.app/",
     image: "/megablog.png",
-    gradient: "from-amber-950 to-stone-900",
-    accent: "#c8a97e",
+    gradient: "from-white/[0.04] to-white/[0.01]",
+    accent: "#EAEFFF",
     tags: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
     features: [
       "Rich text editor with TinyMCE",
@@ -96,8 +96,8 @@ export const caseStudies = [
     ],
     link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
     image: "/mobile-simulator.png",
-    gradient: "from-sky-950 to-cyan-900",
-    accent: "#38bdf8",
+    gradient: "from-white/[0.04] to-white/[0.01]",
+    accent: "#EAEFFF",
     tags: ["VS Code Extension", "JavaScript", "Webview API", "Frontend Tools", "Responsive Design"],
     features: [
       "Preview mobile layouts directly in VS Code",

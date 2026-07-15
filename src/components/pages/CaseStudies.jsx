@@ -101,7 +101,7 @@ export default function CaseStudiesPage() {
                     alt={cs.name}
                     width={800}
                     height={400}
-                    className="object-contain w-full h-full"
+                    className="object-contain w-full h-full rounded-2xl"
                     priority={idx === 0}
                   />
                 </div>
