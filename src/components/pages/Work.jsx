@@ -91,14 +91,14 @@ export default function WorkPage() {
               className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700"
             >
               {/* Image — alternating side */}
-              <div className={`relative overflow-hidden bg-white/[0.03] ${i % 2 === 1 ? "lg:order-2" : ""}`}>
+              <div className={`relative overflow-hidden bg-black ${i % 2 === 1 ? "lg:order-2" : ""}`}>
                 <div className="relative w-full h-full min-h-[20rem] flex items-center justify-center p-8">
                   <Image
                     src={project.image}
                     alt={project.name}
                     width={640}
                     height={360}
-                    className="w-full h-auto max-h-full object-contain transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                    className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     loading={i === 0 ? "eager" : "lazy"}
                   />
