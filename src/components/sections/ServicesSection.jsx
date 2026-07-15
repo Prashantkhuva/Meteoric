@@ -197,7 +197,7 @@ export default function ServicesSection() {
       className="relative w-full bg-black"
     >
       {/* Header */}
-      <div ref={headingRef} className="px-6 md:px-16 pt-28 md:pt-36 pb-12 md:pb-16 max-w-7xl mx-auto">
+      <div ref={headingRef} className="px-6 md:px-16 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-4">
           <div>
             <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">

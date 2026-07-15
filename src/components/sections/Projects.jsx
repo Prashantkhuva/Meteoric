@@ -150,7 +150,7 @@ function Projects() {
         </div>
 
         {/* Project Grid — 2 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-10 mb-16">
           {projects.map((project, i) => (
             <a
               key={project.id}
