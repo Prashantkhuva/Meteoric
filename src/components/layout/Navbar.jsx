@@ -144,7 +144,7 @@ export default function Navbar() {
             backdropFilter: "blur(40px) saturate(1.2)",
           }}
         >
-          <div className="flex flex-col p-2 mt-14">
+          <div className="flex flex-col p-2 mt-2">
             {navItems.map((item, i) => (
               <Link
                 key={item.to}
