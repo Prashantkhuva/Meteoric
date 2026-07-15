@@ -1,7 +1,21 @@
 import { motion } from "framer-motion";
 import { Calendar, FileText } from "lucide-react";
+import { getCalApi } from "@calcom/embed-react";
+import { useEffect, useCallback } from "react";
 
 function Step0({ setStep }) {
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi({ namespace: "let-s-build" });
+      cal("ui", { hideEventTypeDetails: true, layout: "month_view" });
+    })();
+  }, []);
+
+  const openCal = useCallback(async () => {
+    const cal = await getCalApi({ namespace: "let-s-build" });
+    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
+
   return (
     <motion.div
       key="step0"
@@ -16,16 +30,14 @@ function Step0({ setStep }) {
           How would you like to get started?
         </p>
 
-        <a
-          href="#"
-          data-cal-namespace="let-s-build"
-          data-cal-link="prashantkhuva/let-s-build"
-          data-cal-config='{"layout":"month_view"}'
+        <button
+          type="button"
+          onClick={openCal}
           className="w-full mb-3 bg-white text-black py-3 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-white/90 transition-colors"
         >
           <Calendar size={18} />
           Book a Free Strategy Call
-        </a>
+        </button>
 
         <button
           type="button"

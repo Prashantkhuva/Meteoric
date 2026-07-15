@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import MeteorBackground from "./MeteorBackground";
 import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
+import { getCalApi } from "@calcom/embed-react";
 
 const heroWords = "We design and ship high-performance software".split(" ");
 const mutedWords = ["—", ..."websites and apps, fast.".split(" ")];
@@ -16,21 +17,15 @@ function Hero() {
   const ctaRef = useRef(null);
   const [ctaHovered, setCtaHovered] = useState(false);
 
+  const openCal = useCallback(async () => {
+    const cal = await getCalApi({ namespace: "let-s-build" });
+    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
+
   useEffect(() => {
-    let cancelled = false;
-    (async function () {
-      try {
-        const { getCalApi } = await import("@calcom/embed-react");
-        if (cancelled) return;
-        const cal = await getCalApi({ namespace: "let-s-build" });
-        cal("ui", { theme: "dark", layout: "month_view" });
-      } catch {
-        /* embed optional */
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
+    getCalApi({ namespace: "let-s-build" }).then((cal) =>
+      cal("ui", { theme: "dark", layout: "month_view" })
+    );
   }, []);
 
   useGSAP(() => {
@@ -90,11 +85,9 @@ function Hero() {
         {/* CTA Buttons */}
         <div ref={ctaRef} className="relative flex flex-col sm:flex-row items-center gap-4 mt-4">
           {/* Primary CTA */}
-          <a
-            href="#"
-            data-cal-namespace="let-s-build"
-            data-cal-link="prashantkhuva/let-s-build"
-            data-cal-config='{"layout":"month_view"}'
+          <button
+            type="button"
+            onClick={openCal}
             className="group relative inline-flex items-center overflow-hidden border-2 border-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-transform duration-300 ease-out hover:scale-[1.03]"
             onMouseEnter={() => setCtaHovered(true)}
             onMouseLeave={() => setCtaHovered(false)}
@@ -105,7 +98,7 @@ function Hero() {
                 {"Book a Free Strategy Call"}
               </StaggerText>
             </span>
-          </a>
+          </button>
 
           {/* Secondary CTA */}
           <Link
