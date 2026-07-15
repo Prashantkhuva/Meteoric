@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -39,10 +38,6 @@ export default function Footer() {
             <Link href="/privacy" className="text-white/30 hover:text-white transition-colors">Privacy</Link>
             <span className="text-white/10">/</span>
             <Link href="/terms" className="text-white/30 hover:text-white transition-colors">Terms</Link>
-            <span className="text-white/10">/</span>
-            <Link href="/about" className="text-white/30 hover:text-white transition-colors group inline-flex items-center gap-1">
-              Built by Prashant <ArrowUpRight size={10} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
           </div>
         </div>
       </div>
