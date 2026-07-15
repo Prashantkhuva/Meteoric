@@ -24,9 +24,9 @@ export default function ClientLayout({ children }) {
   return (
     <>
       <Preloader />
-      <SmoothScroll />
+      {!isAdmin && <SmoothScroll />}
       {!isAdmin && <Navbar />}
-      <main>{children}</main>
+      {isAdmin ? children : <main>{children}</main>}
       {!isAdmin && <Footer />}
     </>
   );
