@@ -87,7 +87,7 @@ export function AdminShell({ children }) {
 
         <Sidebar mobileOpen={mobileOpen} onMobileClose={closeMobile} userName={userName} userEmail={userEmail} />
 
-        <div className="relative flex flex-1 flex-col min-w-0 overflow-hidden">
+        <div className="relative flex flex-1 flex-col min-w-0 h-full overflow-hidden">
           <TopBar title={title} onMenuClick={openMobile} />
           <main className="flex-1 overflow-auto">
             <ErrorBoundary>

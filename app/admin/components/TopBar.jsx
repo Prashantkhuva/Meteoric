@@ -5,7 +5,7 @@ import { signOut } from "../actions";
 
 export function TopBar({ title, onMenuClick }) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-14 px-4 lg:px-6 border-b border-white/[0.04] bg-[#070707]/90 backdrop-blur-md">
+    <header className="flex items-center justify-between h-14 shrink-0 px-4 lg:px-6 border-b border-white/[0.04] bg-[#070707]/90 backdrop-blur-md">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
