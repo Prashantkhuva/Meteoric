@@ -63,9 +63,9 @@ export default function Navbar() {
             className="hidden md:flex items-center"
             style={{
               background:
-                "linear-gradient(-7.69deg, rgb(0,0,0) 50%, rgb(41,41,41) 124%)",
+                "linear-gradient(-7.69deg, rgba(10,10,10,0.95) 0%, rgba(18,18,18,0.95) 100%)",
               borderRadius: 100,
-              boxShadow: "rgba(134,134,134,0.5) 0.5px 0.5px 0px 0px inset",
+              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06)",
               gap: 56,
               padding: "16px 32px",
               height: 54,

@@ -32,3 +32,4 @@ test-results/
 # OpenCode session summary
 SUMMARY.md
 .opencode
+lighthouse-report.json
