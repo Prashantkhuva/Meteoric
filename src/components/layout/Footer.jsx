@@ -28,16 +28,16 @@ export default function Footer() {
         {/* ── BOTTOM BAR ── */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-8 border-t border-white/5">
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
-            <Link href="/work" className="text-white/40 hover:text-white transition-colors">Work</Link>
-            <Link href="/case-studies" className="text-white/40 hover:text-white transition-colors">Case Studies</Link>
-            <Link href="/services" className="text-white/40 hover:text-white transition-colors">Services</Link>
-            <Link href="/about" className="text-white/40 hover:text-white transition-colors">About</Link>
+            <Link href="/work" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Work</Link>
+            <Link href="/case-studies" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Case Studies</Link>
+            <Link href="/services" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Services</Link>
+            <Link href="/about" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">About</Link>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
             <p className="text-white/30">&copy; 2026 Meteoric.</p>
-            <Link href="/privacy" className="text-white/30 hover:text-white transition-colors">Privacy</Link>
+            <Link href="/privacy" data-no-magnetic className="text-white/30 hover:text-white hover:bg-white/[0.04] px-2 py-1 rounded-lg transition-all duration-200">Privacy</Link>
             <span className="text-white/10">/</span>
-            <Link href="/terms" className="text-white/30 hover:text-white transition-colors">Terms</Link>
+            <Link href="/terms" data-no-magnetic className="text-white/30 hover:text-white hover:bg-white/[0.04] px-2 py-1 rounded-lg transition-all duration-200">Terms</Link>
           </div>
         </div>
       </div>

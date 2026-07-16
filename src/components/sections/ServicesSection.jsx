@@ -94,6 +94,7 @@ export default function ServicesSection() {
           start: "top top",
           end: () => `+=${getScrollDistance()}`,
           pin: true,
+          pinType: "transform",
           scrub: 1,
           invalidateOnRefresh: true,
         },

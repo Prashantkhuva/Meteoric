@@ -75,6 +75,11 @@ export default function ReviewFormModal({ open, onClose }) {
     onClose();
   };
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return createPortal(
     <AnimatePresence>
       {open && (

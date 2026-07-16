@@ -9,8 +9,6 @@ import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const fallbackTestimonials = [
   {
     quote:
@@ -150,6 +148,7 @@ export default function TestimonialsSection() {
   }, []);
 
   useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const fadeUp = (target, trigger, opts = {}) =>

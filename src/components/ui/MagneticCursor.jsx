@@ -83,6 +83,7 @@ export default function MagneticCursor() {
     const selectors = "a, button, [role='button']";
     const bind = () => {
       document.querySelectorAll(selectors).forEach((el) => {
+        if (el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic")) return;
         el.removeEventListener("mouseenter", onEnterInteractive);
         el.addEventListener("mouseenter", onEnterInteractive);
       });

@@ -110,7 +110,7 @@ export default function Navbar() {
           className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
         >
           {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center cursor-pointer">
+          <Link href="/" data-no-magnetic className="flex shrink-0 items-center cursor-pointer">
             <Logo />
           </Link>
 
@@ -150,6 +150,7 @@ export default function Navbar() {
           {/* Right side: CTA + Mobile toggle */}
           <div className="flex items-center gap-3">
             <button
+              data-no-magnetic
               onClick={() => setIsOpen(true)}
               className="hidden md:inline-flex items-center cursor-pointer flip-btn"
             >
@@ -160,6 +161,7 @@ export default function Navbar() {
 
             <button
               type="button"
+              data-no-magnetic
               aria-label={
                 isMenuOpen ? "Close navigation menu" : "Open navigation menu"
               }
@@ -200,6 +202,7 @@ export default function Navbar() {
       >
         {/* Close button */}
         <button
+          data-no-magnetic
           onClick={closeMenu}
           className="absolute top-5 right-6 w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/50 hover:text-white hover:border-white/25 transition-all duration-200"
           aria-label="Close menu"
@@ -216,6 +219,7 @@ export default function Navbar() {
               key={item.to}
               href={item.to}
               onClick={closeMenu}
+              data-no-magnetic
               className="group relative text-[28px] sm:text-[32px] font-display text-white/40 hover:text-white px-8 py-3.5 rounded-2xl hover:bg-white/[0.04] transition-all duration-200"
             >
               <span className="relative z-10">{item.label}</span>
@@ -230,6 +234,7 @@ export default function Navbar() {
         {/* CTA */}
         <div ref={ctaRef}>
           <button
+            data-no-magnetic
             onClick={() => { closeMenu(); setIsOpen(true); }}
             className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide text-black hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
             style={{ background: "linear-gradient(180deg, #fff 0%, #cecece 100%)" }}
