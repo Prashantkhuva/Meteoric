@@ -38,7 +38,7 @@ export default function MagneticCursor() {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    document.body.style.cursor = "none";
+    document.documentElement.classList.add("no-native-cursor");
 
     const onMove = (e) => {
       mouseX.set(e.clientX - BADGE_SIZE / 2);
@@ -93,7 +93,7 @@ export default function MagneticCursor() {
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      document.body.style.cursor = "";
+      document.documentElement.classList.remove("no-native-cursor");
       window.removeEventListener("mousemove", onMove);
       observer.disconnect();
       document.querySelectorAll(selectors).forEach((el) => {
