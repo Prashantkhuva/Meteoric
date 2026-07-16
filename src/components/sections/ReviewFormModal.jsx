@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Star, Loader2, Check, Send, Sparkles } from "lucide-react";
 import { createReview } from "@/lib/actions";
@@ -74,7 +75,7 @@ export default function ReviewFormModal({ open, onClose }) {
     onClose();
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -288,6 +289,7 @@ export default function ReviewFormModal({ open, onClose }) {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
