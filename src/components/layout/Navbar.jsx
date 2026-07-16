@@ -1,5 +1,6 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
 import Link from "next/link";
+import gsap from "gsap";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import StaggerLink from "./StaggerLink";
@@ -16,15 +17,70 @@ const navItems = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+  const overlayRef = useRef(null);
+  const linksRef = useRef(null);
+  const ctaRef = useRef(null);
+  const isAnimating = useRef(false);
+
+  const closeMenu = () => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        isAnimating.current = false;
+        setIsMenuOpen(false);
+        gsap.set(overlay, { display: "none" });
+      },
+    });
+
+    tl.to(ctaRef.current, { y: 20, opacity: 0, duration: 0.2, ease: "power2.in" })
+      .to(Array.from(linksRef.current?.children || []).reverse(), {
+        y: 20, opacity: 0, stagger: 0.03, duration: 0.2, ease: "power2.in",
+      }, "-=0.1")
+      .to(overlay, {
+        clipPath: "circle(0% at calc(100% - 28px) 28px)", duration: 0.4, ease: "power3.inOut",
+      }, "-=0.1");
+  };
 
   useEffect(() => {
     if (isMenuOpen) {
       lockScroll();
       const prev = document.activeElement;
-      const el = menuRef.current;
-      if (el && typeof el.focus === "function") el.focus();
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+
+      const onKey = (e) => { if (e.key === "Escape") closeMenu(); };
+      overlay.addEventListener("keydown", onKey);
+      const onOverlayClick = (e) => { if (e.target === overlay) closeMenu(); };
+      overlay.addEventListener("click", onOverlayClick);
+
+      const tl = gsap.timeline({
+        onComplete: () => { isAnimating.current = false; },
+      });
+      isAnimating.current = true;
+
+      tl.set(overlay, { display: "flex" })
+        .fromTo(overlay,
+          { clipPath: "circle(0% at calc(100% - 28px) 28px)" },
+          { clipPath: "circle(150% at calc(100% - 28px) 28px)", duration: 0.5, ease: "power3.inOut" },
+        )
+        .fromTo(linksRef.current?.children || [],
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.06, duration: 0.35, ease: "power2.out" },
+          "-=0.2",
+        )
+        .fromTo(ctaRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+          "-=0.15",
+        );
+
       return () => {
+        overlay.removeEventListener("keydown", onKey);
+        overlay.removeEventListener("click", onOverlayClick);
         unlockScroll();
         if (prev && typeof prev.focus === "function") prev.focus();
       };
@@ -108,7 +164,7 @@ export default function Navbar() {
                 isMenuOpen ? "Close navigation menu" : "Open navigation menu"
               }
               aria-expanded={isMenuOpen}
-              onClick={() => setIsMenuOpen((open) => !open)}
+              onClick={() => isMenuOpen ? closeMenu() : setIsMenuOpen(true)}
               className="md:hidden inline-flex h-6 w-6 flex-col items-center justify-center gap-[5px]"
               style={{ background: "rgba(255,255,255,0)", borderRadius: 8 }}
             >
@@ -130,49 +186,35 @@ export default function Navbar() {
           </div>
         </div>
 
-          {/* Mobile dropdown */}
+        {/* Mobile fullscreen overlay */}
         <div
-          ref={menuRef}
+          ref={overlayRef}
           tabIndex={-1}
-          className={`md:hidden mx-4 overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.6)] transition-all duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
-            isMenuOpen
-              ? "pointer-events-auto translate-y-0 opacity-100 max-h-[400px]"
-              : "pointer-events-none -translate-y-4 opacity-0 max-h-0"
-          }`}
+          className="md:hidden fixed inset-0 z-40 flex flex-col items-center justify-center gap-6"
           style={{
-            background: "linear-gradient(180deg, rgba(12,12,12,0.97) 0%, rgba(7,7,7,0.98) 100%)",
+            display: "none",
+            background: "linear-gradient(180deg, rgba(12,12,12,0.98) 0%, rgba(7,7,7,0.99) 100%)",
             backdropFilter: "blur(40px) saturate(1.2)",
           }}
         >
-          <div className="flex flex-col p-2 mt-2">
-            {navItems.map((item, i) => (
+          <div ref={linksRef} className="flex flex-col items-center gap-2">
+            {navItems.map((item) => (
               <Link
                 key={item.to}
                 href={item.to}
-                onClick={() => setIsMenuOpen(false)}
-                className="group relative flex items-center justify-center rounded-xl px-4 py-3.5 text-[15px] font-medium text-white/50 transition-all duration-200 hover:bg-white/[0.04] hover:text-white/90"
-                style={{
-                  transitionDelay: isMenuOpen ? `${i * 40}ms` : "0ms",
-                  opacity: isMenuOpen ? 1 : 0,
-                  transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
-                  transition: "opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, color 0.2s ease",
-                }}
+                onClick={closeMenu}
+                className="text-3xl font-display text-white/50 hover:text-white transition-colors duration-200 px-8 py-3"
               >
                 {item.label}
               </Link>
             ))}
+          </div>
 
-            <div className="h-px bg-white/[0.06] mx-3 my-2" />
-
+          <div ref={ctaRef}>
             <button
-              onClick={() => { setIsMenuOpen(false); setIsOpen(true); }}
-              className="mx-1 rounded-xl px-4 py-3 text-sm font-semibold tracking-wide text-black transition-all duration-200 active:scale-[0.98]"
-              style={{
-                background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
-                opacity: isMenuOpen ? 1 : 0,
-                transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
-                transition: "opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s",
-              }}
+              onClick={() => { closeMenu(); setIsOpen(true); }}
+              className="mt-4 rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide text-black"
+              style={{ background: "linear-gradient(180deg, #fff 0%, #cecece 100%)" }}
             >
               Let&apos;s Chat!
             </button>

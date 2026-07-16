@@ -8,9 +8,9 @@ const prefersReduced =
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const variants = {
-  initial: { opacity: 0, y: 8 },
-  enter: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-  exit: { opacity: 0, y: -4, transition: { duration: 0.15, ease: "easeIn" } },
+  initial: { opacity: 0, y: 12, filter: "blur(4px)" },
+  enter: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] } },
+  exit: { opacity: 0, y: -6, filter: "blur(2px)", transition: { duration: 0.2, ease: [0.55, 0, 1, 0.45] } },
 };
 
 const reduced = {
