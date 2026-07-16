@@ -122,6 +122,10 @@ body::after {
   animation: marquee 30s linear infinite;
 }
 
+.split-line {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee {
     animation: none;
@@ -129,21 +133,17 @@ body::after {
   .animate-pulse {
     animation: none;
   }
+  .split-line,
   .gsap-word, .gsap-head-word, .gsap-proc-word, .gsap-card {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
   }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-.gsap-word,
-.gsap-head-word,
-.gsap-proc-word {
-  /* Initial state set by GSAP .fromTo() — no CSS opacity to avoid broken end state */
 }
 
 input:-webkit-autofill,

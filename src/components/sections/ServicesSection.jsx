@@ -4,11 +4,12 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const services = [
   {
@@ -54,27 +55,23 @@ export default function ServicesSection() {
   const headingRef = useRef(null);
   const [ctaHovered, setCtaHovered] = useState(false);
 
-  const svcMainWords = "What we build".split(" ");
-  const svcMutedWords = "for founders.".split(" ");
-
   useGSAP(() => {
     const prefersReduced =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
 
-    // Heading word reveal — scrub
-    gsap.fromTo(headingRef.current?.querySelectorAll(".gsap-svc-word"),
-      { yPercent: 110, opacity: 0 },
+    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
+    gsap.fromTo(split.lines,
+      { y: 40, opacity: 0 },
       {
-        yPercent: 0,
+        y: 0,
         opacity: 1,
-        stagger: 0.03,
-        ease: "power3.out",
+        stagger: 0.1,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: headingRef.current,
-          start: "top 85%",
-          end: "top 40%",
-          scrub: 1,
+          start: "top bottom",
+          toggleActions: "play reset play reset",
         },
       },
     );
@@ -200,29 +197,19 @@ export default function ServicesSection() {
       <div ref={headingRef} className="px-6 md:px-16 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-4">
           <div>
-            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
+            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
               <span className="font-display text-white/40 not-italic mr-2">
                 02
               </span>
-              {"Our Services".split(" ").map((w, i) => (
-                <span key={i} className="gsap-svc-word inline-block">{w}</span>
-              ))}
+              Our Services
             </p>
 
-            <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
-              {svcMainWords.map((w, i) => (
-                <span key={i} className="gsap-svc-word inline-block">{w} </span>
-              ))}
-              <span className="block font-secondary-italic [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
-                {svcMutedWords.map((w, i) => (
-                  <span
-                    key={i}
-                    className="gsap-svc-word inline-block text-transparent bg-clip-text"
-                    style={{ backgroundImage: "linear-gradient(97deg, #fff 0%, #999 100%)" }}
-                  >
-                    {w}{" "}
-                  </span>
-                ))}
+            <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white">
+              What we build{" "}
+              <span className="block font-secondary-italic text-transparent bg-clip-text"
+                style={{ backgroundImage: "linear-gradient(97deg, #fff 0%, #999 100%)" }}
+              >
+                for founders.
               </span>
             </h2>
           </div>

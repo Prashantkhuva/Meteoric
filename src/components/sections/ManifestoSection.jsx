@@ -3,12 +3,10 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const mainWords = "We build digital products that feel inevitable — clean interfaces, solid architecture, software that actually works.".split(" ");
-const mutedWords = "No noise. Just results.".split(" ");
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export default function ManifestoSection() {
   const sectionRef = useRef(null);
@@ -16,25 +14,22 @@ export default function ManifestoSection() {
 
   useGSAP(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".mani-word").forEach(el => {
+      headingRef.current?.querySelectorAll(".split-line").forEach(el => {
         el.style.filter = "none";
         el.style.opacity = "1";
       });
       return;
     }
 
-    const words = headingRef.current?.querySelectorAll(".mani-word");
-    if (!words?.length) return;
+    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
+    if (!split.lines?.length) return;
 
-    gsap.fromTo(words,
+    gsap.fromTo(split.lines,
       { filter: "blur(8px)", opacity: 0.1 },
       {
         filter: "blur(0px)",
         opacity: 1,
-        stagger: {
-          each: 1 / words.length,
-          ease: "none",
-        },
+        stagger: { each: 1 / split.lines.length, ease: "none" },
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -58,15 +53,9 @@ export default function ManifestoSection() {
           Our Philosophy
         </p>
 
-        <h2 ref={headingRef} className="text-3xl md:text-5xl font-secondary-italic leading-snug text-white/80 [&>.mani-word:not(:last-child)]:mr-[0.25em]">
-          {mainWords.map((word, i) => (
-            <span key={i} className="mani-word inline-block">{word} </span>
-          ))}
-          <span className="block mt-2 text-white/40 [&>.mani-word:not(:last-child)]:mr-[0.25em]">
-            {mutedWords.map((word, i) => (
-              <span key={i} className="mani-word inline-block">{word} </span>
-            ))}
-          </span>
+        <h2 ref={headingRef} className="text-3xl md:text-5xl font-secondary-italic leading-snug text-white/80">
+          We build digital products that feel inevitable — clean interfaces, solid architecture, software that actually works.
+          <span className="block mt-2 text-white/40">No noise. Just results.</span>
         </h2>
       </div>
     </section>

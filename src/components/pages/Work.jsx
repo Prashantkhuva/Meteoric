@@ -3,15 +3,14 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const headingWords = "Projects that actually shipped.".split(" ");
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export default function WorkPage() {
   const sectionRef = useRef(null);
@@ -20,26 +19,25 @@ export default function WorkPage() {
 
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".gsap-work-word").forEach((el) => {
+      headingRef.current?.querySelectorAll(".split-line").forEach((el) => {
         el.style.opacity = "1";
         el.style.transform = "none";
       });
       return;
     }
 
-    gsap.fromTo(
-      headingRef.current?.querySelectorAll(".gsap-work-word"),
-      { yPercent: 110, opacity: 0 },
+    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
+    gsap.fromTo(split.lines,
+      { y: 40, opacity: 0 },
       {
-        yPercent: 0,
+        y: 0,
         opacity: 1,
-        stagger: 0.03,
-        ease: "power3.out",
+        stagger: 0.1,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: headingRef.current,
-          start: "top 85%",
-          end: "top 40%",
-          scrub: 1,
+          start: "top bottom",
+          toggleActions: "play reset play reset",
         },
       },
     );
@@ -82,16 +80,12 @@ export default function WorkPage() {
       <section ref={sectionRef} className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24">
         {/* Header */}
         <div ref={headingRef} className="mb-16">
-          <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-work-word:not(:last-child)]:mr-[0.25em]">
+          <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
             <span className="font-display text-white/40 not-italic mr-2">01</span>
-            {"Portfolio".split(" ").map((w, i) => (
-              <span key={i} className="gsap-work-word inline-block">{w} </span>
-            ))}
+            Portfolio
           </p>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight max-w-4xl [&>.gsap-work-word:not(:last-child)]:mr-[0.25em]">
-            {headingWords.map((w, i) => (
-              <span key={i} className="gsap-work-word inline-block">{w} </span>
-            ))}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight max-w-4xl">
+            Projects that actually shipped.
           </h1>
           <p className="text-white/40 text-base md:text-lg max-w-2xl mt-6">
             Every project here went from concept to production — on time, on

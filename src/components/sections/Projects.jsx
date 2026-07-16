@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -10,11 +11,9 @@ import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects as allProjects } from "@/data/projects";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const projects = allProjects.slice(0, 2);
-
-const projMainWords = "Selected Works".split(" ");
 
 export const ProjectCardMobile = function ProjectCardMobile({ project }) {
   return (
@@ -89,26 +88,25 @@ function Projects() {
 
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".gsap-proj-word").forEach((el) => {
+      headingRef.current?.querySelectorAll(".split-line").forEach((el) => {
         el.style.opacity = "1";
         el.style.transform = "none";
       });
       return;
     }
 
-    gsap.fromTo(
-      headingRef.current?.querySelectorAll(".gsap-proj-word"),
-      { yPercent: 110, opacity: 0 },
+    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
+    gsap.fromTo(split.lines,
+      { y: 40, opacity: 0 },
       {
-        yPercent: 0,
+        y: 0,
         opacity: 1,
-        stagger: 0.03,
-        ease: "power3.out",
+        stagger: 0.1,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: headingRef.current,
-          start: "top 85%",
-          end: "top 40%",
-          scrub: 1,
+          start: "top bottom",
+          toggleActions: "play reset play reset",
         },
       },
     );
@@ -140,16 +138,12 @@ function Projects() {
         {/* Header */}
         <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
           <div>
-            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
+            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
               <span className="font-display text-white/40 not-italic mr-2">03</span>
-              {"Curated Portfolio".split(" ").map((w, i) => (
-                <span key={i} className="gsap-proj-word inline-block">{w} </span>
-              ))}
+              Curated Portfolio
             </p>
-            <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight text-white [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
-              {projMainWords.map((w, i) => (
-                <span key={i} className="gsap-proj-word inline-block">{w} </span>
-              ))}
+            <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight text-white">
+              Selected Works
             </h2>
           </div>
 
