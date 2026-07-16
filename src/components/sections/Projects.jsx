@@ -169,15 +169,17 @@ function Projects() {
 
     const imgs = sectionRef.current?.querySelectorAll(".gsap-proj-img");
     imgs?.forEach((img) => {
-      gsap.fromTo(img,
-        { filter: "grayscale(100%) brightness(0.8)" },
+      gsap.set(img, { clipPath: "inset(100% 0 0 0)", objectPosition: "0px 80%" });
+      gsap.to(img,
         {
+          clipPath: "inset(0% 0 0 0)",
+          objectPosition: "0px 30%",
           filter: "grayscale(0%) brightness(1)",
-          ease: "power2.out",
+          ease: "none",
           scrollTrigger: {
             trigger: img,
-            start: "top 90%",
-            end: "top 50%",
+            start: "top 95%",
+            end: "top 30%",
             scrub: 1,
           },
         },

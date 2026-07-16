@@ -126,6 +126,12 @@ body::after {
   overflow: hidden;
 }
 
+.gsap-work-img,
+.gsap-proj-img {
+  clip-path: inset(100% 0 0 0);
+  object-position: 0px 80%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee {
     animation: none;
@@ -137,6 +143,12 @@ body::after {
   .gsap-word, .gsap-head-word, .gsap-proc-word, .gsap-card {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+  }
+  .gsap-work-img,
+  .gsap-proj-img {
+    clip-path: none !important;
+    object-position: center !important;
     filter: none !important;
   }
   *, *::before, *::after {

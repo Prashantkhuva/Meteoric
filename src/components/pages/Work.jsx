@@ -27,7 +27,7 @@ function WorkCard({ project, index }) {
       style={{ transformStyle: "preserve-3d" }}
     >
       <div className={`relative overflow-hidden bg-black ${isReversed ? "lg:order-2" : ""}`}>
-        <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8">
+        <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8 overflow-hidden">
           <Image
             src={project.image}
             alt={project.name}
@@ -130,15 +130,17 @@ export default function WorkPage() {
 
     const imgs = cardsRef.current?.querySelectorAll(".gsap-work-img");
     imgs?.forEach((img) => {
-      gsap.fromTo(img,
-        { filter: "grayscale(100%) brightness(0.8)" },
+      gsap.set(img, { clipPath: "inset(100% 0 0 0)", objectPosition: "0px 80%" });
+      gsap.to(img,
         {
+          clipPath: "inset(0% 0 0 0)",
+          objectPosition: "0px 30%",
           filter: "grayscale(0%) brightness(1)",
-          ease: "power2.out",
+          ease: "none",
           scrollTrigger: {
             trigger: img,
-            start: "top 85%",
-            end: "top 40%",
+            start: "top 90%",
+            end: "top 20%",
             scrub: 1,
           },
         },
