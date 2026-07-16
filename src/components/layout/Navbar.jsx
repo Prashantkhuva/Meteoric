@@ -185,42 +185,59 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-
-        {/* Mobile fullscreen overlay */}
-        <div
-          ref={overlayRef}
-          tabIndex={-1}
-          className="md:hidden fixed inset-0 z-40 flex flex-col items-center justify-center gap-6"
-          style={{
-            display: "none",
-            background: "linear-gradient(180deg, rgba(12,12,12,0.98) 0%, rgba(7,7,7,0.99) 100%)",
-            backdropFilter: "blur(40px) saturate(1.2)",
-          }}
-        >
-          <div ref={linksRef} className="flex flex-col items-center gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.to}
-                href={item.to}
-                onClick={closeMenu}
-                className="text-3xl font-display text-white/50 hover:text-white transition-colors duration-200 px-8 py-3"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          <div ref={ctaRef}>
-            <button
-              onClick={() => { closeMenu(); setIsOpen(true); }}
-              className="mt-4 rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide text-black"
-              style={{ background: "linear-gradient(180deg, #fff 0%, #cecece 100%)" }}
-            >
-              Let&apos;s Chat!
-            </button>
-          </div>
-        </div>
       </header>
+
+      {/* Mobile fullscreen overlay — outside header to avoid z-index stacking */}
+      <div
+        ref={overlayRef}
+        tabIndex={-1}
+        className="md:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center"
+        style={{
+          display: "none",
+          background: "linear-gradient(180deg, rgba(10,10,10,0.99) 0%, rgba(7,7,7,1) 100%)",
+          backdropFilter: "blur(40px) saturate(1.2)",
+        }}
+      >
+        {/* Close button */}
+        <button
+          onClick={closeMenu}
+          className="absolute top-5 right-6 w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/50 hover:text-white hover:border-white/25 transition-all duration-200"
+          aria-label="Close menu"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+
+        {/* Nav links */}
+        <div ref={linksRef} className="flex flex-col items-center gap-1">
+          {navItems.map((item) => (
+            <Link
+              key={item.to}
+              href={item.to}
+              onClick={closeMenu}
+              className="group relative text-[28px] sm:text-[32px] font-display text-white/40 hover:text-white px-8 py-3.5 rounded-2xl hover:bg-white/[0.04] transition-all duration-200"
+            >
+              <span className="relative z-10">{item.label}</span>
+              <span className="absolute left-8 right-8 bottom-3 h-px bg-white/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+            </Link>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="w-12 h-px bg-white/[0.08] my-8" />
+
+        {/* CTA */}
+        <div ref={ctaRef}>
+          <button
+            onClick={() => { closeMenu(); setIsOpen(true); }}
+            className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide text-black hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
+            style={{ background: "linear-gradient(180deg, #fff 0%, #cecece 100%)" }}
+          >
+            Let&apos;s Chat!
+          </button>
+        </div>
+      </div>
 
       <Suspense fallback={null}>
         <RequestModal isOpen={isOpen} setIsOpen={setIsOpen} />
