@@ -53,8 +53,8 @@ export default function ManifestoSection() {
       className="relative bg-black py-32 sm:py-40 lg:py-48"
     >
       <div className="max-w-5xl mx-auto px-6 md:px-12">
-        <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-10">
-          <span className="font-display text-white/30 not-italic mr-2">01</span>
+        <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-10">
+          <span className="font-display text-white/40 not-italic mr-2">01</span>
           Our Philosophy
         </p>
 

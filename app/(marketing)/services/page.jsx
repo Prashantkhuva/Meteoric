@@ -44,12 +44,59 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const serviceJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      name: "Meteoric",
+      url: SITE_URL,
+      description: "Web and SaaS development agency for startups. We build high-performance websites, SaaS platforms, and full-stack applications.",
+      areaServed: "Worldwide",
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Development Services",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "SaaS Development",
+              description: "End-to-end SaaS product development from MVP to production platform.",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Landing Page Design",
+              description: "High-converting landing pages built with Next.js and modern tooling.",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Full-Stack Web Applications",
+              description: "Custom web applications with React, Next.js, Node.js, and Supabase.",
+            },
+          },
+        ],
+      },
+    },
+  ],
+};
+
 export default function Services() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       <ServicesPage />
     </>

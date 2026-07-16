@@ -102,6 +102,7 @@ export default function CaseStudiesPage() {
                     width={800}
                     height={400}
                     className="object-contain w-full h-auto rounded-2xl"
+                    sizes="(max-width: 768px) 100vw, 800px"
                     priority={idx === 0}
                   />
                 </div>

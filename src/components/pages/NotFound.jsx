@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
+const suggestions = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "Contact", href: "/#contact" },
+];
+
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
@@ -13,14 +20,20 @@ export default function NotFound() {
           Page not found
         </h1>
         <p className="text-white/40 text-sm md:text-base leading-relaxed mb-8">
-          This page doesn't exist or has moved. Let's get you back on track.
+          This page doesn&apos;t exist or has moved. Let&apos;s get you back on track.
         </p>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
-        >
-          Back to Home <ArrowUpRight size={16} />
-        </Link>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {suggestions.map((s) => (
+            <Link
+              key={s.href}
+              href={s.href}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] text-white/70 text-sm font-medium hover:text-white hover:border-white/25 hover:bg-white/[0.06] transition-all duration-200"
+            >
+              {s.label}
+              <ArrowUpRight size={13} className="opacity-50" />
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

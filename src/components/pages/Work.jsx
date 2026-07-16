@@ -82,8 +82,8 @@ export default function WorkPage() {
       <section ref={sectionRef} className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24">
         {/* Header */}
         <div ref={headingRef} className="mb-16">
-          <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-work-word:not(:last-child)]:mr-[0.25em]">
-            <span className="font-display text-white/30 not-italic mr-2">01</span>
+          <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-work-word:not(:last-child)]:mr-[0.25em]">
+            <span className="font-display text-white/40 not-italic mr-2">01</span>
             {"Portfolio".split(" ").map((w, i) => (
               <span key={i} className="gsap-work-word inline-block">{w} </span>
             ))}

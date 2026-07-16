@@ -140,8 +140,8 @@ function Projects() {
         {/* Header */}
         <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
           <div>
-            <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
-              <span className="font-display text-white/30 not-italic mr-2">03</span>
+            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-proj-word:not(:last-child)]:mr-[0.25em]">
+              <span className="font-display text-white/40 not-italic mr-2">03</span>
               {"Curated Portfolio".split(" ").map((w, i) => (
                 <span key={i} className="gsap-proj-word inline-block">{w} </span>
               ))}

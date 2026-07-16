@@ -147,6 +147,7 @@ function LoginForm() {
               alt="Meteoric"
               width={48}
               height={48}
+              sizes="48px"
               className="object-cover"
               priority
             />

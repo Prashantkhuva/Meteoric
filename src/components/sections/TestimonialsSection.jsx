@@ -201,9 +201,9 @@ export default function TestimonialsSection() {
           {/* ── Header ── */}
           <div ref={headerRef} className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
             <p
-              className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
+              className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5"
             >
-              <span className="font-display text-white/30 not-italic mr-2">04</span>
+              <span className="font-display text-white/40 not-italic mr-2">04</span>
               Client Stories
               </p>
 
@@ -285,7 +285,7 @@ export default function TestimonialsSection() {
             <div className="max-w-4xl">
               <div ref={faqHeaderRef}>
                 <p
-                  className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5"
+                  className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5"
                 >
                   FAQs
                 </p>

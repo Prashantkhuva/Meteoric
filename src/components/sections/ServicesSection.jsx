@@ -200,8 +200,8 @@ export default function ServicesSection() {
       <div ref={headingRef} className="px-6 md:px-16 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-4">
           <div>
-            <p className="text-white/50 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
-              <span className="font-display text-white/30 not-italic mr-2">
+            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5 [&>.gsap-svc-word:not(:last-child)]:mr-[0.25em]">
+              <span className="font-display text-white/40 not-italic mr-2">
                 02
               </span>
               {"Our Services".split(" ").map((w, i) => (
@@ -377,7 +377,7 @@ export default function ServicesSection() {
                 </span>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] tracking-[0.3em] font-bold text-white/30 uppercase">
+                  <span className="text-[10px] tracking-[0.3em] font-bold text-white/40 uppercase">
                     Service — {s.num}
                   </span>
                   <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center text-white/40">
@@ -388,7 +388,7 @@ export default function ServicesSection() {
                 <h3 className="text-[22px] font-secondary-italic text-white leading-[1.1]">
                   {s.title}
                 </h3>
-                <p className="text-white/50 text-[12px] leading-relaxed">
+                <p className="text-white/60 text-[12px] leading-relaxed">
                   {s.desc}
                 </p>
 
@@ -428,9 +428,9 @@ export default function ServicesSection() {
             <h3 className="text-[22px] font-secondary-italic text-white leading-[1.1]">
               Something custom in mind?
             </h3>
-            <p className="text-white/50 text-[12px] leading-relaxed">
-              Every project begins with understanding your vision. Whether it's
-              a landing page, SaaS, or a full-stack app — we'll build it
+            <p className="text-white/60 text-[12px] leading-relaxed">
+              Every project begins with understanding your vision. Whether it&apos;s
+              a landing page, SaaS, or a full-stack app — we&apos;ll build it
               tailored to your goals.
             </p>
 

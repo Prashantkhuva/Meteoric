@@ -8,6 +8,7 @@ const Logo = memo(function Logo({ className = "" }) {
       alt="Meteoric — software development agency"
       width={157}
       height={40}
+      sizes="157px"
       priority
       className={`shrink-0 ${className}`}
     />
