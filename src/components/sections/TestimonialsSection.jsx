@@ -194,7 +194,7 @@ export default function TestimonialsSection() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
-      <section ref={sectionRef} className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
+      <section ref={sectionRef} id="reviews" className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(234,239,255,0.03),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(234,239,255,0.015),transparent_60%)]" />
 
         <div className="relative z-10">
