@@ -9,8 +9,78 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
+import { useCardTilt } from "@/hooks/useCardTilt";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
+
+function WorkCard({ project, index }) {
+  const { cardRef, onMouseEnter, onMouseMouseMove, onMouseLeave } = useCardTilt(0.8);
+  const isReversed = index % 2 === 1;
+
+  return (
+    <div
+      ref={cardRef}
+      className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700 gsap-work-card"
+      onMouseEnter={onMouseEnter}
+      onMouseMove={onMouseMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      <div className={`relative overflow-hidden bg-black ${isReversed ? "lg:order-2" : ""}`}>
+        <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8">
+          <Image
+            src={project.image}
+            alt={project.name}
+            width={640}
+            height={360}
+            className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03] gsap-work-img"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        </div>
+      </div>
+
+      <div className={`relative flex flex-col justify-center px-8 py-10 lg:px-12 lg:py-16 ${isReversed ? "lg:order-1" : ""}`}>
+        <div className="flex items-center gap-4 mb-6">
+          <span className="h-px w-8" style={{ backgroundColor: project.accent }} />
+          <span className="text-[11px] font-mono tracking-widest uppercase" style={{ color: project.accent }}>
+            Project {String(index + 1).padStart(2, "0")}
+          </span>
+        </div>
+        <h2 className="text-3xl lg:text-4xl font-display text-white mb-3 tracking-tight">{project.name}</h2>
+        <p className="text-base font-medium leading-relaxed mb-5" style={{ color: project.accent }}>{project.tagline}</p>
+        <p className="text-sm text-white/45 leading-relaxed mb-6">{project.description}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
+          {project.features.map((f, fi) => (
+            <div key={fi} className="flex items-start gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: project.accent }} />
+              <span className="text-xs text-white/40 leading-relaxed">{f}</span>
+            </div>
+          ))}
+        </div>
+        {project.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {project.tags.map((tag) => (
+              <span key={tag} className="text-[10px] px-3 py-1 rounded-full border text-white/40 font-medium tracking-wide uppercase"
+                style={{ borderColor: `${project.accent}33`, backgroundColor: `${project.accent}0a` }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        <a href={project.link} target="_blank" rel="noopener noreferrer"
+          className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5 w-fit"
+          style={{ border: `1.5px solid ${project.accent}`, color: project.accent }}>
+          <span className="fill-circle" style={{ backgroundColor: project.accent }} />
+          <span className="relative z-10 flex items-center gap-2 group-hover/btn:text-black transition-colors duration-300">
+            <StaggerText hoverColor="#000">View Live Project</StaggerText>
+            <ArrowUpRight size={15} />
+          </span>
+        </a>
+      </div>
+    </div>
+  );
+}
 
 export default function WorkPage() {
   const sectionRef = useRef(null);
@@ -57,6 +127,23 @@ export default function WorkPage() {
         },
       },
     );
+
+    const imgs = cardsRef.current?.querySelectorAll(".gsap-work-img");
+    imgs?.forEach((img) => {
+      gsap.fromTo(img,
+        { filter: "grayscale(100%) brightness(0.8)" },
+        {
+          filter: "grayscale(0%) brightness(1)",
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: img,
+            start: "top 85%",
+            end: "top 40%",
+            scrub: 1,
+          },
+        },
+      );
+    });
   }, { scope: sectionRef });
 
   return (
@@ -96,109 +183,7 @@ export default function WorkPage() {
         {/* Project Cards — alternating layout */}
         <div ref={cardsRef} className="space-y-16 md:space-y-24 mb-24">
           {projects.map((project, i) => (
-            <div
-              key={project.id}
-              className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700 gsap-work-card"
-            >
-              {/* Image — alternating side */}
-              <div className={`relative overflow-hidden bg-black ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-                <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8">
-                  <Image
-                    src={project.image}
-                    alt={project.name}
-                    width={640}
-                    height={360}
-                    className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03]"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    loading={i === 0 ? "eager" : "lazy"}
-                  />
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className={`relative flex flex-col justify-center px-8 py-10 lg:px-12 lg:py-16 ${i % 2 === 1 ? "lg:order-1" : ""}`}>
-                {/* Project number */}
-                <div className="flex items-center gap-4 mb-6">
-                  <span
-                    className="h-px w-8"
-                    style={{ backgroundColor: project.accent }}
-                  />
-                  <span
-                    className="text-[11px] font-mono tracking-widest uppercase"
-                    style={{ color: project.accent }}
-                  >
-                    Project {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-
-                {/* Name */}
-                <h2 className="text-3xl lg:text-4xl font-display text-white mb-3 tracking-tight">
-                  {project.name}
-                </h2>
-
-                {/* Tagline */}
-                <p
-                  className="text-base font-medium leading-relaxed mb-5"
-                  style={{ color: project.accent }}
-                >
-                  {project.tagline}
-                </p>
-
-                {/* Description */}
-                <p className="text-sm text-white/45 leading-relaxed mb-6">
-                  {project.description}
-                </p>
-
-                {/* Features */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
-                  {project.features.map((f, fi) => (
-                    <div key={fi} className="flex items-start gap-2.5">
-                      <span
-                        className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
-                        style={{ backgroundColor: project.accent }}
-                      />
-                      <span className="text-xs text-white/40 leading-relaxed">{f}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Tags */}
-                {project.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] px-3 py-1 rounded-full border text-white/40 font-medium tracking-wide uppercase"
-                        style={{
-                          borderColor: `${project.accent}33`,
-                          backgroundColor: `${project.accent}0a`,
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* CTA */}
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5 w-fit"
-                  style={{
-                    border: `1.5px solid ${project.accent}`,
-                    color: project.accent,
-                  }}
-                >
-                  <span className="fill-circle" style={{ backgroundColor: project.accent }} />
-                  <span className="relative z-10 flex items-center gap-2 group-hover/btn:text-black transition-colors duration-300">
-                    <StaggerText hoverColor="#000">View Live Project</StaggerText>
-                    <ArrowUpRight size={15} />
-                  </span>
-                </a>
-              </div>
-            </div>
+            <WorkCard key={project.id} project={project} index={i} />
           ))}
         </div>
       </section>

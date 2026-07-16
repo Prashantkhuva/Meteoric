@@ -10,10 +10,50 @@ import Link from "next/link";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects as allProjects } from "@/data/projects";
+import { useCardTilt } from "@/hooks/useCardTilt";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const projects = allProjects.slice(0, 2);
+
+function ProjectCard({ project, index }) {
+  const { cardRef, onMouseEnter, onMouseMouseMove, onMouseLeave } = useCardTilt(1);
+
+  return (
+    <a
+      ref={cardRef}
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group block gsap-proj-card ${index % 2 === 1 ? "md:mt-12" : ""}`}
+      onMouseEnter={onMouseEnter}
+      onMouseMove={onMouseMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">
+        <Image
+          src={project.image}
+          alt={project.name}
+          width={800}
+          height={500}
+          className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03] gsap-proj-img"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          loading="lazy"
+        />
+        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          <ArrowUpRight size={14} className="text-white" />
+        </div>
+      </div>
+      <h3 className="text-lg md:text-xl font-display text-white mb-1 group-hover:text-white/80 transition-colors duration-300">
+        {project.name}
+      </h3>
+      <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
+        {project.tagline}
+      </p>
+    </a>
+  );
+}
 
 export const ProjectCardMobile = function ProjectCardMobile({ project }) {
   return (
@@ -126,6 +166,23 @@ function Projects() {
         },
       },
     );
+
+    const imgs = sectionRef.current?.querySelectorAll(".gsap-proj-img");
+    imgs?.forEach((img) => {
+      gsap.fromTo(img,
+        { filter: "grayscale(100%) brightness(0.8)" },
+        {
+          filter: "grayscale(0%) brightness(1)",
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: img,
+            start: "top 90%",
+            end: "top 50%",
+            scrub: 1,
+          },
+        },
+      );
+    });
   }, { scope: sectionRef });
 
   return (
@@ -162,38 +219,7 @@ function Projects() {
         {/* Project Grid — 2 columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-10 mb-16">
           {projects.map((project, i) => (
-            <a
-              key={project.id}
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`group block gsap-proj-card ${i % 2 === 1 ? "md:mt-12" : ""}`}
-            >
-              {/* Image */}
-              <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">
-                  <Image
-                    src={project.image}
-                    alt={project.name}
-                    width={800}
-                    height={500}
-                    className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03]"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    loading="lazy"
-                  />
-                  {/* Hover arrow */}
-                  <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                    <ArrowUpRight size={14} className="text-white" />
-                  </div>
-              </div>
-
-              {/* Name + category */}
-              <h3 className="text-lg md:text-xl font-display text-white mb-1 group-hover:text-white/80 transition-colors duration-300">
-                {project.name}
-              </h3>
-              <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
-                {project.tagline}
-              </p>
-            </a>
+            <ProjectCard key={project.id} project={project} index={i} />
           ))}
         </div>
       </div>

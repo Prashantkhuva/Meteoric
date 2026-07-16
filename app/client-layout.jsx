@@ -6,6 +6,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/layout/Preloader";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import MagneticCursor from "@/components/ui/MagneticCursor";
 import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 
 export default function ClientLayout({ children }) {
@@ -26,6 +27,7 @@ export default function ClientLayout({ children }) {
       <Preloader />
       {!isAdmin && <SmoothScroll />}
       {!isAdmin && <Navbar />}
+      {!isAdmin && <MagneticCursor />}
       {isAdmin ? children : <main>{children}</main>}
       {!isAdmin && <Footer />}
     </>
