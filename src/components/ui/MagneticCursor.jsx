@@ -28,8 +28,8 @@ export default function MagneticCursor() {
   const [angle, setAngle] = useState(0);
   const prevRef = useRef({ x: 0, y: 0 });
 
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
+  const mouseX = useMotionValue(-9999);
+  const mouseY = useMotionValue(-9999);
   const smoothX = useSpring(mouseX, { stiffness: 500, damping: 35 });
   const smoothY = useSpring(mouseY, { stiffness: 500, damping: 35 });
 
@@ -81,8 +81,10 @@ export default function MagneticCursor() {
     window.addEventListener("mousemove", onMove, { passive: true });
 
     const onMouseLeave = () => {
-      mouseX.set(-100);
-      mouseY.set(-100);
+      mouseX.set(-9999);
+      mouseY.set(-9999);
+      smoothX.jump(-9999);
+      smoothY.jump(-9999);
     };
     const onMouseEnter = (e) => {
       smoothX.jump(e.clientX - BADGE_SIZE / 2);
