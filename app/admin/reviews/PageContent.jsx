@@ -159,7 +159,12 @@ export default function ReviewsPageContent() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} className="px-5 py-12 text-center text-white/30">Loading...</td></tr>
+              <tr><td colSpan={5} className="px-5 py-12 text-center">
+                <div className="flex items-center justify-center gap-2 text-white/30">
+                  <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+                  <span className="text-sm">Loading reviews...</span>
+                </div>
+              </td></tr>
             ) : reviews.length === 0 ? (
               <tr><td colSpan={5} className="px-5 py-12 text-center text-white/30">No reviews found</td></tr>
             ) : (
@@ -243,7 +248,10 @@ export default function ReviewsPageContent() {
       {/* Mobile Cards */}
       <div className="sm:hidden space-y-3">
         {loading ? (
-          <div className="py-12 text-center text-white/30 text-sm">Loading...</div>
+          <div className="py-12 flex items-center justify-center gap-2 text-white/30">
+            <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+            <span className="text-sm">Loading reviews...</span>
+          </div>
         ) : reviews.length === 0 ? (
           <div className="py-12 text-center text-white/30 text-sm">No reviews found</div>
         ) : (
