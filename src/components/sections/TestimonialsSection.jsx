@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Star, Plus, BadgeCheck, Sparkles, Globe, Zap } from "lucide-react";
+import { Star, Plus, BadgeCheck, Sparkles } from "lucide-react";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
@@ -64,13 +64,6 @@ const faqs = [
   },
 ];
 
-const trustStats = [
-  { value: "12", label: "Projects", icon: Globe },
-  { value: "100%", label: "On-Time", icon: Zap },
-  { value: "5★", label: "Rating", icon: Star },
-  { value: "10d", label: "Avg Sprint", icon: Zap },
-];
-
 function ReviewCard({ t }) {
   return (
     <div className="w-[380px] shrink-0 rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4 mx-3">
@@ -118,7 +111,6 @@ export default function TestimonialsSection() {
   const [showForm, setShowForm] = useState(false);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
-  const statsRef = useRef(null);
   const faqHeaderRef = useRef(null);
   const faqListRef = useRef(null);
 
@@ -158,7 +150,6 @@ export default function TestimonialsSection() {
       });
 
     fadeUp(headerRef.current, headerRef.current);
-    fadeUp(statsRef.current, statsRef.current);
     fadeUp(faqHeaderRef.current, faqHeaderRef.current);
     gsap.fromTo(
       faqListRef.current?.querySelectorAll(".gsap-faq-item"),
@@ -212,22 +203,6 @@ export default function TestimonialsSection() {
                 <br />
                 <span className="text-white/40">who build the future.</span>
               </h2>
-
-              <div ref={statsRef} className="flex gap-3">
-                {trustStats.map((stat) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div
-                      key={stat.label}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.06] bg-white/[0.02]"
-                    >
-                      <Icon size={11} className="text-white/30" />
-                      <span className="text-white/70 text-xs font-medium">{stat.value}</span>
-                      <span className="text-white/30 text-[10px]">{stat.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           </div>
 
