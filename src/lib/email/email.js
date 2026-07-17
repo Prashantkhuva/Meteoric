@@ -7,6 +7,7 @@ import InvoiceEmail from "@/emails/invoice-email";
 import OverdueReminder from "@/emails/overdue-reminder";
 import ClientWelcome from "@/emails/client-welcome";
 import PaymentConfirmation from "@/emails/payment-confirmation";
+import ReviewThankYou from "@/emails/review-thankyou";
 import CustomEmail from "@/emails/custom-email";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 
@@ -294,5 +295,23 @@ export async function sendPaymentConfirmation(invoice, client) {
     throw new Error(raw?.message || "Failed to send payment confirmation", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send payment confirmation");
+  return result;
+}
+
+export async function sendReviewThankYou(email, name) {
+  if (!email) return;
+
+  if (isTestMode() && email !== ADMIN) {
+    testModeWarning(email);
+    return { success: false, message: "Cannot send in test mode" };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM,
+    to: [email],
+    subject: "Thank you for your review — Meteoric",
+    react: ReviewThankYou({ name, siteUrl: getSiteUrl() }),
+  });
+  if (result?.error) console.error("[resend] review thank-you failed:", result.error);
   return result;
 }

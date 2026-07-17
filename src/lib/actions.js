@@ -151,6 +151,13 @@ export async function createReview(data) {
       } catch (emailErr) {
         console.error("[resend] review notification failed:", emailErr)
       }
+
+      try {
+        const { sendReviewThankYou } = await import("@/lib/email/email")
+        await sendReviewThankYou(data.email, data.name)
+      } catch (tyErr) {
+        console.error("[resend] review thank-you failed:", tyErr)
+      }
     }
 
     return { success: true }
