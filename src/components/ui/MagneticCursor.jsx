@@ -80,6 +80,17 @@ export default function MagneticCursor() {
 
     window.addEventListener("mousemove", onMove, { passive: true });
 
+    const onMouseLeave = () => {
+      mouseX.set(-100);
+      mouseY.set(-100);
+    };
+    const onMouseEnter = (e) => {
+      mouseX.set(e.clientX - BADGE_SIZE / 2);
+      mouseY.set(e.clientY - BADGE_SIZE / 2);
+    };
+    document.addEventListener("mouseleave", onMouseLeave);
+    document.addEventListener("mouseenter", onMouseEnter);
+
     const selectors = "a, button, [role='button']";
     const bind = () => {
       document.querySelectorAll(selectors).forEach((el) => {
@@ -96,6 +107,8 @@ export default function MagneticCursor() {
     return () => {
       document.documentElement.classList.remove("no-native-cursor");
       window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      document.removeEventListener("mouseenter", onMouseEnter);
       observer.disconnect();
       document.querySelectorAll(selectors).forEach((el) => {
         el.removeEventListener("mouseenter", onEnterInteractive);
