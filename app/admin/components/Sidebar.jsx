@@ -18,6 +18,7 @@ import {
   LogOut,
   X,
   ChevronRight,
+  Star,
 } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,7 @@ const sections = [
     items: [
       { href: "/admin/leads", label: "Leads", icon: Users },
       { href: "/admin/clients", label: "Clients", icon: Briefcase },
+      { href: "/admin/reviews", label: "Reviews", icon: Star },
     ],
   },
   {

@@ -1426,3 +1426,43 @@ export async function deleteBankAccount(id) {
     return { error: err.message || "Failed to delete bank account" };
   }
 }
+
+export async function getReviewsPaginated({ page = 1, pageSize = 15, status, search, col = "created_at", dir = "desc" } = {}) {
+  try {
+    const supabase = await getSupabase();
+    let query = supabase.from("reviews").select("*", { count: "exact" });
+    if (status) query = query.eq("status", status);
+    if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%,content.ilike.%${search}%`);
+    const from = (page - 1) * pageSize;
+    query = query.order(col, { ascending: dir === "asc" }).range(from, from + pageSize - 1);
+    const { data, error, count } = await query;
+    if (error) return { error: error.message, data: [], total: 0 };
+    return { data: data || [], total: count || 0 };
+  } catch (err) {
+    return { error: err.message, data: [], total: 0 };
+  }
+}
+
+export async function updateReviewStatus(id, status) {
+  try {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("reviews").update({ status }).eq("id", id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/reviews");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update review" };
+  }
+}
+
+export async function deleteReview(id) {
+  try {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("reviews").delete().eq("id", id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/reviews");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to delete review" };
+  }
+}

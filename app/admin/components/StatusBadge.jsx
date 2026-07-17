@@ -30,6 +30,8 @@ const colors = {
   planning: { bg: "bg-white/[0.04]", border: "border-white/[0.06]", text: "text-white/30", dot: "bg-white/30" },
   review: { bg: "bg-yellow-500/8", border: "border-yellow-400/15", text: "text-yellow-300/80", dot: "bg-yellow-400" },
   on_hold: { bg: "bg-orange-500/8", border: "border-orange-400/15", text: "text-orange-300/80", dot: "bg-orange-400" },
+  pending: { bg: "bg-amber-500/8", border: "border-amber-400/15", text: "text-amber-300/80", dot: "bg-amber-400" },
+  approved: { bg: "bg-emerald-500/8", border: "border-emerald-400/15", text: "text-emerald-300/80", dot: "bg-emerald-400" },
 };
 
 function resolve(status) {
@@ -59,6 +61,8 @@ const labels = {
   planning: "Planning",
   review: "Review",
   on_hold: "On Hold",
+  pending: "Pending",
+  approved: "Approved",
 };
 
 function label(status) {
