@@ -149,7 +149,7 @@ export default function WorkPage() {
   }, { scope: sectionRef });
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* GEO quotable block */}
       <div className="sr-only" aria-hidden="true">
         Meteoric&apos;s portfolio includes 12+ projects shipped since 2024,
@@ -161,7 +161,7 @@ export default function WorkPage() {
       </div>
 
       {/* Background glow */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#EAEFFF]/[0.015] blur-[200px] rounded-full" />
         <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-white/[0.01] blur-[150px] rounded-full" />
       </div>
