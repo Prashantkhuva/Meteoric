@@ -126,12 +126,12 @@ export default function WorkPage() {
           clipPath: "inset(0% 0 0 0)",
           objectPosition: "0px 30%",
           filter: "grayscale(0%) brightness(1)",
-          ease: "none",
+          duration: 1.2,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: img,
-            start: "top 90%",
-            end: "top 20%",
-            scrub: 1,
+            start: "top 85%",
+            toggleActions: "play none none none",
           },
         },
       );
