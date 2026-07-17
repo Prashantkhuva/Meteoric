@@ -36,7 +36,7 @@ export default function Navbar() {
     const itemRect = item.getBoundingClientRect();
 
     gsap.to(pill, {
-      x: itemRect.left - navRect.left - 6,
+      x: itemRect.left - navRect.left,
       width: itemRect.width,
       opacity: 1,
       duration: 0.35,
