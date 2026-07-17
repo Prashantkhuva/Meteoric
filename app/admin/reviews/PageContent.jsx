@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getReviewsPaginated, updateReviewStatus, deleteReview } from "../actions";
+import { getReviewsPaginated, updateReviewStatus, toggleReviewVerified, deleteReview } from "../actions";
 import { Pagination } from "../components/Pagination";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { StatusBadge } from "../components/StatusBadge";
 import { Toolbar, FilterChip, ClearFiltersButton } from "../components/Toolbar";
 import { useToast } from "../components/ToastContext";
-import { Star, Check, X, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { Star, Check, X, Trash2, ChevronUp, ChevronDown, BadgeCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const PAGE_SIZE = 15;
@@ -86,6 +86,16 @@ export default function ReviewsPageContent() {
     addToast(`Review ${newStatus}`, "success");
   }
 
+  async function handleVerifiedToggle(id, current) {
+    const res = await toggleReviewVerified(id, !current);
+    if (res?.error) {
+      addToast(res.error, "error");
+      return;
+    }
+    setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, is_verified: !current } : r)));
+    addToast(!current ? "Marked as verified" : "Verification removed", "success");
+  }
+
   async function handleDelete() {
     if (!confirmDelete) return;
     setIsDeleting(true);
@@ -157,7 +167,10 @@ export default function ReviewsPageContent() {
                 <tr key={r.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
                   <td className="px-5 py-3">
                     <div>
-                      <p className="text-white/80 font-medium">{r.name}</p>
+                      <p className="text-white/80 font-medium flex items-center gap-1.5">
+                        {r.name}
+                        {r.is_verified && <BadgeCheck size={13} className="text-[#EAEFFF]/60 shrink-0" />}
+                      </p>
                       <p className="text-white/30 text-xs">{r.email}</p>
                       {r.company && <p className="text-white/20 text-xs">{r.company}</p>}
                     </div>
@@ -204,6 +217,13 @@ export default function ReviewsPageContent() {
                         </button>
                       )}
                       <button
+                        onClick={() => handleVerifiedToggle(r.id, r.is_verified)}
+                        className={`p-1.5 rounded-lg transition-colors ${r.is_verified ? "text-[#EAEFFF]/80 hover:text-[#EAEFFF] hover:bg-[#EAEFFF]/10" : "text-white/20 hover:text-[#EAEFFF]/60 hover:bg-[#EAEFFF]/5"}`}
+                        title={r.is_verified ? "Remove verification" : "Mark as verified client"}
+                      >
+                        <BadgeCheck size={14} />
+                      </button>
+                      <button
                         onClick={() => setConfirmDelete(r.id)}
                         className="p-1.5 rounded-lg text-white/20 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                         title="Delete"
@@ -231,7 +251,10 @@ export default function ReviewsPageContent() {
             <div key={r.id} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
-                  <p className="text-white/80 font-medium text-sm">{r.name}</p>
+                  <p className="text-white/80 font-medium text-sm flex items-center gap-1.5">
+                    {r.name}
+                    {r.is_verified && <BadgeCheck size={13} className="text-[#EAEFFF]/60 shrink-0" />}
+                  </p>
                   <p className="text-white/30 text-xs">{r.email}</p>
                 </div>
                 <StatusBadge status={r.status} />
@@ -266,7 +289,10 @@ export default function ReviewsPageContent() {
                     Reset to Pending
                   </button>
                 )}
-                <button onClick={() => setConfirmDelete(r.id)} className="ml-auto p-1.5 rounded-lg text-white/20 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                <button onClick={() => handleVerifiedToggle(r.id, r.is_verified)} className={`p-1.5 rounded-lg transition-colors ${r.is_verified ? "text-[#EAEFFF]/80 bg-[#EAEFFF]/10" : "text-white/20 hover:text-[#EAEFFF]/60 hover:bg-[#EAEFFF]/5"}`} title={r.is_verified ? "Remove verification" : "Mark as verified"}>
+                  <BadgeCheck size={14} />
+                </button>
+                <button onClick={() => setConfirmDelete(r.id)} className="p-1.5 rounded-lg text-white/20 hover:text-red-400 hover:bg-red-500/10 transition-colors">
                   <Trash2 size={14} />
                 </button>
               </div>

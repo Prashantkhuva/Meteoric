@@ -1455,6 +1455,18 @@ export async function updateReviewStatus(id, status) {
   }
 }
 
+export async function toggleReviewVerified(id, is_verified) {
+  try {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("reviews").update({ is_verified }).eq("id", id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/reviews");
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to update review" };
+  }
+}
+
 export async function deleteReview(id) {
   try {
     const supabase = await getSupabase();
