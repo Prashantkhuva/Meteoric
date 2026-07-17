@@ -826,7 +826,7 @@ export async function markInvoiceAsPaid(id, paidAt) {
           const phone = invoice.client.phone.replace(/[^0-9]/g, "");
           const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
           const msg = encodeURIComponent(
-            `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
+            `Hi ${invoice.client.name || "there"}!\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business!\n\nView receipt:\n${pdfUrl || ""}`
           );
           whatsappUrl = `https://wa.me/${phone}?text=${msg}`;
         }
@@ -873,7 +873,7 @@ export async function sendPaymentConfirmationAction(id) {
       const phone = invoice.client.phone.replace(/[^0-9]/g, "");
       const pdfUrl = `${getSiteUrl()}/api/pdf/invoice/${safeId}?token=${shareToken}`;
       const msg = encodeURIComponent(
-        `Hi ${invoice.client.name || "there"}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
+        `Hi ${invoice.client.name || "there"}!\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}\n\nThank you for your business!\n\nView receipt:\n${pdfUrl || ""}`
       );
       whatsappUrl = `https://wa.me/${phone}?text=${msg}`;
     }

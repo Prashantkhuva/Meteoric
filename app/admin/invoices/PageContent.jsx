@@ -715,8 +715,8 @@ function DesktopTable({ items, onView, onEdit, onSend, onDelete, onStatusChange,
                         const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
                         const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : "";
                         const waMsg = inv.status === "paid"
-                          ? `Hi ${inv.client.name}! 👋\n\nPayment received for Invoice ${inv.invoice_number}\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
-                          : `Hi ${inv.client.name}! 👋\n\nInvoice ${inv.invoice_number} has been issued\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nPlease review at:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`;
+                          ? `Hi ${inv.client.name}!\n\nPayment received for Invoice ${inv.invoice_number}\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nThank you for your business!\n\nView receipt:\n${pdfUrl || ""}`
+                          : `Hi ${inv.client.name}!\n\nInvoice ${inv.invoice_number} has been issued\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nPlease review at:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`;
                         window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(waMsg)}`, "_blank")}
                       }
                       icon={MessageCircle}
@@ -803,8 +803,8 @@ function MobileCards({ items, onView, onEdit, onSend, onDelete, onStatusChange, 
                     const t = inv.share_token || (await ensureShareToken("invoice", inv.id)).token;
                     const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${inv.id}?token=${t}` : "";
                     const waMsg = inv.status === "paid"
-                      ? `Hi ${inv.client.name}! 👋\n\nPayment received for Invoice ${inv.invoice_number}\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
-                      : `Hi ${inv.client.name}! 👋\n\nInvoice ${inv.invoice_number} has been issued\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nPlease review at:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`;
+                      ? `Hi ${inv.client.name}!\n\nPayment received for Invoice ${inv.invoice_number}\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nThank you for your business!\n\nView receipt:\n${pdfUrl || ""}`
+                      : `Hi ${inv.client.name}!\n\nInvoice ${inv.invoice_number} has been issued\nAmount: ${getCurrencySymbol(inv.currency)}${Number(inv.total).toFixed(2)}\n\nPlease review at:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`;
                     window.open(`https://wa.me/${inv.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(waMsg)}`, "_blank")}
                 }
                 icon={MessageCircle}
@@ -1361,8 +1361,8 @@ function InvoiceDetailDrawer({ invoice, onClose, onEdit, onSend, onMarkAsPaid, o
                       const t = invoice.share_token || (await ensureShareToken("invoice", invoice.id)).token;
                       const pdfUrl = t ? `${getSiteUrl()}/api/pdf/invoice/${invoice.id}?token=${t}` : "";
                       const waMsg = invoice.status === "paid"
-                        ? `Hi ${invoice.client.name}! 👋\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${drawerCurrency}${Number(invoice.total).toFixed(2)}\n\nThank you for your business! 🙏${pdfUrl ? `\n\n📎 View receipt:\n${pdfUrl}` : ""}`
-                        : `Hi ${invoice.client.name}! 👋\n\nInvoice ${invoice.invoice_number} has been issued\nAmount: ${drawerCurrency}${Number(invoice.total).toFixed(2)}\n\nPlease review at:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`;
+                        ? `Hi ${invoice.client.name}!\n\nPayment received for Invoice ${invoice.invoice_number}\nAmount: ${drawerCurrency}${Number(invoice.total).toFixed(2)}\n\nThank you for your business!\n\nView receipt:\n${pdfUrl || ""}`
+                        : `Hi ${invoice.client.name}!\n\nInvoice ${invoice.invoice_number} has been issued\nAmount: ${drawerCurrency}${Number(invoice.total).toFixed(2)}\n\nPlease review at:\n${pdfUrl || "Check your email for the PDF."}\n\nLet me know if you have any questions!`;
                       window.open(`https://wa.me/${invoice.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(waMsg)}`, "_blank")}
                     }
                     className="inline-flex items-center gap-2 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/70 transition-all hover:bg-emerald-500/[0.06]"
