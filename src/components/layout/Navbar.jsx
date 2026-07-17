@@ -36,7 +36,7 @@ export default function Navbar() {
     const itemRect = item.getBoundingClientRect();
 
     gsap.to(pill, {
-      x: itemRect.left - navRect.left,
+      x: itemRect.left - navRect.left - 6,
       width: itemRect.width,
       opacity: 1,
       duration: 0.35,
@@ -152,17 +152,17 @@ export default function Navbar() {
               background: "#0a0a0a",
               borderRadius: 100,
               boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 1px rgba(255,255,255,0.02)",
-              gap: 56,
-              padding: "16px 32px",
-              height: 54,
+              gap: 4,
+              padding: "6px",
+              height: 42,
             }}
           >
             <span
               ref={pillRef}
-              className="absolute top-0 left-0 h-full rounded-full pointer-events-none"
+              className="absolute top-1/2 -translate-y-1/2 left-0 h-[calc(100%-12px)] rounded-full pointer-events-none"
               style={{
-                background: "rgba(255,255,255,0.04)",
-                boxShadow: "0 0 20px rgba(255,255,255,0.03)",
+                background: "rgba(255,255,255,0.08)",
+                boxShadow: "0 0 12px rgba(255,255,255,0.04)",
                 opacity: 0,
                 willChange: "transform, width",
               }}
@@ -183,6 +183,7 @@ export default function Navbar() {
                   letterSpacing: "normal",
                   textDecoration: "none",
                   cursor: "pointer",
+                  padding: "8px 20px",
                 }}
               >
                 {item.label}
