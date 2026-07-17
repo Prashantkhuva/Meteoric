@@ -85,6 +85,8 @@ export default function MagneticCursor() {
       mouseY.set(-100);
     };
     const onMouseEnter = (e) => {
+      smoothX.jump(e.clientX - BADGE_SIZE / 2);
+      smoothY.jump(e.clientY - BADGE_SIZE / 2);
       mouseX.set(e.clientX - BADGE_SIZE / 2);
       mouseY.set(e.clientY - BADGE_SIZE / 2);
     };
