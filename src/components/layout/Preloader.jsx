@@ -5,7 +5,7 @@ import gsap from "gsap";
 
 const CHARS = "METEORIC".split("");
 
-export default function Preloader() {
+export default function Preloader({ onDone }) {
   const overlayRef = useRef(null);
   const counterRef = useRef(null);
   const counterWrapRef = useRef(null);
@@ -21,7 +21,7 @@ export default function Preloader() {
     ).matches;
 
     if (prefersReduced) {
-      const id = setTimeout(() => setDone(true), 0);
+      const id = setTimeout(() => { setDone(true); onDone?.(); }, 0);
       return () => clearTimeout(id);
     }
 
@@ -33,6 +33,7 @@ export default function Preloader() {
     const tl = gsap.timeline({
       onComplete: () => {
         setDone(true);
+        onDone?.();
         gsap.set(overlay, { display: "none" });
       },
     });

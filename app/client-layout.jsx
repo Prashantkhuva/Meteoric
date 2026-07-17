@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -11,6 +11,7 @@ import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
+  const [preloaderDone, setPreloaderDone] = useState(false);
 
   useEffect(() => {
     initGtag();
@@ -24,10 +25,10 @@ export default function ClientLayout({ children }) {
 
   return (
     <>
-      <Preloader />
+      <Preloader onDone={() => setPreloaderDone(true)} />
       {!isAdmin && <SmoothScroll />}
       {!isAdmin && <Navbar />}
-      {!isAdmin && <MagneticCursor />}
+      {!isAdmin && preloaderDone && <MagneticCursor />}
       {isAdmin ? children : <main>{children}</main>}
       {!isAdmin && <Footer />}
     </>
