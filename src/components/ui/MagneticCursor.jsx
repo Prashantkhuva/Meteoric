@@ -132,7 +132,6 @@ export default function MagneticCursor() {
         height: BADGE_SIZE,
         pointerEvents: "none",
         zIndex: 9999,
-        mixBlendMode: "difference",
       }}
       className="hidden md:flex items-center justify-center"
       aria-hidden="true"
