@@ -31,7 +31,7 @@ export const metadata = {
     description: pageDesc,
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
-  robots: "noindex, follow",
+  robots: "index, follow",
 };
 
 const sections = [
