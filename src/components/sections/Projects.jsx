@@ -10,26 +10,17 @@ import Link from "next/link";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects as allProjects } from "@/data/projects";
-import { useCardTilt } from "@/hooks/useCardTilt";
-
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const projects = allProjects.slice(0, 2);
 
 function ProjectCard({ project, index }) {
-  const { cardRef, onMouseEnter, onMouseMouseMove, onMouseLeave } = useCardTilt(1);
-
   return (
     <a
-      ref={cardRef}
       href={project.link}
       target="_blank"
       rel="noopener noreferrer"
       className={`group block gsap-proj-card ${index % 2 === 1 ? "md:mt-12" : ""}`}
-      onMouseEnter={onMouseEnter}
-      onMouseMove={onMouseMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{ transformStyle: "preserve-3d" }}
     >
       <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">
         <Image

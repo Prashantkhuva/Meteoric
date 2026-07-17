@@ -9,23 +9,13 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
-import { useCardTilt } from "@/hooks/useCardTilt";
-
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 function WorkCard({ project, index }) {
-  const { cardRef, onMouseEnter, onMouseMouseMove, onMouseLeave } = useCardTilt(0.8);
   const isReversed = index % 2 === 1;
 
   return (
-    <div
-      ref={cardRef}
-      className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700 gsap-work-card"
-      onMouseEnter={onMouseEnter}
-      onMouseMove={onMouseMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{ transformStyle: "preserve-3d" }}
-    >
+    <div className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700 gsap-work-card">
       <div className={`relative overflow-hidden bg-black ${isReversed ? "lg:order-2" : ""}`}>
         <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8 overflow-hidden">
           <Image
