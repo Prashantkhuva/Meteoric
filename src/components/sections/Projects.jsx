@@ -83,6 +83,7 @@ export const ProjectCardMobile = function ProjectCardMobile({ project }) {
             </h3>
           </div>
           <a href={project.link} target="_blank" rel="noopener noreferrer"
+            data-no-magnetic
             className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/55 hover:text-white hover:border-white/30 transition-all shrink-0"
             aria-hidden="true" tabIndex={-1}
           >

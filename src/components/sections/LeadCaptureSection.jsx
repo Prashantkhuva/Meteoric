@@ -116,6 +116,7 @@ export default function LeadCaptureSection() {
             Something went wrong. Please email us directly at{" "}
             <a
               href="mailto:contact@withmeteoric.com"
+              data-no-magnetic
               className="underline hover:text-red-300"
             >
               contact@withmeteoric.com

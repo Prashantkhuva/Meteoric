@@ -156,6 +156,7 @@ export default function AboutPage() {
               <div className="flex flex-col gap-2">
                 <a
                   href="mailto:contact@withmeteoric.com"
+                  data-no-magnetic
                   className="text-white/40 hover:text-white text-sm transition-colors duration-200"
                 >
                   contact@withmeteoric.com
@@ -164,6 +165,7 @@ export default function AboutPage() {
                   href="https://cal.com/prashantkhuva/let-s-build"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-no-magnetic
                   className="text-white/40 hover:text-white text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
                 >
                   Book a strategy call
@@ -180,6 +182,7 @@ export default function AboutPage() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-no-magnetic
                   className="text-xs text-white/30 hover:text-white/70 uppercase tracking-[0.15em] transition-colors duration-300"
                 >
                   {link.label}

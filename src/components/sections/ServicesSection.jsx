@@ -271,6 +271,7 @@ export default function ServicesSection() {
                   </div>
                   <Link
                     href={s.href}
+                    data-no-magnetic
                     className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 border-b border-white/15 pb-1 group-hover:text-white/60 group-hover:border-white/30 transition-colors duration-300"
                   >
                     The full picture
@@ -372,6 +373,7 @@ export default function ServicesSection() {
                   </div>
                   <Link
                     href={s.href}
+                    data-no-magnetic
                     className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/40 border-b border-white/[0.12] pb-1 hover:text-white/60 hover:border-white/25 transition-colors"
                   >
                     The full picture

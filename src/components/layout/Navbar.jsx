@@ -149,10 +149,9 @@ export default function Navbar() {
             ref={navRef}
             className="hidden md:flex items-center relative"
             style={{
-              background:
-                "linear-gradient(-7.69deg, rgba(10,10,10,0.95) 0%, rgba(18,18,18,0.95) 100%)",
+              background: "#0a0a0a",
               borderRadius: 100,
-              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06)",
+              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 1px rgba(255,255,255,0.02)",
               gap: 56,
               padding: "16px 32px",
               height: 54,
@@ -162,7 +161,8 @@ export default function Navbar() {
               ref={pillRef}
               className="absolute top-0 left-0 h-full rounded-full pointer-events-none"
               style={{
-                background: "rgba(255,255,255,0.06)",
+                background: "rgba(255,255,255,0.04)",
+                boxShadow: "0 0 20px rgba(255,255,255,0.03)",
                 opacity: 0,
                 willChange: "transform, width",
               }}

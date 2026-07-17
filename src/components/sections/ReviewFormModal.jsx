@@ -84,6 +84,7 @@ export default function ReviewFormModal({ open, onClose }) {
     <AnimatePresence>
       {open && (
         <motion.div
+          data-no-magnetic
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
