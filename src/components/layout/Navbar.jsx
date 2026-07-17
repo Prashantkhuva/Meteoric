@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense, useRef, useEffect } from "react";
+import { useState, lazy, Suspense, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import Logo from "@/components/sections/Logo";
@@ -21,6 +21,36 @@ export default function Navbar() {
   const linksRef = useRef(null);
   const ctaRef = useRef(null);
   const isAnimating = useRef(false);
+  const navRef = useRef(null);
+  const pillRef = useRef(null);
+  const navItemRefs = useRef([]);
+  const activeIndex = useRef(-1);
+
+  const movePill = useCallback((index) => {
+    const nav = navRef.current;
+    const pill = pillRef.current;
+    const item = navItemRefs.current[index];
+    if (!nav || !pill || !item) return;
+
+    const navRect = nav.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+
+    gsap.to(pill, {
+      x: itemRect.left - navRect.left,
+      width: itemRect.width,
+      opacity: 1,
+      duration: 0.35,
+      ease: "power3.out",
+    });
+    activeIndex.current = index;
+  }, []);
+
+  const hidePill = useCallback(() => {
+    const pill = pillRef.current;
+    if (!pill) return;
+    gsap.to(pill, { opacity: 0, duration: 0.25, ease: "power2.in" });
+    activeIndex.current = -1;
+  }, []);
 
   const closeMenu = () => {
     if (isAnimating.current) return;
@@ -116,7 +146,8 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <nav
-            className="hidden md:flex items-center"
+            ref={navRef}
+            className="hidden md:flex items-center relative"
             style={{
               background:
                 "linear-gradient(-7.69deg, rgba(10,10,10,0.95) 0%, rgba(18,18,18,0.95) 100%)",
@@ -127,12 +158,24 @@ export default function Navbar() {
               height: 54,
             }}
           >
-            {navItems.map((item) => (
+            <span
+              ref={pillRef}
+              className="absolute top-0 left-0 h-full rounded-full pointer-events-none"
+              style={{
+                background: "rgba(255,255,255,0.06)",
+                opacity: 0,
+                willChange: "transform, width",
+              }}
+            />
+            {navItems.map((item, i) => (
               <StaggerLink
                 key={item.to}
                 href={item.to}
+                ref={(el) => { navItemRefs.current[i] = el; }}
                 onClick={() => setIsMenuOpen(false)}
                 hoverColor="white"
+                onMouseEnter={() => movePill(i)}
+                onMouseLeave={hidePill}
                 style={{
                   fontSize: 12,
                   fontWeight: 400,

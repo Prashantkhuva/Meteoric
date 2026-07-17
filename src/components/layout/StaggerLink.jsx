@@ -1,15 +1,22 @@
 "use client";
 
+import { forwardRef } from "react";
 import Link from "next/link";
 import StaggerText from "./StaggerText";
 
-export default function StaggerLink({ href, children, className, style, onClick, hoverColor }) {
+const StaggerLink = forwardRef(function StaggerLink(
+  { href, children, className, style, onClick, hoverColor, onMouseEnter, onMouseLeave },
+  ref
+) {
   return (
     <Link
+      ref={ref}
       href={href}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       data-no-magnetic
-      className="group relative px-4 py-2 rounded-xl hover:bg-white/[0.04] transition-all duration-200"
+      className="group relative px-4 py-2 rounded-xl transition-all duration-200"
       style={{ textDecoration: "none" }}
     >
       <StaggerText
@@ -21,4 +28,6 @@ export default function StaggerLink({ href, children, className, style, onClick,
       </StaggerText>
     </Link>
   );
-}
+});
+
+export default StaggerLink;
