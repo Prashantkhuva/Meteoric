@@ -27,7 +27,7 @@ export function Toolbar({ search, onSearchChange, children, resultCount, searchR
           </button>
         )}
       </div>
-      <div className="flex items-center gap-2 overflow-visible flex-wrap">
+      <div className="flex items-center gap-2 overflow-x-auto flex-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-1 px-1">
         {children}
       </div>
       {resultCount !== undefined && (
