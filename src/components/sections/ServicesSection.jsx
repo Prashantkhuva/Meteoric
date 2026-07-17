@@ -216,7 +216,7 @@ export default function ServicesSection() {
       {/* Horizontal scroll area — pinned on desktop */}
       <div
         ref={scrollContainerRef}
-        className="relative overflow-hidden hidden md:flex min-h-screen items-center"
+        className="relative overflow-hidden hidden lg:flex min-h-screen items-center"
       >
         <div
           ref={cardsWrapRef}
@@ -324,7 +324,7 @@ export default function ServicesSection() {
       </div>
 
       {/* Mobile: stacked cards with scroll animation */}
-      <div ref={mobileScrollRef} className="md:hidden">
+      <div ref={mobileScrollRef} className="lg:hidden">
         <div ref={mobileStackRef} className="sticky top-0 h-dvh relative will-change-transform">
           <div className="absolute inset-0 px-5 flex flex-col justify-center">
           {services.map((s, i) => {
