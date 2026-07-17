@@ -184,6 +184,9 @@ export default function Navbar() {
                   textDecoration: "none",
                   cursor: "pointer",
                   padding: "8px 20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 {item.label}

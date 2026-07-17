@@ -16,7 +16,7 @@ const StaggerLink = forwardRef(function StaggerLink(
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       data-no-magnetic
-      className="group relative px-4 py-2 rounded-xl transition-all duration-200"
+      className="group relative rounded-full transition-all duration-200"
       style={{ textDecoration: "none" }}
     >
       <StaggerText
