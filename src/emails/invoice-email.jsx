@@ -80,32 +80,28 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
           )}
 
           {upiId && (
-            <div style={upiSection}>
-              <Text style={bankTitle}>UPI Payment</Text>
-              <Img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`}
-                alt="UPI QR Code"
-                width={160}
-                height={160}
-                style={{ margin: "0 auto 12px", display: "block" }}
-              />
-              <Text style={{ ...bankLine, textAlign: "center", marginBottom: "4px" }}>
-                <Text style={bankLabel}>UPI ID: </Text>{upiId}
-              </Text>
+            <div style={{ marginBottom: "12px" }}>
+              <Link href={upiUri} style={upiButton}>
+                Pay using UPI
+              </Link>
             </div>
           )}
 
-          <div style={{ marginBottom: "12px" }}>
-            <Link href={wiseUrl} style={wiseButton}>
-              <Img src={`${SITE_URL}/wiselogo.svg`} alt="Pay with Wise" width={80} height={18} />
-            </Link>
-          </div>
+          {!upiId && (
+            <>
+              <div style={{ marginBottom: "12px" }}>
+                <Link href={wiseUrl} style={wiseButton}>
+                  <Img src={`${SITE_URL}/wiselogo.svg`} alt="Pay with Wise" width={80} height={18} />
+                </Link>
+              </div>
 
-          <div style={{ marginBottom: "16px" }}>
-            <Link href={paypalUrl} style={paypalButton}>
-              <Img src={`${SITE_URL}/paypal.svg`} alt="Pay with PayPal" width={22} height={22} />
-            </Link>
-          </div>
+              <div style={{ marginBottom: "16px" }}>
+                <Link href={paypalUrl} style={paypalButton}>
+                  <Img src={`${SITE_URL}/paypal.svg`} alt="Pay with PayPal" width={22} height={22} />
+                </Link>
+              </div>
+            </>
+          )}
 
           <div style={{ marginBottom: "4px" }}>
             <Link href={previewUrl} style={button}>
@@ -247,12 +243,16 @@ const bankSection = {
   marginBottom: "20px",
 };
 
-const upiSection = {
-  backgroundColor: "#111111",
-  border: "1px solid #222222",
-  padding: "20px 16px",
-  marginBottom: "20px",
-  textAlign: "center",
+const upiButton = {
+  display: "inline-block",
+  padding: "14px 24px",
+  backgroundColor: "#5F259F",
+  color: "#ffffff",
+  fontSize: "14px",
+  fontWeight: 700,
+  letterSpacing: "0.02em",
+  textDecoration: "none",
+  borderRadius: "6px",
 };
 
 const bankTitle = {

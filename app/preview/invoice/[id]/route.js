@@ -155,11 +155,8 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 .bank-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 10px; }
 .bank-line { font-size: 12px; color: #e0e0e0; line-height: 1.8; }
 .bank-line strong { color: #aaaaaa; }
-.upi-section { margin-top: 24px; padding: 20px 16px; background: #111111; border: 1px solid #222222; text-align: center; }
-.upi-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 12px; }
-.upi-section img { display: block; margin: 0 auto 12px; border-radius: 8px; }
-.upi-vpa { font-size: 13px; color: #e0e0e0; }
-.upi-vpa strong { color: #aaaaaa; }
+.upi-btn { background: #5F259F; color: #ffffff !important; border: none; padding: 12px 20px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+.upi-btn:hover { background: #702DB5; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(95, 37, 159, 0.35); }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
   .toolbar { flex-wrap: wrap; gap: 8px; }
@@ -190,8 +187,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="toolbar">
   <a href="/admin/invoices">&larr; Back to Invoices</a>
   <div class="toolbar-right">
-    ${invoice.status !== "paid" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
-    ${invoice.status !== "paid" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
+    ${invoice.status !== "paid" && !upiId ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
+    ${invoice.status !== "paid" && !upiId ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
+    ${invoice.status !== "paid" && upiId ? '<a class="upi-btn" href="' + upiUri + '" target="_blank" aria-label="Pay using UPI">Pay using UPI</a>' : ""}
     <button class="print-btn" onclick="window.print()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Download PDF
@@ -266,11 +264,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
   ` : ""}
 
-  ${upiId ? `
-  <div class="upi-section">
-    <h4>UPI Payment</h4>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}" alt="UPI QR Code" width="160" height="160" />
-    <p class="upi-vpa"><strong>UPI ID:</strong> ${esc(upiId)}</p>
+  ${upiId && invoice.status !== "paid" ? `
+  <div style="margin-top:24px;text-align:center">
+    <a class="upi-btn" href="${upiUri}" target="_blank" aria-label="Pay using UPI">Pay using UPI</a>
   </div>
   ` : ""}
 
