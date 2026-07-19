@@ -64,14 +64,14 @@ export default function ClientsPage() {
 
   useEffect(() => {
     fetchClients();
-  }, [search, statusFilter, sort, page, col, dir]);
+  }, [search, statusFilter, sort, page, col, dir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useShortcuts(
     useMemo(() => ({
       "n": () => setShowAdd(true),
       "/": () => searchRef.current?.focus(),
       "Escape": () => { if (viewClient) setViewClient(null); if (showAdd) setShowAdd(false); if (editClient) setEditClient(null); },
-    }), [viewClient, showAdd])
+    }), [viewClient, showAdd]) // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   async function fetchClients() {

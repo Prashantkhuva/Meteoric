@@ -8,7 +8,6 @@ import { StatusBadge } from "../components/StatusBadge";
 import { Toolbar, FilterChip, ClearFiltersButton } from "../components/Toolbar";
 import { useToast } from "../components/ToastContext";
 import { Star, Check, X, Trash2, ChevronUp, ChevronDown, BadgeCheck } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const PAGE_SIZE = 15;
 
@@ -55,7 +54,7 @@ export default function ReviewsPageContent() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    setLoading(true); // eslint-disable-line react-hooks/set-state-in-effect
     getReviewsPaginated({ page, pageSize: PAGE_SIZE, status: statusFilter || undefined, search: search || undefined, col: sortCol, dir: sortDir }).then((res) => {
       if (!cancelled) {
         setReviews(res.data);

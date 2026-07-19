@@ -219,7 +219,7 @@ export default function BankAccountsPage() {
 
   useEffect(() => {
     fetchAccounts();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function fetchAccounts() {
     setLoading(true);

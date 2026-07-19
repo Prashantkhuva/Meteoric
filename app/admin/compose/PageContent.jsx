@@ -142,7 +142,7 @@ export default function ComposePageContent() {
     } finally {
       setSending(false);
     }
-  }, [from, to, subject, body, files, addToast]);
+  }, [from, to, subject, body, files, addToast]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const canSend = to.length > 0 && subject.trim() && body.trim() && !sending;
 

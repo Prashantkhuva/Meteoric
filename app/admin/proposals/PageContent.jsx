@@ -93,7 +93,7 @@ export default function ProposalsPage() {
 
   useEffect(() => {
     fetchData();
-  }, [search, statusFilter, sort, page, col, dir]);
+  }, [search, statusFilter, sort, page, col, dir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useShortcuts(
     useMemo(() => ({

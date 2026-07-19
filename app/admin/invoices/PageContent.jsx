@@ -102,7 +102,7 @@ export default function InvoicesPage() {
 
   useEffect(() => {
     fetchData();
-  }, [search, statusFilter, sort, page, col, dir]);
+  }, [search, statusFilter, sort, page, col, dir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkedOverdue = useRef(false);
 

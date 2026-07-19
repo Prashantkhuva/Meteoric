@@ -10,6 +10,7 @@ import PaymentConfirmation from "@/emails/payment-confirmation";
 import ReviewThankYou from "@/emails/review-thankyou";
 import CustomEmail from "@/emails/custom-email";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
+import { getSiteUrl } from "@/config/site-url";
 
 const FROM =
   process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>";

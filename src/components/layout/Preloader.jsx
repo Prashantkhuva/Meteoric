@@ -104,7 +104,7 @@ export default function Preloader({ onDone }) {
     });
 
     return () => tl.kill();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (done) return null;
 

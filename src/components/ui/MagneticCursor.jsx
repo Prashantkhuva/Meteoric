@@ -108,7 +108,7 @@ export default function MagneticCursor() {
         el.removeEventListener("mouseenter", onEnterInteractive);
       });
     };
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <motion.div

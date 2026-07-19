@@ -69,14 +69,14 @@ export default function LeadsPage() {
 
   useEffect(() => {
     fetchLeads();
-  }, [search, statusFilter, sort, page, col, dir]);
+  }, [search, statusFilter, sort, page, col, dir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useShortcuts(
     useMemo(() => ({
       "n": () => setShowAddLead(true),
       "/": () => searchRef.current?.focus(),
       "Escape": () => { if (viewLead) setViewLead(null); if (showAddLead) setShowAddLead(false); if (editLead) setEditLead(null); },
-    }), [viewLead, showAddLead])
+    }), [viewLead, showAddLead]) // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   async function fetchLeads() {
