@@ -23,6 +23,7 @@ const CURRENCIES = ["USD", "INR", "EUR", "GBP", "AUD"];
 
 function BankAccountForm({ open, onClose, onSubmit, account }) {
   const [submitting, setSubmitting] = useState(false);
+  const [currency, setCurrency] = useState(account?.currency || "USD");
   const trapRef = useFocusTrap(open);
 
   useEffect(() => {
@@ -154,7 +155,8 @@ function BankAccountForm({ open, onClose, onSubmit, account }) {
                 <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">Currency</label>
                 <select
                   name="currency"
-                  defaultValue={account?.currency || "USD"}
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
                   style={{ colorScheme: "dark" }}
                 >
@@ -174,6 +176,19 @@ function BankAccountForm({ open, onClose, onSubmit, account }) {
                 />
               </div>
             </div>
+
+            {currency === "INR" && (
+              <div>
+                <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">UPI ID</label>
+                <input
+                  name="upi_id"
+                  maxLength={100}
+                  defaultValue={account?.upi_id || ""}
+                  placeholder="e.g. yourname@okaxis"
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                />
+              </div>
+            )}
 
             <label className="flex items-center gap-2 cursor-pointer">
               <input

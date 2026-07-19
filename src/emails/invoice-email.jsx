@@ -23,6 +23,8 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
   const sym = getSymbol(curr);
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
   const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}${curr}`;
+  const upiId = curr === "INR" && bankAccount?.upi_id ? bankAccount.upi_id : null;
+  const upiUri = upiId ? `upi://pay?pa=${encodeURIComponent(upiId)}&am=${Number(total).toFixed(2)}&cur=INR` : null;
 
   return (
     <Html>
@@ -74,6 +76,22 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
               {bankAccount.ifsc && <Text style={bankLine}><Text style={bankLabel}>IFSC: </Text>{bankAccount.ifsc}</Text>}
               {bankAccount.currency && <Text style={bankLine}><Text style={bankLabel}>Currency: </Text>{bankAccount.currency}</Text>}
               {bankAccount.country && <Text style={bankLine}><Text style={bankLabel}>Country: </Text>{bankAccount.country}</Text>}
+            </div>
+          )}
+
+          {upiId && (
+            <div style={upiSection}>
+              <Text style={bankTitle}>UPI Payment</Text>
+              <Img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`}
+                alt="UPI QR Code"
+                width={160}
+                height={160}
+                style={{ margin: "0 auto 12px", display: "block" }}
+              />
+              <Text style={{ ...bankLine, textAlign: "center", marginBottom: "4px" }}>
+                <Text style={bankLabel}>UPI ID: </Text>{upiId}
+              </Text>
             </div>
           )}
 
@@ -227,6 +245,14 @@ const bankSection = {
   border: "1px solid #222222",
   padding: "16px",
   marginBottom: "20px",
+};
+
+const upiSection = {
+  backgroundColor: "#111111",
+  border: "1px solid #222222",
+  padding: "20px 16px",
+  marginBottom: "20px",
+  textAlign: "center",
 };
 
 const bankTitle = {

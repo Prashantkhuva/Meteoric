@@ -78,6 +78,8 @@ export async function GET(request, { params }) {
 
   const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : invoice.status === "sent" ? "sent" : "draft";
   const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status === "sent" ? "Sent" : invoice.status === "draft" ? "Draft" : invoice.status;
+  const upiId = invoice.currency === "INR" && invoice.bank_account?.upi_id ? invoice.bank_account.upi_id : null;
+  const upiUri = upiId ? "upi://pay?pa=" + encodeURIComponent(upiId) + "&am=" + total.toFixed(2) + "&cur=INR" : null;
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
@@ -153,6 +155,11 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 .bank-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 10px; }
 .bank-line { font-size: 12px; color: #e0e0e0; line-height: 1.8; }
 .bank-line strong { color: #aaaaaa; }
+.upi-section { margin-top: 24px; padding: 20px 16px; background: #111111; border: 1px solid #222222; text-align: center; }
+.upi-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 12px; }
+.upi-section img { display: block; margin: 0 auto 12px; border-radius: 8px; }
+.upi-vpa { font-size: 13px; color: #e0e0e0; }
+.upi-vpa strong { color: #aaaaaa; }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
   .toolbar { flex-wrap: wrap; gap: 8px; }
@@ -256,6 +263,14 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     ${invoice.bank_account.ifsc ? '<p class="bank-line"><strong>IFSC:</strong> ' + esc(invoice.bank_account.ifsc) + "</p>" : ""}
     ${invoice.bank_account.currency ? '<p class="bank-line"><strong>Currency:</strong> ' + esc(invoice.bank_account.currency) + "</p>" : ""}
     ${invoice.bank_account.country ? '<p class="bank-line"><strong>Country:</strong> ' + esc(invoice.bank_account.country) + "</p>" : ""}
+  </div>
+  ` : ""}
+
+  ${upiId ? `
+  <div class="upi-section">
+    <h4>UPI Payment</h4>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}" alt="UPI QR Code" width="160" height="160" />
+    <p class="upi-vpa"><strong>UPI ID:</strong> ${esc(upiId)}</p>
   </div>
   ` : ""}
 

@@ -115,6 +115,7 @@ export const bankAccountSchema = z.object({
   swift_bic: z.string().max(20).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   routing_number: z.string().max(30).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   ifsc: z.string().max(20).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  upi_id: z.string().max(100).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   currency: z.string().max(10).optional().default("USD"),
   country: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   is_default: z.coerce.boolean().optional().default(false),
