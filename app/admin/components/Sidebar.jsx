@@ -91,7 +91,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const pathname = usePathname();
   const mobileTrapRef = useFocusTrap(mobileOpen);
 
-  const [collapsed, setCollapsed] = useState(() => loadPref(SIDEBAR_KEY, true));
+  const [collapsed, setCollapsed] = useState(() => loadPref(SIDEBAR_KEY, false));
   const [closedSections, setClosedSections] = useState(() => {
     const saved = loadPref(SECTIONS_KEY, null);
     if (saved !== null) return new Set(saved);
