@@ -911,7 +911,7 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
     e.preventDefault();
     setSubmitting(true);
     const fd = new FormData(e.target);
-    fd.set("items", JSON.stringify(items.filter((i) => i.description.trim())));
+    fd.set("items", JSON.stringify(items.filter((i) => (Number(i.rate) || 0) > 0 || i.description.trim())));
     fd.set("tax", String(taxAmount.toFixed(2)));
     fd.set("currency", currency);
     fd.set("bank_account_id", bankAccountId);
