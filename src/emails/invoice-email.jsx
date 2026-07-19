@@ -18,13 +18,11 @@ const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 const CURRENCY_SYMBOLS = { USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" };
 function getSymbol(c) { return CURRENCY_SYMBOLS[c] || c || "$"; }
 
-export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl, bankAccount }) {
+export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl, bankAccount, razorpayUrl }) {
   const curr = currency || "USD";
   const sym = getSymbol(curr);
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
   const paypalUrl = `${PAYPAL_ME}/${Number(total).toFixed(2)}${curr}`;
-  const upiId = curr === "INR" && bankAccount?.upi_id ? bankAccount.upi_id : null;
-  const upiUri = upiId ? `upi://pay?pa=${encodeURIComponent(upiId)}&am=${Number(total).toFixed(2)}&cur=INR` : null;
 
   return (
     <Html>
@@ -79,15 +77,15 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
             </div>
           )}
 
-          {upiId && (
+          {razorpayUrl && (
             <div style={{ marginBottom: "12px" }}>
-              <Link href={upiUri} style={upiButton}>
+              <Link href={razorpayUrl} style={upiButton}>
                 Pay using UPI
               </Link>
             </div>
           )}
 
-          {!upiId && (
+          {!razorpayUrl && (
             <>
               <div style={{ marginBottom: "12px" }}>
                 <Link href={wiseUrl} style={wiseButton}>

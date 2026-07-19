@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { createRazorpayOrder, getRazorpayCheckoutUrl, isRazorpayConfigured } from "@/lib/razorpay";
 import fs from "fs";
 import path from "path";
 
@@ -78,8 +79,19 @@ export async function GET(request, { params }) {
 
   const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : invoice.status === "sent" ? "sent" : "draft";
   const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status === "sent" ? "Sent" : invoice.status === "draft" ? "Draft" : invoice.status;
-  const upiId = invoice.currency === "INR" && invoice.bank_account?.upi_id ? invoice.bank_account.upi_id : null;
-  const upiUri = upiId ? "upi://pay?pa=" + encodeURIComponent(upiId) + "&am=" + total.toFixed(2) + "&cur=INR" : null;
+
+  let razorpayUrl = null;
+  if (invoice.status !== "paid" && invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured()) {
+    const order = await createRazorpayOrder({
+      amount: total,
+      currency: "INR",
+      receipt: invoice.invoice_number,
+    });
+    if (order?.id) {
+      razorpayUrl = getRazorpayCheckoutUrl(order.id, total);
+    }
+  }
+
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
@@ -187,9 +199,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="toolbar">
   <a href="/admin/invoices">&larr; Back to Invoices</a>
   <div class="toolbar-right">
-    ${invoice.status !== "paid" && !upiId ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
-    ${invoice.status !== "paid" && !upiId ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
-    ${invoice.status !== "paid" && upiId ? '<a class="upi-btn" href="' + upiUri + '" target="_blank" aria-label="Pay using UPI">Pay using UPI</a>' : ""}
+    ${invoice.status !== "paid" && !razorpayUrl ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
+    ${invoice.status !== "paid" && !razorpayUrl ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
+    ${razorpayUrl ? '<a class="upi-btn" href="' + razorpayUrl + '" target="_blank" aria-label="Pay using UPI">Pay using UPI</a>' : ""}
     <button class="print-btn" onclick="window.print()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Download PDF
@@ -264,9 +276,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
   ` : ""}
 
-  ${upiId && invoice.status !== "paid" ? `
+  ${razorpayUrl ? `
   <div style="margin-top:24px;text-align:center">
-    <a class="upi-btn" href="${upiUri}" target="_blank" aria-label="Pay using UPI">Pay using UPI</a>
+    <a class="upi-btn" href="${razorpayUrl}" target="_blank" aria-label="Pay using UPI">Pay using UPI</a>
   </div>
   ` : ""}
 
