@@ -18,7 +18,7 @@ const PAYPAL_ME = "https://paypal.me/Prashantkhuva";
 const CURRENCY_SYMBOLS = { USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" };
 function getSymbol(c) { return CURRENCY_SYMBOLS[c] || c || "$"; }
 
-export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl, bankAccount, razorpayUrl }) {
+export default function InvoiceEmail({ name, invoiceNumber, total, currency, dueDate, previewUrl, bankAccount, showUPI }) {
   const curr = currency || "USD";
   const sym = getSymbol(curr);
   const wiseUrl = `${WISE_BASE}?currency=${curr}&amount=${Number(total).toFixed(2)}`;
@@ -77,15 +77,15 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
             </div>
           )}
 
-          {razorpayUrl && (
+          {showUPI && (
             <div style={{ marginBottom: "12px" }}>
-              <Link href={razorpayUrl} style={upiButton}>
+              <Link href={previewUrl} style={upiButton}>
                 Pay using UPI
               </Link>
             </div>
           )}
 
-          {!razorpayUrl && (
+          {!showUPI && (
             <>
               <div style={{ marginBottom: "12px" }}>
                 <Link href={wiseUrl} style={wiseButton}>

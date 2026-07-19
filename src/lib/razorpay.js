@@ -1,38 +1,35 @@
-const KEY_ID = process.env.RAZORPAY_KEY_ID;
-const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
+import Razorpay from "razorpay";
+import crypto from "crypto";
+
+const razorpay = new Razorpay({
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 export function isRazorpayConfigured() {
-  return !!(KEY_ID && KEY_SECRET);
+  return !!(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
 }
 
 export async function createRazorpayOrder({ amount, currency, receipt }) {
   if (!isRazorpayConfigured()) return null;
 
-  const auth = Buffer.from(`${KEY_ID}:${KEY_SECRET}`).toString("base64");
-
-  const res = await fetch("https://api.razorpay.com/v1/orders", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${auth}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      amount: Math.round(Number(amount) * 100), // paise
+  try {
+    const order = await razorpay.orders.create({
+      amount: Math.round(Number(amount) * 100),
       currency: currency || "INR",
       receipt: receipt || undefined,
-      payment_capture: 1,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
+    });
+    return order;
+  } catch (err) {
     console.error("[razorpay] order creation failed:", err);
     return null;
   }
-
-  return res.json();
 }
 
-export function getRazorpayCheckoutUrl(orderId, amount) {
-  return `https://checkout.razorpay.com/v1/checkout.js?order_id=${orderId}&amount=${amount}`;
+export function verifyRazorpayPayment({ order_id, payment_id, signature }) {
+  const generated = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .update(order_id + "|" + payment_id)
+    .digest("hex");
+  return generated === signature;
 }

@@ -12,7 +12,7 @@ import CustomEmail from "@/emails/custom-email";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 import { getSiteUrl } from "@/config/site-url";
 
-import { createRazorpayOrder, getRazorpayCheckoutUrl, isRazorpayConfigured } from "@/lib/razorpay";
+import { isRazorpayConfigured } from "@/lib/razorpay";
 
 const FROM =
   process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>";
@@ -159,17 +159,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
 
   const pdfBuffer = await generateInvoicePdf(invoice, client, invoice.currency || "USD");
 
-  let razorpayUrl = null;
-  if (invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured()) {
-    const order = await createRazorpayOrder({
-      amount: invoice.total,
-      currency: "INR",
-      receipt: invoice.invoice_number,
-    });
-    if (order?.id) {
-      razorpayUrl = getRazorpayCheckoutUrl(order.id, invoice.total);
-    }
-  }
+  const showUPI = invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured();
 
   let result;
   try {
@@ -185,7 +175,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
         dueDate,
         previewUrl,
         bankAccount: invoice.bank_account || null,
-        razorpayUrl,
+        showUPI,
       }),
       attachments: [
         {
