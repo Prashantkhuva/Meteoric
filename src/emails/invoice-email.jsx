@@ -65,21 +65,21 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
           {bankAccount && (
             <div style={bankSection}>
               <Text style={bankTitle}>Bank Transfer Details</Text>
-              {bankAccount.bank_name && <Text style={bankLine}><Text style={bankLabel}>Bank: </Text>{bankAccount.bank_name}</Text>}
-              {bankAccount.account_holder && <Text style={bankLine}><Text style={bankLabel}>Name: </Text>{bankAccount.account_holder}</Text>}
-              {bankAccount.account_number && <Text style={bankLine}><Text style={bankLabel}>Account No: </Text>{bankAccount.account_number}</Text>}
-              {bankAccount.iban && <Text style={bankLine}><Text style={bankLabel}>IBAN: </Text>{bankAccount.iban}</Text>}
-              {bankAccount.swift_bic && <Text style={bankLine}><Text style={bankLabel}>SWIFT/BIC: </Text>{bankAccount.swift_bic}</Text>}
-              {bankAccount.routing_number && <Text style={bankLine}><Text style={bankLabel}>Routing: </Text>{bankAccount.routing_number}</Text>}
-              {bankAccount.ifsc && <Text style={bankLine}><Text style={bankLabel}>IFSC: </Text>{bankAccount.ifsc}</Text>}
-              {bankAccount.currency && <Text style={bankLine}><Text style={bankLabel}>Currency: </Text>{bankAccount.currency}</Text>}
-              {bankAccount.country && <Text style={bankLine}><Text style={bankLabel}>Country: </Text>{bankAccount.country}</Text>}
+              {bankAccount.bank_name && <Text style={bankLine}><span style={bankLabel}>Bank: </span>{bankAccount.bank_name}</Text>}
+              {bankAccount.account_holder && <Text style={bankLine}><span style={bankLabel}>Name: </span>{bankAccount.account_holder}</Text>}
+              {bankAccount.account_number && <Text style={bankLine}><span style={bankLabel}>Account No: </span>{bankAccount.account_number}</Text>}
+              {bankAccount.iban && <Text style={bankLine}><span style={bankLabel}>IBAN: </span>{bankAccount.iban}</Text>}
+              {bankAccount.swift_bic && <Text style={bankLine}><span style={bankLabel}>SWIFT/BIC: </span>{bankAccount.swift_bic}</Text>}
+              {bankAccount.routing_number && <Text style={bankLine}><span style={bankLabel}>Routing: </span>{bankAccount.routing_number}</Text>}
+              {bankAccount.ifsc && <Text style={bankLine}><span style={bankLabel}>IFSC: </span>{bankAccount.ifsc}</Text>}
+              {bankAccount.currency && <Text style={bankLine}><span style={bankLabel}>Currency: </span>{bankAccount.currency}</Text>}
+              {bankAccount.country && <Text style={bankLine}><span style={bankLabel}>Country: </span>{bankAccount.country}</Text>}
             </div>
           )}
 
           {showUPI && (
             <div style={{ marginBottom: "12px" }}>
-              <Link href={previewUrl} style={upiButton}>
+              <Link href={previewUrl + "?rp=1"} style={upiButton}>
                 Pay using UPI
               </Link>
             </div>
