@@ -520,7 +520,7 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
           </View>
         )}
 
-        {!isPaid && (
+        {!isPaid && curr !== "INR" && (
           <View style={styles.paySection}>
             <Link src={wiseUrl} style={styles.wiseButton}>
               <Image src={WISE_LOGO} style={styles.wiseLogo} />
@@ -528,6 +528,14 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
             <Link src={paypalUrl} style={styles.paypalButton}>
               <Image src={PAYPAL_LOGO} style={styles.paypalLogo} />
             </Link>
+          </View>
+        )}
+
+        {!isPaid && curr === "INR" && (
+          <View style={styles.paySection}>
+            <Text style={{ fontSize: 12, color: "#888", textAlign: "center" }}>
+              Pay via UPI on the invoice preview page
+            </Text>
           </View>
         )}
 
