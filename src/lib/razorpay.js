@@ -18,7 +18,10 @@ export function isRazorpayConfigured() {
 }
 
 export async function createRazorpayOrder({ amount, currency, receipt }) {
-  if (!isRazorpayConfigured()) return null;
+  if (!isRazorpayConfigured()) {
+    console.error("[razorpay] not configured — check NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET env vars");
+    return { error: "Razorpay not configured" };
+  }
 
   try {
     const order = await getClient().orders.create({
@@ -28,8 +31,9 @@ export async function createRazorpayOrder({ amount, currency, receipt }) {
     });
     return order;
   } catch (err) {
-    console.error("[razorpay] order creation failed:", err);
-    return null;
+    const msg = err?.error?.description || err?.message || String(err);
+    console.error("[razorpay] order creation failed:", msg);
+    return { error: msg };
   }
 }
 

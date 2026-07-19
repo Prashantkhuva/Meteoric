@@ -3,7 +3,7 @@ import { createRazorpayOrder, isRazorpayConfigured } from "@/lib/razorpay";
 
 export async function POST(request) {
   if (!isRazorpayConfigured()) {
-    return NextResponse.json({ error: "Razorpay not configured" }, { status: 500 });
+    return NextResponse.json({ error: "Razorpay not configured — check env vars" }, { status: 500 });
   }
 
   let body;
@@ -24,14 +24,15 @@ export async function POST(request) {
     return NextResponse.json({ error: "Minimum amount is ₹1 (100 paise)" }, { status: 400 });
   }
 
-  const order = await createRazorpayOrder({ amount, currency, receipt });
-  if (!order) {
-    return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+  const result = await createRazorpayOrder({ amount, currency, receipt });
+
+  if (result?.error) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
   }
 
   return NextResponse.json({
-    order_id: order.id,
-    amount: order.amount,
-    currency: order.currency,
+    order_id: result.id,
+    amount: result.amount,
+    currency: result.currency,
   });
 }
