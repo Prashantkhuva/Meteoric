@@ -31,7 +31,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/meteoric.png`}
+            src={`${SITE_URL}/meteoric.svg`}
             alt="Meteoric"
             width={120}
             height={30}
@@ -79,7 +79,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
 
           {showUPI && (
             <div style={{ marginBottom: "12px" }}>
-              <Link href={previewUrl + "?rp=1"} style={upiButton}>
+              <Link href={previewUrl + "&rp=1"} style={upiButton}>
                 Pay using UPI
               </Link>
             </div>
