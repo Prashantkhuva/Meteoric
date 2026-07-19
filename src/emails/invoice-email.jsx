@@ -243,14 +243,15 @@ const bankSection = {
 
 const upiButton = {
   display: "inline-block",
-  padding: "14px 24px",
+  padding: "16px 32px",
   backgroundColor: "#5F259F",
   color: "#ffffff",
-  fontSize: "14px",
+  fontSize: "15px",
   fontWeight: 700,
-  letterSpacing: "0.02em",
+  letterSpacing: "0.03em",
   textDecoration: "none",
-  borderRadius: "6px",
+  borderRadius: "8px",
+  textAlign: "center",
 };
 
 const bankTitle = {

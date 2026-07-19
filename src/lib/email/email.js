@@ -157,7 +157,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
       })
     : null;
 
-  const pdfBuffer = await generateInvoicePdf(invoice, client, invoice.currency || "USD");
+  const pdfBuffer = await generateInvoicePdf(invoice, client, invoice.currency || "USD", previewUrl);
 
   const showUPI = invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured();
 

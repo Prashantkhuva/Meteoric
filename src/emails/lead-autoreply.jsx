@@ -18,7 +18,7 @@ export default function LeadAutoReply({ name, siteUrl }) {
       <Preview>Thank you for reaching out — we'll be in touch</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/meteoric.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
 
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
 

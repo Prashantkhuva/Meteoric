@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
-import { createRazorpayOrder, isRazorpayConfigured } from "@/lib/razorpay";
+import { isRazorpayConfigured } from "@/lib/razorpay";
 import fs from "fs";
 import path from "path";
 
@@ -80,13 +80,9 @@ export async function GET(request, { params }) {
   const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : invoice.status === "sent" ? "sent" : "draft";
   const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status === "sent" ? "Sent" : invoice.status === "draft" ? "Draft" : invoice.status;
 
-  let razorpayOrder = null;
+  let showUPI = false;
   if (invoice.status !== "paid" && invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured()) {
-    razorpayOrder = await createRazorpayOrder({
-      amount: total,
-      currency: "INR",
-      receipt: invoice.invoice_number,
-    });
+    showUPI = true;
   }
 
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
@@ -195,11 +191,11 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 </head>
 <body>
 <div class="toolbar">
-  <a href="/admin/invoices">&larr; Back to Invoices</a>
+  ${token ? "" : '<a href="/admin/invoices">&larr; Back to Invoices</a>'}
   <div class="toolbar-right">
     ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
     ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
-    ${invoice.status !== "paid" && invoice.currency === "INR" && razorpayOrder ? '<button class="upi-btn" onclick="openRazorpay()">Pay using UPI</button>' : ""}
+    ${invoice.status !== "paid" && invoice.currency === "INR" && showUPI ? '<button class="upi-btn" onclick="payWithUPI()">Pay using UPI</button>' : ""}
     <button class="print-btn" onclick="window.print()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Download PDF
@@ -274,9 +270,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
   ` : ""}
 
-  ${razorpayOrder ? `
+  ${showUPI ? `
   <div style="margin-top:24px;text-align:center">
-    <button class="upi-btn" onclick="openRazorpay()">Pay using UPI</button>
+    <button class="upi-btn" onclick="payWithUPI()">Pay using UPI</button>
   </div>
   ` : ""}
 
@@ -287,7 +283,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
   ` : ""}
 </div>
-${razorpayOrder ? '<script type="application/json" id="rp-order">' + JSON.stringify({ id: razorpayOrder.id, amount: razorpayOrder.amount, currency: razorpayOrder.currency, key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "", clientName: invoice.client?.name || "", clientEmail: invoice.client?.email || "", invoiceNumber: invoice.invoice_number }) + "</script><script>function openRazorpay(){var d=JSON.parse(document.getElementById('rp-order').textContent);var rzp=new Razorpay({key:d.key,amount:d.amount,currency:d.currency,name:'Meteoric',description:'Invoice '+d.invoiceNumber,order_id:d.id,prefill:{name:d.clientName,email:d.clientEmail},theme:{color:'#5F259F'},handler:function(r){fetch('/api/razorpay/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)}).then(function(res){return res.json()}).then(function(d){if(d.success)window.location.reload();else alert('Payment verification failed.')}).catch(function(){alert('Payment verification failed.')})}});rzp.on('payment.failed',function(e){alert(e.error&&e.error.description||'Payment failed.')});rzp.open()}if(new URLSearchParams(location.search).get('rp')==='1')openRazorpay();</script>" : ""}
+${showUPI ? '<script>function payWithUPI(){var btn=document.querySelector(".upi-btn");if(btn){btn.disabled=true;btn.textContent="Processing...";}fetch("/api/razorpay/create-order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount:' + total.toFixed(2) + ',currency:"INR",receipt:"' + esc(invoice.invoice_number) + '"})}).then(function(r){return r.json()}).then(function(d){if(d.error){alert("Failed to create payment order: "+d.error);if(btn){btn.disabled=false;btn.textContent="Pay using UPI";}return;}var rzp=new Razorpay({key:"' + (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "") + '",amount:d.amount,currency:d.currency,name:"Meteoric",description:"Invoice '+ esc(invoice.invoice_number) + '",order_id:d.order_id,prefill:{name:"' + esc(invoice.client?.name || "") + '",email:"' + esc(invoice.client?.email || "") + '"},theme:{color:"#5F259F"},handler:function(r){r.invoice_id=' + invoice.id + ';fetch("/api/razorpay/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(r)}).then(function(res){return res.json()}).then(function(d){if(d.success)window.location.reload();else alert("Payment verification failed.")}).catch(function(){alert("Payment verification failed.")})}});rzp.on("payment.failed",function(e){alert(e.error&&e.error.description||"Payment failed.");if(btn){btn.disabled=false;btn.textContent="Pay using UPI";}});rzp.open();}).catch(function(){alert("Failed to connect to payment service.");if(btn){btn.disabled=false;btn.textContent="Pay using UPI";}});}if(new URLSearchParams(location.search).get("rp")==="1")payWithUPI();</script>' : ""}
 </body>
 </html>`;
 

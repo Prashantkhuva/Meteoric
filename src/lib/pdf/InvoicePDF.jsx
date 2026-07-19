@@ -273,6 +273,9 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 1.5,
   },
+  upiLink: {
+    marginTop: 6,
+  },
 });
 
 function esc(text) {
@@ -366,7 +369,7 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
+export default function InvoicePDF({ invoice, client, logo, wiseCurrency, previewUrl }) {
   const items = invoice.items || [];
   const subtotal = items.reduce(
     (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
@@ -533,9 +536,20 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency }) {
 
         {!isPaid && curr === "INR" && (
           <View style={styles.paySection}>
-            <Text style={{ fontSize: 12, color: "#888", textAlign: "center" }}>
-              Pay via UPI on the invoice preview page
+            <Text style={{ fontSize: 11, color: "#888", textAlign: "center", marginBottom: 6 }}>
+              Pay using UPI — click the link below or visit the invoice preview page:
             </Text>
+            {previewUrl ? (
+              <Link src={previewUrl + "&rp=1"} style={styles.upiLink}>
+                <Text style={{ fontSize: 11, color: "#5F259F", textAlign: "center", textDecoration: "underline" }}>
+                  {previewUrl + "&rp=1"}
+                </Text>
+              </Link>
+            ) : (
+              <Text style={{ fontSize: 10, color: "#666", textAlign: "center" }}>
+                Open the invoice preview page to pay via UPI
+              </Text>
+            )}
           </View>
         )}
 
