@@ -1,10 +1,17 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+let razorpay;
+
+function getClient() {
+  if (!razorpay) {
+    razorpay = new Razorpay({
+      key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  }
+  return razorpay;
+}
 
 export function isRazorpayConfigured() {
   return !!(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
@@ -14,7 +21,7 @@ export async function createRazorpayOrder({ amount, currency, receipt }) {
   if (!isRazorpayConfigured()) return null;
 
   try {
-    const order = await razorpay.orders.create({
+    const order = await getClient().orders.create({
       amount: Math.round(Number(amount) * 100),
       currency: currency || "INR",
       receipt: receipt || undefined,
