@@ -1,5 +1,6 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
+import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
 const pageTitle = "Services | Meteoric — Web & SaaS Development for Startups";
 const pageDesc =
@@ -87,6 +88,41 @@ const serviceJsonLd = {
   ],
 };
 
+const serviceFaqs = [
+  {
+    question: "How much does it cost to build a website or SaaS with Meteoric?",
+    answer:
+      "Pricing depends on project scope. Landing pages start at lower budgets and deliver in 3-7 days. Full-stack web applications range from 2-6 weeks, and SaaS products from 4-10 weeks. Contact us for a free custom quote based on your specific requirements.",
+  },
+  {
+    question: "How long does it take to build a SaaS product?",
+    answer:
+      "SaaS products typically take 4-10 weeks from discovery to launch. MVP prototypes can ship in 3-6 weeks. We provide a precise timeline after our free strategy call based on your feature requirements and complexity.",
+  },
+  {
+    question: "What technologies does Meteoric use?",
+    answer:
+      "Our core stack is React, Next.js, Node.js, and the MERN stack. We also use Supabase, Stripe, Tailwind CSS, Framer Motion, GSAP, and PostgreSQL. We adapt to your existing tech stack if needed.",
+  },
+  {
+    question: "Do you work with startups or established companies?",
+    answer:
+      "Both. We specialize in helping startups launch MVPs and scale to production, but we also work with established companies on redesigns, performance optimization, and new product development. Our process adapts to your stage.",
+  },
+  {
+    question: "What happens after my website or app launches?",
+    answer:
+      "Every project includes post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery. We treat every product as a long-term partnership and offer ongoing maintenance and feature development.",
+  },
+  {
+    question: "How is Meteoric different from other development agencies?",
+    answer:
+      "Direct founder involvement on every project — no account managers, no layers of abstraction. We ship 12+ production projects with 100% client satisfaction, using a structured 10-day sprint cycle with weekly updates and transparent communication.",
+  },
+];
+
+const faqJsonLd = buildFaqJsonLd(serviceFaqs);
+
 export default function Services() {
   return (
     <>
@@ -97,6 +133,10 @@ export default function Services() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ServicesPage />
     </>

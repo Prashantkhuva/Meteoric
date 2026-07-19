@@ -165,7 +165,15 @@ export default function TestimonialsSection() {
 
   const reviewSchema = {
     "@context": "https://schema.org",
-    "@graph": fallbackTestimonials.map((t) => ({
+    "@type": "Organization",
+    name: "Meteoric",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5",
+      bestRating: "5",
+      ratingCount: "3",
+    },
+    review: fallbackTestimonials.map((t) => ({
       "@type": "Review",
       itemReviewed: { "@type": "Organization", name: "Meteoric" },
       reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: "5" },
@@ -281,6 +289,9 @@ export default function TestimonialsSection() {
                   >
                     <button
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                      aria-expanded={openFaq === i}
+                      aria-controls={`faq-answer-${i}`}
+                      id={`faq-question-${i}`}
                       className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
                     >
                       <span className="text-white/80 text-sm pr-4 leading-relaxed">
@@ -300,7 +311,11 @@ export default function TestimonialsSection() {
                       className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${openFaq === i ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                     >
                       <div className="overflow-hidden">
-                        <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl">
+                        <p
+                          id={`faq-answer-${i}`}
+                          aria-labelledby={`faq-question-${i}`}
+                          className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl"
+                        >
                           {faq.answer}
                         </p>
                       </div>

@@ -45,12 +45,26 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const speakableJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Meteoric — Web & Software Development Agency",
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".sr-only"],
+  },
+};
+
 export default function Home() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
       <HomePage />
       <HomeHashScroll />

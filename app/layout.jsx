@@ -63,7 +63,7 @@ export const metadata = {
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
   other: {
-    "theme-color": "#000000",
+    "theme-color": "#070707",
     "referrer": "origin-when-cross-origin",
   },
 };
@@ -88,8 +88,23 @@ export default function RootLayout({ children }) {
                   "@id": `${SITE_URL}/#organization`,
                   name: SITE_NAME,
                   url: SITE_URL,
-                  logo: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+                  logo: `${SITE_URL}/m.png`,
+                  image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+                  description:
+                    "Meteoric is a web development agency that builds high-performance websites, SaaS platforms, and full-stack applications for startups and founders.",
                   founder: { "@type": "Person", name: "Prashant Khuva" },
+                  foundingDate: "2024",
+                  areaServed: "Worldwide",
+                  knowsAbout: [
+                    "Web Development",
+                    "SaaS Development",
+                    "React Development",
+                    "Next.js Development",
+                    "Node.js Development",
+                    "Full-Stack Development",
+                    "Landing Page Design",
+                    "Startup Web Development",
+                  ],
                   sameAs: [
                     "https://github.com/Prashantkhuva",
                     "https://www.linkedin.com/company/withmeteoric",
@@ -97,6 +112,12 @@ export default function RootLayout({ children }) {
                     "https://www.instagram.com/officialmeteoric/",
                     "https://www.wikidata.org/wiki/Q140453413",
                   ],
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: "5",
+                    bestRating: "5",
+                    ratingCount: "3",
+                  },
                 },
                 {
                   "@type": "WebSite",
@@ -105,14 +126,6 @@ export default function RootLayout({ children }) {
                   url: SITE_URL,
                   publisher: {
                     "@id": `${SITE_URL}/#organization`,
-                  },
-                  potentialAction: {
-                    "@type": "SearchAction",
-                    target: {
-                      "@type": "EntryPoint",
-                      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
-                    },
-                    "query-input": "required name=search_term_string",
                   },
                 },
                 {
@@ -123,6 +136,7 @@ export default function RootLayout({ children }) {
                   description:
                     "Full-stack web development, SaaS products, and landing pages for startups.",
                   areaServed: "Worldwide",
+                  priceRange: "$$",
                   serviceType: [
                     "Software Development",
                     "Web Development",

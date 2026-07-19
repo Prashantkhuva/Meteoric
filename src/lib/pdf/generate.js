@@ -9,9 +9,9 @@ let logoDataUri;
 function getLogo() {
   if (!logoDataUri) {
     try {
-      const logoPath = path.join(process.cwd(), "public", "meteoric.png");
+      const logoPath = path.join(process.cwd(), "public", "meteoric.svg");
       const buffer = fs.readFileSync(logoPath);
-      logoDataUri = `data:image/png;base64,${buffer.toString("base64")}`;
+      logoDataUri = `data:image/svg+xml;base64,${buffer.toString("base64")}`;
     } catch {
       logoDataUri = null;
     }

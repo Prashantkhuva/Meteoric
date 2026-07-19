@@ -21,7 +21,7 @@ export default function ReviewNotification({ name, email, role, company, project
       <Preview>New review from {name}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/meteoric.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>New Review <span style={star}>✦</span></Heading>
           <Text style={muted}>
             {name} left a {rating}-star review

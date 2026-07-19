@@ -21,7 +21,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <Preview>New lead from {name || email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/meteoric.png`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/meteoric.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>New Lead <span style={star}>✦</span></Heading>
           <Text style={muted}>
             A new lead has submitted the form on {baseUrl.replace("https://", "")}

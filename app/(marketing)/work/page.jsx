@@ -53,6 +53,11 @@ const creativeWorkSchema = {
     description: p.description,
     url: p.link,
     keywords: p.tags.join(", "),
+    author: {
+      "@type": "Organization",
+      name: "Meteoric",
+      url: SITE_URL,
+    },
   })),
 };
 

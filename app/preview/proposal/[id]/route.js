@@ -62,8 +62,8 @@ export async function GET(request, { params }) {
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
-    const logoBuf = fs.readFileSync(path.join(process.cwd(), "public", "meteoric.png"));
-    logoSrc = `data:image/png;base64,${logoBuf.toString("base64")}`;
+    const logoBuf = fs.readFileSync(path.join(process.cwd(), "public", "meteoric.svg"));
+    logoSrc = `data:image/svg+xml;base64,${logoBuf.toString("base64")}`;
   } catch { /* logo file not found, fall back to text */ }
 
   const html = `<!DOCTYPE html>

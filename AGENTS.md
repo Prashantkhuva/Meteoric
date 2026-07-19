@@ -115,23 +115,25 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - [x] Create `/services/saas-development` and `/services/startup-web-development` pillar pages
 
 ## SEO/GEO/AEO Optimization Status (2026-07-07)
-- [x] Canonical tags on all 10 public pages (root layout + 9 pages)
-- [x] `/services`, `/privacy`, `/terms`, `/technologies/*` in sitemap
+- [x] Canonical tags on all public pages (root layout + 7 pages)
+- [x] `/services`, `/privacy`, `/terms` in sitemap
 - [x] IndexNow key-file typo fixed + key file created at `public/meteoric-indexnow-key.txt`
-- [x] Service pages + technology pages in Footer navigation
+- [x] Service pages in Footer navigation
 - [x] `twitter:creator` (`@prashantkhuva_`) on all pages
 - [x] `SiteNavigationElement` schema in root layout
 - [x] `theme-color` (#070707) + `referrer` policy in root layout
 - [x] Privacy Policy (`/privacy`) and Terms of Service (`/terms`) pages
 - [x] Internal links from Work page to service pages
 - [x] `security.txt` at `public/.well-known/security.txt`
-- [x] Technology landing pages: `/technologies/next-js`, `/technologies/supabase`
 - [x] Enhanced AI citation checker script (`scripts/check-ai-citations.mjs`)
-- [x] Updated `llms.txt` with new pages, technology pages
 - [x] Wikidata entry for Meteoric (https://www.wikidata.org/wiki/Q140453413)
-- [x] Technology pages: `/technologies/react`, `/technologies/node-js`
 - [x] Dedicated case studies section (`/case-studies`) with metrics-heavy template
 - [x] Core Web Vitals audit — SpeedInsights installed & collecting RUM data on Vercel
+- [x] GEO: `llms.txt` + `llms-full.txt` with answer capsules and cite-worthy content
+- [x] GEO: Speakable schema for voice search, AggregateRating on Organization
+- [x] AEO: Services page FAQ section with FAQPage JSON-LD schema
+- [x] SEO: Security headers (CSP, HSTS, X-Frame-Options, Permissions-Policy)
+- [x] SEO: robots.txt allows all AI crawlers (GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, anthropic-ai, PerplexityBot, Google-Extended)
 
 ## Research Files (memory/)
 - `memory/research/content-gap-analysis/2026-07-06-meteoric-vs-competitors.md` — Full gap analysis vs Naturaily, Big Human, Superside, DePalma
