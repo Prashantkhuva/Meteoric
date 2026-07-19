@@ -6,9 +6,9 @@ const Logo = memo(function Logo({ className = "" }) {
     <Image
       src="/meteoric.svg"
       alt="Meteoric — software development agency"
-      width={157}
-      height={40}
-      sizes="157px"
+      width={120}
+      height={30}
+      sizes="120px"
       priority
       className={`shrink-0 ${className}`}
     />
