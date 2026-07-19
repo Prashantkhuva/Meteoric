@@ -4,14 +4,14 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request) {
   if (!isRazorpayConfigured()) {
-    return NextResponse.json({ error: "Razorpay not configured" }, { status: 500 });
+    return NextResponse.json({ error: "Payment not configured" }, { status: 500 });
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, invoice_id } = body;
@@ -27,17 +27,20 @@ export async function POST(request) {
   });
 
   if (!isValid) {
-    return NextResponse.json({ error: "Invalid payment signature" }, { status: 400 });
+    return NextResponse.json({ error: "Payment verification failed" }, { status: 400 });
   }
 
   if (invoice_id) {
-    const supabase = await createClient();
-    if (supabase) {
-      const { error } = await supabase
-        .from("invoices")
-        .update({ status: "paid", paid_at: new Date().toISOString() })
-        .eq("id", invoice_id);
-      if (error) console.error("[razorpay] failed to mark invoice paid:", error.message);
+    try {
+      const supabase = await createClient();
+      if (supabase) {
+        await supabase
+          .from("invoices")
+          .update({ status: "paid", paid_at: new Date().toISOString() })
+          .eq("id", invoice_id);
+      }
+    } catch (err) {
+      console.error("[razorpay] failed to mark invoice paid:", err.message);
     }
   }
 

@@ -81,7 +81,7 @@ export async function GET(request, { params }) {
   const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status === "sent" ? "Sent" : invoice.status === "draft" ? "Draft" : invoice.status;
 
   let showUPI = false;
-  if (invoice.status !== "paid" && invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured()) {
+  if (token && invoice.status !== "paid" && invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured()) {
     showUPI = true;
   }
 
@@ -105,7 +105,7 @@ export async function GET(request, { params }) {
 <meta property="og:image:height" content="962" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+${showUPI ? '<script src="https://checkout.razorpay.com/v1/checkout.js"></script>' : ""}
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #070707; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.85); }
@@ -283,7 +283,102 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
   ` : ""}
 </div>
-${showUPI ? '<script>function payWithUPI(){var btn=document.querySelector(".upi-btn");if(btn){btn.disabled=true;btn.textContent="Processing...";}fetch("/api/razorpay/create-order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount:' + total.toFixed(2) + ',currency:"INR",receipt:"' + esc(invoice.invoice_number) + '"})}).then(function(r){return r.json()}).then(function(d){if(d.error){alert("Failed to create payment order: "+d.error);if(btn){btn.disabled=false;btn.textContent="Pay using UPI";}return;}var rzp=new Razorpay({key:"' + (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "") + '",amount:d.amount,currency:d.currency,name:"Meteoric",description:"Invoice '+ esc(invoice.invoice_number) + '",order_id:d.order_id,prefill:{name:"' + esc(invoice.client?.name || "") + '",email:"' + esc(invoice.client?.email || "") + '"},theme:{color:"#5F259F"},handler:function(r){r.invoice_id=' + invoice.id + ';fetch("/api/razorpay/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(r)}).then(function(res){return res.json()}).then(function(d){if(d.success)window.location.reload();else alert("Payment verification failed.")}).catch(function(){alert("Payment verification failed.")})}});rzp.on("payment.failed",function(e){alert(e.error&&e.error.description||"Payment failed.");if(btn){btn.disabled=false;btn.textContent="Pay using UPI";}});rzp.open();}).catch(function(){alert("Failed to connect to payment service.");if(btn){btn.disabled=false;btn.textContent="Pay using UPI";}});}if(new URLSearchParams(location.search).get("rp")==="1")payWithUPI();</script>' : ""}
+${showUPI ? `<script>
+(function() {
+  var INVOICE_ID = ${invoice.id};
+  var INVOICE_NUMBER = ${JSON.stringify(invoice.invoice_number)};
+  var AMOUNT = ${total.toFixed(2)};
+  var CLIENT_NAME = ${JSON.stringify(invoice.client?.name || "")};
+  var CLIENT_EMAIL = ${JSON.stringify(invoice.client?.email || "")};
+  var RAZORPAY_KEY = ${JSON.stringify(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "")};
+
+  function setLoading(btn, loading) {
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.textContent = loading ? "Processing..." : "Pay using UPI";
+  }
+
+  function showError(msg) {
+    alert(msg);
+  }
+
+  window.payWithUPI = function() {
+    var btn = document.querySelector(".upi-btn");
+    setLoading(btn, true);
+
+    fetch("/api/razorpay/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: AMOUNT, currency: "INR", receipt: INVOICE_NUMBER })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) {
+        showError("Failed to create payment order: " + data.error);
+        setLoading(btn, false);
+        return;
+      }
+
+      var rzp = new Razorpay({
+        key: RAZORPAY_KEY,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Meteoric",
+        description: "Invoice " + INVOICE_NUMBER,
+        order_id: data.order_id,
+        prefill: { name: CLIENT_NAME, email: CLIENT_EMAIL },
+        theme: { color: "#5F259F" },
+        handler: function(response) {
+          response.invoice_id = INVOICE_ID;
+          fetch("/api/razorpay/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(response)
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(result) {
+            if (result.success) {
+              // Update UI in-place — no redirect
+              var badges = document.querySelectorAll(".status-badge");
+              badges.forEach(function(b) {
+                b.className = "status-badge paid";
+                b.innerHTML = '<span class="dot"></span>Paid';
+              });
+              var btns = document.querySelectorAll(".upi-btn");
+              btns.forEach(function(b) { b.style.display = "none"; });
+              var paidEl = document.createElement("p");
+              paidEl.className = "paid";
+              paidEl.textContent = "Paid: " + new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+              var datesEl = document.querySelector(".dates");
+              if (datesEl) datesEl.appendChild(paidEl);
+            } else {
+              showError("Payment verification failed. Please contact us.");
+            }
+          })
+          .catch(function() {
+            showError("Payment verification failed. Please contact us.");
+          });
+        }
+      });
+
+      rzp.on("payment.failed", function(e) {
+        showError(e.error && e.error.description || "Payment failed.");
+        setLoading(btn, false);
+      });
+
+      rzp.open();
+    })
+    .catch(function() {
+      showError("Failed to connect to payment service. Please try again.");
+      setLoading(btn, false);
+    });
+  };
+
+  if (new URLSearchParams(location.search).get("rp") === "1") {
+    payWithUPI();
+  }
+})();
+</script>` : ""}
 </body>
 </html>`;
 

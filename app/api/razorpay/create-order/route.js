@@ -15,8 +15,13 @@ export async function POST(request) {
 
   const { amount, currency, receipt } = body;
 
-  if (!amount || Number(amount) < 1) {
-    return NextResponse.json({ error: "Amount must be at least 1" }, { status: 400 });
+  if (!amount || isNaN(Number(amount))) {
+    return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+  }
+
+  const amountPaise = Math.round(Number(amount) * 100);
+  if (amountPaise < 100) {
+    return NextResponse.json({ error: "Minimum amount is ₹1 (100 paise)" }, { status: 400 });
   }
 
   const order = await createRazorpayOrder({ amount, currency, receipt });
