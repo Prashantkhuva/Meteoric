@@ -18,6 +18,8 @@ import {
   LogOut,
   X,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Star,
 } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
@@ -26,7 +28,8 @@ import { signOut } from "../actions";
 import Logo from "@/components/sections/Logo";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
-const STORAGE_KEY = "meteo_sidebar_collapsed";
+const SIDEBAR_KEY = "meteo_sidebar";
+const SECTIONS_KEY = "meteo_sections";
 
 const sections = [
   {
@@ -69,37 +72,37 @@ const bottomLinks = [
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
-function loadCollapsed() {
-  if (typeof window === "undefined") return new Set();
+function loadPref(key, fallback) {
+  if (typeof window === "undefined") return fallback;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return new Set(JSON.parse(raw));
-  } catch {
-    // ignore parse errors
-  }
-  return new Set();
+    const raw = localStorage.getItem(key);
+    if (raw !== null) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return fallback;
 }
 
-function saveCollapsed(set) {
+function savePref(key, val) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
-  } catch {
-    // ignore storage errors
-  }
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch { /* ignore */ }
 }
 
 export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const pathname = usePathname();
   const mobileTrapRef = useFocusTrap(mobileOpen);
-  const [collapsed, setCollapsed] = useState(() => {
-    const saved = loadCollapsed();
-    // Auto-expand any section that contains the current active link
+
+  const [collapsed, setCollapsed] = useState(() => loadPref(SIDEBAR_KEY, true));
+  const [closedSections, setClosedSections] = useState(() => {
+    const saved = loadPref(SECTIONS_KEY, null);
+    if (saved !== null) return new Set(saved);
+    // Default: all sections collapsed except the active one
+    const s = new Set();
     sections.forEach((section, i) => {
-      if (section.label && section.items.some((item) => pathname === item.href)) {
-        saved.delete(i);
+      if (section.label && !section.items.some((item) => pathname === item.href)) {
+        s.add(i);
       }
     });
-    return saved;
+    return s;
   });
 
   const isSectionActive = useCallback(
@@ -107,13 +110,11 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
     [pathname]
   );
 
-  // Persist collapsed state
-  useEffect(() => {
-    saveCollapsed(collapsed);
-  }, [collapsed]);
+  useEffect(() => { savePref(SIDEBAR_KEY, collapsed); }, [collapsed]);
+  useEffect(() => { savePref(SECTIONS_KEY, [...closedSections]); }, [closedSections]);
 
   function toggleSection(index) {
-    setCollapsed((prev) => {
+    setClosedSections((prev) => {
       const next = new Set(prev);
       if (next.has(index)) next.delete(index); else next.add(index);
       return next;
@@ -128,23 +129,55 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [mobileOpen, onMobileClose]);
 
+  const isCollapsed = collapsed;
+  const W = isCollapsed ? "w-[60px]" : "w-56 xl:w-60";
+
   const nav = (
     <nav className="flex flex-col h-full min-h-0">
-      <div className="flex items-center h-14 px-5 border-b border-white/[0.04] shrink-0">
-        <Link href="/admin" className="flex items-center" aria-label="Meteoric Admin">
-          <Logo className="!block w-[120px]" />
-        </Link>
+      {/* Header */}
+      <div className={cn(
+        "flex items-center border-b border-white/[0.04] shrink-0 transition-all duration-200",
+        isCollapsed ? "h-14 justify-center px-0" : "h-14 px-5 justify-between"
+      )}>
+        {!isCollapsed && (
+          <Link href="/admin" className="flex items-center" aria-label="Meteoric Admin">
+            <Logo className="!block w-[100px]" />
+          </Link>
+        )}
+        {isCollapsed && (
+          <Link href="/admin" aria-label="Meteoric Admin" className="flex items-center justify-center">
+            <div className="h-7 w-7 rounded-lg bg-[#EAEFFF] flex items-center justify-center">
+              <span className="text-[11px] font-bold text-[#121212]">M</span>
+            </div>
+          </Link>
+        )}
       </div>
 
-      <div className="flex-1 min-h-0 py-3 px-2.5 overflow-y-auto">
+      {/* Toggle button */}
+      <button
+        onClick={() => setCollapsed((p) => !p)}
+        className={cn(
+          "hidden lg:flex items-center gap-2 mx-2 mt-2 mb-1 rounded-lg text-[11px] font-medium transition-all duration-150",
+          isCollapsed
+            ? "justify-center px-0 py-2 text-white/25 hover:text-white/50 hover:bg-white/[0.03]"
+            : "px-3 py-[6px] text-white/25 hover:text-white/50 hover:bg-white/[0.03]"
+        )}
+        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
+        {isCollapsed ? <ChevronsRight size={14} /> : <ChevronsLeft size={14} />}
+        {!isCollapsed && <span>Collapse</span>}
+      </button>
+
+      {/* Nav items */}
+      <div className="flex-1 min-h-0 py-2 px-2 overflow-y-auto overflow-x-hidden">
         {sections.map((section, si) => {
-          const isCollapsed = collapsed.has(si);
+          const isClosed = closedSections.has(si);
           const active = isSectionActive(section);
           const isSingle = !section.label;
 
           if (isSingle) {
             return (
-              <div key={si} className="mb-2">
+              <div key={si} className="mb-1">
                 {section.items.map((link) => {
                   const linkActive = pathname === link.href;
                   const Icon = link.icon;
@@ -153,18 +186,20 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
                       key={link.href}
                       href={link.href}
                       onClick={onMobileClose}
+                      title={isCollapsed ? link.label : undefined}
                       className={cn(
-                        "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
+                        "group flex items-center rounded-lg transition-all duration-150 relative",
+                        isCollapsed ? "justify-center px-0 py-2.5 mx-auto w-10" : "gap-2.5 px-3 py-[7px]",
                         linkActive
-                          ? "bg-[#EAEFFF]/[0.06] text-[#EAEFFF]"
-                          : "text-white/40 hover:text-white/65 hover:bg-white/[0.025]"
+                          ? "bg-[#EAEFFF]/[0.07] text-[#EAEFFF]"
+                          : "text-white/35 hover:text-white/60 hover:bg-white/[0.03]"
                       )}
                     >
                       {linkActive && (
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
                       )}
-                      <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} />
-                      <span>{link.label}</span>
+                      <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} className="shrink-0" />
+                      {!isCollapsed && <span className="text-[13px] font-medium truncate">{link.label}</span>}
                     </Link>
                   );
                 })}
@@ -173,67 +208,100 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
           }
 
           return (
-            <div key={si} className={si > 0 ? "mt-1" : ""}>
-              <button
-                onClick={() => toggleSection(si)}
-                className={cn(
-                  "w-full flex items-center justify-between px-3 py-[5px] text-[10px] font-semibold uppercase tracking-[0.12em] rounded-md transition-colors",
-                  active ? "text-[#EAEFFF]/50 hover:text-[#EAEFFF]/70" : "text-white/20 hover:text-white/35 hover:bg-white/[0.015]"
-                )}
-              >
-                <span>{section.label}</span>
-                <motion.span
-                  animate={{ rotate: isCollapsed ? 0 : 90 }}
-                  transition={{ duration: 0.15 }}
-                  className="opacity-50"
-                >
-                  <ChevronRight size={10} />
-                </motion.span>
-              </button>
-              <AnimatePresence initial={false}>
-                {!isCollapsed && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="overflow-hidden"
+            <div key={si} className={si > 0 ? "mt-0.5" : ""}>
+              {isCollapsed ? (
+                // Collapsed: show section items directly, group by divider
+                <div className="space-y-0.5 mb-1">
+                  {section.items.map((link) => {
+                    const linkActive = pathname === link.href;
+                    const Icon = link.icon;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={onMobileClose}
+                        title={link.label}
+                        className={cn(
+                          "group flex items-center justify-center rounded-lg px-0 py-2.5 mx-auto w-10 transition-all duration-150 relative",
+                          linkActive
+                            ? "bg-[#EAEFFF]/[0.07] text-[#EAEFFF]"
+                            : "text-white/35 hover:text-white/60 hover:bg-white/[0.03]"
+                        )}
+                      >
+                        {linkActive && (
+                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
+                        )}
+                        <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} className="shrink-0" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                // Expanded: accordion sections
+                <>
+                  <button
+                    onClick={() => toggleSection(si)}
+                    className={cn(
+                      "w-full flex items-center justify-between px-3 py-[5px] text-[10px] font-semibold uppercase tracking-[0.12em] rounded-md transition-colors",
+                      active ? "text-[#EAEFFF]/40 hover:text-[#EAEFFF]/60" : "text-white/15 hover:text-white/30 hover:bg-white/[0.015]"
+                    )}
                   >
-                    <div className="space-y-0.5 pb-1">
-                      {section.items.map((link) => {
-                        const linkActive = pathname === link.href;
-                        const Icon = link.icon;
-                        return (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={onMobileClose}
-                            className={cn(
-                              "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
-                              linkActive
-                                ? "bg-[#EAEFFF]/[0.06] text-[#EAEFFF]"
-                                : "text-white/40 hover:text-white/65 hover:bg-white/[0.025]"
-                            )}
-                          >
-                            {linkActive && (
-                              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
-                            )}
-                            <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} />
-                            <span>{link.label}</span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    <span>{section.label}</span>
+                    <motion.span
+                      animate={{ rotate: isClosed ? 0 : 90 }}
+                      transition={{ duration: 0.15 }}
+                      className="opacity-40"
+                    >
+                      <ChevronRight size={10} />
+                    </motion.span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {!isClosed && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="space-y-0.5 pb-1">
+                          {section.items.map((link) => {
+                            const linkActive = pathname === link.href;
+                            const Icon = link.icon;
+                            return (
+                              <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={onMobileClose}
+                                className={cn(
+                                  "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
+                                  linkActive
+                                    ? "bg-[#EAEFFF]/[0.07] text-[#EAEFFF]"
+                                    : "text-white/35 hover:text-white/60 hover:bg-white/[0.03]"
+                                )}
+                              >
+                                {linkActive && (
+                                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
+                                )}
+                                <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} className="shrink-0" />
+                                <span className="truncate">{link.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
             </div>
           );
         })}
       </div>
 
+      {/* Bottom */}
       <div className="border-t border-white/[0.04] shrink-0">
-        <div className="p-2.5 space-y-0.5">
+        <div className={cn("space-y-0.5", isCollapsed ? "p-2" : "p-2.5")}>
           {bottomLinks.map((link) => {
             const active = pathname === link.href;
             const Icon = link.icon;
@@ -242,43 +310,66 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
                 key={link.href}
                 href={link.href}
                 onClick={onMobileClose}
+                title={isCollapsed ? link.label : undefined}
                 className={cn(
-                  "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
+                  "group flex items-center rounded-lg transition-all duration-150 relative",
+                  isCollapsed ? "justify-center px-0 py-2.5 mx-auto w-10" : "gap-2.5 px-3 py-[7px]",
                   active
-                    ? "bg-[#EAEFFF]/[0.06] text-[#EAEFFF]"
-                    : "text-white/40 hover:text-white/65 hover:bg-white/[0.025]"
+                    ? "bg-[#EAEFFF]/[0.07] text-[#EAEFFF]"
+                    : "text-white/35 hover:text-white/60 hover:bg-white/[0.03]"
                 )}
               >
                 {active && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
                 )}
-                <Icon size={15} strokeWidth={active ? 2 : 1.5} />
-                <span>{link.label}</span>
+                <Icon size={15} strokeWidth={active ? 2 : 1.5} className="shrink-0" />
+                {!isCollapsed && <span className="text-[13px] font-medium">{link.label}</span>}
               </Link>
             );
           })}
         </div>
 
-        <div className="px-3 pb-3">
-          <div className="flex items-center gap-2.5 px-2 py-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-            <div className="h-7 w-7 rounded-full bg-[#EAEFFF] flex items-center justify-center text-[10px] font-bold text-[#121212] shrink-0">
+        {/* User info */}
+        {!isCollapsed ? (
+          <div className="px-2.5 pb-3">
+            <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+              <div className="h-7 w-7 rounded-full bg-[#EAEFFF] flex items-center justify-center text-[10px] font-bold text-[#121212] shrink-0">
+                {(userName || "A").charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-white/60 truncate leading-tight">{userName || "Admin"}</p>
+                <p className="text-[10px] text-white/30 truncate leading-tight mt-0.5">{userEmail || ""}</p>
+              </div>
+            </div>
+            <form action={signOut} className="mt-1">
+              <button
+                type="submit"
+                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-[7px] text-[12px] text-white/30 hover:text-white/55 hover:bg-white/[0.025] transition-all"
+              >
+                <LogOut size={14} />
+                Sign out
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="px-2 pb-3 flex flex-col items-center gap-1.5">
+            <div
+              className="h-7 w-7 rounded-full bg-[#EAEFFF] flex items-center justify-center text-[10px] font-bold text-[#121212]"
+              title={userName || "Admin"}
+            >
               {(userName || "A").charAt(0).toUpperCase()}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white/70 truncate leading-tight">{userName || "Admin"}</p>
-              <p className="text-[10px] text-white/35 truncate leading-tight mt-0.5">{userEmail || ""}</p>
-            </div>
+            <form action={signOut}>
+              <button
+                type="submit"
+                title="Sign out"
+                className="rounded-lg p-2 text-white/30 hover:text-white/55 hover:bg-white/[0.03] transition-all"
+              >
+                <LogOut size={14} />
+              </button>
+            </form>
           </div>
-          <form action={signOut} className="mt-1">
-            <button
-              type="submit"
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-[7px] text-[12px] text-white/35 hover:text-white/60 hover:bg-white/[0.025] transition-all"
-            >
-              <LogOut size={14} />
-              Sign out
-            </button>
-          </form>
-        </div>
+        )}
       </div>
     </nav>
   );
@@ -286,7 +377,12 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-56 xl:w-60 h-full min-h-0 overflow-hidden border-r border-white/[0.04] bg-[#070707] shrink-0">
+      <aside
+        className={cn(
+          "hidden lg:flex lg:flex-col h-full min-h-0 overflow-hidden border-r border-white/[0.04] bg-[#070707] shrink-0 transition-all duration-200",
+          W
+        )}
+      >
         {nav}
       </aside>
 
@@ -298,7 +394,7 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
               onClick={onMobileClose}
             />
             <motion.aside
