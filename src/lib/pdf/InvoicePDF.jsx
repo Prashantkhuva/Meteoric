@@ -273,8 +273,20 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 1.5,
   },
-  upiLink: {
-    marginTop: 6,
+  upiButton: {
+    backgroundColor: "#5F259F",
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderRadius: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  upiButtonText: {
+    fontSize: 13,
+    fontFamily: fonts.bold,
+    color: "#FFFFFF",
+    letterSpacing: 0.5,
   },
 });
 
@@ -534,22 +546,11 @@ export default function InvoicePDF({ invoice, client, logo, wiseCurrency, previe
           </View>
         )}
 
-        {!isPaid && curr === "INR" && (
+        {!isPaid && curr === "INR" && previewUrl && (
           <View style={styles.paySection}>
-            <Text style={{ fontSize: 11, color: "#888", textAlign: "center", marginBottom: 6 }}>
-              Pay using UPI — click the link below or visit the invoice preview page:
-            </Text>
-            {previewUrl ? (
-              <Link src={previewUrl + "&rp=1"} style={styles.upiLink}>
-                <Text style={{ fontSize: 11, color: "#5F259F", textAlign: "center", textDecoration: "underline" }}>
-                  {previewUrl + "&rp=1"}
-                </Text>
-              </Link>
-            ) : (
-              <Text style={{ fontSize: 10, color: "#666", textAlign: "center" }}>
-                Open the invoice preview page to pay via UPI
-              </Text>
-            )}
+            <Link src={previewUrl + "&rp=1"} style={styles.upiButton}>
+              <Text style={styles.upiButtonText}>Pay using UPI</Text>
+            </Link>
           </View>
         )}
 
