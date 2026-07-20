@@ -326,7 +326,7 @@ export default function StartupWebDevelopmentPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 custom={i * 0.5}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-white/10 transition-colors p-6"
+                className="rounded-xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent hover:border-white/[0.12] transition-colors p-6"
               >
                 <h3 className="text-white/80 text-sm font-medium mb-3">{faq.question}</h3>
                 <p className="text-white/40 text-sm leading-relaxed max-w-2xl">{faq.answer}</p>
