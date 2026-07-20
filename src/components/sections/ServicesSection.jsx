@@ -223,7 +223,7 @@ export default function ServicesSection() {
             return (
               <div
                 key={s.num}
-                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-white/[0.1] bg-white/[0.06] p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300 hover:border-white/[0.18] hover:bg-white/[0.09]"
+                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300 hover:border-white/[0.12]"
               >
                 {/* Ghost number */}
                 <span
@@ -328,7 +328,7 @@ export default function ServicesSection() {
             return (
                 <div
                   key={s.num}
-                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.1] bg-[#141414] p-6 flex flex-col gap-4 will-change-transform"
+                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4 will-change-transform"
                   style={{ zIndex: services.length - i, width: "calc(100vw - 40px)" }}
                 >
                 {/* Ghost number */}
@@ -382,7 +382,7 @@ export default function ServicesSection() {
 
           {/* CTA card */}
           <div
-            className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.1] bg-[#141414] p-6 flex flex-col gap-4 will-change-transform"
+            className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-[#EAEFFF]/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4 will-change-transform"
             style={{ zIndex: 0, width: "calc(100vw - 40px)" }}
           >
             <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block">
