@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import gsap from "gsap";
 
-const ARROW_SIZE = 28;
-const BADGE_SIZE = 72;
+const ARROW_SIZE = 22;
+const BADGE_SIZE = 64;
+const GLASS_SIZE = 52;
 
 function getTextForElement(el) {
   if (!el) return "View";
@@ -42,31 +43,35 @@ export default function MagneticCursor() {
       mouseY.set(e.clientY - BADGE_SIZE / 2);
     };
 
-    const onEnterInteractive = (e) => {
-      const el = e.currentTarget;
-      const bounds = el.getBoundingClientRect();
-      const cx = bounds.left + bounds.width / 2;
-      const cy = bounds.top + bounds.height / 2;
+      const onEnterInteractive = (e) => {
+        const el = e.currentTarget;
+        const isNoMagnetic = el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic");
 
-      setLabelText(getTextForElement(el));
-      setIsHovered(true);
+        if (isNoMagnetic) return;
 
-      const magnetize = (me) => {
-        const dx = (me.clientX - cx) * 0.3;
-        const dy = (me.clientY - cy) * 0.3;
-        gsap.to(el, { x: dx, y: dy, duration: 0.3, ease: "power2.out" });
+        const bounds = el.getBoundingClientRect();
+        const cx = bounds.left + bounds.width / 2;
+        const cy = bounds.top + bounds.height / 2;
+
+        setLabelText(getTextForElement(el));
+        setIsHovered(true);
+
+        const magnetize = (me) => {
+          const dx = (me.clientX - cx) * 0.3;
+          const dy = (me.clientY - cy) * 0.3;
+          gsap.to(el, { x: dx, y: dy, duration: 0.3, ease: "power2.out" });
+        };
+
+        const onLeave = () => {
+          setIsHovered(false);
+          gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: "power3.out" });
+          el.removeEventListener("mousemove", magnetize);
+          el.removeEventListener("mouseleave", onLeave);
+        };
+
+        el.addEventListener("mousemove", magnetize);
+        el.addEventListener("mouseleave", onLeave, { once: true });
       };
-
-      const onLeave = () => {
-        setIsHovered(false);
-        gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: "power3.out" });
-        el.removeEventListener("mousemove", magnetize);
-        el.removeEventListener("mouseleave", onLeave);
-      };
-
-      el.addEventListener("mousemove", magnetize);
-      el.addEventListener("mouseleave", onLeave, { once: true });
-    };
 
     window.addEventListener("mousemove", onMove, { passive: true });
 
@@ -126,7 +131,7 @@ export default function MagneticCursor() {
       className="hidden md:flex items-center justify-center"
       aria-hidden="true"
     >
-      {/* Arrow — default state, rotates to face movement direction */}
+      {/* Arrow — default state with frosted glass backing */}
       <motion.div
         animate={{
           scale: isHovered ? 0 : 1,
@@ -135,8 +140,16 @@ export default function MagneticCursor() {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         style={{
           position: "absolute",
-          width: ARROW_SIZE,
-          height: ARROW_SIZE,
+          width: GLASS_SIZE,
+          height: GLASS_SIZE,
+          borderRadius: GLASS_SIZE,
+          background: "rgba(255, 255, 255, 0.08)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           transformOrigin: "center center",
         }}
       >
@@ -161,18 +174,16 @@ export default function MagneticCursor() {
         transition={{ type: "spring", stiffness: 400, damping: 28 }}
         style={{
           position: "absolute",
-          width: "auto",
-          minWidth: BADGE_SIZE,
           height: BADGE_SIZE,
           borderRadius: BADGE_SIZE,
-          background: "rgba(255, 255, 255, 0.15)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid rgba(255, 255, 255, 0.12)",
+          background: "rgba(255, 255, 255, 0.12)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "0 22px",
+          padding: "0 24px",
           transformOrigin: "center center",
         }}
       >
@@ -182,7 +193,7 @@ export default function MagneticCursor() {
             fontSize: "11px",
             fontWeight: 700,
             textTransform: "uppercase",
-            letterSpacing: "0.1em",
+            letterSpacing: "0.12em",
             whiteSpace: "nowrap",
             lineHeight: 1,
           }}
