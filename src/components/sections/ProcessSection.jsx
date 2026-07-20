@@ -5,8 +5,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { buildHowToJsonLd } from "@/lib/seo/jsonLd";
-
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const process = [
@@ -45,13 +43,6 @@ export default function ProcessSection() {
   const timelineRef = useRef(null);
   const progressRef = useRef(null);
   const headingRef = useRef(null);
-
-  const howToSteps = process.map((step) => ({
-    name: step.title,
-    text: step.description,
-  }));
-
-  const howToSchema = buildHowToJsonLd(howToSteps);
 
   useGSAP(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -109,12 +100,7 @@ export default function ProcessSection() {
   }, { scope: sectionRef });
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-      />
-      <section
+    <section
         ref={sectionRef}
         id="process"
         className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32 bg-black"
@@ -188,6 +174,5 @@ export default function ProcessSection() {
         </div>
       </div>
     </section>
-    </>
   );
 }

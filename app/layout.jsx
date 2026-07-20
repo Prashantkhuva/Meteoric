@@ -154,6 +154,7 @@ export default function RootLayout({ children }) {
                     { "@type": "SiteNavigationElement", name: "Work", url: `${SITE_URL}/work` },
                     { "@type": "SiteNavigationElement", name: "Services", url: `${SITE_URL}/services` },
                     { "@type": "SiteNavigationElement", name: "About", url: `${SITE_URL}/about` },
+                    { "@type": "SiteNavigationElement", name: "Case Studies", url: `${SITE_URL}/case-studies` },
                   ],
                 },
               ],
@@ -162,6 +163,7 @@ export default function RootLayout({ children }) {
         />
         <link rel="alternate" hrefLang="en" href={SITE_URL} />
         <link rel="alternate" hrefLang="x-default" href={SITE_URL} />
+        <link rel="alternate" href="/llms.txt" type="text/plain" title="LLM-friendly site index" />
       </head>
       <body className="font-primary" suppressHydrationWarning>
         <ErrorBoundary>

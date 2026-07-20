@@ -41,11 +41,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/services/startup-web-development",
-        destination: "/services",
-        permanent: true,
-      },
-      {
         source: "/services/api-development",
         destination: "/services",
         permanent: true,
@@ -62,11 +57,6 @@ const nextConfig = {
       },
       {
         source: "/services/landing-pages",
-        destination: "/services",
-        permanent: true,
-      },
-      {
-        source: "/services/saas-development",
         destination: "/services",
         permanent: true,
       },

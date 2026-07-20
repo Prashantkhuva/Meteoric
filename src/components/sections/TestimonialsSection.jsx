@@ -5,7 +5,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Star, Plus, BadgeCheck, Sparkles } from "lucide-react";
-import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
 
@@ -161,37 +160,9 @@ export default function TestimonialsSection() {
     );
   }, { scope: sectionRef });
 
-  const faqSchema = buildFaqJsonLd(faqs);
-
-  const reviewSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Meteoric",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5",
-      bestRating: "5",
-      ratingCount: "3",
-    },
-    review: fallbackTestimonials.map((t) => ({
-      "@type": "Review",
-      itemReviewed: { "@type": "Organization", name: "Meteoric" },
-      reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: "5" },
-      author: { "@type": "Person", name: t.author },
-      reviewBody: t.quote,
-    })),
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
-      />
+
       <section ref={sectionRef} id="reviews" className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(234,239,255,0.03),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(234,239,255,0.015),transparent_60%)]" />
 
