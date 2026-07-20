@@ -9,7 +9,7 @@ import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects as allProjects } from "@/data/projects";
 
-const projects = allProjects;
+const projects = allProjects.slice(0, 2);
 
 function ProjectCard({ project, index }) {
   return (
