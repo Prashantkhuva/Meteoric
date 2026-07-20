@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import Step0 from "./Step0";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
@@ -21,7 +20,6 @@ function StepContent({
   handleClose,
 }) {
   return (
-    <AnimatePresence mode="wait">
       <div className="w">
           {step === 0 && <Step0 setStep={setStep} />}
 
@@ -61,7 +59,6 @@ function StepContent({
 
           {submitted && <SuccessStep handleClose={handleClose} />}
       </div>
-    </AnimatePresence>
   );
 }
 

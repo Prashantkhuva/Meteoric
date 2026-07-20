@@ -2,11 +2,7 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
+import { gsap, SplitText } from "@/lib/gsap-setup";
 
 export default function ManifestoSection() {
   const sectionRef = useRef(null);
@@ -15,7 +11,6 @@ export default function ManifestoSection() {
   useGSAP(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       headingRef.current?.querySelectorAll(".split-line").forEach(el => {
-        el.style.filter = "none";
         el.style.opacity = "1";
       });
       return;
@@ -25,9 +20,8 @@ export default function ManifestoSection() {
     if (!split.lines?.length) return;
 
     gsap.fromTo(split.lines,
-      { filter: "blur(8px)", opacity: 0.1 },
+      { opacity: 0.1 },
       {
-        filter: "blur(0px)",
         opacity: 1,
         stagger: { each: 1 / split.lines.length, ease: "none" },
         ease: "none",

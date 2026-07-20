@@ -3,13 +3,9 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const services = [
   {

@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap-setup";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import StaggerLink from "./StaggerLink";

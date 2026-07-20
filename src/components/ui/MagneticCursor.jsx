@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap-setup";
 
 const ARROW_SIZE = 22;
 const BADGE_SIZE = 64;

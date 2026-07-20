@@ -2,15 +2,12 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, SplitText } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects as allProjects } from "@/data/projects";
-gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const projects = allProjects.slice(0, 2);
 

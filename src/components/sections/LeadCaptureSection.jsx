@@ -2,12 +2,9 @@
 
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap-setup";
 import { Check, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");

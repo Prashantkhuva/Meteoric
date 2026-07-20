@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap-setup";
 import { Star, Plus, BadgeCheck, Sparkles } from "lucide-react";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
@@ -139,7 +138,6 @@ export default function TestimonialsSection() {
   }, []);
 
   useGSAP(() => {
-    gsap.registerPlugin(ScrollTrigger);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const fadeUp = (target, trigger, opts = {}) =>

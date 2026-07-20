@@ -1,8 +1,4 @@
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
+import { gsap, SplitText } from "./gsap-setup";
 
 export function textReveal(el, options = {}) {
   if (!el) return null;
