@@ -38,7 +38,7 @@ function Hero() {
     const mutedSplit = new SplitText(mutedTextRef.current, { type: "lines", linesClass: "split-line" });
     const allLines = [...mainSplit.lines, ...mutedSplit.lines];
 
-    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.7 } });
+    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.45 } });
     tl.fromTo(allLines, { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08 })
       .from(subtextRef.current, { y: 30, opacity: 0 }, "-=0.25")
       .from(ctaRef.current, { y: 30, opacity: 0 }, "-=0.2");

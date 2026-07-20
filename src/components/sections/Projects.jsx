@@ -25,7 +25,7 @@ function ProjectCard({ project, index }) {
           alt={project.name}
           width={800}
           height={500}
-          className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03] gsap-proj-img"
+          className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] gsap-proj-img"
           sizes="(max-width: 768px) 100vw, 50vw"
           loading="lazy"
         />
@@ -164,7 +164,7 @@ function Projects() {
           clipPath: "inset(0% 0 0 0)",
           objectPosition: "0px 30%",
           filter: "grayscale(0%) brightness(1)",
-          duration: 1.2,
+          duration: 0.7,
           ease: "power3.out",
           scrollTrigger: {
             trigger: img,

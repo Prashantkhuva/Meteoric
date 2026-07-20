@@ -12,7 +12,7 @@ function WorkCard({ project, index }) {
   const isReversed = index % 2 === 1;
 
   return (
-    <div className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-700 gsap-work-card">
+    <div className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-500 gsap-work-card">
       <div className={`relative overflow-hidden bg-black ${isReversed ? "lg:order-2" : ""}`}>
         <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8 overflow-hidden">
           <Image
@@ -20,7 +20,7 @@ function WorkCard({ project, index }) {
             alt={project.name}
             width={640}
             height={360}
-            className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-700 ease-out group-hover:scale-[1.03] gsap-work-img"
+            className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] gsap-work-img"
             sizes="(max-width: 1024px) 100vw, 50vw"
             loading={index === 0 ? "eager" : "lazy"}
           />
@@ -123,7 +123,7 @@ export default function WorkPage() {
           clipPath: "inset(0% 0 0 0)",
           objectPosition: "0px 30%",
           filter: "grayscale(0%) brightness(1)",
-          duration: 1.2,
+          duration: 0.7,
           ease: "power3.out",
           scrollTrigger: {
             trigger: img,

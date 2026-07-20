@@ -29,7 +29,7 @@ export default function ManifestoSection() {
           trigger: sectionRef.current,
           start: "top 80%",
           end: "bottom 60%",
-          scrub: 0.5,
+          scrub: 0.3,
           invalidateOnRefresh: true,
         },
       },

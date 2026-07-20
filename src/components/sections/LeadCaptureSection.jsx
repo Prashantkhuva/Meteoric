@@ -17,7 +17,7 @@ export default function LeadCaptureSection() {
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     gsap.fromTo(contentRef.current, { y: 24, opacity: 0 }, {
-      y: 0, opacity: 1, ease: "power2.out", duration: 0.7,
+      y: 0, opacity: 1, ease: "power2.out", duration: 0.4,
       scrollTrigger: { trigger: sectionRef.current, start: "top 85%", toggleActions: "play none none none" },
     });
   }, { scope: sectionRef });
