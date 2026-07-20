@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { backfillMissingRates } from "@/lib/exchange-rate";
 import DashboardClient from "./components/DashboardClient";
 
 async function getStats() {
@@ -72,7 +73,9 @@ async function getStats() {
 
   const { data: invoiceTotals } = await supabase
     .from("invoices")
-    .select("status, total, exchange_rate_to_usd");
+    .select("id, status, total, currency, created_at, exchange_rate_to_usd");
+
+  const invoiceData = await backfillMissingRates(supabase, invoiceTotals || []);
 
   const { count: totalProjects } = await supabase
     .from("projects")
@@ -92,7 +95,7 @@ async function getStats() {
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  (invoiceTotals || []).forEach((inv) => {
+  (invoiceData || []).forEach((inv) => {
     const amt = (Number(inv.total) || 0) * (Number(inv.exchange_rate_to_usd) || 1);
     if (inv.status === "sent" || inv.status === "overdue") {
       totalOutstanding += amt;
@@ -119,7 +122,7 @@ async function getStats() {
     totalOutstanding,
     totalRevenue,
     overdueCount,
-    invoiceCount: (invoiceTotals || []).length,
+    invoiceCount: (invoiceData || []).length,
     totalProjects: totalProjects ?? 0,
     planningProjects: projectBuckets.planning,
     activeProjects: projectBuckets.in_progress,
