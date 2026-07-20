@@ -54,8 +54,6 @@ Meteoric offers SaaS development, landing page design, full-stack web applicatio
 ## Services
 
 - [Services](https://withmeteoric.com/services) — Web & SaaS development services for startups and founders. Landing pages, SaaS products, web apps, and full-stack development.
-- [SaaS Development](https://withmeteoric.com/services/saas-development) — SaaS product development from MVP to production. Auth, billing, dashboards, APIs, and multi-tenant platforms.
-- [Startup Web Development](https://withmeteoric.com/services/startup-web-development) — MVP development, startup websites, and full-stack web applications for founders who need to launch fast.
 
 ## Internal links
 
@@ -64,8 +62,6 @@ Meteoric offers SaaS development, landing page design, full-stack web applicatio
 - [Work / Portfolio](https://withmeteoric.com/work)
 - [Case Studies](https://withmeteoric.com/case-studies)
 - [Services](https://withmeteoric.com/services)
-- [SaaS Development](https://withmeteoric.com/services/saas-development)
-- [Startup Web Development](https://withmeteoric.com/services/startup-web-development)
 - [Process](https://withmeteoric.com/#process)
 - [Contact](https://withmeteoric.com/#contact)
 - [Privacy Policy](https://withmeteoric.com/privacy)
