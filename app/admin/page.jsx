@@ -72,7 +72,7 @@ async function getStats() {
 
   const { data: invoiceTotals } = await supabase
     .from("invoices")
-    .select("status, total");
+    .select("status, total, exchange_rate_to_usd");
 
   const { count: totalProjects } = await supabase
     .from("projects")
@@ -93,7 +93,7 @@ async function getStats() {
   monthStart.setHours(0, 0, 0, 0);
 
   (invoiceTotals || []).forEach((inv) => {
-    const amt = Number(inv.total) || 0;
+    const amt = (Number(inv.total) || 0) * (Number(inv.exchange_rate_to_usd) || 1);
     if (inv.status === "sent" || inv.status === "overdue") {
       totalOutstanding += amt;
     }

@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
 import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail, sendPaymentConfirmation } from "@/lib/email/email";
 import { callAIJson } from "@/lib/ai/provider";
+import { getExchangeRate } from "@/lib/exchange-rate";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import {
   idSchema,
@@ -623,6 +624,7 @@ export async function createInvoice(formData) {
       0
     );
     const total = subtotal + data.tax;
+    const exchange_rate_to_usd = await getExchangeRate(data.currency, new Date());
 
     const { error } = await supabase.from("invoices").insert({
       client_id: data.client_id,
@@ -635,6 +637,7 @@ export async function createInvoice(formData) {
       tax: data.tax,
       total,
       currency: data.currency,
+      exchange_rate_to_usd,
       notes: data.notes,
       terms: data.terms,
       due_date: data.due_date,
@@ -658,6 +661,7 @@ export async function updateInvoice(formData) {
       0
     );
     const total = subtotal + data.tax;
+    const exchange_rate_to_usd = await getExchangeRate(data.currency, new Date());
 
     const { error } = await supabase
       .from("invoices")
@@ -671,6 +675,7 @@ export async function updateInvoice(formData) {
         tax: data.tax,
         total,
         currency: data.currency,
+        exchange_rate_to_usd,
         notes: data.notes,
         terms: data.terms,
         due_date: data.due_date,

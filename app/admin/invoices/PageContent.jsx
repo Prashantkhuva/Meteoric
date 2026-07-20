@@ -19,6 +19,7 @@ import { useToast } from "../components/ToastContext";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { Pagination } from "../components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
+import { getCurrencySymbol } from "@/lib/utils";
 
 const CURRENCIES = [
   { label: "USD", symbol: "$" },
@@ -27,10 +28,6 @@ const CURRENCIES = [
   { label: "GBP", symbol: "£" },
   { label: "AUD", symbol: "A$" },
 ];
-
-function getCurrencySymbol(currency) {
-  return CURRENCIES.find((c) => c.label === currency)?.symbol || "$";
-}
 import { BulkActionBar } from "../components/BulkActionBar";
 import { StatusSelect } from "../components/StatusSelect";
 import { IconButton } from "../components/IconButton";
