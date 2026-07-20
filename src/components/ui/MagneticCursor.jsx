@@ -6,7 +6,6 @@ import gsap from "gsap";
 
 const ARROW_SIZE = 22;
 const BADGE_SIZE = 64;
-const GLASS_SIZE = 52;
 
 function getTextForElement(el) {
   if (!el) return "View";
@@ -131,7 +130,7 @@ export default function MagneticCursor() {
       className="hidden md:flex items-center justify-center"
       aria-hidden="true"
     >
-      {/* Arrow — default state with frosted glass backing */}
+      {/* Arrow — default state */}
       <motion.div
         animate={{
           scale: isHovered ? 0 : 1,
@@ -140,16 +139,8 @@ export default function MagneticCursor() {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         style={{
           position: "absolute",
-          width: GLASS_SIZE,
-          height: GLASS_SIZE,
-          borderRadius: GLASS_SIZE,
-          background: "rgba(255, 255, 255, 0.08)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          width: ARROW_SIZE,
+          height: ARROW_SIZE,
           transformOrigin: "center center",
         }}
       >
@@ -158,10 +149,9 @@ export default function MagneticCursor() {
           width={ARROW_SIZE}
           height={ARROW_SIZE}
           viewBox="0 0 256 256"
-          fill="#fff"
-          style={{ display: "block" }}
+          style={{ display: "block", filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))" }}
         >
-          <path d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z" />
+          <path d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z" fill="#fff" />
         </svg>
       </motion.div>
 
@@ -176,10 +166,10 @@ export default function MagneticCursor() {
           position: "absolute",
           height: BADGE_SIZE,
           borderRadius: BADGE_SIZE,
-          background: "rgba(255, 255, 255, 0.12)",
+          background: "rgba(12, 12, 12, 0.85)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid rgba(255, 255, 255, 0.15)",
+          border: "1px solid rgba(255, 255, 255, 0.12)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
