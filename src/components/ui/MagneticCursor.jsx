@@ -85,6 +85,14 @@ export default function MagneticCursor() {
 
     window.addEventListener("mousemove", onMove, { passive: true });
 
+    const onInteractDown = () => {
+      if (hoveredRef.current) {
+        setIsHovered(false);
+        hoveredRef.current = false;
+      }
+    };
+    window.addEventListener("mousedown", onInteractDown, { passive: true });
+
     const onMouseLeave = () => {
       mouseX.set(-9999);
       mouseY.set(-9999);
@@ -121,6 +129,7 @@ export default function MagneticCursor() {
     return () => {
       document.documentElement.classList.remove("no-native-cursor");
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onInteractDown);
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
       observer.disconnect();
