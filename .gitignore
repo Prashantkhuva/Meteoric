@@ -33,3 +33,5 @@ test-results/
 SUMMARY.md
 .opencode
 lighthouse-report.json
+.vercel
+.env*
