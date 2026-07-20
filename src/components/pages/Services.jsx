@@ -219,8 +219,7 @@ export default function ServicesPage() {
                   whileInView="visible"
                   viewport={{ once: true, margin: "-80px" }}
                   custom={2}
-                  className="md:col-span-7 rounded-2xl border border-white/[0.06] p-10 md:p-14 lg:p-16"
-                  style={{ background: "#0a0a0a" }}
+                  className="md:col-span-7 rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-10 md:p-14 lg:p-16"
                 >
                   <h3 className="text-xl md:text-2xl font-secondary-italic text-white/80 mb-4">
                     Our Process
