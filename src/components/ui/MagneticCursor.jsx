@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import gsap from "gsap";
 
 const ARROW_SIZE = 22;
 const BADGE_SIZE = 64;
+
+// ponytail: tip offset = arrow SVG tip position scaled to ARROW_SIZE
+// SVG tip at ~(41,41) in 256x256 viewBox, arrow centered in BADGE container
+const ARROW_TIP_X = (41 / 256) * ARROW_SIZE + (BADGE_SIZE - ARROW_SIZE) / 2;
+const ARROW_TIP_Y = (41 / 256) * ARROW_SIZE + (BADGE_SIZE - ARROW_SIZE) / 2;
 
 function getTextForElement(el) {
   if (!el) return "View";
@@ -24,6 +29,7 @@ function getTextForElement(el) {
 
 export default function MagneticCursor() {
   const [isHovered, setIsHovered] = useState(false);
+  const hoveredRef = useRef(false);
   const [labelText, setLabelText] = useState("View");
   const mouseX = useMotionValue(-9999);
   const mouseY = useMotionValue(-9999);
@@ -38,39 +44,44 @@ export default function MagneticCursor() {
     document.documentElement.classList.add("no-native-cursor");
 
     const onMove = (e) => {
-      mouseX.set(e.clientX - BADGE_SIZE / 2);
-      mouseY.set(e.clientY - BADGE_SIZE / 2);
+      if (hoveredRef.current) {
+        mouseX.set(e.clientX - BADGE_SIZE / 2);
+        mouseY.set(e.clientY - BADGE_SIZE / 2);
+      } else {
+        mouseX.set(e.clientX - ARROW_TIP_X);
+        mouseY.set(e.clientY - ARROW_TIP_Y);
+      }
     };
 
-      const onEnterInteractive = (e) => {
-        const el = e.currentTarget;
-        const isNoMagnetic = el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic");
+    const onEnterInteractive = (e) => {
+      const el = e.currentTarget;
+      if (el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic")) return;
 
-        if (isNoMagnetic) return;
+      const bounds = el.getBoundingClientRect();
+      const cx = bounds.left + bounds.width / 2;
+      const cy = bounds.top + bounds.height / 2;
 
-        const bounds = el.getBoundingClientRect();
-        const cx = bounds.left + bounds.width / 2;
-        const cy = bounds.top + bounds.height / 2;
+      setLabelText(getTextForElement(el));
+      setIsHovered(true);
+      hoveredRef.current = true;
 
-        setLabelText(getTextForElement(el));
-        setIsHovered(true);
-
-        const magnetize = (me) => {
-          const dx = (me.clientX - cx) * 0.3;
-          const dy = (me.clientY - cy) * 0.3;
-          gsap.to(el, { x: dx, y: dy, duration: 0.3, ease: "power2.out" });
-        };
-
-        const onLeave = () => {
-          setIsHovered(false);
-          gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: "power3.out" });
-          el.removeEventListener("mousemove", magnetize);
-          el.removeEventListener("mouseleave", onLeave);
-        };
-
-        el.addEventListener("mousemove", magnetize);
-        el.addEventListener("mouseleave", onLeave, { once: true });
+      const magnetize = (me) => {
+        const dx = (me.clientX - cx) * 0.3;
+        const dy = (me.clientY - cy) * 0.3;
+        gsap.to(el, { x: dx, y: dy, duration: 0.3, ease: "power2.out" });
       };
+
+      const onLeave = () => {
+        setIsHovered(false);
+        hoveredRef.current = false;
+        gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: "power3.out" });
+        el.removeEventListener("mousemove", magnetize);
+        el.removeEventListener("mouseleave", onLeave);
+      };
+
+      el.addEventListener("mousemove", magnetize);
+      el.addEventListener("mouseleave", onLeave, { once: true });
+    };
 
     window.addEventListener("mousemove", onMove, { passive: true });
 
@@ -81,10 +92,10 @@ export default function MagneticCursor() {
       smoothY.jump(-9999);
     };
     const onMouseEnter = (e) => {
-      smoothX.jump(e.clientX - BADGE_SIZE / 2);
-      smoothY.jump(e.clientY - BADGE_SIZE / 2);
-      mouseX.set(e.clientX - BADGE_SIZE / 2);
-      mouseY.set(e.clientY - BADGE_SIZE / 2);
+      smoothX.jump(e.clientX - ARROW_TIP_X);
+      smoothY.jump(e.clientY - ARROW_TIP_Y);
+      mouseX.set(e.clientX - ARROW_TIP_X);
+      mouseY.set(e.clientY - ARROW_TIP_Y);
     };
     document.addEventListener("mouseleave", onMouseLeave);
     document.addEventListener("mouseenter", onMouseEnter);
