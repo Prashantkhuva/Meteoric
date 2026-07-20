@@ -4,7 +4,7 @@ import Image from "next/image";
 const Logo = memo(function Logo({ className = "" }) {
   return (
     <Image
-      src="/meteoric.svg"
+      src="/logo.svg"
       alt="Meteoric — software development agency"
       width={120}
       height={30}

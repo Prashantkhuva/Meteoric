@@ -21,7 +21,7 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
       <Preview>🔥 Hot lead ({score}): {lead.name || lead.email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/meteoric-v2.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/logo.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>🔥 Hot Lead &mdash; {score}/100</Heading>
           {category && <Text style={badge}>Category: {category}</Text>}
           {summary && <Text style={summaryText}>"{summary}"</Text>}

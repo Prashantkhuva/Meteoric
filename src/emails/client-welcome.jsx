@@ -11,7 +11,7 @@ export default function ClientWelcome({ name }) {
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/meteoric-v2.svg`}
+            src={`${SITE_URL}/logo.svg`}
             alt="Meteoric"
             width={120}
             height={30}
