@@ -24,29 +24,29 @@ export default function ClientLayout({ children }) {
     trackPageView(pathname);
   }, [pathname]);
 
-  // Premium reveal: after preloader, animate main content in
+  // Premium reveal: after preloader, fade main content in
   useGSAP(() => {
-    if (!preloaderDone || !contentRef.current) return;
+    if (!contentRef.current) return;
 
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const sections = contentRef.current.children;
-
-    if (prefersReduced) {
-      gsap.set(sections, { opacity: 1, y: 0 });
+    // Hide content until preloader finishes
+    if (!preloaderDone) {
+      gsap.set(contentRef.current, { opacity: 0 });
       return;
     }
 
-    // Set initial hidden state
-    gsap.set(sections, { opacity: 0, y: 30 });
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Stagger reveal — premium feel
-    gsap.to(sections, {
+    if (prefersReduced) {
+      gsap.set(contentRef.current, { opacity: 1 });
+      return;
+    }
+
+    gsap.to(contentRef.current, {
       opacity: 1,
-      y: 0,
-      duration: 0.6,
-      stagger: 0.08,
-      ease: "power3.out",
-      clearProps: "transform",
+      duration: 0.8,
+      ease: "power2.out",
+      delay: 0.1,
+      clearProps: "opacity",
     });
   }, [preloaderDone, pathname]);
 
@@ -67,7 +67,7 @@ export default function ClientLayout({ children }) {
       {isAdmin ? (
         children
       ) : (
-        <main ref={contentRef} id="main-content" style={{ opacity: 0 }}>
+        <main ref={contentRef} id="main-content">
           {children}
         </main>
       )}
