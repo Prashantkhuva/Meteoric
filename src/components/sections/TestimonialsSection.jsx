@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap-setup";
-import { Star, Plus, BadgeCheck, Sparkles } from "lucide-react";
+import { Star, BadgeCheck, Sparkles } from "lucide-react";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
+import FaqAccordion from "./FaqAccordion";
+import { homeFaqs } from "@/data/faqs";
 
 const fallbackTestimonials = [
   {
@@ -31,34 +33,6 @@ const fallbackTestimonials = [
     role: "Product Lead, Stellar Labs",
     project: "Stellar Labs",
     rating: 5,
-  },
-];
-
-const faqs = [
-  {
-    question: "What's your typical development process?",
-    answer:
-      "We start with a discovery call to understand your vision and requirements. Then we move through design direction, development sprints, and finally launch. The entire process is transparent with weekly updates and a clear timeline.",
-  },
-  {
-    question: "How long does it take to build a website or SaaS?",
-    answer:
-      "Landing pages typically take 3–7 days. Web applications range from 2–6 weeks depending on complexity. SaaS products take 4–10 weeks. We'll give you a precise timeline after our discovery call.",
-  },
-  {
-    question: "Do you only work with MERN stack?",
-    answer:
-      "MERN is our core stack, but we're flexible. We've worked with Appwrite, Supabase, various databases, and can adapt to your existing tech stack if needed.",
-  },
-  {
-    question: "What happens after launch? Do you provide support?",
-    answer:
-      "Yes. We include post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery — we treat every product as a long-term partnership.",
-  },
-  {
-    question: "How do I get started?",
-    answer:
-      "Book a free strategy call using the button below. We'll discuss your project, give you a timeline and estimate, and if we're a good fit, we'll start within the week.",
   },
 ];
 
@@ -105,7 +79,6 @@ function ReviewCard({ t }) {
 
 export default function TestimonialsSection() {
   const [reviews, setReviews] = useState(null);
-  const [openFaq, setOpenFaq] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
@@ -148,14 +121,7 @@ export default function TestimonialsSection() {
 
     fadeUp(headerRef.current, headerRef.current);
     fadeUp(faqHeaderRef.current, faqHeaderRef.current);
-    gsap.fromTo(
-      faqListRef.current?.querySelectorAll(".gsap-faq-item"),
-      { y: 16, opacity: 0 },
-      {
-        y: 0, opacity: 1, stagger: 0.06, ease: "power2.out",
-        scrollTrigger: { trigger: faqListRef.current, start: "top 90%", toggleActions: "play none none none" },
-      },
-    );
+    fadeUp(faqListRef.current, faqListRef.current);
   }, { scope: sectionRef });
 
   return (
@@ -246,51 +212,8 @@ export default function TestimonialsSection() {
                 </h2>
               </div>
 
-              <div ref={faqListRef} className="space-y-2.5">
-                {faqs.map((faq, i) => (
-                  <div
-                    key={i}
-                    className={`group rounded-xl border transition-all duration-300 gsap-faq-item ${
-                      openFaq === i
-                        ? "border-white/[0.12] bg-gradient-to-b from-white/[0.03] to-transparent"
-                        : "border-white/[0.06] bg-white/[0.02] hover:border-white/10"
-                    }`}
-                  >
-                    <button
-                      onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                      aria-expanded={openFaq === i}
-                      aria-controls={`faq-answer-${i}`}
-                      id={`faq-question-${i}`}
-                      className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
-                    >
-                      <span className="text-white/80 text-sm pr-4 leading-relaxed">
-                        {faq.question}
-                      </span>
-                      <span
-                        className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${
-                          openFaq === i
-                            ? "border-[#EAEFFF]/20 bg-[#EAEFFF]/10 text-[#EAEFFF] rotate-45"
-                            : "border-white/10 text-white/30 group-hover:border-white/20"
-                        }`}
-                      >
-                        <Plus size={12} />
-                      </span>
-                    </button>
-                    <div
-                      className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${openFaq === i ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-                    >
-                      <div className="overflow-hidden">
-                        <p
-                          id={`faq-answer-${i}`}
-                          aria-labelledby={`faq-question-${i}`}
-                          className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl"
-                        >
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div ref={faqListRef}>
+                <FaqAccordion items={homeFaqs} />
               </div>
             </div>
           </div>

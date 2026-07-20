@@ -2,6 +2,7 @@ import HomePage from "@/components/pages/Home";
 import HomeHashScroll from "./HomeHashScroll";
 import { SITE_URL } from "@/lib/seo/config";
 import { buildHowToJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonLd";
+import { homeFaqs } from "@/data/faqs";
 
 const pageTitle = "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const pageDesc =
@@ -63,30 +64,7 @@ const howToSchema = buildHowToJsonLd([
   { name: "Launch", text: "Deployment, optimization, and final polishing before the product goes live." },
 ]);
 
-const faqs = [
-  {
-    question: "What's your typical development process?",
-    answer: "We start with a discovery call to understand your vision and requirements. Then we move through design direction, development sprints, and finally launch. The entire process is transparent with weekly updates and a clear timeline.",
-  },
-  {
-    question: "How long does it take to build a website or SaaS?",
-    answer: "Landing pages typically take 3–7 days. Web applications range from 2–6 weeks depending on complexity. SaaS products take 4–10 weeks. We'll give you a precise timeline after our discovery call.",
-  },
-  {
-    question: "Do you only work with MERN stack?",
-    answer: "MERN is our core stack, but we're flexible. We've worked with Appwrite, Supabase, various databases, and can adapt to your existing tech stack if needed.",
-  },
-  {
-    question: "What happens after launch? Do you provide support?",
-    answer: "Yes. We include post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery — we treat every product as a long-term partnership.",
-  },
-  {
-    question: "How do I get started?",
-    answer: "Book a free strategy call using the button below. We'll discuss your project, give you a timeline and estimate, and if we're a good fit, we'll start within the week.",
-  },
-];
-
-const faqSchema = buildFaqJsonLd(faqs);
+const faqSchema = buildFaqJsonLd(homeFaqs);
 
 const fallbackTestimonials = [
   { rating: 5, author: "Rohan Mehta", quote: "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference." },

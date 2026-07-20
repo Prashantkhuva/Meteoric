@@ -1,6 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
+import FaqAccordion from "@/components/sections/FaqAccordion";
+import { serviceFaqs } from "@/data/faqs";
 
 const services = [
   {
@@ -104,39 +107,6 @@ const techStack = [
   "Stripe",
   "PostgreSQL",
   "Framer Motion",
-];
-
-const serviceFaqs = [
-  {
-    question: "How much does it cost to build a website or SaaS with Meteoric?",
-    answer:
-      "Pricing depends on project scope. Landing pages start at lower budgets and deliver in 3-7 days. Full-stack web applications range from 2-6 weeks, and SaaS products from 4-10 weeks. Contact us for a free custom quote based on your specific requirements.",
-  },
-  {
-    question: "How long does it take to build a SaaS product?",
-    answer:
-      "SaaS products typically take 4-10 weeks from discovery to launch. MVP prototypes can ship in 3-6 weeks. We provide a precise timeline after our free strategy call based on your feature requirements and complexity.",
-  },
-  {
-    question: "What technologies does Meteoric use?",
-    answer:
-      "Our core stack is React, Next.js, Node.js, and the MERN stack. We also use Supabase, Stripe, Tailwind CSS, Framer Motion, GSAP, and PostgreSQL. We adapt to your existing tech stack if needed.",
-  },
-  {
-    question: "Do you work with startups or established companies?",
-    answer:
-      "Both. We specialize in helping startups launch MVPs and scale to production, but we also work with established companies on redesigns, performance optimization, and new product development. Our process adapts to your stage.",
-  },
-  {
-    question: "What happens after my website or app launches?",
-    answer:
-      "Every project includes post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery. We treat every product as a long-term partnership and offer ongoing maintenance and feature development.",
-  },
-  {
-    question: "How is Meteoric different from other development agencies?",
-    answer:
-      "Direct founder involvement on every project — no account managers, no layers of abstraction. We ship 12+ production projects with 100% client satisfaction, using a structured 10-day sprint cycle with weekly updates and transparent communication.",
-  },
 ];
 
 const fadeUp = {
@@ -348,22 +318,56 @@ export default function ServicesPage() {
             Common questions about our services.
           </motion.h2>
 
-          <div className="space-y-3">
-            {serviceFaqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i * 0.5}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-white/10 transition-colors p-6"
-              >
-                <h3 className="text-white/80 text-sm font-medium mb-3">{faq.question}</h3>
-                <p className="text-white/40 text-sm leading-relaxed max-w-2xl">{faq.answer}</p>
-              </motion.div>
-            ))}
-          </div>
+          <FaqAccordion items={serviceFaqs} />
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 md:py-28 relative border-t border-white/[0.06]">
+        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <motion.span
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-[#EAEFFF]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-5"
+          >
+            Ready to start?
+          </motion.span>
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={1}
+            className="text-3xl md:text-5xl font-secondary-italic mb-6"
+          >
+            Let&apos;s build something <span className="text-white/40">together.</span>
+          </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={2}
+            className="text-white/40 text-base md:text-lg max-w-xl mx-auto mb-10"
+          >
+            Book a free strategy call and we&apos;ll discuss your project, timeline, and how we can help.
+          </motion.p>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={3}
+          >
+            <Link
+              href="/#contact"
+              className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
+            >
+              Get a Free Estimate
+            </Link>
+          </motion.div>
         </div>
       </section>
 

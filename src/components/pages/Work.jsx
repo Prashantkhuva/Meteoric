@@ -17,7 +17,7 @@ function WorkCard({ project, index }) {
         <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8 overflow-hidden">
           <Image
             src={project.image}
-            alt={project.name}
+            alt={`${project.name} — ${project.tagline}`}
             width={640}
             height={360}
             className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] gsap-work-img"

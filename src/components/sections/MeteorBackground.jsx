@@ -126,7 +126,8 @@ function MeteorBackground({ showBrand = true }) {
 
     const animate = (time) => {
       if (!isVisible) {
-        animationFrameId = requestAnimationFrame(animate);
+        // ponytail: break rAF loop when off-screen, poll with setTimeout
+        setTimeout(() => { animationFrameId = requestAnimationFrame(animate); }, 200);
         return;
       }
       ctx.fillStyle = "#000000";

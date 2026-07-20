@@ -16,17 +16,21 @@ export async function createLead(data) {
       return { success: false, error: "Supabase not configured" }
     }
 
-    const { error } = await supabase.from("leads").insert([
-      {
-        name: data.name || null,
-        email: data.email || null,
-        phone: data.phone || null,
-        services: data.services || null,
-        details: data.details || null,
-        budget: data.budget || null,
-        status: "new",
-      },
-    ])
+    const { data: insertData, error } = await supabase
+      .from("leads")
+      .insert([
+        {
+          name: data.name || null,
+          email: data.email || null,
+          phone: data.phone || null,
+          services: data.services || null,
+          details: data.details || null,
+          budget: data.budget || null,
+          status: "new",
+        },
+      ])
+      .select("id")
+      .single();
 
     if (error) {
       console.error("Supabase insert error:", error)
@@ -48,7 +52,7 @@ export async function createLead(data) {
           await supabase
             .from("leads")
             .update({ ai_score: aiScore, ai_category: aiCategory, ai_summary: aiSummary })
-            .eq("email", data.email)
+            .eq("id", insertData?.id ?? 0)
             .is("ai_score", null);
         }
       } catch (aiErr) {

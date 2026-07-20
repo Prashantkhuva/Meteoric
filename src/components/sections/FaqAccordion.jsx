@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 
 export default function FaqAccordion({ items }) {
@@ -24,6 +23,7 @@ export default function FaqAccordion({ items }) {
           >
             <button
               onClick={() => toggle(i)}
+              aria-expanded={isOpen}
               className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
             >
               <span className="text-white/80 text-sm pr-4 leading-relaxed">
@@ -39,28 +39,15 @@ export default function FaqAccordion({ items }) {
                 <Plus size={12} />
               </span>
             </button>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="overflow-hidden"
-                >
-                  {faq.a_html ? (
-                    <p
-                      className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 -mt-1 max-w-2xl [&_a]:text-white/60 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-colors [&_a]:duration-200 hover:[&_a]:text-white"
-                      dangerouslySetInnerHTML={{ __html: faq.a_html }}
-                    />
-                  ) : (
-                    <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 -mt-1 max-w-2xl">
-                      {faq.a}
-                    </p>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div
+              className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+            >
+              <div className="overflow-hidden">
+                <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl">
+                  {faq.a}
+                </p>
+              </div>
+            </div>
           </div>
         );
       })}

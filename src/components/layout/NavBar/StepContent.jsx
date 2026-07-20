@@ -20,7 +20,7 @@ function StepContent({
   handleClose,
 }) {
   return (
-      <div className="w">
+      <div className="w-full">
           {step === 0 && <Step0 setStep={setStep} />}
 
           {step === 1 && (

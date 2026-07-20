@@ -67,6 +67,19 @@ html.lenis {
 /* Grain texture overlay */
 
 /* Button fill circle hover effect */
+.flip-btn {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 100px;
+  background: linear-gradient(180deg, #fff 0%, #cecece 100%);
+  outline: 0;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
 .fill-circle {
   position: absolute;
   top: 50%;

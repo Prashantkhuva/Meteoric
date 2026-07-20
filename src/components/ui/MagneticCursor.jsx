@@ -101,16 +101,21 @@ export default function MagneticCursor() {
     document.addEventListener("mouseenter", onMouseEnter);
 
     const selectors = "a, button, [role='button']";
+    let boundEls = new Set();
     const bind = () => {
       document.querySelectorAll(selectors).forEach((el) => {
+        if (boundEls.has(el)) return;
         if (el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic")) return;
-        el.removeEventListener("mouseenter", onEnterInteractive);
         el.addEventListener("mouseenter", onEnterInteractive);
+        boundEls.add(el);
       });
     };
     bind();
 
-    const observer = new MutationObserver(bind);
+    const observer = new MutationObserver(() => {
+      // ponytail: only rebind new elements, don't re-iterate all
+      requestAnimationFrame(bind);
+    });
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
@@ -119,9 +124,10 @@ export default function MagneticCursor() {
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
       observer.disconnect();
-      document.querySelectorAll(selectors).forEach((el) => {
+      boundEls.forEach((el) => {
         el.removeEventListener("mouseenter", onEnterInteractive);
       });
+      boundEls.clear();
     };
   }, [mouseX, mouseY]); // eslint-disable-line react-hooks/exhaustive-deps
 

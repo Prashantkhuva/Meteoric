@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "@/lib/gsap-setup";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/layout/Preloader";
@@ -12,6 +14,7 @@ import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const [preloaderDone, setPreloaderDone] = useState(false);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     initGtag();
@@ -20,6 +23,32 @@ export default function ClientLayout({ children }) {
   useEffect(() => {
     trackPageView(pathname);
   }, [pathname]);
+
+  // Premium reveal: after preloader, animate main content in
+  useGSAP(() => {
+    if (!preloaderDone || !contentRef.current) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const sections = contentRef.current.children;
+
+    if (prefersReduced) {
+      gsap.set(sections, { opacity: 1, y: 0 });
+      return;
+    }
+
+    // Set initial hidden state
+    gsap.set(sections, { opacity: 0, y: 30 });
+
+    // Stagger reveal — premium feel
+    gsap.to(sections, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power3.out",
+      clearProps: "transform",
+    });
+  }, [preloaderDone, pathname]);
 
   const isAdmin = pathname.startsWith("/admin") || pathname.startsWith("/login");
 
@@ -33,10 +62,16 @@ export default function ClientLayout({ children }) {
       </a>
       <Preloader onDone={() => setPreloaderDone(true)} />
       {!isAdmin && <SmoothScroll />}
-      {!isAdmin && <Navbar />}
+      {!isAdmin && preloaderDone && <Navbar />}
       {!isAdmin && preloaderDone && <MagneticCursor />}
-      {isAdmin ? children : <main id="main-content">{children}</main>}
-      {!isAdmin && <Footer />}
+      {isAdmin ? (
+        children
+      ) : (
+        <main ref={contentRef} id="main-content" style={{ opacity: 0 }}>
+          {children}
+        </main>
+      )}
+      {!isAdmin && preloaderDone && <Footer />}
     </>
   );
 }
