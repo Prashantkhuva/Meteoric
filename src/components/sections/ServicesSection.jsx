@@ -288,7 +288,7 @@ export default function ServicesSection() {
           })}
 
           {/* CTA card */}
-          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-[#EAEFFF]/[0.15] bg-[#EAEFFF]/[0.08] p-8 md:p-10 flex flex-col justify-between min-h-[420px]">
+          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px]">
             <div className="relative z-10">
               <span className="text-[10px] tracking-[0.3em] font-bold text-[#EAEFFF]/30 uppercase block mb-10">
                 And then some
