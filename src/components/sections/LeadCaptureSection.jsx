@@ -14,13 +14,27 @@ export default function LeadCaptureSection() {
   const sectionRef = useRef(null);
   const contentRef = useRef(null);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.fromTo(contentRef.current, { y: 24, opacity: 0 }, {
-      y: 0, opacity: 1, ease: "power2.out", duration: 0.4,
-      scrollTrigger: { trigger: sectionRef.current, start: "top 85%", toggleActions: "play none none none" },
-    });
-  }, { scope: sectionRef });
+  useGSAP(
+    () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      gsap.fromTo(
+        contentRef.current,
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          ease: "power2.out",
+          duration: 0.4,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    },
+    { scope: sectionRef },
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +72,10 @@ export default function LeadCaptureSection() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.02),transparent_70%)]" />
 
-      <div ref={contentRef} className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
+      <div
+        ref={contentRef}
+        className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center"
+      >
         <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
           Start a Project
         </p>
@@ -74,7 +91,11 @@ export default function LeadCaptureSection() {
         </p>
 
         {submitted ? (
-          <div role="status" aria-live="polite" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
+          <div
+            role="status"
+            aria-live="polite"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10"
+          >
             <Check size={16} className="text-green-400" />
             <span className="text-white/60 text-sm">
               Thanks! We&apos;ll be in touch within 24 hours.

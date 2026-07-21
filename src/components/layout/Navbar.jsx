@@ -1,4 +1,11 @@
-import { useState, lazy, Suspense, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  lazy,
+  Suspense,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import Link from "next/link";
 import { gsap } from "@/lib/gsap-setup";
 import Logo from "@/components/sections/Logo";
@@ -66,13 +73,32 @@ export default function Navbar() {
       },
     });
 
-    tl.to(ctaRef.current, { y: 20, opacity: 0, duration: 0.2, ease: "power2.in" })
-      .to(Array.from(linksRef.current?.children || []).reverse(), {
-        y: 20, opacity: 0, stagger: 0.03, duration: 0.2, ease: "power2.in",
-      }, "-=0.1")
-      .to(overlay, {
-        clipPath: "circle(0% at calc(100% - 28px) 28px)", duration: 0.4, ease: "power3.inOut",
-      }, "-=0.1");
+    tl.to(ctaRef.current, {
+      y: 20,
+      opacity: 0,
+      duration: 0.2,
+      ease: "power2.in",
+    })
+      .to(
+        Array.from(linksRef.current?.children || []).reverse(),
+        {
+          y: 20,
+          opacity: 0,
+          stagger: 0.03,
+          duration: 0.2,
+          ease: "power2.in",
+        },
+        "-=0.1",
+      )
+      .to(
+        overlay,
+        {
+          clipPath: "circle(0% at calc(100% - 28px) 28px)",
+          duration: 0.4,
+          ease: "power3.inOut",
+        },
+        "-=0.1",
+      );
   };
 
   useEffect(() => {
@@ -82,27 +108,46 @@ export default function Navbar() {
       const overlay = overlayRef.current;
       if (!overlay) return;
 
-      const onKey = (e) => { if (e.key === "Escape") closeMenu(); };
+      const onKey = (e) => {
+        if (e.key === "Escape") closeMenu();
+      };
       overlay.addEventListener("keydown", onKey);
-      const onOverlayClick = (e) => { if (e.target === overlay) closeMenu(); };
+      const onOverlayClick = (e) => {
+        if (e.target === overlay) closeMenu();
+      };
       overlay.addEventListener("click", onOverlayClick);
 
       const tl = gsap.timeline({
-        onComplete: () => { isAnimating.current = false; },
+        onComplete: () => {
+          isAnimating.current = false;
+        },
       });
       isAnimating.current = true;
 
       tl.set(overlay, { display: "flex" })
-        .fromTo(overlay,
+        .fromTo(
+          overlay,
           { clipPath: "circle(0% at calc(100% - 28px) 28px)" },
-          { clipPath: "circle(150% at calc(100% - 28px) 28px)", duration: 0.5, ease: "power3.inOut" },
+          {
+            clipPath: "circle(150% at calc(100% - 28px) 28px)",
+            duration: 0.5,
+            ease: "power3.inOut",
+          },
         )
-        .fromTo(linksRef.current?.children || [],
+        .fromTo(
+          linksRef.current?.children || [],
           { y: 40, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.06, duration: 0.35, ease: "power2.out" },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.06,
+            duration: 0.35,
+            ease: "power2.out",
+          },
           "-=0.2",
         )
-        .fromTo(ctaRef.current,
+        .fromTo(
+          ctaRef.current,
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
           "-=0.15",
@@ -121,11 +166,13 @@ export default function Navbar() {
   return (
     <>
       <header className="fixed md:static top-0 left-0 w-full max-w-full z-50 py-4 md:pt-6 bg-transparent overflow-hidden">
-        <div
-          className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]"
-        >
+        <div className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]">
           {/* Logo */}
-          <Link href="/" data-no-magnetic className="flex shrink-0 items-center cursor-pointer">
+          <Link
+            href="/"
+            data-no-magnetic
+            className="flex shrink-0 items-center cursor-pointer"
+          >
             <Logo />
           </Link>
 
@@ -136,7 +183,8 @@ export default function Navbar() {
             style={{
               background: "#0a0a0a",
               borderRadius: 100,
-              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 1px rgba(255,255,255,0.02)",
+              boxShadow:
+                "inset 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 1px rgba(255,255,255,0.02)",
               gap: 4,
               padding: "6px",
               height: 42,
@@ -156,7 +204,9 @@ export default function Navbar() {
               <StaggerLink
                 key={item.to}
                 href={item.to}
-                ref={(el) => { navItemRefs.current[i] = el; }}
+                ref={(el) => {
+                  navItemRefs.current[i] = el;
+                }}
                 onClick={() => setIsMenuOpen(false)}
                 hoverColor="white"
                 onMouseEnter={() => movePill(i)}
@@ -186,7 +236,10 @@ export default function Navbar() {
               onClick={() => setIsOpen(true)}
               className="hidden md:inline-flex items-center cursor-pointer flip-btn"
             >
-              <StaggerText hoverColor="#1b1b1b" style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}>
+              <StaggerText
+                hoverColor="#1b1b1b"
+                style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}
+              >
                 {"Let's Chat!"}
               </StaggerText>
             </button>
@@ -198,7 +251,7 @@ export default function Navbar() {
                 isMenuOpen ? "Close navigation menu" : "Open navigation menu"
               }
               aria-expanded={isMenuOpen}
-              onClick={() => isMenuOpen ? closeMenu() : setIsMenuOpen(true)}
+              onClick={() => (isMenuOpen ? closeMenu() : setIsMenuOpen(true))}
               className="md:hidden inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px]"
               style={{ background: "rgba(255,255,255,0)", borderRadius: 8 }}
             >
@@ -206,14 +259,18 @@ export default function Navbar() {
                 className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
                 style={{
                   backgroundColor: "rgb(255,255,255)",
-                  transform: isMenuOpen ? "translateY(3.25px) rotate(45deg)" : "none",
+                  transform: isMenuOpen
+                    ? "translateY(3.25px) rotate(45deg)"
+                    : "none",
                 }}
               />
               <span
                 className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
                 style={{
                   backgroundColor: "rgb(255,255,255)",
-                  transform: isMenuOpen ? "translateY(-3.25px) rotate(-45deg)" : "none",
+                  transform: isMenuOpen
+                    ? "translateY(-3.25px) rotate(-45deg)"
+                    : "none",
                 }}
               />
             </button>
@@ -228,7 +285,8 @@ export default function Navbar() {
         className="md:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center"
         style={{
           display: "none",
-          background: "linear-gradient(180deg, rgba(10,10,10,0.99) 0%, rgba(7,7,7,1) 100%)",
+          background:
+            "linear-gradient(180deg, rgba(10,10,10,0.99) 0%, rgba(7,7,7,1) 100%)",
           backdropFilter: "blur(40px) saturate(1.2)",
         }}
       >
@@ -239,8 +297,19 @@ export default function Navbar() {
           className="absolute top-5 right-6 w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/50 hover:text-white hover:border-white/25 transition-all duration-200"
           aria-label="Close menu"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 1L13 13M13 1L1 13"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
           </svg>
         </button>
 
@@ -267,9 +336,14 @@ export default function Navbar() {
         <div ref={ctaRef}>
           <button
             data-no-magnetic
-            onClick={() => { closeMenu(); setIsOpen(true); }}
+            onClick={() => {
+              closeMenu();
+              setIsOpen(true);
+            }}
             className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide text-black hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
-            style={{ background: "linear-gradient(180deg, #fff 0%, #cecece 100%)" }}
+            style={{
+              background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
+            }}
           >
             Let&apos;s Chat!
           </button>

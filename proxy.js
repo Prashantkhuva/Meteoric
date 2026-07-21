@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 
-const NONCE_SECRET = process.env.CSP_NONCE_SECRET || "meteori-csp-nonce-fallback";
+const NONCE_SECRET =
+  process.env.CSP_NONCE_SECRET || "meteori-csp-nonce-fallback";
 
 function buildCsp(nonce, isDev) {
   const directives = [
@@ -53,10 +54,12 @@ export async function proxy(request) {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
         supabaseResponse = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
+          supabaseResponse.cookies.set(name, value, options),
         );
       },
     },
@@ -80,7 +83,10 @@ export async function proxy(request) {
     return NextResponse.redirect(adminUrl);
   }
 
-  supabaseResponse.headers.set("Content-Security-Policy", buildCsp(nonce, isDev));
+  supabaseResponse.headers.set(
+    "Content-Security-Policy",
+    buildCsp(nonce, isDev),
+  );
   supabaseResponse.headers.set("x-nonce", nonce);
 
   return supabaseResponse;

@@ -23,29 +23,49 @@ function Hero() {
   useEffect(() => {
     import("@calcom/embed-react").then(({ getCalApi }) =>
       getCalApi({ namespace: "let-s-build" }).then((cal) =>
-        cal("ui", { theme: "dark", layout: "month_view" })
-      )
+        cal("ui", { theme: "dark", layout: "month_view" }),
+      ),
     );
   }, []);
 
-  useGSAP(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.querySelectorAll(".split-line").forEach(el => { el.style.transform = "none"; });
-      if (subtextRef.current) { subtextRef.current.style.transform = "none"; }
-      if (ctaRef.current) { ctaRef.current.style.transform = "none"; }
-      return;
-    }
-    const mainSplit = new SplitText(mainTextRef.current, { type: "lines", linesClass: "split-line" });
-    const mutedSplit = new SplitText(mutedTextRef.current, { type: "lines", linesClass: "split-line" });
-    const allLines = [...mainSplit.lines, ...mutedSplit.lines];
+  useGSAP(
+    () => {
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        document.querySelectorAll(".split-line").forEach((el) => {
+          el.style.transform = "none";
+        });
+        if (subtextRef.current) {
+          subtextRef.current.style.transform = "none";
+        }
+        if (ctaRef.current) {
+          ctaRef.current.style.transform = "none";
+        }
+        return;
+      }
+      const mainSplit = new SplitText(mainTextRef.current, {
+        type: "lines",
+        linesClass: "split-line",
+      });
+      const mutedSplit = new SplitText(mutedTextRef.current, {
+        type: "lines",
+        linesClass: "split-line",
+      });
+      const allLines = [...mainSplit.lines, ...mutedSplit.lines];
 
-    gsap.set(allLines, { opacity: 1 });
-    gsap.set([subtextRef.current, ctaRef.current], { opacity: 1 });
-    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.45 } });
-    tl.fromTo(allLines, { y: 40 }, { y: 0, stagger: 0.08 })
-      .from(subtextRef.current, { y: 30 }, "-=0.25")
-      .from(ctaRef.current, { y: 30 }, "-=0.2");
-  }, { scope: containerRef });
+      gsap.set(allLines, { opacity: 1 });
+      gsap.set([subtextRef.current, ctaRef.current], { opacity: 1 });
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out", duration: 0.45 },
+      });
+      tl.fromTo(allLines, { y: 40 }, { y: 0, stagger: 0.08 })
+        .from(subtextRef.current, { y: 30 }, "-=0.25")
+        .from(ctaRef.current, { y: 30 }, "-=0.2");
+    },
+    { scope: containerRef },
+  );
 
   return (
     <section
@@ -57,22 +77,41 @@ function Hero() {
       </div>
 
       <div className="sr-only">
-        Meteoric has shipped 12+ production projects since 2024 with 100% client satisfaction. Average project delivery takes 7-14 days. Services include SaaS development, landing pages, web applications, and full-stack development for startups and founders worldwide.
+        Meteoric has shipped 12+ production projects since 2024 with 100% client
+        satisfaction. Average project delivery takes 7-14 days. Services include
+        SaaS development, landing pages, web applications, and full-stack
+        development for startups and founders worldwide.
       </div>
 
-      <div ref={containerRef} className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 px-5 sm:px-6 md:px-0 md:-translate-y-12">
+      <div
+        ref={containerRef}
+        className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 px-5 sm:px-6 md:px-0 md:-translate-y-12"
+      >
         <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
-          <span ref={mainTextRef} className="block">We design and ship high-performance software</span>
-          <span ref={mutedTextRef} className="block text-white/55 mt-2 font-secondary-italic">— websites and apps, fast.</span>
+          <span ref={mainTextRef} className="block">
+            We design and ship high-performance software
+          </span>
+          <span
+            ref={mutedTextRef}
+            className="block text-white/55 mt-2 font-secondary-italic"
+          >
+            — websites and apps, fast.
+          </span>
         </h1>
 
-        <p ref={subtextRef} className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed">
+        <p
+          ref={subtextRef}
+          className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed"
+        >
           Meteoric is a software development agency that partners with founders
-          to design, develop, and launch modern websites and SaaS products
-          that actually convert — not just look good.
+          to design, develop, and launch modern websites and SaaS products that
+          actually convert — not just look good.
         </p>
 
-        <div ref={ctaRef} className="relative flex flex-col sm:flex-row items-center gap-4 mt-4">
+        <div
+          ref={ctaRef}
+          className="relative flex flex-col sm:flex-row items-center gap-4 mt-4"
+        >
           <button
             type="button"
             onClick={openCal}

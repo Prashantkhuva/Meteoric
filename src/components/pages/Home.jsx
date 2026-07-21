@@ -1,15 +1,9 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 
-const ManifestoSection = dynamic(
-  () => import("../sections/ManifestoSection"),
-);
-const ServicesSection = dynamic(
-  () => import("../sections/ServicesSection"),
-);
-const Projects = dynamic(
-  () => import("@/components/sections/Projects"),
-);
+const ManifestoSection = dynamic(() => import("../sections/ManifestoSection"));
+const ServicesSection = dynamic(() => import("../sections/ServicesSection"));
+const Projects = dynamic(() => import("@/components/sections/Projects"));
 const ProcessSection = dynamic(
   () => import("@/components/sections/ProcessSection"),
 );

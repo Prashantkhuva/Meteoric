@@ -21,7 +21,10 @@ export default function Preloader({ onDone }) {
     ).matches;
 
     if (prefersReduced) {
-      const id = setTimeout(() => { setDone(true); onDone?.(); }, 0);
+      const id = setTimeout(() => {
+        setDone(true);
+        onDone?.();
+      }, 0);
       return () => clearTimeout(id);
     }
 

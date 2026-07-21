@@ -4,7 +4,8 @@ import { SITE_URL } from "@/lib/seo/config";
 import { buildHowToJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { homeFaqs } from "@/data/faqs";
 
-const pageTitle = "Meteoric — Web & Software Development Agency for Startups & SaaS";
+const pageTitle =
+  "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const pageDesc =
   "Meteoric is a software development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
 
@@ -58,18 +59,45 @@ const speakableJsonLd = {
 };
 
 const howToSchema = buildHowToJsonLd([
-  { name: "Discovery", text: "We align on the product vision, audience, requirements, and goals before development begins." },
-  { name: "Design Direction", text: "Interfaces and user flows designed around clarity, usability, and modern interaction patterns." },
-  { name: "Development", text: "Frontend and backend systems engineered for performance, scalability, and maintainability." },
-  { name: "Launch", text: "Deployment, optimization, and final polishing before the product goes live." },
+  {
+    name: "Discovery",
+    text: "We align on the product vision, audience, requirements, and goals before development begins.",
+  },
+  {
+    name: "Design Direction",
+    text: "Interfaces and user flows designed around clarity, usability, and modern interaction patterns.",
+  },
+  {
+    name: "Development",
+    text: "Frontend and backend systems engineered for performance, scalability, and maintainability.",
+  },
+  {
+    name: "Launch",
+    text: "Deployment, optimization, and final polishing before the product goes live.",
+  },
 ]);
 
 const faqSchema = buildFaqJsonLd(homeFaqs);
 
 const fallbackTestimonials = [
-  { rating: 5, author: "Rohan Mehta", quote: "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference." },
-  { rating: 5, author: "Sarah Mitchell", quote: "Working with Meteoric felt more like a partnership than a vendor relationship. They understood our B2B SaaS vision from day one and brought UX ideas we hadn't even considered." },
-  { rating: 5, author: "James Park", quote: "We needed a complete brand website redesign and got way more than we expected. The attention to detail in both design and performance is rare to find." },
+  {
+    rating: 5,
+    author: "Rohan Mehta",
+    quote:
+      "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference.",
+  },
+  {
+    rating: 5,
+    author: "Sarah Mitchell",
+    quote:
+      "Working with Meteoric felt more like a partnership than a vendor relationship. They understood our B2B SaaS vision from day one and brought UX ideas we hadn't even considered.",
+  },
+  {
+    rating: 5,
+    author: "James Park",
+    quote:
+      "We needed a complete brand website redesign and got way more than we expected. The attention to detail in both design and performance is rare to find.",
+  },
 ];
 
 const reviewSchema = {

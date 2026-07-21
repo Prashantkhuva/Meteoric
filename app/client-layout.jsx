@@ -32,7 +32,9 @@ export default function ClientLayout({ children }) {
       return;
     }
 
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     if (prefersReduced) {
       gsap.set(contentRef.current, { opacity: 1 });
@@ -48,7 +50,8 @@ export default function ClientLayout({ children }) {
     });
   }, [preloaderDone, pathname]);
 
-  const isAdmin = pathname.startsWith("/admin") || pathname.startsWith("/login");
+  const isAdmin =
+    pathname.startsWith("/admin") || pathname.startsWith("/login");
 
   return (
     <>

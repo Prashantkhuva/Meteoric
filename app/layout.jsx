@@ -18,7 +18,8 @@ const playfairDisplay = Playfair_Display({
   variable: "--font-playfair",
 });
 
-const metaTitle = "Meteoric — Web & Software Development Agency for Startups & SaaS";
+const metaTitle =
+  "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const metaDesc =
   "Meteoric is a software development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
 const metaDescOg =
@@ -64,7 +65,7 @@ export const metadata = {
   },
   other: {
     "theme-color": "#070707",
-    "referrer": "origin-when-cross-origin",
+    referrer: "origin-when-cross-origin",
   },
 };
 
@@ -74,8 +75,19 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : ""} />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href={
+            process.env.NEXT_PUBLIC_SUPABASE_URL
+              ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
+              : ""
+          }
+        />
         <link rel="dns-prefetch" href="https://cal.com" />
         <script
           type="application/ld+json"
@@ -151,10 +163,26 @@ export default function RootLayout({ children }) {
                   description: "Primary site navigation links",
                   url: SITE_URL,
                   hasPart: [
-                    { "@type": "SiteNavigationElement", name: "Work", url: `${SITE_URL}/work` },
-                    { "@type": "SiteNavigationElement", name: "Services", url: `${SITE_URL}/services` },
-                    { "@type": "SiteNavigationElement", name: "About", url: `${SITE_URL}/about` },
-                    { "@type": "SiteNavigationElement", name: "Case Studies", url: `${SITE_URL}/case-studies` },
+                    {
+                      "@type": "SiteNavigationElement",
+                      name: "Work",
+                      url: `${SITE_URL}/work`,
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      name: "Services",
+                      url: `${SITE_URL}/services`,
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      name: "About",
+                      url: `${SITE_URL}/about`,
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      name: "Case Studies",
+                      url: `${SITE_URL}/case-studies`,
+                    },
                   ],
                 },
               ],
@@ -163,7 +191,12 @@ export default function RootLayout({ children }) {
         />
         <link rel="alternate" hrefLang="en" href={SITE_URL} />
         <link rel="alternate" hrefLang="x-default" href={SITE_URL} />
-        <link rel="alternate" href="/llms.txt" type="text/plain" title="LLM-friendly site index" />
+        <link
+          rel="alternate"
+          href="/llms.txt"
+          type="text/plain"
+          title="LLM-friendly site index"
+        />
       </head>
       <body className="font-primary" suppressHydrationWarning>
         <ErrorBoundary>

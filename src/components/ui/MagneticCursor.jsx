@@ -55,7 +55,11 @@ export default function MagneticCursor() {
 
     const onEnterInteractive = (e) => {
       const el = e.currentTarget;
-      if (el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic")) return;
+      if (
+        el.closest("[data-no-magnetic]") ||
+        el.hasAttribute("data-no-magnetic")
+      )
+        return;
 
       const bounds = el.getBoundingClientRect();
       const cx = bounds.left + bounds.width / 2;
@@ -113,7 +117,11 @@ export default function MagneticCursor() {
     const bind = () => {
       document.querySelectorAll(selectors).forEach((el) => {
         if (boundEls.has(el)) return;
-        if (el.closest("[data-no-magnetic]") || el.hasAttribute("data-no-magnetic")) return;
+        if (
+          el.closest("[data-no-magnetic]") ||
+          el.hasAttribute("data-no-magnetic")
+        )
+          return;
         el.addEventListener("mouseenter", onEnterInteractive);
         boundEls.add(el);
       });
@@ -175,9 +183,15 @@ export default function MagneticCursor() {
           width={ARROW_SIZE}
           height={ARROW_SIZE}
           viewBox="0 0 256 256"
-          style={{ display: "block", filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))" }}
+          style={{
+            display: "block",
+            filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
+          }}
         >
-          <path d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z" fill="#fff" />
+          <path
+            d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"
+            fill="#fff"
+          />
         </svg>
       </motion.div>
 

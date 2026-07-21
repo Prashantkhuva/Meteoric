@@ -11,5 +11,3 @@ export const sitemapRoutes = [
   { path: "/privacy", priority: "0.3", changefreq: "yearly" },
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
 ];
-
-
