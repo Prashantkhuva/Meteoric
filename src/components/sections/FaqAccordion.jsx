@@ -44,7 +44,7 @@ export default function FaqAccordion({ items }) {
               className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
             >
               <div className="overflow-hidden">
-                <p className="text-white/40 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl">
+                <p className="text-white/50 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl">
                   {faq.a}
                 </p>
               </div>

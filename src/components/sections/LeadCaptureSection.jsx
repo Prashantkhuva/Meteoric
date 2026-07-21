@@ -68,7 +68,7 @@ export default function LeadCaptureSection() {
             SaaS platforms, landing pages, full-stack apps.
           </span>
         </h2>
-        <p className="text-white/40 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
+        <p className="text-white/50 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
           Drop your email and we&apos;ll send you a scope, timeline, and price
           within 24 hours — no commitment required.
         </p>
