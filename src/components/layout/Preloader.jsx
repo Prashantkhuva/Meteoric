@@ -78,28 +78,25 @@ export default function Preloader({ onDone }) {
       "-=0.2",
     );
 
-    // 4) counter wraps in, then counts
+    // 4) counter wraps in, then counts (sped up)
     tl.fromTo(
       counterWrapRef.current,
       { opacity: 0 },
-      { opacity: 1, duration: 0.3, ease: "power2.out" },
+      { opacity: 1, duration: 0.2, ease: "power2.out" },
       "-=0.1",
     );
 
     tl.to(counter, {
       textContent: 100,
-      duration: 1,
+      duration: 0.5,
       snap: { textContent: 1 },
       ease: "power1.inOut",
     });
 
-    // 5) pause
-    tl.to({}, { duration: 0.2 });
-
-    // 6) everything fades out
+    // 5) everything fades out
     tl.to([overlay], {
       opacity: 0,
-      duration: 0.5,
+      duration: 0.3,
       ease: "power2.inOut",
     });
 

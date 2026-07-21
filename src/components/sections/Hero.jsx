@@ -6,8 +6,6 @@ import { gsap, SplitText } from "@/lib/gsap-setup";
 import MeteorBackground from "./MeteorBackground";
 import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
-import { getCalApi } from "@calcom/embed-react";
-
 function Hero() {
   const containerRef = useRef(null);
   const mainTextRef = useRef(null);
@@ -17,31 +15,36 @@ function Hero() {
   const [ctaHovered, setCtaHovered] = useState(false);
 
   const openCal = useCallback(async () => {
+    const { getCalApi } = await import("@calcom/embed-react");
     const cal = await getCalApi({ namespace: "let-s-build" });
     cal("modal", { calLink: "prashantkhuva/let-s-build" });
   }, []);
 
   useEffect(() => {
-    getCalApi({ namespace: "let-s-build" }).then((cal) =>
-      cal("ui", { theme: "dark", layout: "month_view" })
+    import("@calcom/embed-react").then(({ getCalApi }) =>
+      getCalApi({ namespace: "let-s-build" }).then((cal) =>
+        cal("ui", { theme: "dark", layout: "month_view" })
+      )
     );
   }, []);
 
   useGSAP(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.querySelectorAll(".split-line").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
-      if (subtextRef.current) { subtextRef.current.style.opacity = "1"; subtextRef.current.style.transform = "none"; }
-      if (ctaRef.current) { ctaRef.current.style.opacity = "1"; ctaRef.current.style.transform = "none"; }
+      document.querySelectorAll(".split-line").forEach(el => { el.style.transform = "none"; });
+      if (subtextRef.current) { subtextRef.current.style.transform = "none"; }
+      if (ctaRef.current) { ctaRef.current.style.transform = "none"; }
       return;
     }
     const mainSplit = new SplitText(mainTextRef.current, { type: "lines", linesClass: "split-line" });
     const mutedSplit = new SplitText(mutedTextRef.current, { type: "lines", linesClass: "split-line" });
     const allLines = [...mainSplit.lines, ...mutedSplit.lines];
 
+    gsap.set(allLines, { opacity: 1 });
+    gsap.set([subtextRef.current, ctaRef.current], { opacity: 1 });
     const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.45 } });
-    tl.fromTo(allLines, { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08 })
-      .from(subtextRef.current, { y: 30, opacity: 0 }, "-=0.25")
-      .from(ctaRef.current, { y: 30, opacity: 0 }, "-=0.2");
+    tl.fromTo(allLines, { y: 40 }, { y: 0, stagger: 0.08 })
+      .from(subtextRef.current, { y: 30 }, "-=0.25")
+      .from(ctaRef.current, { y: 30 }, "-=0.2");
   }, { scope: containerRef });
 
   return (

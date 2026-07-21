@@ -199,7 +199,7 @@ export default function Navbar() {
               }
               aria-expanded={isMenuOpen}
               onClick={() => isMenuOpen ? closeMenu() : setIsMenuOpen(true)}
-              className="md:hidden inline-flex h-6 w-6 flex-col items-center justify-center gap-[5px]"
+              className="md:hidden inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px]"
               style={{ background: "rgba(255,255,255,0)", borderRadius: 8 }}
             >
               <span

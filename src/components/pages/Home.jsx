@@ -1,19 +1,23 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
-import Projects from "@/components/sections/Projects";
-import ServicesSection from "../sections/ServicesSection";
-import ManifestoSection from "../sections/ManifestoSection";
 
+const ManifestoSection = dynamic(
+  () => import("../sections/ManifestoSection"),
+);
+const ServicesSection = dynamic(
+  () => import("../sections/ServicesSection"),
+);
+const Projects = dynamic(
+  () => import("@/components/sections/Projects"),
+);
+const ProcessSection = dynamic(
+  () => import("@/components/sections/ProcessSection"),
+);
 const TestimonialsSection = dynamic(
   () => import("@/components/sections/TestimonialsSection"),
 );
-
 const LeadCaptureSection = dynamic(
   () => import("@/components/sections/LeadCaptureSection"),
-);
-
-const ProcessSection = dynamic(
-  () => import("@/components/sections/ProcessSection"),
 );
 
 export default function Home() {

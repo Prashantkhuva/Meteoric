@@ -28,9 +28,7 @@ export default function ClientLayout({ children }) {
   useGSAP(() => {
     if (!contentRef.current) return;
 
-    // Hide content until preloader finishes
     if (!preloaderDone) {
-      gsap.set(contentRef.current, { opacity: 0 });
       return;
     }
 

@@ -24,6 +24,7 @@ export default function FaqAccordion({ items }) {
             <button
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
+              aria-label={isOpen ? `Collapse: ${faq.q}` : `Expand: ${faq.q}`}
               className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
             >
               <span className="text-white/80 text-sm pr-4 leading-relaxed">

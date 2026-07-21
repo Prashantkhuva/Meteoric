@@ -88,6 +88,7 @@ export default function LeadCaptureSection() {
             <input
               type="email"
               required
+              aria-label="Email address"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
