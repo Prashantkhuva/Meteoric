@@ -8,7 +8,7 @@ function buildCsp(nonce, isDev) {
   const directives = [
     "default-src 'self'",
     `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://www.googletagmanager.com https://va.vercel-scripts.com https://cal.com https://app.cal.com https://embed.cal.com https://checkout.razorpay.com https://cdn.razorpay.com`,
-    `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
+    `style-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://fonts.googleapis.com`,
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob: https: https://vercel.com https://asset.cloudinary.com",
     "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://vitals.vercel-insights.com https://cal.com https://app.cal.com https://api.razorpay.com https://lumberjack.razorpay.com",
