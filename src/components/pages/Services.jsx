@@ -1,7 +1,7 @@
 "use client";
 
+import { useCallback } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { serviceFaqs } from "@/data/faqs";
 
@@ -119,6 +119,12 @@ const fadeUp = {
 };
 
 export default function ServicesPage() {
+  const openCal = useCallback(async () => {
+    const { getCalApi } = await import("@calcom/embed-react");
+    const cal = await getCalApi({ namespace: "let-s-build" });
+    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero */}
@@ -360,12 +366,12 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             custom={3}
           >
-            <Link
-              href="/#contact"
+            <button
+              onClick={openCal}
               className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
             >
               Get a Free Estimate
-            </Link>
+            </button>
           </motion.div>
         </div>
       </section>

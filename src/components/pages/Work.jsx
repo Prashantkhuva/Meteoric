@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
@@ -55,15 +56,15 @@ function WorkCard({ project, index }) {
             ))}
           </div>
         )}
-        <a href={project.link} target="_blank" rel="noopener noreferrer"
+        <Link href={`/work/${project.slug}`}
           className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5 w-fit"
           style={{ border: `1.5px solid ${project.accent}`, color: project.accent }}>
           <span className="fill-circle" style={{ backgroundColor: project.accent }} />
           <span className="relative z-10 flex items-center gap-2 group-hover/btn:text-black transition-colors duration-300">
-            <StaggerText hoverColor="#000">View Live Project</StaggerText>
+            <StaggerText hoverColor="#000">View Case Study</StaggerText>
             <ArrowUpRight size={15} />
           </span>
-        </a>
+        </Link>
       </div>
     </div>
   );

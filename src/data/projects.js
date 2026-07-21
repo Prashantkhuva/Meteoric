@@ -1,6 +1,7 @@
 export const projects = [
   {
     id: 1,
+    slug: "lete-em-know",
     name: "Let'em Know",
     tagline: "Premium agency site with GSAP animations & smooth scroll.",
     description:
@@ -20,6 +21,7 @@ export const projects = [
   },
   {
     id: 2,
+    slug: "habit-flow",
     name: "Habit Flow",
     tagline: "Build habits. Track streaks. Stay consistent.",
     description:
@@ -39,6 +41,7 @@ export const projects = [
   },
   {
     id: 3,
+    slug: "megablog",
     name: "MegaBlog",
     tagline: "A dark editorial blogging platform.",
     description:
@@ -58,6 +61,7 @@ export const projects = [
   },
   {
     id: 4,
+    slug: "mobile-preview-simulator",
     name: "Mobile Preview Simulator",
     tagline: "Preview responsive mobile screens directly inside VS Code.",
     description:

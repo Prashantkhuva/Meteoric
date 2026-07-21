@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
@@ -50,6 +50,12 @@ export default function ServicesSection() {
   const mobileStackRef = useRef(null);
   const headingRef = useRef(null);
   const [ctaHovered, setCtaHovered] = useState(false);
+
+  const openCal = useCallback(async () => {
+    const { getCalApi } = await import("@calcom/embed-react");
+    const cal = await getCalApi({ namespace: "let-s-build" });
+    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
 
   useGSAP(
     () => {
@@ -314,8 +320,8 @@ export default function ServicesSection() {
             </div>
 
             <div className="relative z-10">
-              <Link
-                href="/#contact"
+              <button
+                onClick={openCal}
                 className="inline-flex items-center justify-center flip-btn"
                 onMouseEnter={() => setCtaHovered(true)}
                 onMouseLeave={() => setCtaHovered(false)}
@@ -327,7 +333,7 @@ export default function ServicesSection() {
                 >
                   {"Start a conversation"}
                 </StaggerText>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -426,8 +432,8 @@ export default function ServicesSection() {
               </p>
 
               <div className="mt-auto">
-                <Link
-                  href="/#contact"
+                <button
+                  onClick={openCal}
                   className="inline-flex items-center justify-center flip-btn"
                 >
                   <StaggerText
@@ -436,7 +442,7 @@ export default function ServicesSection() {
                   >
                     {"Start a conversation"}
                   </StaggerText>
-                </Link>
+                </button>
               </div>
             </div>
           </div>

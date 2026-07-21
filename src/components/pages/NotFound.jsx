@@ -5,7 +5,7 @@ const suggestions = [
   { label: "Home", href: "/" },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/services" },
 ];
 
 export default function NotFound() {

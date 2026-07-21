@@ -86,8 +86,9 @@ export default function LeadCaptureSection() {
           </span>
         </h2>
         <p className="text-white/50 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
-          Drop your email and we&apos;ll send you a scope, timeline, and price
-          within 24 hours — no commitment required.
+          Drop your email and we&apos;ll send you a{" "}
+          <span className="text-white/70">scope, timeline, and price estimate</span>{" "}
+          within 24 hours — free, no commitment required.
         </p>
 
         {submitted ? (
