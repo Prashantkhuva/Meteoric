@@ -30,7 +30,7 @@ export default function LeadCaptureSection() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: "top 85%",
-              toggleActions: "play none none none",
+              toggleActions: "play none reverse none",
             },
           },
         );
@@ -47,7 +47,7 @@ export default function LeadCaptureSection() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 85%",
-            toggleActions: "play none none none",
+            toggleActions: "play none reverse none",
           },
         },
       );

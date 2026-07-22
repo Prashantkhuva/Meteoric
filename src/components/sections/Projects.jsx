@@ -135,7 +135,7 @@ function Projects() {
         scrollTrigger: {
           trigger: headingRef.current,
           start: "top bottom",
-          toggleActions: "play none none none",
+          toggleActions: "play none reverse none",
         },
       },
     );
@@ -151,7 +151,7 @@ function Projects() {
         scrollTrigger: {
           trigger: sectionRef.current?.querySelector(".gsap-proj-card"),
           start: "top 88%",
-          toggleActions: "play none none none",
+          toggleActions: "play none reverse none",
         },
       },
     );
@@ -170,7 +170,7 @@ function Projects() {
           scrollTrigger: {
             trigger: img,
             start: "top 85%",
-            toggleActions: "play none none none",
+            toggleActions: "play none reverse none",
           },
         },
       );

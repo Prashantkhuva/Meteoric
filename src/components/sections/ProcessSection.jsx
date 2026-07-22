@@ -68,7 +68,7 @@ export default function ProcessSection() {
         scrollTrigger: {
           trigger: headingRef.current,
           start: "top bottom",
-          toggleActions: "play none none none",
+          toggleActions: "play none reverse none",
         },
       },
     );
@@ -91,7 +91,7 @@ export default function ProcessSection() {
           scrollTrigger: {
             trigger: step,
             start: "top 82%",
-            toggleActions: "play none none none",
+            toggleActions: "play none reverse none",
           },
         });
 

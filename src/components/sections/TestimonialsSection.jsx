@@ -122,7 +122,7 @@ export default function TestimonialsSection() {
         {
           y: 0, opacity: 1, rotateX: 0,
           stagger: 0.12, ease: "power3.out", duration: 0.6,
-          scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none none none" },
+          scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none reverse none" },
         },
       );
     }
@@ -130,7 +130,7 @@ export default function TestimonialsSection() {
     const fadeUp = (target, trigger, opts = {}) =>
       gsap.fromTo(target, { y: 20, opacity: 0 }, {
         y: 0, opacity: 1, ease: "power2.out", duration: 0.35,
-        scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none none none", ...opts },
+        scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none reverse none", ...opts },
       });
 
     fadeUp(faqHeaderRef.current, faqHeaderRef.current);

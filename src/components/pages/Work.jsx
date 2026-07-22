@@ -111,7 +111,7 @@ export default function WorkPage() {
         scrollTrigger: {
           trigger: cardsRef.current?.querySelector(".gsap-work-card"),
           start: "top 90%",
-          toggleActions: "play none none none",
+          toggleActions: "play none reverse none",
         },
       },
     );
@@ -129,7 +129,7 @@ export default function WorkPage() {
           scrollTrigger: {
             trigger: img,
             start: "top 85%",
-            toggleActions: "play none none none",
+            toggleActions: "play none reverse none",
           },
         },
       );

@@ -24,7 +24,7 @@ export default function ScrollReveal({
       duration,
       delay,
       ease: "power2.out",
-      scrollTrigger: { trigger: ref.current, start: "top 90%", toggleActions: "play none none none" },
+      scrollTrigger: { trigger: ref.current, start: "top 90%", toggleActions: "play none reverse none" },
     });
   }, { scope: ref });
 

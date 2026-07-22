@@ -80,7 +80,7 @@ export default function ServicesSection() {
           scrollTrigger: {
             trigger: headingRef.current,
             start: "top bottom",
-            toggleActions: "play none none none",
+            toggleActions: "play none reverse none",
           },
         },
       );
