@@ -87,13 +87,13 @@ export default function ServicesSection() {
 
       // Mobile: stacked cards scroll animation
       const mm = gsap.matchMedia();
-      mm.add("(min-width: 768px)", () => {
+      mm.add("(min-width: 1024px)", () => {
         const cardsWrap = cardsWrapRef.current;
         const container = scrollContainerRef.current;
         if (!cardsWrap || !container) return;
 
         const getScrollDistance = () =>
-          cardsWrap.scrollWidth - container.offsetWidth;
+          Math.max(0, cardsWrap.scrollWidth - container.offsetWidth);
 
         const scrollTween = gsap.to(cardsWrap, {
           x: () => -getScrollDistance(),
