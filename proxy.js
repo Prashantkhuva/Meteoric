@@ -17,6 +17,7 @@ function buildCsp(isDev) {
   ];
 
   if (isDev) {
+    directives[1] = directives[1].replace("'unsafe-inline'", "'unsafe-inline' 'unsafe-eval'");
     directives[1] += " http://localhost:* ws://localhost:*";
     directives[2] += " http://localhost:*";
   }

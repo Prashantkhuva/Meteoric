@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap-setup";
+import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Star, BadgeCheck, Sparkles } from "lucide-react";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { getApprovedReviews } from "@/lib/actions";
 import ReviewFormModal from "./ReviewFormModal";
 import FaqAccordion from "./FaqAccordion";
@@ -113,13 +114,25 @@ export default function TestimonialsSection() {
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const headerHeading = headerRef.current?.querySelector("h2");
+    if (headerHeading) {
+      const split = new SplitText(headerHeading, { type: "lines", linesClass: "split-line" });
+      gsap.fromTo(split.lines,
+        { y: 50, opacity: 0, rotateX: 15 },
+        {
+          y: 0, opacity: 1, rotateX: 0,
+          stagger: 0.12, ease: "power3.out", duration: 0.6,
+          scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none none none" },
+        },
+      );
+    }
+
     const fadeUp = (target, trigger, opts = {}) =>
       gsap.fromTo(target, { y: 20, opacity: 0 }, {
         y: 0, opacity: 1, ease: "power2.out", duration: 0.35,
         scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none none none", ...opts },
       });
 
-    fadeUp(headerRef.current, headerRef.current);
     fadeUp(faqHeaderRef.current, faqHeaderRef.current);
     fadeUp(faqListRef.current, faqListRef.current);
   }, { scope: sectionRef });
@@ -150,51 +163,57 @@ export default function TestimonialsSection() {
           </div>
 
           {/* ── Marquee Row 1 — scrolls left ── */}
-          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-4">
-            <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
-              <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
-                {[...Array(4)].map((_, setIndex) =>
-                  displayReviews.map((t, i) => (
-                    <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
-                  ))
-                )}
+          <ScrollReveal direction="left">
+            <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-4">
+              <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
+                <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
+                  {[...Array(4)].map((_, setIndex) =>
+                    displayReviews.map((t, i) => (
+                      <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
+                    ))
+                  )}
+                </div>
               </div>
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
             </div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
-          </div>
+          </ScrollReveal>
 
           {/* ── Marquee Row 2 — scrolls right ── */}
-          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12">
-            <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
-              <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
-                {[...Array(4)].map((_, setIndex) =>
-                  displayReviews.map((t, i) => (
-                    <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
-                  ))
-                )}
+          <ScrollReveal direction="right">
+            <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12">
+              <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
+                <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
+                  {[...Array(4)].map((_, setIndex) =>
+                    displayReviews.map((t, i) => (
+                      <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
+                    ))
+                  )}
+                </div>
               </div>
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
             </div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
-          </div>
+          </ScrollReveal>
 
           {/* ── Review CTA ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div
-              className="inline-flex items-center gap-3"
-            >
-              <span className="text-white/40 text-xs uppercase tracking-wider">
-                Worked with us?
-              </span>
-              <button
-                onClick={() => setShowForm(true)}
-                className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.08] text-white/40 text-xs hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all duration-200"
+            <ScrollReveal direction="up">
+              <div
+                className="inline-flex items-center gap-3"
               >
-                <Sparkles size={11} className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors" />
-                Leave a review
-              </button>
-            </div>
+                <span className="text-white/40 text-xs uppercase tracking-wider">
+                  Worked with us?
+                </span>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.08] text-white/40 text-xs hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all duration-200"
+                >
+                  <Sparkles size={11} className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors" />
+                  Leave a review
+                </button>
+              </div>
+            </ScrollReveal>
           </div>
 
           {/* ── FAQ ── */}

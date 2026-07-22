@@ -2,9 +2,10 @@
 
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap-setup";
+import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Check, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");
@@ -13,10 +14,29 @@ export default function LeadCaptureSection() {
   const [error, setError] = useState(false);
   const sectionRef = useRef(null);
   const contentRef = useRef(null);
+  const headingRef = useRef(null);
 
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const heading = headingRef.current;
+      if (heading) {
+        const split = new SplitText(heading, { type: "lines", linesClass: "split-line" });
+        gsap.fromTo(split.lines,
+          { y: 40, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            stagger: 0.1, ease: "power3.out", duration: 0.5,
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          },
+        );
+      }
+
       gsap.fromTo(
         contentRef.current,
         { y: 24, opacity: 0 },
@@ -76,20 +96,24 @@ export default function LeadCaptureSection() {
         ref={contentRef}
         className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center"
       >
-        <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
-          Start a Project
-        </p>
-        <h2 className="text-3xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white mb-4">
+        <ScrollReveal direction="down">
+          <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+            Start a Project
+          </p>
+        </ScrollReveal>
+        <h2 ref={headingRef} className="text-3xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white mb-4">
           Let&apos;s ship your next product
           <span className="block text-white/25 mt-1 font-secondary-italic font-normal">
             SaaS platforms, landing pages, full-stack apps.
           </span>
         </h2>
-        <p className="text-white/50 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
-          Drop your email and we&apos;ll send you a{" "}
-          <span className="text-white/70">scope, timeline, and price estimate</span>{" "}
-          within 24 hours — free, no commitment required.
-        </p>
+        <ScrollReveal direction="up" delay={0.15}>
+          <p className="text-white/50 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
+            Drop your email and we&apos;ll send you a{" "}
+            <span className="text-white/70">scope, timeline, and price estimate</span>{" "}
+            within 24 hours — free, no commitment required.
+          </p>
+        </ScrollReveal>
 
         {submitted ? (
           <div

@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const services = [
   {
@@ -211,20 +212,22 @@ export default function ServicesSection() {
             </h2>
           </div>
 
-          <div className="hidden md:flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 pb-2">
-            <span>Scroll to explore</span>
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </div>
+          <ScrollReveal direction="right" delay={0.3}>
+            <div className="hidden md:flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 pb-2">
+              <span>Scroll to explore</span>
+              <svg
+                className="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
 

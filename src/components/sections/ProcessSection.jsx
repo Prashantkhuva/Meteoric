@@ -45,7 +45,15 @@ export default function ProcessSection() {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       headingRef.current?.querySelectorAll(".split-line").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
       progressRef.current.style.height = "100%";
-      timelineRef.current?.querySelectorAll(".proc-step").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
+      timelineRef.current?.querySelectorAll(".proc-step").forEach(el => {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+        el.querySelectorAll(".proc-dot, .proc-num, .proc-title, .proc-desc, .proc-tags > *").forEach(child => {
+          child.style.opacity = "1";
+          child.style.transform = "none";
+          child.style.filter = "none";
+        });
+      });
       return;
     }
 
@@ -78,21 +86,27 @@ export default function ProcessSection() {
 
     const steps = timelineRef.current?.querySelectorAll(".proc-step");
     if (steps?.length) {
-      gsap.fromTo(steps,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.35,
-          stagger: 0.08,
-          ease: "power2.out",
+      steps.forEach((step) => {
+        const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: timelineRef.current,
-            start: "top 80%",
+            trigger: step,
+            start: "top 82%",
             toggleActions: "play none none none",
           },
-        },
-      );
+        });
+
+        const dot = step.querySelector(".proc-dot");
+        const num = step.querySelector(".proc-num");
+        const title = step.querySelector(".proc-title");
+        const desc = step.querySelector(".proc-desc");
+        const tags = step.querySelector(".proc-tags");
+
+        tl.fromTo(dot, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" });
+        if (num) tl.fromTo(num, { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, "-=0.25");
+        if (title) tl.fromTo(title, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
+        if (desc) tl.fromTo(desc, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, "-=0.25");
+        if (tags) tl.fromTo(tags.children, { y: 15, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.06, duration: 0.3, ease: "power2.out" }, "-=0.2");
+      });
     }
   }, { scope: sectionRef });
 
@@ -138,23 +152,23 @@ export default function ProcessSection() {
                 className="proc-step relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-5 sm:grid-cols-[40px_minmax(0,1fr)] sm:gap-x-6 md:grid-cols-[140px_minmax(0,1fr)] md:gap-x-24"
               >
                 <div className="relative flex items-start">
-                  <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-[#111111] shadow-[0_0_20px_rgba(255,255,255,0.06)] sm:h-10 sm:w-10">
+                  <div className="proc-dot relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-[#111111] shadow-[0_0_20px_rgba(255,255,255,0.06)] sm:h-10 sm:w-10">
                     <div className="absolute inset-0 rounded-full border border-white/10" />
                     <div className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)] sm:h-3 sm:w-3" />
                   </div>
-                  <span className="hidden md:block absolute left-20 top-0 text-white/15 text-5xl font-semibold tracking-tight">
+                  <span className="proc-num hidden md:block absolute left-20 top-0 text-white/15 text-5xl font-semibold tracking-tight">
                     {item.id}
                   </span>
                 </div>
 
                 <div className="min-w-0 pb-10 sm:pb-12 md:pb-16">
-                  <h3 className="mb-5 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:mb-8 md:text-5xl font-display">
+                  <h3 className="proc-title mb-5 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:mb-8 md:text-5xl font-display">
                     {item.title}
                   </h3>
-                  <p className="mb-8 max-w-2xl text-base leading-relaxed text-[#EAEFFF]/50 sm:text-lg md:mb-10 md:text-xl">
+                  <p className="proc-desc mb-8 max-w-2xl text-base leading-relaxed text-[#EAEFFF]/50 sm:text-lg md:mb-10 md:text-xl">
                     {item.description}
                   </p>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="proc-tags flex flex-wrap gap-3">
                     {item.tags.map((tag, i) => (
                       <div
                         key={i}
