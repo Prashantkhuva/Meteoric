@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { gsap } from "@/lib/gsap-setup";
 import Logo from "@/components/sections/Logo";
@@ -278,7 +279,8 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile fullscreen overlay — outside header to avoid z-index stacking */}
+      {/* Mobile fullscreen overlay — portaled to body to escape GSAP transform containing block */}
+      {createPortal(
       <div
         ref={overlayRef}
         tabIndex={-1}
@@ -348,7 +350,9 @@ export default function Navbar() {
             Let&apos;s Chat!
           </button>
         </div>
-      </div>
+      </div>,
+      document.body,
+      )}
 
       <Suspense fallback={null}>
         <RequestModal isOpen={isOpen} setIsOpen={setIsOpen} />
