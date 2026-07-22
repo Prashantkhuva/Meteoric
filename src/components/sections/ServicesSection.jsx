@@ -354,7 +354,7 @@ export default function ServicesSection() {
               return (
                 <div
                   key={s.num}
-                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4"
+                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4"
                   style={{
                     zIndex: services.length - i,
                     width: "calc(100vw - 40px)",
@@ -419,7 +419,7 @@ export default function ServicesSection() {
 
             {/* CTA card */}
             <div
-              className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4"
+              className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4"
               style={{ zIndex: 0, width: "calc(100vw - 40px)" }}
             >
               <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block">
