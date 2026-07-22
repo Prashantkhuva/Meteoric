@@ -184,7 +184,9 @@ body::after {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee {
+  .marquee,
+  .animate-marquee-left,
+  .animate-marquee-right {
     animation: none;
   }
   .animate-pulse {

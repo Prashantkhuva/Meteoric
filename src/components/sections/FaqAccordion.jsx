@@ -24,7 +24,6 @@ export default function FaqAccordion({ items }) {
             <button
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
-              aria-label={isOpen ? `Collapse: ${faq.q}` : `Expand: ${faq.q}`}
               className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
             >
               <span className="text-white/80 text-sm pr-4 leading-relaxed">
@@ -44,7 +43,7 @@ export default function FaqAccordion({ items }) {
               className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
             >
               <div className="overflow-hidden">
-                <p className="text-white/50 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl">
+                <p className={`text-white/50 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0"}`}>
                   {faq.a}
                 </p>
               </div>

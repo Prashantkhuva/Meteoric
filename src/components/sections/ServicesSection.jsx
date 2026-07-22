@@ -80,7 +80,7 @@ export default function ServicesSection() {
           scrollTrigger: {
             trigger: headingRef.current,
             start: "top bottom",
-            toggleActions: "play reset play reset",
+            toggleActions: "play none none none",
           },
         },
       );
@@ -438,8 +438,11 @@ export default function ServicesSection() {
                 <button
                   onClick={openCal}
                   className="inline-flex items-center justify-center flip-btn"
+                  onMouseEnter={() => setCtaHovered(true)}
+                  onMouseLeave={() => setCtaHovered(false)}
                 >
                   <StaggerText
+                    hovered={ctaHovered}
                     hoverColor="#1b1b1b"
                     style={{ fontSize: 13, fontWeight: 400, color: "#1b1b1b" }}
                   >

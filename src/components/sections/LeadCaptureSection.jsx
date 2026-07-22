@@ -5,7 +5,6 @@ import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Check, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");
@@ -96,24 +95,20 @@ export default function LeadCaptureSection() {
         ref={contentRef}
         className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center"
       >
-        <ScrollReveal direction="down">
-          <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
-            Start a Project
-          </p>
-        </ScrollReveal>
+        <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
+          Start a Project
+        </p>
         <h2 ref={headingRef} className="text-3xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white mb-4">
           Let&apos;s ship your next product
           <span className="block text-white/25 mt-1 font-secondary-italic font-normal">
             SaaS platforms, landing pages, full-stack apps.
           </span>
         </h2>
-        <ScrollReveal direction="up" delay={0.15}>
-          <p className="text-white/50 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
-            Drop your email and we&apos;ll send you a{" "}
-            <span className="text-white/70">scope, timeline, and price estimate</span>{" "}
-            within 24 hours — free, no commitment required.
-          </p>
-        </ScrollReveal>
+        <p className="text-white/50 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
+          Drop your email and we&apos;ll send you a{" "}
+          <span className="text-white/70">scope, timeline, and price estimate</span>{" "}
+          within 24 hours — free, no commitment required.
+        </p>
 
         {submitted ? (
           <div

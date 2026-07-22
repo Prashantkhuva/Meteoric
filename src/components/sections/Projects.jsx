@@ -135,7 +135,7 @@ function Projects() {
         scrollTrigger: {
           trigger: headingRef.current,
           start: "top bottom",
-          toggleActions: "play reset play reset",
+          toggleActions: "play none none none",
         },
       },
     );
@@ -200,7 +200,7 @@ function Projects() {
         <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
           <div>
             <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
-              <span className="font-display text-white/40 not-italic mr-2">03</span>
+              <span className="font-display text-white/40 not-italic mr-2">04</span>
               Curated Portfolio
             </p>
             <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight text-white">

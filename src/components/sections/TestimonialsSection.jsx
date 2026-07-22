@@ -149,7 +149,7 @@ export default function TestimonialsSection() {
             <p
               className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5"
             >
-              <span className="font-display text-white/40 not-italic mr-2">04</span>
+              <span className="font-display text-white/40 not-italic mr-2">05</span>
               Client Stories
               </p>
 

@@ -68,7 +68,7 @@ export default function ProcessSection() {
         scrollTrigger: {
           trigger: headingRef.current,
           start: "top bottom",
-          toggleActions: "play reset play reset",
+          toggleActions: "play none none none",
         },
       },
     );
@@ -121,7 +121,7 @@ export default function ProcessSection() {
       <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
         <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
           <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
-            <span className="font-display text-white/30 not-italic mr-2">02</span>
+            <span className="font-display text-white/30 not-italic mr-2">03</span>
             Working Together
           </p>
 

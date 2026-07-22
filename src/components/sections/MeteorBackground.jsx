@@ -226,7 +226,7 @@ const styles = {
     width: "100%",
     height: "100%",
     display: "block",
-    filter: "blur(0.7px)",
+    filter: "blur(0px)",
   },
   brand: {
     position: "absolute",

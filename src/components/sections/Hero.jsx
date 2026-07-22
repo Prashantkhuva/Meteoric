@@ -63,6 +63,18 @@ function Hero() {
       tl.fromTo(allLines, { y: 40 }, { y: 0, stagger: 0.08 })
         .from(subtextRef.current, { y: 30 }, "-=0.25")
         .from(ctaRef.current, { y: 30 }, "-=0.2");
+
+      gsap.to(containerRef.current, {
+        y: 60,
+        opacity: 0.3,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#home",
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.5,
+        },
+      });
     },
     { scope: containerRef },
   );
