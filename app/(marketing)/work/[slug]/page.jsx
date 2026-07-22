@@ -7,8 +7,9 @@ export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const project = projects.find((p) => p.slug === params.slug);
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
   const title = `${project.name} — Case Study | Meteoric`;
   const desc = project.tagline;
@@ -33,8 +34,9 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function CaseStudyPage({ params }) {
-  const project = projects.find((p) => p.slug === params.slug);
+export default async function CaseStudyPage({ params }) {
+  const { slug } = await params;
+  const project = projects.find((p) => p.slug === slug);
   if (!project) notFound();
   return <CaseStudy project={project} />;
 }
