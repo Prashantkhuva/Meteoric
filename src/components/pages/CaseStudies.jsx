@@ -4,16 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
 
 export default function CaseStudiesPage() {
   return (
@@ -75,13 +67,7 @@ export default function CaseStudiesPage() {
           >
             <div className="max-w-6xl mx-auto px-6 md:px-12">
               {/* Top: Large number + title */}
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                className="mb-8 md:mb-12"
-              >
+              <ScrollReveal direction="down" delay={0} className="mb-8 md:mb-12">
                 <span className="text-6xl md:text-8xl lg:text-9xl font-secondary-italic text-[#EAEFFF]/[0.06] block leading-none mb-4">
                   {String(idx + 1).padStart(2, "0")}.
                 </span>
@@ -91,17 +77,10 @@ export default function CaseStudiesPage() {
                 <p className="text-lg md:text-xl text-white/35 font-light">
                   {cs.tagline}
                 </p>
-              </motion.div>
+              </ScrollReveal>
 
               {/* Image */}
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                custom={1}
-                className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14 bg-black"
-              >
+              <ScrollReveal direction="up" delay={0.1} className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14 bg-black">
                 <div className="flex items-center justify-center p-4 sm:p-8 h-full">
                   <Image
                     src={cs.image}
@@ -113,21 +92,14 @@ export default function CaseStudiesPage() {
                     priority={idx === 0}
                   />
                 </div>
-              </motion.div>
+              </ScrollReveal>
 
               {/* Content grid */}
               <div className={`grid md:grid-cols-12 gap-10 md:gap-12 ${isReversed ? "" : ""}`}>
                 {/* Left: Meta + Problem/Solution */}
                 <div className={`md:col-span-7 ${isReversed ? "md:order-last" : ""}`}>
                   {/* Meta row */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={2}
-                    className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 mb-8 pb-8 border-b border-white/[0.06]"
-                  >
+                  <ScrollReveal direction="left" delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 mb-8 pb-8 border-b border-white/[0.06]">
                     <div>
                       <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-1">Client</p>
                       <p className="text-white/70 text-sm">{cs.client}</p>
@@ -140,42 +112,22 @@ export default function CaseStudiesPage() {
                       <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-1">Role</p>
                       <p className="text-white/70 text-sm">{cs.role}</p>
                     </div>
-                  </motion.div>
+                  </ScrollReveal>
 
                   {/* Problem */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={3}
-                    className="mb-6"
-                  >
+                  <ScrollReveal direction="left" delay={0.15} className="mb-6">
                     <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Problem</h3>
                     <p className="text-sm text-white/40 leading-relaxed">{cs.problem}</p>
-                  </motion.div>
+                  </ScrollReveal>
 
                   {/* Solution */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={4}
-                    className="mb-8"
-                  >
+                  <ScrollReveal direction="left" delay={0.2} className="mb-8">
                     <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Solution</h3>
                     <p className="text-sm text-white/40 leading-relaxed">{cs.solution}</p>
-                  </motion.div>
+                  </ScrollReveal>
 
                   {/* Features */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={5}
-                  >
+                  <ScrollReveal direction="left" delay={0.25}>
                     <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-4 font-secondary-italic normal-case text-sm">Key Features</h3>
                     <div className="space-y-3">
                       {cs.features.map((f, fi) => (
@@ -188,20 +140,13 @@ export default function CaseStudiesPage() {
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </ScrollReveal>
                 </div>
 
                 {/* Right: Metrics + Tags + CTA */}
                 <div className={`md:col-span-5 ${isReversed ? "md:order-first" : ""}`}>
                   {/* Metrics */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={3}
-                    className="mb-10"
-                  >
+                  <ScrollReveal direction="right" delay={0.15} className="mb-10">
                     {cs.results.map((r, ri) => (
                       <div
                         key={ri}
@@ -216,17 +161,10 @@ export default function CaseStudiesPage() {
                         <p className="text-xs text-white/30 mt-1">{r.description}</p>
                       </div>
                     ))}
-                  </motion.div>
+                  </ScrollReveal>
 
                   {/* Tags */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={4}
-                    className="mb-8"
-                  >
+                  <ScrollReveal direction="right" delay={0.2} className="mb-8">
                     <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">Tech Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {cs.tags.map((tag) => (
@@ -238,16 +176,10 @@ export default function CaseStudiesPage() {
                         </span>
                       ))}
                     </div>
-                  </motion.div>
+                  </ScrollReveal>
 
                   {/* CTA */}
-                  <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                    custom={5}
-                  >
+                  <ScrollReveal direction="right" delay={0.25}>
                     <a
                       href={cs.link}
                       target="_blank"
@@ -260,7 +192,7 @@ export default function CaseStudiesPage() {
                         className="transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
                       />
                     </a>
-                  </motion.div>
+                  </ScrollReveal>
                 </div>
               </div>
             </div>

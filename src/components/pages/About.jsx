@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const RequestModal = lazy(() => import("@/components/layout/NavBar/RequestModal"));
 
@@ -41,15 +42,6 @@ const socials = [
   { label: "X", href: "https://x.com/prashantkhuva_" },
   { label: "Instagram", href: "https://www.instagram.com/officialmeteoric/" },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
 
 export default function AboutPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -211,52 +203,37 @@ export default function AboutPage() {
 
       {/* ── HOW WE WORK ── */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t border-white/[0.06]">
-        <motion.span
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6"
-        >
-          How We Work
-        </motion.span>
-        <motion.h2
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={1}
-          className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-14"
-        >
-          Our{" "}
-          <span className="not-italic">Principles</span>
-        </motion.h2>
+        <ScrollReveal direction="down" delay={0}>
+          <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+            How We Work
+          </span>
+        </ScrollReveal>
+        <ScrollReveal direction="down" delay={0.1}>
+          <h2 className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-14">
+            Our{" "}
+            <span className="not-italic">Principles</span>
+          </h2>
+        </ScrollReveal>
 
         <div className="space-y-0">
           {values.map((item, i) => (
-            <motion.div
-              key={item.num}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-              custom={i + 2}
-              className="py-10 border-t border-white/[0.06]"
-            >
-              <div className="flex gap-6 md:gap-10">
-                <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
-                  {item.num}
-                </span>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-white/35 text-[15px] leading-[1.8] max-w-xl">
-                    {item.description}
-                  </p>
+            <ScrollReveal key={item.num} direction="left" delay={i * 0.15}>
+              <div className="py-10 border-t border-white/[0.06]">
+                <div className="flex gap-6 md:gap-10">
+                  <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
+                    {item.num}
+                  </span>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-3">
+                      {item.title}
+                    </h3>
+                    <p className="text-white/35 text-[15px] leading-[1.8] max-w-xl">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </ScrollReveal>
           ))}
         </div>
       </section>

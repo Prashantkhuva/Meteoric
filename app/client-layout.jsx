@@ -15,6 +15,7 @@ export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const [preloaderDone, setPreloaderDone] = useState(false);
   const contentRef = useRef(null);
+  const navbarRef = useRef(null);
 
   useEffect(() => {
     initGtag();
@@ -24,11 +25,12 @@ export default function ClientLayout({ children }) {
     trackPageView(pathname);
   }, [pathname]);
 
-  // Premium reveal: after preloader, fade main content in
+  // Premium reveal: after preloader, sequence navbar + content entrance
   useGSAP(() => {
     if (!contentRef.current) return;
 
     if (!preloaderDone) {
+      gsap.set(contentRef.current, { opacity: 0 });
       return;
     }
 
@@ -41,13 +43,21 @@ export default function ClientLayout({ children }) {
       return;
     }
 
-    gsap.to(contentRef.current, {
+    const tl = gsap.timeline();
+    tl.to(contentRef.current, {
       opacity: 1,
-      duration: 0.8,
+      duration: 0.6,
       ease: "power2.out",
-      delay: 0.1,
-      clearProps: "opacity",
     });
+
+    if (navbarRef.current) {
+      tl.fromTo(
+        navbarRef.current,
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0,
+      );
+    }
   }, [preloaderDone, pathname]);
 
   const isAdmin =
@@ -63,7 +73,11 @@ export default function ClientLayout({ children }) {
       </a>
       <Preloader onDone={() => setPreloaderDone(true)} />
       {!isAdmin && <SmoothScroll />}
-      {!isAdmin && preloaderDone && <Navbar />}
+      {!isAdmin && preloaderDone && (
+        <div ref={navbarRef} style={{ opacity: 0 }}>
+          <Navbar />
+        </div>
+      )}
       {!isAdmin && preloaderDone && <MagneticCursor />}
       {isAdmin ? (
         children
