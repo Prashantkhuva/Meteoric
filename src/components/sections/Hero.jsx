@@ -69,7 +69,7 @@ function Hero() {
         opacity: 0.3,
         ease: "none",
         scrollTrigger: {
-          trigger: "#home",
+          trigger: containerRef.current.parentElement,
           start: "top top",
           end: "bottom top",
           scrub: 0.5,
