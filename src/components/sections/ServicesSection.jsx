@@ -234,9 +234,8 @@ export default function ServicesSection() {
       {/* Horizontal scroll area — pinned on desktop */}
       <div
         ref={scrollContainerRef}
-        className="relative hidden lg:flex min-h-screen items-center"
+        className="relative hidden lg:flex min-h-screen items-center overflow-clip"
       >
-        <div className="overflow-hidden w-full">
         <div ref={cardsWrapRef} className="flex gap-6 px-6 md:px-16 w-max">
           {services.map((s) => {
             const Icon = s.icon;
@@ -340,7 +339,6 @@ export default function ServicesSection() {
               </button>
             </div>
           </div>
-        </div>
         </div>
       </div>
 
