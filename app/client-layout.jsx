@@ -40,6 +40,7 @@ export default function ClientLayout({ children }) {
 
     if (prefersReduced) {
       gsap.set(contentRef.current, { opacity: 1 });
+      if (navbarRef.current) gsap.set(navbarRef.current, { opacity: 1 });
       return;
     }
 
