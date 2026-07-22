@@ -89,7 +89,7 @@ function Hero() {
       </div>
 
       <div className="sr-only">
-        Meteoric has shipped 12+ production projects since 2024 with 100% client
+        Meteoric has shipped 12+ production projects since 2026 with 100% client
         satisfaction. Average project delivery takes 7-14 days. Services include
         SaaS development, landing pages, web applications, and full-stack
         development for startups and founders worldwide.

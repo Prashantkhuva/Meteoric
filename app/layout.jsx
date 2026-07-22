@@ -105,7 +105,7 @@ export default function RootLayout({ children }) {
                   description:
                     "Meteoric is a web development agency that builds high-performance websites, SaaS platforms, and full-stack applications for startups and founders.",
                   founder: { "@type": "Person", name: "Prashant Khuva" },
-                  foundingDate: "2024",
+                  foundingDate: "2026",
                   areaServed: "Worldwide",
                   knowsAbout: [
                     "Web Development",
