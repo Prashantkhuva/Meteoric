@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import StaggerLink from "./StaggerLink";
 
 export default function Footer() {
   return (
@@ -28,17 +30,17 @@ export default function Footer() {
         {/* ── BOTTOM BAR ── */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-8 border-t border-white/5">
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
-            <Link href="/work" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Work</Link>
-            <Link href="/case-studies" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Case Studies</Link>
-            <Link href="/services" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Services</Link>
-            <Link href="/about" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">About</Link>
-            <Link href="/booking" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Book a Call</Link>
+            <StaggerLink href="/work" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "6px 12px" }}>Work</StaggerLink>
+            <StaggerLink href="/case-studies" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "6px 12px" }}>Case Studies</StaggerLink>
+            <StaggerLink href="/services" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "6px 12px" }}>Services</StaggerLink>
+            <StaggerLink href="/about" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "6px 12px" }}>About</StaggerLink>
+            <StaggerLink href="/booking" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "6px 12px" }}>Book a Call</StaggerLink>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
             <p className="text-white/30">&copy; 2026 Meteoric.</p>
-            <Link href="/privacy" data-no-magnetic className="text-white/30 hover:text-white hover:bg-white/[0.04] px-2 py-1 rounded-lg transition-all duration-200">Privacy</Link>
+            <StaggerLink href="/privacy" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.3)", padding: "4px 8px" }}>Privacy</StaggerLink>
             <span className="text-white/10">/</span>
-            <Link href="/terms" data-no-magnetic className="text-white/30 hover:text-white hover:bg-white/[0.04] px-2 py-1 rounded-lg transition-all duration-200">Terms</Link>
+            <StaggerLink href="/terms" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.3)", padding: "4px 8px" }}>Terms</StaggerLink>
           </div>
         </div>
       </div>
