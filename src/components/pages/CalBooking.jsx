@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -12,6 +13,21 @@ const fadeUp = {
 };
 
 export default function CalBooking() {
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.cal.com/embed/embed.js";
+    script.async = true;
+    script.onload = () => {
+      window.Cal("init", "let-s-build", { origin: "https://app.cal.com" });
+      window.Cal.ns["let-s-build"]("inline", {
+        elementOrSelector: "#my-cal-inline-let-s-build",
+        config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
+        calLink: "prashantkhuva/let-s-build",
+      });
+      window.Cal.ns["let-s-build"]("ui", { hideEventTypeDetails: true, layout: "month_view" });
+    };
+    document.head.appendChild(script);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -61,11 +77,7 @@ export default function CalBooking() {
           custom={3}
           className="rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a]"
         >
-          <iframe
-            src="https://cal.com/prashantkhuva/let-s-build?layout=month_view&theme=dark"
-            className="w-full h-[750px] border-0"
-            loading="lazy"
-          />
+          <div id="my-cal-inline-let-s-build" className="w-full h-[750px] overflow-scroll" />
         </motion.div>
       </section>
 
