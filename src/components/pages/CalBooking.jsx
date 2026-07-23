@@ -14,18 +14,23 @@ const fadeUp = {
 
 export default function CalBooking() {
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://app.cal.com/embed/embed.js";
-    script.async = true;
-    script.onload = () => {
+    function initCal() {
+      if (!window.Cal) return;
       window.Cal("init", "let-s-build", { origin: "https://app.cal.com" });
       window.Cal.ns["let-s-build"]("inline", {
         elementOrSelector: "#my-cal-inline-let-s-build",
-        config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
+        config: { layout: "month_view", theme: "dark", useSlotsViewOnSmallScreen: "true" },
         calLink: "prashantkhuva/let-s-build",
       });
-      window.Cal.ns["let-s-build"]("ui", { hideEventTypeDetails: true, layout: "month_view" });
-    };
+      window.Cal.ns["let-s-build"]("ui", { hideEventTypeDetails: true, layout: "month_view", theme: "dark" });
+    }
+
+    if (window.Cal) { initCal(); return; }
+
+    const script = document.createElement("script");
+    script.src = "https://app.cal.com/embed/embed.js";
+    script.async = true;
+    script.onload = initCal;
     document.head.appendChild(script);
   }, []);
 
@@ -70,7 +75,9 @@ export default function CalBooking() {
 
       {/* Cal Embed */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
-        <div id="my-cal-inline-let-s-build" className="w-full h-[750px] overflow-scroll" />
+        <div className="rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a] overflow-hidden">
+          <div id="my-cal-inline-let-s-build" className="w-full h-[750px] overflow-scroll" />
+        </div>
       </section>
 
       {/* Bottom note */}
