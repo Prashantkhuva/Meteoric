@@ -9,5 +9,6 @@ export const sitemapRoutes = [
   { path: "/services", priority: "0.9", changefreq: "monthly" },
   { path: "/case-studies", priority: "0.9", changefreq: "monthly" },
   { path: "/privacy", priority: "0.3", changefreq: "yearly" },
+  { path: "/booking", priority: "0.8", changefreq: "monthly" },
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
 ];
