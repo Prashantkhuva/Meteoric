@@ -78,7 +78,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
           {showUPI && (
             <div style={{ marginBottom: "12px" }}>
               <Link href={previewUrl + "&rp=1"} style={upiButton}>
-                <Img src={`${SITE_URL}/upi.svg`} alt="UPI" width={48} height={15} />
+                <Img src={`${SITE_URL}/upi.svg`} alt="UPI" width={56} height={20} />
               </Link>
             </div>
           )}
