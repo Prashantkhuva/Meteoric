@@ -8,7 +8,7 @@ export default function CustomEmail({ html }) {
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg?v=3`}
+            src={`${SITE_URL}/logo.svg?v=4`}
             alt="Meteoric"
             width={120}
             height={30}
