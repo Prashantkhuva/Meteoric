@@ -10,7 +10,7 @@ export default function OverdueReminder({ name, invoiceNumber, total, dueDate, d
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg?v=5`}
+            src={`${SITE_URL}/logo.svg?v=4`}
             alt="Meteoric"
             width={120}
             height={30}

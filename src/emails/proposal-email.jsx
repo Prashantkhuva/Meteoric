@@ -19,7 +19,7 @@ export default function ProposalEmail({ name, title, timeline, terms, previewUrl
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg?v=5`}
+            src={`${SITE_URL}/logo.svg?v=4`}
             alt="Meteoric"
             width={120}
             height={30}
