@@ -26,7 +26,7 @@ export default function CalBooking() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Hero */}
       <section className="relative max-w-5xl mx-auto px-6 md:px-12 pt-32 pb-16 md:pb-20">
         <motion.span
