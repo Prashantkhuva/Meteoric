@@ -197,6 +197,12 @@ export default function RootLayout({ children }) {
           type="text/plain"
           title="LLM-friendly site index"
         />
+        <link
+          rel="alternate"
+          href="/llms-full.txt"
+          type="text/plain"
+          title="Meteoric extended AI index"
+        />
       </head>
       <body className="font-primary" suppressHydrationWarning>
         <ErrorBoundary>

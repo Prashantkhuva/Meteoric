@@ -11,8 +11,6 @@ import {
   Link,
   Img,
 } from "react-email";
-import EmailSignature from "./email-signature";
-
 export default function NewLeadNotification({ name, email, phone, services, details, budget, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
@@ -21,7 +19,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <Preview>New lead from {name || email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/logo.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/logo.svg?v=2`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>New Lead <span style={star}>✦</span></Heading>
           <Text style={muted}>
             A new lead has submitted the form on {baseUrl.replace("https://", "")}
@@ -74,7 +72,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
               View in Admin
             </Link>
           </Text>
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -154,4 +152,12 @@ const footer = {
   fontSize: "12px",
   color: "rgba(255, 255, 255, 0.25)",
   textAlign: "center",
+};
+
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };

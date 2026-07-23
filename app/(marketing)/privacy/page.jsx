@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const pageTitle = "Privacy Policy — Meteoric";
@@ -83,8 +84,22 @@ const sections = [
   },
 ];
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "Privacy Policy", item: `${SITE_URL}/privacy` },
+  ],
+};
+
 export default function Privacy() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
     <div className="min-h-screen bg-black text-white">
       <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
         {/* Header */}
@@ -146,12 +161,16 @@ export default function Privacy() {
         </div>
 
         {/* Footer note */}
-        <div className="mt-16 pt-8 border-t border-white/[0.06]">
+        <div className="mt-16 pt-8 border-t border-white/[0.06] flex items-center justify-between">
           <p className="text-white/15 text-xs font-mono tracking-wider">
             Meteoric · withmeteoric.com
           </p>
+          <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
+            Back to home
+          </Link>
         </div>
       </main>
     </div>
+    </>
   );
 }

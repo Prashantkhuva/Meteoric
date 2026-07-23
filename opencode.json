@@ -1,5 +1,6 @@
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/deepseek-v4-flash-free",
   "instructions": [
     "AGENTS.md"
   ]

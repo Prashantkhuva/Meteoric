@@ -1,5 +1,6 @@
-import { Html, Head, Preview, Body, Container, Text, Hr, Link } from "react-email";
-import EmailSignature from "./email-signature";
+import { Html, Head, Preview, Body, Container, Text, Hr, Link, Img } from "react-email";
+
+const SITE_URL = "https://withmeteoric.com";
 
 export default function OverdueReminder({ name, invoiceNumber, total, dueDate, daysOverdue, previewUrl }) {
   return (
@@ -8,6 +9,13 @@ export default function OverdueReminder({ name, invoiceNumber, total, dueDate, d
       <Preview>Overdue Invoice {invoiceNumber} — Please Remit Payment</Preview>
       <Body style={main}>
         <Container style={container}>
+          <Img
+            src={`${SITE_URL}/logo.svg?v=2`}
+            alt="Meteoric"
+            width={120}
+            height={30}
+            style={logo}
+          />
           <Text style={greeting}>Hi {name || "there"},</Text>
 
           <Text style={paragraph}>
@@ -45,11 +53,10 @@ export default function OverdueReminder({ name, invoiceNumber, total, dueDate, d
 
           <Hr style={hr} />
 
-          <Text style={paragraph}>
+          <Text style={closing}>
             Thank you for your prompt attention to this matter.
           </Text>
-
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -68,6 +75,10 @@ const container = {
   padding: "32px",
   backgroundColor: "#0a0a0a",
   border: "1px solid rgba(234, 239, 255, 0.1)",
+};
+
+const logo = {
+  marginBottom: "24px",
 };
 
 const greeting = {
@@ -132,6 +143,22 @@ const button = {
   fontWeight: 600,
   textDecoration: "none",
   margin: "16px 0",
+};
+
+const closing = {
+  fontSize: "14px",
+  color: "rgba(255, 255, 255, 0.4)",
+  lineHeight: "1.6",
+  marginTop: "24px",
+  marginBottom: "0",
+};
+
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };
 
 const hr = {

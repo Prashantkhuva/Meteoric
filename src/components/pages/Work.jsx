@@ -166,7 +166,10 @@ export default function WorkPage() {
           </h1>
           <p className="text-white/40 text-base md:text-lg max-w-2xl mt-6">
             Every project here went from concept to production — on time, on
-            budget, and built to convert.
+            budget, and built to convert.{" "}
+            <Link href="/services" className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">
+              Explore our services
+            </Link>.
           </p>
         </div>
 

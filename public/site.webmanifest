@@ -1,24 +1,13 @@
 {
-  "name": "Meteoric — Web & Software Development Agency",
+  "name": "Meteoric",
   "short_name": "Meteoric",
-  "description": "Meteoric builds premium web experiences, scalable SaaS platforms, and full-stack applications for startups and founders.",
-  "icons": [
-    {
-      "src": "/web-app-manifest-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/web-app-manifest-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "theme_color": "#070707",
-  "background_color": "#070707",
-  "display": "standalone",
+  "description": "Web & Software Development Agency for Startups & SaaS",
   "start_url": "/",
-  "scope": "/"
+  "display": "standalone",
+  "background_color": "#070707",
+  "theme_color": "#070707",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
 }

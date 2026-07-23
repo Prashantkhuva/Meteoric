@@ -5,11 +5,9 @@ import {
   Body,
   Container,
   Text,
-  Hr,
   Link,
   Img,
 } from "react-email";
-import EmailSignature from "./email-signature";
 
 const SITE_URL = "https://withmeteoric.com";
 const WISE_BASE = "https://wise.com/pay/business/khuvaprashantdayanandbhai1";
@@ -31,7 +29,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg`}
+            src={`${SITE_URL}/logo.svg?v=2`}
             alt="Meteoric"
             width={120}
             height={30}
@@ -112,13 +110,8 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
             about this invoice, reply to this email or contact us directly.
           </Text>
 
-          <Hr style={hr} />
-
-          <Text style={paragraph}>
-            Thank you for your business!
-          </Text>
-
-          <EmailSignature />
+          <Text style={closing}>Thank you for your business.</Text>
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -227,6 +220,22 @@ const paypalButton = {
   letterSpacing: "0.02em",
   textDecoration: "none",
   borderRadius: "6px",
+};
+
+const closing = {
+  fontSize: "14px",
+  color: "rgba(255, 255, 255, 0.4)",
+  lineHeight: "1.6",
+  marginTop: "24px",
+  marginBottom: "0",
+};
+
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };
 
 const hr = {

@@ -4,6 +4,7 @@ import { useState, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
@@ -121,7 +122,7 @@ export default function AboutPage() {
               </p>
               <p>
                 Every project is built with the same care as if it were our
-                own. From landing pages to full SaaS platforms, we treat your
+                own. From <Link href="/services" className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">landing pages to full SaaS platforms</Link>, we treat your
                 product like a startup, not a ticket queue.
               </p>
             </div>

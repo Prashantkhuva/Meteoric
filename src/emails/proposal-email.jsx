@@ -5,11 +5,9 @@ import {
   Body,
   Container,
   Text,
-  Hr,
   Link,
   Img,
 } from "react-email";
-import EmailSignature from "./email-signature";
 
 const SITE_URL = "https://withmeteoric.com";
 
@@ -21,7 +19,7 @@ export default function ProposalEmail({ name, title, timeline, terms, previewUrl
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg`}
+            src={`${SITE_URL}/logo.svg?v=2`}
             alt="Meteoric"
             width={120}
             height={30}
@@ -57,14 +55,10 @@ export default function ProposalEmail({ name, title, timeline, terms, previewUrl
             </>
           )}
 
-          <Hr style={hr} />
-
-          <Text style={paragraph}>
-            We're looking forward to working with you. If you have any questions,
-            feel free to reply to this email.
+          <Text style={closing}>
+            We're looking forward to working with you.
           </Text>
-
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -127,7 +121,18 @@ const button = {
   margin: "16px 0",
 };
 
-const hr = {
-  borderColor: "rgba(234, 239, 255, 0.08)",
-  margin: "24px 0",
+const closing = {
+  fontSize: "14px",
+  color: "rgba(255, 255, 255, 0.4)",
+  lineHeight: "1.6",
+  marginTop: "24px",
+  marginBottom: "0",
+};
+
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };

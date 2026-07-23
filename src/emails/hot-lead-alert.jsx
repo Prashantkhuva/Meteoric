@@ -11,8 +11,6 @@ import {
   Link,
   Img,
 } from "react-email";
-import EmailSignature from "./email-signature";
-
 export default function HotLeadAlert({ lead, score, category, summary, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
@@ -21,7 +19,7 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
       <Preview>🔥 Hot lead ({score}): {lead.name || lead.email}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/logo.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/logo.svg?v=2`} alt="Meteoric" width="126" height="32" style={logoImg} />
           <Heading style={h1}>🔥 Hot Lead &mdash; {score}/100</Heading>
           {category && <Text style={badge}>Category: {category}</Text>}
           {summary && <Text style={summaryText}>"{summary}"</Text>}
@@ -84,7 +82,7 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
               View in Admin &rarr;
             </Link>
           </Text>
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -180,4 +178,12 @@ const ctaLink = {
   border: "1px solid rgba(234, 239, 255, 0.2)",
   padding: "10px 24px",
   borderRadius: "8px",
+};
+
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };

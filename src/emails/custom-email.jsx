@@ -1,6 +1,4 @@
-import { Html, Head, Body, Container, Hr, Img } from "react-email";
-import EmailSignature from "./email-signature";
-
+import { Html, Head, Body, Container, Text, Img } from "react-email";
 const SITE_URL = "https://withmeteoric.com";
 
 export default function CustomEmail({ html }) {
@@ -10,7 +8,7 @@ export default function CustomEmail({ html }) {
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg`}
+            src={`${SITE_URL}/logo.svg?v=2`}
             alt="Meteoric"
             width={120}
             height={30}
@@ -21,10 +19,7 @@ export default function CustomEmail({ html }) {
             style={bodyContent}
             dangerouslySetInnerHTML={{ __html: html }}
           />
-
-          <Hr style={hr} />
-
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -57,7 +52,12 @@ const bodyContent = {
   marginBottom: "12px",
 };
 
-const hr = {
-  borderColor: "rgba(234, 239, 255, 0.08)",
-  margin: "24px 0",
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };
+
+

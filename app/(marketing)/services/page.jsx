@@ -2,9 +2,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Services | Meteoric — Web & SaaS Development for Startups";
+const pageTitle = "Services | Meteoric — SaaS & Startup Web Development Agency";
 const pageDesc =
-  "Meteoric offers SaaS development and startup web development services. From MVP prototypes to production platforms — built with Next.js, Supabase, and modern tooling.";
+  "Meteoric is a SaaS and startup web development agency. From MVP prototypes to production platforms — built with Next.js, Supabase, and modern tooling.";
 
 export const metadata = {
   title: pageTitle,
@@ -43,6 +43,16 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
     { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` },
   ],
+};
+
+const speakableJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Services | Meteoric — SaaS & Startup Web Development Agency",
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".sr-only"],
+  },
 };
 
 const serviceJsonLd = {
@@ -129,6 +139,10 @@ export default function Services() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
       <script
         type="application/ld+json"

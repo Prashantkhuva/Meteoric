@@ -2,9 +2,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import WorkPage from "@/components/pages/Work";
 import { projects } from "@/data/projects";
 
-const pageTitle = "Our Work — Meteoric Portfolio | Software & Web Development Projects";
+const pageTitle = "Our Work — Meteoric Agency Portfolio | SaaS & Web Development Projects";
 const pageDesc =
-  "Browse Meteoric's portfolio of shipped software and web development projects — SaaS platforms, landing pages, MVPs, and full-stack applications. Built for founders who ship.";
+  "Browse Meteoric's portfolio of shipped SaaS and web development projects — platforms, landing pages, MVPs, and full-stack applications. Built for founders who ship.";
 
 export const metadata = {
   title: pageTitle,

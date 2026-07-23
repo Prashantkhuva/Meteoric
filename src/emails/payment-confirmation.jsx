@@ -1,6 +1,4 @@
-import { Html, Head, Preview, Body, Container, Text, Hr, Img } from "react-email";
-import EmailSignature from "./email-signature";
-
+import { Html, Head, Preview, Body, Container, Text, Img } from "react-email";
 const SITE_URL = "https://withmeteoric.com";
 
 const CURRENCY_SYMBOLS = { USD: "$", EUR: "\u20AC", GBP: "\u00A3", INR: "\u20B9", CAD: "CA$", AUD: "AU$", SGD: "S$", JPY: "\u00A5" };
@@ -30,7 +28,7 @@ export default function PaymentConfirmation({
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg`}
+            src={`${SITE_URL}/logo.svg?v=2`}
             alt="Meteoric"
             width={120}
             height={30}
@@ -67,10 +65,7 @@ export default function PaymentConfirmation({
             It was a pleasure working with you. If you ever need web development,
             SaaS, or landing page services in the future, don&apos;t hesitate to reach out.
           </Text>
-
-          <Hr style={hr} />
-
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -147,7 +142,12 @@ const divider = {
   margin: "12px 0",
 };
 
-const hr = {
-  borderColor: "rgba(234, 239, 255, 0.08)",
-  margin: "24px 0",
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };
+
+

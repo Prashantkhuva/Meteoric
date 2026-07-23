@@ -5,11 +5,8 @@ import {
   Body,
   Container,
   Text,
-  Hr,
   Img,
 } from "react-email";
-import EmailSignature from "./email-signature";
-
 export default function LeadAutoReply({ name, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
@@ -18,7 +15,7 @@ export default function LeadAutoReply({ name, siteUrl }) {
       <Preview>Thank you for reaching out — we'll be in touch</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/logo.svg`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/logo.svg?v=2`} alt="Meteoric" width="126" height="32" style={logoImg} />
 
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
 
@@ -35,10 +32,7 @@ export default function LeadAutoReply({ name, siteUrl }) {
             </a>
             .
           </Text>
-
-          <Hr style={hr} />
-
-          <EmailSignature />
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
         </Container>
       </Body>
     </Html>
@@ -84,7 +78,12 @@ const link = {
   textDecoration: "underline",
 };
 
-const hr = {
-  borderColor: "rgba(234, 239, 255, 0.08)",
-  margin: "24px 0",
+const signoff = {
+  fontSize: "13px",
+  color: "rgba(255, 255, 255, 0.25)",
+  lineHeight: "1.6",
+  marginTop: "4px",
+  marginBottom: "0",
 };
+
+
