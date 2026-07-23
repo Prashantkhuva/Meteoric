@@ -15,7 +15,7 @@ export default function ReviewThankYou({ name, siteUrl }) {
       <Preview>Thank you for your review — it means a lot to us</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img src={`${baseUrl}/logo.svg?v=4`} alt="Meteoric" width="126" height="32" style={logoImg} />
+          <Img src={`${baseUrl}/logo.svg?v=5`} alt="Meteoric" width="126" height="32" style={logoImg} />
 
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
 

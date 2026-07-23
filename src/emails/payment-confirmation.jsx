@@ -28,7 +28,7 @@ export default function PaymentConfirmation({
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${SITE_URL}/logo.svg?v=4`}
+            src={`${SITE_URL}/logo.svg?v=5`}
             alt="Meteoric"
             width={120}
             height={30}

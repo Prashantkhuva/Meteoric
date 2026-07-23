@@ -6,7 +6,7 @@ export default function EmailSignature() {
   return (
     <div style={wrapper}>
       <Img
-        src={`${SITE_URL}/m.png?v=5`}
+        src={`${SITE_URL}/m.png?v=6`}
         alt="Meteoric"
         width={40}
         height={40}
