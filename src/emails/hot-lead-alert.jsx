@@ -31,7 +31,7 @@ export default function HotLeadAlert({
         <Container style={container}>
           {" "}
           <Img
-            src={`${baseUrl}/email-logo.svg`}
+            src={`${baseUrl}/email-logo.svg?v=1`}
             alt="Meteoric"
             width="126"
             height="32"
