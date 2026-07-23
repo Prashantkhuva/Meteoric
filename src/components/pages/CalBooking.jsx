@@ -70,7 +70,7 @@ export default function CalBooking() {
 
       {/* Cal Embed */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
-        <div id="my-cal-inline-let-s-build" className="w-full h-[750px] overflow-scroll rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a]" />
+        <div id="my-cal-inline-let-s-build" className="w-full h-[750px] overflow-scroll" />
       </section>
 
       {/* Bottom note */}
