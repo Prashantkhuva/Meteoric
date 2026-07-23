@@ -47,10 +47,10 @@ export default function RazorpayCheckout({ orderId, amount, currency, name, emai
   return (
     <button
       onClick={handlePayment}
-      className="inline-flex items-center justify-center px-5 py-3 text-sm font-bold tracking-wide text-white transition-all hover:opacity-90 active:scale-[0.97]"
+      className="inline-flex items-center justify-center px-5 py-3 transition-all hover:opacity-90 active:scale-[0.97]"
       style={{ backgroundColor: "#5F259F", borderRadius: "6px" }}
     >
-      Pay using UPI
+      <img src="/upi.svg" alt="UPI" width="56" height="20" style={{ display: "block" }} />
     </button>
   );
 }
