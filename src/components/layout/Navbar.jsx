@@ -20,6 +20,7 @@ const navItems = [
   { label: "Work", to: "/work" },
   { label: "Services", to: "/services" },
   { label: "About", to: "/about" },
+  { label: "Case Studies", to: "/case-studies" },
 ];
 
 export default function Navbar() {

@@ -140,13 +140,18 @@ export default function Terms() {
         </div>
 
         {/* Footer note */}
-        <div className="mt-16 pt-8 border-t border-white/[0.06] flex items-center justify-between">
+        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/15 text-xs font-mono tracking-wider">
             Meteoric · withmeteoric.com
           </p>
-          <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
-            Back to home
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/services" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
+              Our Services
+            </Link>
+            <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
+              Back to home
+            </Link>
+          </div>
         </div>
       </main>
     </div>

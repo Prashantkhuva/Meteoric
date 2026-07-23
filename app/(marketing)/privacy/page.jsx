@@ -3,7 +3,7 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const pageTitle = "Privacy Policy — Meteoric";
 const pageDesc =
-  "Meteoric's privacy policy explains how we collect, use, and protect your personal data when you use our website and services.";
+   "How Meteoric collects, uses, and protects your personal data when you use our website and services.";
 
 export const metadata = {
   title: pageTitle,
@@ -161,13 +161,18 @@ export default function Privacy() {
         </div>
 
         {/* Footer note */}
-        <div className="mt-16 pt-8 border-t border-white/[0.06] flex items-center justify-between">
+        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/15 text-xs font-mono tracking-wider">
             Meteoric · withmeteoric.com
           </p>
-          <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
-            Back to home
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/services" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
+              Our Services
+            </Link>
+            <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
+              Back to home
+            </Link>
+          </div>
         </div>
       </main>
     </div>

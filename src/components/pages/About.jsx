@@ -44,8 +44,9 @@ const socials = [
   { label: "Instagram", href: "https://www.instagram.com/officialmeteoric/" },
 ];
 
-export default function AboutPage() {
+export default function AboutPage({ faqs = [] }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -197,6 +198,50 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* ── FAQ ── */}
+      {faqs.length > 0 && (
+        <section className="relative max-w-3xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t border-white/[0.06]">
+          <ScrollReveal direction="down" delay={0}>
+            <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+              FAQ
+            </span>
+          </ScrollReveal>
+          <ScrollReveal direction="down" delay={0.1}>
+            <h2 className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-14">
+              Frequently Asked{" "}
+              <span className="not-italic">Questions</span>
+            </h2>
+          </ScrollReveal>
+          <div className="space-y-0">
+            {faqs.map((faq, i) => (
+              <ScrollReveal key={i} direction="up" delay={i * 0.1}>
+                <div className="py-6 border-t border-white/[0.06]">
+                  <button
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    className="w-full flex items-center justify-between text-left cursor-pointer group"
+                    aria-expanded={openFaq === i}
+                  >
+                    <span className="text-base md:text-lg font-secondary-italic font-normal text-white/70 group-hover:text-white/90 transition-colors duration-200 pr-4">
+                      {faq.question}
+                    </span>
+                    <span className={`shrink-0 w-6 h-6 rounded-full border border-white/[0.08] flex items-center justify-center transition-transform duration-300 ${openFaq === i ? "rotate-45" : ""}`}>
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M5 1v8M1 5h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-white/30"/>
+                      </svg>
+                    </span>
+                  </button>
+                  <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"}`}>
+                    <p className="text-white/35 text-[15px] leading-[1.8] pr-8">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+      )}
 
       <Suspense fallback={null}>
         <RequestModal isOpen={isOpen} setIsOpen={setIsOpen} />

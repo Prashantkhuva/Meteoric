@@ -4,7 +4,7 @@ import { projects } from "@/data/projects";
 
 const pageTitle = "Our Work — Meteoric Agency Portfolio | SaaS & Web Development Projects";
 const pageDesc =
-  "Browse Meteoric's portfolio of shipped SaaS and web development projects — platforms, landing pages, MVPs, and full-stack applications. Built for founders who ship.";
+   "Browse Meteoric's portfolio of shipped SaaS and web development projects — platforms, landing pages, and full-stack applications built for founders.";
 
 export const metadata = {
   title: pageTitle,

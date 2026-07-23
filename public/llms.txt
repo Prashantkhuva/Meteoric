@@ -19,6 +19,18 @@ Meteoric is a software development agency that designs and builds high-performan
 
 Meteoric offers SaaS development, landing page design, full-stack web applications, and technical consulting for startups and founders. The agency builds with Next.js, React, Node.js, Supabase, and the MERN stack. Typical project timelines are 3-7 days for landing pages, 2-6 weeks for web apps, and 4-10 weeks for SaaS products.
 
+### SaaS Development
+
+Meteoric builds production-grade SaaS platforms from MVP to scale — authentication, dashboards, payment integration (Stripe/Razorpay), team management, real-time features, and API design. Typical timeline: 4-10 weeks. Core stack: Next.js, Supabase, Stripe, PostgreSQL.
+
+### Landing Page Design
+
+High-converting landing pages built for performance and clarity. Includes custom design, GSAP/Framer Motion animations, SEO structure, forms, and Cal.com integration. Typical timeline: 3-7 days. Delivered with 95+ Lighthouse scores.
+
+### Full-Stack Web Applications
+
+End-to-end web application development including database design, server-side logic, responsive UI, and deployment. Ideal for MVPs, internal tools, and client portals. Typical timeline: 2-6 weeks. Built with Next.js, Node.js, and PostgreSQL.
+
 ## Features
 
 - High-converting landing page design and development

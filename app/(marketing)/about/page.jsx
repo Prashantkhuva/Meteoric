@@ -3,7 +3,7 @@ import AboutPage from "@/components/pages/About";
 
 const pageTitle = "About Meteoric | Web & Product Development Studio for Founders";
 const pageDesc =
-  "Meteoric is a product development studio that partners with founders to design, build, and launch modern web products and SaaS platforms. No bloat, no agencies — just production-ready work that ships on time.";
+   "Meteoric partners with founders to design, build, and launch modern web products and SaaS platforms. Direct founder involvement on every project.";
 
 export const metadata = {
   title: pageTitle,
@@ -82,6 +82,35 @@ const speakableJsonLd = {
   },
 };
 
+const aboutFaqs = [
+  {
+    question: "Who is behind Meteoric?",
+    answer: "Meteoric was founded in 2026 by Prashant Khuva, a full-stack developer and product builder based in India. Previously built FullStack Craft. Every project at Meteoric is built directly by the founder — no account managers, no agency layers.",
+  },
+  {
+    question: "What kind of projects does Meteoric take on?",
+    answer: "Meteoric builds SaaS platforms, landing pages, full-stack web applications, and MVPs for startups and founders. The agency has shipped 12+ production projects with clients including Finlytix, LaunchBright, and Stellar Labs.",
+  },
+  {
+    question: "How does Meteoric differ from other agencies?",
+    answer: "Direct founder involvement on every project from first conversation to final deploy — no account managers or layers. Clean code, clear timelines, 10-day sprint cycles, and a ship mentality focused on production-ready work that launches on time.",
+  },
+  {
+    question: "What technologies does Meteoric specialize in?",
+    answer: "Core stack: React, Next.js, Node.js, Tailwind CSS, Supabase, Stripe, Framer Motion, and GSAP. The agency adapts to existing tech stacks when needed and has experience with various databases and backend services.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: aboutFaqs.map((q) => ({
+    "@type": "Question",
+    name: q.question,
+    acceptedAnswer: { "@type": "Answer", text: q.answer },
+  })),
+};
+
 export default function About() {
   return (
     <>
@@ -97,7 +126,11 @@ export default function About() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
-      <AboutPage />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <AboutPage faqs={aboutFaqs} />
     </>
   );
 }

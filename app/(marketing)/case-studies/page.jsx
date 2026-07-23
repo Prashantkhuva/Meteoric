@@ -4,7 +4,7 @@ import { caseStudies } from "@/data/case-studies";
 
 const pageTitle = "Case Studies | Meteoric — Web Development Projects & Results";
 const pageDesc =
-  "Real projects, real results. See how Meteoric ships production web applications for startups — from SaaS platforms to marketing sites, with measurable outcomes.";
+   "Real projects with measurable outcomes. See how Meteoric ships production web apps for startups — from SaaS platforms to marketing sites.";
 
 export const metadata = {
   title: pageTitle,
