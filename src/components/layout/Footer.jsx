@@ -32,6 +32,7 @@ export default function Footer() {
             <Link href="/case-studies" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Case Studies</Link>
             <Link href="/services" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Services</Link>
             <Link href="/about" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">About</Link>
+            <Link href="/booking" data-no-magnetic className="text-white/40 hover:text-white hover:bg-white/[0.04] px-3 py-1.5 rounded-lg transition-all duration-200">Book a Call</Link>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
             <p className="text-white/30">&copy; 2026 Meteoric.</p>
