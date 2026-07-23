@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback } from "react";
+import Script from "next/script";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -13,9 +14,9 @@ const fadeUp = {
 };
 
 export default function CalBooking() {
-  useEffect(() => {
-    function initCal() {
-      if (!window.Cal) return;
+  const initCal = useCallback(() => {
+    if (typeof window === "undefined" || !window.Cal) return;
+    try {
       window.Cal("init", "let-s-build", { origin: "https://app.cal.com" });
       window.Cal.ns["let-s-build"]("inline", {
         elementOrSelector: "#my-cal-inline-let-s-build",
@@ -23,15 +24,7 @@ export default function CalBooking() {
         calLink: "prashantkhuva/let-s-build",
       });
       window.Cal.ns["let-s-build"]("ui", { hideEventTypeDetails: true, layout: "month_view", theme: "dark" });
-    }
-
-    if (window.Cal) { initCal(); return; }
-
-    const script = document.createElement("script");
-    script.src = "https://app.cal.com/embed/embed.js";
-    script.async = true;
-    script.onload = initCal;
-    document.head.appendChild(script);
+    } catch (e) { if (process.env.NODE_ENV !== "production") console.warn("Cal init failed", e); }
   }, []);
 
   return (
@@ -75,6 +68,7 @@ export default function CalBooking() {
 
       {/* Cal Embed */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
+        <Script src="https://app.cal.com/embed/embed.js" strategy="afterInteractive" onLoad={initCal} />
         <div className="rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a] overflow-hidden">
           <div id="my-cal-inline-let-s-build" className="w-full h-[750px] overflow-scroll" />
         </div>
