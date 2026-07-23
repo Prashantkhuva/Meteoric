@@ -78,7 +78,7 @@ export default function InvoiceEmail({ name, invoiceNumber, total, currency, due
           {showUPI && (
             <div style={{ marginBottom: "12px" }}>
               <Link href={previewUrl + "&rp=1"} style={upiButton}>
-                Pay using UPI
+                <Img src={`${SITE_URL}/upi.svg`} alt="UPI" width={48} height={15} />
               </Link>
             </div>
           )}
@@ -252,15 +252,10 @@ const bankSection = {
 
 const upiButton = {
   display: "inline-block",
-  padding: "16px 32px",
+  padding: "14px 24px",
   backgroundColor: "#5F259F",
-  color: "#ffffff",
-  fontSize: "15px",
-  fontWeight: 700,
-  letterSpacing: "0.03em",
   textDecoration: "none",
-  borderRadius: "8px",
-  textAlign: "center",
+  borderRadius: "6px",
 };
 
 const bankTitle = {

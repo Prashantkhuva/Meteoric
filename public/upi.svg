@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 20" fill="none">
+  <text x="26" y="15" font-family="system-ui,-apple-system,sans-serif" font-size="14" font-weight="800" fill="#fff">UPI</text>
+  <circle cx="6" cy="10" r="4" fill="#9C27B0"/>
+  <circle cx="16" cy="10" r="4" fill="#4CAF50"/>
+  <circle cx="26" cy="10" r="4" fill="#FF9800"/>
+</svg>
