@@ -1,4 +1,4 @@
-import { Html, Head, Preview, Body, Container, Text, Img } from "react-email";
+import { Html, Head, Preview, Body, Container, Text } from "react-email";
 export default function LeadAutoReply({ name, siteUrl }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (

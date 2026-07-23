@@ -1,4 +1,4 @@
-import { Html, Head, Preview, Body, Container, Text, Img } from "react-email";
+import { Html, Head, Preview, Body, Container, Text } from "react-email";
 const SITE_URL = "https://withmeteoric.com";
 export default function ClientWelcome({ name }) {
   return (
