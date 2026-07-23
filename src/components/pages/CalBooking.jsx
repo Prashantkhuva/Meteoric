@@ -14,15 +14,22 @@ const fadeUp = {
 
 export default function CalBooking() {
   useEffect(() => {
-    import("@calcom/embed-react").then(({ getCalApi }) => {
-      getCalApi({ namespace: "let-s-build" }).then((cal) => {
-        cal("inline", {
-          elementOrSelector: "#cal-embed",
-          calLink: "prashantkhuva/let-s-build",
-        });
-        cal("ui", { theme: "dark", layout: "month_view" });
+    const script = document.createElement("script");
+    script.src = "https://app.cal.com/embed/embed.js";
+    script.async = true;
+    script.onload = () => {
+      window.Cal?.("init", "let-s-build", { origin: "https://app.cal.com" });
+      window.Cal.ns["let-s-build"]("inline", {
+        elementOrSelector: "#cal-embed",
+        calLink: "prashantkhuva/let-s-build",
       });
-    });
+      window.Cal.ns["let-s-build"]("ui", {
+        cssVarsPerTheme: { light: { "cal-brand": "#0a0a0a" } },
+        hideEventTypeDetails: true,
+        layout: "month_view",
+      });
+    };
+    document.head.appendChild(script);
   }, []);
 
   return (
