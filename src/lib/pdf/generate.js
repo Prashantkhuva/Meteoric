@@ -1,8 +1,12 @@
-import { renderToBuffer } from "@react-pdf/renderer";
+import { Font, renderToBuffer } from "@react-pdf/renderer";
 import fs from "fs";
 import path from "path";
 import ProposalPDF from "./ProposalPDF";
 import InvoicePDF from "./InvoicePDF";
+
+Font.register({ family: "system-ui", src: "Helvetica" });
+Font.register({ family: "-apple-system", src: "Helvetica" });
+Font.register({ family: "sans-serif", src: "Helvetica" });
 
 let logoDataUri;
 

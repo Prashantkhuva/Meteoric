@@ -39,7 +39,9 @@ export async function GET(request, { params }) {
     invoice = typeof data === "string" ? JSON.parse(data) : data;
   } else {
     const cookieStore = await cookies();
-    const hasAuthCookie = cookieStore.getAll().some((c) => c.name.startsWith("sb-"));
+    const hasAuthCookie = cookieStore
+      .getAll()
+      .some((c) => c.name.startsWith("sb-"));
     if (!hasAuthCookie) {
       return new Response(null, {
         status: 302,
@@ -49,7 +51,9 @@ export async function GET(request, { params }) {
 
     const { data, error } = await supabase
       .from("invoices")
-      .select("*, client:clients(name, email, company), bank_account:bank_accounts(*)")
+      .select(
+        "*, client:clients(name, email, company), bank_account:bank_accounts(*)",
+      )
       .eq("id", id)
       .single();
 
@@ -64,33 +68,66 @@ export async function GET(request, { params }) {
   }
 
   const items = invoice.items || [];
-  const subtotal = items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
+  const subtotal = items.reduce(
+    (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
+    0,
+  );
   const tax = Number(invoice.tax) || 0;
   const total = Number(invoice.total) || subtotal + tax;
   const currency = getCurrencySymbol(invoice.currency);
 
   function fmt(d) {
     if (!d) return "";
-    return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    return new Date(d).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   }
   function itemAmount(item) {
     return ((Number(item.quantity) || 0) * (Number(item.rate) || 0)).toFixed(2);
   }
 
-  const statusClass = invoice.status === "overdue" ? "overdue" : invoice.status === "paid" ? "paid" : invoice.status === "sent" ? "sent" : "draft";
-  const statusLabel = invoice.status === "overdue" ? "Overdue" : invoice.status === "paid" ? "Paid" : invoice.status === "sent" ? "Sent" : invoice.status === "draft" ? "Draft" : invoice.status;
+  const statusClass =
+    invoice.status === "overdue"
+      ? "overdue"
+      : invoice.status === "paid"
+        ? "paid"
+        : invoice.status === "sent"
+          ? "sent"
+          : "draft";
+  const statusLabel =
+    invoice.status === "overdue"
+      ? "Overdue"
+      : invoice.status === "paid"
+        ? "Paid"
+        : invoice.status === "sent"
+          ? "Sent"
+          : invoice.status === "draft"
+            ? "Draft"
+            : invoice.status;
 
   let showUPI = false;
-  if (token && invoice.status !== "paid" && invoice.currency === "INR" && invoice.bank_account?.upi_id && isRazorpayConfigured()) {
+  if (
+    token &&
+    invoice.status !== "paid" &&
+    invoice.currency === "INR" &&
+    invoice.bank_account?.upi_id &&
+    isRazorpayConfigured()
+  ) {
     showUPI = true;
   }
 
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
-    const logoBuf = fs.readFileSync(path.join(process.cwd(), "public", "email-logo.svg"));
+    const logoBuf = fs.readFileSync(
+      path.join(process.cwd(), "public", "email-logo.svg"),
+    );
     logoSrc = `data:image/svg+xml;base64,${logoBuf.toString("base64")}`;
-  } catch { /* logo file not found, fall back to text */ }
+  } catch {
+    /* logo file not found, fall back to text */
+  }
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -194,7 +231,7 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <div class="toolbar">
   ${token ? "" : '<a href="/admin/invoices">&larr; Back to Invoices</a>'}
   <div class="toolbar-right">
-    ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + '&amount=' + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
+    ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + "&amount=" + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
     ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
     ${invoice.status !== "paid" && invoice.currency === "INR" && showUPI ? '<button class="upi-btn" onclick="payWithUPI()"><img src="/upi.svg" alt="UPI" width="56" height="20" /></button>' : ""}
     <button class="print-btn" onclick="window.print()">
@@ -232,7 +269,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     </div>
   </div>
 
-  ${items.length > 0 ? `
+  ${
+    items.length > 0
+      ? `
   <div class="table-wrap"><table>
     <thead>
       <tr>
@@ -243,12 +282,28 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
       </tr>
     </thead>
     <tbody>
-      ${items.map(function(item) {
-        return "<tr><td>" + esc(item.description) + "</td><td>" + item.quantity + "</td><td>" + currency + Number(item.rate).toFixed(2) + "</td><td>" + currency + itemAmount(item) + "</td></tr>";
-      }).join("")}
+      ${items
+        .map(function (item) {
+          return (
+            "<tr><td>" +
+            esc(item.description) +
+            "</td><td>" +
+            item.quantity +
+            "</td><td>" +
+            currency +
+            Number(item.rate).toFixed(2) +
+            "</td><td>" +
+            currency +
+            itemAmount(item) +
+            "</td></tr>"
+          );
+        })
+        .join("")}
     </tbody>
   </table></div>
-  ` : ""}
+  `
+      : ""
+  }
 
   <div class="totals">
     <div class="row"><span>Subtotal</span><span>${currency}${subtotal.toFixed(2)}</span></div>
@@ -256,7 +311,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     <div class="row total"><span>Total</span><span>${currency}${total.toFixed(2)}</span></div>
   </div>
 
-  ${invoice.status !== "paid" && invoice.bank_account ? `
+  ${
+    invoice.status !== "paid" && invoice.bank_account
+      ? `
   <div class="bank-section">
     <h4>Bank Transfer Details</h4>
     ${invoice.bank_account.bank_name ? '<p class="bank-line"><strong>Bank:</strong> ' + esc(invoice.bank_account.bank_name) + "</p>" : ""}
@@ -269,16 +326,24 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
     ${invoice.bank_account.currency ? '<p class="bank-line"><strong>Currency:</strong> ' + esc(invoice.bank_account.currency) + "</p>" : ""}
     ${invoice.bank_account.country ? '<p class="bank-line"><strong>Country:</strong> ' + esc(invoice.bank_account.country) + "</p>" : ""}
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 
-  ${(invoice.notes || invoice.terms) ? `
+  ${
+    invoice.notes || invoice.terms
+      ? `
   <div class="footer">
     ${invoice.notes ? "<h4>Notes</h4><p>" + esc(invoice.notes) + "</p>" : ""}
     ${invoice.terms ? "<h4>Terms & Conditions</h4><p>" + esc(invoice.terms) + "</p>" : ""}
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 </div>
-${showUPI ? `<script>
+${
+  showUPI
+    ? `<script>
 (function() {
   var INVOICE_ID = ${invoice.id};
   var INVOICE_NUMBER = ${JSON.stringify(invoice.invoice_number)};
@@ -373,13 +438,19 @@ ${showUPI ? `<script>
     payWithUPI();
   }
 })();
-</script>` : ""}
+</script>`
+    : ""
+}
 </body>
 </html>`;
 
   function esc(s) {
     if (typeof s !== "string") return s;
-    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   return new Response(html, {
