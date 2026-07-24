@@ -18,7 +18,7 @@ function WorkCard({ project, index }) {
         <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8 overflow-hidden">
           <Image
             src={project.image}
-            alt={`${project.name} — ${project.tagline}`}
+            alt={`${project.name} — ${project.tagline} — Meteoric`}
             width={640}
             height={360}
             className="w-full h-auto max-h-full object-contain rounded-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] gsap-work-img"
@@ -162,7 +162,7 @@ export default function WorkPage() {
             Portfolio
           </p>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight max-w-4xl">
-            Projects that actually shipped.
+            Meteoric's shipped projects.
           </h1>
           <p className="text-white/40 text-base md:text-lg max-w-2xl mt-6">
             Every project here went from concept to production — on time, on

@@ -99,6 +99,7 @@ export default function RootLayout({ children }) {
                   "@type": "Organization",
                   "@id": `${SITE_URL}/#organization`,
                   name: SITE_NAME,
+                  alternateName: "Meteoric Agency",
                   url: SITE_URL,
                   logo: `${SITE_URL}/m.png`,
                   image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,

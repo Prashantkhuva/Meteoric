@@ -84,7 +84,7 @@ export default function CaseStudiesPage() {
                 <div className="flex items-center justify-center p-4 sm:p-8 h-full">
                   <Image
                     src={cs.image}
-                    alt={cs.name}
+                    alt={`${cs.name} — Meteoric`}
                     width={800}
                     height={400}
                     className="object-contain w-full h-auto rounded-2xl"

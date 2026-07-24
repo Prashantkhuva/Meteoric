@@ -101,7 +101,7 @@ function Hero() {
       >
         <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
           <span ref={mainTextRef} className="block">
-            We design and ship high-performance software
+            Meteoric ships high-performance software
           </span>
           <span
             ref={mutedTextRef}

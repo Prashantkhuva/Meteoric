@@ -146,7 +146,7 @@ export default function ServicesPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-white/40 text-base md:text-lg max-w-2xl font-light leading-relaxed mb-10"
         >
-          We partner with founders to design, build, and launch modern web
+          Meteoric partners with founders to design, build, and launch modern web
           products. Every project ships with the same care as if it were our
           own — because it is.
         </motion.p>
@@ -297,7 +297,7 @@ export default function ServicesPage() {
           </ScrollReveal>
           <ScrollReveal direction="down" delay={0.2}>
             <p className="text-white/40 text-base md:text-lg max-w-xl mx-auto mb-10">
-              Book a free strategy call and we&apos;ll discuss your project, timeline, and how we can help.
+              Book a free strategy call and Meteoric will discuss your project, timeline, and how we can help.
             </p>
           </ScrollReveal>
           <ScrollReveal direction="up" delay={0.3}>

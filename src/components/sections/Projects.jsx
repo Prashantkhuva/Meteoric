@@ -22,7 +22,7 @@ function ProjectCard({ project, index }) {
       <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">
         <Image
           src={project.image}
-          alt={`${project.name} — ${project.tagline}`}
+          alt={`${project.name} — ${project.tagline} — Meteoric`}
           width={800}
           height={500}
           className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] gsap-proj-img"
@@ -50,7 +50,7 @@ export const ProjectCardMobile = function ProjectCardMobile({ project }) {
         <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
         <Image
           src={project.image}
-          alt={`${project.name} — ${project.tagline}`}
+          alt={`${project.name} — ${project.tagline} — Meteoric`}
           fill
           className="object-contain p-4"
           loading="lazy"

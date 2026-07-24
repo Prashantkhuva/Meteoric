@@ -192,3 +192,95 @@ open_loops:
   - "Need to update blog.js data structure for series/part relationships"
 recommended_next_skill: "content-quality-auditor (score existing 6 blog posts before writing new content)"
 ```
+
+## Phase 2B: AEO Prompt Keywords (Added 2026-07-24)
+
+Exact conversational queries users type into ChatGPT/Perplexity — highest GEO value since AI engines reward verbatim question matching.
+
+| Keyword | Est. Volume | Difficulty | Intent | GEO | Priority |
+|---------|------------|-----------|--------|-----|----------|
+| "What is the best tech stack for a SaaS startup in 2026" | 900 | Low | Commercial | ✅ | P0 |
+| "How do I choose between Next.js and Remix for my startup" | 600 | Low | Comparison | ✅ | P0 |
+| "What's the fastest way to build an MVP for my startup idea" | 800 | Low | Commercial | ✅ | P0 |
+| "Should I build my startup with no-code or custom development" | 1,200 | Low-Med | Comparison | ✅ | P1 |
+| "How long does it take to build a SaaS product from scratch" | 700 | Low | Informational | ✅ | P1 |
+| "What's the difference between a product studio and an agency" | 400 | Very Low | Comparison | ✅ | P1 |
+| "Which web development framework is best for startups" | 500 | Low | Commercial | ✅ | P1 |
+
+## Phase 2C: Pricing & Budget Keywords
+
+High commercial intent — bottom of funnel. 5-10x higher conversion rate than informational.
+
+| Keyword | Est. Volume | Difficulty | Intent | GEO | Priority |
+|---------|------------|-----------|--------|-----|----------|
+| startup website cost breakdown | 1,600 | Low-Med | Commercial | ✅ | P0 |
+| how much does it cost to build a web app | 2,200 | Medium | Commercial | ✅ | P0 |
+| SaaS MVP development cost 2026 | 900 | Low | Commercial | ✅ | P0 |
+| web development agency rates 2026 | 800 | Low | Commercial | ✅ | P1 |
+| cost to hire a web development agency | 1,100 | Low | Commercial | ✅ | P1 |
+| SaaS development agency pricing | 700 | Low | Commercial | ✅ | P1 |
+
+## Phase 2D: Comparison & Decision Keywords
+
+High conversion intent — prospects actively choosing between options.
+
+| Keyword | Est. Volume | Difficulty | Intent | GEO | Priority |
+|---------|------------|-----------|--------|-----|----------|
+| web development agency vs building in-house | 600 | Low | Comparison | ✅ | P0 |
+| freelance vs agency for web development | 900 | Low | Comparison | ✅ | P1 |
+| React vs Next.js for startup website | 1,400 | Medium | Comparison | ✅ | P1 |
+| Vercel vs Netlify for SaaS hosting | 700 | Low | Comparison | ✅ | P1 |
+| Tailwind CSS vs Bootstrap for SaaS in 2026 | 500 | Low | Comparison | ✅ | P2 |
+| migrating from Webflow to Next.js | 400 | Low | Migration | ✅ | P2 |
+
+## Phase 2E: Use-Case & Problem-Aware Keywords
+
+Undersaturated — low competition, high relevance.
+
+| Keyword | Est. Volume | Difficulty | Intent | GEO | Priority |
+|---------|------------|-----------|--------|-----|----------|
+| custom web application development for startups | 700 | Low | Commercial | ✅ | P1 |
+| end to end product development for startups | 500 | Low | Commercial | ✅ | P1 |
+| full stack development agency for SaaS | 600 | Low | Commercial | ✅ | P1 |
+| startup website not converting redesign | 300 | Low | Commercial | ✅ | P2 |
+| rebuild my startup tech stack | 200 | Very Low | Commercial | ✅ | P2 |
+| React native app development agency | 800 | Low-Med | Commercial | ✅ | P2 |
+
+## Phase 2F: GEO/AEO Methodology Keywords
+
+First-mover opportunity — own the GEO category for dev agencies before competitors.
+
+| Keyword | Est. Volume | Difficulty | Intent | GEO | Priority |
+|---------|------------|-----------|--------|-----|----------|
+| how to get your agency cited by AI search | 300 | Very Low | Informational | ✅ | P1 |
+| GEO optimization for web development agencies | 100 | Very Low | Informational | ✅ | P1 |
+| AI search optimization for SaaS companies | 600 | Low | Informational | ✅ | P1 |
+| how to get cited by ChatGPT for your business | 800 | Low | Informational | ✅ | P1 |
+
+## Updated Handoff Summary
+
+```yaml
+status: EXPANDED
+objective: "Keyword research + SERP analysis for Meteoric — 85+ keywords across 10 topic clusters (original 5 + 5 new)"
+key_findings:
+  - title: "Brand disambiguation need"
+    severity: high
+    evidence: "getmeteoric.com (creator talent agency) outranks withmeteoric.com for brand query 'Meteoric' — fixed H1s, added schema alternateName"
+  - title: "AEO prompt keywords are the biggest competitive moat"
+    severity: high
+    evidence: "Exact conversational queries (7 new P0-P1) have near-zero competition and AI engines match them verbatim"
+  - title: "Pricing content has highest conversion potential"
+    severity: high
+    evidence: "3 new P0 pricing keywords (startup website cost, web app cost, SaaS MVP cost) total 4,700/mo — Meteoric has zero pricing content"
+  - title: "Comparison content amplifies AI citations"
+    severity: medium
+    evidence: "32% of AI citations are from 'X vs Y' pages — only 1 existing (GSAP vs FM). New: agency vs in-house, freelance vs agency, React vs Next.js, Vercel vs Netlify"
+  - title: "GEO methodology = category ownership"
+    severity: medium
+    evidence: "No dev agency is writing about GEO/AEO — first-mover advantage with 4 new low-competition keywords"
+updated_open_loops:
+  - "Brand SEO fixes applied (2026-07-24): H1s on Home, Work, About; schema alternateName"
+  - "Pricing content needed: startup website cost, web app cost, SaaS MVP cost"
+  - "Comparison content needed: agency vs in-house, freelance vs agency, React vs Next.js"
+  - "AEO pillar page needed: single page answering all 7 AEO prompt queries with FAQ schema"
+```

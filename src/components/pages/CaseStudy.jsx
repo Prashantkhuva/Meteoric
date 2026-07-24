@@ -71,7 +71,7 @@ export default function CaseStudy({ project }) {
         >
           <Image
             src={project.image}
-            alt={`${project.name} — ${project.tagline}`}
+            alt={`${project.name} — ${project.tagline} — Meteoric`}
             width={1280}
             height={720}
             className="w-full h-auto object-cover"

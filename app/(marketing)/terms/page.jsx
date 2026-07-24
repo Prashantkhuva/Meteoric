@@ -149,7 +149,7 @@ export default function Terms() {
               Our Services
             </Link>
             <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
-              Back to home
+              Meteoric Home
             </Link>
           </div>
         </div>

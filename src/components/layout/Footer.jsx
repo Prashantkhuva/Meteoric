@@ -38,6 +38,7 @@ export default function Footer() {
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
             <p className="text-white/30">&copy; 2026 Meteoric.</p>
+            <span className="text-white/20 text-xs">Web &amp; Software Development Agency</span>
             <StaggerLink href="/privacy" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.3)", padding: "4px 8px" }}>Privacy</StaggerLink>
             <span className="text-white/10">/</span>
             <StaggerLink href="/terms" hoverColor="#fff" style={{ fontSize: 14, fontWeight: 400, color: "rgba(255,255,255,0.3)", padding: "4px 8px" }}>Terms</StaggerLink>

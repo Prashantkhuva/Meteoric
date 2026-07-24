@@ -102,10 +102,10 @@ export default function AboutPage({ faqs = [] }) {
                 About Meteoric
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-4">
-                Prashant Khuva
+                Prashant Khuva — Founder of Meteoric
               </h1>
               <p className="text-white/25 text-lg md:text-xl font-light">
-                Founder — Meteoric, a Web & Product Development Studio
+                Web & Product Development Studio
               </p>
             </div>
 
