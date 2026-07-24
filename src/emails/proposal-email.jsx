@@ -1,21 +1,11 @@
-import {
-  Html,
-  Head,
-  Preview,
-  Body,
-  Container,
-  Text,
-  Link,
-  Img,
-} from "react-email";
-const SITE_URL = "https://withmeteoric.com";
+import { Html, Head, Preview, Body, Container, Text, Link } from "react-email";
+import EmailLogo from "./EmailLogo";
 export default function ProposalEmail({
   name,
   title,
   timeline,
   terms,
   previewUrl,
-  cb,
 }) {
   return (
     <Html>
@@ -25,13 +15,7 @@ export default function ProposalEmail({
         {" "}
         <Container style={container}>
           {" "}
-          <Img
-            src={`${SITE_URL}/new-meteoric-lg.svg?cb=${cb}`}
-            width="132"
-            height="30"
-            alt="Meteoric"
-            style={logo}
-          />
+          <EmailLogo />
           <Text style={greeting}>Hi {name || "there"},</Text>{" "}
           <Text style={paragraph}>
             {" "}
@@ -83,7 +67,7 @@ const container = {
   backgroundColor: "#0a0a0a",
   border: "1px solid rgba(234, 239, 255, 0.1)",
 };
-const logo = { marginBottom: "24px" };
+
 const strong = { color: "#ffffff" };
 const greeting = {
   fontSize: "16px",

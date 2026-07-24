@@ -1,16 +1,5 @@
-import {
-  Html,
-  Head,
-  Preview,
-  Body,
-  Container,
-  Section,
-  Text,
-  Hr,
-  Heading,
-  Link,
-  Img,
-} from "react-email";
+import { Html, Head, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
+import EmailLogo from "./EmailLogo";
 export default function NewLeadNotification({
   name,
   email,
@@ -19,7 +8,6 @@ export default function NewLeadNotification({
   details,
   budget,
   siteUrl,
-  cb,
 }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
@@ -30,13 +18,7 @@ export default function NewLeadNotification({
         {" "}
         <Container style={container}>
           {" "}
-          <Img
-            src={`${baseUrl}/new-meteoric-lg.svg?cb=${cb}`}
-            width="132"
-            height="30"
-            alt="Meteoric"
-            style={logoImg}
-          />
+          <EmailLogo />
           <Heading style={h1}>
             New Lead <span style={star}>✦</span>
           </Heading>{" "}
@@ -114,7 +96,7 @@ const container = {
   border: "1px solid rgba(234, 239, 255, 0.1)",
   borderRadius: "16px",
 };
-const logoImg = { marginBottom: "20px" };
+
 const star = { color: "#EAEFFF" };
 const h1 = {
   fontSize: "24px",

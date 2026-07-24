@@ -1,6 +1,6 @@
-import { Html, Head, Preview, Body, Container, Text, Img } from "react-email";
-export default function ReviewThankYou({ name, siteUrl, cb }) {
-  const baseUrl = siteUrl || "https://withmeteoric.com";
+import { Html, Head, Preview, Body, Container, Text } from "react-email";
+import EmailLogo from "./EmailLogo";
+export default function ReviewThankYou({ name }) {
   return (
     <Html>
       {" "}
@@ -10,13 +10,7 @@ export default function ReviewThankYou({ name, siteUrl, cb }) {
         {" "}
         <Container style={container}>
           {" "}
-          <Img
-            src={`${baseUrl}/new-meteoric-lg.svg?cb=${cb}`}
-            width="132"
-            height="30"
-            alt="Meteoric"
-            style={logoImg}
-          />
+          <EmailLogo />
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>{" "}
           <Text style={paragraph}>
             {" "}
@@ -49,7 +43,7 @@ const container = {
   border: "1px solid rgba(234, 239, 255, 0.1)",
   borderRadius: "16px",
 };
-const logoImg = { marginBottom: "20px" };
+
 const greeting = {
   fontSize: "16px",
   color: "#ffffff",
