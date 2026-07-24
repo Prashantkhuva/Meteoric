@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { motion } from "framer-motion";
+import { Video, Target, ShieldCheck } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -17,7 +18,7 @@ export default function CalBooking() {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi({ namespace: "let-s-build" });
-      cal("ui", { hideEventTypeDetails: true, layout: "month_view" });
+      cal("ui", { hideEventTypeDetails: true, layout: "month_view", theme: "dark" });
     })();
   }, []);
 
@@ -39,9 +40,11 @@ export default function CalBooking() {
           initial="hidden"
           animate="visible"
           custom={1}
-          className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-5"
+          className="text-4xl md:text-6xl lg:text-7xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-5"
         >
-          Book a Strategy Call
+          Let&apos;s build something{" "}
+          <span className="text-[#EAEFFF]/20 line-through decoration-1">great</span>{" "}
+          <span className="not-italic font-semibold font-display text-white">together.</span>
         </motion.h1>
         <motion.p
           variants={fadeUp}
@@ -51,7 +54,8 @@ export default function CalBooking() {
           className="text-white/35 text-lg md:text-xl max-w-2xl leading-relaxed"
         >
           Pick a time that works for you. No commitment, no sales pitch — just a
-          conversation about your project, timeline, and how we can help.
+          conversation about your <span className="text-white/60 font-secondary-italic">project, timeline,</span> and{" "}
+          <span className="text-white/60 font-secondary-italic">how we can help.</span>
         </motion.p>
       </section>
 
@@ -62,7 +66,8 @@ export default function CalBooking() {
 
       {/* Cal Embed */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
-        <div className="rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a] overflow-hidden" style={{ height: "750px" }}>
+        <div className="relative rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a] overflow-hidden shadow-[0_0_60px_-20px_rgba(234,239,255,0.08)]" style={{ height: "750px" }}>
+          <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_50%_0%,rgba(234,239,255,0.03),transparent_70%)] pointer-events-none" />
           <Cal
             namespace="let-s-build"
             calLink="prashantkhuva/let-s-build"
@@ -72,20 +77,35 @@ export default function CalBooking() {
         </div>
       </section>
 
-      {/* Bottom note */}
-      <section className="max-w-5xl mx-auto px-6 md:px-12 pb-20">
-        <div className="flex flex-col sm:flex-row items-start gap-6 text-white/25 text-sm leading-relaxed">
-          <div className="flex items-start gap-3">
-            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#EAEFFF]/40 shrink-0" />
-            <span>30-minute video call, completely free</span>
+      {/* Bottom notes */}
+      <section className="max-w-5xl mx-auto px-6 md:px-12 pb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
+            <div className="w-10 h-10 rounded-full bg-[#EAEFFF]/5 flex items-center justify-center shrink-0">
+              <Video size={16} className="text-[#EAEFFF]/50" />
+            </div>
+            <div>
+              <p className="text-white/70 text-sm font-semibold mb-1">Free consultation</p>
+              <p className="text-white/30 text-xs leading-relaxed">30-minute video call, completely free</p>
+            </div>
           </div>
-          <div className="flex items-start gap-3">
-            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#EAEFFF]/40 shrink-0" />
-            <span>Discuss your goals, timeline, and budget</span>
+          <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
+            <div className="w-10 h-10 rounded-full bg-[#EAEFFF]/5 flex items-center justify-center shrink-0">
+              <Target size={16} className="text-[#EAEFFF]/50" />
+            </div>
+            <div>
+              <p className="text-white/70 text-sm font-semibold mb-1">No pressure</p>
+              <p className="text-white/30 text-xs leading-relaxed">Discuss your goals, timeline, and budget</p>
+            </div>
           </div>
-          <div className="flex items-start gap-3">
-            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#EAEFFF]/40 shrink-0" />
-            <span>No obligation — ever</span>
+          <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
+            <div className="w-10 h-10 rounded-full bg-[#EAEFFF]/5 flex items-center justify-center shrink-0">
+              <ShieldCheck size={16} className="text-[#EAEFFF]/50" />
+            </div>
+            <div>
+              <p className="text-white/70 text-sm font-semibold mb-1">Zero commitment</p>
+              <p className="text-white/30 text-xs leading-relaxed">No obligation — ever</p>
+            </div>
           </div>
         </div>
       </section>
