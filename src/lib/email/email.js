@@ -49,7 +49,7 @@ export async function sendNewLeadNotification(lead) {
     from: ADMIN_FROM,
     to: [ADMIN],
     subject: `New lead from ${lead.name || lead.email}`,
-    react: NewLeadEmail(lead),
+    react: NewLeadEmail({ ...lead, cb: Date.now() }),
   });
   if (result?.error) console.error("[resend] admin notification failed:", result.error);
   return result;
@@ -61,7 +61,7 @@ export async function sendHotLeadAlert(lead, score, category, summary) {
     from: ADMIN_FROM,
     to: [ADMIN],
     subject: `🔥 Hot lead (${score}): ${lead.name || lead.email}`,
-    react: HotLeadAlert({ lead, score, category, summary }),
+    react: HotLeadAlert({ lead, score, category, summary, cb: Date.now() }),
   });
   if (result?.error) console.error("[resend] hot lead alert failed:", result.error);
   return result;
@@ -79,7 +79,7 @@ export async function sendLeadAutoReply(lead) {
     from: FROM,
     to: [lead.email],
     subject: "Thank you for reaching out — Meteoric",
-    react: LeadAutoReply({ name: lead.name }),
+    react: LeadAutoReply({ name: lead.name, cb: Date.now() }),
   });
   if (result?.error) console.error("[resend] auto-reply failed:", result.error);
   return result;
@@ -107,6 +107,7 @@ export async function sendProposalEmail(proposal, lead, previewUrl) {
         timeline: proposal.timeline,
         terms: proposal.terms,
         previewUrl,
+        cb: Date.now(),
       }),
       attachments: [
         {
@@ -135,7 +136,7 @@ export async function sendClientWelcome(client) {
     from: FROM,
     to: [client.email],
     subject: "Welcome to Meteoric — Let's Build Something Great",
-    react: ClientWelcome({ name: client.name }),
+    react: ClientWelcome({ name: client.name, cb: Date.now() }),
   });
   if (result?.error) console.error("[resend] client welcome failed:", result.error);
   return result;
@@ -176,6 +177,7 @@ export async function sendInvoiceEmail(invoice, client, previewUrl) {
         previewUrl,
         bankAccount: invoice.bank_account || null,
         showUPI,
+        cb: Date.now(),
       }),
       attachments: [
         {
@@ -220,6 +222,7 @@ export async function sendOverdueReminder(invoice, client, previewUrl) {
         dueDate,
         daysOverdue,
         previewUrl,
+        cb: Date.now(),
       }),
     });
   } catch (raw) {
@@ -254,7 +257,7 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
       from: `Meteoric <${fromAddress}>`,
       to,
       subject,
-      react: CustomEmail({ html }),
+      react: CustomEmail({ html, cb: Date.now() }),
       reply_to: fromAddress,
       attachments: safeAttachments.length > 0 ? safeAttachments : undefined,
     });
@@ -288,6 +291,7 @@ export async function sendPaymentConfirmation(invoice, client) {
         total: invoice.total,
         currency: invoice.currency || "USD",
         paidAt: invoice.paid_at,
+        cb: Date.now(),
       }),
       attachments: [
         {
@@ -316,7 +320,7 @@ export async function sendReviewThankYou(email, name) {
     from: FROM,
     to: [email],
     subject: "Thank you for your review — Meteoric",
-    react: ReviewThankYou({ name, siteUrl: getSiteUrl() }),
+    react: ReviewThankYou({ name, siteUrl: getSiteUrl(), cb: Date.now() }),
   });
   if (result?.error) console.error("[resend] review thank-you failed:", result.error);
   return result;

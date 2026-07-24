@@ -146,7 +146,7 @@ export default function InvoiceEmail({
                 <Img
                   src={`${SITE_URL}/upi.svg`}
                   alt="UPI"
-                  width={56}
+                  width={63}
                   height={20}
                 />{" "}
               </Link>{" "}
@@ -312,7 +312,7 @@ const bankSection = {
 const upiButton = {
   display: "inline-block",
   padding: "14px 24px",
-  backgroundColor: "#5F259F",
+  backgroundColor: "#0a0a0a",
   textDecoration: "none",
   borderRadius: "6px",
 };

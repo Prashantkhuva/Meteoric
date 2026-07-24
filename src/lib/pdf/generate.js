@@ -10,7 +10,7 @@ let logoDataUri;
 function getLogo() {
   if (!logoDataUri) {
     try {
-      const logoPath = path.join(process.cwd(), "public", "logo.svg");
+      const logoPath = path.join(process.cwd(), "public", "email-logo.svg");
       const buffer = fs.readFileSync(logoPath);
       logoDataUri = `data:image/svg+xml;base64,${buffer.toString("base64")}`;
     } catch {

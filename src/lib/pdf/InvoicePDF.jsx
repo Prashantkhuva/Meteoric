@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   upiButton: {
-    backgroundColor: "#5F259F",
+    backgroundColor: colors.card,
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 6,
