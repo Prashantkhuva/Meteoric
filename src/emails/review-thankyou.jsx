@@ -38,8 +38,7 @@ export default function ReviewThankYou({ name, siteUrl, cb }) {
 }
 const main = {
   backgroundColor: "#000000",
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+  fontFamily: "Arial, Helvetica, sans-serif",
   padding: "40px 0",
 };
 const container = {

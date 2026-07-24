@@ -30,8 +30,9 @@ export default function OverdueReminder({
         {" "}
         <Container style={container}>
           {" "}
+          // src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
           <Img
-            src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
+            src='/public/email-logo.svg'
             width="132"
             height="30"
             alt="Meteoric"
@@ -85,8 +86,7 @@ export default function OverdueReminder({
 }
 const main = {
   backgroundColor: "#000000",
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+  fontFamily: "Arial, Helvetica, sans-serif",
   padding: "40px 0",
 };
 const container = {

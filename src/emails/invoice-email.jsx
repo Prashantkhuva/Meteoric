@@ -202,8 +202,7 @@ export default function InvoiceEmail({
 }
 const main = {
   backgroundColor: "#000000",
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+  fontFamily: "Arial, Helvetica, sans-serif",
   padding: "40px 0",
 };
 const container = {
@@ -303,7 +302,7 @@ const signoff = {
   marginTop: "4px",
   marginBottom: "0",
 };
-const hr = { borderColor: "rgba(234, 239, 255, 0.08)", margin: "24px 0" };
+
 const bankSection = {
   backgroundColor: "#111111",
   border: "1px solid #222222",
