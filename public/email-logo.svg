@@ -1,0 +1,15 @@
+/* meteoric */
+
+position: absolute;
+width: 47px;
+height: 16px;
+
+font-family: 'Playfair Display';
+font-style: italic;
+font-weight: 600;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height */
+
+color: #FFFFFF;
+

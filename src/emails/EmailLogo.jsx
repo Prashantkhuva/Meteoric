@@ -6,15 +6,15 @@ export default function EmailLogo() {
       style={{
         margin: "0 0 24px 0",
         padding: 0,
-        lineHeight: "30px",
-        fontSize: "24px",
+        lineHeight: "36px",
+        fontSize: "28px",
       }}
     >
       <span
         style={{
           fontFamily: "'Playfair Display', Georgia, serif",
           fontStyle: "italic",
-          fontWeight: 600,
+          fontWeight: 500,
           color: "#FFFFFF",
         }}
       >
@@ -24,7 +24,7 @@ export default function EmailLogo() {
         style={{
           fontFamily: "Inter, 'Helvetica Neue', Arial, sans-serif",
           fontStyle: "italic",
-          fontWeight: 600,
+          fontWeight: 500,
           color: "#FFFFFF",
         }}
       >
