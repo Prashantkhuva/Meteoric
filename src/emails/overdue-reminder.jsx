@@ -30,9 +30,8 @@ export default function OverdueReminder({
         {" "}
         <Container style={container}>
           {" "}
-          // src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
           <Img
-            src='/public/email-logo.svg'
+            src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
             width="132"
             height="30"
             alt="Meteoric"
