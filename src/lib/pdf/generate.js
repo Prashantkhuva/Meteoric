@@ -5,7 +5,7 @@ import path from "path";
 import ProposalPDF from "./ProposalPDF";
 import InvoicePDF from "./InvoicePDF";
 
-let logoDataUri;
+let logoDataUri, upiLogoDataUri;
 
 function getLogo() {
   if (!logoDataUri) {
@@ -22,6 +22,19 @@ function getLogo() {
     }
   }
   return logoDataUri;
+}
+
+function getUpiLogo() {
+  if (!upiLogoDataUri) {
+    try {
+      const p = path.join(process.cwd(), "public", "new-upi-lg.svg");
+      const b = fs.readFileSync(p);
+      upiLogoDataUri = `data:image/svg+xml;base64,${b.toString("base64")}`;
+    } catch {
+      upiLogoDataUri = null;
+    }
+  }
+  return upiLogoDataUri;
 }
 
 export async function generateProposalPdf(proposal, lead) {
@@ -41,6 +54,7 @@ export async function generateInvoicePdf(
       invoice={invoice}
       client={client}
       logo={getLogo()}
+      upiLogo={getUpiLogo()}
       wiseCurrency={wiseCurrency}
       previewUrl={previewUrl}
     />,
