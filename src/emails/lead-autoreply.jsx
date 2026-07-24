@@ -12,7 +12,7 @@ export default function LeadAutoReply({ name, siteUrl, cb }) {
         <Container style={container}>
           {" "}
           <Img
-            src={`${baseUrl}/email-logo.svg?cb=${cb}`}
+            src={`${baseUrl}/new-meteoric-lg.svg?cb=${cb}`}
             width="132"
             height="30"
             alt="Meteoric"

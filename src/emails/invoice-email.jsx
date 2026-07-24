@@ -48,7 +48,7 @@ export default function InvoiceEmail({
         <Container style={container}>
           {" "}
           <Img
-            src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
+            src={`${SITE_URL}/new-meteoric-lg.svg?cb=${cb}`}
             width="132"
             height="30"
             alt="Meteoric"
@@ -144,7 +144,7 @@ export default function InvoiceEmail({
               <Link href={previewUrl + "&rp=1"} style={upiButton}>
                 {" "}
                 <Img
-                  src={`${SITE_URL}/upi.svg`}
+                  src={`${SITE_URL}/new-upi-lg.svg`}
                   alt="UPI"
                   width={63}
                   height={20}

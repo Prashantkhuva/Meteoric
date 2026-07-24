@@ -10,7 +10,11 @@ let logoDataUri;
 function getLogo() {
   if (!logoDataUri) {
     try {
-      const logoPath = path.join(process.cwd(), "public", "email-logo.svg");
+      const logoPath = path.join(
+        process.cwd(),
+        "public",
+        "new-meteoric-lg.svg",
+      );
       const buffer = fs.readFileSync(logoPath);
       logoDataUri = `data:image/svg+xml;base64,${buffer.toString("base64")}`;
     } catch {
@@ -22,12 +26,23 @@ function getLogo() {
 
 export async function generateProposalPdf(proposal, lead) {
   return renderToBuffer(
-    <ProposalPDF proposal={proposal} lead={lead} logo={getLogo()} />
+    <ProposalPDF proposal={proposal} lead={lead} logo={getLogo()} />,
   );
 }
 
-export async function generateInvoicePdf(invoice, client, wiseCurrency, previewUrl) {
+export async function generateInvoicePdf(
+  invoice,
+  client,
+  wiseCurrency,
+  previewUrl,
+) {
   return renderToBuffer(
-    <InvoicePDF invoice={invoice} client={client} logo={getLogo()} wiseCurrency={wiseCurrency} previewUrl={previewUrl} />
+    <InvoicePDF
+      invoice={invoice}
+      client={client}
+      logo={getLogo()}
+      wiseCurrency={wiseCurrency}
+      previewUrl={previewUrl}
+    />,
   );
 }

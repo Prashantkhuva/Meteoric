@@ -40,7 +40,7 @@ export default function PaymentConfirmation({
         <Container style={container}>
           {" "}
           <Img
-            src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
+            src={`${SITE_URL}/new-meteoric-lg.svg?cb=${cb}`}
             width="132"
             height="30"
             alt="Meteoric"

@@ -2,7 +2,14 @@
 
 import { useCallback } from "react";
 
-export default function RazorpayCheckout({ orderId, amount, currency, name, email, invoiceNumber }) {
+export default function RazorpayCheckout({
+  orderId,
+  amount,
+  currency,
+  name,
+  email,
+  invoiceNumber,
+}) {
   const handlePayment = useCallback(async () => {
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -48,9 +55,19 @@ export default function RazorpayCheckout({ orderId, amount, currency, name, emai
     <button
       onClick={handlePayment}
       className="inline-flex items-center justify-center px-5 py-3 transition-all hover:opacity-90 active:scale-[0.97]"
-      style={{ backgroundColor: "#0a0a0a", border: "1px solid #1B1B1B", borderRadius: "6px" }}
+      style={{
+        backgroundColor: "#0a0a0a",
+        border: "1px solid #1B1B1B",
+        borderRadius: "6px",
+      }}
     >
-      <img src="/upi.svg" alt="UPI" width="63" height="20" style={{ display: "block" }} />
+      <img
+        src="/new-upi-lg.svg"
+        alt="UPI"
+        width="63"
+        height="20"
+        style={{ display: "block" }}
+      />
     </button>
   );
 }

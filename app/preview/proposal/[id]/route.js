@@ -26,7 +26,9 @@ export async function GET(request, { params }) {
     proposal = typeof data === "string" ? JSON.parse(data) : data;
   } else {
     const cookieStore = await cookies();
-    const hasAuthCookie = cookieStore.getAll().some((c) => c.name.startsWith("sb-"));
+    const hasAuthCookie = cookieStore
+      .getAll()
+      .some((c) => c.name.startsWith("sb-"));
     if (!hasAuthCookie) {
       return new Response(null, {
         status: 302,
@@ -50,21 +52,34 @@ export async function GET(request, { params }) {
     return new Response("Not found", { status: 404 });
   }
 
-  const statusLabel = proposal.status === "sent" ? "Sent" : proposal.status === "draft" ? "Draft" : proposal.status;
+  const statusLabel =
+    proposal.status === "sent"
+      ? "Sent"
+      : proposal.status === "draft"
+        ? "Draft"
+        : proposal.status;
   const statusClass = proposal.status === "sent" ? "sent" : "";
 
   function fmt(d) {
     if (!d) return "";
-    return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    return new Date(d).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   }
 
   const proposalContent = renderContent(proposal.content);
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
-    const logoBuf = fs.readFileSync(path.join(process.cwd(), "public", "email-logo.svg"));
+    const logoBuf = fs.readFileSync(
+      path.join(process.cwd(), "public", "new-meteoric-lg.svg"),
+    );
     logoSrc = `data:image/svg+xml;base64,${logoBuf.toString("base64")}`;
-  } catch { /* logo file not found, fall back to text */ }
+  } catch {
+    /* logo file not found, fall back to text */
+  }
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -165,19 +180,27 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
     ${proposalContent}
   </div>
 
-  ${proposal.timeline ? `
+  ${
+    proposal.timeline
+      ? `
   <div class="footer">
     <h4>Timeline</h4>
     <p>${esc(proposal.timeline)}</p>
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 
-  ${proposal.terms ? `
+  ${
+    proposal.terms
+      ? `
   <div class="footer">
     <h4>Terms & Conditions</h4>
     <p>${esc(proposal.terms)}</p>
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 </div>
 </body>
 </html>`;
@@ -190,7 +213,11 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 
 function esc(s) {
   if (typeof s !== "string") return s;
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function renderContent(content) {
@@ -209,12 +236,26 @@ function renderNode(node) {
       return "<p>" + renderInline(node.content) + "</p>";
     case "heading": {
       const level = node.attrs?.level || 2;
-      return "<h" + level + ">" + renderInline(node.content) + "</h" + level + ">";
+      return (
+        "<h" + level + ">" + renderInline(node.content) + "</h" + level + ">"
+      );
     }
     case "bulletList":
-      return "<ul>" + (node.content || []).map((item) => "<li>" + renderInline(item.content) + "</li>").join("") + "</ul>";
+      return (
+        "<ul>" +
+        (node.content || [])
+          .map((item) => "<li>" + renderInline(item.content) + "</li>")
+          .join("") +
+        "</ul>"
+      );
     case "orderedList":
-      return "<ol>" + (node.content || []).map((item) => "<li>" + renderInline(item.content) + "</li>").join("") + "</ol>";
+      return (
+        "<ol>" +
+        (node.content || [])
+          .map((item) => "<li>" + renderInline(item.content) + "</li>")
+          .join("") +
+        "</ol>"
+      );
     default:
       return "<p>" + renderInline(node.content) + "</p>";
   }
@@ -222,24 +263,36 @@ function renderNode(node) {
 
 function renderInline(content) {
   if (!content) return "";
-  return content.map((node) => {
-    if (node.type === "hardBreak") return "<br>";
-    if (node.type === "text") {
-      let text = esc(node.text || "");
-      if (node.marks) {
-        for (const mark of node.marks) {
-          if (mark.type === "bold") text = "<strong>" + text + "</strong>";
-          if (mark.type === "italic") text = "<em>" + text + "</em>";
-          if (mark.type === "underline") text = "<u>" + text + "</u>";
-          if (mark.type === "link") {
-            const href = mark.attrs?.href || "";
-            const safe = href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:") ? href : "";
-            text = '<a href="' + esc(safe) + '" target="_blank" rel="noopener noreferrer">' + text + "</a>";
+  return content
+    .map((node) => {
+      if (node.type === "hardBreak") return "<br>";
+      if (node.type === "text") {
+        let text = esc(node.text || "");
+        if (node.marks) {
+          for (const mark of node.marks) {
+            if (mark.type === "bold") text = "<strong>" + text + "</strong>";
+            if (mark.type === "italic") text = "<em>" + text + "</em>";
+            if (mark.type === "underline") text = "<u>" + text + "</u>";
+            if (mark.type === "link") {
+              const href = mark.attrs?.href || "";
+              const safe =
+                href.startsWith("http://") ||
+                href.startsWith("https://") ||
+                href.startsWith("mailto:")
+                  ? href
+                  : "";
+              text =
+                '<a href="' +
+                esc(safe) +
+                '" target="_blank" rel="noopener noreferrer">' +
+                text +
+                "</a>";
+            }
           }
         }
+        return text;
       }
-      return text;
-    }
-    return "";
-  }).join("");
+      return "";
+    })
+    .join("");
 }
