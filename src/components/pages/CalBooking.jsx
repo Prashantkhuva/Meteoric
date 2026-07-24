@@ -66,7 +66,7 @@ export default function CalBooking() {
 
       {/* Cal Embed */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
-        <div className="relative rounded-2xl ring-1 ring-white/[0.06] bg-[#0a0a0a] overflow-hidden shadow-[0_0_60px_-20px_rgba(234,239,255,0.08)]" style={{ height: "750px" }}>
+        <div className="relative rounded-2xl ring-1 ring-white/[0.06] overflow-hidden shadow-[0_0_60px_-20px_rgba(234,239,255,0.08)]" style={{ height: "750px" }}>
           <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_50%_0%,rgba(234,239,255,0.03),transparent_70%)] pointer-events-none" />
           <Cal
             namespace="let-s-build"
