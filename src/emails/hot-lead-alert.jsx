@@ -17,6 +17,7 @@ export default function HotLeadAlert({
   category,
   summary,
   siteUrl,
+  cb,
 }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
@@ -30,8 +31,14 @@ export default function HotLeadAlert({
         {" "}
         <Container style={container}>
           {" "}
-          <Img src={`${baseUrl}/email-logo.svg?cb=${Date.now()}`} width="132" height="30" alt="Meteoric" style={logoImg} />
-<Heading style={h1}>🔥 Hot Lead &mdash; {score}/100</Heading>{" "}
+          <Img
+            src={`${baseUrl}/email-logo.svg?cb=${cb}`}
+            width="132"
+            height="30"
+            alt="Meteoric"
+            style={logoImg}
+          />
+          <Heading style={h1}>🔥 Hot Lead &mdash; {score}/100</Heading>{" "}
           {category && <Text style={badge}>Category: {category}</Text>}{" "}
           {summary && <Text style={summaryText}>"{summary}"</Text>}{" "}
           <Hr style={hr} />{" "}

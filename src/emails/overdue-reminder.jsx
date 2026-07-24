@@ -17,6 +17,7 @@ export default function OverdueReminder({
   dueDate,
   daysOverdue,
   previewUrl,
+  cb,
 }) {
   return (
     <Html>
@@ -29,8 +30,14 @@ export default function OverdueReminder({
         {" "}
         <Container style={container}>
           {" "}
-          <Img src={`${SITE_URL}/email-logo.svg?cb=${Date.now()}`} width="132" height="30" alt="Meteoric" style={logo} />
-<Text style={greeting}>Hi {name || "there"},</Text>{" "}
+          <Img
+            src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
+            width="132"
+            height="30"
+            alt="Meteoric"
+            style={logo}
+          />
+          <Text style={greeting}>Hi {name || "there"},</Text>{" "}
           <Text style={paragraph}>
             {" "}
             This is a reminder that invoice{" "}

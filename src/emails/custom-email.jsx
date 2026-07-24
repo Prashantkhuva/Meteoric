@@ -1,6 +1,6 @@
 import { Html, Head, Body, Container, Text, Img } from "react-email";
 const SITE_URL = "https://withmeteoric.com";
-export default function CustomEmail({ html }) {
+export default function CustomEmail({ html, cb }) {
   return (
     <Html>
       {" "}
@@ -9,8 +9,14 @@ export default function CustomEmail({ html }) {
         {" "}
         <Container style={container}>
           {" "}
-          <Img src={`${SITE_URL}/email-logo.svg?cb=${Date.now()}`} width="132" height="30" alt="Meteoric" style={logo} />
-<div style={bodyContent} dangerouslySetInnerHTML={{ __html: html }} />{" "}
+          <Img
+            src={`${SITE_URL}/email-logo.svg?cb=${cb}`}
+            width="132"
+            height="30"
+            alt="Meteoric"
+            style={logo}
+          />
+          <div style={bodyContent} dangerouslySetInnerHTML={{ __html: html }} />{" "}
           <Text style={signoff}>Prashant — Founder, Meteoric</Text>{" "}
         </Container>{" "}
       </Body>{" "}

@@ -19,6 +19,7 @@ export default function NewLeadNotification({
   details,
   budget,
   siteUrl,
+  cb,
 }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
@@ -29,8 +30,14 @@ export default function NewLeadNotification({
         {" "}
         <Container style={container}>
           {" "}
-          <Img src={`${baseUrl}/email-logo.svg?cb=${Date.now()}`} width="132" height="30" alt="Meteoric" style={logoImg} />
-<Heading style={h1}>
+          <Img
+            src={`${baseUrl}/email-logo.svg?cb=${cb}`}
+            width="132"
+            height="30"
+            alt="Meteoric"
+            style={logoImg}
+          />
+          <Heading style={h1}>
             New Lead <span style={star}>✦</span>
           </Heading>{" "}
           <Text style={muted}>

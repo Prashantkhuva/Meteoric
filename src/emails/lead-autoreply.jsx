@@ -1,5 +1,5 @@
 import { Html, Head, Preview, Body, Container, Text, Img } from "react-email";
-export default function LeadAutoReply({ name, siteUrl }) {
+export default function LeadAutoReply({ name, siteUrl, cb }) {
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
     <Html>
@@ -11,8 +11,14 @@ export default function LeadAutoReply({ name, siteUrl }) {
         {" "}
         <Container style={container}>
           {" "}
-          <Img src={`${baseUrl}/email-logo.svg?cb=${Date.now()}`} width="132" height="30" alt="Meteoric" style={logoImg} />
-<Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>{" "}
+          <Img
+            src={`${baseUrl}/email-logo.svg?cb=${cb}`}
+            width="132"
+            height="30"
+            alt="Meteoric"
+            style={logoImg}
+          />
+          <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>{" "}
           <Text style={paragraph}>
             {" "}
             Thank you for reaching out. We've received your inquiry and we're
