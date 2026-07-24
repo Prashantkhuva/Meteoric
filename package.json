@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",
+    "@fontsource/inter": "^5.3.0",
     "@google/generative-ai": "^0.24.1",
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-select": "^2.2.6",

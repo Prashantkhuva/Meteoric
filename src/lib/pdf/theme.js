@@ -18,9 +18,9 @@ export const colors = {
 };
 
 export const fonts = {
-  body: "Helvetica",
-  bold: "Helvetica-Bold",
-  oblique: "Helvetica-Oblique",
+  body: "Inter",
+  bold: "Inter-Bold",
+  oblique: "Inter-Italic",
 };
 
 export const fontSizes = {
