@@ -6,8 +6,8 @@ export default function EmailLogo() {
       style={{
         margin: "0 0 24px 0",
         padding: 0,
-        lineHeight: "16px",
-        fontSize: "12px",
+        lineHeight: "30px",
+        fontSize: "24px",
       }}
     >
       <span
