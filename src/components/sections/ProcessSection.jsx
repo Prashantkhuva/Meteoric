@@ -130,8 +130,10 @@ export default function ProcessSection() {
           </h2>
 
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/50 sm:mt-8 sm:text-lg">
-            Every project moves through a clear workflow — from strategy and
-            design to development and launch.
+            Every project moves through a clear workflow — from{" "}
+            <span className="text-white/70 font-secondary-italic">strategy and design</span>
+            {" "}to{" "}
+            <span className="text-white/70 font-secondary-italic">development and launch</span>.
           </p>
         </div>
 
