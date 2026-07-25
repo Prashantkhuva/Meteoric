@@ -55,57 +55,6 @@ const speakableJsonLd = {
   },
 };
 
-const serviceJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "ProfessionalService",
-      name: "Meteoric",
-      url: SITE_URL,
-      description: "Web and SaaS development agency for startups. We build high-performance websites, SaaS platforms, and full-stack applications.",
-      areaServed: "Worldwide",
-      hasOfferCatalog: {
-        "@type": "OfferCatalog",
-        name: "Development Services",
-        itemListElement: [
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Landing Pages",
-              description: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
-            },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "SaaS Development",
-              description: "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
-            },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Web Applications",
-              description: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
-            },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Full-Stack Development",
-              description: "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
-            },
-          },
-        ],
-      },
-    },
-  ],
-};
-
 const serviceFaqs = [
   {
     question: "How much does it cost to build a website or SaaS with Meteoric?",
@@ -161,10 +110,6 @@ export default function Services() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       <script
         type="application/ld+json"
