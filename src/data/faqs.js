@@ -46,4 +46,12 @@ export const serviceFaqs = [
     q: "How is Meteoric different from other development agencies?",
     a: "Direct founder involvement on every project — no account managers, no layers of abstraction. We ship 12+ production projects with 100% client satisfaction, using a structured 10-day sprint cycle with weekly updates and transparent communication.",
   },
+  {
+    q: "What is an MVP in SaaS?",
+    a: "An MVP (Minimum Viable Product) in SaaS is the leanest version of your product that still delivers core value to early users. It includes only the essential features needed to validate your idea, gather real feedback, and start generating revenue — without over-investing in polish before proving product-market fit.",
+  },
+  {
+    q: "How do I go from MVP to a full SaaS product?",
+    a: "After validating your MVP with real users, we iterate based on feedback — adding features, improving performance, and scaling infrastructure. Meteoric handles the full lifecycle: MVP in 3–6 weeks, then ongoing sprints for feature expansion, analytics, billing, and team onboarding. No rebuilds, just continuous improvement.",
+  },
 ];

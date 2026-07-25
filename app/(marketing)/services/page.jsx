@@ -2,9 +2,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Services | Meteoric — SaaS & Startup Web Development Agency";
+const pageTitle = "SaaS MVP Development Services for Startups | Meteoric";
 const pageDesc =
-  "Meteoric is a SaaS and startup web development agency. From MVP prototypes to production platforms — built with Next.js, Supabase, and modern tooling.";
+  "Meteoric ships SaaS MVPs in 3–6 weeks. From prototype to production — Next.js, Supabase, and modern full-stack tooling. Book a free strategy call to start.";
 
 export const metadata = {
   title: pageTitle,
@@ -128,6 +128,16 @@ const serviceFaqs = [
     question: "How is Meteoric different from other development agencies?",
     answer:
       "Direct founder involvement on every project — no account managers, no layers of abstraction. We ship 12+ production projects with 100% client satisfaction, using a structured 10-day sprint cycle with weekly updates and transparent communication.",
+  },
+  {
+    question: "What is an MVP in SaaS?",
+    answer:
+      "An MVP (Minimum Viable Product) in SaaS is the leanest version of your product that still delivers core value to early users. It includes only the essential features needed to validate your idea, gather real feedback, and start generating revenue — without over-investing in polish before proving product-market fit.",
+  },
+  {
+    question: "How do I go from MVP to a full SaaS product?",
+    answer:
+      "After validating your MVP with real users, we iterate based on feedback — adding features, improving performance, and scaling infrastructure. Meteoric handles the full lifecycle: MVP in 3–6 weeks, then ongoing sprints for feature expansion, analytics, billing, and team onboarding. No rebuilds, just continuous improvement.",
   },
 ];
 

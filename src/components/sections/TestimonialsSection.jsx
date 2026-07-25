@@ -167,7 +167,7 @@ export default function TestimonialsSection() {
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-4">
               <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
                 <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
-                  {[...Array(4)].map((_, setIndex) =>
+                  {[...Array(2)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
                       <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
                     ))
@@ -184,7 +184,7 @@ export default function TestimonialsSection() {
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12">
               <div className="group flex overflow-hidden p-2 [--gap:0.75rem] [gap:var(--gap)] flex-row [--duration:40s]">
                 <div className="flex w-max shrink-0 justify-around [gap:var(--gap)] animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
-                  {[...Array(4)].map((_, setIndex) =>
+                  {[...Array(2)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
                       <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
                     ))

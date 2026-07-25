@@ -11,6 +11,7 @@ import { projects } from "@/data/projects";
 
 function WorkCard({ project, index }) {
   const isReversed = index % 2 === 1;
+  const caseSlug = project.slug === "lete-em-know" ? "letem-know" : project.slug;
 
   return (
     <div className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-500 gsap-work-card">
@@ -36,27 +37,8 @@ function WorkCard({ project, index }) {
           </span>
         </div>
         <h2 className="text-3xl lg:text-4xl font-display text-white mb-3 tracking-tight">{project.name}</h2>
-        <p className="text-base font-medium leading-relaxed mb-5" style={{ color: project.accent }}>{project.tagline}</p>
-        <p className="text-sm text-white/45 leading-relaxed mb-6">{project.description}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
-          {project.features.map((f, fi) => (
-            <div key={fi} className="flex items-start gap-2.5">
-              <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: project.accent }} />
-              <span className="text-xs text-white/40 leading-relaxed">{f}</span>
-            </div>
-          ))}
-        </div>
-        {project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {project.tags.map((tag) => (
-              <span key={tag} className="text-[10px] px-3 py-1 rounded-full border text-white/40 font-medium tracking-wide uppercase"
-                style={{ borderColor: `${project.accent}33`, backgroundColor: `${project.accent}0a` }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-        <Link href={`/work/${project.slug}`}
+        <p className="text-base font-medium leading-relaxed mb-6" style={{ color: project.accent }}>{project.tagline}</p>
+        <Link href={`/case-studies#${caseSlug}`}
           className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5 w-fit"
           style={{ border: `1.5px solid ${project.accent}`, color: project.accent }}>
           <span className="fill-circle" style={{ backgroundColor: project.accent }} />

@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function StaggerText({ text, children, hoverColor, hovered: externalHovered, className, style, ...rest }) {
   const [internalHovered, setInternalHovered] = useState(false);
+  const ref = useRef(null);
   const hovered = externalHovered !== undefined ? externalHovered : internalHovered;
   const content = text || (typeof children === "string" ? children : "");
   const words = content.split(" ");
+
+  useEffect(() => {
+    ref.current?.classList.add("st-runtime");
+  }, []);
 
   return (
     <>
@@ -16,10 +21,12 @@ export default function StaggerText({ text, children, hoverColor, hovered: exter
         .st-char-wrap { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
         .st-char { display: inline-block; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
         .st-char.exit { transform: translateY(-110%); }
-        .st-char-enter { display: inline-block; position: absolute; top: 0; left: 0; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; transform: translateY(110%); }
+        .st-char-enter { display: none; }
+        .st-runtime .st-char-enter { display: inline-block; position: absolute; top: 0; left: 0; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; transform: translateY(110%); }
         .st-char-enter.enter { transform: translateY(0%); }
       `}</style>
       <span
+        ref={ref}
         className={className}
         style={{ ...style, lineHeight: 1.25 }}
         onMouseEnter={() => setInternalHovered(true)}
