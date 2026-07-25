@@ -20,10 +20,25 @@ function routeUrl(routePath) {
   return `${SITE_URL}${routePath}`;
 }
 
+const serviceSlugs = [
+  "saas-development",
+  "startup-web-development",
+  "nextjs-development",
+  "web-applications",
+];
+
+const serviceUrls = serviceSlugs.map((slug) => ({
+  path: `/services/${slug}`,
+  changefreq: "monthly",
+  priority: "0.8",
+}));
+
+const allRoutes = [...sitemapRoutes, ...serviceUrls];
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${sitemapRoutes
+${allRoutes
   .map(
     (route) => `  <url>
     <loc>${routeUrl(route.path)}</loc>

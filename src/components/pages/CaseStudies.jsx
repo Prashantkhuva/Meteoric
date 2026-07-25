@@ -9,10 +9,10 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
 
 const serviceLinks = {
-  "letem-know": { label: "Landing Pages", anchor: "landing-pages" },
-  "habit-flow": { label: "SaaS Development", anchor: "saas-development" },
-  "megablog": { label: "Web Applications", anchor: "web-applications" },
-  "mobile-preview-simulator": { label: "Full-Stack Development", anchor: "full-stack-development" },
+  "letem-know": { label: "Landing Pages", href: "/services#landing-pages" },
+  "habit-flow": { label: "SaaS Development", href: "/services/saas-development" },
+  "megablog": { label: "Web Applications", href: "/services/web-applications" },
+  "mobile-preview-simulator": { label: "Full-Stack Development", href: "/services/startup-web-development" },
 };
 
 export default function CaseStudiesPage() {
@@ -207,7 +207,7 @@ export default function CaseStudiesPage() {
                     <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8 border-t border-white/[0.06]">
                       <p className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-3">If this looks like what you need…</p>
                       <Link
-                        href={`/services#${serviceLinks[cs.slug].anchor}`}
+                        href={serviceLinks[cs.slug].href}
                         className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[#EAEFFF]/70 hover:text-[#EAEFFF] transition-colors duration-300"
                       >
                         <span>Need {serviceLinks[cs.slug].label}?</span>

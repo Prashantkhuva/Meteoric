@@ -2,9 +2,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
 import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "SaaS MVP Development Services for Startups | Meteoric";
+const pageTitle = "Web Development Agency for Startups & SaaS | Meteoric";
 const pageDesc =
-  "Meteoric ships SaaS MVPs in 3–6 weeks. From prototype to production — Next.js, Supabase, and modern full-stack tooling. Book a free strategy call to start.";
+  "Meteoric is a web development agency specializing in SaaS development, startup websites, and full-stack applications. Next.js, Supabase, and modern tooling. Book a free strategy call.";
 
 export const metadata = {
   title: pageTitle,
@@ -48,7 +48,7 @@ const breadcrumbJsonLd = {
 const speakableJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Services | Meteoric — SaaS & Startup Web Development Agency",
+  name: "Web Development Agency for Startups & SaaS | Meteoric",
   speakable: {
     "@type": "SpeakableSpecification",
     cssSelector: [".sr-only"],

@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { serviceFaqs } from "@/data/faqs";
@@ -11,6 +13,7 @@ const services = [
     num: "01",
     title: ["Landing", "Pages"],
     desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
+    slug: null,
     process: {
       intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
       steps: [
@@ -33,6 +36,7 @@ const services = [
     num: "02",
     title: ["SaaS", "Development"],
     desc: "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
+    slug: "saas-development",
     process: {
       intro: "We build SaaS like a product studio, not an agency. Founder-level involvement, no account managers, and a technical stack built to scale.",
       steps: [
@@ -55,6 +59,7 @@ const services = [
     num: "03",
     title: ["Web", "Applications"],
     desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
+    slug: "web-applications",
     process: {
       intro: "Whether it's an internal dashboard or a customer-facing platform, we build web apps that are fast, reliable, and a pleasure to use.",
       steps: [
@@ -77,6 +82,7 @@ const services = [
     num: "04",
     title: ["Full-Stack", "Development"],
     desc: "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
+    slug: "startup-web-development",
     process: {
       intro: "No coordinating multiple vendors. We handle the entire stack — from the database schema to the pixel-perfect UI — so you get one cohesive product.",
       steps: [
@@ -195,6 +201,16 @@ export default function ServicesPage() {
                       {svc.desc}
                     </p>
                   </ScrollReveal>
+                  {svc.slug && (
+                    <ScrollReveal direction="down" delay={0.25}>
+                      <Link
+                        href={`/services/${svc.slug}`}
+                        className="inline-flex items-center gap-1.5 text-sm text-[#EAEFFF]/60 hover:text-white mt-4 transition-colors"
+                      >
+                        Learn more <ArrowUpRight size={14} />
+                      </Link>
+                    </ScrollReveal>
+                  )}
                 </div>
 
                 {/* Right: Process card */}
