@@ -2,6 +2,13 @@
 
 ## Today's Session Summary
 
+### Schema Markup & Internal Linking (2026-07-25)
+- **Service schema** (`app/(marketing)/services/page.jsx`): Updated `ProfessionalService`+`OfferCatalog` to include all 4 services with full descriptions from `Services.jsx` (was missing "Web Applications" — had only 3)
+- **FAQPage schema**: Already correct via `buildFaqJsonLd()` — 8 questions including 2 MVP FAQs
+- **Anchor IDs** (`src/components/pages/Services.jsx`): Added `id` attributes to each service `<section>` (`landing-pages`, `saas-development`, `web-applications`, `full-stack-development`)
+- **Contextual links** (`src/components/pages/CaseStudies.jsx`): Each case study now links to matching service tab via `/services#anchor` — "Need {Service}?" CTA per project
+- **Homepage dual CTA** (`src/components/sections/Projects.jsx`): Added "Read Case Studies" link alongside existing "Explore All Work"
+
 ### Mobile UI Fixes (All Pushed)
 - Navbar invisible on mobile → GSAP `clearProps: "transform"` in `app/client-layout.jsx`
 - Mobile overlay height: 0 → portal overlay to `document.body` in `src/components/layout/Navbar.jsx`

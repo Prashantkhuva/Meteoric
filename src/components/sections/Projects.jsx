@@ -208,16 +208,28 @@ function Projects() {
             </h2>
           </div>
 
-          <Link
-            href="/work"
-            className="group relative inline-flex items-center gap-2 text-white/60 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300 hover:text-white"
-          >
-            <span className="relative inline-flex items-center gap-2">
-              <StaggerText text="Explore All Work" />
-              <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </span>
-            <span className="absolute left-0 -bottom-1 h-px w-0 bg-white/40 group-hover:w-full transition-all duration-500" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
+            <Link
+              href="/work"
+              className="group relative inline-flex items-center gap-2 text-white/60 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300 hover:text-white"
+            >
+              <span className="relative inline-flex items-center gap-2">
+                <StaggerText text="Explore All Work" />
+                <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
+              <span className="absolute left-0 -bottom-1 h-px w-0 bg-white/40 group-hover:w-full transition-all duration-500" />
+            </Link>
+            <Link
+              href="/case-studies"
+              className="group relative inline-flex items-center gap-2 text-white/40 text-xs uppercase tracking-[0.2em] font-medium transition-colors duration-300 hover:text-white/80"
+            >
+              <span className="relative inline-flex items-center gap-2">
+                <StaggerText text="Read Case Studies" />
+                <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
+              <span className="absolute left-0 -bottom-1 h-px w-0 bg-white/40 group-hover:w-full transition-all duration-500" />
+            </Link>
+          </div>
         </div>
 
         {/* Project Grid — 2 columns */}

@@ -165,6 +165,7 @@ export default function ServicesPage() {
         return (
           <section
             key={svc.num}
+            id={svc.title.join("-").toLowerCase().replace(/\s+/g, "-")}
             className="py-20 md:py-28 relative border-t border-white/[0.06]"
           >
             <div className="max-w-6xl mx-auto px-6 md:px-12">

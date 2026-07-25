@@ -1,11 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
+
+const serviceLinks = {
+  "letem-know": { label: "Landing Pages", anchor: "landing-pages" },
+  "habit-flow": { label: "SaaS Development", anchor: "saas-development" },
+  "megablog": { label: "Web Applications", anchor: "web-applications" },
+  "mobile-preview-simulator": { label: "Full-Stack Development", anchor: "full-stack-development" },
+};
 
 export default function CaseStudiesPage() {
   return (
@@ -193,6 +201,23 @@ export default function CaseStudiesPage() {
                       />
                     </a>
                   </ScrollReveal>
+
+                  {/* Service link */}
+                  {serviceLinks[cs.slug] && (
+                    <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8 border-t border-white/[0.06]">
+                      <p className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-3">If this looks like what you need…</p>
+                      <Link
+                        href={`/services#${serviceLinks[cs.slug].anchor}`}
+                        className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[#EAEFFF]/70 hover:text-[#EAEFFF] transition-colors duration-300"
+                      >
+                        <span>Need {serviceLinks[cs.slug].label}?</span>
+                        <ArrowRight
+                          size={14}
+                          className="transition-transform duration-300 group-hover/serv:translate-x-1"
+                        />
+                      </Link>
+                    </ScrollReveal>
+                  )}
                 </div>
               </div>
             </div>
