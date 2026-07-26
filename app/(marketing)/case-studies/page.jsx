@@ -14,9 +14,9 @@ export const metadata = {
     title: pageTitle,
     description: pageDesc,
     url: `${SITE_URL}/case-studies`,
-    images: [{ url: `${SITE_URL}${DEFAULT_OG_IMAGE}`, width: 1635, height: 962, alt: pageTitle }],
+    images: [{ url: `${SITE_URL}/api/og?title=${encodeURIComponent(pageTitle)}&description=${encodeURIComponent(pageDesc)}&type=work`, width: 1635, height: 962, alt: pageTitle }],
   },
-  twitter: { card: "summary_large_image", site: "@prashantkhuva_", creator: "@prashantkhuva_", title: pageTitle, description: pageDesc, images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`] },
+  twitter: { card: "summary_large_image", site: "@prashantkhuva_", creator: "@prashantkhuva_", title: pageTitle, description: pageDesc, images: [`${SITE_URL}/api/og?title=${encodeURIComponent(pageTitle)}&description=${encodeURIComponent(pageDesc)}&type=work`] },
 };
 
 const breadcrumbJsonLd = {

@@ -47,8 +47,7 @@ export const metadata = {
     url: `${SITE_URL}/`,
     images: [
       {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+        url: `${SITE_URL}/api/og?title=${encodeURIComponent(metaTitle)}&description=${encodeURIComponent(metaDescOg)}`,
         width: 1635,
         height: 962,
         alt: metaTitle,
@@ -61,7 +60,7 @@ export const metadata = {
     creator: "@prashantkhuva_",
     title: metaTitle,
     description: metaDescOg,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
+    images: [`${SITE_URL}/api/og?title=${encodeURIComponent(metaTitle)}&description=${encodeURIComponent(metaDescOg)}`],
   },
   other: {
     "theme-color": "#070707",
