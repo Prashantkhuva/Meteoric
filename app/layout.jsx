@@ -159,7 +159,8 @@ export default function RootLayout({ children }) {
                         itemOffered: {
                           "@type": "Service",
                           name: "Landing Pages",
-                          description: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
+                          description:
+                            "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
                         },
                       },
                       {
@@ -167,7 +168,8 @@ export default function RootLayout({ children }) {
                         itemOffered: {
                           "@type": "Service",
                           name: "SaaS Development",
-                          description: "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
+                          description:
+                            "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
                         },
                       },
                       {
@@ -175,7 +177,8 @@ export default function RootLayout({ children }) {
                         itemOffered: {
                           "@type": "Service",
                           name: "Web Applications",
-                          description: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
+                          description:
+                            "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
                         },
                       },
                       {
@@ -183,7 +186,8 @@ export default function RootLayout({ children }) {
                         itemOffered: {
                           "@type": "Service",
                           name: "Full-Stack Development",
-                          description: "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
+                          description:
+                            "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
                         },
                       },
                     ],

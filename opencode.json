@@ -3,5 +3,33 @@
   "model": "opencode/deepseek-v4-flash-free",
   "instructions": [
     "AGENTS.md"
-  ]
+  ],
+  "mcp": {
+    "linear": {
+      "type": "local",
+      "command": ["npx", "-y", "@mseep/linear-mcp"],
+      "enabled": true,
+      "environment": {
+        "LINEAR_API_KEY": "{env:LINEAR_API_KEY}"
+      }
+    },
+    "notion": {
+      "type": "local",
+      "command": ["npx", "-y", "@notionhq/notion-mcp-server"],
+      "enabled": true,
+      "environment": {
+        "NOTION_TOKEN": "{env:NOTION_TOKEN}"
+      }
+    },
+    "gsc": {
+      "type": "local",
+      "command": ["npx", "-y", "suganthan-gsc-mcp"],
+      "enabled": true,
+      "environment": {
+        "GSC_AUTH_MODE": "oauth",
+        "GSC_OAUTH_SECRETS_FILE": "{env:GSC_OAUTH_SECRETS_FILE}",
+        "GSC_SITE_URL": "{env:GSC_SITE_URL}"
+      }
+    }
+  }
 }
