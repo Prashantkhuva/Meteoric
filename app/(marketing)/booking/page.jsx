@@ -44,12 +44,26 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const speakableJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: pageTitle,
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".sr-only"],
+  },
+};
+
 export default function BookingPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
       <CalBooking />
     </>

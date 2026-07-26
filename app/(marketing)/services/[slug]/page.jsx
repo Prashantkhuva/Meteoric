@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
-import { buildFaqJsonLd } from "@/lib/seo/jsonLd";
+import { buildFaqJsonLd, buildHowToJsonLd } from "@/lib/seo/jsonLd";
 import ServiceLanding from "@/components/pages/ServiceLanding";
 
 const serviceData = {
@@ -24,10 +24,10 @@ const serviceData = {
       },
     ],
     faqs: [
-      { q: "How long does it take to build a SaaS MVP?", a: "Most SaaS MVPs ship in 3–6 weeks. Timeline depends on feature complexity, third-party integrations, and design requirements. We give you a precise timeline after the free strategy call." },
-      { q: "What tech stack do you use for SaaS?", a: "Next.js, React, Supabase (PostgreSQL), Stripe, Tailwind CSS, and Framer Motion. We adapt to your existing stack if needed." },
-      { q: "Can you add features after the MVP launches?", a: "Yes. Every project includes post-launch support. We treat each product as a long-term partnership and iterate based on real user feedback." },
-      { q: "How is Meteoric different from other SaaS agencies?", a: "Direct founder involvement, no account managers, 10-day sprint cycles, and a track record of 12+ production projects with 100% client satisfaction." },
+      { question: "How long does it take to build a SaaS MVP?", answer: "Most SaaS MVPs ship in 3–6 weeks. Timeline depends on feature complexity, third-party integrations, and design requirements. We give you a precise timeline after the free strategy call." },
+      { question: "What tech stack do you use for SaaS?", answer: "Next.js, React, Supabase (PostgreSQL), Stripe, Tailwind CSS, and Framer Motion. We adapt to your existing stack if needed." },
+      { question: "Can you add features after the MVP launches?", answer: "Yes. Every project includes post-launch support. We treat each product as a long-term partnership and iterate based on real user feedback." },
+      { question: "How is Meteoric different from other SaaS agencies?", answer: "Direct founder involvement, no account managers, 10-day sprint cycles, and a track record of 12+ production projects with 100% client satisfaction." },
     ],
   },
   "startup-web-development": {
@@ -50,9 +50,9 @@ const serviceData = {
       },
     ],
     faqs: [
-      { q: "How much does a startup website cost?", a: "Landing pages start at a fixed price and deliver in 3–7 days. Multi-page websites and web applications are scoped per project. Contact us for a free quote based on your specific needs." },
-      { q: "Do you work with pre-seed startups?", a: "Yes. We specialize in helping early-stage startups launch their first website or MVP. Our process is designed for founders who need to move fast without sacrificing quality." },
-      { q: "Can I update the website myself after launch?", a: "Yes. We build on Next.js with a clean, documented codebase. We'll walk you through the basics or set up a simple CMS if needed. Post-launch support is included." },
+      { question: "How much does a startup website cost?", answer: "Landing pages start at a fixed price and deliver in 3–7 days. Multi-page websites and web applications are scoped per project. Contact us for a free quote based on your specific needs." },
+      { question: "Do you work with pre-seed startups?", answer: "Yes. We specialize in helping early-stage startups launch their first website or MVP. Our process is designed for founders who need to move fast without sacrificing quality." },
+      { question: "Can I update the website myself after launch?", answer: "Yes. We build on Next.js with a clean, documented codebase. We'll walk you through the basics or set up a simple CMS if needed. Post-launch support is included." },
     ],
   },
   "nextjs-development": {
@@ -75,9 +75,9 @@ const serviceData = {
       },
     ],
     faqs: [
-      { q: "Why choose Next.js for my project?", a: "Next.js combines the best of static sites and dynamic servers. You get fast load times, great SEO, and the ability to add real-time features, auth, and APIs — all in one framework." },
-      { q: "Do you migrate existing sites to Next.js?", a: "Yes. We've migrated WordPress, plain React, and other frameworks to Next.js. The result is typically 2–3x faster page loads and significantly better SEO performance." },
-      { q: "Can you build the backend with Next.js too?", a: "Yes. Next.js API routes and Server Actions can handle backend logic, database operations, and third-party integrations. For complex backends, we pair Next.js with Supabase or Node.js." },
+      { question: "Why choose Next.js for my project?", answer: "Next.js combines the best of static sites and dynamic servers. You get fast load times, great SEO, and the ability to add real-time features, auth, and APIs — all in one framework." },
+      { question: "Do you migrate existing sites to Next.js?", answer: "Yes. We've migrated WordPress, plain React, and other frameworks to Next.js. The result is typically 2–3x faster page loads and significantly better SEO performance." },
+      { question: "Can you build the backend with Next.js too?", answer: "Yes. Next.js API routes and Server Actions can handle backend logic, database operations, and third-party integrations. For complex backends, we pair Next.js with Supabase or Node.js." },
     ],
   },
   "web-applications": {
@@ -100,9 +100,9 @@ const serviceData = {
       },
     ],
     faqs: [
-      { q: "What kind of web applications do you build?", a: "Dashboards, internal tools, customer portals, data visualization platforms, booking systems, and more. If it runs in a browser, we can build it." },
-      { q: "Can you integrate with existing APIs or services?", a: "Yes. We've integrated Stripe, Resend, Cal.com, Supabase, and custom APIs. We adapt to your existing infrastructure and third-party services." },
-      { q: "Do you build mobile-responsive web apps?", a: "Every web app we build is fully responsive across desktop, tablet, and mobile. We design mobile-first and test across real devices before launch." },
+      { question: "What kind of web applications do you build?", answer: "Dashboards, internal tools, customer portals, data visualization platforms, booking systems, and more. If it runs in a browser, we can build it." },
+      { question: "Can you integrate with existing APIs or services?", answer: "Yes. We've integrated Stripe, Resend, Cal.com, Supabase, and custom APIs. We adapt to your existing infrastructure and third-party services." },
+      { question: "Do you build mobile-responsive web apps?", answer: "Every web app we build is fully responsive across desktop, tablet, and mobile. We design mobile-first and test across real devices before launch." },
     ],
   },
 };
@@ -143,6 +143,23 @@ export default async function ServicePage({ params }) {
 
   const faqJsonLd = buildFaqJsonLd(service.faqs);
 
+  const speakableJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: service.title,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".sr-only"],
+    },
+  };
+
+  const howToJsonLd = buildHowToJsonLd(
+    (service.sections || []).map((s) => ({
+      name: s.heading,
+      text: s.body,
+    }))
+  );
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -156,6 +173,8 @@ export default async function ServicePage({ params }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ServiceLanding service={service} />
     </>

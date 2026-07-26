@@ -27,7 +27,7 @@ export default function FaqAccordion({ items }) {
               className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
             >
               <span className="text-white/80 text-sm pr-4 leading-relaxed">
-                {faq.q}
+                {faq.question}
               </span>
               <span
                 className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${
@@ -44,7 +44,7 @@ export default function FaqAccordion({ items }) {
             >
               <div className="overflow-hidden">
                 <p className={`text-white/50 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0"}`}>
-                  {faq.a}
+                  {faq.answer}
                 </p>
               </div>
             </div>

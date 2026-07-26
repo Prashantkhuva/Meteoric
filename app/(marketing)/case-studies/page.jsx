@@ -28,6 +28,16 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const speakableJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: pageTitle,
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".sr-only"],
+  },
+};
+
 const collectionJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -46,6 +56,7 @@ export default function CaseStudiesRoute() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }} />
       <CaseStudiesPage />
     </>

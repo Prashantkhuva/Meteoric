@@ -87,12 +87,26 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const speakableJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: pageTitle,
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".sr-only"],
+  },
+};
+
 export default function Terms() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
     <div className="min-h-screen bg-black text-white">
       <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">

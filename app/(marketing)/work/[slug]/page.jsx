@@ -34,9 +34,50 @@ export async function generateMetadata({ params }) {
   };
 }
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
+    { "@type": "ListItem", position: 3, name: "Case Study", item: `${SITE_URL}/work` },
+  ],
+};
+
 export default async function CaseStudyPage({ params }) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
   if (!project) notFound();
-  return <CaseStudy project={project} />;
+
+  const pageTitle = `${project.name} — Case Study | Meteoric`;
+
+  const speakableJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: pageTitle,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".sr-only"],
+    },
+  };
+
+  const creativeWorkSchema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.name,
+    description: project.description,
+    url: `${SITE_URL}/work/${project.slug}`,
+    keywords: project.tags?.join(", "),
+    author: { "@type": "Organization", name: "Meteoric", url: SITE_URL },
+    about: project.tagline,
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
+      <CaseStudy project={project} />
+    </>
+  );
 }

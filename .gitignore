@@ -38,3 +38,8 @@ lighthouse-report.json
 mseep-linear-mcp-78.0.1.tgz
 CLAUDE.md
 .cursor/mcp.json
+.claude/commands/aeo-optimize.md
+.claude/commands/backlink-strategy.md
+.claude/commands/content-seo.md
+.claude
+.mcp.json

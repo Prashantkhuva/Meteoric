@@ -45,6 +45,16 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const speakableJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: pageTitle,
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".sr-only"],
+  },
+};
+
 const creativeWorkSchema = {
   "@context": "https://schema.org",
   "@graph": projects.map((p) => ({
@@ -67,6 +77,10 @@ export default function Work() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
       <script
         type="application/ld+json"

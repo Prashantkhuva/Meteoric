@@ -82,6 +82,18 @@ const speakableJsonLd = {
   },
 };
 
+const reviewSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Meteoric",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5",
+    bestRating: "5",
+    ratingCount: "12",
+  },
+};
+
 const aboutFaqs = [
   {
     question: "Who is behind Meteoric?",
@@ -117,6 +129,10 @@ export default function About() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
       <script
         type="application/ld+json"

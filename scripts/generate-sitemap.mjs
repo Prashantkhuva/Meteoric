@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE_URL, sitemapRoutes } from "../src/lib/seo/config.js";
+import { projects } from "../src/data/projects.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -33,7 +34,13 @@ const serviceUrls = serviceSlugs.map((slug) => ({
   priority: "0.8",
 }));
 
-const allRoutes = [...sitemapRoutes, ...serviceUrls];
+const workUrls = projects.map((project) => ({
+  path: `/work/${project.slug}`,
+  changefreq: "monthly",
+  priority: "0.7",
+}));
+
+const allRoutes = [...sitemapRoutes, ...serviceUrls, ...workUrls];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -62,6 +69,11 @@ Allow: /
 Disallow: /admin
 Disallow: /login
 
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /login
+
 User-agent: GPTBot
 Allow: /
 Disallow: /admin
@@ -73,6 +85,26 @@ Disallow: /admin
 Disallow: /login
 
 User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /login
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /login
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /admin
+Disallow: /login
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin
+Disallow: /login
+
+User-agent: Bytespider
 Allow: /
 Disallow: /admin
 Disallow: /login
