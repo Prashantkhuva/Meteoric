@@ -129,10 +129,10 @@ export default function ProcessSection() {
             A structured process built for <span className="text-white/55 font-secondary-italic">modern product development.</span>
           </h2>
 
-          <p className="mt-4 sm:mt-5 max-w-2xl text-base leading-snug text-white/50 sm:text-lg">
+          <p className="mt-5 sm:mt-6 lg:mt-8 max-w-2xl text-base leading-relaxed text-white/50 sm:text-lg">
             Every project moves through a clear workflow
           </p>
-          <p className="mt-1.5 sm:mt-2 max-w-2xl text-sm leading-snug text-white/40 sm:text-base">
+          <p className="mt-3 sm:mt-3.5 max-w-2xl text-sm leading-relaxed text-white/40 sm:text-base">
             <span className="mr-2 text-white/20 font-display not-italic">—</span>
             from{" "}
             <span className="text-white/70 font-secondary-italic">strategy and design</span>
