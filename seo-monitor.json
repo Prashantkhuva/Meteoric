@@ -1,0 +1,62 @@
+{
+  "site": "https://withmeteoric.com",
+  "lastCheck": "2026-07-26",
+  "checks": {
+    "robots": { "status": "pass", "note": "All crawlers allowed, admin/login blocked" },
+    "sitemap": { "status": "pass", "note": "16+ URLs with proper lastmod and priority" },
+    "metaDescriptions": { "status": "pass", "note": "All pages have unique meta descriptions under 155 chars" },
+    "titleTags": { "status": "pass", "note": "All titles under 60 chars after fix" },
+    "h1Tags": { "status": "pass", "note": "Single H1 per page, keyword-optimized" },
+    "canonicals": { "status": "pass", "note": "Self-referencing canonicals on all pages" },
+    "ogImages": { "status": "pass", "note": "Dynamic OG images via next/og route" },
+    "jsonLd": {
+      "status": "pass",
+      "schemas": [
+        "Organization", "WebSite", "ProfessionalService", "SiteNavigationElement",
+        "BreadcrumbList", "FAQPage", "HowTo", "CreativeWork",
+        "CollectionPage", "Person", "AggregateRating", "Review", "SpeakableSpecification"
+      ],
+      "note": "13 schema types across the site"
+    },
+    "llmsTxt": { "status": "pass", "note": "Includes version, contact, pricing" },
+    "landingPages": { "status": "pass", "note": "/services/landing-pages created with full SEO metadata" },
+    "aiCrawlerAccess": { "status": "pass", "note": "GPTBot, ClaudeBot, PerplexityBot, CCBot all allowed" }
+  },
+  "actions": [
+    {
+      "priority": "high",
+      "task": "Set up Google Search Console OAuth",
+      "status": "pending",
+      "note": "Add GSC_OAUTH_SECRETS_FILE to .env.local"
+    },
+    {
+      "priority": "high",
+      "task": "Submit sitemap to Google",
+      "status": "pending",
+      "note": "Submit https://withmeteoric.com/sitemap.xml to GSC"
+    },
+    {
+      "priority": "high",
+      "task": "Submit /services/landing-pages for indexing",
+      "status": "pending",
+      "note": "New page needs indexing request"
+    },
+    {
+      "priority": "medium",
+      "task": "Deploy latest changes to Vercel",
+      "status": "pending",
+      "note": "Push main branch to trigger deployment"
+    },
+    {
+      "priority": "medium",
+      "task": "Run weekly SEO check script",
+      "status": "done",
+      "note": "node scripts/seo-checks.mjs"
+    }
+  ],
+  "schedule": {
+    "weekly": "Run node scripts/seo-checks.mjs",
+    "monthly": "Full audit — schemas, content freshness, competitors",
+    "quarterly": "Comprehensive SEO audit + strategy review"
+  }
+}
