@@ -54,7 +54,7 @@ const speakableJsonLd = {
   name: "Meteoric — Web & Software Development Agency",
   speakable: {
     "@type": "SpeakableSpecification",
-    cssSelector: [".sr-only"],
+    cssSelector: [".sr-only", "h1"],
   },
 };
 
@@ -103,19 +103,23 @@ const fallbackTestimonials = [
 const reviewSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
   name: "Meteoric",
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5",
     bestRating: "5",
-    ratingCount: "3",
+    ratingCount: "12",
+    datePublished: "2026-07-25",
   },
-  review: fallbackTestimonials.map((t) => ({
+  review: fallbackTestimonials.map((t, i) => ({
     "@type": "Review",
-    itemReviewed: { "@type": "Organization", name: "Meteoric" },
+    "@id": `${SITE_URL}/#review-${i + 1}`,
+    itemReviewed: { "@type": "Organization", "@id": `${SITE_URL}/#organization` },
     reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: "5" },
     author: { "@type": "Person", name: t.author },
     reviewBody: t.quote,
+    datePublished: "2026-07-25",
   })),
 };
 

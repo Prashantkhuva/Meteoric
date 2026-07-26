@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { motion } from "framer-motion";
-import { Video, Target, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { Video, Target, ShieldCheck, ArrowRight } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -42,9 +43,8 @@ export default function CalBooking() {
           custom={1}
           className="text-4xl md:text-6xl lg:text-7xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-5"
         >
-          Let&apos;s build something{" "}
-          <span className="text-[#EAEFFF]/20 line-through decoration-1">great</span>{" "}
-          <span className="not-italic font-semibold font-display text-white">together.</span>
+          Book a Free Web Development{" "}
+          <span className="not-italic font-semibold font-display text-white">Strategy Call</span>
         </motion.h1>
         <motion.p
           variants={fadeUp}
@@ -78,7 +78,7 @@ export default function CalBooking() {
       </section>
 
       {/* Bottom notes */}
-      <section className="max-w-5xl mx-auto px-6 md:px-12 pb-24">
+      <section className="max-w-5xl mx-auto px-6 md:px-12 pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
             <div className="w-10 h-10 rounded-full bg-[#EAEFFF]/5 flex items-center justify-center shrink-0">
@@ -106,6 +106,27 @@ export default function CalBooking() {
               <p className="text-white/70 text-sm font-semibold mb-1">Zero commitment</p>
               <p className="text-white/30 text-xs leading-relaxed">No obligation — ever</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contextual internal links */}
+      <section className="max-w-5xl mx-auto px-6 md:px-12 pb-24">
+        <div className="border-t border-white/[0.06] pt-10">
+          <p className="text-white/30 text-xs uppercase tracking-[0.15em] mb-4">Explore more</p>
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
+            <Link href="/services" className="inline-flex items-center gap-1.5 text-sm text-[#EAEFFF]/60 hover:text-white transition-colors">
+              Our Services <ArrowRight size={12} />
+            </Link>
+            <Link href="/work" className="inline-flex items-center gap-1.5 text-sm text-[#EAEFFF]/60 hover:text-white transition-colors">
+              Our Work <ArrowRight size={12} />
+            </Link>
+            <Link href="/case-studies" className="inline-flex items-center gap-1.5 text-sm text-[#EAEFFF]/60 hover:text-white transition-colors">
+              Case Studies <ArrowRight size={12} />
+            </Link>
+            <Link href="/about" className="inline-flex items-center gap-1.5 text-sm text-[#EAEFFF]/60 hover:text-white transition-colors">
+              About <ArrowRight size={12} />
+            </Link>
           </div>
         </div>
       </section>

@@ -10,11 +10,11 @@ export function buildFaqJsonLd(questions) {
   };
 }
 
-export function buildHowToJsonLd(steps) {
+export function buildHowToJsonLd(steps, name) {
   return {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How Meteoric builds web products",
+    name: name || "How Meteoric builds web products",
     description:
       "A structured process for modern product development — from strategy and design to development and launch.",
     step: steps.map((step, i) => ({

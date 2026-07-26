@@ -74,12 +74,6 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
         <link
           rel="preconnect"
           href={
@@ -134,6 +128,14 @@ export default function RootLayout({ children }) {
                   publisher: {
                     "@id": `${SITE_URL}/#organization`,
                   },
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${SITE_URL}/work?q={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
                 },
                 {
                   "@type": "ProfessionalService",
@@ -144,6 +146,12 @@ export default function RootLayout({ children }) {
                     "Full-stack web development, SaaS products, and landing pages for startups.",
                   areaServed: "Worldwide",
                   priceRange: "$$",
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    contactType: "customer service",
+                    availableLanguage: "English",
+                    email: "contact@withmeteoric.com",
+                  },
                   serviceType: [
                     "Software Development",
                     "Web Development",

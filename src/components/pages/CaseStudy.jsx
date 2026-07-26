@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, ArrowLeft } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
+import { caseStudies } from "@/data/case-studies";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -17,6 +18,8 @@ const fadeUp = {
 };
 
 export default function CaseStudy({ project }) {
+  const csLookup = { "lete-em-know": "letem-know", "habit-flow": "habit-flow", "megablog": "megablog", "mobile-preview-simulator": "mobile-preview-simulator" };
+  const caseStudy = caseStudies.find((cs) => cs.slug === csLookup[project.slug]);
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
     const cal = await getCalApi({ namespace: "let-s-build" });
@@ -96,6 +99,33 @@ export default function CaseStudy({ project }) {
             <p className="text-white/50 text-[15px] leading-[1.8]">
               {project.description}
             </p>
+
+            {caseStudy && (
+              <>
+                <div className="mt-10 pt-10 border-t border-white/[0.06]">
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-4">The Problem</h3>
+                  <p className="text-white/40 text-[15px] leading-[1.8]">{caseStudy.problem}</p>
+                </div>
+                <div className="mt-8">
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-4">The Solution</h3>
+                  <p className="text-white/40 text-[15px] leading-[1.8]">{caseStudy.solution}</p>
+                </div>
+                {caseStudy.results && (
+                  <div className="mt-8 pt-8 border-t border-white/[0.06]">
+                    <h3 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-4">Results</h3>
+                    <div className="space-y-4">
+                      {caseStudy.results.map((r, ri) => (
+                        <div key={ri}>
+                          <p className="text-lg font-display text-white">{r.value}</p>
+                          <p className="text-[11px] text-white/30 uppercase tracking-[0.1em]">{r.metric}</p>
+                          <p className="text-xs text-white/25">{r.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </motion.div>
 
           {/* Right — Features + Stack */}

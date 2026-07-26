@@ -42,8 +42,8 @@ export default function CaseStudiesPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-secondary-italic font-normal leading-[1.1] tracking-tight max-w-4xl mb-8"
         >
-          Case{" "}
-          <span className="not-italic">Studies</span>
+          Web Development Case{" "}
+          <span className="not-italic">Studies & Results</span>
         </motion.h1>
 
         <motion.p

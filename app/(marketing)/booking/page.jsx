@@ -1,7 +1,7 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import CalBooking from "@/components/pages/CalBooking";
 
-const pageTitle = "Book a Free Strategy Call | Meteoric";
+const pageTitle = "Book a Free Web Development Strategy Call | Meteoric";
 const pageDesc =
   "Schedule a free 30-minute strategy call with Meteoric. Discuss your web development, SaaS, or startup project and get expert guidance.";
 
@@ -50,7 +50,7 @@ const speakableJsonLd = {
   name: pageTitle,
   speakable: {
     "@type": "SpeakableSpecification",
-    cssSelector: [".sr-only"],
+    cssSelector: [".sr-only", "h1"],
   },
 };
 

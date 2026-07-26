@@ -1,3 +1,8 @@
+version: 1.0
+last-updated: 2026-07-26
+contact: contact@withmeteoric.com
+see-also: https://withmeteoric.com
+
 # Meteoric — Web Development Agency
 
 > Meteoric builds premium web experiences, scalable full-stack applications, and modern digital products for startups and founders. Founded in 2026 by Prashant Khuva, Meteoric has shipped 12+ production projects with 100% client satisfaction across SaaS, landing pages, and full-stack web applications.
@@ -18,6 +23,10 @@ Meteoric is a software development agency that designs and builds high-performan
 ## What services does Meteoric offer?
 
 Meteoric offers SaaS development, landing page design, full-stack web applications, and technical consulting for startups and founders. The agency builds with Next.js, React, Node.js, Supabase, and the MERN stack. Typical project timelines are 3-7 days for landing pages, 2-6 weeks for web apps, and 4-10 weeks for SaaS products.
+
+### Pricing
+
+Landing pages start at lower budgets and deliver in 3-7 days. Full-stack web applications and SaaS products are scoped per project — contact Meteoric for a custom quote based on your specific requirements. Every project includes post-launch support.
 
 ### SaaS Development
 

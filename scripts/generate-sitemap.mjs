@@ -14,14 +14,13 @@ const outDir =
     : "public";
 
 const outputDir = path.resolve(rootDir, outDir);
-const today = new Date().toISOString();
-
 function routeUrl(routePath) {
   if (routePath === "/") return `${SITE_URL}/`;
   return `${SITE_URL}${routePath}`;
 }
 
 const serviceSlugs = [
+  "landing-pages",
   "saas-development",
   "startup-web-development",
   "nextjs-development",
@@ -40,7 +39,14 @@ const workUrls = projects.map((project) => ({
   priority: "0.7",
 }));
 
+const lastmodIndex = {};
+sitemapRoutes.forEach((r) => { lastmodIndex[r.path] = r.lastmod; });
+
 const allRoutes = [...sitemapRoutes, ...serviceUrls, ...workUrls];
+
+function routeLastmod(route) {
+  return lastmodIndex[route.path] || new Date().toISOString().split("T")[0];
+}
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -49,7 +55,7 @@ ${allRoutes
   .map(
     (route) => `  <url>
     <loc>${routeUrl(route.path)}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${routeLastmod(route)}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
   </url>`

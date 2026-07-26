@@ -1,10 +1,11 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
 import { buildFaqJsonLd, buildHowToJsonLd } from "@/lib/seo/jsonLd";
+import { serviceFaqs } from "@/data/faqs";
 
 const pageTitle = "Web Development Agency for Startups & SaaS | Meteoric";
 const pageDesc =
-  "Meteoric is a web development agency specializing in SaaS development, startup websites, and full-stack applications. Next.js, Supabase, and modern tooling. Book a free strategy call.";
+  "Meteoric is a web development agency specializing in SaaS, startup websites, and full-stack apps. Book a free strategy call.";
 
 export const metadata = {
   title: pageTitle,
@@ -51,64 +52,23 @@ const speakableJsonLd = {
   name: "Web Development Agency for Startups & SaaS | Meteoric",
   speakable: {
     "@type": "SpeakableSpecification",
-    cssSelector: [".sr-only"],
+    cssSelector: [".sr-only", "h1"],
   },
 };
-
-const serviceFaqs = [
-  {
-    question: "How much does it cost to build a website or SaaS with Meteoric?",
-    answer:
-      "Pricing depends on project scope. Landing pages start at lower budgets and deliver in 3-7 days. Full-stack web applications range from 2-6 weeks, and SaaS products from 4-10 weeks. Contact us for a free custom quote based on your specific requirements.",
-  },
-  {
-    question: "How long does it take to build a SaaS product?",
-    answer:
-      "SaaS products typically take 4-10 weeks from discovery to launch. MVP prototypes can ship in 3-6 weeks. We provide a precise timeline after our free strategy call based on your feature requirements and complexity.",
-  },
-  {
-    question: "What technologies does Meteoric use?",
-    answer:
-      "Our core stack is React, Next.js, Node.js, and the MERN stack. We also use Supabase, Stripe, Tailwind CSS, Framer Motion, GSAP, and PostgreSQL. We adapt to your existing tech stack if needed.",
-  },
-  {
-    question: "Do you work with startups or established companies?",
-    answer:
-      "Both. We specialize in helping startups launch MVPs and scale to production, but we also work with established companies on redesigns, performance optimization, and new product development. Our process adapts to your stage.",
-  },
-  {
-    question: "What happens after my website or app launches?",
-    answer:
-      "Every project includes post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery. We treat every product as a long-term partnership and offer ongoing maintenance and feature development.",
-  },
-  {
-    question: "How is Meteoric different from other development agencies?",
-    answer:
-      "Direct founder involvement on every project — no account managers, no layers of abstraction. We ship 12+ production projects with 100% client satisfaction, using a structured 10-day sprint cycle with weekly updates and transparent communication.",
-  },
-  {
-    question: "What is an MVP in SaaS?",
-    answer:
-      "An MVP (Minimum Viable Product) in SaaS is the leanest version of your product that still delivers core value to early users. It includes only the essential features needed to validate your idea, gather real feedback, and start generating revenue — without over-investing in polish before proving product-market fit.",
-  },
-  {
-    question: "How do I go from MVP to a full SaaS product?",
-    answer:
-      "After validating your MVP with real users, we iterate based on feedback — adding features, improving performance, and scaling infrastructure. Meteoric handles the full lifecycle: MVP in 3–6 weeks, then ongoing sprints for feature expansion, analytics, billing, and team onboarding. No rebuilds, just continuous improvement.",
-  },
-];
 
 const faqJsonLd = buildFaqJsonLd(serviceFaqs);
 
 const reviewSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
   name: "Meteoric",
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5",
     bestRating: "5",
     ratingCount: "12",
+    datePublished: "2026-07-25",
   },
 };
 

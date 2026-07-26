@@ -144,7 +144,7 @@ export default function WorkPage() {
             Portfolio
           </p>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight max-w-4xl">
-            Meteoric's shipped projects.
+            Our Portfolio — SaaS & Web Development Projects
           </h1>
           <p className="text-white/40 text-base md:text-lg max-w-2xl mt-6">
             Every project here went from concept to production — on time, on

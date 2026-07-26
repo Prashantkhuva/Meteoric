@@ -3,7 +3,7 @@ import AboutPage from "@/components/pages/About";
 
 const pageTitle = "About Meteoric | Web & Product Development Studio for Founders";
 const pageDesc =
-   "Meteoric partners with founders to design, build, and launch modern web products and SaaS platforms. Direct founder involvement on every project.";
+   "Meteoric partners with founders to design, build, and launch modern web products. Direct founder involvement on every project. Meet the team.";
 
 export const metadata = {
   title: pageTitle,
@@ -70,6 +70,7 @@ const personJsonLd = {
   ],
   description:
     "Founder of Meteoric, a product development studio. Full-stack developer with expertise in React, Next.js, Node.js, and the MERN stack. Previously built FullStack Craft. Has shipped 12+ production projects for startups and founders.",
+  affiliation: { "@id": `${SITE_URL}/#organization` },
 };
 
 const speakableJsonLd = {
@@ -78,19 +79,21 @@ const speakableJsonLd = {
   name: "About Meteoric | Web & Product Development Studio for Founders",
   speakable: {
     "@type": "SpeakableSpecification",
-    cssSelector: [".sr-only"],
+    cssSelector: [".sr-only", "h1"],
   },
 };
 
 const reviewSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
   name: "Meteoric",
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5",
     bestRating: "5",
     ratingCount: "12",
+    datePublished: "2026-07-25",
   },
 };
 

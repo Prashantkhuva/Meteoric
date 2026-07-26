@@ -13,7 +13,7 @@ const services = [
     num: "01",
     title: ["Landing", "Pages"],
     desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
-    slug: null,
+    slug: "landing-pages",
     process: {
       intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
       steps: [
@@ -142,8 +142,8 @@ export default function ServicesPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-secondary-italic font-normal leading-[1.1] tracking-tight max-w-4xl mb-8"
         >
-          Design. Build.{" "}
-          <span className="font-secondary-italic font-normal">Launch.</span>
+          Web Development Services{" "}
+          <span className="font-secondary-italic font-normal">for Startups & SaaS</span>
         </motion.h1>
 
         <motion.p

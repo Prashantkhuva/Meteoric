@@ -99,7 +99,7 @@ const speakableJsonLd = {
   name: pageTitle,
   speakable: {
     "@type": "SpeakableSpecification",
-    cssSelector: [".sr-only"],
+    cssSelector: [".sr-only", "h1"],
   },
 };
 

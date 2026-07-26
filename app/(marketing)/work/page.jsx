@@ -2,9 +2,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import WorkPage from "@/components/pages/Work";
 import { projects } from "@/data/projects";
 
-const pageTitle = "Our Work — Meteoric Agency Portfolio | SaaS & Web Development Projects";
+const pageTitle = "Meteoric Portfolio — SaaS & Web Development Projects";
 const pageDesc =
-   "Browse Meteoric's portfolio of shipped SaaS and web development projects — platforms, landing pages, and full-stack applications built for founders.";
+   "See Meteoric's portfolio of SaaS and web development projects — platforms, landing pages, and full-stack apps built for founders.";
 
 export const metadata = {
   title: pageTitle,
@@ -51,7 +51,7 @@ const speakableJsonLd = {
   name: pageTitle,
   speakable: {
     "@type": "SpeakableSpecification",
-    cssSelector: [".sr-only"],
+    cssSelector: [".sr-only", "h1"],
   },
 };
 
@@ -68,6 +68,8 @@ const creativeWorkSchema = {
       name: "Meteoric",
       url: SITE_URL,
     },
+    datePublished: "2026-01-15",
+    inLanguage: "en-US",
   })),
 };
 

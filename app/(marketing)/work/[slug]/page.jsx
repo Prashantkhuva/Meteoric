@@ -12,7 +12,9 @@ export async function generateMetadata({ params }) {
   const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
   const title = `${project.name} — Case Study | Meteoric`;
-  const desc = project.tagline;
+  const desc = project.description
+    ? project.description.split(". ").slice(0, 2).join(". ") + "."
+    : project.tagline;
   return {
     title,
     description: desc,
@@ -34,16 +36,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
-    { "@type": "ListItem", position: 3, name: "Case Study", item: `${SITE_URL}/work` },
-  ],
-};
-
 export default async function CaseStudyPage({ params }) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
@@ -51,13 +43,23 @@ export default async function CaseStudyPage({ params }) {
 
   const pageTitle = `${project.name} — Case Study | Meteoric`;
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
+      { "@type": "ListItem", position: 3, name: project.name, item: `${SITE_URL}/work/${project.slug}` },
+    ],
+  };
+
   const speakableJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: pageTitle,
     speakable: {
       "@type": "SpeakableSpecification",
-      cssSelector: [".sr-only"],
+      cssSelector: [".sr-only", "h1"],
     },
   };
 
@@ -70,6 +72,8 @@ export default async function CaseStudyPage({ params }) {
     keywords: project.tags?.join(", "),
     author: { "@type": "Organization", name: "Meteoric", url: SITE_URL },
     about: project.tagline,
+    datePublished: "2026-01-15",
+    inLanguage: "en-US",
   };
 
   return (
