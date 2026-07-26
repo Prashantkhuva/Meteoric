@@ -36,3 +36,5 @@ lighthouse-report.json
 .vercel
 .env*
 mseep-linear-mcp-78.0.1.tgz
+CLAUDE.md
+.cursor/mcp.json
