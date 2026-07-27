@@ -205,7 +205,7 @@ export default function CaseStudy({ project }) {
             onClick={openCal}
             className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300"
           >
-            Start a Similar Project
+            Book a Free Strategy Call
           </button>
         </motion.div>
       </section>

@@ -216,6 +216,32 @@ export default function TestimonialsSection() {
             </ScrollReveal>
           </div>
 
+          {/* ── CTA after social proof ── */}
+          <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16">
+            <ScrollReveal direction="up">
+              <div className="flex flex-col items-center text-center py-12 px-6 rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent">
+                <h3 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-4">
+                  Ready to build something{" "}
+                  <span className="text-white/40">great?</span>
+                </h3>
+                <p className="text-white/50 text-sm md:text-base max-w-md mb-8">
+                  Book a free strategy call and let&apos;s discuss your project, timeline, and how we can help.
+                </p>
+                <button
+                  onClick={() => {
+                    import("@calcom/embed-react").then(async ({ getCalApi }) => {
+                      const cal = await getCalApi({ namespace: "let-s-build" });
+                      cal("modal", { calLink: "prashantkhuva/let-s-build" });
+                    });
+                  }}
+                  className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
+                >
+                  Book a Free Strategy Call
+                </button>
+              </div>
+            </ScrollReveal>
+          </div>
+
           {/* ── FAQ ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
             <div className="max-w-4xl">

@@ -21,6 +21,7 @@ const navItems = [
   { label: "Services", to: "/services" },
   { label: "About", to: "/about" },
   { label: "Case Studies", to: "/case-studies" },
+  { label: "Book a Call", to: "/booking" },
 ];
 
 export default function Navbar() {
@@ -34,6 +35,12 @@ export default function Navbar() {
   const pillRef = useRef(null);
   const navItemRefs = useRef([]);
   const activeIndex = useRef(-1);
+
+  const openCal = useCallback(async () => {
+    const { getCalApi } = await import("@calcom/embed-react");
+    const cal = await getCalApi({ namespace: "let-s-build" });
+    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
 
   const movePill = useCallback((index) => {
     const nav = navRef.current;
@@ -235,14 +242,14 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               data-no-magnetic
-              onClick={() => setIsOpen(true)}
+              onClick={openCal}
               className="hidden md:inline-flex items-center cursor-pointer flip-btn"
             >
               <StaggerText
                 hoverColor="#1b1b1b"
                 style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}
               >
-                {"Let's Chat!"}
+                {"Book a Free Call"}
               </StaggerText>
             </button>
 
@@ -341,14 +348,14 @@ export default function Navbar() {
             data-no-magnetic
             onClick={() => {
               closeMenu();
-              setIsOpen(true);
+              openCal();
             }}
             className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide text-black hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
             style={{
               background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
             }}
           >
-            Let&apos;s Chat!
+            Book a Free Call
           </button>
         </div>
       </div>,

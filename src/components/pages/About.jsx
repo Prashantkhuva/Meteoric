@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
@@ -47,6 +47,12 @@ const socials = [
 export default function AboutPage({ faqs = [] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+
+  const openCal = useCallback(async () => {
+    const { getCalApi } = await import("@calcom/embed-react");
+    const cal = await getCalApi({ namespace: "let-s-build" });
+    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -187,11 +193,11 @@ export default function AboutPage({ faqs = [] }) {
             {/* CTA */}
             <div>
               <button
-                onClick={() => setIsOpen(true)}
+                onClick={openCal}
                 className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white/60 hover:text-white border border-white/[0.08] hover:border-white/20 px-7 py-3 transition-all duration-300 cursor-pointer"
               >
                 <span className="relative z-10">
-                  <StaggerText text="Start a Project" hoverColor="#fff" />
+                  <StaggerText text="Book a Free Strategy Call" hoverColor="#fff" />
                 </span>
               </button>
             </div>
