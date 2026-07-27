@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
       title,
       description: desc,
       url: `${SITE_URL}/work/${project.slug}`,
-      images: [{ url: `${SITE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(desc)}&type=work`, width: 1635, height: 962, alt: project.name }],
+      images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: project.name }],
     },
     twitter: {
       card: "summary_large_image",
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
       creator: "@prashantkhuva_",
       title,
       description: desc,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(desc)}&type=work`],
+      images: [`${SITE_URL}/og.png`],
     },
   };
 }

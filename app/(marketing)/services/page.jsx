@@ -19,7 +19,8 @@ export const metadata = {
     url: `${SITE_URL}/services`,
     images: [
       {
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent(pageTitle)}&description=${encodeURIComponent(pageDesc)}&type=service`,
+        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         width: 1635,
         height: 962,
         alt: pageTitle,
@@ -32,7 +33,7 @@ export const metadata = {
     creator: "@prashantkhuva_",
     title: pageTitle,
     description: pageDesc,
-    images: [`${SITE_URL}/api/og?title=${encodeURIComponent(pageTitle)}&description=${encodeURIComponent(pageDesc)}&type=service`],
+    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
 };
 

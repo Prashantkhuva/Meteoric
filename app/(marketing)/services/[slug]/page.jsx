@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { SITE_URL } from "@/lib/seo/config";
 import { buildFaqJsonLd, buildHowToJsonLd } from "@/lib/seo/jsonLd";
 import ServiceLanding from "@/components/pages/ServiceLanding";
 
@@ -149,7 +149,7 @@ export async function generateMetadata({ params }) {
       title: service.title,
       description: service.desc,
       url: `${SITE_URL}/services/${slug}`,
-      images: [{ url: `${SITE_URL}/api/og?title=${encodeURIComponent(service.title)}&description=${encodeURIComponent(service.desc)}&type=service`, width: 1635, height: 962, alt: service.title }],
+      images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: service.title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -157,7 +157,7 @@ export async function generateMetadata({ params }) {
       creator: "@prashantkhuva_",
       title: service.title,
       description: service.desc,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(service.title)}&description=${encodeURIComponent(service.desc)}&type=service`],
+      images: [`${SITE_URL}/og.png`],
     },
   };
 }
