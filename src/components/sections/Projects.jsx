@@ -132,11 +132,12 @@ function Projects() {
         opacity: 1,
         stagger: 0.1,
         ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top bottom",
-          toggleActions: "play none reverse none",
-        },
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top bottom",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
+          },
       },
     );
 
@@ -148,11 +149,12 @@ function Projects() {
         opacity: 1,
         stagger: 0.15,
         ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current?.querySelector(".gsap-proj-card"),
-          start: "top 88%",
-          toggleActions: "play none reverse none",
-        },
+          scrollTrigger: {
+            trigger: sectionRef.current?.querySelector(".gsap-proj-card"),
+            start: "top 88%",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
+          },
       },
     );
 
@@ -171,6 +173,7 @@ function Projects() {
             trigger: img,
             start: "top 85%",
             toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
         },
       );

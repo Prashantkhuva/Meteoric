@@ -90,11 +90,12 @@ export default function WorkPage() {
         opacity: 1,
         stagger: 0.2,
         ease: "power2.out",
-        scrollTrigger: {
-          trigger: cardsRef.current?.querySelector(".gsap-work-card"),
-          start: "top 90%",
-          toggleActions: "play none reverse none",
-        },
+          scrollTrigger: {
+            trigger: cardsRef.current?.querySelector(".gsap-work-card"),
+            start: "top 90%",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
+          },
       },
     );
 
@@ -112,6 +113,7 @@ export default function WorkPage() {
             trigger: img,
             start: "top 85%",
             toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
         },
       );

@@ -18,14 +18,18 @@ export default function ScrollReveal({
 
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.from(ref.current, {
-      ...offset[direction],
-      opacity: 0,
-      duration,
-      delay,
-      ease: "power2.out",
-      scrollTrigger: { trigger: ref.current, start: "top 90%", toggleActions: "play none reverse none" },
-    });
+    gsap.fromTo(ref.current,
+      { ...offset[direction], opacity: 0 },
+      {
+        ...(direction === "left" || direction === "right" ? { x: 0 } : { y: 0 }),
+        opacity: 1,
+        duration,
+        delay,
+        ease: "power2.out",
+        immediateRender: true,
+        scrollTrigger: { trigger: ref.current, start: "top 90%", toggleActions: "play none reverse none", invalidateOnRefresh: true },
+      },
+    );
   }, { scope: ref });
 
   return (

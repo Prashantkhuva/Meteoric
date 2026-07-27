@@ -31,6 +31,7 @@ export default function LeadCaptureSection() {
               trigger: sectionRef.current,
               start: "top 85%",
               toggleActions: "play none reverse none",
+              invalidateOnRefresh: true,
             },
           },
         );
@@ -48,6 +49,7 @@ export default function LeadCaptureSection() {
             trigger: sectionRef.current,
             start: "top 85%",
             toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
         },
       );

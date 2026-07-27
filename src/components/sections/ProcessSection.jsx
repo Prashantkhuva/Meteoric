@@ -65,11 +65,12 @@ export default function ProcessSection() {
         opacity: 1,
         stagger: 0.1,
         ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top bottom",
-          toggleActions: "play none reverse none",
-        },
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top bottom",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
+          },
       },
     );
 
@@ -92,6 +93,7 @@ export default function ProcessSection() {
             trigger: step,
             start: "top 82%",
             toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
         });
 

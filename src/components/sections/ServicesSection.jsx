@@ -81,6 +81,7 @@ export default function ServicesSection() {
             trigger: headingRef.current,
             start: "top bottom",
             toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
         },
       );
