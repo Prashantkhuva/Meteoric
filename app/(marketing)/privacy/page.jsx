@@ -64,21 +64,41 @@ const sections = [
   },
   {
     num: "04",
-    title: "Cookies",
-    content: `We use minimal cookies for essential functionality and analytics. You can control cookie preferences through your browser settings. We do not use tracking cookies for advertising purposes.`,
+    title: "International Data Transfers",
+    content: `Some of our service providers — including Vercel (hosting), Supabase (database), Resend (email), and Google Analytics (analytics) — may process your personal data outside your country of residence, including in the United States. By using our website and services, you consent to the transfer of your data to these jurisdictions, which may have different data protection laws than your own. We take steps to ensure your data receives an adequate level of protection wherever it is processed.`,
   },
   {
     num: "05",
+    title: "Cookies",
+    content: `We use minimal cookies for essential functionality and analytics through Google Analytics. We do not use cookies for third-party advertising tracking. You can control cookie preferences through your browser settings. For more information, refer to Google's Privacy Policy at https://policies.google.com/privacy.`,
+  },
+  {
+    num: "06",
     title: "Data Retention",
     content: `We retain your personal data only as long as necessary for the purposes described in this policy, or as required by law. You may request deletion of your data at any time by contacting us.`,
   },
   {
-    num: "06",
+    num: "07",
+    title: "Children's Privacy",
+    content: `Our website and services are not directed to anyone under the age of 18. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will take steps to delete it promptly.`,
+  },
+  {
+    num: "08",
     title: "Your Rights",
     content: `Depending on your location, you may have rights regarding your personal data, including access, correction, deletion, and portability. To exercise these rights, email us at contact@withmeteoric.com.`,
   },
   {
-    num: "07",
+    num: "09",
+    title: "Changes to This Policy",
+    content: `We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page reflects the most recent revision. Your continued use of our website and services after changes are posted constitutes your acceptance of the revised policy.`,
+  },
+  {
+    num: "10",
+    title: "Governing Law",
+    content: `This Privacy Policy is governed by and construed in accordance with the laws of India.`,
+  },
+  {
+    num: "11",
     title: "Contact",
     content: `For questions about this privacy policy, contact us at contact@withmeteoric.com.`,
   },

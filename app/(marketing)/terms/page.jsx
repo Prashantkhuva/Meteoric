@@ -63,16 +63,41 @@ const sections = [
   },
   {
     num: "06",
+    title: "Termination",
+    content: `Either party may terminate the agreement with written notice as specified in the signed proposal or agreement. Upon termination, the client is responsible for payment for all work completed up to the date of termination. Deliverables for completed work will be released upon receipt of final payment. Sections relating to Intellectual Property, Confidentiality, and Limitation of Liability shall survive termination.`,
+  },
+  {
+    num: "07",
+    title: "Warranty Disclaimer",
+    content: `Our services are provided on an "as-is" and "as-available" basis. To the fullest extent permitted by law, Meteoric disclaims all warranties, whether express or implied, including any implied warranties of merchantability or fitness for a particular purpose. Any warranties specific to your engagement will be outlined in the signed proposal or agreement.`,
+  },
+  {
+    num: "08",
     title: "Limitation of Liability",
     content: `Meteoric's liability is limited to the amount paid for the specific project component giving rise to the claim. We are not liable for consequential damages, lost profits, or business interruption, even if advised of the possibility of such damages.`,
   },
   {
-    num: "07",
-    title: "Website Use",
-    content: `This website is provided for informational purposes. You agree not to use this site for any unlawful purpose or in violation of these terms. We reserve the right to update these terms at any time.`,
+    num: "09",
+    title: "Indemnification",
+    content: `You agree to indemnify, defend, and hold harmless Meteoric and its personnel from and against any claims, damages, losses, liabilities, and expenses arising out of or related to your use of the deliverables, content you provide to us, or your violation of these terms or applicable law.`,
   },
   {
-    num: "08",
+    num: "10",
+    title: "Force Majeure",
+    content: `Neither party shall be held liable for delays or failure to perform obligations under these terms due to events beyond their reasonable control, including but not limited to natural disasters, acts of God, hosting outages, government actions, pandemics, or internet disruptions.`,
+  },
+  {
+    num: "11",
+    title: "Website Use",
+    content: `This website is provided for informational purposes. You agree not to use this site for any unlawful purpose or in violation of these terms. We reserve the right to update these terms at any time. This website may contain links to third-party websites or services that are not owned or controlled by Meteoric. We are not responsible for the content, privacy practices, or practices of any third-party websites.`,
+  },
+  {
+    num: "12",
+    title: "Governing Law and Jurisdiction",
+    content: `These Terms of Service are governed by and construed in accordance with the laws of India. Any disputes arising out of or relating to these terms shall be subject to the exclusive jurisdiction of the courts of Gujarat, India, regardless of your country of residence or location.`,
+  },
+  {
+    num: "13",
     title: "Contact",
     content: `For questions about these terms, contact us at contact@withmeteoric.com.`,
   },
