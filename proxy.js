@@ -26,6 +26,18 @@ function buildCsp(isDev) {
 }
 
 export async function proxy(request) {
+  const host = request.headers.get("host") || "";
+  const pn = request.nextUrl.pathname;
+  if (
+    (host === "www.withmeteoric.com" || host.startsWith("www.")) &&
+    !pn.startsWith("/api")
+  ) {
+    const url = new URL(
+      `https://withmeteoric.com${pn}${request.nextUrl.search}`,
+    );
+    return Response.redirect(url, 301);
+  }
+
   const isDev = process.env.NODE_ENV === "development";
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
