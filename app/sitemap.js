@@ -1,6 +1,7 @@
 import { SITE_URL } from "@/lib/seo/config";
 import { sitemapRoutes } from "@/lib/seo/config";
 import { projects } from "@/data/projects";
+import { blogPosts } from "@/data/blog-posts";
 
 const serviceSlugs = [
   "saas-development",
@@ -31,5 +32,12 @@ export default function sitemap() {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...projectRoutes, ...serviceRoutes];
+  const blogRoutes = blogPosts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: post.published,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...projectRoutes, ...serviceRoutes, ...blogRoutes];
 }

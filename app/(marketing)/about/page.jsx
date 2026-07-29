@@ -3,7 +3,7 @@ import AboutPage from "@/components/pages/About";
 
 const pageTitle = "About Meteoric | Web & Product Development Studio for Founders";
 const pageDesc =
-   "Meteoric partners with founders to design, build, and launch modern web products. Direct founder involvement on every project. Meet the team.";
+   "Meteoric partners with founders to design, build, and launch modern web products. Direct founder involvement on every project with 12+ production apps shipped. Founded by Prashant Khuva, a full-stack developer building for startups.";
 
 export const metadata = {
   title: pageTitle,

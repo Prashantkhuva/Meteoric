@@ -32,7 +32,7 @@ const serviceData = {
   },
   "saas-development": {
     title: "SaaS Development Agency | Meteoric",
-    desc: "Meteoric ships SaaS MVPs in 3–6 weeks. Full-stack SaaS development with Next.js, Supabase, Stripe. Founder-led, production-ready.",
+    desc: "Meteoric ships SaaS MVPs in 3–6 weeks. Full-stack SaaS development with Next.js, Supabase, Stripe — auth, billing, dashboards included. Founder-led, production-ready.",
     h1: ["SaaS", "Development"],
     tagline: "From idea to production SaaS — MVP in weeks, not months.",
     sections: [
@@ -58,7 +58,7 @@ const serviceData = {
   },
   "startup-web-development": {
     title: "Startup Web Development Agency | Meteoric",
-    desc: "Meteoric builds high-performance websites for startups. Next.js, modern stack, fast delivery. Landing pages in 3–7 days.",
+    desc: "Meteoric builds high-performance websites for startups. Next.js, modern stack, fast delivery. Landing pages in 3–7 days, multi-page sites in 1–3 weeks. Founder-led development.",
     h1: ["Startup Web", "Development"],
     tagline: "Your startup's website ships in days, not quarters.",
     sections: [
@@ -83,7 +83,7 @@ const serviceData = {
   },
   "nextjs-development": {
     title: "Next.js Development Agency | Meteoric",
-    desc: "Meteoric is a Next.js development agency. React and Next.js applications — landing pages to full-stack SaaS. SEO, speed, scalability.",
+    desc: "Meteoric is a Next.js development agency building React and Next.js applications — from landing pages to full-stack SaaS. 12+ production projects. SEO, speed, scalability.",
     h1: ["Next.js", "Development"],
     tagline: "React and Next.js. The right stack for modern web products.",
     sections: [

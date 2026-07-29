@@ -61,6 +61,11 @@ const nextConfig = {
         destination: "/services",
         permanent: true,
       },
+      {
+        source: "/technologies/:path*",
+        destination: "/services",
+        permanent: true,
+      },
     ];
   },
 };

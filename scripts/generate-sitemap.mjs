@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE_URL, sitemapRoutes } from "../src/lib/seo/config.js";
 import { projects } from "../src/data/projects.js";
+import { blogPosts } from "../src/data/blog-posts.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -39,10 +40,16 @@ const workUrls = projects.map((project) => ({
   priority: "0.7",
 }));
 
+const blogUrls = blogPosts.map((post) => ({
+  path: `/blog/${post.slug}`,
+  changefreq: "weekly",
+  priority: "0.7",
+}));
+
 const lastmodIndex = {};
 sitemapRoutes.forEach((r) => { lastmodIndex[r.path] = r.lastmod; });
 
-const allRoutes = [...sitemapRoutes, ...serviceUrls, ...workUrls];
+const allRoutes = [...sitemapRoutes, ...serviceUrls, ...workUrls, ...blogUrls];
 
 function routeLastmod(route) {
   return lastmodIndex[route.path] || new Date().toISOString().split("T")[0];

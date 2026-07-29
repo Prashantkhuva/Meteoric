@@ -23,7 +23,14 @@ export async function generateMetadata({ params }) {
       title,
       description: desc,
       url: `${SITE_URL}/work/${project.slug}`,
-      images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: project.name }],
+      images: [
+        {
+          url: `${SITE_URL}/og.png`,
+          width: 1200,
+          height: 630,
+          alt: project.name,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -48,8 +55,18 @@ export default async function CaseStudyPage({ params }) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-      { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
-      { "@type": "ListItem", position: 3, name: project.name, item: `${SITE_URL}/work/${project.slug}` },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Work",
+        item: `${SITE_URL}/work`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: project.name,
+        item: `${SITE_URL}/work/${project.slug}`,
+      },
     ],
   };
 
@@ -78,9 +95,18 @@ export default async function CaseStudyPage({ params }) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }}
+      />
       <CaseStudy project={project} />
     </>
   );

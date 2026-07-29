@@ -5,7 +5,7 @@ import { serviceFaqs } from "@/data/faqs";
 
 const pageTitle = "Web Development Agency for Startups & SaaS | Meteoric";
 const pageDesc =
-  "Meteoric is a web development agency specializing in SaaS, startup websites, and full-stack apps. Book a free strategy call.";
+  "Meteoric is a web development agency specializing in SaaS, startup websites, and full-stack apps. Founder-led, no account managers. 12+ production projects shipped. Book a free strategy call.";
 
 export const metadata = {
   title: pageTitle,
