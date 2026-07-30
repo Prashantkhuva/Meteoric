@@ -160,3 +160,11 @@ ADMIN_EMAIL
 CALCOM_API_KEY
 NEXT_PUBLIC_SITE_URL
 ```
+
+## Google Indexing API (Bulk Reindexing)
+- **Service account key:** `C:\Users\PRASHANT\Downloads\gcp-mcp-503913-1a46f0314665.json`
+- **Service account email:** `indexing-api@gcp-mcp-503913.iam.gserviceaccount.com`
+- **GCP Project:** `gcp-mcp-503913`
+- **Org:** `work-prashantkhuva-org` (ID: `440155376237`)
+- To reindex: use the service account key with Google APIs Node.js client to call `indexing.urlNotifications.publish()` with `URL_UPDATED` type
+- Daily quota: 200 URL notifications
