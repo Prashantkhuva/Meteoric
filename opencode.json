@@ -26,9 +26,9 @@
       "command": ["npx", "-y", "suganthan-gsc-mcp"],
       "enabled": true,
       "environment": {
-        "GSC_AUTH_MODE": "{env:GSC_AUTH_MODE}",
-        "GSC_OAUTH_SECRETS_FILE": "{env:GSC_OAUTH_SECRETS_FILE}",
-        "GSC_SITE_URL": "{env:GSC_SITE_URL}"
+        "GSC_AUTH_MODE": "oauth",
+        "GSC_OAUTH_SECRETS_FILE": "C:\\Users\\PRASHANT\\.config\\gsc\\client_secret.json",
+        "GSC_SITE_URL": "https://withmeteoric.com"
       }
     }
   }
