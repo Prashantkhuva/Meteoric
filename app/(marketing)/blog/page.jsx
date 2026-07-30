@@ -209,34 +209,16 @@ export default function BlogIndex() {
             </div>
           </section>
 
-          {/* ═══════════════════════════════════════
-               FOOTER
-             ═══════════════════════════════════════ */}
-          <div className="mt-24 pt-10 border-t border-white/[0.06]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <p className="font-secondary-italic text-white/60 text-lg mb-2">Meteoric</p>
-                <p className="text-white/20 text-xs font-mono leading-[1.7]">Web development &amp; SaaS insights from real project experience.</p>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-white/12 text-[10px] font-mono tracking-wider uppercase mb-1">Navigate</span>
-                <Link href="/" className="text-white/25 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">Home</Link>
-                <Link href="/work" className="text-white/25 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">Work</Link>
-                <Link href="/services" className="text-white/25 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">Services</Link>
-              </div>
-              <div className="flex flex-col items-start md:items-end gap-2 justify-end">
-                <Link
-                  href="/booking"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black text-[11px] font-mono tracking-wider rounded-full hover:bg-[#EAEFFF] transition-colors duration-200"
-                >
-                  Book a Call
-                  <span className="text-black/40">→</span>
-                </Link>
-                <Link href="/" className="text-white/15 hover:text-white/35 text-[10px] font-mono tracking-wider transition-colors duration-200">
-                  ← Back to Home
-                </Link>
-              </div>
-            </div>
+          {/* ── Bottom Nav ── */}
+          <div className="mt-24 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Link href="/" className="group inline-flex items-center gap-2 text-white/15 hover:text-white/40 text-xs font-mono tracking-wider transition-colors duration-200">
+              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
+              Back to Home
+            </Link>
+            <Link href="/services" className="group inline-flex items-center gap-2 text-white/15 hover:text-white/40 text-xs font-mono tracking-wider transition-colors duration-200">
+              Services
+              <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
+            </Link>
           </div>
         </div>
       </main>

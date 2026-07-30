@@ -280,29 +280,14 @@ export default async function BlogPost({ params }) {
             </div>
           </div>
 
-          {/* ═══════════════════════════════════════
-               FOOTER NAV
-             ═══════════════════════════════════════ */}
-          <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* ── Back Link ── */}
+          <div className="mt-12 pt-8 border-t border-white/[0.06]">
             <Link
               href="/blog"
               className="group inline-flex items-center gap-2 text-white/15 hover:text-white/40 text-xs font-mono tracking-wider transition-colors duration-200"
             >
               <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               Back to all articles
-            </Link>
-            <Link
-              href="/"
-              className="text-white/10 hover:text-white/25 text-[10px] font-mono tracking-wider transition-colors duration-200"
-            >
-              Meteoric © {new Date().getFullYear()}
-            </Link>
-            <Link
-              href="/services"
-              className="group inline-flex items-center gap-2 text-white/15 hover:text-white/40 text-xs font-mono tracking-wider transition-colors duration-200"
-            >
-              Services
-              <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
             </Link>
           </div>
         </div>
