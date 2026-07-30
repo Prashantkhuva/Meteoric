@@ -56,12 +56,6 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://withmeteoric.com/services/landing-pages</loc>
-    <lastmod>2026-07-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://withmeteoric.com/services/saas-development</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>monthly</changefreq>
@@ -75,12 +69,6 @@
   </url>
   <url>
     <loc>https://withmeteoric.com/services/nextjs-development</loc>
-    <lastmod>2026-07-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://withmeteoric.com/services/web-applications</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

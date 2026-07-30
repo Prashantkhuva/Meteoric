@@ -7,16 +7,16 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['dist', 'out', '.next', 'middleware-snapshot.js']),
   {
-    files: ['middleware.js'],
+    files: ['proxy.js'],
     ...js.configs.recommended,
     languageOptions: {
-      globals: globals.browser,
+      globals: { ...globals.browser, ...globals.node },
       sourceType: 'module',
     },
   },
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['middleware.js'],
+    ignores: ['proxy.js'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,

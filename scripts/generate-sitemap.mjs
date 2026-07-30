@@ -21,11 +21,9 @@ function routeUrl(routePath) {
 }
 
 const serviceSlugs = [
-  "landing-pages",
   "saas-development",
   "startup-web-development",
   "nextjs-development",
-  "web-applications",
 ];
 
 const serviceUrls = serviceSlugs.map((slug) => ({

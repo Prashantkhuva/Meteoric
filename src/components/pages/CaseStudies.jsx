@@ -11,7 +11,7 @@ import { caseStudies } from "@/data/case-studies";
 const serviceLinks = {
   "letem-know": { label: "Landing Pages", href: "/services#landing-pages" },
   "habit-flow": { label: "SaaS Development", href: "/services/saas-development" },
-  "megablog": { label: "Web Applications", href: "/services/web-applications" },
+  "megablog": { label: "Web Applications", href: "/services" },
   "mobile-preview-simulator": { label: "Full-Stack Development", href: "/services/startup-web-development" },
 };
 
