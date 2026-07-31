@@ -1,9 +1,9 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import AboutPage from "@/components/pages/About";
 
-const pageTitle = "About Meteoric | Web & Product Development Studio for Founders";
+const pageTitle = "About Meteoric — The Founder-Led Studio Behind 12+ Launches";
 const pageDesc =
-   "Meteoric partners with founders to design, build, and launch modern web products. Direct founder involvement on every project with 12+ production apps shipped. Founded by Prashant Khuva, a full-stack developer building for startups.";
+   "Meteoric is a founder-led studio with a simple promise: direct involvement, honest advice, and products that ship. Meet Prashant Khuva, the full-stack developer building for startups.";
 
 export const metadata = {
   title: pageTitle,

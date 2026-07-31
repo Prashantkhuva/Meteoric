@@ -1,9 +1,9 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import CalBooking from "@/components/pages/CalBooking";
 
-const pageTitle = "Book a Free Web Development Strategy Call | Meteoric";
+const pageTitle = "Book a Strategy Call — Free | Meteoric";
 const pageDesc =
-  "Schedule a free 30-minute strategy call with Meteoric. Discuss your web development, SaaS, or startup project and get a timeline and estimate from a founder-led agency.";
+  "Thirty minutes, no pitch. Walk through your idea with the founder who builds it and leave with a clear plan, timeline, and estimate.";
 
 export const metadata = {
   title: pageTitle,

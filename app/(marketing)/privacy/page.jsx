@@ -3,7 +3,7 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const pageTitle = "Privacy Policy — Meteoric";
 const pageDesc =
-   "How Meteoric collects, uses, and protects your personal data when you use our website and services.";
+   "How Meteoric collects, uses, and protects your data — plain and simple.";
 
 export const metadata = {
   title: pageTitle,

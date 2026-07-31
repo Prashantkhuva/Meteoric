@@ -21,9 +21,9 @@ const playfairDisplay = Playfair_Display({
 const metaTitle =
   "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const metaDesc =
-  "Meteoric is a software development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that convert. Book a free strategy call.";
+  "Meteoric is a founder-led web development agency building high-performance websites, SaaS platforms, and full-stack applications that convert — not just look good. Free strategy call.";
 const metaDescOg =
-  "Meteoric is a software development agency that designs and builds high-performance websites, SaaS platforms, and full-stack applications that actually convert. Book a free strategy call.";
+  "Meteoric is a founder-led web development agency building high-performance websites, SaaS platforms, and full-stack applications that actually convert. No account managers — just shipped products.";
 
 export const metadata = {
   title: metaTitle,

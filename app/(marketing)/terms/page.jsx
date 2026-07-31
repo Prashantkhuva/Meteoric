@@ -3,7 +3,7 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const pageTitle = "Terms of Service — Meteoric";
 const pageDesc =
-  "Meteoric's terms of service govern the use of our website and the engagement terms for our software development services.";
+  "The terms that govern Meteoric's website and our software development engagements — fair, clear, and straight to the point.";
 
 export const metadata = {
   title: pageTitle,

@@ -2,9 +2,9 @@ import Link from "next/link";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import { blogPosts, blogTags } from "@/data/blog-posts";
 
-const pageTitle = "Blog | Meteoric — Web Development & SaaS Insights";
+const pageTitle = "Blog — SaaS, Web Development & Design Insights | Meteoric";
 const pageDesc =
-  "Practical guides on SaaS development, web development, tech stack decisions, and building products that grow. Written by Meteoric's founder with real project experience.";
+  "Notes on building products that convert — written by the founder from real shipped work. No fluff, no recycled content, no filler.";
 
 export const metadata = {
   title: pageTitle,

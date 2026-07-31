@@ -3,9 +3,9 @@ import ServicesPage from "@/components/pages/Services";
 import { buildFaqJsonLd, buildHowToJsonLd } from "@/lib/seo/jsonLd";
 import { serviceFaqs } from "@/data/faqs";
 
-const pageTitle = "Web Development Agency for Startups & SaaS | Meteoric";
+const pageTitle = "Services — Web Development & SaaS for Startups | Meteoric";
 const pageDesc =
-  "Meteoric is a web development agency specializing in SaaS, startup websites, and full-stack apps. Founder-led, no account managers. 12+ production projects shipped. Book a free strategy call.";
+  "Landing pages, SaaS products, and full-stack applications — designed and built in-house, shipped with the founder on the line. Clear scope, honest timelines, premium results.";
 
 export const metadata = {
   title: pageTitle,
