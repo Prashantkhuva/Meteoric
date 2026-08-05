@@ -32,6 +32,21 @@ export async function generateMetadata({ params }) {
   };
 }
 
+const postService = {
+  "mongodb-schema-design-for-saas-billing": { href: "/services/saas-development", label: "SaaS Development" },
+  "how-to-build-a-saas-mvp-step-by-step-guide": { href: "/services/saas-development", label: "SaaS Development" },
+  "mongodb-vs-postgresql-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
+  "gsap-vs-framer-motion-production-guide": { href: "/services/landing-pages", label: "Landing Page Design" },
+  "supabase-vs-firebase-2026-comparison": { href: "/services/saas-development", label: "SaaS Development" },
+  "nextjs-vs-remix-2026-comparison": { href: "/services/nextjs-development", label: "Next.js Development" },
+  "what-is-a-web-development-agency": { href: "/services", label: "Explore Services" },
+  "how-much-does-a-startup-website-cost": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "building-a-saas-prototype-in-3-weeks-a-case-study": { href: "/services/saas-development", label: "SaaS Development" },
+  "the-meteoric-guide-to-choosing-your-tech-stack": { href: "/services/nextjs-development", label: "Next.js Development" },
+  "how-to-choose-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "react-vs-nextjs-for-startup-websites": { href: "/services/nextjs-development", label: "Next.js Development" },
+};
+
 function readingTime(sections) {
   const words = sections.reduce((acc, s) => acc + s.body.split(/\s+/).length, 0);
   return Math.max(1, Math.ceil(words / 200));
@@ -43,6 +58,7 @@ export default async function BlogPost({ params }) {
   if (!post) notFound();
 
   const readTime = readingTime(post.sections);
+  const relatedService = postService[post.slug] || { href: "/services", label: "Explore Services" };
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -270,10 +286,10 @@ export default async function BlogPost({ params }) {
                   <span className="text-black/40">→</span>
                 </Link>
                 <Link
-                  href="/services"
+                  href={relatedService.href}
                   className="inline-flex items-center gap-2 text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200 group"
                 >
-                  Explore Services
+                  {relatedService.label}
                   <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
                 </Link>
               </div>

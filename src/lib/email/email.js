@@ -16,15 +16,15 @@ import { isRazorpayConfigured } from "@/lib/razorpay";
 const FROM =
   process.env.FROM_EMAIL || "Meteoric <onboarding@resend.dev>";
 const ADMIN = process.env.ADMIN_EMAIL;
-const ADMIN_FROM = `Meteoric <${process.env.ADMIN_CONTACT_EMAIL || "admin@withmeteoric.com"}>`;
-const BILLING_FROM = `Meteoric <${process.env.BILLING_EMAIL || "billing@withmeteoric.com"}>`;
+const ADMIN_FROM = `Meteoric <${process.env.ADMIN_CONTACT_EMAIL || "admin@mail.withmeteoric.com"}>`;
+const BILLING_FROM = `Meteoric <${process.env.BILLING_EMAIL || "billing@mail.withmeteoric.com"}>`;
 const DOMAIN = (FROM || "").match(/@([^>]+)/)?.[1];
 
 const SENDER_MAP = {
-  contact: "contact@withmeteoric.com",
-  admin: process.env.ADMIN_CONTACT_EMAIL || "admin@withmeteoric.com",
-  billing: process.env.BILLING_EMAIL || "billing@withmeteoric.com",
-  support: process.env.SUPPORT_EMAIL || "support@withmeteoric.com",
+  contact: "contact@mail.withmeteoric.com",
+  admin: process.env.ADMIN_CONTACT_EMAIL || "admin@mail.withmeteoric.com",
+  billing: process.env.BILLING_EMAIL || "billing@mail.withmeteoric.com",
+  support: process.env.SUPPORT_EMAIL || "support@mail.withmeteoric.com",
 };
 
 function sanitizeFilename(name) {

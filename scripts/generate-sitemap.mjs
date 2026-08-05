@@ -24,6 +24,8 @@ const serviceSlugs = [
   "saas-development",
   "startup-web-development",
   "nextjs-development",
+  "landing-pages",
+  "web-applications",
 ];
 
 const serviceUrls = serviceSlugs.map((slug) => ({
