@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
+import useSectionAnimations from "@/hooks/useSectionAnimations";
 import { projects as allProjects } from "@/data/projects";
 
 const projects = allProjects.slice(0, 2);
@@ -115,14 +115,16 @@ function Projects() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".split-line").forEach((el) => {
-        el.style.opacity = "1";
-        el.style.transform = "none";
-      });
-      return;
-    }
+  useSectionAnimations(
+    sectionRef,
+    () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        headingRef.current?.querySelectorAll(".split-line").forEach((el) => {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        });
+        return;
+      }
 
     const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
     gsap.fromTo(split.lines,
@@ -190,7 +192,9 @@ function Projects() {
         },
       );
     });
-  }, { scope: sectionRef });
+  },
+  [],
+);
 
   return (
     <section
@@ -200,7 +204,7 @@ function Projects() {
     >
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
-        <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+        <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 md:gap-16 mb-16">
           <div>
             <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
               <span className="font-display text-white/40 not-italic mr-2">04</span>
@@ -211,7 +215,7 @@ function Projects() {
             </h2>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 shrink-0">
             <Link
               href="/work"
               className="group relative inline-flex items-center gap-2 text-white/60 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300 hover:text-white"

@@ -17,8 +17,9 @@ export default function SmoothScroll() {
     let cleanupScrollTrigger = () => {};
     let pinObserver = null;
 
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
-      ([{ default: gsap }, { ScrollTrigger }]) => {
+    const init = () => {
+      Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
+        ([{ default: gsap }, { ScrollTrigger }]) => {
         gsap.registerPlugin(ScrollTrigger);
 
         const lenis = new Lenis({
@@ -68,6 +69,14 @@ export default function SmoothScroll() {
         };
       },
     );
+    };
+
+    // Defer smooth-scroll setup so it doesn't compete with first render.
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(init, { timeout: 1500 });
+    } else {
+      setTimeout(init, 200);
+    }
 
     return () => {
       cleanupScrollTrigger();
@@ -80,9 +89,16 @@ export default function SmoothScroll() {
       ? document.querySelector(hash)
       : 0;
 
-    const timeoutId = window.setTimeout(() => {
-      lenisRef.current?.scrollTo(scrollTarget || 0, { immediate: !hash });
-    }, 0);
+    const attempt = () => {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(scrollTarget || 0, {
+          immediate: !hash,
+        });
+      }
+    };
+    attempt();
+    // Lenis init is deferred to idle — retry once it's available.
+    const timeoutId = window.setTimeout(attempt, 1500);
 
     return () => window.clearTimeout(timeoutId);
   }, [pathname]);

@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
+import useSectionAnimations from "@/hooks/useSectionAnimations";
 
 const process = [
   {
@@ -41,21 +41,33 @@ export default function ProcessSection() {
   const progressRef = useRef(null);
   const headingRef = useRef(null);
 
-  useGSAP(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".split-line").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; });
-      progressRef.current.style.height = "100%";
-      timelineRef.current?.querySelectorAll(".proc-step").forEach(el => {
-        el.style.opacity = "1";
-        el.style.transform = "none";
-        el.querySelectorAll(".proc-dot, .proc-num, .proc-title, .proc-desc, .proc-tags > *").forEach(child => {
-          child.style.opacity = "1";
-          child.style.transform = "none";
-          child.style.filter = "none";
+  useSectionAnimations(
+    sectionRef,
+    () => {
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        headingRef.current
+          ?.querySelectorAll(".split-line")
+          .forEach((el) => {
+            el.style.opacity = "1";
+            el.style.transform = "none";
+          });
+        progressRef.current.style.height = "100%";
+        timelineRef.current?.querySelectorAll(".proc-step").forEach((el) => {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+          el.querySelectorAll(".proc-dot, .proc-num, .proc-title, .proc-desc, .proc-tags > *").forEach(
+            (child) => {
+              child.style.opacity = "1";
+              child.style.transform = "none";
+              child.style.filter = "none";
+            },
+          );
         });
-      });
-      return;
-    }
+        return;
+      }
 
     const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
     gsap.fromTo(split.lines,
@@ -110,7 +122,9 @@ export default function ProcessSection() {
         if (tags) tl.fromTo(tags.children, { y: 15, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.06, duration: 0.3, ease: "power2.out" }, "-=0.2");
       });
     }
-  }, { scope: sectionRef });
+  },
+  [],
+);
 
   return (
     <section

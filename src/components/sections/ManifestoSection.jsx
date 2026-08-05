@@ -1,42 +1,54 @@
 "use client";
 
 import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import useSectionAnimations from "@/hooks/useSectionAnimations";
 
 export default function ManifestoSection() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
 
-  useGSAP(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      headingRef.current?.querySelectorAll(".split-word").forEach(el => {
-        el.style.opacity = "1";
-        el.style.filter = "none";
+  useSectionAnimations(
+    sectionRef,
+    () => {
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        headingRef.current
+          ?.querySelectorAll(".split-word")
+          .forEach((el) => {
+            el.style.opacity = "1";
+            el.style.filter = "none";
+          });
+        return;
+      }
+
+      const split = new SplitText(headingRef.current, {
+        type: "words",
+        wordsClass: "split-word",
       });
-      return;
-    }
+      if (!split.words?.length) return;
 
-    const split = new SplitText(headingRef.current, { type: "words", wordsClass: "split-word" });
-    if (!split.words?.length) return;
+      gsap.set(split.words, { opacity: 0.08, filter: "blur(8px)" });
 
-    gsap.set(split.words, { opacity: 0.08, filter: "blur(8px)" });
-
-    gsap.to(split.words, {
-      opacity: 1,
-      filter: "blur(0px)",
-      stagger: { each: 1 / split.words.length, ease: "none" },
-      ease: "none",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 75%",
-        end: "bottom 55%",
-        scrub: 0.4,
-        invalidateOnRefresh: true,
-      },
-    });
-  }, { scope: sectionRef });
+      gsap.to(split.words, {
+        opacity: 1,
+        filter: "blur(0px)",
+        stagger: { each: 1 / split.words.length, ease: "none" },
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          end: "bottom 55%",
+          scrub: 0.4,
+          invalidateOnRefresh: true,
+        },
+      });
+    },
+    [],
+  );
 
   return (
     <section

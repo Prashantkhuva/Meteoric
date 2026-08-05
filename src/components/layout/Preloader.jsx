@@ -45,19 +45,19 @@ export default function Preloader({ onDone }) {
     tl.fromTo(
       comet,
       { x: -60, opacity: 0 },
-      { x: "110vw", opacity: 1, duration: 1, ease: "power2.in" },
+      { x: "110vw", opacity: 1, duration: 0.7, ease: "power2.in" },
     );
 
     // trail follows the comet
     tl.fromTo(
       trail,
       { scaleX: 0, opacity: 0 },
-      { scaleX: 1, opacity: 1, duration: 0.8, ease: "power2.out" },
+      { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.out" },
       "<0.1",
     );
 
     // fade trail
-    tl.to(trail, { opacity: 0, duration: 0.4 }, "-=0.3");
+    tl.to(trail, { opacity: 0, duration: 0.3 }, "-=0.3");
 
     // 2) stagger characters in
     tl.fromTo(
@@ -66,18 +66,18 @@ export default function Preloader({ onDone }) {
       {
         yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.05,
+        duration: 0.45,
+        stagger: 0.04,
         ease: "power3.out",
       },
-      "-=0.5",
+      "-=0.35",
     );
 
     // 3) tagline fades in
     tl.fromTo(
       tagRef.current,
       { opacity: 0, y: 8 },
-      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
       "-=0.2",
     );
 
@@ -85,13 +85,13 @@ export default function Preloader({ onDone }) {
     tl.fromTo(
       counterWrapRef.current,
       { opacity: 0 },
-      { opacity: 1, duration: 0.2, ease: "power2.out" },
+      { opacity: 1, duration: 0.15, ease: "power2.out" },
       "-=0.1",
     );
 
     tl.to(counter, {
       textContent: 100,
-      duration: 0.5,
+      duration: 0.4,
       snap: { textContent: 1 },
       ease: "power1.inOut",
     });
@@ -99,7 +99,7 @@ export default function Preloader({ onDone }) {
     // 5) everything fades out
     tl.to([overlay], {
       opacity: 0,
-      duration: 0.3,
+      duration: 0.25,
       ease: "power2.inOut",
     });
 

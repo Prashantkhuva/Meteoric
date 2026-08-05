@@ -1,14 +1,21 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useGSAP } from "@gsap/react";
+import dynamic from "next/dynamic";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Star, BadgeCheck, Sparkles } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { getApprovedReviews } from "@/lib/actions";
-import ReviewFormModal from "./ReviewFormModal";
 import FaqAccordion from "./FaqAccordion";
 import { homeFaqs } from "@/data/faqs";
+import useSectionAnimations from "@/hooks/useSectionAnimations";
+
+// Lazy — ReviewFormModal pulls framer-motion; only load it when the review
+// form is actually opened so the homepage initial bundle stays lean.
+const ReviewFormModal = dynamic(() => import("./ReviewFormModal"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const fallbackTestimonials = [
   {
@@ -111,31 +118,35 @@ export default function TestimonialsSection() {
     load();
   }, []);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useSectionAnimations(
+    sectionRef,
+    () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const headerHeading = headerRef.current?.querySelector("h2");
-    if (headerHeading) {
-      const split = new SplitText(headerHeading, { type: "lines", linesClass: "split-line" });
-      gsap.fromTo(split.lines,
-        { y: 50, opacity: 0, rotateX: 15 },
-        {
-          y: 0, opacity: 1, rotateX: 0,
-          stagger: 0.12, ease: "power3.out", duration: 0.6,
-          scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none reverse none", invalidateOnRefresh: true },
-        },
-      );
-    }
+      const headerHeading = headerRef.current?.querySelector("h2");
+      if (headerHeading) {
+        const split = new SplitText(headerHeading, { type: "lines", linesClass: "split-line" });
+        gsap.fromTo(split.lines,
+          { y: 50, opacity: 0, rotateX: 15 },
+          {
+            y: 0, opacity: 1, rotateX: 0,
+            stagger: 0.12, ease: "power3.out", duration: 0.6,
+            scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none reverse none", invalidateOnRefresh: true },
+          },
+        );
+      }
 
-    const fadeUp = (target, trigger, opts = {}) =>
-      gsap.fromTo(target, { y: 20, opacity: 0 }, {
-        y: 0, opacity: 1, ease: "power2.out", duration: 0.35,
-        scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none reverse none", invalidateOnRefresh: true, ...opts },
-      });
+      const fadeUp = (target, trigger, opts = {}) =>
+        gsap.fromTo(target, { y: 20, opacity: 0 }, {
+          y: 0, opacity: 1, ease: "power2.out", duration: 0.35,
+          scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none reverse none", invalidateOnRefresh: true, ...opts },
+        });
 
-    fadeUp(faqHeaderRef.current, faqHeaderRef.current);
-    fadeUp(faqListRef.current, faqListRef.current);
-  }, { scope: sectionRef });
+      fadeUp(faqHeaderRef.current, faqHeaderRef.current);
+      fadeUp(faqListRef.current, faqListRef.current);
+    },
+    [],
+  );
 
   return (
     <>

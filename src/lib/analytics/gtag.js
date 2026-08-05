@@ -25,9 +25,9 @@ export function initGtag() {
   };
 
   if (typeof requestIdleCallback !== "undefined") {
-    requestIdleCallback(load, { timeout: 2000 });
+    requestIdleCallback(load, { timeout: 5000 });
   } else {
-    setTimeout(load, 1000);
+    setTimeout(load, 3500);
   }
 }
 

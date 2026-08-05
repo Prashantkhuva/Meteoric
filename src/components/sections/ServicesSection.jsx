@@ -2,11 +2,11 @@
 
 import { useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import useSectionAnimations from "@/hooks/useSectionAnimations";
 
 const services = [
   {
@@ -15,7 +15,7 @@ const services = [
     desc: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
     tags: ["Strategy", "UX/UI", "Responsive", "Conversion"],
     icon: Smartphone,
-    href: "/services",
+    href: "/services/landing-pages",
   },
   {
     num: "02",
@@ -23,7 +23,7 @@ const services = [
     desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
     tags: ["Auth", "Dashboards", "Payments", "Scalable"],
     icon: Monitor,
-    href: "/services",
+    href: "/services/saas-development",
   },
   {
     num: "03",
@@ -31,7 +31,7 @@ const services = [
     desc: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
     tags: ["Frontend", "Backend", "Real-time", "API"],
     icon: Code2,
-    href: "/services",
+    href: "/services/web-applications",
   },
   {
     num: "04",
@@ -39,7 +39,7 @@ const services = [
     desc: "Complete frontend and backend development — from APIs and databases to polished UI. Full stack, one team.",
     tags: ["APIs", "Databases", "UI", "DevOps"],
     icon: Layers,
-    href: "/services",
+    href: "/services/nextjs-development",
   },
 ];
 
@@ -58,7 +58,8 @@ export default function ServicesSection() {
     cal("modal", { calLink: "prashantkhuva/let-s-build" });
   }, []);
 
-  useGSAP(
+  useSectionAnimations(
+    sectionRef,
     () => {
       const prefersReduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -180,7 +181,7 @@ export default function ServicesSection() {
         mm?.revert?.();
       };
     },
-    { scope: sectionRef },
+    [],
   );
 
   return (

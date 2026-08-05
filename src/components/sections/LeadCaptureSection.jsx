@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Check, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
+import useSectionAnimations from "@/hooks/useSectionAnimations";
 
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");
@@ -15,7 +15,8 @@ export default function LeadCaptureSection() {
   const contentRef = useRef(null);
   const headingRef = useRef(null);
 
-  useGSAP(
+  useSectionAnimations(
+    sectionRef,
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -54,7 +55,7 @@ export default function LeadCaptureSection() {
         },
       );
     },
-    { scope: sectionRef },
+    [],
   );
 
   const handleSubmit = async (e) => {

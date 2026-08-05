@@ -25,38 +25,28 @@ export default function ClientLayout({ children }) {
     trackPageView(pathname);
   }, [pathname]);
 
-  // Premium reveal: after preloader, sequence navbar + content entrance
+  // Content stays visible immediately (overlay preloader fades over it) — this
+  // avoids delaying LCP. Only the navbar reveals after the preloader completes.
   useGSAP(() => {
-    if (!contentRef.current) return;
-
-    if (!preloaderDone) {
-      gsap.set(contentRef.current, { opacity: 0 });
-      return;
-    }
-
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
     if (prefersReduced) {
-      gsap.set(contentRef.current, { opacity: 1 });
       if (navbarRef.current) gsap.set(navbarRef.current, { opacity: 1 });
       return;
     }
 
-    const tl = gsap.timeline();
-    tl.to(contentRef.current, {
-      opacity: 1,
-      duration: 0.6,
-      ease: "power2.out",
-    });
+    if (!preloaderDone) {
+      if (navbarRef.current) gsap.set(navbarRef.current, { opacity: 0 });
+      return;
+    }
 
     if (navbarRef.current) {
-      tl.fromTo(
+      gsap.fromTo(
         navbarRef.current,
         { y: -20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", clearProps: "transform" },
-        0,
       );
     }
   }, [preloaderDone, pathname]);

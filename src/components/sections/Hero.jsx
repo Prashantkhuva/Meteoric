@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import MeteorBackground from "./MeteorBackground";
@@ -20,14 +20,6 @@ function Hero() {
     cal("modal", { calLink: "prashantkhuva/let-s-build" });
   }, []);
 
-  useEffect(() => {
-    import("@calcom/embed-react").then(({ getCalApi }) =>
-      getCalApi({ namespace: "let-s-build" }).then((cal) =>
-        cal("ui", { theme: "dark", layout: "month_view" }),
-      ),
-    );
-  }, []);
-
   useGSAP(
     () => {
       if (
@@ -45,36 +37,46 @@ function Hero() {
         }
         return;
       }
-      const mainSplit = new SplitText(mainTextRef.current, {
-        type: "lines",
-        linesClass: "split-line",
-      });
-      const mutedSplit = new SplitText(mutedTextRef.current, {
-        type: "lines",
-        linesClass: "split-line",
-      });
-      const allLines = [...mainSplit.lines, ...mutedSplit.lines];
+      // Defer text-splitting (expensive DOM work) until the browser is idle so
+      // it doesn't compete with LCP rendering on low-end devices.
+      const run = () => {
+        const mainSplit = new SplitText(mainTextRef.current, {
+          type: "lines",
+          linesClass: "split-line",
+        });
+        const mutedSplit = new SplitText(mutedTextRef.current, {
+          type: "lines",
+          linesClass: "split-line",
+        });
+        const allLines = [...mainSplit.lines, ...mutedSplit.lines];
 
-      gsap.set(allLines, { opacity: 1 });
-      gsap.set([subtextRef.current, ctaRef.current], { opacity: 1 });
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out", duration: 0.45 },
-      });
-      tl.fromTo(allLines, { y: 40 }, { y: 0, stagger: 0.08 })
-        .from(subtextRef.current, { y: 30 }, "-=0.25")
-        .from(ctaRef.current, { y: 30 }, "-=0.2");
+        gsap.set(allLines, { opacity: 1 });
+        gsap.set([subtextRef.current, ctaRef.current], { opacity: 1 });
+        const tl = gsap.timeline({
+          defaults: { ease: "power3.out", duration: 0.45 },
+        });
+        tl.fromTo(allLines, { y: 40 }, { y: 0, stagger: 0.08 })
+          .from(subtextRef.current, { y: 30 }, "-=0.25")
+          .from(ctaRef.current, { y: 30 }, "-=0.2");
 
-      gsap.to(containerRef.current, {
-        y: 60,
-        opacity: 0.3,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current.parentElement,
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.5,
-        },
-      });
+        gsap.to(containerRef.current, {
+          y: 60,
+          opacity: 0.3,
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current.parentElement,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.5,
+          },
+        });
+      };
+
+      if (typeof requestIdleCallback !== "undefined") {
+        requestIdleCallback(run, { timeout: 1200 });
+      } else {
+        setTimeout(run, 100);
+      }
     },
     { scope: containerRef },
   );
