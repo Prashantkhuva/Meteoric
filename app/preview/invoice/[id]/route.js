@@ -352,10 +352,24 @@ ${
   var CLIENT_EMAIL = ${JSON.stringify(invoice.client?.email || "")};
   var RAZORPAY_KEY = ${JSON.stringify(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "")};
 
-  function setLoading(btn, loading) {
+  var UPI_BTN_HTML = '<img src="/new-upi-lg.svg" alt="UPI" width="63" height="20" />';
+  var btn = document.querySelector(".upi-btn");
+  var paying = false;
+
+  function setLoading(loading) {
     if (!btn) return;
     btn.disabled = loading;
-    btn.textContent = loading ? "Processing..." : "Pay using UPI";
+    if (loading) {
+      btn.dataset.original = btn.innerHTML;
+      btn.innerHTML = "Processing...";
+    } else {
+      btn.innerHTML = btn.dataset.original || UPI_BTN_HTML;
+    }
+  }
+
+  function resetButton() {
+    paying = false;
+    setLoading(false);
   }
 
   function showError(msg) {
@@ -363,8 +377,10 @@ ${
   }
 
   window.payWithUPI = function() {
-    var btn = document.querySelector(".upi-btn");
-    setLoading(btn, true);
+    if (!btn || paying) return;
+
+    paying = true;
+    setLoading(true);
 
     fetch("/api/razorpay/create-order", {
       method: "POST",
@@ -375,7 +391,7 @@ ${
     .then(function(data) {
       if (data.error) {
         showError("Failed to create payment order: " + data.error);
-        setLoading(btn, false);
+        resetButton();
         return;
       }
 
@@ -414,23 +430,36 @@ ${
             } else {
               showError("Payment verification failed. Please contact us.");
             }
+            resetButton();
           })
           .catch(function() {
             showError("Payment verification failed. Please contact us.");
+            resetButton();
           });
+        },
+        modal: {
+          ondismiss: function() {
+            // User cancelled or closed the Razorpay modal — release the button
+            resetButton();
+          }
         }
       });
 
       rzp.on("payment.failed", function(e) {
         showError(e.error && e.error.description || "Payment failed.");
-        setLoading(btn, false);
+        resetButton();
       });
 
-      rzp.open();
+      try {
+        rzp.open();
+      } catch (e) {
+        showError("Could not open the payment window. Please try again.");
+        resetButton();
+      }
     })
     .catch(function() {
       showError("Failed to connect to payment service. Please try again.");
-      setLoading(btn, false);
+      resetButton();
     });
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export default function RazorpayCheckout({
   orderId,
@@ -10,7 +10,12 @@ export default function RazorpayCheckout({
   email,
   invoiceNumber,
 }) {
+  const [loading, setLoading] = useState(false);
+
   const handlePayment = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
       order_id: orderId,
@@ -32,42 +37,57 @@ export default function RazorpayCheckout({
             window.location.reload();
           } else {
             alert("Payment verification failed. Please contact us.");
+            setLoading(false);
           }
         } catch {
           alert("Payment verification failed. Please contact us.");
+          setLoading(false);
         }
       },
       modal: {
         ondismiss: function () {
-          // ponytail: user dismissed modal, no action needed
+          setLoading(false);
         },
       },
     };
 
-    const rzp = new window.Razorpay(options);
-    rzp.on("payment.failed", function (response) {
-      alert(response.error?.description || "Payment failed. Please try again.");
-    });
-    rzp.open();
-  }, [orderId, amount, currency, name, email, invoiceNumber]);
+    try {
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", function (response) {
+        alert(response.error?.description || "Payment failed. Please try again.");
+        setLoading(false);
+      });
+      rzp.open();
+    } catch {
+      alert("Could not open the payment window. Please try again.");
+      setLoading(false);
+    }
+  }, [orderId, amount, currency, name, email, invoiceNumber, loading]);
 
   return (
     <button
       onClick={handlePayment}
-      className="inline-flex items-center justify-center px-5 py-3 transition-all hover:opacity-90 active:scale-[0.97]"
+      disabled={loading}
+      className="inline-flex items-center justify-center px-5 py-3 transition-all hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60"
       style={{
         backgroundColor: "#0a0a0a",
         border: "1px solid #1B1B1B",
         borderRadius: "6px",
       }}
     >
-      <img
-        src="/new-upi-lg.svg"
-        alt="UPI"
-        width="63"
-        height="20"
-        style={{ display: "block" }}
-      />
+      {loading ? (
+        <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
+          Processing...
+        </span>
+      ) : (
+        <img
+          src="/new-upi-lg.svg"
+          alt="UPI"
+          width="63"
+          height="20"
+          style={{ display: "block" }}
+        />
+      )}
     </button>
   );
 }
