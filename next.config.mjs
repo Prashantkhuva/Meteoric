@@ -47,16 +47,6 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: "/services/landing-pages",
-        destination: "/services",
-        permanent: true,
-      },
-      {
-        source: "/services/web-applications",
-        destination: "/services",
-        permanent: true,
-      },
-      {
         source: "/services/full-stack-development",
         destination: "/services",
         permanent: true,
