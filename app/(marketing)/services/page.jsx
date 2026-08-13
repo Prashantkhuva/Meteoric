@@ -58,20 +58,6 @@ const speakableJsonLd = {
 
 const faqJsonLd = buildFaqJsonLd(serviceFaqs);
 
-const reviewSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": `${SITE_URL}/#organization`,
-  name: "Meteoric",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "5",
-    bestRating: "5",
-    ratingCount: "12",
-    datePublished: "2026-07-25",
-  },
-};
-
 const howToSchema = buildHowToJsonLd([
   {
     name: "Discovery & Strategy",
@@ -101,10 +87,6 @@ export default function Services() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
       <script
         type="application/ld+json"

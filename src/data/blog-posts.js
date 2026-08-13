@@ -141,11 +141,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Landscape in 2026",
-        body: "GSAP and Framer Motion are the two dominant animation libraries for the web. GSAP is a framework-agnostic animation engine with 2M+ weekly npm downloads, while Framer Motion is the React-native animation library from the Framer team with 1.5M+ weekly downloads. Both are production-ready, but they excel in different scenarios. Choosing between them depends on your framework, animation complexity, and performance requirements.",
+        body: "GSAP and Framer Motion are the two dominant animation libraries for the web. GSAP is a framework-agnostic animation engine with 4M+ weekly npm downloads, and it has been completely free — including every plugin — since April 2025, when Webflow stepped in to sponsor the licensing. Framer Motion (now branded simply as Motion) is the React-native animation library from the Framer team with 41M+ weekly downloads. Both are production-ready, but they excel in different scenarios. Choosing between them depends on your framework, animation complexity, and performance requirements.",
       },
       {
         heading: "Bundle Size and Performance",
-        body: "GSAP core is approximately 25KB gzipped — lightweight for its capabilities. Framer Motion is larger at around 35KB gzipped, partly because it includes React-specific features like layout animations and AnimatePresence. For simple UI animations in a React app, Framer Motion's tree-shaking works well. For complex timeline-based animations or scroll-driven sequences, GSAP's smaller footprint and lower overhead make it the performance winner.",
+        body: "GSAP core is roughly 27KB gzipped — lightweight for its capabilities. Framer Motion is larger at around 60KB gzipped (less with aggressive tree-shaking), partly because it includes React-specific features like layout animations and AnimatePresence. For simple UI animations in a React app, Framer Motion's tree-shaking works well. For complex timeline-based animations or scroll-driven sequences, GSAP's smaller footprint and lower overhead make it the performance winner.",
       },
       {
         heading: "Scroll Animations",
@@ -153,7 +153,7 @@ export const blogPosts = [
       },
       {
         heading: "React Integration",
-        body: "Framer Motion was built for React — its component-based API (motion.div, AnimatePresence, layout animations) feels natural in JSX. GSAP works with React through refs and the useGSAP hook but doesn't have the same declarative API. If your project is 100% React with mostly UI animations (buttons, modals, page transitions), Framer Motion will feel more idiomatic. If you need complex timelines, scroll animation, or SVG animations, GSAP's imperative API gives you more control.",
+        body: "Framer Motion was built for React — its component-based API (motion.div, AnimatePresence, layout animations) feels natural in JSX. GSAP works with React through refs and the useGSAP hook but doesn't have the same declarative API. If your project is 100% React with mostly UI animations (buttons, modals, page transitions), Framer Motion will feel more idiomatic. If you need complex timelines, scroll animation, or SVG animations, GSAP's imperative API gives you more control. For a [React or Next.js web application](/services/nextjs-development), the pattern we use in production is Framer Motion for UI polish and GSAP with ScrollTrigger for scroll-driven sections — the two never fight because they animate different properties.",
       },
       {
         heading: "SVG and Canvas Animation",
@@ -161,13 +161,13 @@ export const blogPosts = [
       },
       {
         heading: "Production Recommendation",
-        body: "Use Framer Motion for React UI animations — modal transitions, list animations, layout shifts, and page transitions in Next.js. Use GSAP for scroll-driven animations, complex timelines, SVG morphing, and any animation that needs precise timing control. Many production sites use both: Framer Motion for UI polish and GSAP for hero section scroll animations. The libraries coexist well since they animate different properties independently.",
+        body: "Use Framer Motion for React UI animations — modal transitions, list animations, layout shifts, and page transitions in Next.js. Use GSAP for scroll-driven animations, complex timelines, SVG morphing, and any animation that needs precise timing control. Many production sites use both: Framer Motion for UI polish and GSAP for hero section scroll animations. The libraries coexist well since they animate different properties independently. If you're planning an animation-heavy [web application or SaaS product](/services/saas-development), this is exactly the setup we ship at Meteoric — production-grade animation architecture without the jank.",
       },
     ],
     faqs: [
       { question: "Can I use GSAP and Framer Motion together?", answer: "Yes. They operate independently and animate different properties. Many production sites use Framer Motion for UI interactions (modals, page transitions) and GSAP for scroll-based hero animations. Just avoid animating the same element with both libraries simultaneously." },
       { question: "Which is better for Next.js?", answer: "Both work well with Next.js. Framer Motion integrates naturally with React Server Components (as a client component wrapper). GSAP works via refs and the useGSAP hook. For Next.js projects with scroll animations, the common pattern is Framer Motion for UI + GSAP with ScrollTrigger for hero/scroll sections." },
-      { question: "Do I need a license for GSAP?", answer: "GSAP is free for most use cases under the Standard License. A paid Business Green license is needed for commercial websites, SaaS products, and paid apps. Framer Motion is MIT licensed and free for all use cases." },
+      { question: "Do I need a license for GSAP?", answer: "No — GSAP has been completely free for commercial use since April 2025. Every plugin (ScrollTrigger, SplitText, DrawSVG, and more) is now included at no cost, so the old paid Business Green license no longer exists. GSAP is distributed under the Standard No-Charge license, which allows commercial projects but not reselling GSAP itself. Framer Motion is MIT licensed and free for all use cases." },
     ],
     tags: ["GSAP", "Framer Motion", "Animation", "React", "Next.js"],
   },
@@ -189,7 +189,7 @@ export const blogPosts = [
       },
       {
         heading: "Pricing Comparison",
-        body: "Supabase's free tier includes 500MB database, 2GB bandwidth, 50,000 monthly active users, and 5GB storage. Firebase's free tier includes 1GB Firestore storage, 10GB bandwidth, and 10GB hosting — but costs scale quickly with reads/writes. For a growing SaaS, Supabase's pricing is more predictable since it's based on database size and bandwidth, not per-operation costs. Firebase's per-read pricing can surprise teams as their app grows.",
+        body: "Supabase's free tier includes a 500MB PostgreSQL database, 5GB of egress bandwidth (plus 5GB cached), 50,000 monthly active users, and 1GB of file storage — across 2 free projects, with the database pausing after 7 days of inactivity. The Pro plan at $25/month bumps that to an 8GB database, 100GB storage, 250GB egress, and 100,000 monthly active users. Firebase's Spark free tier includes 1GB of Firestore, 50K document reads / 20K writes / 20K deletes per day, 10GB of egress, and 2M Cloud Function invocations per month — but Google removed Cloud Storage from the free tier in February 2026, so file uploads now require a paid Blaze plan. Blaze bills per operation ($0.06 per 100K reads, $0.18 per 100K writes) with no spending cap. For a growing SaaS, Supabase's pricing is more predictable since it's based on database size and bandwidth, not per-operation costs. Firebase's per-read pricing can surprise teams as their app grows.",
       },
       {
         heading: "Open Source vs Vendor Lock-in",
@@ -197,15 +197,15 @@ export const blogPosts = [
       },
       {
         heading: "Authentication",
-        body: "Both offer email/password, OAuth (Google, GitHub, etc.), and magic link authentication. Supabase's Row Level Security (RLS) ties auth directly to database permissions — a powerful feature that makes your data secure by default. Firebase's auth is solid but its security rules (Firestore Security Rules) are a separate system to learn. For teams already comfortable with SQL, Supabase's RLS approach is more intuitive.",
+        body: "Both offer email/password, OAuth (Google, GitHub, and others), and magic link authentication in their free tiers, which cover roughly 50,000 monthly active users. Supabase's Row Level Security (RLS) ties auth directly to database permissions — a powerful feature that makes your data secure by default. Firebase's auth is solid but its security rules (Firestore Security Rules) are a separate system to learn, and the Firebase Admin SDK bypasses them by design, so server-side code must enforce its own permissions. For teams already comfortable with SQL, Supabase's RLS approach is more intuitive. Phone authentication is a paid add-on on both platforms, and enterprise features like SAML SSO require Firebase Identity Platform on Google's side.",
       },
       {
         heading: "Real-time and Realtime Features",
-        body: "Both platforms support real-time subscriptions. Supabase uses PostgreSQL's native replication for real-time — changes in your database are streamed to clients in real-time without additional infrastructure. Firebase uses WebSocket connections to Firestore. Supabase's approach means your real-time data is always consistent with your database, eliminating a common source of bugs in Firebase apps.",
+        body: "Both platforms support real-time subscriptions. Supabase uses PostgreSQL's native replication for real-time — changes in your database are streamed to clients in real-time without additional infrastructure. Firebase uses WebSocket connections to Firestore. Supabase's approach means your real-time data is always consistent with your database, eliminating a common source of bugs in Firebase apps. Pricing differs too: Supabase's free tier includes 2 million realtime messages per month with 200 concurrent connections, while every Firestore listener change counts against your daily read quota — a chat-heavy or event-heavy app can burn through the free 50K reads quickly, which makes Supabase noticeably cheaper for real-time features.",
       },
       {
         heading: "Recommendation for 2026",
-        body: "For new SaaS projects, Supabase is the better choice in 2026. PostgreSQL, open-source licensing, predictable pricing, and built-in auth with RLS create a stronger foundation for long-term product development. Firebase remains a good choice for mobile-first apps, Google Cloud ecosystems, or teams already deeply invested in the Firebase ecosystem. But for a web-based SaaS product starting fresh, Supabase's advantages are hard to ignore.",
+        body: "For new SaaS projects, Supabase is the better choice in 2026. PostgreSQL, open-source licensing, predictable pricing, and built-in auth with RLS create a stronger foundation for long-term product development. Firebase remains a good choice for mobile-first apps, Google Cloud ecosystems, or teams already deeply invested in the Firebase ecosystem. But for a web-based SaaS product starting fresh, Supabase's advantages are hard to ignore — it's the backend we default to when we [build SaaS products for startups](/services/saas-development), with auth, database, realtime, and storage under one open-source roof.",
       },
       {
         heading: "Performance and Latency in Practice",
@@ -213,7 +213,7 @@ export const blogPosts = [
       },
       {
         heading: "Storage, Files, and Edge Functions",
-        body: "Both platforms include file storage and serverless functions. Firebase Storage is mature, with automatic CDN distribution through Google's network, while Supabase Storage offers S3-compatible storage with built-in image transformations and CDN support. For functions, Firebase Cloud Functions have a longer history and deeper ecosystem — including background triggers tied to every Firebase service. Supabase Edge Functions run on Deno, deploy globally, and integrate naturally with the rest of the Supabase stack. For most web projects, both are adequate; the practical difference emerges in how your functions access data. Supabase functions connect directly to your PostgreSQL database with the same RLS policies applied, so security rules are consistent across the app. Firebase functions use the Admin SDK, which bypasses security rules by design — convenient, but it means your server-side code must enforce its own permissions. For a team building a multi-tenant SaaS, keeping one permission model (RLS) across client and server code is a meaningful security win.",
+        body: "Both platforms include file storage and serverless functions. Firebase Storage is mature, with automatic CDN distribution through Google's network, while Supabase Storage offers S3-compatible storage with built-in image transformations and CDN support. For functions, Firebase Cloud Functions have a longer history and deeper ecosystem — including background triggers tied to every Firebase service. Supabase Edge Functions run on Deno, deploy globally, and integrate naturally with the rest of the Supabase stack. For most web projects, both are adequate; the practical difference emerges in how your functions access data. Supabase functions connect directly to your PostgreSQL database with the same RLS policies applied, so security rules are consistent across the app. Firebase functions use the Admin SDK, which bypasses security rules by design — convenient, but it means your server-side code must enforce its own permissions. For a team building a multi-tenant SaaS, keeping one permission model (RLS) across client and server code is a meaningful security win. There's also a 2026 pricing catch on Google's side: Cloud Storage was removed from the Spark free tier in February 2026, so any file uploads now require a paid Blaze plan. Supabase's free tier still includes 1GB of storage with 500K Edge Function invocations per month, while Cloud Functions on Blaze include 2M free invocations (Node.js, Python, and Go).",
       },
       {
         heading: "Developer Experience and the SQL Advantage",
@@ -225,7 +225,7 @@ export const blogPosts = [
       },
       {
         heading: "Decision Framework for New Projects",
-        body: "If you're starting a web-based SaaS in 2026, the decision framework is short. Choose Supabase when: your product has relational data (users, teams, subscriptions, invoices), you need reporting or analytics, you want a predictable database-based pricing model, or you value open-source and portability. Choose Firebase when: you're building a mobile-first app, you need Firebase Cloud Messaging for push notifications, your team already has deep Firebase experience, or you want the convenience of Google's tightly integrated suite. For anything in the middle — a typical startup web app — Supabase gives you a better database, a clearer permission model, and a lower long-term risk profile. Either choice can ship a working product quickly; Supabase is the one you're less likely to outgrow.",
+        body: "If you're starting a web-based SaaS in 2026, the decision framework is short. Choose Supabase when: your product has relational data (users, teams, subscriptions, invoices), you need reporting or analytics, you want a predictable database-based pricing model, or you value open-source and portability. Choose Firebase when: you're building a mobile-first app, you need Firebase Cloud Messaging for push notifications, your team already has deep Firebase experience, or you want the convenience of Google's tightly integrated suite. For anything in the middle — a typical startup web app — Supabase gives you a better database, a clearer permission model, and a lower long-term risk profile. Either choice can ship a working product quickly; Supabase is the one you're less likely to outgrow. If you'd rather have an expert make the call, our [SaaS development team](/services/saas-development) helps founders choose the right backend before a line of code is written.",
       },
     ],
     faqs: [

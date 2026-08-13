@@ -2,9 +2,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import CaseStudiesPage from "@/components/pages/CaseStudies";
 import { caseStudies } from "@/data/case-studies";
 
-const pageTitle = "Case Studies — Outcomes, Not Output | Meteoric";
+const pageTitle = "Case Studies — Meteoric Web Development";
 const pageDesc =
-   "The work behind the work. Real products with measurable outcomes — MVPs, dashboards, and marketing sites shipped by Meteoric, with the numbers to prove it.";
+  "In-depth breakdowns of how Meteoric ships SaaS MVPs and full-stack apps for startups — architecture, stack choices, and results.";
 
 export const metadata = {
   title: pageTitle,

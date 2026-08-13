@@ -52,6 +52,23 @@ function readingTime(sections) {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+function renderRichBody(text) {
+  const parts = text.split(/(\[[^\]]+\]\([^)\s]+\))/g).filter(Boolean);
+  return parts.map((part, i) => {
+    const match = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+    if (!match) return part;
+    return (
+      <Link
+        key={i}
+        href={match[2]}
+        className="text-[#EAEFFF]/70 hover:text-[#EAEFFF] underline underline-offset-4 decoration-[#EAEFFF]/30 hover:decoration-[#EAEFFF]/70 transition-all duration-200"
+      >
+        {match[1]}
+      </Link>
+    );
+  });
+}
+
 export default async function BlogPost({ params }) {
   const { slug } = await params;
   const post = getBlogPost(slug);
@@ -184,7 +201,7 @@ export default async function BlogPost({ params }) {
                       {section.heading}
                     </h2>
                     <p className="text-white/30 text-[15px] md:text-base leading-[1.85] font-[350]">
-                      {section.body}
+                      {renderRichBody(section.body)}
                     </p>
                     {i < post.sections.length - 1 && (
                       <div className="mt-14 h-px bg-gradient-to-r from-white/[0.04] via-white/[0.02] to-transparent" />

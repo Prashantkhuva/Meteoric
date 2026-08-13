@@ -1,9 +1,9 @@
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import AboutPage from "@/components/pages/About";
 
-const pageTitle = "About Meteoric — The Founder-Led Studio Behind 12+ Launches";
+const pageTitle = "About Meteoric — Full-Stack Web Dev Agency";
 const pageDesc =
-   "Meteoric is a founder-led studio with a simple promise: direct involvement, honest advice, and products that ship. Meet Prashant Khuva, the full-stack developer building for startups.";
+  "Meteoric is a web development agency for founders who want a real engineer, not a template. MERN, Next.js, and production-grade builds.";
 
 export const metadata = {
   title: pageTitle,
@@ -83,20 +83,6 @@ const speakableJsonLd = {
   },
 };
 
-const reviewSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": `${SITE_URL}/#organization`,
-  name: "Meteoric",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "5",
-    bestRating: "5",
-    ratingCount: "12",
-    datePublished: "2026-07-25",
-  },
-};
-
 const aboutFaqs = [
   {
     question: "Who is behind Meteoric?",
@@ -132,10 +118,6 @@ export default function About() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
       <script
         type="application/ld+json"

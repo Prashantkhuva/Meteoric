@@ -103,13 +103,13 @@ function Hero() {
       >
         <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
           <span ref={mainTextRef} className="block">
-            Meteoric ships high-performance software
+            Meteoric — a web development agency
           </span>
           <span
             ref={mutedTextRef}
             className="block text-white/55 mt-2 font-secondary-italic"
           >
-            — websites and apps, fast.
+            for founders who ship fast.
           </span>
         </h1>
 

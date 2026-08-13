@@ -11,10 +11,12 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
-  const title = `${project.name} — Case Study | Meteoric`;
-  const desc = project.description
-    ? project.description.split(". ").slice(0, 2).join(". ") + "."
-    : project.tagline;
+  const title = project.metaTitle ?? `${project.name} — Case Study | Meteoric`;
+  const desc =
+    project.metaDescription ??
+    (project.description
+      ? project.description.split(". ").slice(0, 2).join(". ") + "."
+      : project.tagline);
   return {
     title,
     description: desc,

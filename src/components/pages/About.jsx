@@ -117,9 +117,12 @@ export default function AboutPage({ faqs = [] }) {
 
             <div className="space-y-4 text-white/35 text-[15px] leading-[1.8]">
               <p>
-                Meteoric is a product studio that partners with founders to
-                design, develop, and launch modern web products that actually
-                convert.
+                Meteoric is a{" "}
+                <Link href="/" className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">
+                  web development agency
+                </Link>{" "}
+                that partners with founders to design, develop, and launch
+                modern web products that actually convert.
               </p>
               <p>
                 I started Meteoric to close the gap between what founders

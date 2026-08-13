@@ -44,6 +44,9 @@ export const projects = [
     slug: "megablog",
     name: "MegaBlog",
     tagline: "A dark editorial blogging platform.",
+    metaTitle: "MegaBlog Case Study — React + Appwrite | Meteoric",
+    metaDescription:
+      "How Meteoric built MegaBlog: a full-stack blogging platform with React, Appwrite, and TinyMCE, from auth to editorial UX.",
     description:
       "A premium blog platform built with React 19 and Appwrite backend. Features a rich TinyMCE editor, full CRUD for posts, Redux Toolkit state management, and a dark editorial aesthetic with Framer Motion animations throughout. Outcome: Content publishing workflow reduced from hours to minutes, editors report 3x faster article turnaround.",
     link: "https://megablog.vercel.app/",

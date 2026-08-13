@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import StaggerLink from "./StaggerLink";
 
 export default function Footer() {
@@ -39,7 +40,11 @@ export default function Footer() {
           {/* Legal + copyright — centered on mobile, right on desktop */}
           <div className="flex flex-col items-center gap-2 text-sm">
             <p className="text-white/25 text-center text-xs sm:text-sm leading-relaxed">
-              &copy; 2026 Meteoric. <span className="text-white/15">Web &amp; Software Development Agency</span>
+              &copy; 2026{" "}
+              <Link href="/" className="hover:text-white/50 transition-colors duration-200">
+                Meteoric
+              </Link>
+              . <span className="text-white/15">Web &amp; Software Development Agency</span>
             </p>
             <div className="flex items-center gap-3">
               <StaggerLink href="/privacy" hoverColor="#fff" style={{ fontSize: 12, fontWeight: 400, color: "rgba(255,255,255,0.25)", padding: "6px 10px" }}>Privacy</StaggerLink>
