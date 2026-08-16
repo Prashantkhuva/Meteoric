@@ -98,8 +98,11 @@ export async function addLead(formData) {
     name: data.name,
     email: data.email || null,
     phone: data.phone,
+    company: data.company,
     services: data.services,
     budget: data.budget,
+    details: data.details,
+    source: data.source || "manual",
     status: "inquiry",
   });
 
@@ -140,6 +143,129 @@ export async function addLead(formData) {
   return { success: true };
 }
 
+const IMPORT_STATUS_MAP = {
+  new: "inquiry",
+  inquiry: "inquiry",
+  contacted: "discovery",
+  discovery: "discovery",
+  qualified: "proposal",
+  proposal: "proposal",
+  in_progress: "in_progress",
+  "in progress": "in_progress",
+  completed: "completed",
+  won: "completed",
+  lost: "lost",
+};
+
+const IMPORT_SOURCE_MAP = {
+  website: "website",
+  web: "website",
+  "cal.com": "cal.com",
+  cal: "cal.com",
+  booking: "cal.com",
+  manual: "manual",
+  import: "csv_import",
+  csv: "csv_import",
+  csv_import: "csv_import",
+  whatsapp: "whatsapp",
+  wa: "whatsapp",
+  other: "other",
+};
+
+const IMPORT_CHUNK_SIZE = 50;
+const IMPORT_MAX_ROWS = 1000;
+
+export async function importLeads(rows) {
+  try {
+    const supabase = await getSupabase();
+    if (!Array.isArray(rows) || rows.length === 0) return { error: "No rows provided" };
+    if (rows.length > IMPORT_MAX_ROWS) return { error: `Maximum ${IMPORT_MAX_ROWS} rows per import` };
+
+    const prepared = [];
+    const errors = [];
+    const seenEmails = new Set();
+
+    for (let i = 0; i < rows.length; i++) {
+      const raw = rows[i] || {};
+      const rowNum = i + 2;
+
+      const name = raw.name != null ? String(raw.name).trim() : "";
+      if (!name) {
+        errors.push({ row: rowNum, reason: "Missing name" });
+        continue;
+      }
+
+      const email = raw.email != null ? String(raw.email).trim().toLowerCase() : "";
+      if (email) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          errors.push({ row: rowNum, reason: `Invalid email: ${email}` });
+          continue;
+        }
+        if (seenEmails.has(email)) {
+          errors.push({ row: rowNum, reason: "Duplicate email within file" });
+          continue;
+        }
+        seenEmails.add(email);
+      }
+
+      let status = "inquiry";
+      if (raw.status != null && String(raw.status).trim()) {
+        const mapped = IMPORT_STATUS_MAP[String(raw.status).trim().toLowerCase()];
+        if (!mapped) {
+          errors.push({ row: rowNum, reason: `Unknown status: ${String(raw.status).trim()}` });
+          continue;
+        }
+        status = mapped;
+      }
+
+      const sourceRaw = raw.source != null ? String(raw.source).trim().toLowerCase() : "";
+      const source = sourceRaw ? (IMPORT_SOURCE_MAP[sourceRaw] || "other") : "csv_import";
+
+      try {
+        const data = leadSchema.parse({ ...raw, name, email, source });
+        prepared.push({ row: rowNum, data: { ...data, email: email || null, status, source: source || "csv_import" } });
+      } catch (err) {
+        errors.push({ row: rowNum, reason: err.message || "Invalid row" });
+      }
+    }
+
+    const emailsToCheck = prepared.filter((p) => p.data.email).map((p) => p.data.email);
+    const existingEmails = new Set();
+    if (emailsToCheck.length) {
+      const { data: existing } = await supabase
+        .from("leads")
+        .select("email")
+        .in("email", emailsToCheck);
+      (existing || []).forEach((e) => { if (e.email) existingEmails.add(e.email); });
+    }
+
+    const final = [];
+    for (const item of prepared) {
+      if (item.data.email && existingEmails.has(item.data.email)) {
+        errors.push({ row: item.row, reason: "Already exists in database" });
+      } else {
+        final.push(item);
+      }
+    }
+
+    let imported = 0;
+    for (let i = 0; i < final.length; i += IMPORT_CHUNK_SIZE) {
+      const chunk = final.slice(i, i + IMPORT_CHUNK_SIZE).map((item) => item.data);
+      const { error } = await supabase.from("leads").insert(chunk);
+      if (error) {
+        errors.push({ row: 0, reason: `Batch insert failed: ${error.message}` });
+        break;
+      }
+      imported += chunk.length;
+    }
+
+    revalidateAdmin("/admin/leads");
+    return { success: true, imported, skipped: errors.length, errors };
+  } catch (err) {
+    return { error: err.message || "Failed to import leads" };
+  }
+}
+
 export async function updateLead(formData) {
   const supabase = await getSupabase();
   const raw = Object.fromEntries(formData.entries());
@@ -154,8 +280,11 @@ export async function updateLead(formData) {
         name: data.name,
         email: data.email || null,
         phone: data.phone,
+        company: data.company,
         services: data.services,
         budget: data.budget,
+        details: data.details,
+        source: data.source || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", raw.id);
@@ -381,8 +510,10 @@ export async function createLeadFromBooking(formData) {
       name: data.name,
       email: data.email || "",
       phone: data.phone || "",
+      company: data.company || null,
       services: data.services || "",
       budget: data.budget || "",
+      source: "cal.com",
       status: "inquiry",
     });
 
@@ -1039,7 +1170,7 @@ export async function updateProjectStatus(id, newStatus) {
 function resolveOrder(col, dir, sort) {
   const validCols = [
     "name", "email", "status", "created_at", "invoice_number",
-    "total", "budget", "deadline", "title", "company", "phone", "ai_score",
+    "total", "budget", "deadline", "title", "company", "phone", "ai_score", "source",
   ];
   if (col && validCols.includes(col)) {
     return { column: col, ascending: dir !== "desc" };
@@ -1058,11 +1189,12 @@ function resolveOrder(col, dir, sort) {
 
 export async function getLeadsPaginated(params) {
   const supabase = await getSupabase();
-  const { page, pageSize, search, status, score: scoreFilter, col, dir, sort } = paginationSchema.parse(params);
+  const { page, pageSize, search, status, score: scoreFilter, source, col, dir, sort } = paginationSchema.parse(params);
 
   let query = supabase.from("leads").select("*", { count: "exact" });
   if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%`);
   if (status !== "all") query = query.eq("status", status);
+  if (source !== "all") query = query.eq("source", source);
   if (scoreFilter === "hot") query = query.gte("ai_score", 70);
   else if (scoreFilter === "warm") query = query.gte("ai_score", 40).lt("ai_score", 70);
   else if (scoreFilter === "cold") query = query.gte("ai_score", 0).lt("ai_score", 40);

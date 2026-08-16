@@ -12,11 +12,12 @@ export function useFilters(defaults = {}) {
     search: searchParams.get("search") || defaults.search || "",
     status: searchParams.get("status") || defaults.status || "all",
     score: searchParams.get("score") || defaults.score || "all",
+    source: searchParams.get("source") || defaults.source || "all",
     sort: searchParams.get("sort") || defaults.sort || "newest",
     page: Number(searchParams.get("page")) || defaults.page || 1,
     col: searchParams.get("col") || "",
     dir: searchParams.get("dir") || "asc",
-  }), [searchParams, defaults.search, defaults.status, defaults.score, defaults.sort, defaults.page]);
+  }), [searchParams, defaults.search, defaults.status, defaults.score, defaults.source, defaults.sort, defaults.page]);
 
   const debounceRef = useRef(null);
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const VALID_LEAD_STATUSES = ["inquiry", "discovery", "proposal", "in_progress", "completed", "lost"];
+export const VALID_LEAD_SOURCES = ["website", "cal.com", "manual", "csv_import", "whatsapp", "other"];
 export const VALID_CLIENT_STATUSES = ["onboarding", "active", "at_risk", "inactive", "churned"];
 export const VALID_PROPOSAL_STATUSES = ["draft", "sent", "viewed", "accepted", "rejected"];
 export const VALID_INVOICE_STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"];
@@ -51,6 +52,7 @@ export const paginationSchema = z.object({
   search: z.string().max(200).default(""),
   status: z.string().max(50).default("all"),
   score: z.string().max(50).default("all"),
+  source: z.string().max(50).default("all"),
   col: z
     .string()
     .refine((v) => v === "" || VALID_COLUMNS.includes(v), "Invalid sort column")
@@ -63,8 +65,15 @@ export const leadSchema = z.object({
   name: nameSchema,
   email: emailSchema.optional().or(z.literal("")),
   phone: phoneSchema,
+  company: companySchema,
   services: z.string().max(500).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   budget: z.string().max(200).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  details: z.string().max(5000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  source: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+});
+
+export const leadImportRowSchema = leadSchema.extend({
+  status: z.string().max(50).optional().or(z.literal("")),
 });
 
 export const clientSchema = z.object({

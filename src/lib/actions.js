@@ -23,10 +23,12 @@ export async function createLead(data) {
           name: data.name || null,
           email: data.email || null,
           phone: data.phone || null,
+          company: data.company || null,
           services: data.services || null,
           details: data.details || null,
           budget: data.budget || null,
-          status: "new",
+          source: data.source || "website",
+          status: "inquiry",
         },
       ])
       .select("id")
