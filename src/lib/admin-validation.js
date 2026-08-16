@@ -2,6 +2,44 @@ import { z } from "zod";
 
 export const VALID_LEAD_STATUSES = ["inquiry", "discovery", "proposal", "in_progress", "completed", "lost"];
 export const VALID_LEAD_SOURCES = ["website", "cal.com", "manual", "csv_import", "whatsapp", "other"];
+export const IMPORT_STATUS_MAP = {
+  new: "inquiry",
+  inquiry: "inquiry",
+  cold: "inquiry",
+  contacted: "discovery",
+  discovery: "discovery",
+  warm: "discovery",
+  qualified: "proposal",
+  proposal: "proposal",
+  hot: "proposal",
+  in_progress: "in_progress",
+  "in progress": "in_progress",
+  completed: "completed",
+  won: "completed",
+  lost: "lost",
+};
+export const IMPORT_SOURCE_MAP = {
+  website: "website",
+  web: "website",
+  "cal.com": "cal.com",
+  cal: "cal.com",
+  booking: "cal.com",
+  manual: "manual",
+  import: "csv_import",
+  csv: "csv_import",
+  csv_import: "csv_import",
+  whatsapp: "whatsapp",
+  wa: "whatsapp",
+  other: "other",
+};
+export function normalizeImportStatus(raw) {
+  if (raw == null || !String(raw).trim()) return null;
+  return IMPORT_STATUS_MAP[String(raw).trim().toLowerCase()] || null;
+}
+export function normalizeImportSource(raw) {
+  if (raw == null || !String(raw).trim()) return null;
+  return IMPORT_SOURCE_MAP[String(raw).trim().toLowerCase()] || "other";
+}
 export const VALID_CLIENT_STATUSES = ["onboarding", "active", "at_risk", "inactive", "churned"];
 export const VALID_PROPOSAL_STATUSES = ["draft", "sent", "viewed", "accepted", "rejected"];
 export const VALID_INVOICE_STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"];

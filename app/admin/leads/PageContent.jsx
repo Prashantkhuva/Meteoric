@@ -23,6 +23,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
+import { normalizeImportStatus } from "@/lib/admin-validation";
 import Checkbox from "../components/Checkbox";
 import { LeadFormModal } from "../components/LeadFormModal";
 
@@ -757,6 +758,9 @@ function LeadImportModal({ open, onClose, onImported }) {
         const key = row.email.toLowerCase();
         if (seen.has(key)) { state = "duplicate"; reason = "Duplicate email in file"; }
         else seen.add(key);
+      }
+      if (state === "valid" && row.status && !normalizeImportStatus(row.status)) {
+        state = "error"; reason = `Unknown status: ${row.status}`;
       }
       return { ...row, state, reason };
     });

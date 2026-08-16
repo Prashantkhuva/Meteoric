@@ -28,6 +28,8 @@ import {
   VALID_PROPOSAL_STATUSES,
   VALID_INVOICE_STATUSES,
   VALID_PROJECT_STATUSES,
+  normalizeImportStatus,
+  normalizeImportSource,
 } from "@/lib/admin-validation";
 
 async function getSupabase() {
@@ -143,35 +145,6 @@ export async function addLead(formData) {
   return { success: true };
 }
 
-const IMPORT_STATUS_MAP = {
-  new: "inquiry",
-  inquiry: "inquiry",
-  contacted: "discovery",
-  discovery: "discovery",
-  qualified: "proposal",
-  proposal: "proposal",
-  in_progress: "in_progress",
-  "in progress": "in_progress",
-  completed: "completed",
-  won: "completed",
-  lost: "lost",
-};
-
-const IMPORT_SOURCE_MAP = {
-  website: "website",
-  web: "website",
-  "cal.com": "cal.com",
-  cal: "cal.com",
-  booking: "cal.com",
-  manual: "manual",
-  import: "csv_import",
-  csv: "csv_import",
-  csv_import: "csv_import",
-  whatsapp: "whatsapp",
-  wa: "whatsapp",
-  other: "other",
-};
-
 const IMPORT_CHUNK_SIZE = 50;
 const IMPORT_MAX_ROWS = 1000;
 
@@ -210,7 +183,7 @@ export async function importLeads(rows) {
 
       let status = "inquiry";
       if (raw.status != null && String(raw.status).trim()) {
-        const mapped = IMPORT_STATUS_MAP[String(raw.status).trim().toLowerCase()];
+        const mapped = normalizeImportStatus(raw.status);
         if (!mapped) {
           errors.push({ row: rowNum, reason: `Unknown status: ${String(raw.status).trim()}` });
           continue;
@@ -219,7 +192,7 @@ export async function importLeads(rows) {
       }
 
       const sourceRaw = raw.source != null ? String(raw.source).trim().toLowerCase() : "";
-      const source = sourceRaw ? (IMPORT_SOURCE_MAP[sourceRaw] || "other") : "csv_import";
+      const source = sourceRaw ? normalizeImportSource(sourceRaw) : "csv_import";
 
       try {
         const data = leadSchema.parse({ ...raw, name, email, source });
