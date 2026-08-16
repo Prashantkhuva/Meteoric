@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import * as Select from "@radix-ui/react-select";
 import { Search, X, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -58,59 +58,51 @@ export function FilterChip({ active, onClick, children }) {
 }
 
 export function SortDropdown({ value, onChange, options, label }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    function handleClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  const current = options.find((o) => o.value === value);
-
   return (
-    <div ref={ref} className="relative shrink-0">
-      <button
-        onClick={() => setOpen((v) => !v)}
+    <Select.Root value={value} onValueChange={onChange}>
+      <Select.Trigger
         className={cn(
-          "inline-flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium whitespace-nowrap outline-none transition-all duration-200",
+          "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium whitespace-nowrap outline-none transition-all duration-200",
           "focus-visible:ring-1 focus-visible:ring-[#EAEFFF]/40 active:scale-[0.97]",
-          open
-            ? "border-[#EAEFFF]/35 bg-[#EAEFFF]/10 text-[#EAEFFF] shadow-[0_0_20px_-4px_rgba(234,239,255,0.25)]"
-            : "border-white/[0.07] bg-white/[0.02] text-white/45 hover:border-white/[0.15] hover:bg-white/[0.04] hover:text-white/75"
+          "data-[state=open]:border-[#EAEFFF]/35 data-[state=open]:bg-[#EAEFFF]/10 data-[state=open]:text-[#EAEFFF] data-[state=open]:shadow-[0_0_20px_-4px_rgba(234,239,255,0.25)]",
+          "border-white/[0.07] bg-white/[0.02] text-white/45 hover:border-white/[0.15] hover:bg-white/[0.04] hover:text-white/75"
         )}
         aria-label={label}
-        aria-expanded={open}
       >
-        <span className="max-w-[220px] truncate">{current?.label || value}</span>
-        <ChevronDown
-          size={12}
-          className={cn("shrink-0 transition-transform duration-200", open ? "rotate-180" : "text-white/30")}
-        />
-      </button>
-      {open && (
-        <div className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 z-50 min-w-[170px] overflow-hidden rounded-xl border border-white/[0.09] bg-[#0b0b0b]/95 py-1 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md">
-          {options.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => { onChange(opt.value); setOpen(false); }}
-              className={cn(
-                "flex w-full items-center justify-between gap-3 px-3.5 py-2 text-xs whitespace-nowrap transition-colors",
-                opt.value === value
-                  ? "text-[#EAEFFF] bg-[#EAEFFF]/[0.06]"
-                  : "text-white/45 hover:bg-white/[0.03] hover:text-white/75"
-              )}
-            >
-              <span>{opt.label}</span>
-              {opt.value === value && <Check size={12} className="shrink-0 text-[#EAEFFF]" />}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+        <Select.Value placeholder={label} className="max-w-[220px] truncate" />
+        <Select.Icon>
+          <ChevronDown
+            size={12}
+            className="shrink-0 transition-transform duration-200 text-white/30 data-[state=open]:rotate-180 data-[state=open]:text-[#EAEFFF]"
+          />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          position="popper"
+          sideOffset={8}
+          align="end"
+          className="z-[9999] max-h-[300px] min-w-[170px] overflow-hidden rounded-xl border border-white/[0.09] bg-[#0b0b0b]/95 py-1 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md"
+        >
+          <Select.Viewport>
+            {options.map((opt) => (
+              <Select.Item
+                key={opt.value}
+                value={opt.value}
+                className={cn(
+                  "flex w-full cursor-pointer items-center justify-between gap-3 px-3.5 py-2 text-xs whitespace-nowrap transition-colors outline-none",
+                  "data-[state=checked]:text-[#EAEFFF] data-[state=checked]:bg-[#EAEFFF]/[0.06]",
+                  "text-white/45 data-[highlighted]:bg-white/[0.03] data-[highlighted]:text-white/75"
+                )}
+              >
+                <Select.ItemText>{opt.label}</Select.ItemText>
+                {opt.value === value && <Check size={12} className="shrink-0 text-[#EAEFFF]" />}
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   );
 }
 
