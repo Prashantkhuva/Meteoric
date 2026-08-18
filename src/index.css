@@ -49,6 +49,17 @@ html.lenis {
   scrollbar-color: #2a2a2a transparent;
 }
 
+/* Hide scrollbars (keeps scrolling) — used in the admin panel */
+.hide-scrollbar,
+.hide-scrollbar * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar,
+.hide-scrollbar *::-webkit-scrollbar {
+  display: none;
+}
+
 ::selection {
   background: rgba(234, 239, 255, 0.12);
   color: #EAEFFF;

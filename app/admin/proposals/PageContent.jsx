@@ -63,6 +63,7 @@ export default function ProposalsPage() {
   const [total, setTotal] = useState(0);
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
@@ -81,6 +82,7 @@ export default function ProposalsPage() {
   const router = useRouter();
   const addToast = useToast();
   const searchRef = useRef(null);
+  const fetchIdRef = useRef(0);
 
   const handleCreateInvoice = useCallback((proposal) => {
     const params = new URLSearchParams();
@@ -104,15 +106,18 @@ export default function ProposalsPage() {
   );
 
   async function fetchData() {
+    const fetchId = ++fetchIdRef.current;
     setSelected(new Set());
     setLoading(true);
     const [result, leadsRes] = await Promise.all([
       getProposalsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
       getLeads().catch(() => []),
     ]);
+    if (fetchId !== fetchIdRef.current) return;
     if (result.error) { setError(result.error); }
     else { setProposals(result.data); setTotal(result.total); }
     setLeads(leadsRes);
+    setHasLoaded(true);
     setLoading(false);
   }
 
@@ -259,7 +264,7 @@ export default function ProposalsPage() {
     setEditingStatus(null);
   }
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
         <div className="flex items-center gap-3 text-white/40">
@@ -349,7 +354,7 @@ export default function ProposalsPage() {
       ) : (
         <>
           {proposals.length > 0 && (
-            <>
+            <div className={`relative transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none select-none" : ""}`}>
               <DesktopTable
                 items={proposals}
                 onView={setViewProposal}
@@ -378,9 +383,9 @@ export default function ProposalsPage() {
                 selected={selected}
                 onToggleSelect={toggleSelect}
               />
-            </>
+            </div>
           )}
-          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 

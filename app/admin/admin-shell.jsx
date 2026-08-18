@@ -74,7 +74,7 @@ export function AdminShell({ children }) {
 
   return (
     <ToastProvider>
-      <div className="flex h-dvh min-h-0 overflow-hidden bg-[#070707]">
+      <div className="hide-scrollbar flex h-dvh min-h-0 overflow-hidden bg-[#070707]">
         <div className="fixed inset-0 pointer-events-none" aria-hidden="true">
           <div
             className="absolute inset-0 opacity-[0.025]"

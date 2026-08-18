@@ -19,26 +19,33 @@ export function useFilters(defaults = {}) {
     dir: searchParams.get("dir") || "asc",
   }), [searchParams, defaults.search, defaults.status, defaults.score, defaults.source, defaults.sort, defaults.page]);
 
+  // Merges rapid successive updates so nothing gets dropped by the debounce,
+  // and reads the freshest committed URL at flush time instead of a stale closure.
+  const pendingRef = useRef(null);
   const debounceRef = useRef(null);
 
   const setFilters = useCallback((updates) => {
-    const params = new URLSearchParams(searchParams.toString());
-    Object.entries(updates).forEach(([key, value]) => {
-      if (!value || value === "all" || value === 1 || value === "1") {
-        params.delete(key);
-      } else {
-        params.set(key, String(value));
-      }
-    });
+    pendingRef.current = { ...(pendingRef.current || {}), ...updates };
+    const merged = pendingRef.current;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      debounceRef.current = null;
+      pendingRef.current = null;
+      const params = new URLSearchParams(window.location.search);
+      Object.entries(merged).forEach(([key, value]) => {
+        if (!value || value === "all" || value === 1 || value === "1") {
+          params.delete(key);
+        } else {
+          params.set(key, String(value));
+        }
+      });
       const qs = params.toString();
       router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
     }, updates.search !== undefined ? 300 : 0);
-  }, [searchParams, router, pathname]);
+  }, [router, pathname]);
 
   const toggleColSort = useCallback((column) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     const currentCol = params.get("col") || "";
     const currentDir = params.get("dir") || "asc";
     if (currentCol === column) {
@@ -55,7 +62,7 @@ export function useFilters(defaults = {}) {
     params.delete("page");
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
-  }, [searchParams, router, pathname]);
+  }, [router, pathname]);
 
   return { filters, setFilters, toggleColSort };
 }

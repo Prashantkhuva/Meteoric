@@ -241,7 +241,7 @@ export default function ReviewsPageContent() {
             )}
           </tbody>
         </table>
-        <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={setPage} />
+        <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={setPage} />
       </div>
 
       {/* Mobile Cards */}

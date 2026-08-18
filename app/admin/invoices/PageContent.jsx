@@ -75,6 +75,7 @@ export default function InvoicesPage() {
   const [total, setTotal] = useState(0);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
@@ -96,6 +97,7 @@ export default function InvoicesPage() {
   const [bankAccounts, setBankAccounts] = useState([]);
   const addToast = useToast();
   const searchRef = useRef(null);
+  const fetchIdRef = useRef(0);
 
   useEffect(() => {
     fetchData();
@@ -112,6 +114,7 @@ export default function InvoicesPage() {
   );
 
   async function fetchData() {
+    const fetchId = ++fetchIdRef.current;
     setLoading(true);
 
     const [result, clientsRes, bankRes] = await Promise.all([
@@ -120,12 +123,15 @@ export default function InvoicesPage() {
       getBankAccounts().then((r) => r.data || []).catch(() => []),
     ]);
 
+    if (fetchId !== fetchIdRef.current) return;
+
     if (result.error) { setError(result.error); setLoading(false); return; }
 
     setInvoices(result.data);
     setTotal(result.total);
     setClients(clientsRes);
     setBankAccounts(bankRes);
+    setHasLoaded(true);
     setLoading(false);
 
     if (checkedOverdue.current) return;
@@ -409,7 +415,7 @@ export default function InvoicesPage() {
     setSending(null);
   }
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
         <div className="flex items-center gap-3 text-white/40">
@@ -510,7 +516,7 @@ export default function InvoicesPage() {
       ) : (
         <>
           {invoices.length > 0 && (
-            <>
+            <div className={`relative transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none select-none" : ""}`}>
               <DesktopTable
                 items={invoices}
                 onView={setViewInvoice}
@@ -539,9 +545,9 @@ export default function InvoicesPage() {
                 selected={selected}
                 onToggleSelect={toggleSelect}
               />
-            </>
+            </div>
           )}
-          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 

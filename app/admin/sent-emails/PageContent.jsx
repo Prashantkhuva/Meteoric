@@ -106,7 +106,7 @@ export default function SentEmailsPageContent() {
         </div>
       </div>
 
-      {loading ? (
+      {loading && emails.length === 0 ? (
         <div className="flex items-center justify-center py-20">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#EAEFFF] border-t-transparent" />
         </div>
@@ -120,6 +120,7 @@ export default function SentEmailsPageContent() {
         </div>
       ) : (
         <div className="border border-white/[0.06] bg-[#0a0a0a] rounded-xl overflow-hidden">
+          <div className={`transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none select-none" : ""}`}>
           {/* Table Header */}
           <div className="grid grid-cols-[36px_140px_140px_1fr_60px] gap-3 px-4 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium items-center">
             <Checkbox checked={allSelected} onChange={toggleSelectAll} label="Select all" />
@@ -202,8 +203,9 @@ export default function SentEmailsPageContent() {
               </AnimatePresence>
             </div>
           ))}
+          </div>
 
-          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={setPage} />
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={setPage} />
         </div>
       )}
 

@@ -65,6 +65,7 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [error, setError] = useState(null);
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, score: scoreFilter, source: sourceFilter, sort, page, col, dir } = filters;
@@ -85,6 +86,7 @@ export default function LeadsPage() {
   const deleteRef = useRef(null);
   const addToast = useToast();
   const searchRef = useRef(null);
+  const fetchIdRef = useRef(0);
 
   useEffect(() => {
     fetchLeads();
@@ -99,11 +101,14 @@ export default function LeadsPage() {
   );
 
   async function fetchLeads() {
+    const fetchId = ++fetchIdRef.current;
     setSelected(new Set());
     setLoading(true);
     const result = await getLeadsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, score: scoreFilter, source: sourceFilter, col, dir, sort });
+    if (fetchId !== fetchIdRef.current) return;
     if (result.error) { setError(result.error); }
     else { setLeads(result.data); setTotal(result.total); }
+    setHasLoaded(true);
     setLoading(false);
   }
 
@@ -284,7 +289,7 @@ export default function LeadsPage() {
     }
   }
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="flex items-center justify-center h-64 p-6 lg:p-8">
         <div className="flex items-center gap-3 text-white/40">
@@ -392,7 +397,7 @@ export default function LeadsPage() {
       ) : (
         <>
           {leads.length > 0 && (
-            <>
+            <div className={`relative transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none select-none" : ""}`}>
               <DesktopTable
                 leads={leads}
                 onView={setViewLead}
@@ -419,9 +424,9 @@ export default function LeadsPage() {
                 selected={selected}
                 onToggleSelect={toggleSelect}
               />
-            </>
+            </div>
           )}
-          <Pagination current={page} total={total} pageSize={PAGE_SIZE} onChange={(p) => setFilters({ page: p })} />
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={(p) => setFilters({ page: p })} />
         </>
       )}
 
