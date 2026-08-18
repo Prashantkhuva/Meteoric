@@ -1,9 +1,9 @@
 "use client";
 
-import { Menu, LogOut } from "lucide-react";
+import { Menu, LogOut, Keyboard } from "lucide-react";
 import { signOut } from "../actions";
 
-export function TopBar({ title, onMenuClick }) {
+export function TopBar({ title, onMenuClick, onShortcuts }) {
   return (
     <header className="flex items-center justify-between h-14 shrink-0 px-4 lg:px-6 border-b border-white/[0.04] bg-[#070707]/90 backdrop-blur-md">
       <div className="flex items-center gap-3">
@@ -19,6 +19,15 @@ export function TopBar({ title, onMenuClick }) {
         </span>
       </div>
       <div className="flex items-center gap-3">
+        <button
+          onClick={onShortcuts}
+          className="flex items-center gap-1.5 rounded-full border border-white/[0.06] px-3 py-1 text-[11px] font-medium text-white/35 transition-colors hover:border-white/[0.15] hover:text-white/60"
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          <Keyboard size={13} />
+          <span className="hidden sm:inline">?</span>
+        </button>
         <form action={signOut} className="lg:hidden">
           <button
             type="submit"

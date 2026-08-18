@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { getReviewsPaginated, updateReviewStatus, toggleReviewVerified, deleteReview } from "../actions";
 import { Pagination } from "../components/Pagination";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { StatusBadge } from "../components/StatusBadge";
 import { Toolbar, FilterChip, ClearFiltersButton } from "../components/Toolbar";
 import { useToast } from "../components/ToastContext";
+import { useShortcuts } from "@/hooks/useShortcuts";
 import { Star, Check, X, Trash2, ChevronUp, ChevronDown, BadgeCheck } from "lucide-react";
 
 const PAGE_SIZE = 15;
@@ -51,6 +52,13 @@ export default function ReviewsPageContent() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [expanded, setExpanded] = useState(null);
+  const searchRef = useRef(null);
+
+  useShortcuts(
+    useMemo(() => ({
+      "/": () => searchRef.current?.focus(),
+    }), [])
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -124,6 +132,7 @@ export default function ReviewsPageContent() {
       <Toolbar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
+        searchRef={searchRef}
         searchPlaceholder="Search reviews..."
       >
         {statusFilters.map((f) => (

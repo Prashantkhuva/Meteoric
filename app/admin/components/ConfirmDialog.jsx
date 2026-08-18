@@ -20,10 +20,11 @@ export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, o
     if (!open) return;
     function handleKey(e) {
       if (e.key === "Escape") onCancel();
+      if (e.key === "Enter" && !loading && e.target.tagName !== "BUTTON") onConfirm();
     }
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [open, onCancel]);
+  }, [open, onCancel, onConfirm, loading]);
 
   return (
     <AnimatePresence>

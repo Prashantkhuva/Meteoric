@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getRecipients, sendCustomEmailAction } from "../actions";
 import { RichEditor } from "../components/RichEditor";
 import { useToast } from "../components/ToastContext";
+import { useShortcuts } from "@/hooks/useShortcuts";
 import { Send, Paperclip, X, ChevronDown, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -145,6 +146,12 @@ export default function ComposePageContent() {
   }, [from, to, subject, body, files, addToast]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const canSend = to.length > 0 && subject.trim() && body.trim() && !sending;
+
+  useShortcuts(
+    useMemo(() => ({
+      "mod+Enter": () => { if (canSend) handleSend(); },
+    }), [canSend, handleSend])
+  );
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6">
