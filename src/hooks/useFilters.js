@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 export function useFilters(defaults = {}) {
   const searchParams = useSearchParams();
@@ -19,33 +19,52 @@ export function useFilters(defaults = {}) {
     dir: searchParams.get("dir") || "asc",
   }), [searchParams, defaults.search, defaults.status, defaults.score, defaults.source, defaults.sort, defaults.page]);
 
-  // Merges rapid successive updates so nothing gets dropped by the debounce,
-  // and reads the freshest committed URL at flush time instead of a stale closure.
-  const pendingRef = useRef(null);
+  // paramsRef is the synchronous source of truth for the URL state. Every
+  // update merges into it immediately, so rapid clicks always build on the
+  // latest logical state — never on the browser URL, which lags behind
+  // in-flight router.replace() calls (the cause of dropped/duplicated updates).
+  const paramsRef = useRef(null);
   const debounceRef = useRef(null);
 
+  // Rebuild from the committed URL only on back/forward navigation.
+  useEffect(() => {
+    const syncFromUrl = () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+      }
+      paramsRef.current = new URLSearchParams(window.location.search);
+    };
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, []);
+
+  const commit = useCallback((params) => {
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [router, pathname]);
+
   const setFilters = useCallback((updates) => {
-    pendingRef.current = { ...(pendingRef.current || {}), ...updates };
-    const merged = pendingRef.current;
+    const base = paramsRef.current || new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(base.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (!value || value === "all" || value === 1 || value === "1") {
+        params.delete(key);
+      } else {
+        params.set(key, String(value));
+      }
+    });
+    paramsRef.current = params;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       debounceRef.current = null;
-      pendingRef.current = null;
-      const params = new URLSearchParams(window.location.search);
-      Object.entries(merged).forEach(([key, value]) => {
-        if (!value || value === "all" || value === 1 || value === "1") {
-          params.delete(key);
-        } else {
-          params.set(key, String(value));
-        }
-      });
-      const qs = params.toString();
-      router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+      commit(params);
     }, updates.search !== undefined ? 300 : 0);
-  }, [router, pathname]);
+  }, [commit]);
 
   const toggleColSort = useCallback((column) => {
-    const params = new URLSearchParams(window.location.search);
+    const base = paramsRef.current || new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(base.toString());
     const currentCol = params.get("col") || "";
     const currentDir = params.get("dir") || "asc";
     if (currentCol === column) {
@@ -60,9 +79,10 @@ export function useFilters(defaults = {}) {
       params.set("dir", "asc");
     }
     params.delete("page");
-    const qs = params.toString();
-    router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
-  }, [router, pathname]);
+    paramsRef.current = params;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    commit(params);
+  }, [commit]);
 
   return { filters, setFilters, toggleColSort };
 }

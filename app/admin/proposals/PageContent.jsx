@@ -326,7 +326,7 @@ export default function ProposalsPage() {
         ))}
         <SortDropdown
           value={sort}
-          onChange={(v) => setFilters({ sort: v })}
+          onChange={(v) => setFilters({ sort: v, page: 1 })}
           label="Sort proposals"
           options={[
             { value: "newest", label: "Newest" },

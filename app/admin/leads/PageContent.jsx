@@ -346,7 +346,7 @@ export default function LeadsPage() {
           {exporting ? <span className="h-3 w-3 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline-block mr-1" /> : <Download size={12} className="inline mr-1" />}
           {exporting ? "Exporting..." : "CSV"}
         </button>
-        <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", score: "all", source: "all" })} visible={hasFilters} />
+        <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", score: "all", source: "all", page: 1 })} visible={hasFilters} />
         <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
         {statusList.map((s) => (
           <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setFilters({ status: s.value, page: 1 })}>
@@ -369,7 +369,7 @@ export default function LeadsPage() {
         />
         <SortDropdown
           value={sort}
-          onChange={(v) => setFilters({ sort: v })}
+          onChange={(v) => setFilters({ sort: v, page: 1 })}
           label="Sort leads"
           options={[
             { value: "newest", label: "Newest" },

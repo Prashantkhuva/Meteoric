@@ -310,7 +310,7 @@ export default function ProjectsPage() {
         ))}
         <SortDropdown
           value={sort}
-          onChange={(v) => setFilters({ sort: v })}
+          onChange={(v) => setFilters({ sort: v, page: 1 })}
           label="Sort projects"
           options={[
             { value: "newest", label: "Newest" },
