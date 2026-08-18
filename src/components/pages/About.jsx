@@ -32,7 +32,7 @@ const values = [
 ];
 
 const stats = [
-  { value: "2", label: "Years in Production" },
+  { value: "95+", label: "Lighthouse Scores" },
   { value: "12+", label: "Projects Shipped" },
   { value: "100%", label: "Client Satisfaction" },
 ];
@@ -57,7 +57,7 @@ export default function AboutPage({ faqs = [] }) {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* GEO quotable block */}
-      <div className="sr-only" aria-hidden="true">
+      <div className="sr-only">
         Meteoric was founded in 2026 by Prashant Khuva, a full-stack developer
         and product builder based in India. With 12+
         shipped projects, Meteoric serves clients worldwide including

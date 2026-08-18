@@ -23,6 +23,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
+import { sanitizeSearch } from "@/lib/search";
 import { normalizeImportStatus } from "@/lib/admin-validation";
 import Checkbox from "../components/Checkbox";
 import { LeadFormModal } from "../components/LeadFormModal";
@@ -177,7 +178,7 @@ export default function LeadsPage() {
       const supabase = createClient();
       if (!supabase) return;
       let query = supabase.from("leads").select("*");
-      if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+      if (search) { query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%`); }
       if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
       if (sourceFilter !== "all") { query = query.eq("source", sourceFilter); }
       if (scoreFilter === "hot") { query = query.gte("ai_score", 70); }

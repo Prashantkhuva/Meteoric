@@ -215,7 +215,19 @@ function QuickLinksCard({ onAddLead }) {
 }
 
 function RecentLeadsTable({ leads }) {
-  if (!leads || leads.length === 0) return null;
+  if (!leads || leads.length === 0) {
+    return (
+      <div className="border border-white/[0.06] bg-[#0a0a0a]">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
+          <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Leads</h3>
+          <Link href="/admin/leads" className="text-[11px] text-white/35 hover:text-white/50 transition-colors">
+            View all
+          </Link>
+        </div>
+        <div className="px-5 py-10 text-center text-sm text-white/25">No leads yet</div>
+      </div>
+    );
+  }
 
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a]">
@@ -258,7 +270,19 @@ function RecentLeadsTable({ leads }) {
 }
 
 function RecentClientsTable({ clients }) {
-  if (!clients || clients.length === 0) return null;
+  if (!clients || clients.length === 0) {
+    return (
+      <div className="border border-white/[0.06] bg-[#0a0a0a]">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
+          <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Clients</h3>
+          <Link href="/admin/clients" className="text-[11px] text-white/35 hover:text-white/50 transition-colors">
+            View all
+          </Link>
+        </div>
+        <div className="px-5 py-10 text-center text-sm text-white/25">No clients yet</div>
+      </div>
+    );
+  }
 
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a]">
@@ -299,7 +323,19 @@ function RecentClientsTable({ clients }) {
 }
 
 function RecentInvoicesTable({ invoices }) {
-  if (!invoices || invoices.length === 0) return null;
+  if (!invoices || invoices.length === 0) {
+    return (
+      <div className="border border-white/[0.06] bg-[#0a0a0a]">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
+          <h3 className="text-xs font-semibold tracking-tight text-white/70">Recent Invoices</h3>
+          <Link href="/admin/invoices" className="text-[11px] text-white/35 hover:text-white/50 transition-colors">
+            View all
+          </Link>
+        </div>
+        <div className="px-5 py-10 text-center text-sm text-white/25">No invoices yet</div>
+      </div>
+    );
+  }
 
   return (
     <div className="border border-white/[0.06] bg-[#0a0a0a]">

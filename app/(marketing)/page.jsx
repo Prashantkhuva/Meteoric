@@ -109,7 +109,7 @@ const reviewSchema = {
     "@type": "AggregateRating",
     ratingValue: "5",
     bestRating: "5",
-    ratingCount: "12",
+    ratingCount: "3",
     datePublished: "2026-07-25",
   },
   review: fallbackTestimonials.map((t, i) => ({

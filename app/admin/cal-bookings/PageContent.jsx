@@ -14,6 +14,7 @@ import { useFilters } from "@/hooks/useFilters"
 import { useFocusTrap } from "@/hooks/useFocusTrap"
 import { useShortcuts } from "@/hooks/useShortcuts"
 import { downloadCSV } from "@/lib/csv-export"
+import { ConfirmDialog } from "../components/ConfirmDialog"
 
 const EM = "\u2014"
 
@@ -90,6 +91,7 @@ export default function CalBookingsPage() {
   const [refreshKey, setRefreshKey] = useState(0)
   const [editingStatus, setEditingStatus] = useState(null)
   const [statusLoading, setStatusLoading] = useState(false)
+  const [rejectTarget, setRejectTarget] = useState(null)
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, col, dir } = filters;
   const addToast = useToast()
@@ -194,7 +196,7 @@ export default function CalBookingsPage() {
     downloadCSV(filteredBookings, CSV_COLUMNS, "bookings");
   }, [filteredBookings]);
 
-  async function handleBookingStatusUpdate(bookingId, status) {
+  async function applyBookingStatus(bookingId, status) {
     setStatusLoading(true)
     const result = await updateBookingStatus(bookingId, status);
     setStatusLoading(false)
@@ -206,6 +208,14 @@ export default function CalBookingsPage() {
       setRefreshKey(k => k + 1);
       addToast(`Booking ${status}`, "success");
     }
+  }
+
+  function handleBookingStatusUpdate(bookingId, status) {
+    if (status === "rejected") {
+      setRejectTarget(bookingId)
+      return
+    }
+    applyBookingStatus(bookingId, status)
   }
 
   function handleInlineStatusChange(bookingId, value) {
@@ -429,6 +439,21 @@ export default function CalBookingsPage() {
           statusLoading={statusLoading}
         />
       )}
+
+      <ConfirmDialog
+        open={!!rejectTarget}
+        title="Reject booking"
+        message="Rejecting will cancel this booking and notify the attendee. Continue?"
+        confirmLabel="Reject"
+        destructive
+        loading={statusLoading}
+        onConfirm={async () => {
+          const id = rejectTarget
+          setRejectTarget(null)
+          await applyBookingStatus(id, "rejected")
+        }}
+        onCancel={() => { if (!statusLoading) { setRejectTarget(null); setEditingStatus(null) } }}
+      />
     </div>
   )
 }

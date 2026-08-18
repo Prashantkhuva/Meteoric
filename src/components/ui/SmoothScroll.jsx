@@ -16,6 +16,7 @@ export default function SmoothScroll() {
     // ponytail: dynamic import avoids SSR crash — gsap + ScrollTrigger only exist in browser
     let cleanupScrollTrigger = () => {};
     let pinObserver = null;
+    let tickerFn = null;
 
     const init = () => {
       Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
@@ -38,9 +39,10 @@ export default function SmoothScroll() {
         // so Lenis caches a stale limit near the bottom. Fix: force resize when pin-spacer appears.
         pinObserver = new MutationObserver(() => lenis.resize());
         pinObserver.observe(document.body, { childList: true });
-        gsap.ticker.add((time) => {
+        tickerFn = (time) => {
           lenis.raf(time * 1000);
-        });
+        };
+        gsap.ticker.add(tickerFn);
         gsap.ticker.lagSmoothing(0);
 
         function handleAnchorClick(event) {
@@ -64,6 +66,7 @@ export default function SmoothScroll() {
         cleanupScrollTrigger = () => {
           document.removeEventListener("click", handleAnchorClick);
           pinObserver?.disconnect();
+          if (tickerFn) gsap.ticker.remove(tickerFn);
           lenis.destroy();
           lenisRef.current = null;
         };

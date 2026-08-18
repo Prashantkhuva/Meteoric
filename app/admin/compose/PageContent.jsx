@@ -88,17 +88,21 @@ export default function ComposePageContent() {
     const incoming = Array.from(newFiles);
     setFiles((prev) => {
       const remaining = MAX_FILES - prev.length;
+      const tooLarge = incoming.filter((f) => f.size > MAX_FILE_SIZE);
       const allowed = incoming
         .filter((f) => f.size <= MAX_FILE_SIZE)
         .slice(0, remaining);
-      if (allowed.length < incoming.length) {
-        if (prev.length >= MAX_FILES) {
-          console.warn(`Max ${MAX_FILES} files allowed`);
-        }
+      if (prev.length >= MAX_FILES) {
+        addToast(`Max ${MAX_FILES} files allowed`, "error");
+      } else if (tooLarge.length > 0) {
+        addToast(
+          `${tooLarge[0].name} exceeds the ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB limit`,
+          "error"
+        );
       }
       return [...prev, ...allowed];
     });
-  }, []);
+  }, [addToast]);
 
   const removeFile = useCallback((index) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
@@ -108,6 +112,8 @@ export default function ComposePageContent() {
     if (!to.length || !subject.trim() || !body.trim()) return;
 
     setSending(true);
+    const uploadedPaths = [];
+    let sendFailed = false;
     try {
       const supabase = createClient();
       const uploadedFiles = [];
@@ -121,6 +127,7 @@ export default function ComposePageContent() {
           console.warn("Storage upload failed:", error.message);
           continue;
         }
+        uploadedPaths.push(data.path);
         uploadedFiles.push({ name: f.name, size: f.size, path: data.path });
       }
 
@@ -133,17 +140,25 @@ export default function ComposePageContent() {
       });
 
       if (result.error) {
+        sendFailed = true;
         addToast(result.error, "error");
       } else {
         addToast("Email sent successfully", "success");
         router.push("/admin/sent-emails");
       }
     } catch (err) {
+      sendFailed = true;
       addToast(err.message || "Failed to send", "error");
     } finally {
+      if (sendFailed && uploadedPaths.length > 0) {
+        try {
+          const supabase = createClient();
+          await supabase.storage.from("email-attachments").remove(uploadedPaths);
+        } catch { /* cleanup is best-effort */ }
+      }
       setSending(false);
     }
-  }, [from, to, subject, body, files, addToast]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [from, to, subject, body, files, addToast, router]);
 
   const canSend = to.length > 0 && subject.trim() && body.trim() && !sending;
 

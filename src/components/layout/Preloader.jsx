@@ -16,6 +16,17 @@ export default function Preloader({ onDone }) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && sessionStorage.getItem("meteoric-preloader-seen")) {
+      const id = setTimeout(() => {
+        setDone(true);
+        onDone?.();
+      }, 0);
+      return () => clearTimeout(id);
+    }
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("meteoric-preloader-seen", "1");
+    }
+
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;

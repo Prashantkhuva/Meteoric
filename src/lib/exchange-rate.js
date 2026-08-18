@@ -41,18 +41,24 @@ export async function backfillMissingRates(supabase, invoices) {
   }
 
   const updated = [...invoices];
-  for (const inv of missing) {
-    const rate = await getExchangeRate(inv.currency, inv.created_at);
-    if (rate !== 1) {
-      await supabase
-        .from("invoices")
-        .update({ exchange_rate_to_usd: rate })
-        .eq("id", inv.id);
-      const idx = updated.findIndex((i) => i.id === inv.id);
-      if (idx !== -1) updated[idx] = { ...updated[idx], exchange_rate_to_usd: rate };
+  let cursor = 0;
+
+  async function worker() {
+    while (cursor < missing.length) {
+      const inv = missing[cursor++];
+      const rate = await getExchangeRate(inv.currency, inv.created_at);
+      if (rate !== 1) {
+        await supabase
+          .from("invoices")
+          .update({ exchange_rate_to_usd: rate })
+          .eq("id", inv.id);
+        const idx = updated.findIndex((i) => i.id === inv.id);
+        if (idx !== -1) updated[idx] = { ...updated[idx], exchange_rate_to_usd: rate };
+      }
     }
-    await new Promise((r) => setTimeout(r, 200));
   }
+
+  await Promise.all(Array.from({ length: 5 }, worker));
 
   lastBackfillDate = today;
   return updated;

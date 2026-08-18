@@ -44,6 +44,7 @@ export const VALID_CLIENT_STATUSES = ["onboarding", "active", "at_risk", "inacti
 export const VALID_PROPOSAL_STATUSES = ["draft", "sent", "viewed", "accepted", "rejected"];
 export const VALID_INVOICE_STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"];
 export const VALID_PROJECT_STATUSES = ["planning", "in_progress", "review", "completed", "on_hold", "cancelled"];
+export const VALID_REVIEW_STATUSES = ["pending", "approved", "rejected"];
 
 const VALID_COLUMNS = [
   "name", "email", "status", "created_at", "invoice_number", "total",

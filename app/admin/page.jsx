@@ -6,21 +6,63 @@ async function getStats() {
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const { count: totalLeads } = await supabase
-    .from("leads")
-    .select("*", { count: "exact", head: true });
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-  const { data: leadStatusCounts } = await supabase
-    .from("leads")
-    .select("status");
+  const now = new Date();
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
 
-  const statusBuckets = { inquiry: 0, discovery: 0, proposal: 0, in_progress: 0, completed: 0, lost: 0 };
-  (leadStatusCounts || []).forEach((l) => { if (statusBuckets[l.status] !== undefined) statusBuckets[l.status]++; });
-
-  const [clientsResult, recentClientsResult] = await Promise.all([
+  const [
+    totalLeadsResult,
+    leadStatusCountsResult,
+    clientsResult,
+    recentClientsResult,
+    recentLeadsResult,
+    monthlyRawResult,
+    invoiceTotalsResult,
+    totalProjectsResult,
+    projectStatusDataResult,
+    clientsThisMonthResult,
+    clientsLastMonthResult,
+    overdueInvoicesResult,
+    recentInvoicesResult,
+  ] = await Promise.all([
+    supabase.from("leads").select("*", { count: "exact", head: true }),
+    supabase.from("leads").select("status"),
     supabase.from("clients").select("*", { count: "exact", head: true }),
     supabase.from("clients").select("*").order("created_at", { ascending: false }).limit(5),
+    supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(5),
+    supabase
+      .from("leads")
+      .select("created_at, status")
+      .gte("created_at", sixMonthsAgo.toISOString())
+      .order("created_at", { ascending: true }),
+    supabase.from("invoices").select("id, status, total, currency, created_at, paid_at, exchange_rate_to_usd"),
+    supabase.from("projects").select("*", { count: "exact", head: true }),
+    supabase.from("projects").select("status"),
+    supabase.from("clients").select("*", { count: "exact", head: true }).gte("created_at", thisMonthStart),
+    supabase
+      .from("clients")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", lastMonthStart)
+      .lt("created_at", thisMonthStart),
+    supabase
+      .from("invoices")
+      .select("*, client:clients(name, email)")
+      .eq("status", "overdue")
+      .order("due_date", { ascending: true })
+      .limit(5),
+    supabase
+      .from("invoices")
+      .select("*, client:clients(name, email)")
+      .order("created_at", { ascending: false })
+      .limit(5),
   ]);
+
+  const leadStatusCounts = leadStatusCountsResult.data || [];
+  const statusBuckets = { inquiry: 0, discovery: 0, proposal: 0, in_progress: 0, completed: 0, lost: 0 };
+  leadStatusCounts.forEach((l) => { if (statusBuckets[l.status] !== undefined) statusBuckets[l.status]++; });
 
   const totalClients = clientsResult.count ?? 0;
   const recentClients = recentClientsResult?.data || [];
@@ -32,23 +74,10 @@ async function getStats() {
   const completedLeads = statusBuckets.completed;
   const lostLeads = statusBuckets.lost;
 
-  const { data: recentLeads } = await supabase
-    .from("leads")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(5);
-
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-
-  const { data: monthlyRaw } = await supabase
-    .from("leads")
-    .select("created_at, status")
-    .gte("created_at", sixMonthsAgo.toISOString())
-    .order("created_at", { ascending: true });
+  const recentLeads = recentLeadsResult?.data || [];
 
   const monthBuckets = {};
-  (monthlyRaw || []).forEach((lead) => {
+  (monthlyRawResult?.data || []).forEach((lead) => {
     const d = new Date(lead.created_at);
     const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
     if (!monthBuckets[key]) {
@@ -61,7 +90,6 @@ async function getStats() {
     if (lead.status === "completed") monthBuckets[key].won++;
   });
 
-  const now = new Date();
   const monthlyLeadData = Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
@@ -73,31 +101,16 @@ async function getStats() {
     };
   });
 
-  const { data: invoiceTotals } = await supabase
-    .from("invoices")
-    .select("id, status, total, currency, created_at, exchange_rate_to_usd");
+  const invoiceData = await backfillMissingRates(supabase, invoiceTotalsResult.data || []);
 
-  const invoiceData = await backfillMissingRates(supabase, invoiceTotals || []);
-
-  const { count: totalProjects } = await supabase
-    .from("projects")
-    .select("*", { count: "exact", head: true });
-
-  const { data: projectStatusData } = await supabase
-    .from("projects")
-    .select("status");
+  const totalProjects = totalProjectsResult.count ?? 0;
 
   const projectBuckets = { planning: 0, in_progress: 0, review: 0, completed: 0, on_hold: 0, cancelled: 0 };
-  (projectStatusData || []).forEach((p) => { if (projectBuckets[p.status] !== undefined) projectBuckets[p.status]++; });
+  (projectStatusDataResult?.data || []).forEach((p) => { if (projectBuckets[p.status] !== undefined) projectBuckets[p.status]++; });
 
   let totalOutstanding = 0;
   let overdueCount = 0;
   let totalRevenue = 0;
-  const monthStart = new Date();
-  monthStart.setDate(1);
-  monthStart.setHours(0, 0, 0, 0);
-
-  const now2 = new Date();
   const revenueMonthBuckets = {};
   (invoiceData || []).forEach((inv) => {
     const amt = (Number(inv.total) || 0) * (Number(inv.exchange_rate_to_usd) || 1);
@@ -119,7 +132,7 @@ async function getStats() {
   });
 
   const monthlyRevenue = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date(now2.getFullYear(), now2.getMonth() - 5 + i, 1);
+    const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
     const b = revenueMonthBuckets[key];
     return {
@@ -143,30 +156,10 @@ async function getStats() {
     return ((monthlyRevenue[len - 1].paid - prev) / prev) * 100;
   })();
 
-  const thisMonthStart = new Date(now2.getFullYear(), now2.getMonth(), 1).toISOString();
-  const lastMonthStart = new Date(now2.getFullYear(), now2.getMonth() - 1, 1).toISOString();
-  const [{ count: clientsThisMonth }, { count: clientsLastMonth }] = await Promise.all([
-    supabase.from("clients").select("*", { count: "exact", head: true }).gte("created_at", thisMonthStart),
-    supabase.from("clients").select("*", { count: "exact", head: true }).gte("created_at", lastMonthStart).lt("created_at", thisMonthStart),
-  ]);
-  const clientsMom = (clientsThisMonth || 0) - (clientsLastMonth || 0);
-
-  const [{ data: overdueInvoices }, { data: recentInvoices }] = await Promise.all([
-    supabase
-      .from("invoices")
-      .select("*, client:clients(name, email)")
-      .eq("status", "overdue")
-      .order("due_date", { ascending: true })
-      .limit(5),
-    supabase
-      .from("invoices")
-      .select("*, client:clients(name, email)")
-      .order("created_at", { ascending: false })
-      .limit(5),
-  ]);
+  const clientsMom = (clientsThisMonthResult.count || 0) - (clientsLastMonthResult.count || 0);
 
   return {
-    totalLeads: totalLeads ?? 0,
+    totalLeads: totalLeadsResult.count ?? 0,
     inquiryLeads,
     discoveryLeads,
     proposalLeads,
@@ -174,7 +167,7 @@ async function getStats() {
     completedLeads,
     lostLeads,
     totalClients,
-    recentLeads: recentLeads || [],
+    recentLeads,
     recentClients,
     monthlyLeadData,
     monthlyRevenue,
@@ -184,10 +177,10 @@ async function getStats() {
     totalOutstanding,
     totalRevenue,
     overdueCount,
-    overdueInvoices: overdueInvoices || [],
-    recentInvoices: recentInvoices || [],
+    overdueInvoices: overdueInvoicesResult?.data || [],
+    recentInvoices: recentInvoicesResult?.data || [],
     invoiceCount: (invoiceData || []).length,
-    totalProjects: totalProjects ?? 0,
+    totalProjects,
     planningProjects: projectBuckets.planning,
     activeProjects: projectBuckets.in_progress,
     reviewProjects: projectBuckets.review,

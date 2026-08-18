@@ -25,6 +25,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
+import { sanitizeSearch } from "@/lib/search";
 import { getSiteUrl } from "@/config/site-url";
 import Checkbox from "../components/Checkbox";
 import { RichEditor } from "../components/RichEditor";
@@ -179,7 +180,7 @@ export default function ProposalsPage() {
       const supabase = createClient();
       if (!supabase) return;
       let query = supabase.from("proposals").select("*, lead:leads(name, email, phone, company)");
-      if (search) { query = query.or(`title.ilike.%${search}%,lead.name.ilike.%${search}%`); }
+      if (search) { query = query.or(`title.ilike.%${sanitizeSearch(search)}%,lead.name.ilike.%${sanitizeSearch(search)}%`); }
       if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
       const { data } = await query;
       downloadCSV(data || [], CSV_COLUMNS, `proposals-${new Date().toISOString().slice(0, 10)}.csv`);

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getSentEmails, deleteSentEmail } from "../actions";
+import DOMPurify from "dompurify";
 import { Pagination } from "../components/Pagination";
 import { BulkActionBar } from "../components/BulkActionBar";
 import { ConfirmDialog } from "../components/ConfirmDialog";
@@ -92,6 +93,14 @@ export default function SentEmailsPageContent() {
 
   const allSelected = emails.length > 0 && selected.size === emails.length;
 
+  const sanitizedBodies = useMemo(() => {
+    const map = new Map();
+    for (const email of emails) {
+      map.set(email.id, DOMPurify.sanitize(email.body || ""));
+    }
+    return map;
+  }, [emails]);
+
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
@@ -122,7 +131,7 @@ export default function SentEmailsPageContent() {
         <div className="border border-white/[0.06] bg-[#0a0a0a] rounded-xl overflow-hidden">
           <div className={`transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none select-none" : ""}`}>
           {/* Table Header */}
-          <div className="grid grid-cols-[36px_140px_140px_1fr_60px] gap-3 px-4 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium items-center">
+          <div className="grid grid-cols-[36px_150px_150px_1fr_1fr_40px] gap-3 px-4 py-3 border-b border-white/[0.06] text-[10px] uppercase tracking-wider text-white/30 font-medium items-center">
             <Checkbox checked={allSelected} onChange={toggleSelectAll} label="Select all" />
             <span>Date</span>
             <span>From</span>
@@ -135,7 +144,7 @@ export default function SentEmailsPageContent() {
           {emails.map((email) => (
             <div key={email.id}>
               <div
-                className="grid grid-cols-[36px_140px_140px_1fr_60px] gap-3 px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors cursor-pointer items-center"
+                className="grid grid-cols-[36px_150px_150px_1fr_1fr_40px] gap-3 px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors cursor-pointer items-center"
                 onClick={() => toggleExpand(email.id)}
               >
                 <div onClick={(e) => e.stopPropagation()}>
@@ -176,7 +185,7 @@ export default function SentEmailsPageContent() {
                       <p className="text-[10px] uppercase tracking-wider text-white/30 mb-2">Body Preview</p>
                       <div
                         className="text-sm text-white/50 prose prose-invert max-w-none [&_a]:text-[#EAEFFF] [&_a]:underline"
-                        dangerouslySetInnerHTML={{ __html: email.body || "<em>No body</em>" }}
+                        dangerouslySetInnerHTML={{ __html: sanitizedBodies.get(email.id) || "<em>No body</em>" }}
                       />
                       {email.attachments?.length > 0 && (
                         <div className="mt-3 pt-3 border-t border-white/[0.04]">

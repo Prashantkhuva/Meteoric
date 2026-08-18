@@ -118,12 +118,29 @@ export default function Navbar() {
 
       const onKey = (e) => {
         if (e.key === "Escape") closeMenu();
+        if (e.key === "Tab") {
+          const focusable = overlay.querySelectorAll(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          );
+          if (focusable.length === 0) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       };
       overlay.addEventListener("keydown", onKey);
       const onOverlayClick = (e) => {
         if (e.target === overlay) closeMenu();
       };
       overlay.addEventListener("click", onOverlayClick);
+
+      overlay.focus({ preventScroll: true });
 
       const tl = gsap.timeline({
         onComplete: () => {

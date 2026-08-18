@@ -348,7 +348,7 @@ export default function ServicesSection() {
       <div ref={mobileScrollRef} className="lg:hidden">
         <div
           ref={mobileStackRef}
-          className="sticky top-0 h-dvh relative will-change-transform"
+          className="sticky top-0 h-screen supports-[height:100dvh]:h-dvh relative will-change-transform"
         >
           <div className="absolute inset-0 px-5 flex flex-col justify-center">
             {services.map((s, i) => {

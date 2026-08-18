@@ -93,8 +93,8 @@ export default function TestimonialsSection() {
   const faqHeaderRef = useRef(null);
   const faqListRef = useRef(null);
 
-  const displayReviews = reviews
-    ? [...reviews, ...fallbackTestimonials]
+  const displayReviews = reviews && reviews.length > 0
+    ? reviews
     : fallbackTestimonials;
 
   useEffect(() => {

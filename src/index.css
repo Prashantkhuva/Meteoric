@@ -49,6 +49,43 @@ html.lenis {
   scrollbar-color: #2a2a2a transparent;
 }
 
+.st-word {
+  display: inline-flex;
+  margin-right: 0.3em;
+}
+.st-word:last-child {
+  margin-right: 0;
+}
+.st-char-wrap {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: top;
+}
+.st-char {
+  display: inline-block;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.st-char.exit {
+  transform: translateY(-110%);
+}
+.st-char-enter {
+  display: none;
+}
+.st-runtime .st-char-enter {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  transform: translateY(110%);
+}
+.st-char-enter.enter {
+  transform: translateY(0%);
+}
+
 /* Hide scrollbars (keeps scrolling) — used in the admin panel */
 .hide-scrollbar,
 .hide-scrollbar * {

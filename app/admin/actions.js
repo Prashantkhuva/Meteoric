@@ -6,10 +6,12 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
+import { sanitizeEmailHtml } from "@/lib/sanitize";
 import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail, sendPaymentConfirmation } from "@/lib/email/email";
 import { callAIJson } from "@/lib/ai/provider";
 import { getExchangeRate } from "@/lib/exchange-rate";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
+import { sanitizeSearch } from "@/lib/search";
 import {
   idSchema,
   emailSchema,
@@ -28,6 +30,7 @@ import {
   VALID_PROPOSAL_STATUSES,
   VALID_INVOICE_STATUSES,
   VALID_PROJECT_STATUSES,
+  VALID_REVIEW_STATUSES,
   normalizeImportStatus,
   normalizeImportSource,
 } from "@/lib/admin-validation";
@@ -43,12 +46,32 @@ function revalidateAdmin(...paths) {
   revalidatePath("/admin");
 }
 
-function sanitizeSearch(input) {
-  if (!input) return "";
-  return input.replace(/[\\(%)_]/g, (c) => {
-    if (c === "\\") return "\\\\";
-    return `\\${c}`;
-  });
+async function isRateLimited(supabase, scope, email, maxPerMinute = 5) {
+  const since = new Date(Date.now() - 60000).toISOString();
+
+  if (scope === "sent_emails") {
+    const { count } = await supabase
+      .from("sent_emails")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", since);
+    if ((count || 0) >= maxPerMinute) return true;
+
+    if (email) {
+      const { count: perRecipient } = await supabase
+        .from("sent_emails")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", since)
+        .contains("to_addresses", [email]);
+      if ((perRecipient || 0) >= 2) return true;
+    }
+    return false;
+  }
+
+  const { count } = await supabase
+    .from(scope)
+    .select("id", { count: "exact", head: true })
+    .gte("sent_at", since);
+  return (count || 0) >= maxPerMinute;
 }
 
 export async function signOut() {
@@ -444,9 +467,18 @@ export async function updateBookingStatus(bookingId, status) {
   const key = process.env.CALCOM_API_KEY;
   if (!key) return { error: "CALCOM_API_KEY not set" };
 
-  const baseUrl = `https://api.cal.com/v2/bookings/${bookingId}`;
+  let safeStatus;
+  let safeId;
+  try {
+    safeStatus = statusSchema(["accepted", "rejected"]).parse(status);
+    safeId = idSchema.parse(bookingId);
+  } catch (err) {
+    return { error: err.message || "Invalid booking or status" };
+  }
 
-  const endpoint = status === "accepted"
+  const baseUrl = `https://api.cal.com/v2/bookings/${safeId}`;
+
+  const endpoint = safeStatus === "accepted"
     ? `${baseUrl}/confirm`
     : `${baseUrl}/cancel`;
 
@@ -458,7 +490,7 @@ export async function updateBookingStatus(bookingId, status) {
         "cal-api-version": "2024-08-13",
         "Content-Type": "application/json",
       },
-      body: status === "rejected" ? JSON.stringify({ cancellationReason: "Cancelled by admin" }) : undefined,
+      body: safeStatus === "rejected" ? JSON.stringify({ cancellationReason: "Cancelled by admin" }) : undefined,
     });
 
     if (!res.ok) {
@@ -503,7 +535,8 @@ export async function getLeads() {
   const { data } = await supabase
     .from("leads")
     .select("id, name, email, company")
-    .order("name", { ascending: true });
+    .order("name", { ascending: true })
+    .limit(200);
   return data || [];
 }
 
@@ -512,7 +545,8 @@ export async function getClients() {
   const { data } = await supabase
     .from("clients")
     .select("id, name, email, phone, company")
-    .order("name", { ascending: true });
+    .order("name", { ascending: true })
+    .limit(200);
   return data || [];
 }
 
@@ -659,6 +693,10 @@ export async function sendProposal(id) {
     if (!proposal) return { success: false, error: "Proposal not found" };
     if (!proposal.lead?.email) return { success: false, error: "Lead has no email address" };
 
+    if (await isRateLimited(supabase, "proposals", proposal.lead.email)) {
+      return { success: false, error: "Too many proposal emails sent recently. Try again in a minute." };
+    }
+
     const shareToken = randomUUID();
     const previewUrl = `${getSiteUrl()}/preview/proposal/${safeId}?token=${shareToken}`;
 
@@ -715,13 +753,17 @@ export async function createInvoice(formData) {
     const supabase = await getSupabase();
     const data = invoiceSchema.parse(parseFormData(formData));
 
-    const { count } = await supabase
+    const { data: latest } = await supabase
       .from("invoices")
-      .select("*", { count: "exact", head: true });
+      .select("invoice_number")
+      .order("id", { ascending: false })
+      .limit(1);
 
-    const nextNum = String((count || 0) + 1).padStart(4, "0");
+    let seq = 1;
+    const lastMatch = latest?.[0]?.invoice_number?.match(/^INV-(\d{4})/i);
+    if (lastMatch) seq = parseInt(lastMatch[1], 10) + 1;
     const ts = Date.now().toString(36).toUpperCase();
-    const invoiceNumber = `INV-${nextNum}-${ts}`;
+    const invoiceNumber = `INV-${String(seq).padStart(4, "0")}-${ts}`;
 
     const subtotal = data.items.reduce(
       (s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0),
@@ -870,6 +912,10 @@ export async function sendInvoice(id) {
     if (fetchError) return { success: false, error: fetchError.message };
     if (!invoice) return { success: false, error: "Invoice not found" };
     if (!invoice.client?.email) return { success: false, error: "Client has no email address" };
+
+    if (await isRateLimited(supabase, "invoices", invoice.client.email)) {
+      return { success: false, error: "Too many invoice emails sent recently. Try again in a minute." };
+    }
 
     const shareToken = randomUUID();
     const previewUrl = `${getSiteUrl()}/preview/invoice/${safeId}?token=${shareToken}`;
@@ -1295,8 +1341,8 @@ export async function getRecipients() {
   try {
     const supabase = await getSupabase();
     const [leads, clients] = await Promise.all([
-      supabase.from("leads").select("id, name, email").not("email", "is", null),
-      supabase.from("clients").select("id, name, email").not("email", "is", null),
+      supabase.from("leads").select("id, name, email").not("email", "is", null).limit(200),
+      supabase.from("clients").select("id, name, email").not("email", "is", null).limit(200),
     ]);
 
     const recipients = [
@@ -1347,6 +1393,15 @@ export async function sendCustomEmailAction(data) {
       return { error: "Invalid sender" };
     }
 
+    if (await isRateLimited(supabase, "sent_emails", to[0])) {
+      return { error: "Too many emails sent recently. Try again in a minute." };
+    }
+
+    const safeBody = sanitizeEmailHtml(body);
+    if (!safeBody) {
+      return { error: "Email body is empty after sanitization" };
+    }
+
     let files = [];
     try {
       files = data.files ? JSON.parse(data.files) : [];
@@ -1383,7 +1438,7 @@ export async function sendCustomEmailAction(data) {
         from,
         to,
         subject,
-        html: body,
+        html: safeBody,
         attachments: attachmentBuffers,
       });
     } catch (sendErr) {
@@ -1397,7 +1452,7 @@ export async function sendCustomEmailAction(data) {
         from_address: `${from}@withmeteoric.com`,
         to_addresses: to,
         subject,
-        body,
+        body: safeBody,
         attachments: uploadedMeta.length ? uploadedMeta : null,
         resend_id: result?.data?.id || null,
         status: "sent",
@@ -1435,7 +1490,8 @@ export async function getSentEmails(page = 1, pageSize = 15) {
 export async function deleteSentEmail(id) {
   try {
     const supabase = await getSupabase();
-    const { error } = await supabase.from("sent_emails").delete().eq("id", id);
+    const safeId = idSchema.parse(id);
+    const { error } = await supabase.from("sent_emails").delete().eq("id", safeId);
     if (error) return { error: error.message };
     revalidateAdmin("/admin/sent-emails");
     return { success: true };
@@ -1530,7 +1586,8 @@ export async function updateBankAccount(formData) {
 export async function deleteBankAccount(id) {
   try {
     const supabase = await getSupabase();
-    const { error } = await supabase.from("bank_accounts").delete().eq("id", id);
+    const safeId = idSchema.parse(id);
+    const { error } = await supabase.from("bank_accounts").delete().eq("id", safeId);
     if (error) return { error: error.message };
     revalidateAdmin("/admin/bank-accounts");
     return { success: true };
@@ -1544,7 +1601,7 @@ export async function getReviewsPaginated({ page = 1, pageSize = 15, status, sea
     const supabase = await getSupabase();
     let query = supabase.from("reviews").select("*", { count: "exact" });
     if (status) query = query.eq("status", status);
-    if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%,content.ilike.%${search}%`);
+    if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%,content.ilike.%${sanitizeSearch(search)}%`);
     const from = (page - 1) * pageSize;
     query = query.order(col, { ascending: dir === "asc" }).range(from, from + pageSize - 1);
     const { data, error, count } = await query;
@@ -1558,7 +1615,9 @@ export async function getReviewsPaginated({ page = 1, pageSize = 15, status, sea
 export async function updateReviewStatus(id, status) {
   try {
     const supabase = await getSupabase();
-    const { error } = await supabase.from("reviews").update({ status }).eq("id", id);
+    const safeId = idSchema.parse(id);
+    const safeStatus = statusSchema(VALID_REVIEW_STATUSES).parse(status);
+    const { error } = await supabase.from("reviews").update({ status: safeStatus }).eq("id", safeId);
     if (error) return { error: error.message };
     revalidateAdmin("/admin/reviews");
     return { success: true };
@@ -1570,7 +1629,9 @@ export async function updateReviewStatus(id, status) {
 export async function toggleReviewVerified(id, is_verified) {
   try {
     const supabase = await getSupabase();
-    const { error } = await supabase.from("reviews").update({ is_verified }).eq("id", id);
+    const safeId = idSchema.parse(id);
+    const safeVerified = z.union([z.boolean(), z.string().transform((v) => v === "true")]).parse(is_verified);
+    const { error } = await supabase.from("reviews").update({ is_verified: safeVerified }).eq("id", safeId);
     if (error) return { error: error.message };
     revalidateAdmin("/admin/reviews");
     return { success: true };
@@ -1582,7 +1643,8 @@ export async function toggleReviewVerified(id, is_verified) {
 export async function deleteReview(id) {
   try {
     const supabase = await getSupabase();
-    const { error } = await supabase.from("reviews").delete().eq("id", id);
+    const safeId = idSchema.parse(id);
+    const { error } = await supabase.from("reviews").delete().eq("id", safeId);
     if (error) return { error: error.message };
     revalidateAdmin("/admin/reviews");
     return { success: true };

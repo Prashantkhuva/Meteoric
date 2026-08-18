@@ -33,6 +33,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
+import { sanitizeSearch } from "@/lib/search";
 import Checkbox from "../components/Checkbox";
 
 const PAGE_SIZE = 15;
@@ -158,13 +159,7 @@ export default function ProjectsPage() {
   async function handleBulkStatusChange(newStatus) {
     setBulkUpdating(true);
     const ids = [...selected];
-    const formDatas = ids.map((id) => {
-      const fd = new FormData();
-      fd.set("id", id);
-      fd.set("status", newStatus);
-      return fd;
-    });
-    const results = await Promise.all(formDatas.map((fd) => updateProject(fd)));
+    const results = await Promise.all(ids.map((id) => updateProjectStatus(id, newStatus)));
     const errors = results.filter((r) => r?.error);
     if (errors.length > 0) {
       addToast(errors[0].error, "error");
@@ -183,7 +178,7 @@ export default function ProjectsPage() {
       const supabase = createClient();
       if (!supabase) return;
       let query = supabase.from("projects").select("*, client:clients(name, email, company)");
-      if (search) { query = query.or(`name.ilike.%${search}%,client.name.ilike.%${search}%`); }
+      if (search) { query = query.or(`name.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`); }
       if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
       const { data } = await query;
       downloadCSV(data || [], CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);

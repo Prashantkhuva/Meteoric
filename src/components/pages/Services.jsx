@@ -13,7 +13,7 @@ const services = [
     num: "01",
     title: ["Landing", "Pages"],
     desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
-    slug: "",
+    slug: "landing-pages",
     process: {
       intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
       steps: [
@@ -59,7 +59,7 @@ const services = [
     num: "03",
     title: ["Web", "Applications"],
     desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
-    slug: "",
+    slug: "web-applications",
     process: {
       intro: "Whether it's an internal dashboard or a customer-facing platform, we build web apps that are fast, reliable, and a pleasure to use.",
       steps: [
@@ -109,7 +109,6 @@ const techStack = [
   "Supabase",
   "Node.js",
   "Tailwind CSS",
-  "TypeScript",
   "GSAP",
   "Stripe",
   "PostgreSQL",

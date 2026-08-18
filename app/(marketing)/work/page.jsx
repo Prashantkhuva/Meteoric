@@ -61,7 +61,7 @@ const creativeWorkSchema = {
     "@type": "CreativeWork",
     name: p.name,
     description: p.description,
-    url: p.link,
+    url: `${SITE_URL}/work/${p.slug}`,
     keywords: p.tags.join(", "),
     author: {
       "@type": "Organization",

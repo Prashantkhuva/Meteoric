@@ -21,6 +21,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
+import { sanitizeSearch } from "@/lib/search";
 
 const PAGE_SIZE = 15;
 
@@ -149,7 +150,7 @@ export default function ClientsPage() {
       const supabase = createClient();
       if (!supabase) return;
       let query = supabase.from("clients").select("*");
-      if (search) { query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`); }
+      if (search) { query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%`); }
       if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
       const { data } = await query;
       downloadCSV(data || [], CSV_COLUMNS, `clients-${new Date().toISOString().slice(0, 10)}.csv`);

@@ -3,7 +3,8 @@ export function downloadCSV(data, columns, filename) {
   const rows = data.map((item) =>
     columns.map((c) => {
       const val = c.accessor(item);
-      const str = String(val ?? "");
+      let str = String(val ?? "");
+      if (/^[=+\-@]/.test(str)) str = `'${str}`;
       return `"${str.replace(/"/g, '""')}"`;
     })
   );

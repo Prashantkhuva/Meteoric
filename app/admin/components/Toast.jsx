@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, AlertCircle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,9 +8,11 @@ import { ToastContext } from "./ToastContext";
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
+  const idRef = useRef(0);
 
   const addToast = useCallback((message, type = "success") => {
-    const id = Date.now();
+    idRef.current += 1;
+    const id = idRef.current;
     setToasts((prev) => [...prev, { id, message, type }]);
   }, []);
 

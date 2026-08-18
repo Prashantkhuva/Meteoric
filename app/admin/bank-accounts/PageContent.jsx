@@ -374,10 +374,10 @@ export default function BankAccountsPage() {
 
       <ConfirmDialog
         open={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
+        onCancel={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         title="Delete Bank Account"
-        description={`Delete "${deleteTarget?.label}"? This cannot be undone.`}
+        message={`Delete "${deleteTarget?.label}"? This cannot be undone.`}
         loading={isDeleting}
       />
     </div>

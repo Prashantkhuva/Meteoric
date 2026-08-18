@@ -36,6 +36,7 @@ import { useFilters } from "@/hooks/useFilters";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
+import { sanitizeSearch } from "@/lib/search";
 import Checkbox from "../components/Checkbox";
 import { getSiteUrl } from "@/config/site-url";
 
@@ -257,7 +258,7 @@ export default function InvoicesPage() {
       const supabase = createClient();
       if (!supabase) return;
       let query = supabase.from("invoices").select("*, client:clients(name, email, phone, company), proposal:proposals(id, title)");
-      if (search) { query = query.or(`invoice_number.ilike.%${search}%,client.name.ilike.%${search}%`); }
+      if (search) { query = query.or(`invoice_number.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`); }
       if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
       const { data } = await query;
       downloadCSV(data || [], CSV_COLUMNS, `invoices-${new Date().toISOString().slice(0, 10)}.csv`);
@@ -857,8 +858,10 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
   const [currency, setCurrency] = useState(invoice?.currency || "USD");
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [bankAccountId, setBankAccountId] = useState(invoice?.bank_account_id || "");
+  const [clientId, setClientId] = useState(invoice?.client_id || "");
   const trapRef = useFocusTrap(open);
   const scrollRef = useRef(null);
+  const addToast = useToast();
 
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -912,9 +915,19 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!clientId) {
+      addToast("Please select a client", "error");
+      return;
+    }
+    const validItems = items.filter((i) => i.description.trim() || (Number(i.rate) || 0) > 0);
+    if (validItems.length === 0) {
+      addToast("Add at least one line item", "error");
+      return;
+    }
     setSubmitting(true);
     const fd = new FormData(e.target);
-    fd.set("items", JSON.stringify(items.filter((i) => (Number(i.rate) || 0) > 0 || i.description.trim())));
+    fd.set("client_id", clientId);
+    fd.set("items", JSON.stringify(validItems));
     fd.set("tax", String(taxAmount.toFixed(2)));
     fd.set("currency", currency);
     fd.set("bank_account_id", bankAccountId);
@@ -985,7 +998,8 @@ function InvoiceFormModal({ open, onClose, onSubmit, clients, bankAccounts, invo
                 <select
                   id="field-client_id"
                   name="client_id"
-                  defaultValue={invoice?.client_id || ""}
+                  value={clientId}
+                  onChange={(e) => setClientId(e.target.value)}
                   className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
                   style={{ colorScheme: "dark" }}
                 >

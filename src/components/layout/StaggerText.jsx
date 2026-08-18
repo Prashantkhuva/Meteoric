@@ -14,25 +14,14 @@ export default function StaggerText({ text, children, hoverColor, hovered: exter
   }, []);
 
   return (
-    <>
-      <style>{`
-        .st-word { display: inline-flex; margin-right: 0.3em; }
-        .st-word:last-child { margin-right: 0; }
-        .st-char-wrap { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
-        .st-char { display: inline-block; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
-        .st-char.exit { transform: translateY(-110%); }
-        .st-char-enter { display: none; }
-        .st-runtime .st-char-enter { display: inline-block; position: absolute; top: 0; left: 0; transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; transform: translateY(110%); }
-        .st-char-enter.enter { transform: translateY(0%); }
-      `}</style>
-      <span
-        ref={ref}
-        className={className}
-        style={{ ...style, lineHeight: 1.25 }}
-        onMouseEnter={() => setInternalHovered(true)}
-        onMouseLeave={() => setInternalHovered(false)}
-        {...rest}
-      >
+    <span
+      ref={ref}
+      className={className}
+      style={{ ...style, lineHeight: 1.25 }}
+      onMouseEnter={() => setInternalHovered(true)}
+      onMouseLeave={() => setInternalHovered(false)}
+      {...rest}
+    >
         {words.map((word, wi) => (
           <span key={wi} className="st-word">
             {word.split("").map((char, ci) => {
@@ -60,6 +49,5 @@ export default function StaggerText({ text, children, hoverColor, hovered: exter
           </span>
         ))}
       </span>
-    </>
   );
 }
