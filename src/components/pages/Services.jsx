@@ -265,15 +265,20 @@ export default function ServicesPage() {
           <div className="absolute left-0 top-0 w-24 md:w-48 h-full bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 w-24 md:w-48 h-full bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
-          <div className="flex w-max whitespace-nowrap animate-marquee-left">
-            {[...techStack, ...techStack].map((tech, i) => (
-              <span
-                key={i}
-                className="px-6 md:px-10 text-3xl md:text-5xl font-secondary-italic text-white/[0.08] hover:text-white/40 transition-colors duration-500"
-              >
-                {tech}
-              </span>
-            ))}
+          <div
+            className="flex w-max whitespace-nowrap animate-marquee-left"
+            style={{ "--sets": 6 }}
+          >
+            {[...Array(6)]
+              .flatMap(() => techStack)
+              .map((tech, i) => (
+                <span
+                  key={i}
+                  className="px-6 md:px-10 text-3xl md:text-5xl font-secondary-italic text-white/[0.08] hover:text-white/40 transition-colors duration-500"
+                >
+                  {tech}
+                </span>
+              ))}
           </div>
         </div>
       </section>

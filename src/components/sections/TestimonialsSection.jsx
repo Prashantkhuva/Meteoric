@@ -176,9 +176,12 @@ export default function TestimonialsSection() {
           {/* ── Marquee Row 1 — scrolls left ── */}
           <ScrollReveal direction="left">
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-4">
-              <div className="group flex overflow-hidden p-2 [--duration:40s]">
-                <div className="flex w-max shrink-0 animate-marquee-left flex-row group-hover:[animation-play-state:paused]">
-                  {[...Array(2)].map((_, setIndex) =>
+              <div className="group flex overflow-hidden p-2">
+                <div
+                  className="flex w-max shrink-0 animate-marquee-left flex-row group-hover:[animation-play-state:paused]"
+                  style={{ "--sets": 6 }}
+                >
+                  {[...Array(6)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
                       <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
                     ))
@@ -193,9 +196,12 @@ export default function TestimonialsSection() {
           {/* ── Marquee Row 2 — scrolls right ── */}
           <ScrollReveal direction="right">
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12">
-              <div className="group flex overflow-hidden p-2 [--duration:40s]">
-                <div className="flex w-max shrink-0 animate-marquee-right flex-row group-hover:[animation-play-state:paused]">
-                  {[...Array(2)].map((_, setIndex) =>
+              <div className="group flex overflow-hidden p-2">
+                <div
+                  className="flex w-max shrink-0 animate-marquee-right flex-row group-hover:[animation-play-state:paused]"
+                  style={{ "--sets": 6 }}
+                >
+                  {[...Array(6)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
                       <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
                     ))

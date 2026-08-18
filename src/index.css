@@ -204,11 +204,11 @@ body::after {
 }
 
 @utility animate-marquee-left {
-  animation: marquee-left var(--duration, 40s) linear infinite;
+  animation: marquee-left calc(var(--duration-per-set, 20s) * var(--sets, 2)) linear infinite;
 }
 
 @utility animate-marquee-right {
-  animation: marquee-right var(--duration, 40s) linear infinite;
+  animation: marquee-right calc(var(--duration-per-set, 20s) * var(--sets, 2)) linear infinite;
 }
 
 .marquee {
