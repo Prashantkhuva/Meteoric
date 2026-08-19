@@ -62,7 +62,9 @@ export default function ClientLayout({ children }) {
   }, [preloaderDone, pathname]);
 
   const isAdmin =
-    pathname.startsWith("/admin") || pathname.startsWith("/login");
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/editor");
 
   return (
     <>

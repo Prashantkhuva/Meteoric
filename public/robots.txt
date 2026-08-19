@@ -3,50 +3,60 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: GPTBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: CCBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: meta-externalagent
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: Amazonbot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 User-agent: Bytespider
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
 
 Sitemap: https://withmeteoric.com/sitemap.xml
