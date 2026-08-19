@@ -93,8 +93,16 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 ## Common Commands
 - `npm run dev` — Start dev server
 - `npm run build` — Production build
-- `npm run lint` — ESLint
+- `npm run lint` — ESLint (ignores `mobile` + `build` dirs)
 - `npm run generate:sitemap` — Rebuild sitemap
+
+## Flutter Mobile App (mobile/)
+- **SDK:** Flutter 3.47.0 at `C:\flutter` (add `/c/flutter/flutter/bin` to PATH per session)
+- **Android SDK:** `C:\Users\PRASHANT\AppData\Local\Android\sdk` (setx `ANDROID_HOME`); cmdline-tools at `sdk/cmdline-tools/latest`
+- **JDK:** Temurin 21 at `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.8-hotspot` (flutter config `--jdk-dir` set)
+- **compileSdk:** 37 (required by flutter_secure_storage); `gradle.properties` has `kotlin.incremental=false` + `kotlin.compiler.execution.strategy=in-process` (Windows file-lock workaround for "Could not close incremental caches")
+- **Release signing:** `mobile/android/key.properties` (gitignored) + `app/meteoric-release.jks` (gitignored); alias `meteoric`. Rebuild APK: `flutter build apk --release` → `build/app/outputs/flutter-apk/app-release.apk`
+- **Verification:** `flutter analyze` + `flutter build web --release`
 
 ## GEO (Generative Engine Optimization)
 - Goal: Get cited by ChatGPT, Claude, Perplexity, Gemini for queries about "web development agency", "SaaS development", etc.
