@@ -102,6 +102,7 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - **JDK:** Temurin 21 at `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.8-hotspot` (flutter config `--jdk-dir` set)
 - **compileSdk:** 37 (required by flutter_secure_storage); `gradle.properties` has `kotlin.incremental=false` + `kotlin.compiler.execution.strategy=in-process` (Windows file-lock workaround for "Could not close incremental caches")
 - **Release signing:** `mobile/android/key.properties` (gitignored) + `app/meteoric-release.jks` (gitignored); alias `meteoric`. Rebuild APK: `flutter build apk --release` → `build/app/outputs/flutter-apk/app-release.apk`
+- **OTA updates (Shorebird):** `shorebird` CLI at `~/.shorebird/bin` (add to PATH per session); logged in as `work.prashantkhuva@gmail.com`; `app_id: 39ba27c5-5735-4c86-a9b9-e037da640ec0` in `mobile/shorebird.yaml` (checked in). Workflow: new release → `shorebird release android` (also uploads AAB to Play Store if ever needed); code change → `shorebird patch android --release-version 0.1.0+1` (tiny diff, phones auto-update on next launch, no reinstall). Limits: patches can't change native plugins/AndroidManifest/icons/assets — those need a new release. Bumping `pubspec.yaml` version = new release, not patch. Verify patch w/o publishing: `--dry-run`
 - **Verification:** `flutter analyze` + `flutter build web --release`
 
 ## GEO (Generative Engine Optimization)
