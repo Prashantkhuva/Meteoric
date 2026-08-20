@@ -1,5 +1,4 @@
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 
 export async function authGuard(request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -21,15 +20,6 @@ export async function authGuard(request) {
 
   const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) return null;
-
-  const projectRef = new URL(url).hostname.split(".")[0];
-  const cookieStore = await cookies();
-  cookieStore.set(`sb-${projectRef}-auth-token`, token, {
-    path: "/",
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
 
   return { user: data.user, token };
 }

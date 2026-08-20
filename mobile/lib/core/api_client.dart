@@ -41,8 +41,10 @@ class ApiClient {
       'Accept': 'application/json',
     };
     final ref = _projectRef;
-    if (ref != null && ref.isNotEmpty) {
-      headers['Cookie'] = 'sb-$ref-auth-token=$token';
+    final session = AuthService.instance.auth.currentSession;
+    if (ref != null && ref.isNotEmpty && session != null) {
+      headers['Cookie'] =
+          'sb-$ref-auth-token=base64-${base64Url.encode(utf8.encode(jsonEncode(session.toJson())))}';
     }
     return headers;
   }
