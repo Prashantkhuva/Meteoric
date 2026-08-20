@@ -21,34 +21,59 @@ class ApiClient {
 
   String get _base => AppConfig.apiBaseUrl;
 
+  /// Supabase project ref from the URL (e.g. `abc123` in
+  /// `https://abc123.supabase.co`) — used for the session cookie name.
+  String? get _projectRef {
+    final url = AppConfig.supabaseUrl
+        .replaceFirst('https://', '')
+        .replaceFirst('http://', '');
+    return url.split('.').first;
+  }
+
   Map<String, String> _headers() {
     final token = AuthService.accessToken;
     if (token == null) {
       throw ApiException('Not authenticated', status: 401);
     }
-    return {
+    final headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
+    final ref = _projectRef;
+    if (ref != null && ref.isNotEmpty) {
+      headers['Cookie'] = 'sb-$ref-auth-token=$token';
+    }
+    return headers;
+  }
+
+  /// Sends the request; on a 401 the session is refreshed once and the
+  /// request retried with the new access token.
+  Future<http.Response> _send(Future<http.Response> Function() request) async {
+    var res = await request();
+    if (res.statusCode == 401 && AuthService.isSignedIn) {
+      if (await AuthService.refreshSession()) {
+        res = await request();
+      }
+    }
+    return res;
   }
 
   Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body) async {
-    final res = await http
-        .post(
+    final res = await _send(() => http.post(
           Uri.parse('$_base$path'),
           headers: _headers(),
           body: jsonEncode(body),
-        )
-        .timeout(const Duration(seconds: 30));
+        ).timeout(const Duration(seconds: 30)));
 
     return _decode(res);
   }
 
   Future<Map<String, dynamic>> _get(String path) async {
-    final res = await http
-        .get(Uri.parse('$_base$path'), headers: _headers())
-        .timeout(const Duration(seconds: 30));
+    final res = await _send(() => http.get(
+          Uri.parse('$_base$path'),
+          headers: _headers(),
+        ).timeout(const Duration(seconds: 30)));
     return _decode(res);
   }
 

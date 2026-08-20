@@ -69,6 +69,19 @@ class AuthService {
 
   static bool get isSignedIn => accessToken != null;
 
+  /// Refreshes the current session (access tokens expire hourly). Returns
+  /// true when a new session was obtained and persisted.
+  static Future<bool> refreshSession() async {
+    try {
+      final res = await instance.auth.refreshSession();
+      if (res.session != null) {
+        AppStorage.saveSession(res.session!.toJson().toString());
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
   static Future<void> signIn(String email, String password) async {
     final res = await instance.auth.signInWithPassword(
       email: email.trim(),
