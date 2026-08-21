@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/filter_bar.dart';
 
 class ReviewsScreen extends StatefulWidget {
   const ReviewsScreen({super.key});
@@ -69,9 +72,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
       } else {
-        _snack(action == 'verified'
-            ? (verified == true ? 'Marked verified' : 'Marked unverified')
-            : 'Review ${action}d');
+        _snack(
+          action == 'verified'
+              ? (verified == true ? 'Marked verified' : 'Marked unverified')
+              : 'Review ${action}d',
+        );
         _load();
       }
     } catch (err) {
@@ -86,7 +91,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         title: const Text('Delete review'),
         content: const Text('Delete this review? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -116,7 +124,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -129,7 +139,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -138,16 +152,21 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       body: Column(
         children: [
           const SizedBox(height: 12),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL'),
-              MapEntry('pending', 'Pending'),
-              MapEntry('published', 'Published'),
-              MapEntry('hidden', 'Hidden'),
+          FilterBar(
+            groups: [
+              FilterGroup(
+                key: 'status',
+                label: 'Status',
+                options: const [
+                  MapEntry('pending', 'Pending'),
+                  MapEntry('published', 'Published'),
+                  MapEntry('hidden', 'Hidden'),
+                ],
+              ),
             ],
-            selected: _status,
-            onSelected: (v) {
-              setState(() => _status = v);
+            values: {'status': _status},
+            onChanged: (v) {
+              setState(() => _status = v['status'] ?? 'all');
               _page = 1;
               _load();
             },
@@ -190,7 +209,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, i) => _ReviewCard(
           review: _reviews[i],
-          onVerified: (v) => _action((_reviews[i]['id'] as num).toInt(), 'verified', verified: v),
+          onVerified: (v) => _action(
+            (_reviews[i]['id'] as num).toInt(),
+            'verified',
+            verified: v,
+          ),
           onStatus: (s) => _action((_reviews[i]['id'] as num).toInt(), s),
           onDelete: () => _delete((_reviews[i]['id'] as num).toInt()),
         ),
@@ -251,7 +274,9 @@ class _ReviewCard extends StatelessWidget {
                 Icon(
                   s <= rating ? Icons.star : Icons.star_border,
                   size: 15,
-                  color: s <= rating ? const Color(0xFFF5C451) : AppColors.textFaint,
+                  color: s <= rating
+                      ? const Color(0xFFF5C451)
+                      : AppColors.textFaint,
                 ),
               const Spacer(),
               if (isVerified)
@@ -261,7 +286,13 @@ class _ReviewCard extends StatelessWidget {
                     SizedBox(width: 3),
                     Text(
                       'VERIFIED',
-                      style: TextStyle(color: AppColors.accent, fontSize: 9, fontWeight: FontWeight.w600, letterSpacing: 1, fontFamily: 'Inter'),
+                      style: TextStyle(
+                        color: AppColors.accent,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ],
                 ),
@@ -270,14 +301,23 @@ class _ReviewCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             review['comment'] ?? '',
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 12, height: 1.5, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 12,
+              height: 1.5,
+              fontFamily: 'Inter',
+            ),
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 10),
           Text(
             Fmt.date(review['created_at'] as String?),
-            style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 10,
+              fontFamily: 'Inter',
+            ),
           ),
           const SizedBox(height: 10),
           Wrap(
@@ -290,7 +330,11 @@ class _ReviewCard extends StatelessWidget {
                 () => onVerified(!isVerified),
               ),
               if (status != 'published')
-                _chip('PUBLISH', const Color(0xFF4CAF50), () => onStatus('published')),
+                _chip(
+                  'PUBLISH',
+                  const Color(0xFF4CAF50),
+                  () => onStatus('published'),
+                ),
               if (status != 'hidden')
                 _chip('HIDE', AppColors.textMuted, () => onStatus('hidden')),
               _chip('DELETE', AppColors.red, onDelete),
@@ -311,7 +355,12 @@ class _ReviewCard extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w600, fontFamily: 'Inter'),
+          style: TextStyle(
+            color: color,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
         ),
       ),
     );

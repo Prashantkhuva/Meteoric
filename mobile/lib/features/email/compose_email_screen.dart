@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
-import '../../shared/widgets/tip_tap_editor_screen.dart';
+import '../../shared/widgets/rich_text_editor_screen.dart';
 
 class ComposeEmailScreen extends StatefulWidget {
   const ComposeEmailScreen({super.key});
@@ -122,7 +123,9 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -150,10 +153,17 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                 Expanded(
                   child: Text(
                     'Could not load recipients: $_recipientsError',
-                    style: const TextStyle(color: AppColors.red, fontSize: 11, fontFamily: 'Inter'),
+                    style: const TextStyle(
+                      color: AppColors.red,
+                      fontSize: 11,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
-                TextButton(onPressed: _loadRecipients, child: const Text('Retry')),
+                TextButton(
+                  onPressed: _loadRecipients,
+                  child: const Text('Retry'),
+                ),
               ],
             )
           else if (!_recipientsLoaded)
@@ -176,21 +186,34 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                     children: [
                       for (final email in _to)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+                            border: Border.all(
+                              color: AppColors.accent.withValues(alpha: 0.4),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
                                 email,
-                                style: const TextStyle(color: AppColors.accent, fontSize: 11, fontFamily: 'Inter'),
+                                style: const TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: 11,
+                                  fontFamily: 'Inter',
+                                ),
                               ),
                               const SizedBox(width: 6),
                               GestureDetector(
                                 onTap: () => setState(() => _to.remove(email)),
-                                child: const Icon(Icons.close, size: 12, color: AppColors.accent),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 12,
+                                  color: AppColors.accent,
+                                ),
                               ),
                             ],
                           ),
@@ -200,12 +223,18 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   initialValue: _searchFilter,
-                  decoration: const InputDecoration(labelText: 'Recipient type', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Recipient type',
+                    isDense: true,
+                  ),
                   items: const [
                     DropdownMenuItem(value: 'all', child: Text('All')),
                     DropdownMenuItem(value: 'client', child: Text('Clients')),
                     DropdownMenuItem(value: 'lead', child: Text('Leads')),
-                    DropdownMenuItem(value: 'prospect', child: Text('Prospects')),
+                    DropdownMenuItem(
+                      value: 'prospect',
+                      child: Text('Prospects'),
+                    ),
                   ],
                   onChanged: (v) => setState(() => _searchFilter = v ?? 'all'),
                 ),
@@ -216,7 +245,11 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                   decoration: InputDecoration(
                     labelText: 'Search or type email, press enter to add',
                     isDense: true,
-                    prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.textFaint),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      size: 16,
+                      color: AppColors.textFaint,
+                    ),
                   ),
                 ),
                 if (_filteredRecipients.isNotEmpty)
@@ -230,23 +263,37 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                       children: [
                         for (final r in _filteredRecipients.take(8))
                           InkWell(
-                            onTap: () => _addRecipient((r['email'] ?? '') as String),
+                            onTap: () =>
+                                _addRecipient((r['email'] ?? '') as String),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
                               decoration: const BoxDecoration(
-                                border: Border(bottom: BorderSide(color: AppColors.border)),
+                                border: Border(
+                                  bottom: BorderSide(color: AppColors.border),
+                                ),
                               ),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       r['name'] ?? (r['email'] ?? ''),
-                                      style: const TextStyle(color: AppColors.text, fontSize: 13, fontFamily: 'Inter'),
+                                      style: const TextStyle(
+                                        color: AppColors.text,
+                                        fontSize: 13,
+                                        fontFamily: 'Inter',
+                                      ),
                                     ),
                                   ),
                                   Text(
                                     '${r['email']}',
-                                    style: const TextStyle(color: AppColors.textFaint, fontSize: 11, fontFamily: 'Inter'),
+                                    style: const TextStyle(
+                                      color: AppColors.textFaint,
+                                      fontSize: 11,
+                                      fontFamily: 'Inter',
+                                    ),
                                   ),
                                 ],
                               ),
@@ -273,7 +320,11 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
                       'Body added',
-                      style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
                 AccentButton(
@@ -292,7 +343,10 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                 ? const SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF121212)),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Color(0xFF121212),
+                    ),
                   )
                 : const Text('SEND EMAIL'),
           ),
@@ -305,9 +359,10 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
   Future<void> _openBodyEditor() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => TipTapEditorScreen(
+        builder: (_) => RichTextEditorScreen(
           initialContent: _body,
           outputFormat: 'html',
+          title: 'Email body',
           onSave: (body) => setState(() => _body = body),
         ),
       ),

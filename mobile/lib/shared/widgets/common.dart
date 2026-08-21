@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/theme.dart';
 
 /// Standard screen scaffold: dark background, optional title, back button.
@@ -171,7 +172,11 @@ class EmptyState extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 13, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 13,
+              fontFamily: 'Inter',
+            ),
           ),
         ],
       ),
@@ -217,7 +222,11 @@ class PaginationBar extends StatelessWidget {
           ),
           Text(
             '$_pages pages',
-            style: const TextStyle(color: AppColors.textFaint, fontSize: 11, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 11,
+              fontFamily: 'Inter',
+            ),
           ),
           SizedBox(
             width: 90,
@@ -228,59 +237,6 @@ class PaginationBar extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Horizontal scrolling status filter chips.
-class FilterChips extends StatelessWidget {
-  const FilterChips({
-    super.key,
-    required this.options,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  final List<MapEntry<String, String>> options; // value -> label
-  final String selected;
-  final ValueChanged<String> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          for (final opt in options) ...[
-            _chip(opt.key, opt.value),
-            const SizedBox(width: 8),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _chip(String value, String label) {
-    final active = value == selected;
-    return GestureDetector(
-      onTap: () => onSelected(value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: active ? AppColors.accent : Colors.transparent,
-          border: Border.all(color: active ? AppColors.accent : AppColors.border),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: active ? const Color(0xFF121212) : AppColors.textMuted,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
-          ),
-        ),
       ),
     );
   }
@@ -360,12 +316,20 @@ class ErrorBox extends StatelessWidget {
           children: [
             Text(
               message,
-              style: const TextStyle(color: AppColors.red, fontSize: 13, fontFamily: 'Inter'),
+              style: const TextStyle(
+                color: AppColors.red,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 12),
-              GhostButton(height: 36, onPressed: onRetry, child: const Text('RETRY')),
+              GhostButton(
+                height: 36,
+                onPressed: onRetry,
+                child: const Text('RETRY'),
+              ),
             ],
           ],
         ),

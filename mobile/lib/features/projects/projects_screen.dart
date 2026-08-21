@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/filter_bar.dart';
 import 'project_detail_screen.dart';
 import 'project_form_screen.dart';
 
@@ -100,7 +103,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
             tooltip: 'New project',
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -115,29 +122,42 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
                 hintText: 'Search projects...',
-                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textFaint),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  size: 18,
+                  color: AppColors.textFaint,
+                ),
                 suffixIcon: _search.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.close, size: 16, color: AppColors.textMuted),
+                        icon: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.textMuted,
+                        ),
                         onPressed: _clearSearch,
                       )
                     : null,
               ),
             ),
           ),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL'),
-              MapEntry('planning', 'Planning'),
-              MapEntry('in_progress', 'In Progress'),
-              MapEntry('review', 'Review'),
-              MapEntry('completed', 'Completed'),
-              MapEntry('on_hold', 'On Hold'),
-              MapEntry('cancelled', 'Cancelled'),
+          FilterBar(
+            groups: [
+              FilterGroup(
+                key: 'status',
+                label: 'Status',
+                options: const [
+                  MapEntry('planning', 'Planning'),
+                  MapEntry('in_progress', 'In Progress'),
+                  MapEntry('review', 'Review'),
+                  MapEntry('completed', 'Completed'),
+                  MapEntry('on_hold', 'On Hold'),
+                  MapEntry('cancelled', 'Cancelled'),
+                ],
+              ),
             ],
-            selected: _status,
-            onSelected: (v) {
-              setState(() => _status = v);
+            values: {'status': _status},
+            onChanged: (v) {
+              setState(() => _status = v['status'] ?? 'all');
               _page = 1;
               _load();
             },
@@ -226,7 +246,9 @@ class _ProjectCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.border),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -243,13 +265,19 @@ class _ProjectCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  StatusBadge(meta: Status.get(Status.projects, project['status'])),
+                  StatusBadge(
+                    meta: Status.get(Status.projects, project['status']),
+                  ),
                 ],
               ),
               const SizedBox(height: 6),
               Text(
                 clientName,
-                style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -269,12 +297,20 @@ class _ProjectCard extends StatelessWidget {
                   else
                     const Text(
                       'No budget set',
-                      style: TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                      style: TextStyle(
+                        color: AppColors.textFaint,
+                        fontSize: 10,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   const Spacer(),
                   Text(
                     Fmt.timeAgo(project['created_at'] as String?),
-                    style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ],
               ),

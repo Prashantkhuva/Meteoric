@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/config.dart';
 import '../../core/constants.dart';
@@ -35,18 +36,26 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     final items = _invoice['items'];
     if (items is! List) return 0;
     return items.fold<double>(0, (sum, item) {
-      final qty = (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
-      final rate = (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
+      final qty =
+          (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
+      final rate =
+          (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
   }
 
   double get _total => _subtotal + ((_invoice['tax'] as num?)?.toDouble() ?? 0);
 
+  String get _currency => (_invoice['currency'] ?? 'USD') as String;
+
+  String _money(num? value) => Fmt.money(value, currency: _currency);
+
   Future<void> _send() async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceSend((_invoice['id'] as num).toInt());
+      final res = await ApiClient.instance.invoiceSend(
+        (_invoice['id'] as num).toInt(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -64,8 +73,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   Future<void> _markPaid() async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance
-          .invoiceMarkPaid((_invoice['id'] as num).toInt(), DateTime.now().toIso8601String());
+      final res = await ApiClient.instance.invoiceMarkPaid(
+        (_invoice['id'] as num).toInt(),
+        DateTime.now().toIso8601String(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -87,7 +98,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         title: const Text('Cancel invoice'),
         content: const Text('Cancel this invoice? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('No')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('No'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -102,7 +116,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceCancel((_invoice['id'] as num).toInt());
+      final res = await ApiClient.instance.invoiceCancel(
+        (_invoice['id'] as num).toInt(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -119,8 +135,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
   Future<void> _share() async {
     try {
-      final res = await ApiClient.instance
-          .invoiceShareToken((_invoice['id'] as num).toInt());
+      final res = await ApiClient.instance.invoiceShareToken(
+        (_invoice['id'] as num).toInt(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -134,10 +151,17 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
           title: const Text('Share invoice'),
           content: SelectableText(
             url,
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 13, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 13,
+              fontFamily: 'Inter',
+            ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Close'),
+            ),
           ],
         ),
       );
@@ -153,7 +177,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         title: const Text('Delete invoice'),
         content: const Text('Delete this invoice? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -168,7 +195,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceDelete((_invoice['id'] as num).toInt());
+      final res = await ApiClient.instance.invoiceDelete(
+        (_invoice['id'] as num).toInt(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -186,7 +215,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -207,7 +238,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               const Spacer(),
               Text(
                 Fmt.date(_invoice['created_at'] as String?),
-                style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                style: const TextStyle(
+                  color: AppColors.textFaint,
+                  fontSize: 10,
+                  fontFamily: 'Inter',
+                ),
               ),
             ],
           ),
@@ -228,7 +263,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             title: 'Items',
             child: Column(
               children: [
-                for (final item in (_invoice['items'] as List?)?.cast<Map>() ?? const <Map>[])
+                for (final item
+                    in (_invoice['items'] as List?)?.cast<Map>() ??
+                        const <Map>[])
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -236,12 +273,18 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                         Expanded(
                           child: Text(
                             '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
-                            style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                            ),
                           ),
                         ),
                         Text(
-                          Fmt.money(((item['rate'] as num?)?.toDouble() ?? 0) *
-                              ((item['quantity'] as num?)?.toDouble() ?? 1)),
+                          _money(
+                            ((item['rate'] as num?)?.toDouble() ?? 0) *
+                                ((item['quantity'] as num?)?.toDouble() ?? 1),
+                          ),
                           style: const TextStyle(
                             color: AppColors.text,
                             fontSize: 12,
@@ -253,14 +296,13 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                     ),
                   ),
                 const Divider(color: AppColors.border),
-                DetailRow(label: 'Subtotal', value: Fmt.money(_subtotal)),
+                DetailRow(label: 'Subtotal', value: _money(_subtotal)),
                 if (((_invoice['tax'] as num?) ?? 0) > 0)
-                  DetailRow(label: 'Tax', value: Fmt.money((_invoice['tax'] as num?)?.toDouble() ?? 0)),
-                DetailRow(
-                  label: 'Total',
-                  value: Fmt.money(_total),
-                  strong: true,
-                ),
+                  DetailRow(
+                    label: 'Tax',
+                    value: _money((_invoice['tax'] as num?)?.toDouble() ?? 0),
+                  ),
+                DetailRow(label: 'Total', value: _money(_total), strong: true),
               ],
             ),
           ),
@@ -269,8 +311,14 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             title: 'Details',
             child: Column(
               children: [
-                DetailRow(label: 'Currency', value: _invoice['currency'] ?? 'USD'),
-                DetailRow(label: 'Due date', value: _invoice['due_date'] ?? '—'),
+                DetailRow(
+                  label: 'Currency',
+                  value: _invoice['currency'] ?? 'USD',
+                ),
+                DetailRow(
+                  label: 'Due date',
+                  value: _invoice['due_date'] ?? '—',
+                ),
                 DetailRow(label: 'Notes', value: _invoice['notes'] ?? '—'),
                 DetailRow(label: 'Terms', value: _invoice['terms'] ?? '—'),
               ],
@@ -292,18 +340,23 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   onPressed: _busy
                       ? null
                       : () async {
-                          final changed = await Navigator.of(context).push<bool>(
-                            MaterialPageRoute(
-                              builder: (_) => InvoiceFormScreen(invoice: _invoice),
-                            ),
-                          );
+                          final changed = await Navigator.of(context)
+                              .push<bool>(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      InvoiceFormScreen(invoice: _invoice),
+                                ),
+                              );
                           if (changed == true && mounted) setState(() {});
                         },
                   child: const Text('EDIT'),
                 ),
               ),
               Expanded(
-                child: GhostButton(onPressed: _busy ? null : _share, child: const Text('SHARE')),
+                child: GhostButton(
+                  onPressed: _busy ? null : _share,
+                  child: const Text('SHARE'),
+                ),
               ),
             ],
           ),

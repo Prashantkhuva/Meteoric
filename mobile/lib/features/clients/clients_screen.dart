@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/filter_bar.dart';
 import 'client_detail_screen.dart';
 import 'client_form_screen.dart';
 
@@ -100,7 +103,11 @@ class _ClientsScreenState extends State<ClientsScreen> {
             tooltip: 'Add client',
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -115,28 +122,41 @@ class _ClientsScreenState extends State<ClientsScreen> {
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
                 hintText: 'Search name, email, company...',
-                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textFaint),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  size: 18,
+                  color: AppColors.textFaint,
+                ),
                 suffixIcon: _search.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.close, size: 16, color: AppColors.textMuted),
+                        icon: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.textMuted,
+                        ),
                         onPressed: _clearSearch,
                       )
                     : null,
               ),
             ),
           ),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL'),
-              MapEntry('onboarding', 'Onboarding'),
-              MapEntry('active', 'Active'),
-              MapEntry('at_risk', 'At Risk'),
-              MapEntry('inactive', 'Inactive'),
-              MapEntry('churned', 'Churned'),
+          FilterBar(
+            groups: [
+              FilterGroup(
+                key: 'status',
+                label: 'Status',
+                options: const [
+                  MapEntry('onboarding', 'Onboarding'),
+                  MapEntry('active', 'Active'),
+                  MapEntry('at_risk', 'At Risk'),
+                  MapEntry('inactive', 'Inactive'),
+                  MapEntry('churned', 'Churned'),
+                ],
+              ),
             ],
-            selected: _status,
-            onSelected: (v) {
-              setState(() => _status = v);
+            values: {'status': _status},
+            onChanged: (v) {
+              setState(() => _status = v['status'] ?? 'all');
               _page = 1;
               _load();
             },
@@ -209,7 +229,11 @@ class _ClientsScreenState extends State<ClientsScreen> {
 }
 
 class _ClientCard extends StatelessWidget {
-  const _ClientCard({required this.client, required this.onTap, required this.onEdit});
+  const _ClientCard({
+    required this.client,
+    required this.onTap,
+    required this.onEdit,
+  });
 
   final Map<String, dynamic> client;
   final VoidCallback onTap;
@@ -227,7 +251,9 @@ class _ClientCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.border),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -244,11 +270,17 @@ class _ClientCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  StatusBadge(meta: Status.get(Status.clients, client['status'])),
+                  StatusBadge(
+                    meta: Status.get(Status.clients, client['status']),
+                  ),
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: onEdit,
-                    child: const Icon(Icons.edit_outlined, size: 15, color: AppColors.textFaint),
+                    child: const Icon(
+                      Icons.edit_outlined,
+                      size: 15,
+                      color: AppColors.textFaint,
+                    ),
                   ),
                 ],
               ),
@@ -258,7 +290,11 @@ class _ClientCard extends StatelessWidget {
                   if (company != null && '$company'.isNotEmpty) '$company',
                   if (email != null && '$email'.isNotEmpty) '$email',
                 ].join(' • '),
-                style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -267,12 +303,20 @@ class _ClientCard extends StatelessWidget {
                 children: [
                   Text(
                     'Added ${Fmt.date(client['created_at'] as String?)}',
-                    style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                   const Spacer(),
                   Text(
                     Fmt.timeAgo(client['created_at'] as String?),
-                    style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ],
               ),

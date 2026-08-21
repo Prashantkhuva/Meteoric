@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/filter_bar.dart';
 import 'lead_detail_screen.dart';
 import 'lead_form_screen.dart';
 
@@ -110,7 +113,11 @@ class _LeadsScreenState extends State<LeadsScreen> {
             tooltip: 'Add lead',
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -126,64 +133,69 @@ class _LeadsScreenState extends State<LeadsScreen> {
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
                 hintText: 'Search name, email, company...',
-                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textFaint),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  size: 18,
+                  color: AppColors.textFaint,
+                ),
                 suffixIcon: _search.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.close, size: 16, color: AppColors.textMuted),
+                        icon: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.textMuted,
+                        ),
                         onPressed: _clearSearch,
                       )
                     : null,
               ),
             ),
           ),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL'),
-              MapEntry('inquiry', 'Inquiry'),
-              MapEntry('discovery', 'Discovery'),
-              MapEntry('proposal', 'Proposal'),
-              MapEntry('in_progress', 'In Progress'),
-              MapEntry('completed', 'Completed'),
-              MapEntry('lost', 'Lost'),
+          FilterBar(
+            groups: [
+              FilterGroup(
+                key: 'status',
+                label: 'Status',
+                options: const [
+                  MapEntry('inquiry', 'Inquiry'),
+                  MapEntry('discovery', 'Discovery'),
+                  MapEntry('proposal', 'Proposal'),
+                  MapEntry('in_progress', 'In Progress'),
+                  MapEntry('completed', 'Completed'),
+                  MapEntry('lost', 'Lost'),
+                ],
+              ),
+              FilterGroup(
+                key: 'score',
+                label: 'Score',
+                options: const [
+                  MapEntry('hot', 'Hot'),
+                  MapEntry('warm', 'Warm'),
+                  MapEntry('cold', 'Cold'),
+                  MapEntry('scored', 'Scored'),
+                  MapEntry('unscored', 'Unscored'),
+                ],
+              ),
+              FilterGroup(
+                key: 'source',
+                label: 'Source',
+                options: const [
+                  MapEntry('website', 'Website'),
+                  MapEntry('cal.com', 'Cal.com'),
+                  MapEntry('manual', 'Manual'),
+                  MapEntry('csv_import', 'CSV'),
+                  MapEntry('whatsapp', 'WhatsApp'),
+                  MapEntry('other', 'Other'),
+                ],
+              ),
             ],
-            selected: _status,
-            onSelected: (v) {
-              setState(() => _status = v);
-              _page = 1;
-              _load();
-            },
-          ),
-          const SizedBox(height: 10),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL SCORES'),
-              MapEntry('hot', 'Hot'),
-              MapEntry('warm', 'Warm'),
-              MapEntry('cold', 'Cold'),
-              MapEntry('scored', 'Scored'),
-              MapEntry('unscored', 'Unscored'),
-            ],
-            selected: _score,
-            onSelected: (v) {
-              setState(() => _score = v);
-              _page = 1;
-              _load();
-            },
-          ),
-          const SizedBox(height: 10),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL SOURCES'),
-              MapEntry('website', 'Website'),
-              MapEntry('cal.com', 'Cal.com'),
-              MapEntry('manual', 'Manual'),
-              MapEntry('csv_import', 'CSV'),
-              MapEntry('whatsapp', 'WhatsApp'),
-              MapEntry('other', 'Other'),
-            ],
-            selected: _source,
-            onSelected: (v) {
-              setState(() => _source = v);
+            values: {'status': _status, 'score': _score, 'source': _source},
+            onChanged: (v) {
+              setState(() {
+                _status = v['status'] ?? 'all';
+                _score = v['score'] ?? 'all';
+                _source = v['source'] ?? 'all';
+              });
               _page = 1;
               _load();
             },
@@ -241,22 +253,25 @@ class _LeadsScreenState extends State<LeadsScreen> {
   }
 
   Future<void> _openDetail(Map<String, dynamic> lead) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => LeadDetailScreen(lead: lead)),
-    );
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => LeadDetailScreen(lead: lead)));
     _load();
   }
 
   Future<void> _openForm({Map<String, dynamic>? lead}) async {
-    final changed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => LeadFormScreen(lead: lead)),
-    );
+    final changed = await Navigator.of(
+      context,
+    ).push<bool>(MaterialPageRoute(builder: (_) => LeadFormScreen(lead: lead)));
     if (changed == true) _load();
   }
 }
 
 class _LeadCard extends StatelessWidget {
-  const _LeadCard({required this.lead, required this.onTap, required this.onEdit});
+  const _LeadCard({
+    required this.lead,
+    required this.onTap,
+    required this.onEdit,
+  });
 
   final Map<String, dynamic> lead;
   final VoidCallback onTap;
@@ -306,7 +321,11 @@ class _LeadCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: onEdit,
-                    child: const Icon(Icons.edit_outlined, size: 15, color: AppColors.textFaint),
+                    child: const Icon(
+                      Icons.edit_outlined,
+                      size: 15,
+                      color: AppColors.textFaint,
+                    ),
                   ),
                 ],
               ),
@@ -316,7 +335,11 @@ class _LeadCard extends StatelessWidget {
                   if (company != null && '$company'.isNotEmpty) '$company',
                   if (email != null && '$email'.isNotEmpty) '$email',
                 ].join(' • '),
-                style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -325,10 +348,15 @@ class _LeadCard extends StatelessWidget {
                 children: [
                   if (score != null)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 7,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: scoreColor.withValues(alpha: 0.08),
-                        border: Border.all(color: scoreColor.withValues(alpha: 0.35)),
+                        border: Border.all(
+                          color: scoreColor.withValues(alpha: 0.35),
+                        ),
                       ),
                       child: Text(
                         '${score.toStringAsFixed(0)} ${category ?? ''}',
@@ -341,11 +369,17 @@ class _LeadCard extends StatelessWidget {
                       ),
                     ),
                   if (score != null) const SizedBox(width: 8),
-                  StatusBadge(meta: Status.get(Status.leadSources, lead['source'])),
+                  StatusBadge(
+                    meta: Status.get(Status.leadSources, lead['source']),
+                  ),
                   const Spacer(),
                   Text(
                     Fmt.timeAgo(lead['created_at'] as String?),
-                    style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ],
               ),

@@ -4,7 +4,22 @@ class Fmt {
   static final DateFormat _date = DateFormat('MMM d, yyyy');
   static final DateFormat _short = DateFormat('MMM d');
   static final DateFormat _time = DateFormat('hh:mm a');
-  static final NumberFormat _currency = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
+  static final NumberFormat _currency = NumberFormat.currency(
+    symbol: '\$',
+    decimalDigits: 0,
+  );
+  static final NumberFormat _inr = NumberFormat.currency(
+    locale: 'en_IN',
+    symbol: '₹',
+    decimalDigits: 0,
+  );
+
+  static const Map<String, String> _currencySymbols = {
+    'USD': '\$',
+    'INR': '₹',
+    'EUR': '€',
+    'GBP': '£',
+  };
 
   static String date(String? iso) {
     if (iso == null || iso.isEmpty) return '—';
@@ -43,15 +58,17 @@ class Fmt {
     }
   }
 
-  static String money(num? value) {
+  static String money(num? value, {String? currency}) {
     if (value == null) return '—';
-    return _currency.format(value);
+    final code = currency?.trim().toUpperCase() ?? 'USD';
+    if (code == 'INR') return _inr.format(value);
+    if (code.isEmpty || code == 'USD') return _currency.format(value);
+    final symbol = _currencySymbols[code] ?? '$code ';
+    return '$symbol${_formatAmount(value)}';
   }
 
   static String moneyWithCurrency(num? value, String? currency) {
-    if (value == null) return '—';
-    final symbol = currency == 'USD' ? '\$' : (currency ?? '\$');
-    return '$symbol${_formatAmount(value)}';
+    return money(value, currency: currency);
   }
 
   static String _formatAmount(num value) {

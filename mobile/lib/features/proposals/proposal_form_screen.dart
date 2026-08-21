@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
-import '../../shared/widgets/tip_tap_editor_screen.dart';
+import '../../shared/widgets/rich_text_editor_screen.dart';
 
 class ProposalFormScreen extends StatefulWidget {
   const ProposalFormScreen({super.key, this.proposal});
@@ -15,9 +16,15 @@ class ProposalFormScreen extends StatefulWidget {
 
 class _ProposalFormScreenState extends State<ProposalFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final _title = TextEditingController(text: widget.proposal?['title'] ?? '');
-  late final _timeline = TextEditingController(text: widget.proposal?['timeline'] ?? '');
-  late final _terms = TextEditingController(text: widget.proposal?['terms'] ?? '');
+  late final _title = TextEditingController(
+    text: widget.proposal?['title'] ?? '',
+  );
+  late final _timeline = TextEditingController(
+    text: widget.proposal?['timeline'] ?? '',
+  );
+  late final _terms = TextEditingController(
+    text: widget.proposal?['terms'] ?? '',
+  );
 
   String? _leadId;
   dynamic _content;
@@ -37,7 +44,9 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     _content = widget.proposal?['content'];
     final pricing = widget.proposal?['pricing'];
     if (pricing is List) {
-      _pricing = pricing.map((e) => (e as Map).cast<String, dynamic>()).toList();
+      _pricing = pricing
+          .map((e) => (e as Map).cast<String, dynamic>())
+          .toList();
     }
     _loadLeads();
   }
@@ -138,7 +147,9 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -162,7 +173,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           children: [
             TextFormField(
               controller: _title,
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Title is required' : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Title is required' : null,
               decoration: const InputDecoration(labelText: 'Title'),
             ),
             const SizedBox(height: 12),
@@ -206,7 +218,10 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF121212)),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF121212),
+                      ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROPOSAL'),
             ),
@@ -224,7 +239,11 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           Expanded(
             child: Text(
               'Could not load leads: $_leadsError',
-              style: const TextStyle(color: AppColors.red, fontSize: 11, fontFamily: 'Inter'),
+              style: const TextStyle(
+                color: AppColors.red,
+                fontSize: 11,
+                fontFamily: 'Inter',
+              ),
             ),
           ),
           TextButton(onPressed: _loadLeads, child: const Text('Retry')),
@@ -273,7 +292,11 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(
                 _contentPreview(),
-                style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -308,8 +331,9 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
   Future<void> _openEditor() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => TipTapEditorScreen(
+        builder: (_) => RichTextEditorScreen(
           initialContent: _content,
+          title: 'Proposal content',
           onSave: (content) => setState(() => _content = content),
         ),
       ),
@@ -326,7 +350,11 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               padding: EdgeInsets.only(bottom: 12),
               child: Text(
                 'No line items yet.',
-                style: TextStyle(color: AppColors.textFaint, fontSize: 12, fontFamily: 'Inter'),
+                style: TextStyle(
+                  color: AppColors.textFaint,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
           for (var i = 0; i < _pricing.length; i++)
@@ -363,12 +391,19 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               Expanded(
                 child: TextField(
                   controller: desc,
-                  decoration: const InputDecoration(labelText: 'Description', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    isDense: true,
+                  ),
                   onChanged: (v) => item['description'] = v,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 16, color: AppColors.textFaint),
+                icon: const Icon(
+                  Icons.close,
+                  size: 16,
+                  color: AppColors.textFaint,
+                ),
                 onPressed: () => _removePricingRow(i),
               ),
             ],
@@ -380,7 +415,10 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 child: TextField(
                   controller: qty,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Qty', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Qty',
+                    isDense: true,
+                  ),
                   onChanged: (v) => item['quantity'] = num.tryParse(v) ?? 1,
                 ),
               ),
@@ -389,7 +427,10 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 child: TextField(
                   controller: rate,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Rate', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Rate',
+                    isDense: true,
+                  ),
                   onChanged: (v) => item['rate'] = num.tryParse(v) ?? 0,
                 ),
               ),

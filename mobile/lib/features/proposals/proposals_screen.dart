@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/filter_bar.dart';
 import 'proposal_detail_screen.dart';
 import 'proposal_form_screen.dart';
 
@@ -100,7 +103,11 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
             tooltip: 'New proposal',
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -115,27 +122,40 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
                 hintText: 'Search proposals...',
-                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textFaint),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  size: 18,
+                  color: AppColors.textFaint,
+                ),
                 suffixIcon: _search.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.close, size: 16, color: AppColors.textMuted),
+                        icon: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.textMuted,
+                        ),
                         onPressed: _clearSearch,
                       )
                     : null,
               ),
             ),
           ),
-          FilterChips(
-            options: const [
-              MapEntry('all', 'ALL'),
-              MapEntry('draft', 'Draft'),
-              MapEntry('sent', 'Sent'),
-              MapEntry('accepted', 'Accepted'),
-              MapEntry('declined', 'Declined'),
+          FilterBar(
+            groups: [
+              FilterGroup(
+                key: 'status',
+                label: 'Status',
+                options: const [
+                  MapEntry('draft', 'Draft'),
+                  MapEntry('sent', 'Sent'),
+                  MapEntry('accepted', 'Accepted'),
+                  MapEntry('declined', 'Declined'),
+                ],
+              ),
             ],
-            selected: _status,
-            onSelected: (v) {
-              setState(() => _status = v);
+            values: {'status': _status},
+            onChanged: (v) {
+              setState(() => _status = v['status'] ?? 'all');
               _page = 1;
               _load();
             },
@@ -193,7 +213,9 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
 
   Future<void> _openDetail(Map<String, dynamic> proposal) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => ProposalDetailScreen(proposal: proposal)),
+      MaterialPageRoute(
+        builder: (_) => ProposalDetailScreen(proposal: proposal),
+      ),
     );
     _load();
   }
@@ -224,7 +246,9 @@ class _ProposalCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.border),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -241,18 +265,28 @@ class _ProposalCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  StatusBadge(meta: Status.get(Status.proposals, proposal['status'])),
+                  StatusBadge(
+                    meta: Status.get(Status.proposals, proposal['status']),
+                  ),
                 ],
               ),
               const SizedBox(height: 6),
               Row(
                 children: [
-                  const Icon(Icons.person_outline, size: 13, color: AppColors.textFaint),
+                  const Icon(
+                    Icons.person_outline,
+                    size: 13,
+                    color: AppColors.textFaint,
+                  ),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       leadName,
-                      style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -274,7 +308,11 @@ class _ProposalCard extends StatelessWidget {
                   const Spacer(),
                   Text(
                     Fmt.timeAgo(proposal['created_at'] as String?),
-                    style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ],
               ),
@@ -289,8 +327,10 @@ class _ProposalCard extends StatelessWidget {
     final pricing = proposal['pricing'];
     if (pricing is! List) return 0;
     return pricing.fold<double>(0, (sum, item) {
-      final qty = (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
-      final rate = (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
+      final qty =
+          (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
+      final rate =
+          (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
   }
