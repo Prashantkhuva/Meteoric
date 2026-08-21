@@ -148,8 +148,9 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
                 options: const [
                   MapEntry('draft', 'Draft'),
                   MapEntry('sent', 'Sent'),
+                  MapEntry('viewed', 'Viewed'),
                   MapEntry('accepted', 'Accepted'),
-                  MapEntry('declined', 'Declined'),
+                  MapEntry('rejected', 'Rejected'),
                 ],
               ),
             ],

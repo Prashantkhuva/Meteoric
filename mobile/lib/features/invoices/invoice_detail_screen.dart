@@ -6,6 +6,7 @@ import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/status_flow.dart';
 import 'invoice_form_screen.dart';
 
 class InvoiceDetailScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class InvoiceDetailScreen extends StatefulWidget {
 class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   late Map<String, dynamic> _invoice;
   bool _busy = false;
+  bool _changed = false;
 
   @override
   void initState() {
@@ -60,7 +62,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
       } else {
-        setState(() => _invoice = {..._invoice, 'status': 'sent'});
+        setState(() {
+          _invoice = {..._invoice, 'status': 'sent'};
+          _changed = true;
+        });
         _snack('Invoice sent by email');
       }
     } catch (err) {
@@ -81,7 +86,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
       } else {
-        setState(() => _invoice = {..._invoice, 'status': 'paid'});
+        setState(() {
+          _invoice = {..._invoice, 'status': 'paid'};
+          _changed = true;
+        });
         _snack('Invoice marked as paid');
       }
     } catch (err) {
@@ -91,40 +99,22 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     }
   }
 
-  Future<void> _cancel() async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Cancel invoice'),
-        content: const Text('Cancel this invoice? This cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('No'),
-          ),
-          AccentButton(
-            height: 38,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            backgroundColor: AppColors.red,
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('CANCEL'),
-          ),
-        ],
-      ),
-    );
-    if (ok != true) return;
-
+  Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceCancel(
+      final res = await ApiClient.instance.invoiceStatus(
         (_invoice['id'] as num).toInt(),
+        status,
       );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
       } else {
-        setState(() => _invoice = {..._invoice, 'status': 'cancelled'});
-        _snack('Invoice cancelled');
+        setState(() {
+          _invoice = {..._invoice, 'status': status};
+          _changed = true;
+        });
+        _snack('Status updated');
       }
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
@@ -227,163 +217,175 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     final client = _client;
     final status = _invoice['status'];
 
-    return AppScaffold(
-      title: _invoice['number'] ?? 'Invoice #${_invoice['id']}',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Row(
-            children: [
-              StatusBadge(meta: Status.get(Status.invoices, status)),
-              const Spacer(),
-              Text(
-                Fmt.date(_invoice['created_at'] as String?),
-                style: const TextStyle(
-                  color: AppColors.textFaint,
-                  fontSize: 10,
-                  fontFamily: 'Inter',
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Navigator.of(context).pop(_changed);
+      },
+      child: AppScaffold(
+        title: _invoice['number'] ?? 'Invoice #${_invoice['id']}',
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Row(
+              children: [
+                StatusBadge(meta: Status.get(Status.invoices, status)),
+                const Spacer(),
+                Text(
+                  Fmt.date(_invoice['created_at'] as String?),
+                  style: const TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 10,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (client != null)
+              SectionCard(
+                title: 'Client',
+                child: Column(
+                  children: [
+                    DetailRow(label: 'Name', value: client['name'] ?? '—'),
+                    DetailRow(label: 'Email', value: client['email'] ?? '—'),
+                    DetailRow(label: 'Phone', value: client['phone'] ?? '—'),
+                  ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (client != null)
+            const SizedBox(height: 16),
             SectionCard(
-              title: 'Client',
+              title: 'Items',
               child: Column(
                 children: [
-                  DetailRow(label: 'Name', value: client['name'] ?? '—'),
-                  DetailRow(label: 'Email', value: client['email'] ?? '—'),
-                  DetailRow(label: 'Phone', value: client['phone'] ?? '—'),
-                ],
-              ),
-            ),
-          const SizedBox(height: 16),
-          SectionCard(
-            title: 'Items',
-            child: Column(
-              children: [
-                for (final item
-                    in (_invoice['items'] as List?)?.cast<Map>() ??
-                        const <Map>[])
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
+                  for (final item
+                      in (_invoice['items'] as List?)?.cast<Map>() ??
+                          const <Map>[])
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
+                              style: const TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                          Text(
+                            _money(
+                              ((item['rate'] as num?)?.toDouble() ?? 0) *
+                                  ((item['quantity'] as num?)?.toDouble() ?? 1),
+                            ),
                             style: const TextStyle(
-                              color: AppColors.textMuted,
+                              color: AppColors.text,
                               fontSize: 12,
+                              fontWeight: FontWeight.w600,
                               fontFamily: 'Inter',
                             ),
                           ),
-                        ),
-                        Text(
-                          _money(
-                            ((item['rate'] as num?)?.toDouble() ?? 0) *
-                                ((item['quantity'] as num?)?.toDouble() ?? 1),
-                          ),
-                          style: const TextStyle(
-                            color: AppColors.text,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                const Divider(color: AppColors.border),
-                DetailRow(label: 'Subtotal', value: _money(_subtotal)),
-                if (((_invoice['tax'] as num?) ?? 0) > 0)
+                  const Divider(color: AppColors.border),
+                  DetailRow(label: 'Subtotal', value: _money(_subtotal)),
+                  if (((_invoice['tax'] as num?) ?? 0) > 0)
+                    DetailRow(
+                      label: 'Tax',
+                      value: _money((_invoice['tax'] as num?)?.toDouble() ?? 0),
+                    ),
                   DetailRow(
-                    label: 'Tax',
-                    value: _money((_invoice['tax'] as num?)?.toDouble() ?? 0),
+                    label: 'Total',
+                    value: _money(_total),
+                    strong: true,
                   ),
-                DetailRow(label: 'Total', value: _money(_total), strong: true),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          SectionCard(
-            title: 'Details',
-            child: Column(
-              children: [
-                DetailRow(
-                  label: 'Currency',
-                  value: _invoice['currency'] ?? 'USD',
-                ),
-                DetailRow(
-                  label: 'Due date',
-                  value: _invoice['due_date'] ?? '—',
-                ),
-                DetailRow(label: 'Notes', value: _invoice['notes'] ?? '—'),
-                DetailRow(label: 'Terms', value: _invoice['terms'] ?? '—'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          if (status == 'draft')
-            AccentButton(
-              onPressed: _busy ? null : _send,
-              child: const Text('SEND TO CLIENT'),
-            ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              Expanded(
-                child: GhostButton(
-                  onPressed: _busy
-                      ? null
-                      : () async {
-                          final changed = await Navigator.of(context)
-                              .push<bool>(
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      InvoiceFormScreen(invoice: _invoice),
-                                ),
-                              );
-                          if (changed == true && mounted) setState(() {});
-                        },
-                  child: const Text('EDIT'),
-                ),
+                ],
               ),
-              Expanded(
-                child: GhostButton(
-                  onPressed: _busy ? null : _share,
-                  child: const Text('SHARE'),
-                ),
+            ),
+            const SizedBox(height: 16),
+            SectionCard(
+              title: 'Details',
+              child: Column(
+                children: [
+                  DetailRow(
+                    label: 'Currency',
+                    value: _invoice['currency'] ?? 'USD',
+                  ),
+                  DetailRow(
+                    label: 'Due date',
+                    value: _invoice['due_date'] ?? '—',
+                  ),
+                  DetailRow(label: 'Notes', value: _invoice['notes'] ?? '—'),
+                  DetailRow(label: 'Terms', value: _invoice['terms'] ?? '—'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            StatusFlowSection(
+              metaMap: Status.invoices,
+              transitions: StatusFlow.invoices,
+              current: status is String ? status : null,
+              busy: _busy,
+              flowKey: 'invoices',
+              onSelect: _changeStatus,
+            ),
+            const SizedBox(height: 20),
+            if (status == 'draft')
+              AccentButton(
+                onPressed: _busy ? null : _send,
+                child: const Text('SEND TO CLIENT'),
+              ),
+            if (status == 'sent' || status == 'overdue') ...[
+              const SizedBox(height: 12),
+              AccentButton(
+                onPressed: _busy ? null : _markPaid,
+                child: const Text('MARK PAID'),
               ),
             ],
-          ),
-          const SizedBox(height: 10),
-          if (status == 'sent' || status == 'overdue')
-            GhostButton(
-              onPressed: _busy ? null : _markPaid,
-              child: const Text('MARK PAID'),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                Expanded(
+                  child: GhostButton(
+                    onPressed: _busy
+                        ? null
+                        : () async {
+                            final changed = await Navigator.of(context)
+                                .push<bool>(
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        InvoiceFormScreen(invoice: _invoice),
+                                  ),
+                                );
+                            if (changed == true && mounted) setState(() {});
+                          },
+                    child: const Text('EDIT'),
+                  ),
+                ),
+                Expanded(
+                  child: GhostButton(
+                    onPressed: _busy ? null : _share,
+                    child: const Text('SHARE'),
+                  ),
+                ),
+              ],
             ),
-          if (status == 'draft' || status == 'sent' || status == 'overdue') ...[
             const SizedBox(height: 10),
             GhostButton(
               borderColor: AppColors.red.withValues(alpha: 0.4),
               textColor: AppColors.red,
-              onPressed: _busy ? null : _cancel,
-              child: const Text('CANCEL INVOICE'),
+              onPressed: _busy ? null : _delete,
+              child: const Text('DELETE'),
             ),
+            const SizedBox(height: 24),
           ],
-          const SizedBox(height: 10),
-          GhostButton(
-            borderColor: AppColors.red.withValues(alpha: 0.4),
-            textColor: AppColors.red,
-            onPressed: _busy ? null : _delete,
-            child: const Text('DELETE'),
-          ),
-          const SizedBox(height: 24),
-        ],
+        ),
       ),
     );
   }

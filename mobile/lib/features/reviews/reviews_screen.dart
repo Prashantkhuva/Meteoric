@@ -159,8 +159,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 label: 'Status',
                 options: const [
                   MapEntry('pending', 'Pending'),
-                  MapEntry('published', 'Published'),
-                  MapEntry('hidden', 'Hidden'),
+                  MapEntry('approved', 'Approved'),
+                  MapEntry('rejected', 'Rejected'),
                 ],
               ),
             ],

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'dart:async';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/status_flow.dart';
 import 'lead_form_screen.dart';
 
 class LeadDetailScreen extends StatefulWidget {
@@ -19,6 +22,7 @@ class LeadDetailScreen extends StatefulWidget {
 class _LeadDetailScreenState extends State<LeadDetailScreen> {
   late Map<String, dynamic> _lead;
   bool _busy = false;
+  bool _changed = false;
 
   @override
   void initState() {
@@ -26,7 +30,10 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     _lead = widget.lead;
   }
 
-  Future<void> _run(String label, Future<Map<String, dynamic>> Function() fn) async {
+  Future<void> _run(
+    String label,
+    Future<Map<String, dynamic>> Function() fn,
+  ) async {
     if (_busy) return;
     setState(() => _busy = true);
     try {
@@ -36,8 +43,11 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
         _snack(res['error'] as String, isError: true);
       } else {
         _snack('$label done');
-        setState(() => _lead = Map<String, dynamic>.from(_lead)
-          ..addAll(res.cast<String, dynamic>()));
+        setState(() {
+          _changed = true;
+          _lead = Map<String, dynamic>.from(_lead)
+            ..addAll(res.cast<String, dynamic>());
+        });
       }
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
@@ -50,7 +60,9 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -75,10 +87,17 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
         title: const Text('Convert to client'),
         content: const Text(
           'This will create a client from this lead and mark the lead as completed. A welcome email is sent.',
-          style: TextStyle(fontSize: 13, color: AppColors.textMuted, fontFamily: 'Inter'),
+          style: TextStyle(
+            fontSize: 13,
+            color: AppColors.textMuted,
+            fontFamily: 'Inter',
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -91,7 +110,9 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (ok != true) return;
 
     await _run('Lead converted', () async {
-      final res = await ApiClient.instance.leadConvert((_lead['id'] as num).toInt());
+      final res = await ApiClient.instance.leadConvert(
+        (_lead['id'] as num).toInt(),
+      );
       if (!res.containsKey('error')) {
         setState(() => _lead = {..._lead, 'status': 'completed'});
       }
@@ -106,10 +127,17 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
         title: const Text('Delete lead'),
         content: Text(
           'Delete "${_lead['name']}"? This cannot be undone.',
-          style: const TextStyle(fontSize: 13, color: AppColors.textMuted, fontFamily: 'Inter'),
+          style: const TextStyle(
+            fontSize: 13,
+            color: AppColors.textMuted,
+            fontFamily: 'Inter',
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -123,7 +151,9 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (ok != true) return;
 
     await _run('Lead deleted', () async {
-      final res = await ApiClient.instance.leadDelete((_lead['id'] as num).toInt());
+      final res = await ApiClient.instance.leadDelete(
+        (_lead['id'] as num).toInt(),
+      );
       if (!res.containsKey('error') && mounted) {
         Navigator.of(context).pop(true);
       }
@@ -137,164 +167,159 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     final score = _lead['ai_score'];
     final summary = _lead['ai_summary'];
 
-    return AppScaffold(
-      title: name,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Row(
-            children: [
-              StatusBadge(meta: Status.get(Status.leads, _lead['status'])),
-              const SizedBox(width: 8),
-              StatusBadge(meta: Status.get(Status.leadSources, _lead['source'])),
-              const Spacer(),
-              Text(
-                'Created ${Fmt.date(_lead['created_at'] as String?)}',
-                style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          SectionCard(
-            title: 'Details',
-            child: Column(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Navigator.of(context).pop(_changed);
+      },
+      child: AppScaffold(
+        title: name,
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Row(
               children: [
-                DetailRow(label: 'Email', value: _lead['email'] ?? '—'),
-                DetailRow(label: 'Phone', value: _lead['phone'] ?? '—'),
-                DetailRow(label: 'Company', value: _lead['company'] ?? '—'),
-                DetailRow(label: 'Services', value: _lead['services'] ?? '—'),
-                DetailRow(label: 'Budget', value: _lead['budget'] ?? '—'),
-                if (_lead['details'] != null && '${_lead['details']}'.isNotEmpty)
-                  DetailRow(label: 'Details', value: '${_lead['details']}'),
+                StatusBadge(meta: Status.get(Status.leads, _lead['status'])),
+                const SizedBox(width: 8),
+                StatusBadge(
+                  meta: Status.get(Status.leadSources, _lead['source']),
+                ),
+                const Spacer(),
+                Text(
+                  'Created ${Fmt.date(_lead['created_at'] as String?)}',
+                  style: const TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 10,
+                    fontFamily: 'Inter',
+                  ),
+                ),
               ],
             ),
-          ),
-          if (score != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             SectionCard(
-              title: 'AI Score',
+              title: 'Details',
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        score.toStringAsFixed(0),
-                        style: TextStyle(
-                          color: switch (_lead['ai_category']) {
-                            'hot' => AppColors.emerald,
-                            'warm' => AppColors.amber,
-                            'cold' => AppColors.sky,
-                            _ => AppColors.text,
-                          },
-                          fontSize: 34,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Inter',
+                  DetailRow(label: 'Email', value: _lead['email'] ?? '—'),
+                  DetailRow(label: 'Phone', value: _lead['phone'] ?? '—'),
+                  DetailRow(label: 'Company', value: _lead['company'] ?? '—'),
+                  DetailRow(label: 'Services', value: _lead['services'] ?? '—'),
+                  DetailRow(label: 'Budget', value: _lead['budget'] ?? '—'),
+                  if (_lead['details'] != null &&
+                      '${_lead['details']}'.isNotEmpty)
+                    DetailRow(label: 'Details', value: '${_lead['details']}'),
+                ],
+              ),
+            ),
+            if (score != null) ...[
+              const SizedBox(height: 16),
+              SectionCard(
+                title: 'AI Score',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          score.toStringAsFixed(0),
+                          style: TextStyle(
+                            color: switch (_lead['ai_category']) {
+                              'hot' => AppColors.emerald,
+                              'warm' => AppColors.amber,
+                              'cold' => AppColors.sky,
+                              _ => AppColors.text,
+                            },
+                            fontSize: 34,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Inter',
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
+                        const SizedBox(width: 10),
+                        Text(
+                          (_lead['ai_category'] ?? '').toString().toUpperCase(),
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 12,
+                            letterSpacing: 1,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (summary != null && '$summary'.isNotEmpty) ...[
+                      const SizedBox(height: 10),
                       Text(
-                        (_lead['ai_category'] ?? '').toString().toUpperCase(),
+                        '$summary',
                         style: const TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
-                          letterSpacing: 1,
+                          height: 1.5,
                           fontFamily: 'Inter',
                         ),
                       ),
                     ],
-                  ),
-                  if (summary != null && '$summary'.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Text(
-                      '$summary',
-                      style: const TextStyle(color: AppColors.textMuted, fontSize: 12, height: 1.5, fontFamily: 'Inter'),
-                    ),
                   ],
-                ],
+                ),
               ),
+            ],
+            const SizedBox(height: 16),
+            StatusFlowSection(
+              metaMap: Status.leads,
+              transitions: StatusFlow.leads,
+              current: _lead['status'] is String
+                  ? _lead['status'] as String
+                  : null,
+              busy: _busy,
+              flowKey: 'leads',
+              onSelect: _changeStatus,
             ),
-          ],
-          const SizedBox(height: 16),
-          SectionCard(
-            title: 'Update status',
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
+            const SizedBox(height: 20),
+            Row(
               children: [
-                for (final entry in Status.leads.entries)
-                  GestureDetector(
-                    onTap: _busy ? null : () => _changeStatus(entry.key),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: _lead['status'] == entry.key
-                            ? entry.value.color.withValues(alpha: 0.15)
-                            : Colors.transparent,
-                        border: Border.all(
-                          color: _lead['status'] == entry.key
-                              ? entry.value.color
-                              : AppColors.border,
-                        ),
-                      ),
-                      child: Text(
-                        entry.value.label,
-                        style: TextStyle(
-                          color: _lead['status'] == entry.key ? entry.value.color : AppColors.textMuted,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
+                Expanded(
+                  child: GhostButton(
+                    onPressed: _busy ? null : _convert,
+                    child: const Text('CONVERT TO CLIENT'),
                   ),
+                ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: GhostButton(
-                  onPressed: _busy ? null : _convert,
-                  child: const Text('CONVERT TO CLIENT'),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: GhostButton(
+                    onPressed: _busy
+                        ? null
+                        : () async {
+                            final changed = await Navigator.of(context)
+                                .push<bool>(
+                                  MaterialPageRoute(
+                                    builder: (_) => LeadFormScreen(lead: _lead),
+                                  ),
+                                );
+                            if (changed == true && mounted) {
+                              setState(() {});
+                            }
+                          },
+                    child: const Text('EDIT'),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: GhostButton(
-                  onPressed: _busy
-                      ? null
-                      : () async {
-                          final changed = await Navigator.of(context).push<bool>(
-                            MaterialPageRoute(
-                              builder: (_) => LeadFormScreen(lead: _lead),
-                            ),
-                          );
-                          if (changed == true && mounted) {
-                            setState(() {});
-                          }
-                        },
-                  child: const Text('EDIT'),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: GhostButton(
+                    borderColor: AppColors.red.withValues(alpha: 0.4),
+                    textColor: AppColors.red,
+                    onPressed: _busy ? null : _delete,
+                    child: const Text('DELETE'),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: GhostButton(
-                  borderColor: AppColors.red.withValues(alpha: 0.4),
-                  textColor: AppColors.red,
-                  onPressed: _busy ? null : _delete,
-                  child: const Text('DELETE'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-        ],
+              ],
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
