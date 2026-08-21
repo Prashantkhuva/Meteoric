@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/app_version.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
@@ -263,10 +264,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           SectionCard(
             title: 'App',
-            child: const Column(
+            child: Column(
               children: [
-                DetailRow(label: 'Version', value: '0.3.0'),
-                DetailRow(label: 'Platform', value: 'Android / iOS'),
+                DetailRow(label: 'Version', value: AppVersion.display),
+                DetailRow(label: 'Last updated', value: AppVersion.updatedAt),
+                const DetailRow(label: 'Platform', value: 'Android / iOS'),
               ],
             ),
           ),
