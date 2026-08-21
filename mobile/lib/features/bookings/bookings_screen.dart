@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
@@ -32,7 +33,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
       final res = await ApiClient.instance.bookingsList();
       if (mounted) {
         setState(() {
-          _bookings = ((res['data'] as List?) ?? const [])
+          _bookings = ((res['bookings'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
           _loading = false;
@@ -59,7 +60,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
       } else {
-        _snack(status == 'accepted' ? 'Booking accepted' : 'Booking cancelled');
+        _snack(status == 'accepted' ? 'Booking accepted' : 'Booking rejected');
         _load();
       }
     } catch (err) {
@@ -73,8 +74,8 @@ class _BookingsScreenState extends State<BookingsScreen> {
     setState(() => _busy = true);
     try {
       final attendee = (booking['attendee'] is Map
-              ? booking['attendee'].cast<String, dynamic>()
-              : const <String, dynamic>{});
+          ? booking['attendee'].cast<String, dynamic>()
+          : const <String, dynamic>{});
       final res = await ApiClient.instance.bookingCreateLead({
         'name': attendee['name'] ?? 'Booking guest',
         'email': attendee['email'] ?? '',
@@ -98,7 +99,9 @@ class _BookingsScreenState extends State<BookingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -111,7 +114,11 @@ class _BookingsScreenState extends State<BookingsScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -204,12 +211,20 @@ class _BookingCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             email,
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 12,
+              fontFamily: 'Inter',
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             start != null ? Fmt.dateTime('$start') : '—',
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 12,
+              fontFamily: 'Inter',
+            ),
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -220,7 +235,11 @@ class _BookingCard extends StatelessWidget {
                 _chip('ACCEPT', AppColors.accent, busy ? null : onAccept),
               if (status != 'rejected')
                 _chip('REJECT', AppColors.red, busy ? null : onReject),
-              _chip('CREATE LEAD', const Color(0xFF4CAF50), busy ? null : onCreateLead),
+              _chip(
+                'CREATE LEAD',
+                const Color(0xFF4CAF50),
+                busy ? null : onCreateLead,
+              ),
             ],
           ),
         ],
@@ -241,7 +260,13 @@ class _BookingCard extends StatelessWidget {
       ),
       child: Text(
         status.toUpperCase(),
-        style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w600, letterSpacing: 1, fontFamily: 'Inter'),
+        style: TextStyle(
+          color: color,
+          fontSize: 9,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+          fontFamily: 'Inter',
+        ),
       ),
     );
   }
@@ -252,7 +277,9 @@ class _BookingCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          border: Border.all(color: color.withValues(alpha: onTap == null ? 0.15 : 0.4)),
+          border: Border.all(
+            color: color.withValues(alpha: onTap == null ? 0.15 : 0.4),
+          ),
         ),
         child: Text(
           label,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+
 import 'core/theme.dart';
 import 'core/supabase.dart';
 import 'features/auth/login_screen.dart';
@@ -19,6 +22,13 @@ class MeteoricAdminApp extends StatelessWidget {
       title: 'Meteoric Admin',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en')],
       home: const AuthGate(),
     );
   }

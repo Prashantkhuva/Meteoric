@@ -75,7 +75,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         _snack(
           action == 'verified'
               ? (verified == true ? 'Marked verified' : 'Marked unverified')
-              : 'Review ${action}d',
+              : action == 'approved'
+              ? 'Review approved'
+              : 'Review rejected',
         );
         _load();
       }
@@ -329,14 +331,14 @@ class _ReviewCard extends StatelessWidget {
                 isVerified ? AppColors.textMuted : AppColors.accent,
                 () => onVerified(!isVerified),
               ),
-              if (status != 'published')
+              if (status != 'approved')
                 _chip(
-                  'PUBLISH',
+                  'APPROVE',
                   const Color(0xFF4CAF50),
-                  () => onStatus('published'),
+                  () => onStatus('approved'),
                 ),
-              if (status != 'hidden')
-                _chip('HIDE', AppColors.textMuted, () => onStatus('hidden')),
+              if (status != 'rejected')
+                _chip('REJECT', AppColors.red, () => onStatus('rejected')),
               _chip('DELETE', AppColors.red, onDelete),
             ],
           ),
