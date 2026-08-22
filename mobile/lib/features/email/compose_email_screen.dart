@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
-import '../../shared/widgets/rich_text_editor_screen.dart';
+import '../../shared/widgets/rich_text_editor.dart';
 
 class ComposeEmailScreen extends StatefulWidget {
   const ComposeEmailScreen({super.key});
@@ -310,31 +310,25 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
             decoration: const InputDecoration(labelText: 'Subject'),
           ),
           const SizedBox(height: 16),
-          SectionCard(
-            title: 'Body',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_body != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      'Body added',
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                  ),
-                AccentButton(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  onPressed: () => _openBodyEditor(),
-                  child: Text(_body == null ? 'ADD BODY' : 'EDIT BODY'),
-                ),
-              ],
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Text(
+              'BODY',
+              style: TextStyle(
+                color: AppColors.textFaint,
+                fontSize: 9,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+                fontFamily: 'Inter',
+              ),
             ),
+          ),
+          InlineRichEditor(
+            initialContent: _body,
+            onChanged: (value) => _body = value,
+            outputFormat: 'html',
+            placeholder: 'Write your email...',
+            autoGrow: true,
           ),
           const SizedBox(height: 24),
           AccentButton(
@@ -352,19 +346,6 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
           ),
           const SizedBox(height: 16),
         ],
-      ),
-    );
-  }
-
-  Future<void> _openBodyEditor() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => RichTextEditorScreen(
-          initialContent: _body,
-          outputFormat: 'html',
-          title: 'Email body',
-          onSave: (body) => setState(() => _body = body),
-        ),
       ),
     );
   }
