@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
@@ -53,10 +54,17 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
         title: const Text('Delete client'),
         content: Text(
           'Delete "${_client['name']}"? This cannot be undone.',
-          style: const TextStyle(fontSize: 13, color: AppColors.textMuted, fontFamily: 'Inter'),
+          style: const TextStyle(
+            fontSize: 13,
+            color: AppColors.textMuted,
+            fontFamily: 'Inter',
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -71,7 +79,9 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.clientDelete((_client['id'] as num).toInt());
+      final res = await ApiClient.instance.clientDelete(
+        (_client['id'] as num).toInt(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -89,7 +99,9 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -107,7 +119,11 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
               const Spacer(),
               Text(
                 'Added ${Fmt.date(_client['created_at'] as String?)}',
-                style: const TextStyle(color: AppColors.textFaint, fontSize: 10, fontFamily: 'Inter'),
+                style: const TextStyle(
+                  color: AppColors.textFaint,
+                  fontSize: 10,
+                  fontFamily: 'Inter',
+                ),
               ),
             ],
           ),
@@ -133,19 +149,26 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                   GestureDetector(
                     onTap: _busy ? null : () => _changeStatus(entry.key),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: _client['status'] == entry.key
                             ? entry.value.color.withValues(alpha: 0.15)
                             : Colors.transparent,
                         border: Border.all(
-                          color: _client['status'] == entry.key ? entry.value.color : AppColors.border,
+                          color: _client['status'] == entry.key
+                              ? entry.value.color
+                              : AppColors.border,
                         ),
                       ),
                       child: Text(
                         entry.value.label,
                         style: TextStyle(
-                          color: _client['status'] == entry.key ? entry.value.color : AppColors.textMuted,
+                          color: _client['status'] == entry.key
+                              ? entry.value.color
+                              : AppColors.textMuted,
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Inter',
@@ -164,9 +187,13 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                   onPressed: _busy
                       ? null
                       : () async {
-                          final changed = await Navigator.of(context).push<bool>(
-                            MaterialPageRoute(builder: (_) => ClientFormScreen(client: _client)),
-                          );
+                          final changed = await Navigator.of(context)
+                              .push<bool>(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ClientFormScreen(client: _client),
+                                ),
+                              );
                           if (changed == true && mounted) {
                             setState(() {});
                           }

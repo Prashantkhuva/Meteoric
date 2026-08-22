@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
@@ -17,10 +18,18 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   late final _name = TextEditingController(text: widget.lead?['name'] ?? '');
   late final _email = TextEditingController(text: widget.lead?['email'] ?? '');
   late final _phone = TextEditingController(text: widget.lead?['phone'] ?? '');
-  late final _company = TextEditingController(text: widget.lead?['company'] ?? '');
-  late final _services = TextEditingController(text: widget.lead?['services'] ?? '');
-  late final _budget = TextEditingController(text: widget.lead?['budget'] ?? '');
-  late final _details = TextEditingController(text: widget.lead?['details'] ?? '');
+  late final _company = TextEditingController(
+    text: widget.lead?['company'] ?? '',
+  );
+  late final _services = TextEditingController(
+    text: widget.lead?['services'] ?? '',
+  );
+  late final _budget = TextEditingController(
+    text: widget.lead?['budget'] ?? '',
+  );
+  late final _details = TextEditingController(
+    text: widget.lead?['details'] ?? '',
+  );
   late String _source;
   bool _saving = false;
 
@@ -82,7 +91,9 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -127,20 +138,35 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                 runSpacing: 8,
                 children: [
                   for (final source in const [
-                    'manual', 'website', 'cal.com', 'whatsapp', 'other',
+                    'manual',
+                    'website',
+                    'cal.com',
+                    'whatsapp',
+                    'other',
                   ])
                     GestureDetector(
                       onTap: () => setState(() => _source = source),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          color: _source == source ? AppColors.accent : Colors.transparent,
-                          border: Border.all(color: _source == source ? AppColors.accent : AppColors.border),
+                          color: _source == source
+                              ? AppColors.accent
+                              : Colors.transparent,
+                          border: Border.all(
+                            color: _source == source
+                                ? AppColors.accent
+                                : AppColors.border,
+                          ),
                         ),
                         child: Text(
                           source.toUpperCase(),
                           style: TextStyle(
-                            color: _source == source ? const Color(0xFF121212) : AppColors.textMuted,
+                            color: _source == source
+                                ? const Color(0xFF121212)
+                                : AppColors.textMuted,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Inter',
@@ -158,7 +184,10 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF121212)),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF121212),
+                      ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'ADD LEAD'),
             ),

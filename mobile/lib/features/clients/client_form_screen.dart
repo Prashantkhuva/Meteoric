@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
@@ -15,9 +16,15 @@ class ClientFormScreen extends StatefulWidget {
 class _ClientFormScreenState extends State<ClientFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.client?['name'] ?? '');
-  late final _email = TextEditingController(text: widget.client?['email'] ?? '');
-  late final _phone = TextEditingController(text: widget.client?['phone'] ?? '');
-  late final _company = TextEditingController(text: widget.client?['company'] ?? '');
+  late final _email = TextEditingController(
+    text: widget.client?['email'] ?? '',
+  );
+  late final _phone = TextEditingController(
+    text: widget.client?['phone'] ?? '',
+  );
+  late final _company = TextEditingController(
+    text: widget.client?['company'] ?? '',
+  );
   bool _saving = false;
 
   bool get _isEdit => widget.client != null;
@@ -65,7 +72,9 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -81,7 +90,8 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
           children: [
             TextFormField(
               controller: _name,
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
               decoration: const InputDecoration(labelText: 'Name'),
             ),
             const SizedBox(height: 12),
@@ -108,7 +118,10 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF121212)),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF121212),
+                      ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'ADD CLIENT'),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/theme.dart';
 
 /// Renders a TipTap editor JSON document (doc → paragraph/heading/lists with
@@ -15,7 +16,12 @@ class TipTapView extends StatelessWidget {
     if (doc is String) {
       return Text(
         doc,
-        style: const TextStyle(color: AppColors.textMuted, fontSize: 13, height: 1.6, fontFamily: 'Inter'),
+        style: const TextStyle(
+          color: AppColors.textMuted,
+          fontSize: 13,
+          height: 1.6,
+          fontFamily: 'Inter',
+        ),
       );
     }
     if (doc is! Map || doc['type'] != 'doc' || doc['content'] is! List) {
@@ -25,7 +31,8 @@ class TipTapView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final node in (doc['content'] as List).cast<Map>()) _buildNode(node),
+        for (final node in (doc['content'] as List).cast<Map>())
+          _buildNode(node),
       ],
     );
   }
@@ -60,9 +67,7 @@ class TipTapView extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 8, left: indent),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (final item in children) _listItem(item, '•'),
-            ],
+            children: [for (final item in children) _listItem(item, '•')],
           ),
         );
       case 'orderedList':
@@ -71,7 +76,8 @@ class TipTapView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (var i = 0; i < children.length; i++) _listItem(children[i], '${i + 1}.'),
+              for (var i = 0; i < children.length; i++)
+                _listItem(children[i], '${i + 1}.'),
             ],
           ),
         );
@@ -80,7 +86,12 @@ class TipTapView extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 8, left: indent),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            border: Border(left: BorderSide(color: AppColors.accent.withValues(alpha: 0.4), width: 2)),
+            border: Border(
+              left: BorderSide(
+                color: AppColors.accent.withValues(alpha: 0.4),
+                width: 2,
+              ),
+            ),
           ),
           child: _inline(children),
         );
@@ -106,21 +117,28 @@ class TipTapView extends StatelessWidget {
         children: [
           Text(
             '$marker ',
-            style: const TextStyle(color: AppColors.accent, fontSize: 13, fontFamily: 'Inter'),
+            style: const TextStyle(
+              color: AppColors.accent,
+              fontSize: 13,
+              fontFamily: 'Inter',
+            ),
           ),
           Expanded(
             child: node['type'] == 'listItem'
                 ? (_hasNestedList(children)
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (final c in children)
-                            c['type'] == 'paragraph'
-                                ? _inline((c['content'] as List?)?.cast<Map>() ?? const [])
-                                : _buildNode(c, indent: 12),
-                        ],
-                      )
-                    : _inline(children))
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final c in children)
+                              c['type'] == 'paragraph'
+                                  ? _inline(
+                                      (c['content'] as List?)?.cast<Map>() ??
+                                          const [],
+                                    )
+                                  : _buildNode(c, indent: 12),
+                          ],
+                        )
+                      : _inline(children))
                 : _inline(children),
           ),
         ],
@@ -129,21 +147,26 @@ class TipTapView extends StatelessWidget {
   }
 
   bool _hasNestedList(List<Map> children) {
-    return children.any((c) => c['type'] == 'bulletList' || c['type'] == 'orderedList');
+    return children.any(
+      (c) => c['type'] == 'bulletList' || c['type'] == 'orderedList',
+    );
   }
 
   Widget _inline(List<Map> nodes) {
     if (nodes.isEmpty) {
       return const Text(
         ' ',
-        style: TextStyle(color: AppColors.textMuted, fontSize: 13, height: 1.6, fontFamily: 'Inter'),
+        style: TextStyle(
+          color: AppColors.textMuted,
+          fontSize: 13,
+          height: 1.6,
+          fontFamily: 'Inter',
+        ),
       );
     }
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        for (final node in nodes) _inlineNode(node),
-      ],
+      children: [for (final node in nodes) _inlineNode(node)],
     );
   }
 
@@ -154,35 +177,68 @@ class TipTapView extends StatelessWidget {
 
     Widget child = Text(
       text,
-      style: const TextStyle(color: AppColors.textMuted, fontSize: 13, height: 1.6, fontFamily: 'Inter'),
+      style: const TextStyle(
+        color: AppColors.textMuted,
+        fontSize: 13,
+        height: 1.6,
+        fontFamily: 'Inter',
+      ),
     );
 
     if (markTypes.contains('bold')) {
       child = Text(
         text,
-        style: const TextStyle(color: AppColors.textMuted, fontSize: 13, height: 1.6, fontWeight: FontWeight.w700, fontFamily: 'Inter'),
+        style: const TextStyle(
+          color: AppColors.textMuted,
+          fontSize: 13,
+          height: 1.6,
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Inter',
+        ),
       );
     }
     if (markTypes.contains('italic')) {
       child = Text(
         text,
-        style: const TextStyle(color: AppColors.textMuted, fontSize: 13, height: 1.6, fontStyle: FontStyle.italic, fontFamily: 'Inter'),
+        style: const TextStyle(
+          color: AppColors.textMuted,
+          fontSize: 13,
+          height: 1.6,
+          fontStyle: FontStyle.italic,
+          fontFamily: 'Inter',
+        ),
       );
     }
     if (markTypes.contains('underline')) {
       child = Text(
         text,
-        style: const TextStyle(color: AppColors.textMuted, fontSize: 13, height: 1.6, decoration: TextDecoration.underline, fontFamily: 'Inter'),
+        style: const TextStyle(
+          color: AppColors.textMuted,
+          fontSize: 13,
+          height: 1.6,
+          decoration: TextDecoration.underline,
+          fontFamily: 'Inter',
+        ),
       );
     }
     if (markTypes.contains('link')) {
-      final href = marks
-          .firstWhere((m) => m['type'] == 'link', orElse: () => const {})['attrs']?['href'] as String?;
+      final href =
+          marks.firstWhere(
+                (m) => m['type'] == 'link',
+                orElse: () => const {},
+              )['attrs']?['href']
+              as String?;
       child = GestureDetector(
         onTap: () => _openLink(href),
         child: Text(
           text,
-          style: const TextStyle(color: AppColors.accent, fontSize: 13, height: 1.6, decoration: TextDecoration.underline, fontFamily: 'Inter'),
+          style: const TextStyle(
+            color: AppColors.accent,
+            fontSize: 13,
+            height: 1.6,
+            decoration: TextDecoration.underline,
+            fontFamily: 'Inter',
+          ),
         ),
       );
     }

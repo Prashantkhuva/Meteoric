@@ -1,12 +1,13 @@
 name: meteoric_admin
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.4.2+7
+version: 0.4.3+8
 
 environment:
   sdk: ^3.13.0
 dependencies:
   dart_quill_delta: ^10.8.3
+  file_picker: ^10.1.2
   fl_chart: ^1.2.0
   flutter:
     sdk: flutter

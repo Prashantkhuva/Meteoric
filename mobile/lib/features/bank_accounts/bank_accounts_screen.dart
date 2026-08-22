@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
@@ -54,7 +55,10 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
         title: const Text('Delete bank account'),
         content: Text('Delete "${account['label']}"? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           AccentButton(
             height: 38,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -68,8 +72,9 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
     if (ok != true) return;
 
     try {
-      final res = await ApiClient.instance
-          .bankAccountDelete((account['id'] as num).toInt());
+      final res = await ApiClient.instance.bankAccountDelete(
+        (account['id'] as num).toInt(),
+      );
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -86,14 +91,18 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
 
   Future<void> _openForm({Map<String, dynamic>? account}) async {
     final changed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => BankAccountFormScreen(account: account)),
+      MaterialPageRoute(
+        builder: (_) => BankAccountFormScreen(account: account),
+      ),
     );
     if (changed == true) _load();
   }
@@ -111,7 +120,11 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
             tooltip: 'Add bank account',
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            icon: const Icon(
+              Icons.refresh,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -170,14 +183,46 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                         ),
                       ),
                     ),
+                    if (account['is_default'] == true)
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withValues(alpha: 0.1),
+                          border: Border.all(
+                            color: AppColors.accent.withValues(alpha: 0.4),
+                          ),
+                        ),
+                        child: const Text(
+                          'DEFAULT',
+                          style: TextStyle(
+                            color: AppColors.accent,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ),
                     GestureDetector(
                       onTap: () => _openForm(account: account),
-                      child: const Icon(Icons.edit_outlined, size: 15, color: AppColors.textFaint),
+                      child: const Icon(
+                        Icons.edit_outlined,
+                        size: 15,
+                        color: AppColors.textFaint,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     GestureDetector(
                       onTap: () => _delete(account),
-                      child: const Icon(Icons.delete_outline, size: 15, color: AppColors.textFaint),
+                      child: const Icon(
+                        Icons.delete_outline,
+                        size: 15,
+                        color: AppColors.textFaint,
+                      ),
                     ),
                   ],
                 ),
@@ -187,17 +232,31 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                     account['bank_name'],
                     account['account_holder'],
                   ].where((v) => v != null && '$v'.isNotEmpty).join(' • '),
-                  style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontFamily: 'Inter'),
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   [
+                    if (account['currency'] != null &&
+                        '${account['currency']}'.isNotEmpty)
+                      '${account['currency']}',
                     account['account_number'],
                     account['iban'],
                     account['swift'],
                     account['routing_number'],
+                    if (account['upi_id'] != null &&
+                        '${account['upi_id']}'.isNotEmpty)
+                      'UPI ${account['upi_id']}',
                   ].where((v) => v != null && '$v'.isNotEmpty).join(' • '),
-                  style: const TextStyle(color: AppColors.textFaint, fontSize: 11, fontFamily: 'Inter'),
+                  style: const TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 11,
+                    fontFamily: 'Inter',
+                  ),
                 ),
               ],
             ),

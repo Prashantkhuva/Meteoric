@@ -4,8 +4,10 @@ import '../../core/api_client.dart';
 import '../../core/config.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
+import '../../core/native.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/share_sheet.dart';
 import '../../shared/widgets/status_flow.dart';
 import 'invoice_form_screen.dart';
 
@@ -91,6 +93,29 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
           _changed = true;
         });
         _snack('Invoice marked as paid');
+        final wa = res['whatsappUrl'];
+        if (wa is String && wa.isNotEmpty) Native.openUrl(wa);
+      }
+    } catch (err) {
+      if (mounted) _snack(err.toString(), isError: true);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _resendReceipt() async {
+    setState(() => _busy = true);
+    try {
+      final res = await ApiClient.instance.invoiceConfirmation(
+        (_invoice['id'] as num).toInt(),
+      );
+      if (!mounted) return;
+      if (res.containsKey('error')) {
+        _snack(res['error'] as String, isError: true);
+      } else {
+        _snack('Payment confirmation sent');
+        final wa = res['whatsappUrl'];
+        if (wa is String && wa.isNotEmpty) Native.openUrl(wa);
       }
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
@@ -135,25 +160,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       }
       final token = res['token'];
       final url = '${AppConfig.siteUrl}/share/invoice/$token';
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Share invoice'),
-          content: SelectableText(
-            url,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 13,
-              fontFamily: 'Inter',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Close'),
-            ),
-          ],
-        ),
+      await showShareSheet(
+        context,
+        title: _invoice['invoice_number'] ?? 'Invoice',
+        url: url,
       );
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
@@ -344,6 +354,13 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               AccentButton(
                 onPressed: _busy ? null : _markPaid,
                 child: const Text('MARK PAID'),
+              ),
+            ],
+            if (status == 'paid') ...[
+              const SizedBox(height: 12),
+              GhostButton(
+                onPressed: _busy ? null : _resendReceipt,
+                child: const Text('RESEND RECEIPT'),
               ),
             ],
             const SizedBox(height: 12),

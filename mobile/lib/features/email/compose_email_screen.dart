@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/api_client.dart';
+import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/rich_text_editor.dart';
@@ -20,12 +25,17 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
     ('support', 'Support', 'support@withmeteoric.com'),
   ];
 
+  static const _maxFiles = 5;
+  static const _maxFileSize = 10 * 1024 * 1024;
+
   String _from = 'contact';
   final _subject = TextEditingController();
   final _search = TextEditingController();
   dynamic _body;
 
   final List<String> _to = [];
+  final List<PlatformFile> _files = [];
+  bool _uploadingAttachments = false;
   String _searchFilter = 'all';
   bool _sending = false;
 
@@ -91,6 +101,60 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
     }
   }
 
+  Future<void> _pickFiles() async {
+    if (_files.length >= _maxFiles) {
+      _snack('Max $_maxFiles files allowed', isError: true);
+      return;
+    }
+    try {
+      final picked = await FilePicker.platform.pickFiles(allowMultiple: true);
+      if (picked == null || picked.files.isEmpty) return;
+      var added = 0;
+      for (final f in picked.files) {
+        if (_files.length >= _maxFiles) break;
+        if (f.size > _maxFileSize) {
+          _snack('${f.name} exceeds the 10MB limit', isError: true);
+          continue;
+        }
+        if (!_files.any((x) => x.name == f.name && x.size == f.size)) {
+          _files.add(f);
+          added++;
+        }
+      }
+      if (added > 0 && mounted) setState(() {});
+    } catch (err) {
+      if (mounted) _snack(err.toString(), isError: true);
+    }
+  }
+
+  /// Uploads attachments to Supabase Storage and returns [{name,size,path}]
+  /// entries, mirroring the web compose flow.
+  Future<List<Map<String, dynamic>>> _uploadAttachments() async {
+    final uploaded = <Map<String, dynamic>>[];
+    if (_files.isEmpty) return uploaded;
+    setState(() => _uploadingAttachments = true);
+    try {
+      final storage = AuthService.instance.storage.from('email-attachments');
+      for (final f in _files) {
+        if (f.path == null) continue;
+        final path =
+            'attachments/${DateTime.now().millisecondsSinceEpoch}-${f.name}';
+        final bytes = await File(f.path!).readAsBytes();
+        await storage.uploadBinary(
+          path,
+          bytes,
+          fileOptions: const FileOptions(
+            contentType: 'application/octet-stream',
+          ),
+        );
+        uploaded.add({'name': f.name, 'size': f.size, 'path': path});
+      }
+    } finally {
+      if (mounted) setState(() => _uploadingAttachments = false);
+    }
+    return uploaded;
+  }
+
   Future<void> _send() async {
     if (_to.isEmpty || _subject.text.trim().isEmpty || _body == null) {
       _snack('Add recipients, subject and body', isError: true);
@@ -98,12 +162,13 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
     }
     setState(() => _sending = true);
     try {
+      final uploaded = await _uploadAttachments();
       final res = await ApiClient.instance.emailSend({
         'from': _from,
         'to': _to,
         'subject': _subject.text.trim(),
         'body': _body,
-        'files': const [],
+        'files': uploaded,
       });
       if (!mounted) return;
       if (res.containsKey('error')) {
@@ -329,6 +394,80 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
             outputFormat: 'html',
             placeholder: 'Write your email...',
             autoGrow: true,
+          ),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Text(
+              'ATTACHMENTS',
+              style: TextStyle(
+                color: AppColors.textFaint,
+                fontSize: 9,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+          if (_files.isNotEmpty)
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final f in _files)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.border),
+                      color: AppColors.card,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.attach_file,
+                          size: 12,
+                          color: AppColors.textMuted,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '${f.name} (${(f.size / 1024).toStringAsFixed(0)} KB)',
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 11,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        GestureDetector(
+                          onTap: () => setState(() => _files.remove(f)),
+                          child: const Icon(
+                            Icons.close,
+                            size: 12,
+                            color: AppColors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          const SizedBox(height: 8),
+          GhostButton(
+            onPressed:
+                (_sending ||
+                    _uploadingAttachments ||
+                    _files.length >= _maxFiles)
+                ? null
+                : _pickFiles,
+            child: Text(
+              _files.length >= _maxFiles
+                  ? 'MAX $_maxFiles FILES'
+                  : 'ADD ATTACHMENTS (UP TO 10MB)',
+            ),
           ),
           const SizedBox(height: 24),
           AccentButton(

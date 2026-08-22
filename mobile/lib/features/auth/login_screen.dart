@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../home/home_shell.dart';
@@ -27,7 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  bool get _locked => _lockUntil != null && DateTime.now().isBefore(_lockUntil!);
+  bool get _locked =>
+      _lockUntil != null && DateTime.now().isBefore(_lockUntil!);
 
   Future<void> _submit() async {
     if (_locked) return;
@@ -182,19 +184,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 filled: true,
                                 fillColor: const Color(0x08FFFFFF),
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.border),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.border,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0x33EAEFFF)),
+                                  borderSide: const BorderSide(
+                                    color: Color(0x33EAEFFF),
+                                  ),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.border),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.border,
+                                  ),
                                 ),
                               ),
                             ),
@@ -220,38 +230,54 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscure ? Icons.visibility_off : Icons.visibility,
+                                    _obscure
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
                                     size: 18,
                                     color: const Color(0x66FFFFFF),
                                   ),
-                                  onPressed: () => setState(() => _obscure = !_obscure),
+                                  onPressed: () =>
+                                      setState(() => _obscure = !_obscure),
                                 ),
                                 filled: true,
                                 fillColor: const Color(0x08FFFFFF),
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.border),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.border,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0x33EAEFFF)),
+                                  borderSide: const BorderSide(
+                                    color: Color(0x33EAEFFF),
+                                  ),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.border),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.border,
+                                  ),
                                 ),
                               ),
                             ),
                             if (_error != null) ...[
                               const SizedBox(height: 16),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0x0AF87171),
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: const Color(0x1AF87171)),
+                                  border: Border.all(
+                                    color: const Color(0x1AF87171),
+                                  ),
                                 ),
                                 child: Text(
                                   _error!,
@@ -267,7 +293,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                               height: 48,
                               child: Material(
-                                color: _loading ? const Color(0x66EAEFFF) : AppColors.accent,
+                                color: _loading
+                                    ? const Color(0x66EAEFFF)
+                                    : AppColors.accent,
                                 borderRadius: BorderRadius.circular(12),
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(12),
@@ -280,10 +308,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                               SizedBox(
                                                 width: 16,
                                                 height: 16,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: Color(0xFF121212),
-                                                ),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                      color: Color(0xFF121212),
+                                                    ),
                                               ),
                                               SizedBox(width: 8),
                                               Text(
@@ -298,7 +327,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ],
                                           )
                                         : Text(
-                                            _locked ? 'Locked — try again shortly' : 'Sign in',
+                                            _locked
+                                                ? 'Locked — try again shortly'
+                                                : 'Sign in',
                                             style: const TextStyle(
                                               color: Color(0xFF121212),
                                               fontSize: 14,
@@ -366,27 +397,14 @@ class _LoginBackground extends StatelessWidget {
       child: IgnorePointer(
         child: Stack(
           children: [
-            const CustomPaint(
-              painter: _DotGridPainter(),
-              size: Size.infinite,
-            ),
-            const _GlowOrb(
-              top: -200,
-              left: -200,
-              size: 500,
-              opacity: 0.025,
-            ),
+            const CustomPaint(painter: _DotGridPainter(), size: Size.infinite),
+            const _GlowOrb(top: -200, left: -200, size: 500, opacity: 0.025),
             Positioned(
               bottom: -150,
               right: -180,
               child: _GlowOrb(size: 400, opacity: 0.015),
             ),
-            const _GlowOrb(
-              top: 320,
-              left: -300,
-              size: 600,
-              opacity: 0.010,
-            ),
+            const _GlowOrb(top: 320, left: -300, size: 600, opacity: 0.010),
           ],
         ),
       ),
@@ -395,7 +413,12 @@ class _LoginBackground extends StatelessWidget {
 }
 
 class _GlowOrb extends StatelessWidget {
-  const _GlowOrb({this.top, this.left, required this.size, required this.opacity});
+  const _GlowOrb({
+    this.top,
+    this.left,
+    required this.size,
+    required this.opacity,
+  });
 
   final double? top;
   final double? left;

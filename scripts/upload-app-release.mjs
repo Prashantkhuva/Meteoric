@@ -11,10 +11,15 @@
 //      `app-releases` — this is what the app polls on launch.
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync, statSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
+// Resolve .env relative to this script so it works from any working directory.
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
 try {
-  for (const line of readFileSync(".env", "utf8").split("\n")) {
+  for (const line of readFileSync(join(ROOT, ".env"), "utf8").split("\n")) {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
     if (m && !process.env[m[1]])
       process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
@@ -32,11 +37,19 @@ if (!apkPath || !version || !build) {
 const REPO = "Prashantkhuva/meteoric-app-releases";
 const apkUrl = `https://github.com/${REPO}/releases/download/v${version}/universal.apk`;
 
-// 1. GitHub release with the APK
-execSync(
-  `gh release create v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --title "v${version}" --notes "${notes}"`,
-  { stdio: "inherit" }
-);
+// 1. GitHub release with the APK (falls back to re-upload if release exists)
+try {
+  execSync(
+    `gh release create v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --title "v${version}" --notes "${notes}"`,
+    { stdio: "inherit" }
+  );
+} catch {
+  console.log(`Release v${version} already exists — uploading asset instead`);
+  execSync(
+    `gh release upload v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --clobber`,
+    { stdio: "inherit" }
+  );
+}
 console.log(`GitHub release v${version} created`);
 
 // 2. Update manifest on Supabase

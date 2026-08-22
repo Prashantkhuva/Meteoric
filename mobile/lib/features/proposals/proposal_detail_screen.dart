@@ -6,6 +6,7 @@ import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/share_sheet.dart';
 import '../../shared/widgets/status_flow.dart';
 import '../../shared/widgets/tiptap_view.dart';
 import 'proposal_form_screen.dart';
@@ -95,25 +96,10 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
       }
       final token = res['token'];
       final url = '${AppConfig.siteUrl}/share/proposal/$token';
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Share proposal'),
-          content: SelectableText(
-            url,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 13,
-              fontFamily: 'Inter',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Close'),
-            ),
-          ],
-        ),
+      await showShareSheet(
+        context,
+        title: _proposal['title'] ?? 'Proposal',
+        url: url,
       );
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);

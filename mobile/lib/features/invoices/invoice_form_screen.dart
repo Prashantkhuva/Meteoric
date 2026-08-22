@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
@@ -14,8 +15,12 @@ class InvoiceFormScreen extends StatefulWidget {
 
 class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final _notes = TextEditingController(text: widget.invoice?['notes'] ?? '');
-  late final _terms = TextEditingController(text: widget.invoice?['terms'] ?? '');
+  late final _notes = TextEditingController(
+    text: widget.invoice?['notes'] ?? '',
+  );
+  late final _terms = TextEditingController(
+    text: widget.invoice?['terms'] ?? '',
+  );
 
   String? _clientId;
   String? _proposalId;
@@ -67,7 +72,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     try {
       final clients = await ApiClient.instance.clientsSimple();
       final banks = await ApiClient.instance.bankAccountsList();
-      final proposals = await ApiClient.instance.proposalsList({'page': 1, 'pageSize': 100});
+      final proposals = await ApiClient.instance.proposalsList({
+        'page': 1,
+        'pageSize': 100,
+      });
       if (mounted) {
         setState(() {
           _clients = ((clients['data'] as List?) ?? const [])
@@ -125,7 +133,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -171,7 +181,11 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                       padding: EdgeInsets.only(bottom: 12),
                       child: Text(
                         'No line items yet.',
-                        style: TextStyle(color: AppColors.textFaint, fontSize: 12, fontFamily: 'Inter'),
+                        style: TextStyle(
+                          color: AppColors.textFaint,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
                   for (var i = 0; i < _items.length; i++)
@@ -179,7 +193,11 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                       padding: const EdgeInsets.only(bottom: 10),
                       child: _itemRow(i),
                     ),
-                  GhostButton(height: 40, onPressed: _addItem, child: const Text('ADD LINE ITEM')),
+                  GhostButton(
+                    height: 40,
+                    onPressed: _addItem,
+                    child: const Text('ADD LINE ITEM'),
+                  ),
                 ],
               ),
             ),
@@ -215,19 +233,28 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
             GestureDetector(
               onTap: _pickDueDate,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 16,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.border),
                   color: AppColors.card,
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.calendar_today_outlined, size: 15, color: AppColors.textFaint),
+                    const Icon(
+                      Icons.calendar_today_outlined,
+                      size: 15,
+                      color: AppColors.textFaint,
+                    ),
                     const SizedBox(width: 10),
                     Text(
                       _dueDate == null ? 'Set due date' : 'Due: $_dueDate',
                       style: TextStyle(
-                        color: _dueDate == null ? AppColors.textFaint : AppColors.text,
+                        color: _dueDate == null
+                            ? AppColors.textFaint
+                            : AppColors.text,
                         fontSize: 13,
                         fontFamily: 'Inter',
                       ),
@@ -236,7 +263,11 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                     if (_dueDate != null)
                       GestureDetector(
                         onTap: () => setState(() => _dueDate = null),
-                        child: const Icon(Icons.close, size: 15, color: AppColors.textFaint),
+                        child: const Icon(
+                          Icons.close,
+                          size: 15,
+                          color: AppColors.textFaint,
+                        ),
                       ),
                   ],
                 ),
@@ -261,7 +292,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF121212)),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF121212),
+                      ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE INVOICE'),
             ),
@@ -279,7 +313,11 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           Expanded(
             child: Text(
               'Could not load references: $_clientsError',
-              style: const TextStyle(color: AppColors.red, fontSize: 11, fontFamily: 'Inter'),
+              style: const TextStyle(
+                color: AppColors.red,
+                fontSize: 11,
+                fontFamily: 'Inter',
+              ),
             ),
           ),
           TextButton(onPressed: _loadRefs, child: const Text('Retry')),
@@ -321,7 +359,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           initialValue: _proposalId,
           decoration: const InputDecoration(labelText: 'Proposal (optional)'),
           items: [
-            const DropdownMenuItem(value: '', child: Text('No proposal linked')),
+            const DropdownMenuItem(
+              value: '',
+              child: Text('No proposal linked'),
+            ),
             for (final p in _proposals)
               DropdownMenuItem(
                 value: '${p['id']}',
@@ -337,13 +378,19 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           initialValue: _bankAccountId,
-          decoration: const InputDecoration(labelText: 'Bank account (optional)'),
+          decoration: const InputDecoration(
+            labelText: 'Bank account (optional)',
+          ),
           items: [
             const DropdownMenuItem(value: '', child: Text('No bank account')),
             for (final b in _banks)
               DropdownMenuItem(
                 value: '${b['id']}',
-                child: Text(b['label'] ?? 'Account #${b['id']}', maxLines: 1, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  b['label'] ?? 'Account #${b['id']}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
           ],
           onChanged: (v) => setState(() => _bankAccountId = v == '' ? null : v),
@@ -371,12 +418,19 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
               Expanded(
                 child: TextField(
                   controller: desc,
-                  decoration: const InputDecoration(labelText: 'Description', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    isDense: true,
+                  ),
                   onChanged: (v) => item['description'] = v,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 16, color: AppColors.textFaint),
+                icon: const Icon(
+                  Icons.close,
+                  size: 16,
+                  color: AppColors.textFaint,
+                ),
                 onPressed: () => _removeItem(i),
               ),
             ],
@@ -388,7 +442,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                 child: TextField(
                   controller: qty,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Qty', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Qty',
+                    isDense: true,
+                  ),
                   onChanged: (v) => item['quantity'] = num.tryParse(v) ?? 1,
                 ),
               ),
@@ -397,7 +454,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                 child: TextField(
                   controller: rate,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Rate', isDense: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Rate',
+                    isDense: true,
+                  ),
                   onChanged: (v) => item['rate'] = num.tryParse(v) ?? 0,
                 ),
               ),

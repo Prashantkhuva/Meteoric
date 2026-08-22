@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/theme.dart';
 import 'compose_email_screen.dart';
 import 'sent_emails_screen.dart';
@@ -27,15 +28,23 @@ class _EmailScreenState extends State<EmailScreen> {
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ComposeEmailScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => const ComposeEmailScreen(),
+                    ),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.border),
+                  ),
                   child: const Row(
                     children: [
-                      Icon(Icons.edit_outlined, size: 18, color: AppColors.accent),
+                      Icon(
+                        Icons.edit_outlined,
+                        size: 18,
+                        color: AppColors.accent,
+                      ),
                       SizedBox(width: 14),
                       Expanded(
                         child: Text(
@@ -48,7 +57,11 @@ class _EmailScreenState extends State<EmailScreen> {
                           ),
                         ),
                       ),
-                      Icon(Icons.chevron_right, size: 18, color: AppColors.textFaint),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: AppColors.textFaint,
+                      ),
                     ],
                   ),
                 ),
@@ -65,10 +78,16 @@ class _EmailScreenState extends State<EmailScreen> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.border),
+                  ),
                   child: const Row(
                     children: [
-                      Icon(Icons.outbox_outlined, size: 18, color: AppColors.accent),
+                      Icon(
+                        Icons.outbox_outlined,
+                        size: 18,
+                        color: AppColors.accent,
+                      ),
                       SizedBox(width: 14),
                       Expanded(
                         child: Text(
@@ -81,7 +100,11 @@ class _EmailScreenState extends State<EmailScreen> {
                           ),
                         ),
                       ),
-                      Icon(Icons.chevron_right, size: 18, color: AppColors.textFaint),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: AppColors.textFaint,
+                      ),
                     ],
                   ),
                 ),

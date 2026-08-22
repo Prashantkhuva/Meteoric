@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
@@ -15,11 +16,18 @@ class ProjectFormScreen extends StatefulWidget {
 class _ProjectFormScreenState extends State<ProjectFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.project?['name'] ?? '');
-  late final _description = TextEditingController(text: widget.project?['description'] ?? '');
-  late final _services = TextEditingController(text: widget.project?['services'] ?? '');
+  late final _description = TextEditingController(
+    text: widget.project?['description'] ?? '',
+  );
+  late final _services = TextEditingController(
+    text: widget.project?['services'] ?? '',
+  );
   late final _budget = TextEditingController(
-      text: (widget.project?['budget'] as num?)?.toString() ?? '');
-  late final _notes = TextEditingController(text: widget.project?['notes'] ?? '');
+    text: (widget.project?['budget'] as num?)?.toString() ?? '',
+  );
+  late final _notes = TextEditingController(
+    text: widget.project?['notes'] ?? '',
+  );
 
   String? _clientId;
   String? _startDate;
@@ -129,7 +137,9 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? AppColors.red.withValues(alpha: 0.9) : AppColors.cardRaised,
+        backgroundColor: isError
+            ? AppColors.red.withValues(alpha: 0.9)
+            : AppColors.cardRaised,
       ),
     );
   }
@@ -145,7 +155,8 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           children: [
             TextFormField(
               controller: _name,
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
               decoration: const InputDecoration(labelText: 'Name'),
             ),
             const SizedBox(height: 12),
@@ -170,9 +181,21 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(child: _dateTile('Start date', _startDate, () => _pickDate('start'))),
+                Expanded(
+                  child: _dateTile(
+                    'Start date',
+                    _startDate,
+                    () => _pickDate('start'),
+                  ),
+                ),
                 const SizedBox(width: 10),
-                Expanded(child: _dateTile('Deadline', _deadline, () => _pickDate('deadline'))),
+                Expanded(
+                  child: _dateTile(
+                    'Deadline',
+                    _deadline,
+                    () => _pickDate('deadline'),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -188,7 +211,10 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF121212)),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF121212),
+                      ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROJECT'),
             ),
@@ -206,7 +232,11 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           Expanded(
             child: Text(
               'Could not load clients: $_clientsError',
-              style: const TextStyle(color: AppColors.red, fontSize: 11, fontFamily: 'Inter'),
+              style: const TextStyle(
+                color: AppColors.red,
+                fontSize: 11,
+                fontFamily: 'Inter',
+              ),
             ),
           ),
           TextButton(onPressed: _loadClients, child: const Text('Retry')),
@@ -257,7 +287,13 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           children: [
             Text(
               label.toUpperCase(),
-              style: const TextStyle(color: AppColors.textFaint, fontSize: 9, fontWeight: FontWeight.w600, letterSpacing: 1, fontFamily: 'Inter'),
+              style: const TextStyle(
+                color: AppColors.textFaint,
+                fontSize: 9,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1,
+                fontFamily: 'Inter',
+              ),
             ),
             const SizedBox(height: 6),
             Text(

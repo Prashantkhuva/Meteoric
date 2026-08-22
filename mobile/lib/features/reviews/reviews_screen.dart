@@ -23,13 +23,24 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   int _total = 0;
   int _page = 1;
   String _status = 'all';
+  String _sort = 'newest';
   bool _loading = true;
   String? _error;
+
+  final _search = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _search.dispose();
+    _debounce?.cancel();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -41,8 +52,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       final res = await ApiClient.instance.reviewsList({
         'page': _page,
         'pageSize': _pageSize,
+        'search': _search.text.trim(),
         'status': _status,
-        'sort': 'newest',
+        'sort': _sort,
       });
       if (mounted) {
         setState(() {
@@ -63,6 +75,14 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     }
   }
 
+  void _onSearchChanged(String _) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      _page = 1;
+      _load();
+    });
+  }
+
   Future<void> _action(int id, String action, {bool? verified}) async {
     try {
       final res = action == 'verified'
@@ -75,9 +95,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         _snack(
           action == 'verified'
               ? (verified == true ? 'Marked verified' : 'Marked unverified')
-              : action == 'approved'
-              ? 'Review approved'
-              : 'Review rejected',
+              : switch (action) {
+                  'approved' => 'Review approved',
+                  'rejected' => 'Review rejected',
+                  _ => 'Review set to pending',
+                },
         );
         _load();
       }
@@ -153,7 +175,35 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+            child: TextField(
+              controller: _search,
+              onChanged: _onSearchChanged,
+              decoration: InputDecoration(
+                hintText: 'Search name, comment...',
+                prefixIcon: const Icon(
+                  Icons.search,
+                  size: 18,
+                  color: AppColors.textFaint,
+                ),
+                suffixIcon: _search.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.textMuted,
+                        ),
+                        onPressed: () {
+                          _search.clear();
+                          _page = 1;
+                          _load();
+                        },
+                      )
+                    : null,
+              ),
+            ),
+          ),
           FilterBar(
             groups: [
               FilterGroup(
@@ -165,10 +215,22 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   MapEntry('rejected', 'Rejected'),
                 ],
               ),
+              FilterGroup(
+                key: 'sort',
+                label: 'Sort',
+                options: const [
+                  MapEntry('newest', 'Newest'),
+                  MapEntry('oldest', 'Oldest'),
+                  MapEntry('rating', 'Rating high–low'),
+                ],
+              ),
             ],
-            values: {'status': _status},
+            values: {'status': _status, 'sort': _sort},
             onChanged: (v) {
-              setState(() => _status = v['status'] ?? 'all');
+              setState(() {
+                _status = v['status'] ?? 'all';
+                _sort = v['sort'] ?? 'newest';
+              });
               _page = 1;
               _load();
             },
@@ -339,6 +401,12 @@ class _ReviewCard extends StatelessWidget {
                 ),
               if (status != 'rejected')
                 _chip('REJECT', AppColors.red, () => onStatus('rejected')),
+              if (status != 'pending')
+                _chip(
+                  'SET PENDING',
+                  AppColors.textMuted,
+                  () => onStatus('pending'),
+                ),
               _chip('DELETE', AppColors.red, onDelete),
             ],
           ),

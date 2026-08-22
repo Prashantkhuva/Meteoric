@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/theme.dart';
 import '../proposals/proposals_screen.dart';
 import '../invoices/invoices_screen.dart';
@@ -18,7 +19,11 @@ class MoreScreen extends StatelessWidget {
     _Item('Projects', Icons.folder_outlined, ProjectsScreen()),
     _Item('Reviews', Icons.star_outline, ReviewsScreen()),
     _Item('Bookings', Icons.event_outlined, BookingsScreen()),
-    _Item('Bank Accounts', Icons.account_balance_outlined, BankAccountsScreen()),
+    _Item(
+      'Bank Accounts',
+      Icons.account_balance_outlined,
+      BankAccountsScreen(),
+    ),
     _Item('Email', Icons.mail_outline, EmailScreen()),
     _Item('Settings', Icons.settings_outlined, SettingsScreen()),
   ];
@@ -40,13 +45,14 @@ class MoreScreen extends StatelessWidget {
             color: AppColors.card,
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => item.screen),
-                );
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => item.screen));
               },
               child: Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.border),
+                ),
                 child: Row(
                   children: [
                     Icon(item.icon, size: 18, color: AppColors.textMuted),
@@ -62,7 +68,11 @@ class MoreScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Icon(Icons.chevron_right, size: 18, color: AppColors.textFaint),
+                    const Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: AppColors.textFaint,
+                    ),
                   ],
                 ),
               ),
