@@ -1,6 +1,7 @@
 import { authGuard, jsonToFormData, fail } from "../_lib/helpers";
 import {
   getProposalsPaginated,
+  getProposalById,
   createProposal,
   updateProposal,
   deleteProposal,
@@ -28,6 +29,8 @@ export async function POST(request) {
     switch (action) {
       case "list":
         return Response.json(await getProposalsPaginated(payload));
+      case "get":
+        return Response.json({ data: await getProposalById(payload.id) });
       case "create":
         return Response.json(await createProposal(jsonToFormData(payload)));
       case "update":

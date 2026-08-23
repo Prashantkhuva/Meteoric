@@ -83,6 +83,37 @@ class MainActivity : FlutterActivity() {
                         result.error("SHARE_ERROR", e.message, null)
                     }
                 }
+                "shareFileB64" -> {
+                    try {
+                        val args = call.arguments as Map<*, *>
+                        val name = args["name"] as String
+                        val mime = args["mime"] as String
+                        val b64 = args["b64"] as String
+                        val bytes = android.util.Base64.decode(b64, android.util.Base64.DEFAULT)
+                        val dir = File(cacheDir, "exports").apply {
+                            if (!exists()) mkdirs()
+                        }
+                        val file = File(dir, name)
+                        file.writeBytes(bytes)
+                        val uri = FileProvider.getUriForFile(
+                            this,
+                            "$packageName.fileprovider",
+                            file
+                        )
+                        val intent = Intent(Intent.ACTION_SEND)
+                            .setType(mime)
+                            .putExtra(Intent.EXTRA_STREAM, uri)
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        startActivity(
+                            Intent.createChooser(intent, "Share").addFlags(
+                                Intent.FLAG_ACTIVITY_NEW_TASK
+                            )
+                        )
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("SHARE_ERROR", e.message, null)
+                    }
+                }
                 "openUrl" -> {
                     try {
                         val url = call.arguments as String

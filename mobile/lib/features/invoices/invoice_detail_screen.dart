@@ -10,6 +10,7 @@ import '../../shared/widgets/common.dart';
 import '../../shared/widgets/share_sheet.dart';
 import '../../shared/widgets/status_flow.dart';
 import 'invoice_form_screen.dart';
+import 'invoice_preview_screen.dart';
 
 class InvoiceDetailScreen extends StatefulWidget {
   const InvoiceDetailScreen({super.key, required this.invoice});
@@ -211,6 +212,20 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     }
   }
 
+  Future<void> _reload() async {
+    try {
+      final res = await ApiClient.instance.invoiceGet(
+        (_invoice['id'] as num).toInt(),
+      );
+      if (!mounted) return;
+      if (res['data'] is Map && !(res.containsKey('error'))) {
+        setState(() => _invoice = (res['data'] as Map).cast<String, dynamic>());
+      }
+    } catch (_) {
+      // Keep showing stale row if refetch fails.
+    }
+  }
+
   void _snack(String msg, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -364,9 +379,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               ),
             ],
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
+            Row(
               children: [
                 Expanded(
                   child: GhostButton(
@@ -380,11 +393,28 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                         InvoiceFormScreen(invoice: _invoice),
                                   ),
                                 );
-                            if (changed == true && mounted) setState(() {});
+                            if (changed == true && mounted) await _reload();
                           },
                     child: const Text('EDIT'),
                   ),
                 ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: GhostButton(
+                    onPressed: _busy
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    InvoicePreviewScreen(invoice: _invoice),
+                              ),
+                            );
+                          },
+                    child: const Text('PREVIEW'),
+                  ),
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: GhostButton(
                     onPressed: _busy ? null : _share,

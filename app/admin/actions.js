@@ -1190,6 +1190,7 @@ function resolveOrder(col, dir, sort) {
   const validCols = [
     "name", "email", "status", "created_at", "invoice_number",
     "total", "budget", "deadline", "title", "company", "phone", "ai_score", "source",
+    "rating",
   ];
   if (col && validCols.includes(col)) {
     return { column: col, ascending: dir !== "desc" };
@@ -1282,6 +1283,38 @@ export async function getInvoicesPaginated(params) {
   const { data, count, error } = await query;
   if (error) return { data: [], total: 0 };
   return { data: data || [], total: count || 0 };
+}
+
+export async function getInvoiceById(id) {
+  try {
+    const safeId = idSchema.parse(id);
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*, client:clients(name, email, phone, company), proposal:proposals(id, title), bank_account:bank_accounts(*)")
+      .eq("id", safeId)
+      .single();
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export async function getProposalById(id) {
+  try {
+    const safeId = idSchema.parse(id);
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("proposals")
+      .select("*, lead:leads(name, email, phone, company)")
+      .eq("id", safeId)
+      .single();
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export async function getProjectsPaginated(params) {
@@ -1600,7 +1633,7 @@ export async function getReviewsPaginated({ page = 1, pageSize = 15, status, sea
   try {
     const supabase = await getSupabase();
     let query = supabase.from("reviews").select("*", { count: "exact" });
-    if (status) query = query.eq("status", status);
+    if (status && status !== "all") query = query.eq("status", status);
     if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,email.ilike.%${sanitizeSearch(search)}%,company.ilike.%${sanitizeSearch(search)}%,content.ilike.%${sanitizeSearch(search)}%`);
     const from = (page - 1) * pageSize;
     query = query.order(col, { ascending: dir === "asc" }).range(from, from + pageSize - 1);

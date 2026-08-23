@@ -49,12 +49,20 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       _error = null;
     });
     try {
+      // Server expects col/dir ordering params (see resolveOrder in
+      // app/admin/actions.js) — map our sort presets onto them.
+      final (col, dir) = switch (_sort) {
+        'oldest' => ('created_at', 'asc'),
+        'rating' => ('rating', 'desc'),
+        _ => ('created_at', 'desc'),
+      };
       final res = await ApiClient.instance.reviewsList({
         'page': _page,
         'pageSize': _pageSize,
         'search': _search.text.trim(),
         'status': _status,
-        'sort': _sort,
+        'col': col,
+        'dir': dir,
       });
       if (mounted) {
         setState(() {
@@ -181,7 +189,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               controller: _search,
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
-                hintText: 'Search name, comment...',
+                hintText: 'Search name, email, company...',
                 prefixIcon: const Icon(
                   Icons.search,
                   size: 18,
@@ -364,7 +372,7 @@ class _ReviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            review['comment'] ?? '',
+            review['content'] ?? '',
             style: const TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,

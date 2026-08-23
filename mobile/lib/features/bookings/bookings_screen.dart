@@ -13,6 +13,26 @@ class BookingsScreen extends StatefulWidget {
   State<BookingsScreen> createState() => _BookingsScreenState();
 }
 
+/// Normalizes a raw Cal.com v2 booking row:
+/// - attendee lives in the `attendees` array (first entry)
+/// - `id` is numeric, `uid` is the string key
+Map<String, dynamic> _attendeeOf(Map<String, dynamic> booking) {
+  final list = booking['attendees'];
+  if (list is List && list.isNotEmpty && list.first is Map) {
+    return (list.first as Map).cast<String, dynamic>();
+  }
+  if (booking['attendee'] is Map) {
+    return (booking['attendee'] as Map).cast<String, dynamic>();
+  }
+  return const <String, dynamic>{};
+}
+
+String _shortTitle(String? title) {
+  if (title == null) return '';
+  final idx = title.indexOf(' between ');
+  return idx > -1 ? title.substring(0, idx) : title;
+}
+
 class _BookingsScreenState extends State<BookingsScreen> {
   List<Map<String, dynamic>> _bookings = [];
   bool _loading = true;
@@ -62,17 +82,18 @@ class _BookingsScreenState extends State<BookingsScreen> {
   List<Map<String, dynamic>> get _filtered {
     final q = _search.text.trim().toLowerCase();
     return _bookings.where((b) {
-      if (_status != 'all' && '${b['status'] ?? 'pending'}' != _status) {
+      final status = '${b['status'] ?? 'pending'}'.toLowerCase();
+      if (_status != 'all' && status != _status) {
         return false;
       }
       if (q.isEmpty) return true;
-      final attendee = b['attendee'] is Map
-          ? b['attendee'].cast<String, dynamic>()
-          : {};
+      final attendee = _attendeeOf(b);
       final haystack = [
         attendee['name'],
         attendee['email'],
         b['title'],
+        b['description'],
+        b['location'],
         b['eventTypeId'],
       ].where((v) => v != null).map((v) => '$v'.toLowerCase()).join(' ');
       return haystack.contains(q);
@@ -83,13 +104,19 @@ class _BookingsScreenState extends State<BookingsScreen> {
     });
   }
 
+  /// Numeric Cal.com booking id — required by the status / create-lead APIs.
+  int? _bookingId(Map<String, dynamic> booking) =>
+      booking['id'] is num ? (booking['id'] as num).toInt() : null;
+
   Future<void> _setStatus(Map<String, dynamic> booking, String status) async {
+    final id = _bookingId(booking);
+    if (id == null) {
+      _snack('Booking id missing — cannot update', isError: true);
+      return;
+    }
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.bookingStatus(
-        booking['id'] as String,
-        status,
-      );
+      final res = await ApiClient.instance.bookingStatus('$id', status);
       if (!mounted) return;
       if (res.containsKey('error')) {
         _snack(res['error'] as String, isError: true);
@@ -105,16 +132,19 @@ class _BookingsScreenState extends State<BookingsScreen> {
   }
 
   Future<void> _createLead(Map<String, dynamic> booking) async {
+    final id = _bookingId(booking);
+    if (id == null) {
+      _snack('Booking id missing — cannot create lead', isError: true);
+      return;
+    }
     setState(() => _busy = true);
     try {
-      final attendee = (booking['attendee'] is Map
-          ? booking['attendee'].cast<String, dynamic>()
-          : const <String, dynamic>{});
+      final attendee = _attendeeOf(booking);
       final res = await ApiClient.instance.bookingCreateLead({
         'name': attendee['name'] ?? 'Booking guest',
         'email': attendee['email'] ?? '',
-        'phone': attendee['phone'] ?? '',
-        'bookingId': booking['id'],
+        'phone': attendee['phoneNumber'] ?? attendee['phone'] ?? '',
+        'bookingId': id,
       });
       if (!mounted) return;
       if (res.containsKey('error')) {
@@ -139,14 +169,12 @@ class _BookingsScreenState extends State<BookingsScreen> {
         rows: [
           ['Attendee', 'Email', 'Phone', 'Event', 'Start', 'Status'],
           ...rows.map((b) {
-            final attendee = b['attendee'] is Map
-                ? b['attendee'].cast<String, dynamic>()
-                : const <String, dynamic>{};
+            final attendee = _attendeeOf(b);
             return [
               '${attendee['name'] ?? ''}',
               '${attendee['email'] ?? ''}',
-              '${attendee['phone'] ?? ''}',
-              '${b['title'] ?? ''}',
+              '${attendee['phoneNumber'] ?? attendee['phone'] ?? ''}',
+              _shortTitle(b['title'] as String?),
               csvDate(b['start'] ?? b['startTime']),
               '${b['status'] ?? 'pending'}',
             ];
@@ -332,13 +360,15 @@ class _BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final attendee = booking['attendee'] is Map
-        ? booking['attendee'].cast<String, dynamic>()
-        : const <String, dynamic>{};
+    final attendee = _attendeeOf(booking);
     final name = attendee['name'] ?? '—';
     final email = attendee['email'] ?? '—';
     final start = booking['start'] ?? booking['startTime'];
-    final status = booking['status'] ?? 'pending';
+    final status = '${booking['status'] ?? 'pending'}'.toLowerCase();
+    final title = _shortTitle(booking['title'] as String?);
+    final duration = (booking['duration'] as num?)?.toInt();
+    final description = booking['description'];
+    final location = booking['location'];
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -374,6 +404,31 @@ class _BookingCard extends StatelessWidget {
               fontFamily: 'Inter',
             ),
           ),
+          if (title.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(
+                  Icons.label_outline,
+                  size: 13,
+                  color: AppColors.textFaint,
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    duration != null ? '$title · $duration min' : title,
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 8),
           Row(
             children: [
@@ -395,6 +450,45 @@ class _BookingCard extends StatelessWidget {
               ),
             ],
           ),
+          if (location is String && location.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 13,
+                  color: AppColors.textFaint,
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    location,
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (description is String && description.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: const TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 12,
+                height: 1.5,
+                fontFamily: 'Inter',
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,

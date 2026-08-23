@@ -10,6 +10,7 @@ import '../../shared/widgets/share_sheet.dart';
 import '../../shared/widgets/status_flow.dart';
 import '../../shared/widgets/tiptap_view.dart';
 import 'proposal_form_screen.dart';
+import 'proposal_preview_screen.dart';
 
 class ProposalDetailScreen extends StatefulWidget {
   const ProposalDetailScreen({super.key, required this.proposal});
@@ -147,6 +148,22 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
     }
   }
 
+  Future<void> _reload() async {
+    try {
+      final res = await ApiClient.instance.proposalGet(
+        (_proposal['id'] as num).toInt(),
+      );
+      if (!mounted) return;
+      if (res['data'] is Map && !(res.containsKey('error'))) {
+        setState(
+          () => _proposal = (res['data'] as Map).cast<String, dynamic>(),
+        );
+      }
+    } catch (_) {
+      // Keep showing stale row if refetch fails.
+    }
+  }
+
   void _snack(String msg, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -279,9 +296,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                     : const Text('SEND TO LEAD'),
               ),
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
+            Row(
               children: [
                 Expanded(
                   child: GhostButton(
@@ -295,11 +310,28 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                                         ProposalFormScreen(proposal: _proposal),
                                   ),
                                 );
-                            if (changed == true && mounted) setState(() {});
+                            if (changed == true && mounted) await _reload();
                           },
                     child: const Text('EDIT'),
                   ),
                 ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: GhostButton(
+                    onPressed: _busy
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProposalPreviewScreen(proposal: _proposal),
+                              ),
+                            );
+                          },
+                    child: const Text('PREVIEW'),
+                  ),
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: GhostButton(
                     onPressed: _busy ? null : _share,

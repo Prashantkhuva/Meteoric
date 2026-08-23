@@ -1,6 +1,7 @@
 import { authGuard, jsonToFormData, fail } from "../_lib/helpers";
 import {
   getInvoicesPaginated,
+  getInvoiceById,
   createInvoice,
   updateInvoice,
   deleteInvoice,
@@ -30,6 +31,8 @@ export async function POST(request) {
     switch (action) {
       case "list":
         return Response.json(await getInvoicesPaginated(payload));
+      case "get":
+        return Response.json({ data: await getInvoiceById(payload.id) });
       case "create":
         return Response.json(await createInvoice(jsonToFormData(payload)));
       case "update":

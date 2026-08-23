@@ -93,8 +93,9 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
         final draft = res['data'] as Map<String, dynamic>? ?? const {};
         setState(() {
           if (draft['title'] != null) _title.text = draft['title'] as String;
-          if (draft['timeline'] != null)
+          if (draft['timeline'] != null) {
             _timeline.text = draft['timeline'] as String;
+          }
           if (draft['terms'] != null) _terms.text = draft['terms'] as String;
           if (draft['content'] != null) _content = draft['content'];
           if (draft['pricing'] is List) {

@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import 'supabase.dart';
 import 'config.dart';
 
@@ -61,21 +63,29 @@ class ApiClient {
     return res;
   }
 
-  Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body) async {
-    final res = await _send(() => http.post(
-          Uri.parse('$_base$path'),
-          headers: _headers(),
-          body: jsonEncode(body),
-        ).timeout(const Duration(seconds: 30)));
+  Future<Map<String, dynamic>> _post(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
+    final res = await _send(
+      () => http
+          .post(
+            Uri.parse('$_base$path'),
+            headers: _headers(),
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 30)),
+    );
 
     return _decode(res);
   }
 
   Future<Map<String, dynamic>> _get(String path) async {
-    final res = await _send(() => http.get(
-          Uri.parse('$_base$path'),
-          headers: _headers(),
-        ).timeout(const Duration(seconds: 30)));
+    final res = await _send(
+      () => http
+          .get(Uri.parse('$_base$path'), headers: _headers())
+          .timeout(const Duration(seconds: 30)),
+    );
     return _decode(res);
   }
 
@@ -84,7 +94,10 @@ class ApiClient {
     try {
       body = jsonDecode(res.body) as Map<String, dynamic>;
     } catch (_) {
-      throw ApiException('Unexpected server response (${res.statusCode})', status: res.statusCode);
+      throw ApiException(
+        'Unexpected server response (${res.statusCode})',
+        status: res.statusCode,
+      );
     }
     if (res.statusCode == 401) {
       throw ApiException(body['error'] ?? 'Session expired', status: 401);
@@ -108,8 +121,10 @@ class ApiClient {
   Future<Map<String, dynamic>> leadUpdate(Map<String, dynamic> data) =>
       _post('/api/admin/leads', {'action': 'update', ...data});
 
-  Future<Map<String, dynamic>> leadStatus(int id, String status) =>
-      _post('/api/admin/leads', {'action': 'status', 'id': id, 'status': status});
+  Future<Map<String, dynamic>> leadStatus(int id, String status) => _post(
+    '/api/admin/leads',
+    {'action': 'status', 'id': id, 'status': status},
+  );
 
   Future<Map<String, dynamic>> leadConvert(int id) =>
       _post('/api/admin/leads', {'action': 'convert', 'id': id});
@@ -133,8 +148,10 @@ class ApiClient {
   Future<Map<String, dynamic>> clientUpdate(Map<String, dynamic> data) =>
       _post('/api/admin/clients', {'action': 'update', ...data});
 
-  Future<Map<String, dynamic>> clientStatus(int id, String status) =>
-      _post('/api/admin/clients', {'action': 'status', 'id': id, 'status': status});
+  Future<Map<String, dynamic>> clientStatus(int id, String status) => _post(
+    '/api/admin/clients',
+    {'action': 'status', 'id': id, 'status': status},
+  );
 
   Future<Map<String, dynamic>> clientDelete(int id) =>
       _post('/api/admin/clients', {'action': 'delete', 'id': id});
@@ -142,6 +159,9 @@ class ApiClient {
   // ── Proposals ───────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> proposalsList(Map<String, dynamic> params) =>
       _post('/api/admin/proposals', {'action': 'list', ...params});
+
+  Future<Map<String, dynamic>> proposalGet(int id) =>
+      _post('/api/admin/proposals', {'action': 'get', 'id': id});
 
   Future<Map<String, dynamic>> proposalCreate(Map<String, dynamic> data) =>
       _post('/api/admin/proposals', {'action': 'create', ...data});
@@ -158,8 +178,10 @@ class ApiClient {
   Future<Map<String, dynamic>> proposalSend(int id) =>
       _post('/api/admin/proposals', {'action': 'send', 'id': id});
 
-  Future<Map<String, dynamic>> proposalStatus(int id, String status) =>
-      _post('/api/admin/proposals', {'action': 'status', 'id': id, 'status': status});
+  Future<Map<String, dynamic>> proposalStatus(int id, String status) => _post(
+    '/api/admin/proposals',
+    {'action': 'status', 'id': id, 'status': status},
+  );
 
   Future<Map<String, dynamic>> proposalShareToken(int id) =>
       _post('/api/admin/proposals', {'action': 'share-token', 'id': id});
@@ -170,6 +192,9 @@ class ApiClient {
   // ── Invoices ────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> invoicesList(Map<String, dynamic> params) =>
       _post('/api/admin/invoices', {'action': 'list', ...params});
+
+  Future<Map<String, dynamic>> invoiceGet(int id) =>
+      _post('/api/admin/invoices', {'action': 'get', 'id': id});
 
   Future<Map<String, dynamic>> invoiceCreate(Map<String, dynamic> data) =>
       _post('/api/admin/invoices', {'action': 'create', ...data});
@@ -183,8 +208,10 @@ class ApiClient {
   Future<Map<String, dynamic>> invoiceSend(int id) =>
       _post('/api/admin/invoices', {'action': 'send', 'id': id});
 
-  Future<Map<String, dynamic>> invoiceMarkPaid(int id, String paidAt) =>
-      _post('/api/admin/invoices', {'action': 'paid', 'id': id, 'paidAt': paidAt});
+  Future<Map<String, dynamic>> invoiceMarkPaid(int id, String paidAt) => _post(
+    '/api/admin/invoices',
+    {'action': 'paid', 'id': id, 'paidAt': paidAt},
+  );
 
   Future<Map<String, dynamic>> invoiceConfirmation(int id) =>
       _post('/api/admin/invoices', {'action': 'confirmation', 'id': id});
@@ -195,8 +222,10 @@ class ApiClient {
   Future<Map<String, dynamic>> invoiceCancel(int id) =>
       _post('/api/admin/invoices', {'action': 'cancel', 'id': id});
 
-  Future<Map<String, dynamic>> invoiceStatus(int id, String status) =>
-      _post('/api/admin/invoices', {'action': 'status', 'id': id, 'status': status});
+  Future<Map<String, dynamic>> invoiceStatus(int id, String status) => _post(
+    '/api/admin/invoices',
+    {'action': 'status', 'id': id, 'status': status},
+  );
 
   Future<Map<String, dynamic>> invoiceShareToken(int id) =>
       _post('/api/admin/invoices', {'action': 'share-token', 'id': id});
@@ -214,18 +243,24 @@ class ApiClient {
   Future<Map<String, dynamic>> projectDelete(int id) =>
       _post('/api/admin/projects', {'action': 'delete', 'id': id});
 
-  Future<Map<String, dynamic>> projectStatus(int id, String status) =>
-      _post('/api/admin/projects', {'action': 'status', 'id': id, 'status': status});
+  Future<Map<String, dynamic>> projectStatus(int id, String status) => _post(
+    '/api/admin/projects',
+    {'action': 'status', 'id': id, 'status': status},
+  );
 
   // ── Reviews ─────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> reviewsList(Map<String, dynamic> params) =>
       _post('/api/admin/reviews', {'action': 'list', ...params});
 
-  Future<Map<String, dynamic>> reviewStatus(int id, String status) =>
-      _post('/api/admin/reviews', {'action': 'status', 'id': id, 'status': status});
+  Future<Map<String, dynamic>> reviewStatus(int id, String status) => _post(
+    '/api/admin/reviews',
+    {'action': 'status', 'id': id, 'status': status},
+  );
 
-  Future<Map<String, dynamic>> reviewVerified(int id, bool isVerified) =>
-      _post('/api/admin/reviews', {'action': 'verified', 'id': id, 'is_verified': isVerified});
+  Future<Map<String, dynamic>> reviewVerified(int id, bool isVerified) => _post(
+    '/api/admin/reviews',
+    {'action': 'verified', 'id': id, 'is_verified': isVerified},
+  );
 
   Future<Map<String, dynamic>> reviewDelete(int id) =>
       _post('/api/admin/reviews', {'action': 'delete', 'id': id});
@@ -234,7 +269,11 @@ class ApiClient {
   Future<Map<String, dynamic>> bookingsList() => _get('/api/admin/bookings');
 
   Future<Map<String, dynamic>> bookingStatus(String bookingId, String status) =>
-      _post('/api/admin/bookings', {'action': 'status', 'bookingId': bookingId, 'status': status});
+      _post('/api/admin/bookings', {
+        'action': 'status',
+        'bookingId': bookingId,
+        'status': status,
+      });
 
   Future<Map<String, dynamic>> bookingCreateLead(Map<String, dynamic> data) =>
       _post('/api/admin/bookings', {'action': 'create-lead', ...data});
@@ -259,8 +298,10 @@ class ApiClient {
   Future<Map<String, dynamic>> emailSend(Map<String, dynamic> data) =>
       _post('/api/admin/email', {'action': 'send', ...data});
 
-  Future<Map<String, dynamic>> emailSent(int page, int pageSize) =>
-      _post('/api/admin/email', {'action': 'sent', 'page': page, 'pageSize': pageSize});
+  Future<Map<String, dynamic>> emailSent(int page, int pageSize) => _post(
+    '/api/admin/email',
+    {'action': 'sent', 'page': page, 'pageSize': pageSize},
+  );
 
   Future<Map<String, dynamic>> emailDelete(int id) =>
       _post('/api/admin/email', {'action': 'delete', 'id': id});
