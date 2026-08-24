@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
 
 class LeadFormScreen extends StatefulWidget {
@@ -87,16 +88,8 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     }
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   @override
   Widget build(BuildContext context) {

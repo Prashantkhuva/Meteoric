@@ -4,12 +4,14 @@ import 'package:flutter_quill/flutter_quill.dart';
 
 import 'core/theme.dart';
 import 'core/supabase.dart';
+import 'core/notification_service.dart';
 import 'features/auth/login_screen.dart';
 import 'features/home/home_shell.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AuthService.init();
+  await NotificationService.instance.init();
   runApp(const MeteoricAdminApp());
 }
 

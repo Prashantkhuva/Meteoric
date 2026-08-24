@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../core/api_client.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/bulk_actions_bar.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/error_views.dart';
 
 class SentEmailsScreen extends StatefulWidget {
   const SentEmailsScreen({super.key});
@@ -20,7 +22,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
   int _total = 0;
   int _page = 1;
   bool _loading = true;
-  String? _error;
+  Object? _error;
 
   final Set<int> _selected = {};
   bool _busy = false;
@@ -53,7 +55,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
     } catch (err) {
       if (mounted) {
         setState(() {
-          _error = err.toString();
+          _error = err;
           _loading = false;
         });
       }
@@ -128,16 +130,8 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
     _load();
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +199,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
 
   Widget _buildBody() {
     if (_loading) return const LoadingView();
-    if (_error != null) return ErrorBox(message: _error!, onRetry: _load);
+    if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_emails.isEmpty) {
       return const EmptyState(
         message: 'No sent emails yet.',

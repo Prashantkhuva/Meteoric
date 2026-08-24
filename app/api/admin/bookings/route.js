@@ -1,6 +1,7 @@
 import { authGuard, fail } from "../_lib/helpers";
 import { updateBookingStatus, createLeadFromBooking } from "../../../admin/actions";
 import { jsonToFormData } from "../_lib/helpers";
+import { detectNewBookings } from "@/lib/notifications";
 
 const CAL_API = "https://api.cal.com/v2";
 
@@ -25,7 +26,12 @@ export async function GET(request) {
     }
 
     const json = await res.json();
-    return Response.json({ bookings: json.data || [] });
+    const bookings = json.data || [];
+
+    // Fire-and-forget: record unseen bookings as notifications.
+    detectNewBookings(bookings).catch(() => {});
+
+    return Response.json({ bookings });
   } catch (err) {
     return fail(err.message, 500);
   }

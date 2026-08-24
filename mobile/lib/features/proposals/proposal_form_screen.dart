@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/rich_text_editor_screen.dart';
 
@@ -145,16 +146,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     }
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   void _addPricingRow() {
     setState(() => _pricing.add({'description': '', 'quantity': 1, 'rate': 0}));

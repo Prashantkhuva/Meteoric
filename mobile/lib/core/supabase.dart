@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'config.dart';
 
 /// Thin auth wrapper around the Supabase SDK. `instance` exposes the raw
@@ -18,7 +19,9 @@ class AuthService {
       authOptions: FlutterAuthClientOptions(
         authFlowType: AuthFlowType.pkce,
         persistSession: true,
-        localStorage: SharedPreferencesLocalStorage(persistSessionKey: 'sb_session'),
+        localStorage: SharedPreferencesLocalStorage(
+          persistSessionKey: 'sb_session',
+        ),
       ),
     );
   }

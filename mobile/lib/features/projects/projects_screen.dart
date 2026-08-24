@@ -6,8 +6,10 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/bulk_actions_bar.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/csv_export.dart';
 import '../../shared/widgets/filter_bar.dart';
 import 'project_detail_screen.dart';
@@ -41,7 +43,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   String _status = 'all';
   String _sort = 'newest';
   bool _loading = true;
-  String? _error;
+  Object? _error;
 
   final Set<int> _selected = {};
   bool _busy = false;
@@ -87,7 +89,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     } catch (err) {
       if (mounted) {
         setState(() {
-          _error = err.toString();
+          _error = err;
           _loading = false;
         });
       }
@@ -128,14 +130,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       _busy = false;
       _selected.clear();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(failed == 0 ? 'Done' : 'Completed with $failed failures'),
-        backgroundColor: failed == 0
-            ? AppColors.cardRaised
-            : AppColors.red.withValues(alpha: 0.9),
-      ),
-    );
+    if (failed == 0) {
+      Toast.success(context, 'Done');
+    } else {
+      Toast.error(context, 'Completed with $failed failures');
+    }
     _load();
   }
 
@@ -151,8 +150,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   Future<void> _exportCsv() async {
     try {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Exporting...')));
+      Toast.info(context, 'Exporting...');
       final all = <Map<String, dynamic>>[];
       for (var p = 1; p <= 100; p++) {
         final res = await ApiClient.instance.projectsList({
@@ -186,10 +184,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         ],
       );
     } catch (err) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(err.toString())));
-      }
+      if (mounted) Toast.error(context, err.toString());
     }
   }
 
@@ -360,7 +355,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   Widget _buildList() {
     if (_loading) return const LoadingView();
-    if (_error != null) return ErrorBox(message: _error!, onRetry: _load);
+    if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_projects.isEmpty) {
       return const EmptyState(
         message: 'No projects found.',

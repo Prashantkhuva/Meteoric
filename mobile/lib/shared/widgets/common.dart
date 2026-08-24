@@ -36,7 +36,8 @@ class AppScaffold extends StatelessWidget {
   }
 }
 
-/// KPI stat card used on the dashboard.
+/// KPI stat card used on the dashboard. Supports an icon chip, accent
+/// coloring and tap navigation.
 class KpiCard extends StatelessWidget {
   const KpiCard({
     super.key,
@@ -44,17 +45,24 @@ class KpiCard extends StatelessWidget {
     required this.value,
     this.sub,
     this.subColor,
+    this.icon,
+    this.accent,
+    this.onTap,
   });
 
   final String label;
   final String value;
   final String? sub;
   final Color? subColor;
+  final IconData? icon;
+  final Color? accent;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
+    final accentColor = accent ?? AppColors.textFaint;
+    Widget card = Container(
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.card,
         border: Border.all(color: AppColors.border),
@@ -62,41 +70,85 @@ class KpiCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label.toUpperCase(),
-            style: const TextStyle(
-              color: AppColors.textFaint,
-              fontSize: 9,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.2,
-              fontFamily: 'Inter',
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+              if (icon != null)
+                Container(
+                  width: 26,
+                  height: 26,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: accentColor.withValues(alpha: 0.07),
+                    border: Border.all(
+                      color: accentColor.withValues(alpha: 0.22),
+                    ),
+                  ),
+                  child: Icon(icon, size: 13, color: accentColor),
+                ),
+            ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Text(
             value,
             style: const TextStyle(
               color: AppColors.text,
-              fontSize: 26,
+              fontSize: 24,
               fontWeight: FontWeight.w700,
+              letterSpacing: -0.5,
               fontFamily: 'Inter',
               height: 1.1,
             ),
           ),
           if (sub != null) ...[
             const SizedBox(height: 8),
-            Text(
-              sub!,
-              style: TextStyle(
-                color: subColor ?? AppColors.textMuted,
-                fontSize: 11,
-                fontFamily: 'Inter',
-              ),
+            Row(
+              children: [
+                Container(
+                  width: 5,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: subColor ?? AppColors.textMuted,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    sub!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: subColor ?? AppColors.textMuted,
+                      fontSize: 11,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ],
       ),
     );
+    if (onTap != null) {
+      card = Material(
+        color: Colors.transparent,
+        child: InkWell(onTap: onTap, child: card),
+      );
+    }
+    return card;
   }
 }
 
@@ -290,49 +342,6 @@ class DetailRow extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Error message box.
-class ErrorBox extends StatelessWidget {
-  const ErrorBox({super.key, required this.message, this.onRetry});
-
-  final String message;
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.red.withValues(alpha: 0.06),
-          border: Border.all(color: AppColors.red.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              message,
-              style: const TextStyle(
-                color: AppColors.red,
-                fontSize: 13,
-                fontFamily: 'Inter',
-              ),
-              textAlign: TextAlign.center,
-            ),
-            if (onRetry != null) ...[
-              const SizedBox(height: 12),
-              GhostButton(
-                height: 36,
-                onPressed: onRetry,
-                child: const Text('RETRY'),
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }

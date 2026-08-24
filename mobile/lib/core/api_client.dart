@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show SocketException;
 
 import 'package:http/http.dart' as http;
 
@@ -10,8 +12,26 @@ import 'config.dart';
 /// session's access token as a Bearer token.
 class ApiException implements Exception {
   ApiException(this.message, {this.status = 400});
+
+  /// Network-level failure — no internet, DNS failure or timeout.
+  factory ApiException.offline([String message = 'No internet connection']) =>
+      ApiException(message, status: 0);
+
   final String message;
   final int status;
+
+  bool get isOffline => status == 0;
+  bool get isAuthError => status == 401;
+  bool get isServerError => status >= 500;
+
+  /// Short, human-friendly headline for error views.
+  String get title {
+    if (isOffline) return "You're offline";
+    if (isAuthError) return 'Session expired';
+    if (isServerError) return 'Server unavailable';
+    return 'Something went wrong';
+  }
+
   @override
   String toString() => message;
 }
@@ -52,12 +72,33 @@ class ApiClient {
   }
 
   /// Sends the request; on a 401 the session is refreshed once and the
-  /// request retried with the new access token.
+  /// request retried with the new access token. Network-level failures
+  /// (offline, DNS, timeout) are normalised into [ApiException] with
+  /// status `0` so screens can show a dedicated offline state.
   Future<http.Response> _send(Future<http.Response> Function() request) async {
-    var res = await request();
+    http.Response res;
+    try {
+      res = await request();
+    } on ApiException {
+      rethrow;
+    } on SocketException {
+      throw ApiException.offline();
+    } on TimeoutException {
+      throw ApiException.offline('Request timed out');
+    } on http.ClientException {
+      throw ApiException.offline();
+    }
     if (res.statusCode == 401 && AuthService.isSignedIn) {
       if (await AuthService.refreshSession()) {
-        res = await request();
+        try {
+          res = await request();
+        } on SocketException {
+          throw ApiException.offline();
+        } on TimeoutException {
+          throw ApiException.offline('Request timed out');
+        } on http.ClientException {
+          throw ApiException.offline();
+        }
       }
     }
     return res;
@@ -95,7 +136,9 @@ class ApiClient {
       body = jsonDecode(res.body) as Map<String, dynamic>;
     } catch (_) {
       throw ApiException(
-        'Unexpected server response (${res.statusCode})',
+        res.statusCode >= 500
+            ? 'The server is having trouble right now. Please try again shortly.'
+            : 'Unexpected server response (${res.statusCode})',
         status: res.statusCode,
       );
     }
@@ -277,6 +320,16 @@ class ApiClient {
 
   Future<Map<String, dynamic>> bookingCreateLead(Map<String, dynamic> data) =>
       _post('/api/admin/bookings', {'action': 'create-lead', ...data});
+
+  // ── Notifications ───────────────────────────────────────────────────────
+  Future<Map<String, dynamic>> notificationsList({int limit = 50}) =>
+      _post('/api/admin/notifications', {'action': 'list', 'limit': limit});
+
+  Future<Map<String, dynamic>> notificationsMarkRead(List<int> ids) =>
+      _post('/api/admin/notifications', {'action': 'mark_read', 'ids': ids});
+
+  Future<Map<String, dynamic>> notificationsMarkAllRead() =>
+      _post('/api/admin/notifications', {'action': 'mark_all_read'});
 
   // ── Bank accounts ───────────────────────────────────────────────────────
   Future<Map<String, dynamic>> bankAccountsList() =>

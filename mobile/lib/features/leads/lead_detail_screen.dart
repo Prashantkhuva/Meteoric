@@ -6,6 +6,7 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/status_flow.dart';
 import 'lead_form_screen.dart';
@@ -56,16 +57,8 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     }
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   Future<void> _changeStatus(String status) async {
     await _run('Status updated', () async {

@@ -4,6 +4,7 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/status_flow.dart';
 import 'project_form_screen.dart';
@@ -98,16 +99,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     }
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   @override
   Widget build(BuildContext context) {

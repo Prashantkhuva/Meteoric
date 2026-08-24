@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../core/formatters.dart';
 import '../../core/native.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/pdf_export.dart';
 import '../../shared/widgets/tiptap_view.dart';
 import '../invoices/invoice_preview_screen.dart' show StatusDot;
@@ -196,12 +197,7 @@ class ProposalPreviewScreen extends StatelessWidget {
   }
 
   Future<void> _exportPdf(BuildContext context) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Generating PDF...'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    Toast.info(context, 'Generating PDF...');
     try {
       final doc = PdfExport.proposal(proposal);
       final bytes = await doc.save();
@@ -212,14 +208,11 @@ class ProposalPreviewScreen extends StatelessWidget {
       );
     } on PlatformException catch (err) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(err.message ?? 'Could not share PDF')),
-        );
+        Toast.error(context, err.message ?? 'Could not share PDF');
       }
     } catch (err) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('$err')));
+        Toast.error(context, '$err');
       }
     }
   }

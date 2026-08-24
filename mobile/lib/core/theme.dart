@@ -55,7 +55,10 @@ class AppTheme {
         filled: true,
         fillColor: const Color(0x99000000),
         hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 14),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.zero,
           borderSide: const BorderSide(color: AppColors.border),
@@ -74,7 +77,9 @@ class AppTheme {
         ),
       ),
       dividerTheme: const DividerThemeData(color: AppColors.borderSoft),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.accent),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: AppColors.accent,
+      ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.cardRaised,
         contentTextStyle: const TextStyle(color: AppColors.text, fontSize: 13),

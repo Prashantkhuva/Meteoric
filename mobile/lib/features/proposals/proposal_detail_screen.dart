@@ -5,6 +5,7 @@ import '../../core/config.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/share_sheet.dart';
 import '../../shared/widgets/status_flow.dart';
@@ -164,16 +165,8 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
     }
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   @override
   Widget build(BuildContext context) {

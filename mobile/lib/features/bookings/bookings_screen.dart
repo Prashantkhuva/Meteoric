@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/api_client.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/csv_export.dart';
+import 'booking_detail_screen.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -33,14 +37,24 @@ String _shortTitle(String? title) {
   return idx > -1 ? title.substring(0, idx) : title;
 }
 
+DateTime? _startOf(Map<String, dynamic> booking) {
+  final s = booking['start'] ?? booking['startTime'];
+  if (s == null) return null;
+  return DateTime.tryParse('$s')?.toLocal();
+}
+
+bool _sameDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
+
 class _BookingsScreenState extends State<BookingsScreen> {
   List<Map<String, dynamic>> _bookings = [];
   bool _loading = true;
-  String? _error;
-  bool _busy = false;
+  Object? _error;
 
   final _search = TextEditingController();
   String _status = 'all';
+  bool _calendarMode = false;
+  DateTime _selectedDay = DateTime.now();
 
   @override
   void initState() {
@@ -54,11 +68,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
     super.dispose();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  /// [silent] keeps current content on screen while refreshing.
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
       final res = await ApiClient.instance.bookingsList();
       if (mounted) {
@@ -72,11 +89,19 @@ class _BookingsScreenState extends State<BookingsScreen> {
     } catch (err) {
       if (mounted) {
         setState(() {
-          _error = err.toString();
+          _error = err;
           _loading = false;
         });
       }
     }
+  }
+
+  /// Opens the detail screen; refreshes silently when it reports changes.
+  Future<void> _openDetail(Map<String, dynamic> booking) async {
+    final changed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => BookingDetailScreen(booking: booking)),
+    );
+    if (changed == true) _load(silent: true);
   }
 
   List<Map<String, dynamic>> get _filtered {
@@ -104,66 +129,24 @@ class _BookingsScreenState extends State<BookingsScreen> {
     });
   }
 
-  /// Numeric Cal.com booking id — required by the status / create-lead APIs.
-  int? _bookingId(Map<String, dynamic> booking) =>
-      booking['id'] is num ? (booking['id'] as num).toInt() : null;
-
-  Future<void> _setStatus(Map<String, dynamic> booking, String status) async {
-    final id = _bookingId(booking);
-    if (id == null) {
-      _snack('Booking id missing — cannot update', isError: true);
-      return;
-    }
-    setState(() => _busy = true);
-    try {
-      final res = await ApiClient.instance.bookingStatus('$id', status);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack(status == 'accepted' ? 'Booking accepted' : 'Booking rejected');
-        _load();
-      }
-    } catch (err) {
-      if (mounted) _snack(err.toString(), isError: true);
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
-  Future<void> _createLead(Map<String, dynamic> booking) async {
-    final id = _bookingId(booking);
-    if (id == null) {
-      _snack('Booking id missing — cannot create lead', isError: true);
-      return;
-    }
-    setState(() => _busy = true);
-    try {
-      final attendee = _attendeeOf(booking);
-      final res = await ApiClient.instance.bookingCreateLead({
-        'name': attendee['name'] ?? 'Booking guest',
-        'email': attendee['email'] ?? '',
-        'phone': attendee['phoneNumber'] ?? attendee['phone'] ?? '',
-        'bookingId': id,
-      });
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('Lead created from booking');
-      }
-    } catch (err) {
-      if (mounted) _snack(err.toString(), isError: true);
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
+  /// Bookings falling on the selected calendar day, chronological order.
+  List<Map<String, dynamic>> get _selectedDayBookings {
+    final rows =
+        _bookings.where((b) {
+          final start = _startOf(b);
+          return start != null && _sameDay(start, _selectedDay);
+        }).toList()..sort((a, b) {
+          final sa = _startOf(a)!;
+          final sb = _startOf(b)!;
+          return sa.compareTo(sb);
+        });
+    return rows;
   }
 
   Future<void> _exportCsv() async {
     try {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Exporting...')));
-      final rows = _filtered;
+      Toast.info(context, 'Exporting...');
+      final rows = _calendarMode ? _selectedDayBookings : _filtered;
       await CsvExport.share(
         filename: CsvExport.datedName('bookings'),
         rows: [
@@ -182,22 +165,8 @@ class _BookingsScreenState extends State<BookingsScreen> {
         ],
       );
     } catch (err) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(err.toString())));
-      }
+      if (mounted) Toast.error(context, err.toString());
     }
-  }
-
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
   }
 
   @override
@@ -207,6 +176,17 @@ class _BookingsScreenState extends State<BookingsScreen> {
         title: const Text('Bookings'),
         automaticallyImplyLeading: false,
         actions: [
+          IconButton(
+            icon: Icon(
+              _calendarMode
+                  ? Icons.list_alt_outlined
+                  : Icons.calendar_month_outlined,
+              size: 20,
+              color: AppColors.textMuted,
+            ),
+            onPressed: () => setState(() => _calendarMode = !_calendarMode),
+            tooltip: _calendarMode ? 'List view' : 'Calendar view',
+          ),
           IconButton(
             icon: const Icon(
               Icons.download_outlined,
@@ -222,99 +202,147 @@ class _BookingsScreenState extends State<BookingsScreen> {
               size: 18,
               color: AppColors.textMuted,
             ),
-            onPressed: _load,
+            onPressed: () => _load(),
             tooltip: 'Refresh',
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-            child: TextField(
-              controller: _search,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(
-                hintText: 'Search name, email...',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 18,
-                  color: AppColors.textFaint,
+      body: _loading
+          ? const LoadingView()
+          : _error != null
+          ? ErrorStateView(error: _error, onRetry: () => _load())
+          : _calendarMode
+          ? _buildCalendarBody()
+          : _buildListBody(),
+    );
+  }
+
+  // ── Calendar mode ───────────────────────────────────────────────────────
+
+  Widget _buildCalendarBody() {
+    final dayRows = _selectedDayBookings;
+    return Column(
+      children: [
+        _MonthCalendar(
+          bookings: _bookings,
+          selected: _selectedDay,
+          onSelect: (d) => setState(() => _selectedDay = d),
+        ),
+        Container(height: 1, color: AppColors.border),
+        Expanded(
+          child: dayRows.isEmpty
+              ? EmptyState(
+                  message:
+                      'No bookings on ${DateFormat('MMM d').format(_selectedDay)}.',
+                  icon: Icons.event_outlined,
+                )
+              : RefreshIndicator(
+                  onRefresh: () => _load(silent: true),
+                  color: AppColors.accent,
+                  backgroundColor: AppColors.card,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: dayRows.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 10),
+                    itemBuilder: (context, i) => _BookingCard(
+                      booking: dayRows[i],
+                      onTap: () => _openDetail(dayRows[i]),
+                    ),
+                  ),
                 ),
-                suffixIcon: _search.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(
-                          Icons.close,
-                          size: 16,
-                          color: AppColors.textMuted,
-                        ),
-                        onPressed: () {
-                          _search.clear();
-                          setState(() {});
-                        },
-                      )
-                    : null,
+        ),
+      ],
+    );
+  }
+
+  // ── List mode ───────────────────────────────────────────────────────────
+
+  Widget _buildListBody() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+          child: TextField(
+            controller: _search,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              hintText: 'Search name, email...',
+              prefixIcon: const Icon(
+                Icons.search,
+                size: 18,
+                color: AppColors.textFaint,
               ),
+              suffixIcon: _search.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: AppColors.textMuted,
+                      ),
+                      onPressed: () {
+                        _search.clear();
+                        setState(() {});
+                      },
+                    )
+                  : null,
             ),
           ),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                for (final entry in const [
-                  MapEntry('all', 'All'),
-                  MapEntry('pending', 'Pending'),
-                  MapEntry('accepted', 'Accepted'),
-                  MapEntry('rejected', 'Rejected'),
-                  MapEntry('cancelled', 'Cancelled'),
-                ])
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: GestureDetector(
-                      onTap: () => setState(() => _status = entry.key),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
+        ),
+        SizedBox(
+          height: 40,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            children: [
+              for (final entry in const [
+                MapEntry('all', 'All'),
+                MapEntry('pending', 'Pending'),
+                MapEntry('accepted', 'Accepted'),
+                MapEntry('rejected', 'Rejected'),
+                MapEntry('cancelled', 'Cancelled'),
+              ])
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: GestureDetector(
+                    onTap: () => setState(() => _status = entry.key),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: _status == entry.key
+                            ? Colors.white.withValues(alpha: 0.06)
+                            : Colors.transparent,
+                        border: Border.all(
                           color: _status == entry.key
-                              ? AppColors.accent.withValues(alpha: 0.1)
-                              : Colors.transparent,
-                          border: Border.all(
-                            color: _status == entry.key
-                                ? AppColors.accent.withValues(alpha: 0.5)
-                                : AppColors.border,
-                          ),
+                              ? Colors.white.withValues(alpha: 0.3)
+                              : AppColors.border,
                         ),
-                        child: Text(
-                          entry.value.toUpperCase(),
-                          style: TextStyle(
-                            color: _status == entry.key
-                                ? AppColors.accent
-                                : AppColors.textMuted,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.8,
-                            fontFamily: 'Inter',
-                          ),
+                      ),
+                      child: Text(
+                        entry.value.toUpperCase(),
+                        style: TextStyle(
+                          color: _status == entry.key
+                              ? AppColors.text
+                              : AppColors.textMuted,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.8,
+                          fontFamily: 'Inter',
                         ),
                       ),
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
-          const SizedBox(height: 4),
-          Expanded(child: _buildBody()),
-        ],
-      ),
+        ),
+        const SizedBox(height: 4),
+        Expanded(child: _buildList()),
+      ],
     );
   }
 
-  Widget _buildBody() {
-    if (_loading) return const LoadingView();
-    if (_error != null) return ErrorBox(message: _error!, onRetry: _load);
+  Widget _buildList() {
     final rows = _filtered;
     if (rows.isEmpty) {
       return const EmptyState(
@@ -324,39 +352,241 @@ class _BookingsScreenState extends State<BookingsScreen> {
     }
 
     return RefreshIndicator(
-      onRefresh: _load,
+      onRefresh: () => _load(silent: true),
       color: AppColors.accent,
       backgroundColor: AppColors.card,
       child: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: rows.length,
         separatorBuilder: (_, _) => const SizedBox(height: 10),
-        itemBuilder: (context, i) => _BookingCard(
-          booking: rows[i],
-          busy: _busy,
-          onAccept: () => _setStatus(rows[i], 'accepted'),
-          onReject: () => _setStatus(rows[i], 'rejected'),
-          onCreateLead: () => _createLead(rows[i]),
+        itemBuilder: (context, i) =>
+            _BookingCard(booking: rows[i], onTap: () => _openDetail(rows[i])),
+      ),
+    );
+  }
+}
+
+// ── Month calendar ────────────────────────────────────────────────────────
+
+/// Minimal monochrome month grid — days with bookings carry a dot under the
+/// number; today gets an outline; the selected day fills with accent.
+class _MonthCalendar extends StatefulWidget {
+  const _MonthCalendar({
+    required this.bookings,
+    required this.selected,
+    required this.onSelect,
+  });
+
+  final List<Map<String, dynamic>> bookings;
+  final DateTime selected;
+  final ValueChanged<DateTime> onSelect;
+
+  @override
+  State<_MonthCalendar> createState() => _MonthCalendarState();
+}
+
+class _MonthCalendarState extends State<_MonthCalendar> {
+  late DateTime _month = DateTime(widget.selected.year, widget.selected.month);
+
+  static const _weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+  @override
+  void didUpdateWidget(covariant _MonthCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_sameDay(widget.selected, oldWidget.selected) ||
+        widget.selected.month != _month.month ||
+        widget.selected.year != _month.year) {
+      _month = DateTime(widget.selected.year, widget.selected.month);
+    }
+  }
+
+  void _shift(int months) {
+    setState(() {
+      _month = DateTime(_month.year, _month.month + months);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Days of this month that contain at least one booking.
+    final markedDays = <int>{};
+    for (final b in widget.bookings) {
+      final start = _startOf(b);
+      if (start != null &&
+          start.year == _month.year &&
+          start.month == _month.month) {
+        markedDays.add(start.day);
+      }
+    }
+
+    final firstOffset = (_month.weekday + 6) % 7; // Monday-first grid
+    final daysInMonth = DateUtils.getDaysInMonth(_month.year, _month.month);
+    final totalCells = ((firstOffset + daysInMonth) / 7).ceil() * 7;
+    final now = DateTime.now();
+
+    return Container(
+      color: AppColors.card,
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(
+                  Icons.chevron_left,
+                  size: 18,
+                  color: AppColors.textMuted,
+                ),
+                onPressed: () => _shift(-1),
+              ),
+              Expanded(
+                child: Text(
+                  DateFormat('MMMM yyyy').format(_month),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.text,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: AppColors.textMuted,
+                ),
+                onPressed: () => _shift(1),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              for (final w in _weekdays)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      w.toUpperCase(),
+                      style: const TextStyle(
+                        color: AppColors.textFaint,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          for (var row = 0; row < totalCells ~/ 7; row++)
+            Row(
+              children: [
+                for (var col = 0; col < 7; col++)
+                  _cell(
+                    row * 7 + col,
+                    firstOffset,
+                    daysInMonth,
+                    now,
+                    markedDays,
+                  ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _cell(
+    int index,
+    int firstOffset,
+    int daysInMonth,
+    DateTime now,
+    Set<int> markedDays,
+  ) {
+    final dayNum = index - firstOffset + 1;
+    if (dayNum < 1 || dayNum > daysInMonth) {
+      return const Expanded(child: SizedBox(height: 44));
+    }
+    final date = DateTime(_month.year, _month.month, dayNum);
+    final isToday = _sameDay(date, now);
+    final isSelected = _sameDay(date, widget.selected);
+    final hasBookings = markedDays.contains(dayNum);
+
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => widget.onSelect(date),
+        child: SizedBox(
+          height: 44,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.accent
+                      : isToday
+                      ? Colors.white.withValues(alpha: 0.06)
+                      : Colors.transparent,
+                  border: isSelected || isToday
+                      ? Border.all(
+                          color: isSelected
+                              ? AppColors.accent
+                              : Colors.white.withValues(alpha: 0.22),
+                        )
+                      : null,
+                ),
+                child: Text(
+                  '$dayNum',
+                  style: TextStyle(
+                    color: isSelected
+                        ? const Color(0xFF070707)
+                        : AppColors.text,
+                    fontSize: 11.5,
+                    fontWeight: isSelected || isToday
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 3),
+              Container(
+                width: 4,
+                height: 4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: hasBookings
+                      ? AppColors.accent.withValues(alpha: 0.85)
+                      : Colors.transparent,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
+// ── Booking card ──────────────────────────────────────────────────────────
+
 class _BookingCard extends StatelessWidget {
-  const _BookingCard({
-    required this.booking,
-    required this.busy,
-    required this.onAccept,
-    required this.onReject,
-    required this.onCreateLead,
-  });
+  const _BookingCard({required this.booking, required this.onTap});
 
   final Map<String, dynamic> booking;
-  final bool busy;
-  final VoidCallback onAccept;
-  final VoidCallback onReject;
-  final VoidCallback onCreateLead;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -367,191 +597,104 @@ class _BookingCard extends StatelessWidget {
     final status = '${booking['status'] ?? 'pending'}'.toLowerCase();
     final title = _shortTitle(booking['title'] as String?);
     final duration = (booking['duration'] as num?)?.toInt();
-    final description = booking['description'];
-    final location = booking['location'];
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
-        color: AppColors.card,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Material(
+      color: AppColors.card,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                    color: AppColors.text,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-              _statusPill(status),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            email,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 12,
-              fontFamily: 'Inter',
-            ),
-          ),
-          if (title.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                const Icon(
-                  Icons.label_outline,
-                  size: 13,
-                  color: AppColors.textFaint,
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    duration != null ? '$title · $duration min' : title,
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 12,
-                      fontFamily: 'Inter',
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '$name',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.text,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
-            ),
-          ],
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              const Icon(
-                Icons.event_outlined,
-                size: 13,
-                color: AppColors.textFaint,
+                  const SizedBox(width: 8),
+                  _statusPill(status),
+                  const SizedBox(width: 2),
+                  const Icon(
+                    Icons.chevron_right,
+                    size: 15,
+                    color: AppColors.textFaint,
+                  ),
+                ],
               ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  start != null ? Fmt.dateTime('$start') : '—',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                  ),
+              const SizedBox(height: 6),
+              Text(
+                '$email',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
                 ),
               ),
-            ],
-          ),
-          if (location is String && location.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 13,
-                  color: AppColors.textFaint,
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    location,
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 12,
-                      fontFamily: 'Inter',
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.event_outlined,
+                    size: 13,
+                    color: AppColors.textFaint,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      title.isEmpty
+                          ? (start != null ? Fmt.dateTime('$start') : '—')
+                          : duration != null
+                          ? '$title · $duration min · ${Fmt.dateTime('$start')}'
+                          : '$title · ${Fmt.dateTime('$start')}',
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
-            ),
-          ],
-          if (description is String && description.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 12,
-                height: 1.5,
-                fontFamily: 'Inter',
-              ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              if (status != 'accepted')
-                _chip('ACCEPT', AppColors.accent, busy ? null : onAccept),
-              if (status != 'rejected')
-                _chip('REJECT', AppColors.red, busy ? null : onReject),
-              _chip(
-                'CREATE LEAD',
-                const Color(0xFF4CAF50),
-                busy ? null : onCreateLead,
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _statusPill(String status) {
-    final color = switch (status) {
-      'accepted' => const Color(0xFF4CAF50),
-      'rejected' => AppColors.red,
-      _ => AppColors.textMuted,
-    };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: color.withValues(alpha: 0.4)),
+        color: Colors.white.withValues(alpha: 0.05),
+        border: Border.all(color: AppColors.borderSoft),
       ),
       child: Text(
         status.toUpperCase(),
-        style: TextStyle(
-          color: color,
+        style: const TextStyle(
+          color: AppColors.textMuted,
           fontSize: 9,
           fontWeight: FontWeight.w600,
           letterSpacing: 1,
           fontFamily: 'Inter',
-        ),
-      ),
-    );
-  }
-
-  Widget _chip(String label, Color color, VoidCallback? onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: color.withValues(alpha: onTap == null ? 0.15 : 0.4),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: color.withValues(alpha: onTap == null ? 0.4 : 1),
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
-          ),
         ),
       ),
     );

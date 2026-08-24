@@ -6,7 +6,9 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/filter_bar.dart';
 
 class ReviewsScreen extends StatefulWidget {
@@ -25,7 +27,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   String _status = 'all';
   String _sort = 'newest';
   bool _loading = true;
-  String? _error;
+  Object? _error;
 
   final _search = TextEditingController();
   Timer? _debounce;
@@ -76,7 +78,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     } catch (err) {
       if (mounted) {
         setState(() {
-          _error = err.toString();
+          _error = err;
           _loading = false;
         });
       }
@@ -152,16 +154,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     }
   }
 
-  void _snack(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: isError
-            ? AppColors.red.withValues(alpha: 0.9)
-            : AppColors.cardRaised,
-      ),
-    );
-  }
+  void _snack(String msg, {bool isError = false}) =>
+      isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +257,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   Widget _buildList() {
     if (_loading) return const LoadingView();
-    if (_error != null) return ErrorBox(message: _error!, onRetry: _load);
+    if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_reviews.isEmpty) {
       return const EmptyState(
         message: 'No reviews found.',

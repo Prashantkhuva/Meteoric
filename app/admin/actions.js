@@ -12,6 +12,7 @@ import { callAIJson } from "@/lib/ai/provider";
 import { getExchangeRate } from "@/lib/exchange-rate";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import { sanitizeSearch } from "@/lib/search";
+import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
 import {
   idSchema,
   emailSchema,
@@ -874,6 +875,18 @@ export async function checkOverdueInvoices() {
   let sent = 0;
 
   for (const invoice of overdue || []) {
+    await createNotification({
+      type: NOTIFICATION_TYPES.INVOICE_OVERDUE,
+      title: `Overdue · ${invoice.invoice_number || `#${invoice.id}`}`,
+      body:
+        invoice.total != null
+          ? `${invoice.currency || "USD"} ${Number(invoice.total).toFixed(2)}${invoice.client?.name ? ` — ${invoice.client.name}` : ""}`
+          : null,
+      entityType: "invoice",
+      entityId: invoice.id,
+      dedupeKey: `invoice_overdue:${invoice.id}`,
+    });
+
     if (!invoice.client?.email) continue;
 
     const shareToken = invoice.share_token || randomUUID();
@@ -954,6 +967,23 @@ export async function markInvoiceAsPaid(id, paidAt) {
       .eq("id", safeId);
 
     if (error) return { error: error.message };
+
+    const { data: paidInvoice } = await supabase
+      .from("invoices")
+      .select("invoice_number, total, currency, client:clients(name)")
+      .eq("id", safeId)
+      .single();
+
+    await createNotification({
+      type: NOTIFICATION_TYPES.PAYMENT_RECEIVED,
+      title: `Payment received · ${paidInvoice?.invoice_number || `#${safeId}`}`,
+      body:
+        paidInvoice?.total != null
+          ? `${paidInvoice.currency || "USD"} ${Number(paidInvoice.total).toFixed(2)}${paidInvoice?.client?.name ? ` — ${paidInvoice.client.name}` : ""}`
+          : null,
+      entityType: "invoice",
+      entityId: safeId,
+    });
 
     let whatsappUrl = null;
     try {
@@ -1090,6 +1120,27 @@ export async function updateInvoiceStatus(id, status) {
       .eq("id", safeId);
 
     if (error) return { error: error.message };
+
+    if (safeStatus === "paid") {
+      const { data: paidInvoice } = await supabase
+        .from("invoices")
+        .select("invoice_number, total, currency, client:clients(name)")
+        .eq("id", safeId)
+        .single();
+
+      await createNotification({
+        type: NOTIFICATION_TYPES.PAYMENT_RECEIVED,
+        title: `Payment received · ${paidInvoice?.invoice_number || `#${safeId}`}`,
+        body:
+          paidInvoice?.total != null
+            ? `${paidInvoice.currency || "USD"} ${Number(paidInvoice.total).toFixed(2)}${paidInvoice?.client?.name ? ` — ${paidInvoice.client.name}` : ""}`
+            : null,
+        entityType: "invoice",
+        entityId: safeId,
+        dedupeKey: `invoice_paid:${safeId}:${new Date().toISOString().slice(0, 10)}`,
+      });
+    }
+
     revalidateAdmin("/admin/invoices");
     return { success: true };
   } catch (err) {

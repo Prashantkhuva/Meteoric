@@ -11,6 +11,7 @@ dependencies:
   fl_chart: ^1.2.0
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^19.4.2
   flutter_localizations:
     sdk: flutter
   flutter_quill: ^11.5.1
@@ -23,6 +24,7 @@ dependencies:
   pdf: ^3.11.3
   shared_preferences: ^2.5.5
   supabase_flutter: ^2.17.2
+  timezone: ^0.10.1
   vsc_quill_delta_to_html: ^1.0.5
 
 dev_dependencies:

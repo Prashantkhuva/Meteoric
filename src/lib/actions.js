@@ -7,6 +7,7 @@ import { resend } from "@/lib/email/resend";
 import { getSiteUrl } from "@/config/site-url";
 import { callAIJson } from "@/lib/ai/provider";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
+import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
 
 export async function createLead(data) {
   try {
@@ -60,6 +61,19 @@ export async function createLead(data) {
       } catch (aiErr) {
         console.warn("[ai] lead scoring failed:", aiErr?.message);
       }
+    }
+
+    if (aiCategory !== "spam") {
+      await createNotification({
+        type: NOTIFICATION_TYPES.NEW_LEAD,
+        title: data.name || "New lead",
+        body:
+          [data.services, data.budget ? `Budget ${data.budget}` : null]
+            .filter(Boolean)
+            .join(" · ") || null,
+        entityType: "lead",
+        entityId: insertData?.id ?? null,
+      });
     }
 
     let emailError = null

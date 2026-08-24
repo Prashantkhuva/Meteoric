@@ -8,8 +8,10 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/bulk_actions_bar.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/csv_export.dart';
 import '../../shared/widgets/filter_bar.dart';
 import 'lead_detail_screen.dart';
@@ -45,7 +47,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
   String _score = 'all';
   String _sort = 'newest';
   bool _loading = true;
-  String? _error;
+  Object? _error;
   Timer? _debounce;
 
   final Set<int> _selected = {};
@@ -95,7 +97,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     } catch (err) {
       if (mounted) {
         setState(() {
-          _error = err.toString();
+          _error = err;
           _loading = false;
         });
       }
@@ -138,18 +140,11 @@ class _LeadsScreenState extends State<LeadsScreen> {
       _busy = false;
       _selected.clear();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          failed == 0
-              ? 'Deleted successfully'
-              : 'Deleted with $failed failures',
-        ),
-        backgroundColor: failed == 0
-            ? AppColors.cardRaised
-            : AppColors.red.withValues(alpha: 0.9),
-      ),
-    );
+    if (failed == 0) {
+      Toast.success(context, 'Deleted successfully');
+    } else {
+      Toast.error(context, 'Deleted with $failed failures');
+    }
     _load();
   }
 
@@ -169,11 +164,11 @@ class _LeadsScreenState extends State<LeadsScreen> {
       _busy = false;
       _selected.clear();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(failed == 0 ? 'Status updated' : '$failed failed'),
-      ),
-    );
+    if (failed == 0) {
+      Toast.success(context, 'Status updated');
+    } else {
+      Toast.error(context, '$failed failed');
+    }
     _load();
   }
 
@@ -203,8 +198,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   Future<void> _exportCsv() async {
     try {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Exporting...')));
+      Toast.info(context, 'Exporting...');
       final rows = await _fetchAll();
       final csv = [
         [
@@ -236,10 +230,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
       ];
       await CsvExport.share(filename: CsvExport.datedName('leads'), rows: csv);
     } catch (err) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(err.toString())));
-      }
+      if (mounted) Toast.error(context, err.toString());
     }
   }
 
@@ -267,32 +258,19 @@ class _LeadsScreenState extends State<LeadsScreen> {
         rows.add(row);
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Importing ${rows.length} rows...')),
-      );
+      Toast.info(context, 'Importing ${rows.length} rows...');
       final res = await ApiClient.instance.leadsImport(rows);
       if (!mounted) return;
       final errors = (res['errors'] as List?) ?? const [];
       final imported = (res['imported'] as num?)?.toInt() ?? 0;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            errors.isEmpty
-                ? 'Imported $imported leads'
-                : 'Imported $imported · ${errors.length} skipped',
-          ),
-        ),
-      );
+      if (errors.isEmpty) {
+        Toast.success(context, 'Imported $imported leads');
+      } else {
+        Toast.info(context, 'Imported $imported · ${errors.length} skipped');
+      }
       _load();
     } catch (err) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(err.toString()),
-            backgroundColor: AppColors.red.withValues(alpha: 0.9),
-          ),
-        );
-      }
+      if (mounted) Toast.error(context, err.toString());
     }
   }
 
@@ -500,7 +478,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   Widget _buildList() {
     if (_loading) return const LoadingView();
-    if (_error != null) return ErrorBox(message: _error!, onRetry: _load);
+    if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_leads.isEmpty) {
       return const EmptyState(
         message: 'No leads found. Adjust filters or add a new lead.',

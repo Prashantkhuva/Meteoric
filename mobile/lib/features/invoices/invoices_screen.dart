@@ -7,8 +7,10 @@ import '../../core/config.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../core/toast.dart';
 import '../../shared/widgets/bulk_actions_bar.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/csv_export.dart';
 import '../../shared/widgets/filter_bar.dart';
 import '../../shared/widgets/share_sheet.dart';
@@ -42,7 +44,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
   String _status = 'all';
   String _sort = 'newest';
   bool _loading = true;
-  String? _error;
+  Object? _error;
 
   final Set<int> _selected = {};
   bool _busy = false;
@@ -88,7 +90,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     } catch (err) {
       if (mounted) {
         setState(() {
-          _error = err.toString();
+          _error = err;
           _loading = false;
         });
       }
@@ -129,14 +131,11 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
       _busy = false;
       _selected.clear();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(failed == 0 ? 'Done' : 'Completed with $failed failures'),
-        backgroundColor: failed == 0
-            ? AppColors.cardRaised
-            : AppColors.red.withValues(alpha: 0.9),
-      ),
-    );
+    if (failed == 0) {
+      Toast.success(context, 'Done');
+    } else {
+      Toast.error(context, 'Completed with $failed failures');
+    }
     _load();
   }
 
@@ -166,8 +165,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
 
   Future<void> _exportCsv() async {
     try {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Exporting...')));
+      Toast.info(context, 'Exporting...');
       final all = <Map<String, dynamic>>[];
       for (var p = 1; p <= 100; p++) {
         final res = await ApiClient.instance.invoicesList({
@@ -202,10 +200,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
         ],
       );
     } catch (err) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(err.toString())));
-      }
+      if (mounted) Toast.error(context, err.toString());
     }
   }
 
@@ -214,12 +209,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
       final res = await ApiClient.instance.invoiceShareToken(_id(invoice));
       if (!mounted) return;
       if (res.containsKey('error')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${res['error']}'),
-            backgroundColor: AppColors.red.withValues(alpha: 0.9),
-          ),
-        );
+        Toast.error(context, '${res['error']}');
         return;
       }
       await showShareSheet(
@@ -228,10 +218,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
         url: '${AppConfig.siteUrl}/share/invoice/${res['token']}',
       );
     } catch (err) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(err.toString())));
-      }
+      if (mounted) Toast.error(context, err.toString());
     }
   }
 
@@ -402,7 +389,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
 
   Widget _buildList() {
     if (_loading) return const LoadingView();
-    if (_error != null) return ErrorBox(message: _error!, onRetry: _load);
+    if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_invoices.isEmpty) {
       return const EmptyState(
         message: 'No invoices found.',
