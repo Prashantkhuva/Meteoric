@@ -57,6 +57,8 @@ class NotificationService {
             'Admin alerts',
             channelDescription:
                 'New leads, bookings, payments and overdue invoices',
+            icon: 'ic_notif',
+            largeIcon: DrawableResourceAndroidBitmap('ic_meteoric_color'),
             importance: Importance.high,
             priority: Priority.high,
             category: AndroidNotificationCategory.message,
