@@ -7,6 +7,7 @@ import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { serviceFaqs } from "@/data/faqs";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 const services = [
   {
@@ -321,7 +322,10 @@ export default function ServicesPage() {
           </ScrollReveal>
           <ScrollReveal direction="up" delay={0.3}>
             <button
-              onClick={openCal}
+              onClick={() => {
+                trackEvent("services_cta_click", { button_location: "/services" });
+                openCal();
+              }}
               className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
             >
               Get a Free Estimate

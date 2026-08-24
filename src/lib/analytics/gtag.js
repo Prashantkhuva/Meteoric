@@ -32,6 +32,16 @@ export function initGtag() {
 }
 
 /**
+ * Safely fires a GA4 event, checking if gtag exists before calling.
+ * Wraps window.gtag('event', ...) to avoid errors if analytics hasn't loaded
+ * or ad blockers are active.
+ */
+export function trackEvent(eventName, params = {}) {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", eventName, params);
+}
+
+/**
  * Sends a page_view for SPA navigations (and initial route after mount).
  * Uses the recommended GA4 event so we don't re-run full config on each route.
  */

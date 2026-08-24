@@ -7,6 +7,7 @@ import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 const serviceLinks = {
   "letem-know": { label: "Landing Pages", href: "/services#landing-pages" },
@@ -16,6 +17,11 @@ const serviceLinks = {
 };
 
 export default function CaseStudiesPage() {
+  // Track case study page view
+  trackEvent("case_study_view", {
+    case_study_name: caseStudies[0]?.name,
+  });
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* ── GEO quotable blocks ── */}

@@ -6,6 +6,7 @@ import { gsap, SplitText } from "@/lib/gsap-setup";
 import MeteorBackground from "./MeteorBackground";
 import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
+import { trackEvent } from "@/lib/analytics/gtag";
 function Hero() {
   const containerRef = useRef(null);
   const mainTextRef = useRef(null);
@@ -128,7 +129,10 @@ function Hero() {
         >
           <button
             type="button"
-            onClick={openCal}
+            onClick={() => {
+              trackEvent("booking_click", { button_location: "/hero" });
+              openCal();
+            }}
             className="group relative inline-flex items-center overflow-hidden border-2 border-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-transform duration-300 ease-out hover:scale-[1.03]"
             onMouseEnter={() => setCtaHovered(true)}
             onMouseLeave={() => setCtaHovered(false)}

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 const RequestModal = lazy(() => import("@/components/layout/NavBar/RequestModal"));
 
@@ -163,6 +164,17 @@ export default function AboutPage({ faqs = [] }) {
                   className="text-white/40 hover:text-white text-sm transition-colors duration-200"
                 >
                   contact@withmeteoric.com
+                </a>
+                <a
+                  href="https://wa.me/1234567890"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-no-magnetic
+                  className="text-white/40 hover:text-white text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
+                  onClick={() => trackEvent("whatsapp_click", { click_location: "/about" })}
+                >
+                  WhatsApp
+                  <ArrowUpRight size={12} />
                 </a>
                 <a
                   href="https://cal.com/prashantkhuva/let-s-build"

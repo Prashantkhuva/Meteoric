@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import FaqAccordion from "@/components/sections/FaqAccordion";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 export default function ServiceLanding({ service }) {
   const openCal = useCallback(async () => {
@@ -104,7 +105,10 @@ export default function ServiceLanding({ service }) {
           </ScrollReveal>
           <ScrollReveal direction="up" delay={0.2}>
             <button
-              onClick={openCal}
+              onClick={() => {
+                trackEvent("services_cta_click", { button_location: `/services/${service.slug}` });
+                openCal();
+              }}
               className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
             >
               Get a Free Estimate <ArrowUpRight size={15} className="ml-2" />

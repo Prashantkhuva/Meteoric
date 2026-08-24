@@ -13,6 +13,7 @@ import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import StaggerLink from "./StaggerLink";
 import StaggerText from "./StaggerText";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -39,6 +40,10 @@ export default function Navbar() {
     const { getCalApi } = await import("@calcom/embed-react");
     const cal = await getCalApi({ namespace: "let-s-build" });
     cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  }, []);
+
+  const trackBookingClick = useCallback((buttonLocation) => {
+    trackEvent("booking_click", { button_location: buttonLocation });
   }, []);
 
   const movePill = useCallback((index) => {
@@ -258,7 +263,10 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               data-no-magnetic
-              onClick={openCal}
+              onClick={() => {
+                trackBookingClick("/navbar");
+                openCal();
+              }}
               className="hidden md:inline-flex items-center cursor-pointer flip-btn"
             >
               <StaggerText
@@ -363,6 +371,7 @@ export default function Navbar() {
           <button
             data-no-magnetic
             onClick={() => {
+              trackBookingClick("/navbar-mobile");
               closeMenu();
               openCal();
             }}

@@ -5,6 +5,7 @@ import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Check, Loader2 } from "lucide-react";
 import { createLead } from "@/lib/actions";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 export default function LeadCaptureSection() {
   const [email, setEmail] = useState("");
@@ -80,6 +81,10 @@ export default function LeadCaptureSection() {
 
     setSubmitted(true);
     setSending(false);
+
+    trackEvent("contact_form_submit", {
+      form_location: window.location.pathname,
+    });
   };
 
   return (

@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
+import { trackEvent } from "@/lib/analytics/gtag";
 
 function WorkCard({ project, index }) {
   const isReversed = index % 2 === 1;
@@ -52,6 +53,11 @@ function WorkCard({ project, index }) {
 }
 
 export default function WorkPage() {
+  // Track portfolio/ case study page view
+  trackEvent("case_study_view", {
+    case_study_name: "Portfolio — SaaS & Web Development Projects",
+  });
+
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const cardsRef = useRef(null);
