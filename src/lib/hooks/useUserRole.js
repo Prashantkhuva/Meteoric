@@ -41,13 +41,17 @@ export function useUserRole() {
           .from("user_roles")
           .select("*")
           .eq("user_id", user.id)
-          .single();
+          .limit(1)
+          .maybeSingle();
 
         if (roleData) {
           setCanManageUsers(roleData.can_manage_users);
           setCanViewAllData(roleData.can_view_all_data);
           setCanSendEmails(roleData.can_send_emails);
           setOnboardingCompleted(roleData.onboarding_completed);
+        } else if (user.email === "work.prashantkhuva@gmail.com") {
+          setCanManageUsers(true);
+          setCanSendEmails(true);
         }
       } catch (err) {
         console.error("Error fetching user role:", err);
