@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useUserRole } from "@/lib/hooks/useUserRole";
 import { createClient } from "@/lib/supabase/client";
 import { User, Lock } from "lucide-react";
-import { useContext } from "react";
-import { ToastContext } from "@/components/ToastContext";
+import { useToast } from "../components/ToastContext";
 
 export default function PageContent() {
-  const toast = useContext(ToastContext);
+  const toast = useToast();
   const {
     user,
     role,
