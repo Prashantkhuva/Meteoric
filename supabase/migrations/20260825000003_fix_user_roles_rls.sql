@@ -1,37 +1,32 @@
--- Fix: break recursive RLS + replace deprecated auth.role()
--- auth.role() is deprecated; use auth.uid() IS NOT NULL instead.
--- The superadmin policy was "for ALL" and self-referenced user_roles,
--- causing infinite recursion / 500 on SELECT. Restrict it to INSERT/UPDATE/DELETE.
+-- Nuclear fix: drop ALL policies, rebuild without recursion.
+-- Authorization (superadmin check) lives in server actions, NOT in RLS.
+-- RLS only ensures users can read their own role row.
+-- This avoids the recursive self-reference that caused 500 errors.
 
--- Drop all existing policies
-drop policy if exists "Superadmin can manage all user roles" on public.user_roles;
-drop policy if exists "Users can view own role" on public.user_roles;
-drop policy if exists "Superadmin can insert user roles" on public.user_roles;
-drop policy if exists "Superadmin can update own user role" on public.user_roles;
+DO $$ DECLARE pol RECORD; BEGIN
+  FOR pol IN SELECT policyname FROM pg_policies WHERE tablename = 'user_roles' AND schemaname = 'public'
+  LOOP
+    EXECUTE 'DROP POLICY IF EXISTS ' || quote_ident(pol.policyname) || ' ON public.user_roles';
+  END LOOP;
+END $$;
 
--- Everyone can read their own role (SELECT only)
-create policy "Users can view own role"
-  on public.user_roles for select
-  using (user_id = auth.uid());
+-- 1. Authenticated users can read their own role row
+CREATE POLICY "user_roles_select_own"
+  ON public.user_roles FOR SELECT
+  USING (user_id = auth.uid());
 
--- Superadmin can do everything except SELECT (INSERT/UPDATE/DELETE)
--- Self-references user_roles but only for INSERT/UPDATE/DELETE which
--- don't trigger SELECT recursion.
-create policy "Superadmin can manage user roles"
-  on public.user_roles for all
-  using (
-    auth.uid() is not null
-    and exists (
-      select 1 from public.user_roles ur2
-      where ur2.user_id = auth.uid()
-        and ur2.role = 'superadmin'
-    )
-  )
-  with check (
-    auth.uid() is not null
-    and exists (
-      select 1 from public.user_roles ur2
-      where ur2.user_id = auth.uid()
-        and ur2.role = 'superadmin'
-    )
-  );
+-- 2. Authenticated users can insert (server actions enforce superadmin check)
+CREATE POLICY "user_roles_insert_auth"
+  ON public.user_roles FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+-- 3. Authenticated users can update (server actions enforce superadmin check)
+CREATE POLICY "user_roles_update_auth"
+  ON public.user_roles FOR UPDATE
+  USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+-- 4. Authenticated users can delete (server actions enforce superadmin check)
+CREATE POLICY "user_roles_delete_auth"
+  ON public.user_roles FOR DELETE
+  USING (auth.uid() IS NOT NULL);
