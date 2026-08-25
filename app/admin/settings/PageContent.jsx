@@ -1,38 +1,30 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 import { createClient } from "@/lib/supabase/client";
-import { User, Lock, Loader2, Check } from "lucide-react";
-import { ToastContext } from "../components/ToastContext";
+import { User, Lock } from "lucide-react";
+import { useContext } from "react";
+import { ToastContext } from "@/components/ToastContext";
 
 export default function PageContent() {
   const toast = useContext(ToastContext);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [user, setUser] = useState(null);
+  const {
+    user,
+    role,
+    onboardingCompleted,
+  } = useUserRole();
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  // Local state for form fields - ALWAYS called in this exact order
+  const [fullName, setFullName] = useState(user?.user_metadata?.full_name || user?.email?.split("@")[0] || "");
+  const [email, setEmail] = useState(user?.email || "");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    const supabase = createClient();
-    if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => {
-      const u = data?.user;
-      if (u) {
-        setUser(u);
-        setFullName(u.user_metadata?.full_name || u.user_metadata?.name || "");
-        setEmail(u.email || "");
-      }
-    }).finally(() => setLoading(false));
-  }, []);
-
+  // Handle profile save
   async function handleProfileSave(e) {
     e.preventDefault();
-    setSaving(true);
     const supabase = createClient();
     try {
       const updates = { data: { full_name: fullName } };
@@ -41,19 +33,13 @@ export default function PageContent() {
       }
       const { error } = await supabase.auth.updateUser(updates);
       if (error) throw error;
-      setUser((prev) => ({
-        ...prev,
-        email: email !== user.email ? email : prev.email,
-        user_metadata: { ...prev.user_metadata, full_name: fullName },
-      }));
       toast("Profile updated successfully", "success");
     } catch (err) {
       toast(err.message || "Failed to update profile", "error");
-    } finally {
-      setSaving(false);
     }
   }
 
+  // Handle password save
   async function handlePasswordSave(e) {
     e.preventDefault();
     if (newPassword.length < 6) {
@@ -64,30 +50,23 @@ export default function PageContent() {
       toast("Passwords do not match", "error");
       return;
     }
-    setSaving(true);
     const supabase = createClient();
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
+      // Mark onboarding as complete
+      if (onboardingCompleted !== true) {
+        await supabase.from("user_roles").update({ onboarding_completed: true }).eq("user_id", user?.id);
+        if (user?.user) {
+          await supabase.auth.admin.updateUserById(user.id, { user_metadata: { onboarding_completed: true } });
+        }
+      }
       setNewPassword("");
       setConfirmPassword("");
-      toast("Password updated successfully", "success");
+      toast("Password updated successfully. You can now log in with your new password.", "success");
     } catch (err) {
       toast(err.message || "Failed to update password", "error");
-    } finally {
-      setSaving(false);
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="p-5 lg:p-8">
-        <div className="flex items-center gap-3 text-white/30">
-          <Loader2 size={16} className="animate-spin" />
-          <span className="text-sm">Loading settings...</span>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -98,6 +77,7 @@ export default function PageContent() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
         <div className="border border-white/[0.06] bg-white/[0.02] p-5 lg:p-6 space-y-4">
           <div className="flex items-center gap-2 text-white/70">
             <User size={16} />
@@ -139,10 +119,9 @@ export default function PageContent() {
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={false}
               className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
             >
-              {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
               Save Profile
             </button>
           </form>
@@ -199,15 +178,21 @@ export default function PageContent() {
 
             <button
               type="submit"
-              disabled={saving || !newPassword || !confirmPassword}
+              disabled={!newPassword || !confirmPassword}
               className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
             >
-              {saving ? <Loader2 size={14} className="animate-spin" /> : <Lock size={14} />}
               Update Password
             </button>
           </form>
         </div>
       </div>
+
+      {/* First login notice */}
+      {!onboardingCompleted && role !== "speaker" && (
+        <p className="mt-2 text-xs text-amber-400/70">
+          ⚠️ First login requires password change
+        </p>
+      )}
     </div>
   );
 }

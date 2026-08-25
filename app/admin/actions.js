@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { generateAutoPassword } from "@/lib/utils/generate-password";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
@@ -1734,5 +1735,222 @@ export async function deleteReview(id) {
     return { success: true };
   } catch (err) {
     return { error: err.message || "Failed to delete review" };
+  }
+}
+
+export async function addUserInvite(formData) {
+  try {
+    const supabase = await getSupabase();
+    const name = formData.get("name")?.toString().trim();
+    const email = formData.get("email")?.toString().trim().toLowerCase();
+    const role = formData.get("role")?.toString().trim();
+
+    if (!name || !email || !role) {
+      return { error: "Name, email, and role are required" };
+    }
+
+    const validRoles = ["superadmin", "admin", "speaker"];
+    if (!validRoles.includes(role)) {
+      return { error: "Invalid role specified" };
+    }
+
+    // Check if user already exists
+    const { data: existingUser } = await supabase.auth.admin.listUsers();
+    const userExists = existingUser.users.some((u) => u.email === email);
+
+    if (userExists) {
+      return { error: "A user with this email already exists" };
+    }
+
+    // Create user in Supabase Auth
+    const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
+      email,
+      password: generateAutoPassword(),
+      email_confirm: true,
+      user_metadata: { full_name: name, role },
+    });
+
+    if (authError) return { error: authError.message };
+    if (!authUser.user) return { error: "Failed to create user" };
+
+    // Assign role in user_roles table
+    const { error: roleError } = await supabase.from("user_roles").insert({
+      user_id: authUser.user.id,
+      role,
+      can_manage_users: role === "superadmin",
+      can_view_all_data: true,
+      can_send_emails: role !== "speaker",
+      onboarding_completed: false,
+    });
+
+    if (roleError) {
+      // Clean up auth user if role assignment fails
+      await supabase.auth.admin.deleteUser(authUser.user.id);
+      return { error: roleError.message };
+    }
+
+    // Send invitation email
+    const loginUrl = `${getSiteUrl()}/login?redirect=/admin`;
+    const invitationEmailHtml = `
+      <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>You're invited to Meteoric Admin</h2>
+        <p>Hello <strong>${name}</strong>,</p>
+        <p>You have been added to the Meteoric Admin panel as a <strong>${role}</strong>.</p>
+        <p>Your auto-generated password: <code>${generateAutoPassword()}</code></p>
+        <p>Login here: <a href="${loginUrl}" style="color: #EAEFFF; text-decoration: underline;">${loginUrl}</a></p>
+        <p>⚠️ <strong>First login requires password change.</strong></p>
+        <p>Best regards,<br/>Meteoric Team</p>
+      </div>
+    `;
+
+    await sendCustomEmail({
+      from: "admin",
+      to: [email],
+      subject: "You're invited to Meteoric Admin",
+      html: invitationEmailHtml,
+    });
+
+    return { success: true, userId: authUser.user.id };
+  } catch (err) {
+    console.error("[actions] addUserInvite error:", err);
+    return { error: err.message || "Failed to add user invite" };
+  }
+}
+
+export async function resendInvitation(userId) {
+  try {
+    const supabase = await getSupabase();
+    const { data: user, error: userError } = await supabase.auth.admin.getUserById(userId);
+
+    if (userError || !user.user) return { error: "User not found" };
+
+    // Check if onboarding is completed
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (!roleData) return { error: "User role not found" };
+    if (roleData.onboarding_completed) {
+      return { error: "Onboarding already completed" };
+    }
+
+    const loginUrl = `${getSiteUrl()}/login?redirect=/admin`;
+    const resetEmailHtml = `
+      <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Password Reset / First Login</h2>
+        <p>Hello,</p>
+        <p>This is a reminder to complete your first login and set a new password.</p>
+        <p>Login here: <a href="${loginUrl}" style="color: #EAEFFF; text-decoration: underline;">${loginUrl}</a></p>
+        <p>Best regards,<br/>Meteoric Team</p>
+      </div>
+    `;
+
+    await sendCustomEmail({
+      from: "admin",
+      to: [user.user.email],
+      subject: "Complete your first login - Meteoric Admin",
+      html: resetEmailHtml,
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error("[actions] resendInvitation error:", err);
+    return { error: err.message || "Failed to resend invitation" };
+  }
+}
+
+export async function updateUserRole(userId, newRole) {
+  try {
+    const supabase = await getSupabase();
+
+    // Verify current user is superadmin
+    const { data: currentRole } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", supabase.auth.getUser().then((r) => r.data.user.id))
+      .single();
+
+    if (currentRole?.role !== "superadmin") {
+      return { error: "Only superadmin can change user roles" };
+    }
+
+    const validRoles = ["superadmin", "admin", "speaker"];
+    if (!validRoles.includes(newRole)) {
+      return { error: "Invalid role specified" };
+    }
+
+    // Update role in user_roles table
+    const { error } = await supabase
+      .from("user_roles")
+      .update({
+        role: newRole,
+        can_manage_users: newRole === "superadmin",
+      })
+      .eq("user_id", userId);
+
+    if (error) return { error: error.message };
+
+    // Update auth user metadata
+    await supabase.auth.admin.updateUserById(userId, {
+      user_metadata: { role: newRole },
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error("[actions] updateUserRole error:", err);
+    return { error: err.message || "Failed to update user role" };
+  }
+}
+
+export async function onboardUserComplete(userId) {
+  try {
+    const supabase = await getSupabase();
+
+    const { error } = await supabase
+      .from("user_roles")
+      .update({ onboarding_completed: true })
+      .eq("user_id", userId);
+
+    if (error) return { error: error.message };
+
+    // Update auth user metadata
+    const { data: user } = await supabase.auth.admin.getUserById(userId);
+    if (user.user) {
+      await supabase.auth.admin.updateUserById(userId, {
+        user_metadata: { onboarding_completed: true },
+      });
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("[actions] onboardUserComplete error:", err);
+    return { error: err.message || "Failed to complete onboarding" };
+  }
+}
+
+export async function getUserPermissions(userId) {
+  try {
+    const supabase = await getSupabase();
+
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (!roleData) return { error: "User role not found" };
+
+    return {
+      role: roleData.role,
+      canManageUsers: roleData.can_manage_users,
+      canViewAllData: roleData.can_view_all_data,
+      canSendEmails: roleData.can_send_emails,
+      onboardingCompleted: roleData.onboarding_completed,
+    };
+  } catch (err) {
+    console.error("[actions] getUserPermissions error:", err);
+    return { error: err.message || "Failed to get user permissions" };
   }
 }
