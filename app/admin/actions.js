@@ -1763,9 +1763,10 @@ export async function addUserInvite(formData) {
     }
 
     // Create user in Supabase Auth
+    const generatedPassword = generateAutoPassword();
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
       email,
-      password: generateAutoPassword(),
+      password: generatedPassword,
       email_confirm: true,
       user_metadata: { full_name: name, role },
     });
@@ -1796,7 +1797,7 @@ export async function addUserInvite(formData) {
         <h2>You're invited to Meteoric Admin</h2>
         <p>Hello <strong>${name}</strong>,</p>
         <p>You have been added to the Meteoric Admin panel as a <strong>${role}</strong>.</p>
-        <p>Your auto-generated password: <code>${generateAutoPassword()}</code></p>
+        <p>Your auto-generated password: <code>${generatedPassword}</code></p>
         <p>Login here: <a href="${loginUrl}" style="color: #EAEFFF; text-decoration: underline;">${loginUrl}</a></p>
         <p>⚠️ <strong>First login requires password change.</strong></p>
         <p>Best regards,<br/>Meteoric Team</p>

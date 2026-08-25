@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/api_client.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -17,6 +18,7 @@ class _UsersScreenState extends State<UsersScreen> {
   bool _canManageUsers = false;
   List<Map<String, dynamic>> _users = [];
   String? _changingRoleFor;
+  String? _resendingFor;
 
   @override
   void initState() {
@@ -34,7 +36,9 @@ class _UsersScreenState extends State<UsersScreen> {
   Future<void> _loadUsers() async {
     setState(() => _loading = true);
     try {
-      _users = await AuthService.listUsersWithRoles();
+      final data = await ApiClient.instance.usersListWithRoles();
+      final list = data['users'];
+      if (list is List) _users = list.cast<Map<String, dynamic>>();
     } catch (err) {
       if (mounted) Toast.error(context, _clean(err));
     }
@@ -43,29 +47,77 @@ class _UsersScreenState extends State<UsersScreen> {
 
   Future<void> _changeRole(String userId, String newRole) async {
     setState(() => _changingRoleFor = userId);
-    final err = await AuthService.setUserRole(userId, newRole);
-    if (!mounted) return;
-    if (err != null) {
-      Toast.error(context, err);
-    } else {
-      Toast.success(context, 'Role updated');
-      await _loadUsers();
+    try {
+      final res = await ApiClient.instance.usersUpdateRole({
+        'userId': userId,
+        'role': newRole,
+      });
+      if (!mounted) return;
+      if (res['error'] != null) {
+        Toast.error(context, res['error']);
+      } else {
+        Toast.success(context, 'Role updated');
+        await _loadUsers();
+      }
+    } catch (err) {
+      if (mounted) Toast.error(context, _clean(err));
     }
+    if (mounted) setState(() => _changingRoleFor = null);
+  }
+
+  Future<void> _resendInvite(String userId) async {
+    setState(() => _resendingFor = userId);
+    try {
+      final res = await ApiClient.instance.usersResendInvite({
+        'userId': userId,
+      });
+      if (!mounted) return;
+      if (res['error'] != null) {
+        Toast.error(context, res['error']);
+      } else {
+        Toast.success(context, 'Invitation resent');
+      }
+    } catch (err) {
+      if (mounted) Toast.error(context, _clean(err));
+    }
+    if (mounted) setState(() => _resendingFor = null);
+  }
+
+  void _showInviteSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardRaised,
+      shape: const RoundedRectangleBorder(),
+      builder: (_) => _InviteSheet(onInvited: () {
+        Navigator.pop(context);
+        _loadUsers();
+      }),
+    );
   }
 
   String _clean(Object e) {
     final s = e.toString().replaceFirst('Exception: ', '');
-    return s.length > 100 ? '${s.substring(0, 100)}…' : s;
+    return s.length > 120 ? '${s.substring(0, 120)}…' : s;
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Team',
+      actions: [
+        if (_canManageUsers)
+          IconButton(
+            onPressed: _showInviteSheet,
+            icon: const Icon(Icons.person_add_outlined, size: 20),
+            tooltip: 'Invite user',
+          ),
+      ],
       body: _loading
           ? const LoadingView()
           : _users.isEmpty
-              ? const EmptyState(message: 'No team members yet', icon: Icons.group_outlined)
+              ? const EmptyState(
+                  message: 'No team members yet', icon: Icons.group_outlined)
               : RefreshIndicator(
                   onRefresh: _loadUsers,
                   child: ListView.separated(
@@ -75,9 +127,11 @@ class _UsersScreenState extends State<UsersScreen> {
                     itemBuilder: (context, i) => _UserTile(
                       user: _users[i],
                       canManage: _canManageUsers,
-                      changing: _changingRoleFor == _users[i]['user_id'],
+                      changing: _changingRoleFor == _users[i]['id'],
+                      resending: _resendingFor == _users[i]['id'],
                       onRoleChanged: (role) =>
-                          _changeRole(_users[i]['user_id'], role),
+                          _changeRole(_users[i]['id'], role),
+                      onResend: () => _resendInvite(_users[i]['id']),
                     ),
                   ),
                 ),
@@ -85,18 +139,24 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 }
 
+// ── User tile ───────────────────────────────────────────────────────────
+
 class _UserTile extends StatelessWidget {
   const _UserTile({
     required this.user,
     required this.canManage,
     required this.changing,
+    required this.resending,
     required this.onRoleChanged,
+    required this.onResend,
   });
 
   final Map<String, dynamic> user;
   final bool canManage;
   final bool changing;
+  final bool resending;
   final ValueChanged<String> onRoleChanged;
+  final VoidCallback onResend;
 
   static const _roleColors = {
     'superadmin': AppColors.accent,
@@ -115,7 +175,7 @@ class _UserTile extends StatelessWidget {
         : email.isNotEmpty
             ? email[0].toUpperCase()
             : '?';
-    final color = _roleColors[role] ?? AppColors.textMuted;
+    final color = _roleColors[role] ?? AppColors.textFaint;
 
     return Container(
       decoration: BoxDecoration(
@@ -126,6 +186,7 @@ class _UserTile extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         child: Row(
           children: [
+            // Avatar
             Container(
               width: 36,
               height: 36,
@@ -145,6 +206,8 @@ class _UserTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
+
+            // Name + email
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,6 +240,8 @@ class _UserTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
+
+            // Role badge + status
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -188,10 +253,12 @@ class _UserTile extends StatelessWidget {
                           child: CircularProgressIndicator(strokeWidth: 1.5),
                         )
                       : Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: color.withValues(alpha: 0.08),
-                            border: Border.all(color: color.withValues(alpha: 0.2)),
+                            border:
+                                Border.all(color: color.withValues(alpha: 0.2)),
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
@@ -206,19 +273,26 @@ class _UserTile extends StatelessWidget {
                                 fontFamily: 'Inter',
                                 letterSpacing: 0.8,
                               ),
-                              icon: Icon(Icons.expand_more, size: 12, color: color),
+                              icon:
+                                  Icon(Icons.expand_more, size: 12, color: color),
                               items: const [
-                                DropdownMenuItem(value: 'superadmin', child: Text('SUPERADMIN')),
-                                DropdownMenuItem(value: 'admin', child: Text('ADMIN')),
-                                DropdownMenuItem(value: 'speaker', child: Text('SPEAKER')),
+                                DropdownMenuItem(
+                                    value: 'superadmin',
+                                    child: Text('SUPERADMIN')),
+                                DropdownMenuItem(
+                                    value: 'admin', child: Text('ADMIN')),
+                                DropdownMenuItem(
+                                    value: 'speaker', child: Text('SPEAKER')),
                               ],
-                              onChanged: (v) => v != null ? onRoleChanged(v) : null,
+                              onChanged: (v) =>
+                                  v != null ? onRoleChanged(v) : null,
                             ),
                           ),
                         )
                 else
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.08),
                       border: Border.all(color: color.withValues(alpha: 0.2)),
@@ -235,13 +309,41 @@ class _UserTile extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 4),
-                Text(
-                  onboarded ? 'Active' : 'Pending',
-                  style: TextStyle(
-                    color: onboarded ? AppColors.emerald : AppColors.amber,
-                    fontSize: 10,
-                    fontFamily: 'Inter',
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      onboarded ? 'Active' : 'Pending',
+                      style: TextStyle(
+                        color:
+                            onboarded ? AppColors.emerald : AppColors.amber,
+                        fontSize: 10,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    if (!onboarded && canManage) ...[
+                      const SizedBox(width: 6),
+                      resending
+                          ? const SizedBox(
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 1),
+                            )
+                          : GestureDetector(
+                              onTap: onResend,
+                              child: const Text(
+                                'Resend',
+                                style: TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: 10,
+                                  fontFamily: 'Inter',
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -250,4 +352,173 @@ class _UserTile extends StatelessWidget {
       ),
     );
   }
+}
+
+// ── Invite bottom sheet ─────────────────────────────────────────────────
+
+class _InviteSheet extends StatefulWidget {
+  const _InviteSheet({required this.onInvited});
+  final VoidCallback onInvited;
+
+  @override
+  State<_InviteSheet> createState() => _InviteSheetState();
+}
+
+class _InviteSheetState extends State<_InviteSheet> {
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  String _role = 'admin';
+  bool _busy = false;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _email.dispose();
+    super.dispose();
+  }
+
+  Future<void> _invite() async {
+    final name = _name.text.trim();
+    final email = _email.text.trim();
+    if (name.isEmpty || email.isEmpty || !email.contains('@')) {
+      Toast.error(context, 'Enter a valid name and email');
+      return;
+    }
+
+    setState(() => _busy = true);
+    try {
+      final res = await ApiClient.instance.usersInvite({
+        'name': name,
+        'email': email,
+        'role': _role,
+      });
+      if (!mounted) return;
+      if (res['error'] != null) {
+        Toast.error(context, res['error']);
+      } else {
+        Toast.success(context, 'Invitation sent');
+        widget.onInvited();
+      }
+    } catch (err) {
+      if (mounted) {
+        final s = err.toString().replaceFirst('Exception: ', '');
+        Toast.error(context, s.length > 120 ? '${s.substring(0, 120)}…' : s);
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Invite team member',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 16),
+          _label('NAME'),
+          TextField(
+            controller: _name,
+            enabled: !_busy,
+            style: const TextStyle(
+                color: AppColors.text, fontSize: 14, fontFamily: 'Inter'),
+            decoration: _input(),
+          ),
+          const SizedBox(height: 12),
+          _label('EMAIL'),
+          TextField(
+            controller: _email,
+            enabled: !_busy,
+            keyboardType: TextInputType.emailAddress,
+            style: const TextStyle(
+                color: AppColors.text, fontSize: 14, fontFamily: 'Inter'),
+            decoration: _input(),
+          ),
+          const SizedBox(height: 12),
+          _label('ROLE'),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _role,
+                isExpanded: true,
+                dropdownColor: AppColors.cardRaised,
+                style: const TextStyle(
+                  color: AppColors.text,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
+                items: const [
+                  DropdownMenuItem(value: 'admin', child: Text('Admin')),
+                  DropdownMenuItem(value: 'speaker', child: Text('Speaker')),
+                  DropdownMenuItem(
+                      value: 'superadmin', child: Text('Superadmin')),
+                ],
+                onChanged: (v) => v != null ? setState(() => _role = v) : null,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: AccentButton(
+              height: 44,
+              onPressed: _busy ? null : _invite,
+              child: _busy
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('SEND INVITATION'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _label(String text) => Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: AppColors.textFaint,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+            fontFamily: 'Inter',
+          ),
+        ),
+      );
+
+  InputDecoration _input() => InputDecoration(
+        isDense: true,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.border)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: AppColors.accent.withValues(alpha: 0.3)),
+        ),
+      );
 }

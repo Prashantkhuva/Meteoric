@@ -58,6 +58,8 @@ class AuthService {
   // ── Role helpers ──────────────────────────────────────────────────────
 
   /// Fetch the current user's role row from user_roles.
+  /// Falls back to superadmin for work.prashantkhuva@gmail.com
+  /// if no role row exists (same as web useUserRole hook).
   static Future<Map<String, dynamic>?> get myRole async {
     final u = user;
     if (u == null) return null;
@@ -67,8 +69,28 @@ class AuthService {
           .select()
           .eq('user_id', u.id)
           .maybeSingle();
-      return data;
+      if (data != null) return data;
+      // Fallback: superadmin for primary account
+      if (u.email == 'work.prashantkhuva@gmail.com') {
+        return {
+          'role': 'superadmin',
+          'can_manage_users': true,
+          'can_view_all_data': true,
+          'can_send_emails': true,
+          'onboarding_completed': true,
+        };
+      }
+      return null;
     } catch (_) {
+      if (u.email == 'work.prashantkhuva@gmail.com') {
+        return {
+          'role': 'superadmin',
+          'can_manage_users': true,
+          'can_view_all_data': true,
+          'can_send_emails': true,
+          'onboarding_completed': true,
+        };
+      }
       return null;
     }
   }

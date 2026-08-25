@@ -361,4 +361,17 @@ class ApiClient {
 
   // ── Overview ────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> overview() => _get('/api/admin/overview');
+
+  // ── Users / Team ───────────────────────────────────────────────────────
+  Future<Map<String, dynamic>> usersListWithRoles() =>
+      _post('/api/admin/users', {'action': 'list-with-roles'});
+
+  Future<Map<String, dynamic>> usersInvite(Map<String, dynamic> data) =>
+      _post('/api/admin/users', {'action': 'invite', ...data});
+
+  Future<Map<String, dynamic>> usersUpdateRole(Map<String, dynamic> data) =>
+      _post('/api/admin/users', {'action': 'update-role', ...data});
+
+  Future<Map<String, dynamic>> usersResendInvite(Map<String, dynamic> data) =>
+      _post('/api/admin/users', {'action': 'resend-invite', ...data});
 }
