@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useUserRole } from "@/lib/hooks/useUserRole";
 import { createClient } from "@/lib/supabase/client";
+import { onboardUserComplete } from "../actions";
 import { User, Lock } from "lucide-react";
 import { useToast } from "../components/ToastContext";
 
@@ -53,12 +54,9 @@ export default function PageContent() {
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
-      // Mark onboarding as complete
+      // Mark onboarding as complete via server action (bypasses RLS)
       if (onboardingCompleted !== true) {
-        await supabase.from("user_roles").update({ onboarding_completed: true }).eq("user_id", user?.id);
-        if (user?.user) {
-          await supabase.auth.admin.updateUserById(user.id, { user_metadata: { onboarding_completed: true } });
-        }
+        await onboardUserComplete(user.id);
       }
       setNewPassword("");
       setConfirmPassword("");

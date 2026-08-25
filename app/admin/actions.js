@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { generateAutoPassword } from "@/lib/utils/generate-password";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -40,6 +41,12 @@ import {
 async function getSupabase() {
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase not configured");
+  return supabase;
+}
+
+function getAdminClient() {
+  const supabase = createServiceClient();
+  if (!supabase) throw new Error("Service role key not configured");
   return supabase;
 }
 
@@ -1740,7 +1747,7 @@ export async function deleteReview(id) {
 
 export async function addUserInvite(formData) {
   try {
-    const supabase = await getSupabase();
+    const supabase = getAdminClient();
     const name = formData.get("name")?.toString().trim();
     const email = formData.get("email")?.toString().trim().toLowerCase();
     const role = formData.get("role")?.toString().trim();
@@ -1820,7 +1827,7 @@ export async function addUserInvite(formData) {
 
 export async function resendInvitation(userId) {
   try {
-    const supabase = await getSupabase();
+    const supabase = getAdminClient();
     const { data: user, error: userError } = await supabase.auth.admin.getUserById(userId);
 
     if (userError || !user.user) return { error: "User not found" };
@@ -1864,11 +1871,11 @@ export async function resendInvitation(userId) {
 
 export async function updateUserRole(userId, newRole) {
   try {
-    const supabase = await getSupabase();
+    const sessionSupabase = await getSupabase();
 
-    // Verify current user is superadmin
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    const { data: currentRole } = await supabase
+    // Verify current user is superadmin (uses session client — RLS allows reading own row)
+    const { data: { user: currentUser } } = await sessionSupabase.auth.getUser();
+    const { data: currentRole } = await sessionSupabase
       .from("user_roles")
       .select("role")
       .eq("user_id", currentUser.id)
@@ -1882,6 +1889,8 @@ export async function updateUserRole(userId, newRole) {
     if (!validRoles.includes(newRole)) {
       return { error: "Invalid role specified" };
     }
+
+    const supabase = getAdminClient();
 
     // Update role in user_roles table
     const { error } = await supabase
@@ -1908,7 +1917,7 @@ export async function updateUserRole(userId, newRole) {
 
 export async function onboardUserComplete(userId) {
   try {
-    const supabase = await getSupabase();
+    const supabase = getAdminClient();
 
     const { error } = await supabase
       .from("user_roles")
@@ -1934,7 +1943,7 @@ export async function onboardUserComplete(userId) {
 
 export async function getUserPermissions(userId) {
   try {
-    const supabase = await getSupabase();
+    const supabase = getAdminClient();
 
     const { data: roleData } = await supabase
       .from("user_roles")
@@ -1959,7 +1968,7 @@ export async function getUserPermissions(userId) {
 
 export async function getUsersWithRoles() {
   try {
-    const supabase = await getSupabase();
+    const supabase = getAdminClient();
 
     const { data: authUsers, error: listError } = await supabase.auth.admin.listUsers();
     if (listError) return { error: listError.message };

@@ -123,12 +123,7 @@ function LoginForm() {
       if (supabaseClient) {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (user) {
-          const { data: roleData } = await supabaseClient
-            .from("user_roles")
-            .select("onboarding_completed")
-            .eq("user_id", user.id)
-            .single();
-          if (roleData && !roleData.onboarding_completed) {
+          if (user.user_metadata?.onboarding_completed === false) {
             router.push("/admin/settings?onboarding=1");
             router.refresh();
             return;

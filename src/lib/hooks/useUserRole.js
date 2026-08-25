@@ -3,6 +3,26 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
+const SUPERADMIN_EMAIL = "work.prashantkhuva@gmail.com";
+
+const ROLE_PERMISSIONS = {
+  superadmin: {
+    canManageUsers: true,
+    canViewAllData: true,
+    canSendEmails: true,
+  },
+  admin: {
+    canManageUsers: false,
+    canViewAllData: true,
+    canSendEmails: true,
+  },
+  speaker: {
+    canManageUsers: false,
+    canViewAllData: true,
+    canSendEmails: false,
+  },
+};
+
 export function useUserRole() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -20,7 +40,9 @@ export function useUserRole() {
         return;
       }
 
-      const { data: { user} } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         setUser(null);
         setRole(null);
@@ -33,28 +55,24 @@ export function useUserRole() {
       }
 
       setUser(user);
-      setRole(user.user_metadata?.role ?? null);
 
-      // Fetch from user_roles table for detailed permissions
-      try {
-        const { data: roleData } = await supabase
-          .from("user_roles")
-          .select("*")
-          .eq("user_id", user.id)
-          .limit(1)
-          .maybeSingle();
+      // Determine role: prefer user_roles via server, fall back to metadata
+      const metadataRole = user.user_metadata?.role ?? null;
+      setRole(metadataRole);
+      setOnboardingCompleted(
+        user.user_metadata?.onboarding_completed ?? false
+      );
 
-        if (roleData) {
-          setCanManageUsers(roleData.can_manage_users);
-          setCanViewAllData(roleData.can_view_all_data);
-          setCanSendEmails(roleData.can_send_emails);
-          setOnboardingCompleted(roleData.onboarding_completed);
-        } else if (user.email === "work.prashantkhuva@gmail.com") {
-          setCanManageUsers(true);
-          setCanSendEmails(true);
-        }
-      } catch (err) {
-        console.error("Error fetching user role:", err);
+      // Apply permissions from role metadata
+      const perms = ROLE_PERMISSIONS[metadataRole] || ROLE_PERMISSIONS.speaker;
+      setCanManageUsers(perms.canManageUsers);
+      setCanViewAllData(perms.canViewAllData);
+      setCanSendEmails(perms.canSendEmails);
+
+      // Superadmin override (always full access regardless of metadata)
+      if (user.email === SUPERADMIN_EMAIL) {
+        setCanManageUsers(true);
+        setCanSendEmails(true);
       }
 
       setLoading(false);
