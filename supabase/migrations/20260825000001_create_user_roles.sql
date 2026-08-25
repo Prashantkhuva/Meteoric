@@ -1,6 +1,6 @@
 create table if not exists public.user_roles (
   id bigint generated always as identity primary key,
-  user_id bigint not null references auth.users(id) on delete cascade unique,
+  user_id uuid not null references auth.users(id) on delete cascade unique,
   role text not null check (role in ('superadmin', 'admin', 'speaker')),
   can_manage_users boolean not null default false,
   can_view_all_data boolean not null default true,
@@ -11,22 +11,26 @@ create table if not exists public.user_roles (
 
 alter table public.user_roles enable row level security;
 
+drop policy if exists "Superadmin can manage all user roles" on public.user_roles;
 create policy "Superadmin can manage all user roles"
   on public.user_roles for all
   using (auth.role() = 'authenticated' and exists (
     select 1 from public.user_roles ur2 where ur2.user_id = auth.uid() and ur2.role = 'superadmin'
   ));
 
+drop policy if exists "Users can view own role" on public.user_roles;
 create policy "Users can view own role"
   on public.user_roles for select
   using (user_id = auth.uid());
 
+drop policy if exists "Superadmin can insert user roles" on public.user_roles;
 create policy "Superadmin can insert user roles"
   on public.user_roles for insert
   with check (auth.role() = 'authenticated' and exists (
     select 1 from public.user_roles ur2 where ur2.user_id = auth.uid() and ur2.role = 'superadmin'
   ));
 
+drop policy if exists "Superadmin can update own user role" on public.user_roles;
 create policy "Superadmin can update own user role"
   on public.user_roles for update
   using (auth.role() = 'authenticated' and exists (
