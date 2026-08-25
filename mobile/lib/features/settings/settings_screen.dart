@@ -16,6 +16,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _busy = false;
+  String _role = '';
 
   late final TextEditingController _name;
   late final TextEditingController _email;
@@ -29,11 +30,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     final user = AuthService.user;
     _name = TextEditingController(
-      text:
-          user?.userMetadata?['full_name'] ?? user?.userMetadata?['name'] ?? '',
+      text: user?.userMetadata?['full_name'] ?? user?.userMetadata?['name'] ?? '',
     );
     _email = TextEditingController(text: user?.email ?? '');
     _originalEmail = user?.email ?? '';
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    final data = await AuthService.myRole;
+    if (!mounted) return;
+    setState(() {
+      _role = data?['role'] ?? '';
+    });
   }
 
   @override
@@ -45,15 +54,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
-  void _snack(String msg, {bool isError = false}) =>
-      isError ? Toast.error(context, msg) : Toast.success(context, msg);
+  void _snack(String msg, {bool error = false}) =>
+      error ? Toast.error(context, msg) : Toast.success(context, msg);
 
   Future<void> _saveProfile() async {
     final name = _name.text.trim();
     final email = _email.text.trim();
-    if (name.isEmpty) return _snack('Name cannot be empty', isError: true);
+    if (name.isEmpty) return _snack('Name cannot be empty', error: true);
     if (email.isEmpty || !email.contains('@')) {
-      return _snack('Enter a valid email', isError: true);
+      return _snack('Enter a valid email', error: true);
     }
 
     setState(() => _busy = true);
@@ -71,7 +80,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             : 'Profile updated — check your inbox to confirm the new email',
       );
     } catch (err) {
-      if (mounted) _snack(_cleanError(err), isError: true);
+      if (mounted) _snack(_clean(err), error: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -79,10 +88,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _changePassword() async {
     if (_password.text.length < 6) {
-      return _snack('Password must be at least 6 characters', isError: true);
+      return _snack('Password must be at least 6 characters', error: true);
     }
     if (_password.text != _confirmPassword.text) {
-      return _snack('Passwords do not match', isError: true);
+      return _snack('Passwords do not match', error: true);
     }
 
     setState(() => _busy = true);
@@ -96,15 +105,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() {});
       _snack('Password updated');
     } catch (err) {
-      if (mounted) _snack(_cleanError(err), isError: true);
+      if (mounted) _snack(_clean(err), error: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
-  String _cleanError(Object err) {
+  String _clean(Object err) {
     final msg = err.toString().replaceFirst('AuthException: ', '');
     return msg.length > 120 ? '${msg.substring(0, 120)}…' : msg;
+  }
+
+  Color get _roleColor {
+    switch (_role) {
+      case 'superadmin':
+        return AppColors.accent;
+      case 'admin':
+        return AppColors.emerald;
+      case 'speaker':
+        return AppColors.textMuted;
+      default:
+        return AppColors.textFaint;
+    }
   }
 
   Future<void> _signOut() async {
@@ -146,12 +168,92 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final emailChanged = _email.text.trim() != _originalEmail;
+    final userName = _name.text.isNotEmpty
+        ? _name.text
+        : _originalEmail.split('@').first;
 
     return AppScaffold(
       title: 'Settings',
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // ── Identity card ──────────────────────────────────────────
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: _roleColor.withValues(alpha: 0.1),
+                    border: Border.all(color: _roleColor.withValues(alpha: 0.25)),
+                  ),
+                  child: Text(
+                    userName[0].toUpperCase(),
+                    style: TextStyle(
+                      color: _roleColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userName,
+                        style: const TextStyle(
+                          color: AppColors.text,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _originalEmail,
+                        style: const TextStyle(
+                          color: AppColors.textFaint,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (_role.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _roleColor.withValues(alpha: 0.08),
+                      border: Border.all(color: _roleColor.withValues(alpha: 0.2)),
+                    ),
+                    child: Text(
+                      _role.toUpperCase(),
+                      style: TextStyle(
+                        color: _roleColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // ── Profile ───────────────────────────────────────────────
           SectionCard(
             title: 'Profile',
             child: Column(
@@ -201,9 +303,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+
+          // ── Password ──────────────────────────────────────────────
           SectionCard(
-            title: 'Change password',
+            title: 'Change Password',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -254,18 +358,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+
+          // ── App info ──────────────────────────────────────────────
           SectionCard(
             title: 'App',
             child: Column(
               children: [
                 DetailRow(label: 'Version', value: AppVersion.display),
-                DetailRow(label: 'Last updated', value: AppVersion.updatedAt),
+                DetailRow(label: 'Build', value: 'Patch ${AppVersion.patch}'),
+                DetailRow(label: 'Updated', value: AppVersion.updatedAt),
                 const DetailRow(label: 'Platform', value: 'Android / iOS'),
               ],
             ),
           ),
           const SizedBox(height: 20),
+
+          // ── Sign out ──────────────────────────────────────────────
           GhostButton(
             borderColor: AppColors.red.withValues(alpha: 0.4),
             textColor: AppColors.red,

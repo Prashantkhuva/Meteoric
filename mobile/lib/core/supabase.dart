@@ -54,4 +54,43 @@ class AuthService {
   static Future<void> signOut() async {
     await instance.auth.signOut();
   }
+
+  // ── Role helpers ──────────────────────────────────────────────────────
+
+  /// Fetch the current user's role row from user_roles.
+  static Future<Map<String, dynamic>?> get myRole async {
+    final u = user;
+    if (u == null) return null;
+    try {
+      final data = await instance
+          .from('user_roles')
+          .select()
+          .eq('user_id', u.id)
+          .maybeSingle();
+      return data;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// List all users with their roles (calls the RPC).
+  static Future<List<Map<String, dynamic>>> listUsersWithRoles() async {
+    final data = await instance.rpc('list_users_with_roles');
+    if (data is List) {
+      return data.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Change a user's role (calls the RPC; superadmin only).
+  static Future<String?> setUserRole(String targetUserId, String newRole) async {
+    final res = await instance.rpc('set_user_role', params: {
+      'target_user_id': targetUserId,
+      'new_role': newRole,
+    });
+    if (res is Map && res['error'] != null) {
+      return res['error'] as String;
+    }
+    return null;
+  }
 }

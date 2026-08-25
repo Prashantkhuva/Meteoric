@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../proposals/proposals_screen.dart';
 import '../invoices/invoices_screen.dart';
@@ -8,28 +9,51 @@ import '../reviews/reviews_screen.dart';
 import '../bookings/bookings_screen.dart';
 import '../bank_accounts/bank_accounts_screen.dart';
 import '../email/email_screen.dart';
+import '../users/users_screen.dart';
 import '../settings/settings_screen.dart';
 
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
 
-  static const _items = [
+  @override
+  State<MoreScreen> createState() => _MoreScreenState();
+}
+
+class _MoreScreenState extends State<MoreScreen> {
+  bool _canManageUsers = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    final roleRow = await AuthService.myRole;
+    if (mounted) {
+      setState(() => _canManageUsers = roleRow?['can_manage_users'] ?? false);
+    }
+  }
+
+  static const _baseItems = [
     _Item('Proposals', Icons.description_outlined, ProposalsScreen()),
     _Item('Invoices', Icons.receipt_long_outlined, InvoicesScreen()),
     _Item('Projects', Icons.folder_outlined, ProjectsScreen()),
     _Item('Reviews', Icons.star_outline, ReviewsScreen()),
     _Item('Bookings', Icons.event_outlined, BookingsScreen()),
-    _Item(
-      'Bank Accounts',
-      Icons.account_balance_outlined,
-      BankAccountsScreen(),
-    ),
+    _Item('Bank Accounts', Icons.account_balance_outlined, BankAccountsScreen()),
     _Item('Email', Icons.mail_outline, EmailScreen()),
-    _Item('Settings', Icons.settings_outlined, SettingsScreen()),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final items = [
+      ..._baseItems,
+      if (_canManageUsers)
+        const _Item('Team', Icons.group_outlined, UsersScreen()),
+      const _Item('Settings', Icons.settings_outlined, SettingsScreen()),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('More'),
@@ -37,10 +61,10 @@ class MoreScreen extends StatelessWidget {
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
-        itemCount: _items.length,
+        itemCount: items.length,
         separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (context, i) {
-          final item = _items[i];
+          final item = items[i];
           return Material(
             color: AppColors.card,
             child: InkWell(

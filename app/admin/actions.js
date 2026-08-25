@@ -1954,3 +1954,46 @@ export async function getUserPermissions(userId) {
     return { error: err.message || "Failed to get user permissions" };
   }
 }
+
+export async function getUsersWithRoles() {
+  try {
+    const supabase = await getSupabase();
+
+    const { data: authUsers, error: listError } = await supabase.auth.admin.listUsers();
+    if (listError) return { error: listError.message };
+
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    const roleMap = {};
+    (roles || []).forEach((r) => { roleMap[r.user_id] = r; });
+
+    const users = authUsers.users.map((u) => {
+      const roleData = roleMap[u.id] || null;
+      return {
+        id: u.id,
+        email: u.email,
+        full_name: u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split("@")[0] || "",
+        role: roleData?.role || null,
+        can_manage_users: roleData?.can_manage_users ?? false,
+        can_send_emails: roleData?.can_send_emails ?? false,
+        onboarding_completed: roleData?.onboarding_completed ?? false,
+        created_at: u.created_at,
+      };
+    });
+
+    users.sort((a, b) => {
+      const order = { superadmin: 0, admin: 1, speaker: 2 };
+      const ra = order[a.role] ?? 3;
+      const rb = order[b.role] ?? 3;
+      return ra - rb;
+    });
+
+    return { users };
+  } catch (err) {
+    console.error("[actions] getUsersWithRoles error:", err);
+    return { error: err.message || "Failed to fetch users" };
+  }
+}

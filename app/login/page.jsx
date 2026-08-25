@@ -118,6 +118,24 @@ function LoginForm() {
         return;
       }
 
+      // Check if user needs to change password (onboarding)
+      const supabaseClient = createClient();
+      if (supabaseClient) {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (user) {
+          const { data: roleData } = await supabaseClient
+            .from("user_roles")
+            .select("onboarding_completed")
+            .eq("user_id", user.id)
+            .single();
+          if (roleData && !roleData.onboarding_completed) {
+            router.push("/admin/settings?onboarding=1");
+            router.refresh();
+            return;
+          }
+        }
+      }
+
       router.push(redirect);
       router.refresh();
     },

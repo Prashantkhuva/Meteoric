@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { signOut } from "../actions";
 import Logo from "@/components/sections/Logo";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 const SECTIONS_KEY = "meteo_sections";
 
@@ -87,6 +88,7 @@ function savePref(key, val) {
 export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
   const pathname = usePathname();
   const mobileTrapRef = useFocusTrap(mobileOpen);
+  const { canManageUsers } = useUserRole();
 
   const [closedSections, setClosedSections] = useState(() => {
     const saved = loadPref(SECTIONS_KEY, null);
@@ -227,6 +229,65 @@ export function Sidebar({ mobileOpen, onMobileClose, userName, userEmail }) {
             </div>
           );
         })}
+
+        {canManageUsers && (
+          <div className="mt-1">
+            <button
+              onClick={() => toggleSection(sections.length)}
+              className={cn(
+                "w-full flex items-center justify-between px-3 py-[5px] text-[10px] font-semibold uppercase tracking-[0.12em] rounded-md transition-colors",
+                pathname === "/admin/users"
+                  ? "text-[#EAEFFF]/40 hover:text-[#EAEFFF]/60"
+                  : "text-white/15 hover:text-white/30 hover:bg-white/[0.015]"
+              )}
+            >
+              <span>Team</span>
+              <motion.span
+                animate={{ rotate: closedSections.has(sections.length) ? 0 : 90 }}
+                transition={{ duration: 0.15 }}
+                className="opacity-40"
+              >
+                <ChevronRight size={10} />
+              </motion.span>
+            </button>
+            <AnimatePresence initial={false}>
+              {!closedSections.has(sections.length) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-0.5 pb-1">
+                    {(() => {
+                      const linkActive = pathname === "/admin/users";
+                      const Icon = Users;
+                      return (
+                        <Link
+                          href="/admin/users"
+                          onClick={onMobileClose}
+                          className={cn(
+                            "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-150 relative",
+                            linkActive
+                              ? "bg-[#EAEFFF]/[0.07] text-[#EAEFFF]"
+                              : "text-white/35 hover:text-white/60 hover:bg-white/[0.03]"
+                          )}
+                        >
+                          {linkActive && (
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-[#EAEFFF]" />
+                          )}
+                          <Icon size={15} strokeWidth={linkActive ? 2 : 1.5} className="shrink-0" />
+                          <span className="truncate">Users</span>
+                        </Link>
+                      );
+                    })()}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
 
       {/* Bottom */}

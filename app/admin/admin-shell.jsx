@@ -21,6 +21,7 @@ const pageTitles = {
   "/admin/bank-accounts": "Bank Accounts",
   "/admin/compose": "Compose Email",
   "/admin/sent-emails": "Sent Emails",
+  "/admin/users": "Users",
   "/admin/settings": "Settings",
 };
 
@@ -56,6 +57,7 @@ export function AdminShell({ children }) {
         "g k": () => go("/admin/cal-bookings"),
         "g m": () => go("/admin/compose"),
         "g s": () => go("/admin/sent-emails"),
+        "g u": () => go("/admin/users"),
         "g e": () => go("/admin/settings"),
       };
     }, [router])
