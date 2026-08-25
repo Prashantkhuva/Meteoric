@@ -9,38 +9,72 @@ import {
   updateUserRole,
   resendInvitation,
 } from "../actions";
-import { Shield, UserPlus, Mail, ChevronDown, Loader2, X } from "lucide-react";
+import {
+  Shield,
+  UserPlus,
+  Mail,
+  ChevronDown,
+  Loader2,
+  X,
+  Users,
+  Crown,
+  Eye,
+  Pencil,
+} from "lucide-react";
 
-const ROLE_STYLES = {
+const ROLES = {
   superadmin: {
-    bg: "bg-[#EAEFFF]/[0.08]",
-    text: "text-[#EAEFFF]",
-    border: "border-[#EAEFFF]/20",
+    label: "Superadmin",
+    color: "text-[#EAEFFF]",
+    bg: "bg-[#EAEFFF]/[0.06]",
+    border: "border-[#EAEFFF]/15",
     dot: "bg-[#EAEFFF]",
+    icon: Crown,
+    desc: "Full access. Manage users, all data, send emails, settings.",
   },
   admin: {
-    bg: "bg-emerald-500/[0.08]",
-    text: "text-emerald-400",
-    border: "border-emerald-500/20",
+    label: "Admin",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/[0.06]",
+    border: "border-emerald-500/15",
     dot: "bg-emerald-400",
+    icon: Pencil,
+    desc: "CRUD all data. Send proposals/invoices. Cannot manage users.",
   },
   speaker: {
-    bg: "bg-white/[0.04]",
-    text: "text-white/50",
-    border: "border-white/10",
+    label: "Speaker",
+    color: "text-white/50",
+    bg: "bg-white/[0.03]",
+    border: "border-white/[0.08]",
     dot: "bg-white/40",
+    icon: Eye,
+    desc: "View-only. Can see all data but cannot edit or send emails.",
   },
 };
 
-function RoleBadge({ role }) {
-  const s = ROLE_STYLES[role] || ROLE_STYLES.speaker;
+function RoleBadge({ role, size = "sm" }) {
+  const r = ROLES[role] || ROLES.speaker;
+  const isLg = size === "lg";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${s.bg} ${s.text} ${s.border}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-${isLg ? "3" : "2.5"} py-${isLg ? "1" : "0.5"} text-[${isLg ? "12" : "11"}px] font-semibold uppercase tracking-wider ${r.bg} ${r.color} ${r.border}`}
     >
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {role || "—"}
+      <span className={`h-1.5 w-1.5 rounded-full ${r.dot}`} />
+      {r.label}
     </span>
+  );
+}
+
+function UserAvatar({ name, email, role, size = "md" }) {
+  const r = ROLES[role] || ROLES.speaker;
+  const initial = (name || email || "?").charAt(0).toUpperCase();
+  const dim = size === "lg" ? "h-10 w-10 text-sm" : "h-8 w-8 text-[11px]";
+  return (
+    <div
+      className={`${dim} rounded-full flex items-center justify-center font-bold shrink-0 ${r.bg} ${r.color} ring-1 ${r.border}`}
+    >
+      {initial}
+    </div>
   );
 }
 
@@ -82,7 +116,9 @@ export default function PageContent() {
         setLoading(false);
       }
     })();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [canManageUsers, toast]);
 
   async function handleInvite(e) {
@@ -143,20 +179,30 @@ export default function PageContent() {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
         <Shield className="h-8 w-8 text-white/15" />
-        <p className="text-sm text-white/30">You don't have permission to manage users.</p>
+        <p className="text-sm text-white/30">
+          You don't have permission to manage users.
+        </p>
       </div>
     );
   }
 
+  const superadminCount = users.filter((u) => u.role === "superadmin").length;
+  const adminCount = users.filter((u) => u.role === "admin").length;
+  const speakerCount = users.filter((u) => u.role === "speaker").length;
+
   return (
-    <div className="p-5 lg:p-8 space-y-5">
+    <div className="p-5 lg:p-8 space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">
-            Users
+            Team
           </h1>
           <p className="mt-1 text-sm text-white/35 tabular-nums">
-            {users.length} user{users.length !== 1 ? "s" : ""} in your team
+            {users.length} member{users.length !== 1 ? "s" : ""} &middot;
+            {superadminCount > 0 && ` ${superadminCount} superadmin`}
+            {adminCount > 0 && ` · ${adminCount} admin`}
+            {speakerCount > 0 && ` · ${speakerCount} speaker`}
           </p>
         </div>
         <button
@@ -164,14 +210,17 @@ export default function PageContent() {
           className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
         >
           <UserPlus size={14} />
-          Invite User
+          Invite
         </button>
       </div>
 
+      {/* Invite form */}
       {showInvite && (
         <div className="border border-[#EAEFFF]/10 bg-[#EAEFFF]/[0.03] p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-medium text-white/70">Invite new user</h2>
+            <h2 className="text-sm font-medium text-white/70">
+              Invite team member
+            </h2>
             <button
               onClick={() => setShowInvite(false)}
               className="text-white/30 hover:text-white/60 transition-colors"
@@ -179,14 +228,17 @@ export default function PageContent() {
               <X size={16} />
             </button>
           </div>
-          <form onSubmit={handleInvite} className="flex flex-col sm:flex-row gap-3">
+          <form
+            onSubmit={handleInvite}
+            className="flex flex-col sm:flex-row gap-3"
+          >
             <input
               type="text"
               placeholder="Full name"
               value={inviteName}
               onChange={(e) => setInviteName(e.target.value)}
               required
-              className="flex-1 border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-[#EAEFFF]/20"
+              className="flex-1 border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-[#EAEFFF]/20 transition-colors"
             />
             <input
               type="email"
@@ -194,13 +246,13 @@ export default function PageContent() {
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
               required
-              className="flex-1 border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-[#EAEFFF]/20"
+              className="flex-1 border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-[#EAEFFF]/20 transition-colors"
             />
             <div className="relative">
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value)}
-                className="appearance-none border border-white/[0.06] bg-black/60 px-3.5 py-2.5 pr-8 text-sm text-white outline-none focus:border-[#EAEFFF]/20 cursor-pointer"
+                className="appearance-none border border-white/[0.06] bg-black/60 px-3.5 py-2.5 pr-8 text-sm text-white outline-none focus:border-[#EAEFFF]/20 cursor-pointer transition-colors"
               >
                 <option value="superadmin">Superadmin</option>
                 <option value="admin">Admin</option>
@@ -225,133 +277,160 @@ export default function PageContent() {
             </button>
           </form>
           <p className="mt-2 text-[11px] text-white/25">
-            An auto-generated password will be emailed. The user must change it on first login.
+            An auto-generated password will be emailed. The user must change it
+            on first login.
           </p>
         </div>
       )}
 
+      {/* Users list */}
       {loading ? (
         <div className="flex items-center justify-center h-40">
           <Loader2 className="h-5 w-5 animate-spin text-white/30" />
         </div>
       ) : users.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-40 gap-3">
-          <Shield className="h-8 w-8 text-white/15" />
-          <p className="text-sm text-white/30">No users found</p>
+          <Users className="h-8 w-8 text-white/15" />
+          <p className="text-sm text-white/30">No team members yet</p>
+          <button
+            onClick={() => setShowInvite(true)}
+            className="text-xs text-[#EAEFFF]/60 hover:text-[#EAEFFF] transition-colors"
+          >
+            Invite your first team member
+          </button>
         </div>
       ) : (
         <div className="border border-white/[0.06] overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/[0.04] text-[10px] font-semibold uppercase tracking-[0.12em] text-white/25">
-                <th className="text-left px-5 py-3">User</th>
+                <th className="text-left px-5 py-3">Member</th>
                 <th className="text-left px-5 py-3">Role</th>
-                <th className="text-left px-5 py-3 hidden md:table-cell">Status</th>
-                <th className="text-left px-5 py-3 hidden lg:table-cell">Joined</th>
+                <th className="text-left px-5 py-3 hidden md:table-cell">
+                  Status
+                </th>
+                <th className="text-left px-5 py-3 hidden lg:table-cell">
+                  Joined
+                </th>
                 <th className="text-right px-5 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
-                <tr
-                  key={u.id}
-                  className="border-b border-white/[0.03] last:border-0 hover:bg-white/[0.01] transition-colors"
-                >
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-[#EAEFFF]/[0.07] flex items-center justify-center text-[11px] font-bold text-[#EAEFFF] shrink-0">
-                        {(u.full_name || u.email || "?").charAt(0).toUpperCase()}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-white/80 truncate">{u.full_name}</p>
-                        <p className="text-[11px] text-white/30 truncate">{u.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <div className="relative">
-                      <select
-                        value={u.role || ""}
-                        onChange={(e) => handleChangeRole(u.id, e.target.value)}
-                        disabled={changingRole === u.id || u.id === null}
-                        className="appearance-none bg-transparent border border-white/[0.06] px-2.5 py-1.5 pr-7 text-[12px] text-white/70 outline-none focus:border-[#EAEFFF]/20 cursor-pointer disabled:opacity-50"
-                      >
-                        <option value="superadmin">Superadmin</option>
-                        <option value="admin">Admin</option>
-                        <option value="speaker">Speaker</option>
-                      </select>
-                      <ChevronDown
-                        size={12}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none"
-                      />
-                      {changingRole === u.id && (
-                        <Loader2
-                          size={12}
-                          className="absolute right-6 top-1/2 -translate-y-1/2 text-white/30 animate-spin"
+              {users.map((u) => {
+                return (
+                  <tr
+                    key={u.id}
+                    className="border-b border-white/[0.03] last:border-0 hover:bg-white/[0.01] transition-colors group"
+                  >
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <UserAvatar
+                          name={u.full_name}
+                          email={u.email}
+                          role={u.role}
                         />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-white/80 truncate">
+                            {u.full_name}
+                          </p>
+                          <p className="text-[11px] text-white/30 truncate">
+                            {u.email}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="relative">
+                        <select
+                          value={u.role || ""}
+                          onChange={(e) =>
+                            handleChangeRole(u.id, e.target.value)
+                          }
+                          disabled={changingRole === u.id || u.id === null}
+                          className="appearance-none bg-transparent border border-white/[0.06] px-2.5 py-1.5 pr-7 text-[12px] text-white/70 outline-none focus:border-[#EAEFFF]/20 cursor-pointer disabled:opacity-50 transition-colors"
+                        >
+                          <option value="superadmin">Superadmin</option>
+                          <option value="admin">Admin</option>
+                          <option value="speaker">Speaker</option>
+                        </select>
+                        <ChevronDown
+                          size={12}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none"
+                        />
+                        {changingRole === u.id && (
+                          <Loader2
+                            size={12}
+                            className="absolute right-6 top-1/2 -translate-y-1/2 text-white/30 animate-spin"
+                          />
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 hidden md:table-cell">
+                      {u.onboarding_completed ? (
+                        <span className="inline-flex items-center gap-1.5 text-[11px] text-emerald-400/70">
+                          <span className="h-1 w-1 rounded-full bg-emerald-400/50" />
+                          Active
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 text-[11px] text-amber-400/70">
+                          <span className="h-1 w-1 rounded-full bg-amber-400/50" />
+                          Pending
+                        </span>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5 hidden md:table-cell">
-                    {u.onboarding_completed ? (
-                      <span className="text-[11px] text-emerald-400/70">Active</span>
-                    ) : (
-                      <span className="text-[11px] text-amber-400/70">Pending</span>
-                    )}
-                  </td>
-                  <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[11px] text-white/25 tabular-nums">
-                      {u.created_at
-                        ? new Date(u.created_at).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })
-                        : "—"}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right">
-                    {!u.onboarding_completed && (
-                      <button
-                        onClick={() => handleResend(u.id, u.email)}
-                        className="inline-flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
-                      >
-                        <Mail size={12} />
-                        Resend
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-5 py-3.5 hidden lg:table-cell">
+                      <span className="text-[11px] text-white/25 tabular-nums">
+                        {u.created_at
+                          ? new Date(u.created_at).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })
+                          : "—"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      {!u.onboarding_completed && (
+                        <button
+                          onClick={() => handleResend(u.id, u.email)}
+                          className="inline-flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+                        >
+                          <Mail size={12} />
+                          Resend
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       )}
 
-      <div className="pt-4 border-t border-white/[0.04] space-y-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/20">
+      {/* Role permissions */}
+      <div className="pt-4 border-t border-white/[0.04]">
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/20 mb-3">
           Role Permissions
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            {
-              role: "superadmin",
-              perms: "Full access. Manage users, all data, send emails, settings.",
-            },
-            {
-              role: "admin",
-              perms: "CRUD all data. Send proposals/invoices. Cannot manage users.",
-            },
-            {
-              role: "speaker",
-              perms: "View-only. Can see all data but cannot edit or send emails.",
-            },
-          ].map((r) => (
-            <div key={r.role} className="border border-white/[0.04] bg-white/[0.01] p-3">
-              <RoleBadge role={r.role} />
-              <p className="mt-2 text-[11px] text-white/30 leading-relaxed">{r.perms}</p>
-            </div>
-          ))}
+          {Object.entries(ROLES).map(([key, r]) => {
+            const Icon = r.icon;
+            return (
+              <div
+                key={key}
+                className="border border-white/[0.04] bg-white/[0.01] p-3.5"
+              >
+                <div className="flex items-center gap-2">
+                  <Icon size={13} className={r.color} />
+                  <RoleBadge role={key} />
+                </div>
+                <p className="mt-2 text-[11px] text-white/30 leading-relaxed">
+                  {r.desc}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

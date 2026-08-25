@@ -1867,10 +1867,11 @@ export async function updateUserRole(userId, newRole) {
     const supabase = await getSupabase();
 
     // Verify current user is superadmin
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
     const { data: currentRole } = await supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", supabase.auth.getUser().then((r) => r.data.user.id))
+      .eq("user_id", currentUser.id)
       .single();
 
     if (currentRole?.role !== "superadmin") {

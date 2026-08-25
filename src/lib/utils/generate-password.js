@@ -1,5 +1,3 @@
-"use client";
-
 export function generateAutoPassword(length = 12) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
   let password = "";
