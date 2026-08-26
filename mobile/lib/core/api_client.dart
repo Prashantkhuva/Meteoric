@@ -374,4 +374,7 @@ class ApiClient {
 
   Future<Map<String, dynamic>> usersResendInvite(Map<String, dynamic> data) =>
       _post('/api/admin/users', {'action': 'resend-invite', ...data});
+
+  Future<Map<String, dynamic>> usersDelete(Map<String, dynamic> data) =>
+      _post('/api/admin/users', {'action': 'delete', ...data});
 }

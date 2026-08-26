@@ -3,6 +3,7 @@ import {
   addUserInvite,
   resendInvitation,
   updateUserRole,
+  deleteUser,
   getUsersWithRoles,
 } from "../../../admin/actions";
 
@@ -39,6 +40,10 @@ export async function POST(request) {
       }
       case "resend-invite": {
         const result = await resendInvitation(payload.userId);
+        return Response.json(result);
+      }
+      case "delete": {
+        const result = await deleteUser(payload.userId);
         return Response.json(result);
       }
       default:

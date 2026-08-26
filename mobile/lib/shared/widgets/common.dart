@@ -203,7 +203,7 @@ class SectionCard extends StatelessWidget {
   }
 }
 
-/// Empty state placeholder.
+/// Empty state placeholder — centered in parent.
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key, required this.message, this.icon});
 
@@ -212,25 +212,27 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, color: AppColors.textFaint, size: 32),
-            const SizedBox(height: 12),
-          ],
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 13,
-              fontFamily: 'Inter',
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, color: AppColors.textFaint, size: 32),
+              const SizedBox(height: 12),
+            ],
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

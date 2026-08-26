@@ -16,9 +16,12 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   bool _loading = true;
   bool _canManageUsers = false;
+  bool _isSuperadmin = false;
+  String? _currentUserId;
   List<Map<String, dynamic>> _users = [];
   String? _changingRoleFor;
   String? _resendingFor;
+  String? _deletingFor;
 
   @override
   void initState() {
@@ -27,9 +30,13 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Future<void> _init() async {
+    final u = AuthService.user;
+    _currentUserId = u?.id;
     final roleRow = await AuthService.myRole;
     if (!mounted) return;
+    final role = roleRow?['role'] as String? ?? '';
     _canManageUsers = roleRow?['can_manage_users'] ?? false;
+    _isSuperadmin = role == 'superadmin' || u?.email == 'work.prashantkhuva@gmail.com';
     await _loadUsers();
   }
 
@@ -83,6 +90,81 @@ class _UsersScreenState extends State<UsersScreen> {
     if (mounted) setState(() => _resendingFor = null);
   }
 
+  Future<void> _deleteUser(Map<String, dynamic> user) async {
+    final email = user['email'] as String? ?? '';
+    final userId = user['id'] as String?;
+    if (userId == null) return;
+
+    // Confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        shape: const RoundedRectangleBorder(),
+        title: const Text(
+          'Delete User',
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to permanently delete $email? This action cannot be undone.',
+          style: const TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 13,
+            height: 1.5,
+            fontFamily: 'Inter',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(
+                color: AppColors.red,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _deletingFor = userId);
+    try {
+      final res = await ApiClient.instance.usersDelete({
+        'userId': userId,
+      });
+      if (!mounted) return;
+      if (res['error'] != null) {
+        Toast.error(context, res['error']);
+      } else {
+        Toast.success(context, '$email has been removed');
+        await _loadUsers();
+      }
+    } catch (err) {
+      if (mounted) Toast.error(context, _clean(err));
+    }
+    if (mounted) setState(() => _deletingFor = null);
+  }
+
   void _showInviteSheet() {
     showModalBottomSheet(
       context: context,
@@ -127,11 +209,15 @@ class _UsersScreenState extends State<UsersScreen> {
                     itemBuilder: (context, i) => _UserTile(
                       user: _users[i],
                       canManage: _canManageUsers,
+                      isSuperadmin: _isSuperadmin,
+                      currentUserId: _currentUserId,
                       changing: _changingRoleFor == _users[i]['id'],
                       resending: _resendingFor == _users[i]['id'],
+                      deleting: _deletingFor == _users[i]['id'],
                       onRoleChanged: (role) =>
                           _changeRole(_users[i]['id'], role),
                       onResend: () => _resendInvite(_users[i]['id']),
+                      onDelete: () => _deleteUser(_users[i]),
                     ),
                   ),
                 ),
@@ -145,18 +231,26 @@ class _UserTile extends StatelessWidget {
   const _UserTile({
     required this.user,
     required this.canManage,
+    required this.isSuperadmin,
+    required this.currentUserId,
     required this.changing,
     required this.resending,
+    required this.deleting,
     required this.onRoleChanged,
     required this.onResend,
+    required this.onDelete,
   });
 
   final Map<String, dynamic> user;
   final bool canManage;
+  final bool isSuperadmin;
+  final String? currentUserId;
   final bool changing;
   final bool resending;
+  final bool deleting;
   final ValueChanged<String> onRoleChanged;
   final VoidCallback onResend;
+  final VoidCallback onDelete;
 
   static const _roleColors = {
     'superadmin': AppColors.accent,
@@ -176,6 +270,7 @@ class _UserTile extends StatelessWidget {
             ? email[0].toUpperCase()
             : '?';
     final color = _roleColors[role] ?? AppColors.textFaint;
+    final canDelete = isSuperadmin && user['id'] != currentUserId;
 
     return Container(
       decoration: BoxDecoration(
@@ -241,7 +336,7 @@ class _UserTile extends StatelessWidget {
             ),
             const SizedBox(width: 8),
 
-            // Role badge + status
+            // Role badge + status + actions
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -340,6 +435,24 @@ class _UserTile extends StatelessWidget {
                                   fontFamily: 'Inter',
                                   decoration: TextDecoration.underline,
                                 ),
+                              ),
+                            ),
+                    ],
+                    if (canDelete) ...[
+                      const SizedBox(width: 8),
+                      deleting
+                          ? const SizedBox(
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 1, color: AppColors.red),
+                            )
+                          : GestureDetector(
+                              onTap: onDelete,
+                              child: const Icon(
+                                Icons.delete_outline,
+                                size: 14,
+                                color: AppColors.red,
                               ),
                             ),
                     ],
