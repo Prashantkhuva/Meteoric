@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSiteUrl } from "@/config/site-url";
 import { sanitizeEmailHtml } from "@/lib/sanitize";
-import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail, sendPaymentConfirmation } from "@/lib/email/email";
+import { sendProposalEmail, sendInvoiceEmail, sendOverdueReminder, sendClientWelcome, sendHotLeadAlert, sendCustomEmail, sendPaymentConfirmation, sendInvitationEmail } from "@/lib/email/email";
 import { callAIJson } from "@/lib/ai/provider";
 import { getExchangeRate } from "@/lib/exchange-rate";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
@@ -1799,23 +1799,12 @@ export async function addUserInvite(formData) {
 
     // Send invitation email
     const loginUrl = `${getSiteUrl()}/login?redirect=/admin`;
-    const invitationEmailHtml = `
-      <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>You're invited to Meteoric Admin</h2>
-        <p>Hello <strong>${name}</strong>,</p>
-        <p>You have been added to the Meteoric Admin panel as a <strong>${role}</strong>.</p>
-        <p>Your auto-generated password: <code>${generatedPassword}</code></p>
-        <p>Login here: <a href="${loginUrl}" style="color: #EAEFFF; text-decoration: underline;">${loginUrl}</a></p>
-        <p>⚠️ <strong>First login requires password change.</strong></p>
-        <p>Best regards,<br/>Meteoric Team</p>
-      </div>
-    `;
-
-    await sendCustomEmail({
-      from: "admin",
-      to: [email],
-      subject: "You're invited to Meteoric Admin",
-      html: invitationEmailHtml,
+    await sendInvitationEmail({
+      name,
+      email,
+      role,
+      password: generatedPassword,
+      loginUrl,
     });
 
     return { success: true, userId: authUser.user.id };

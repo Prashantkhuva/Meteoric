@@ -8,6 +8,7 @@ import OverdueReminder from "@/emails/overdue-reminder";
 import ClientWelcome from "@/emails/client-welcome";
 import PaymentConfirmation from "@/emails/payment-confirmation";
 import ReviewThankYou from "@/emails/review-thankyou";
+import InvitationEmail from "@/emails/invitation-email";
 import CustomEmail from "@/emails/custom-email";
 import { generateProposalPdf, generateInvoicePdf } from "@/lib/pdf/generate";
 
@@ -262,6 +263,30 @@ export async function sendCustomEmail({ from, to, subject, html, attachments }) 
     throw new Error(raw?.message || "Failed to send custom email", { cause: raw });
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send custom email");
+  return result;
+}
+
+export async function sendInvitationEmail({ name, email, role, password, loginUrl }) {
+  if (!email) throw new Error("No email address provided");
+
+  if (isTestMode() && email !== ADMIN) {
+    testModeWarning(email);
+    throw new Error("Cannot send — verify a domain in Resend first (test mode only delivers to admin)");
+  }
+
+  let result;
+  try {
+    result = await resend.emails.send({
+      from: `Meteoric <${SENDER_MAP.admin}>`,
+      to: email,
+      subject: "You're invited to Meteoric Admin",
+      react: InvitationEmail({ name, role, email, password, loginUrl }),
+    });
+  } catch (raw) {
+    console.error("[resend] invitation email threw:", raw);
+    throw new Error(raw?.message || "Failed to send invitation email", { cause: raw });
+  }
+  if (result?.error) throw new Error(result.error.message || "Failed to send invitation email");
   return result;
 }
 
