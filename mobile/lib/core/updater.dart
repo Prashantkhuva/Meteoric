@@ -52,11 +52,34 @@ class Updater {
       final update = AppUpdate.fromJson(
         (jsonDecode(res.body) as Map).cast<String, dynamic>(),
       );
-      if (update.url.isEmpty || update.build <= _localBuild) return null;
-      return update;
+      if (update.url.isEmpty) return null;
+      if (update.build > _localBuild) return update;
+      if (update.build == _localBuild &&
+          update.version.isNotEmpty &&
+          _compareSemver(update.version, _localVersion) > 0) {
+        return update;
+      }
+      return null;
     } catch (_) {
       return null;
     }
+  }
+
+  /// Parses "X.Y.Z" and returns +1 / 0 / -1 comparison.
+  static int _compareSemver(String a, String b) {
+    final pa = a.split('.').map(int.tryParse).toList();
+    final pb = b.split('.').map(int.tryParse).toList();
+    for (var i = 0; i < 3; i++) {
+      final va = i < pa.length ? (pa[i] ?? 0) : 0;
+      final vb = i < pb.length ? (pb[i] ?? 0) : 0;
+      if (va != vb) return va.compareTo(vb);
+    }
+    return 0;
+  }
+
+  static String get _localVersion {
+    final plus = AppVersion.version.split('+');
+    return plus.first;
   }
 
   static int get _localBuild {
