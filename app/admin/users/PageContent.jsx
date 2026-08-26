@@ -22,6 +22,7 @@ import {
   deleteUser,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
+import * as Select from "@radix-ui/react-select";
 import {
   Shield,
   UserPlus,
@@ -39,6 +40,7 @@ import {
   Calendar,
   ArrowRight,
   RefreshCw,
+  Check,
 } from "lucide-react";
 
 const PAGE_SIZE = 15;
@@ -127,6 +129,62 @@ function UserAvatar({ name, email, role, size = "md" }) {
     >
       {initial}
     </div>
+  );
+}
+
+const ROLE_OPTIONS = [
+  { value: "superadmin", label: "Superadmin" },
+  { value: "admin", label: "Admin" },
+  { value: "speaker", label: "Speaker" },
+];
+
+function RoleSelect({ value, onChange, disabled, compact = false }) {
+  return (
+    <Select.Root value={value} onValueChange={onChange} disabled={disabled}>
+      <Select.Trigger
+        className={`inline-flex items-center gap-1.5 outline-none transition-colors data-[disabled]:opacity-50 ${
+          compact
+            ? "border border-white/[0.06] bg-transparent px-2.5 py-1.5 text-[12px] text-white/70 hover:border-white/[0.12] hover:text-white/80 data-[state=open]:border-[#EAEFFF]/20"
+            : "w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white hover:border-white/[0.12] data-[state=open]:border-[#EAEFFF]/20"
+        }`}
+      >
+        <Select.Value />
+        <Select.Icon>
+          <ChevronDown
+            size={compact ? 12 : 14}
+            className="text-white/30 shrink-0"
+          />
+        </Select.Icon>
+      </Select.Trigger>
+
+      <Select.Portal>
+        <Select.Content
+          position="popper"
+          sideOffset={6}
+          className="z-[9999] min-w-[160px] border border-white/[0.08] bg-[#0c0c0c] py-1.5 shadow-2xl"
+        >
+          <Select.Viewport>
+            {ROLE_OPTIONS.map((option, i) => (
+              <div key={option.value}>
+                {i > 0 && <div className="mx-3 my-1 h-px bg-white/[0.04]" />}
+                <Select.Item
+                  value={option.value}
+                  className="flex cursor-pointer items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-white/50 outline-none transition-colors hover:bg-white/[0.08] data-[highlighted]:bg-white/[0.08] data-[state=checked]:text-white/80"
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${ROLES[option.value]?.dot || "bg-white/40"}`} />
+                  <Select.ItemText>{option.label}</Select.ItemText>
+                  {value === option.value && (
+                    <span className="ml-auto text-[#EAEFFF]/50">
+                      <Check size={13} />
+                    </span>
+                  )}
+                </Select.Item>
+              </div>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   );
 }
 
@@ -524,25 +582,15 @@ export default function PageContent() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="relative">
-                        <select
+                        <RoleSelect
                           value={u.role || ""}
-                          onChange={(e) =>
-                            handleChangeRole(u.id, e.target.value)
-                          }
+                          onChange={(val) => handleChangeRole(u.id, val)}
                           disabled={
                             changingRole === u.id ||
                             u.id === null ||
                             !isSuperadmin
                           }
-                          className="appearance-none bg-transparent border border-white/[0.06] px-2.5 py-1.5 pr-7 text-[12px] text-white/70 outline-none focus:border-[#EAEFFF]/20 cursor-pointer disabled:opacity-50 transition-colors"
-                        >
-                          <option value="superadmin">Superadmin</option>
-                          <option value="admin">Admin</option>
-                          <option value="speaker">Speaker</option>
-                        </select>
-                        <ChevronDown
-                          size={12}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none"
+                          compact
                         />
                         {changingRole === u.id && (
                           <Loader2
@@ -825,22 +873,10 @@ export default function PageContent() {
                   >
                     Role
                   </label>
-                  <div className="relative">
-                    <select
-                      id="invite-role"
-                      value={inviteRole}
-                      onChange={(e) => setInviteRole(e.target.value)}
-                      className="w-full appearance-none border border-white/[0.06] bg-black/60 px-3.5 py-2.5 pr-8 text-sm text-white outline-none focus:border-[#EAEFFF]/20 cursor-pointer transition-colors"
-                    >
-                      <option value="superadmin">Superadmin</option>
-                      <option value="admin">Admin</option>
-                      <option value="speaker">Speaker</option>
-                    </select>
-                    <ChevronDown
-                      size={14}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
-                    />
-                  </div>
+                  <RoleSelect
+                    value={inviteRole}
+                    onChange={setInviteRole}
+                  />
                   <p className="mt-1.5 text-[11px] text-white/25">
                     {ROLES[inviteRole]?.desc}
                   </p>
@@ -936,34 +972,18 @@ export default function PageContent() {
                     <div className="flex items-center justify-between">
                       <RoleBadge role={viewUser.role} size="lg" />
                       {isSuperadmin && (
-                        <div className="relative">
-                          <select
-                            value={viewUser.role || ""}
-                            onChange={(e) => {
-                              handleChangeRole(viewUser.id, e.target.value);
-                              setViewUser({
-                                ...viewUser,
-                                role: e.target.value,
-                              });
-                            }}
-                            disabled={changingRole === viewUser.id}
-                            className="appearance-none bg-transparent border border-white/[0.06] px-2.5 py-1.5 pr-7 text-[12px] text-white/50 outline-none focus:border-[#EAEFFF]/20 cursor-pointer disabled:opacity-50 transition-colors"
-                          >
-                            <option value="superadmin">Superadmin</option>
-                            <option value="admin">Admin</option>
-                            <option value="speaker">Speaker</option>
-                          </select>
-                          <ChevronDown
-                            size={12}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none"
-                          />
-                          {changingRole === viewUser.id && (
-                            <Loader2
-                              size={12}
-                              className="absolute right-6 top-1/2 -translate-y-1/2 text-white/30 animate-spin"
-                            />
-                          )}
-                        </div>
+                        <RoleSelect
+                          value={viewUser.role || ""}
+                          onChange={(val) => {
+                            handleChangeRole(viewUser.id, val);
+                            setViewUser({
+                              ...viewUser,
+                              role: val,
+                            });
+                          }}
+                          disabled={changingRole === viewUser.id}
+                          compact
+                        />
                       )}
                     </div>
                   </div>
