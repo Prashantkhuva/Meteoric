@@ -5,9 +5,9 @@
 ///   • shorebird patch → increment [patch], leave [version] alone
 /// Always set [updatedAt] to the ship time. Settings shows these values.
 class AppVersion {
-  static const String version = '0.9.0+1';
+  static const String version = '0.10.0+1';
   static const int patch = 0;
-  static const String updatedAt = '26 Aug 2026 · 12:00 PM';
+  static const String updatedAt = '26 Aug 2026 · 1:30 PM';
 
   static String get display => patch > 0 ? '$version (patch $patch)' : version;
 }
