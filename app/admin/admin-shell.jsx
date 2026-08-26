@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
@@ -28,6 +28,8 @@ const pageTitles = {
 export function AdminShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isOnboarding = searchParams.get("onboarding") === "1";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userName, setUserName] = useState("Admin");
   const [userEmail, setUserEmail] = useState(null);
@@ -81,8 +83,18 @@ export function AdminShell({ children }) {
         "Admin"
       );
       setUserEmail(user?.email);
+
+      // Force onboarding: redirect to settings if password not yet changed
+      if (
+        user &&
+        user.user_metadata?.onboarding_completed === false &&
+        pathname !== "/admin/settings"
+      ) {
+        router.replace("/admin/settings?onboarding=1");
+        return;
+      }
     }).finally(() => setChecking(false));
-  }, [router]);
+  }, [router, pathname]);
 
   // Lock body scroll on admin pages
   useEffect(() => {
@@ -114,10 +126,14 @@ export function AdminShell({ children }) {
           />
         </div>
 
-        <Sidebar mobileOpen={mobileOpen} onMobileClose={closeMobile} userName={userName} userEmail={userEmail} />
+        {!isOnboarding && (
+          <Sidebar mobileOpen={mobileOpen} onMobileClose={closeMobile} userName={userName} userEmail={userEmail} />
+        )}
 
         <div className="relative flex flex-1 flex-col min-w-0 min-h-0 h-full overflow-hidden">
-          <TopBar title={title} onMenuClick={openMobile} onShortcuts={() => setShowShortcuts((v) => !v)} />
+          {!isOnboarding && (
+            <TopBar title={title} onMenuClick={openMobile} onShortcuts={() => setShowShortcuts((v) => !v)} />
+          )}
           <main className="flex-1 min-h-0 overflow-auto">
             <ErrorBoundary>
               {children}
@@ -125,7 +141,9 @@ export function AdminShell({ children }) {
           </main>
         </div>
       </div>
-      <ShortcutsModal open={showShortcuts} onClose={() => setShowShortcuts(false)} />
+      {!isOnboarding && (
+        <ShortcutsModal open={showShortcuts} onClose={() => setShowShortcuts(false)} />
+      )}
     </ToastProvider>
   );
 }
