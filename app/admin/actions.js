@@ -2008,3 +2008,42 @@ export async function getUsersWithRoles() {
     return { error: err.message || "Failed to fetch users" };
   }
 }
+
+export async function deleteUser(userId) {
+  try {
+    const sessionSupabase = await getSupabase();
+
+    // Verify current user is superadmin
+    const { data: { user: currentUser } } = await sessionSupabase.auth.getUser();
+    if (!currentUser) return { error: "Not authenticated" };
+
+    const { data: currentRole } = await sessionSupabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", currentUser.id)
+      .single();
+
+    if (currentRole?.role !== "superadmin") {
+      return { error: "Only superadmin can delete users" };
+    }
+
+    // Prevent self-deletion
+    if (userId === currentUser.id) {
+      return { error: "You cannot delete your own account" };
+    }
+
+    const supabase = getAdminClient();
+
+    // Delete from user_roles (ON DELETE CASCADE will handle this, but explicit is safer)
+    await supabase.from("user_roles").delete().eq("user_id", userId);
+
+    // Delete from auth.users (this cascades to user_roles via FK)
+    const { error } = await supabase.auth.admin.deleteUser(userId);
+    if (error) return { error: error.message };
+
+    return { success: true };
+  } catch (err) {
+    console.error("[actions] deleteUser error:", err);
+    return { error: err.message || "Failed to delete user" };
+  }
+}

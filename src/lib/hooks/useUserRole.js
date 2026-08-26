@@ -31,6 +31,7 @@ export function useUserRole() {
   const [canViewAllData, setCanViewAllData] = useState(true);
   const [canSendEmails, setCanSendEmails] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const [isSuperadmin, setIsSuperadmin] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -56,24 +57,18 @@ export function useUserRole() {
 
       setUser(user);
 
-      // Determine role: prefer user_roles via server, fall back to metadata
       const metadataRole = user.user_metadata?.role ?? null;
+      const superadmin = metadataRole === "superadmin" || user.email === SUPERADMIN_EMAIL;
       setRole(metadataRole);
       setOnboardingCompleted(
         user.user_metadata?.onboarding_completed ?? false
       );
+      setIsSuperadmin(superadmin);
 
-      // Apply permissions from role metadata
       const perms = ROLE_PERMISSIONS[metadataRole] || ROLE_PERMISSIONS.speaker;
-      setCanManageUsers(perms.canManageUsers);
+      setCanManageUsers(superadmin || perms.canManageUsers);
       setCanViewAllData(perms.canViewAllData);
-      setCanSendEmails(perms.canSendEmails);
-
-      // Superadmin override (always full access regardless of metadata)
-      if (user.email === SUPERADMIN_EMAIL) {
-        setCanManageUsers(true);
-        setCanSendEmails(true);
-      }
+      setCanSendEmails(superadmin || perms.canSendEmails);
 
       setLoading(false);
     };
@@ -84,6 +79,7 @@ export function useUserRole() {
   return {
     user,
     role,
+    isSuperadmin,
     canManageUsers,
     canViewAllData,
     canSendEmails,

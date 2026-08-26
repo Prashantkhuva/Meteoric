@@ -8,6 +8,7 @@ import {
   addUserInvite,
   updateUserRole,
   resendInvitation,
+  deleteUser,
 } from "../actions";
 import {
   Shield,
@@ -20,6 +21,7 @@ import {
   Crown,
   Eye,
   Pencil,
+  Trash2,
 } from "lucide-react";
 
 const ROLES = {
@@ -80,7 +82,7 @@ function UserAvatar({ name, email, role, size = "md" }) {
 
 export default function PageContent() {
   const toast = useToast();
-  const { canManageUsers, loading: roleLoading } = useUserRole();
+  const { user, canManageUsers, isSuperadmin, loading: roleLoading } = useUserRole();
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,6 +96,10 @@ export default function PageContent() {
 
   // role change
   const [changingRole, setChangingRole] = useState(null);
+
+  // delete
+  const [deletingUser, setDeletingUser] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchUsers = useCallback(async () => {
     const res = await getUsersWithRoles();
@@ -164,6 +170,20 @@ export default function PageContent() {
       toast(res.error, "error");
     } else {
       toast(`Invitation resent to ${email}`, "success");
+    }
+  }
+
+  async function handleDelete() {
+    if (!deletingUser) return;
+    setDeleting(true);
+    const res = await deleteUser(deletingUser.id);
+    setDeleting(false);
+    if (res.error) {
+      toast(res.error, "error");
+    } else {
+      toast(`${deletingUser.email} has been removed`, "success");
+      setDeletingUser(null);
+      fetchUsers();
     }
   }
 
@@ -390,15 +410,26 @@ export default function PageContent() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      {!u.onboarding_completed && (
-                        <button
-                          onClick={() => handleResend(u.id, u.email)}
-                          className="inline-flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
-                        >
-                          <Mail size={12} />
-                          Resend
-                        </button>
-                      )}
+                      <div className="inline-flex items-center gap-2">
+                        {!u.onboarding_completed && (
+                          <button
+                            onClick={() => handleResend(u.id, u.email)}
+                            className="inline-flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+                          >
+                            <Mail size={12} />
+                            Resend
+                          </button>
+                        )}
+                        {isSuperadmin && u.id !== user?.id && (
+                          <button
+                            onClick={() => setDeletingUser(u)}
+                            className="inline-flex items-center gap-1.5 text-[11px] text-red-400/50 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 size={12} />
+                            Delete
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -433,6 +464,47 @@ export default function PageContent() {
           })}
         </div>
       </div>
+
+      {/* Delete confirmation modal */}
+      {deletingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm border border-white/[0.08] bg-[#0a0a0a] p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center bg-red-500/10 border border-red-500/20">
+                <Trash2 size={18} className="text-red-400" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-white">Delete User</h3>
+                <p className="text-xs text-white/40">This action cannot be undone</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/50 leading-relaxed">
+              Are you sure you want to permanently delete <span className="text-white/70 font-medium">{deletingUser.email}</span>? All their data will be removed from the system.
+            </p>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                onClick={() => setDeletingUser(null)}
+                disabled={deleting}
+                className="px-4 py-2 text-xs font-medium text-white/50 hover:text-white/70 border border-white/[0.06] hover:border-white/[0.12] transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-500/20 border border-red-500/30 hover:bg-red-500/30 transition-colors disabled:opacity-50"
+              >
+                {deleting ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Trash2 size={12} />
+                )}
+                {deleting ? "Deleting..." : "Delete User"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
