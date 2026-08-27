@@ -32,6 +32,18 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/admin/:path*",
+        has: [{ type: "host", value: "withmeteoric.com" }],
+        destination: "https://admin.withmeteoric.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/admin",
+        has: [{ type: "host", value: "withmeteoric.com" }],
+        destination: "https://admin.withmeteoric.com",
+        permanent: true,
+      },
+      {
         source: "/services/api-development",
         destination: "/services",
         permanent: true,
