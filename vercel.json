@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "admin.withmeteoric.com" }],
+      "destination": "/admin"
+    },
+    {
+      "source": "/login",
+      "has": [{ "type": "host", "value": "admin.withmeteoric.com" }],
+      "destination": "/login"
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "admin.withmeteoric.com" }],
+      "destination": "/admin/$1"
+    }
+  ]
+}
