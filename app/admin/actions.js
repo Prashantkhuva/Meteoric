@@ -1775,7 +1775,7 @@ export async function addUserInvite(formData) {
       email,
       password: generatedPassword,
       email_confirm: true,
-      user_metadata: { full_name: name, role },
+      user_metadata: { full_name: name, role, onboarding_completed: false },
     });
 
     if (authError) return { error: authError.message };
@@ -1915,11 +1915,11 @@ export async function onboardUserComplete(userId) {
 
     if (error) return { error: error.message };
 
-    // Update auth user metadata
-    const { data: user } = await supabase.auth.admin.getUserById(userId);
-    if (user.user) {
+    // Update auth user metadata (merge to preserve full_name, role)
+    const { data: userData } = await supabase.auth.admin.getUserById(userId);
+    if (userData.user) {
       await supabase.auth.admin.updateUserById(userId, {
-        user_metadata: { onboarding_completed: true },
+        user_metadata: { ...userData.user.user_metadata, onboarding_completed: true },
       });
     }
 
