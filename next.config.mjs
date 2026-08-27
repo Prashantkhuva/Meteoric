@@ -40,7 +40,7 @@ const nextConfig = {
       {
         source: "/admin",
         has: [{ type: "host", value: "withmeteoric.com" }],
-        destination: "https://admin.withmeteoric.com",
+        destination: "https://admin.withmeteoric.com/admin",
         permanent: true,
       },
       {
