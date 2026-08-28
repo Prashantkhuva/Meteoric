@@ -28,6 +28,27 @@ function buildCsp(isDev) {
 export async function proxy(request) {
   const host = request.headers.get("host") || "";
   const pn = request.nextUrl.pathname;
+
+  // Main domain /admin → redirect to admin subdomain
+  if (host === "withmeteoric.com" && pn.startsWith("/admin")) {
+    const sub = pn === "/admin" ? "" : pn.replace("/admin", "");
+    return Response.redirect(
+      `https://admin.withmeteoric.com${sub || ""}${request.nextUrl.search}`,
+      301,
+    );
+  }
+
+  // Admin subdomain → rewrite to serve admin panel
+  if (host === "admin.withmeteoric.com") {
+    const url = request.nextUrl.clone();
+    if (pn === "/") {
+      url.pathname = "/admin";
+    } else if (pn !== "/login") {
+      url.pathname = `/admin${pn}`;
+    }
+    return NextResponse.rewrite(url);
+  }
+
   if (
     (host === "www.withmeteoric.com" || host.startsWith("www.")) &&
     !pn.startsWith("/api")
