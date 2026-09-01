@@ -49,8 +49,8 @@ export const metadata = {
       {
         url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1635,
-        height: 962,
+        width: 1200,
+        height: 630,
         alt: metaTitle,
       },
     ],
@@ -66,6 +66,7 @@ export const metadata = {
   other: {
     "theme-color": "#070707",
     referrer: "origin-when-cross-origin",
+    "og:image:secure_url": `${SITE_URL}${DEFAULT_OG_IMAGE}`,
   },
 };
 

@@ -90,7 +90,7 @@ async function checkHomepage() {
     else logWarn("No OG image found");
     if (text.includes('https://fonts.googleapis.com')) logWarn("External Google Fonts link found (should use next/font)");
     else logPass("No external font references (using next/font)");
-    if (text.includes('/og.png')) logPass("Static OG image in use");
+    if (text.includes('/og.jpg')) logPass("Static OG image in use");
     else logWarn("Non-standard OG image path");
   } catch {
     logFail("Could not fetch homepage");

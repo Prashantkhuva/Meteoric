@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
       url: `${SITE_URL}/work/${project.slug}`,
       images: [
         {
-          url: `${SITE_URL}/og.png`,
+          url: `${SITE_URL}/og.jpg`,
           width: 1200,
           height: 630,
           alt: project.name,
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }) {
       creator: "@prashantkhuva_",
       title,
       description: desc,
-      images: [`${SITE_URL}/og.png`],
+      images: [`${SITE_URL}/og.jpg`],
     },
   };
 }
