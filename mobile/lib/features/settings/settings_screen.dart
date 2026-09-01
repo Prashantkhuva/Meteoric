@@ -5,6 +5,7 @@ import '../../core/app_version.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
+import '../../core/updater.dart';
 import '../../shared/widgets/common.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -19,6 +20,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _role = '';
   bool _editingProfile = false;
   bool _editingPassword = false;
+
+  // Update check state
+  bool _checkingUpdate = false;
+  bool _downloading = false;
+  double? _downloadProgress;
+  String? _updateError;
+  AppUpdate? _availableUpdate;
+  bool _updateChecked = false;
 
   late final TextEditingController _name;
   late final TextEditingController _email;
@@ -129,6 +138,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return AppColors.textMuted;
       default:
         return AppColors.textFaint;
+    }
+  }
+
+  Future<void> _checkForUpdate() async {
+    setState(() {
+      _checkingUpdate = true;
+      _updateError = null;
+      _availableUpdate = null;
+      _updateChecked = false;
+    });
+    try {
+      final update = await Updater.checkForUpdate();
+      if (!mounted) return;
+      setState(() {
+        _availableUpdate = update;
+        _updateChecked = true;
+      });
+      if (update == null) {
+        if (mounted) Toast.info(context, 'You are on the latest version');
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _updateError = 'Could not check for updates');
+      }
+    } finally {
+      if (mounted) setState(() => _checkingUpdate = false);
+    }
+  }
+
+  Future<void> _downloadAndInstall() async {
+    if (_availableUpdate == null || _downloading) return;
+    setState(() {
+      _downloading = true;
+      _downloadProgress = 0;
+      _updateError = null;
+    });
+    try {
+      final path = await Updater.download(
+        _availableUpdate!,
+        onProgress: (p) {
+          if (mounted) setState(() => _downloadProgress = p);
+        },
+      );
+      await Updater.install(path);
+      if (mounted) setState(() => _downloading = false);
+    } catch (err) {
+      if (mounted) {
+        setState(() {
+          _downloading = false;
+          _downloadProgress = null;
+          _updateError =
+              'Install failed. Allow "Install unknown apps" for Meteoric '
+              'Admin in Android settings, then retry.';
+        });
+      }
     }
   }
 
@@ -356,6 +420,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 10),
+          _buildUpdateChecker(),
 
           const SizedBox(height: 28),
 
@@ -373,6 +439,219 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   // ── Sub-widgets ───────────────────────────────────────────────
+
+  Widget _buildUpdateChecker() {
+    final checking = _checkingUpdate;
+    final downloading = _downloading;
+    final update = _availableUpdate;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: checking || downloading ? null : _checkForUpdate,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.06),
+                      border: Border.all(
+                        color: AppColors.accent.withValues(alpha: 0.12),
+                      ),
+                    ),
+                    child: checking
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.accent,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.system_update_rounded,
+                            size: 16,
+                            color: AppColors.accent,
+                          ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          checking
+                              ? 'Checking…'
+                              : update != null
+                                  ? 'Update Available'
+                                  : _updateChecked
+                                      ? 'Up to Date'
+                                      : 'Check for Updates',
+                          style: const TextStyle(
+                            color: AppColors.text,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          checking
+                              ? 'Looking for the latest version…'
+                              : update != null
+                                  ? 'Version ${update.version} is ready'
+                                  : _updateChecked
+                                      ? 'Running the latest version'
+                                      : 'Tap to check for a newer version',
+                          style: TextStyle(
+                            color: update != null
+                                ? AppColors.accent
+                                : AppColors.textFaint,
+                            fontSize: 11,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!checking && !downloading && update == null)
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 20,
+                      color: AppColors.textFaint,
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (update != null && !downloading) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(height: 1, color: AppColors.border),
+            ),
+            if (update.notes != null && update.notes!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    update.notes!,
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+              child: SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: _downloadAndInstall,
+                  style: TextButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 11),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  child: const Text(
+                    'DOWNLOAD & INSTALL',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (downloading) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(height: 1, color: AppColors.border),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Downloading update…',
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '${((_downloadProgress ?? 0) * 100).toInt()}%',
+                        style: const TextStyle(
+                          color: AppColors.accent,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: LinearProgressIndicator(
+                      value: (_downloadProgress ?? 0).clamp(0.0, 1.0),
+                      minHeight: 3,
+                      backgroundColor: AppColors.border,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        AppColors.accent,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          if (_updateError != null) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(height: 1, color: AppColors.border),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+              child: Text(
+                _updateError!,
+                style: const TextStyle(
+                  color: AppColors.red,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 
   Widget _sectionHeader(String text) => Text(
     text,
