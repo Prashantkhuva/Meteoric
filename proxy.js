@@ -28,6 +28,16 @@ function buildCsp(isDev) {
 export async function proxy(request) {
   const host = request.headers.get("host") || "";
   const pn = request.nextUrl.pathname;
+
+  // 1. Redirect http → https
+  if (request.nextUrl.protocol === "http:") {
+    const url = new URL(
+      `https://${host}${pn}${request.nextUrl.search}`,
+    );
+    return Response.redirect(url, 301);
+  }
+
+  // 2. Redirect www → non-www
   if (
     (host === "www.withmeteoric.com" || host.startsWith("www.")) &&
     !pn.startsWith("/api")
@@ -36,6 +46,13 @@ export async function proxy(request) {
       `https://withmeteoric.com${pn}${request.nextUrl.search}`,
     );
     return Response.redirect(url, 301);
+  }
+
+  // 3. Strip ?q= search parameter (broken template variable)
+  if (request.nextUrl.searchParams.has("q")) {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("q");
+    return Response.redirect(url.toString(), 301);
   }
 
   const isDev = process.env.NODE_ENV === "development";
@@ -92,5 +109,7 @@ export async function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.svg|og.jpg|apple-touch-icon.png|site.webmanifest|robots.txt|sitemap.xml|llms.txt|llms-full.txt).*)",
+  ],
 };

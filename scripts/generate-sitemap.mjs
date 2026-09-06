@@ -76,51 +76,71 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: GPTBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: CCBot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: meta-externalagent
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: Amazonbot
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 User-agent: Bytespider
 Allow: /
 Disallow: /admin
 Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
 
 Sitemap: ${SITE_URL}/sitemap.xml
 `;
