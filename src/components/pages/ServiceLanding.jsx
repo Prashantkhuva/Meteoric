@@ -89,6 +89,35 @@ export default function ServiceLanding({ service }) {
         </div>
       </section>
 
+      {/* Related Articles */}
+      {service.relatedBlogPosts?.length > 0 && (
+        <section className="border-t border-white/[0.06] py-16 md:py-20">
+          <div className="max-w-4xl mx-auto px-6 md:px-12">
+            <ScrollReveal direction="down" delay={0}>
+              <span className="text-[#EAEFFF]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-5">
+                Related Articles
+              </span>
+            </ScrollReveal>
+            <div className="grid md:grid-cols-3 gap-4">
+              {service.relatedBlogPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                >
+                  <h3 className="text-sm font-secondary-italic text-white/70 group-hover:text-[#EAEFFF] transition-colors duration-300 mb-2 leading-[1.3]">
+                    {post.title}
+                  </h3>
+                  <span className="text-white/20 text-xs font-mono group-hover:text-white/40 transition-colors duration-300">
+                    Read more →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className="border-t border-white/[0.06] py-20">
         <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
@@ -100,13 +129,16 @@ export default function ServiceLanding({ service }) {
           </ScrollReveal>
           <ScrollReveal direction="down" delay={0.1}>
             <p className="text-white/40 text-base md:text-lg max-w-xl mx-auto mb-10">
-              Book a free strategy call and Meteoric will discuss your project, timeline, and how we can help.
+              Book a free strategy call and Meteoric will discuss your project,
+              timeline, and how we can help.
             </p>
           </ScrollReveal>
           <ScrollReveal direction="up" delay={0.2}>
             <button
               onClick={() => {
-                trackEvent("services_cta_click", { button_location: `/services/${service.slug}` });
+                trackEvent("services_cta_click", {
+                  button_location: `/services/${service.slug}`,
+                });
                 openCal();
               }}
               className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"

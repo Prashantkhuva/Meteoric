@@ -9,6 +9,8 @@ const serviceSlugs = [
   "nextjs-development",
   "landing-pages",
   "web-applications",
+  "saas-development-agency",
+  "web-development-agency-for-startups",
 ];
 
 export default function sitemap() {

@@ -26,6 +26,8 @@ const serviceSlugs = [
   "nextjs-development",
   "landing-pages",
   "web-applications",
+  "saas-development-agency",
+  "web-development-agency-for-startups",
 ];
 
 const serviceUrls = serviceSlugs.map((slug) => ({
@@ -47,7 +49,9 @@ const blogUrls = blogPosts.map((post) => ({
 }));
 
 const lastmodIndex = {};
-sitemapRoutes.forEach((r) => { lastmodIndex[r.path] = r.lastmod; });
+sitemapRoutes.forEach((r) => {
+  lastmodIndex[r.path] = r.lastmod;
+});
 
 const allRoutes = [...sitemapRoutes, ...serviceUrls, ...workUrls, ...blogUrls];
 
@@ -65,7 +69,7 @@ ${allRoutes
     <lastmod>${routeLastmod(route)}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
-  </url>`
+  </url>`,
   )
   .join("\n")}
 </urlset>
@@ -151,4 +155,6 @@ await Promise.all([
   writeFile(path.join(outputDir, "robots.txt"), robots, "utf8"),
 ]);
 
-console.log(`Generated sitemap.xml and robots.txt in ${path.relative(rootDir, outputDir)}`);
+console.log(
+  `Generated sitemap.xml and robots.txt in ${path.relative(rootDir, outputDir)}`,
+);
