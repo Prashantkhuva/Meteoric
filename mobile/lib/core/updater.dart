@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,7 +10,7 @@ import 'app_version.dart';
 import 'config.dart';
 
 /// Remote release manifest served from the public Supabase Storage bucket
-/// `app-releases` (`latest.json` + `meteoric-admin.apk`).
+/// `app-releases` (`latest.json`).
 class AppUpdate {
   const AppUpdate({
     required this.version,
@@ -29,6 +30,9 @@ class AppUpdate {
   final int build;
   final String url;
   final String? notes;
+
+  @override
+  String toString() => 'AppUpdate(v$version, build=$build)';
 }
 
 /// In-app updater: checks a remote manifest, downloads the new APK with
@@ -41,28 +45,50 @@ class Updater {
   static const String _manifestUrl =
       '${AppConfig.supabaseUrl}/storage/v1/object/public/app-releases/latest.json';
   static const String _apkName = 'meteoric-admin.apk';
+  static const int _maxRetries = 2;
 
   /// Returns the available update, or null when up to date / unreachable.
+  ///
+  /// Retries up to [_maxRetries] times on network errors. Adds a cache-busting
+  /// query parameter so CDN/proxy caches don't serve a stale manifest.
   static Future<AppUpdate?> checkForUpdate() async {
-    try {
-      final res = await http
-          .get(Uri.parse(_manifestUrl))
-          .timeout(const Duration(seconds: 10));
-      if (res.statusCode != 200) return null;
-      final update = AppUpdate.fromJson(
-        (jsonDecode(res.body) as Map).cast<String, dynamic>(),
-      );
-      if (update.url.isEmpty) return null;
-      if (update.build > _localBuild) return update;
-      if (update.build == _localBuild &&
-          update.version.isNotEmpty &&
-          _compareSemver(update.version, _localVersion) > 0) {
-        return update;
+    for (var attempt = 0; attempt <= _maxRetries; attempt++) {
+      try {
+        final uri = Uri.parse('$_manifestUrl?t=${DateTime.now().millisecondsSinceEpoch}');
+        final res = await http
+            .get(uri)
+            .timeout(const Duration(seconds: 10));
+        if (res.statusCode != 200) {
+          if (attempt < _maxRetries) continue;
+          return null;
+        }
+        final update = AppUpdate.fromJson(
+          (jsonDecode(res.body) as Map).cast<String, dynamic>(),
+        );
+        if (update.url.isEmpty) return null;
+
+        // First check build number, then fall back to semver
+        if (update.build > _localBuild) return update;
+        if (update.build == _localBuild &&
+            update.version.isNotEmpty &&
+            _compareSemver(update.version, _localVersion) > 0) {
+          return update;
+        }
+        return null; // Up to date
+      } on SocketException {
+        if (attempt < _maxRetries) continue;
+        return null;
+      } on TimeoutException {
+        if (attempt < _maxRetries) continue;
+        return null;
+      } on http.ClientException {
+        if (attempt < _maxRetries) continue;
+        return null;
+      } catch (_) {
+        return null; // Unknown error — don't retry
       }
-      return null;
-    } catch (_) {
-      return null;
     }
+    return null;
   }
 
   /// Parses "X.Y.Z" and returns +1 / 0 / -1 comparison.
@@ -88,6 +114,9 @@ class Updater {
   }
 
   /// Downloads [update] to the app cache dir, reporting 0..1 progress.
+  ///
+  /// Retries once on transient failures. Uses an overall timeout of 5 minutes
+  /// to prevent hung downloads on slow connections.
   static Future<String> download(
     AppUpdate update, {
     void Function(double progress)? onProgress,
@@ -98,31 +127,68 @@ class Updater {
     final file = File('${updatesDir.path}/$_apkName');
     if (file.existsSync()) file.deleteSync();
 
-    final client = http.Client();
-    try {
-      final request = http.Request('GET', Uri.parse(update.url));
-      final response = await client
-          .send(request)
-          .timeout(const Duration(seconds: 30));
-      if (response.statusCode != 200) {
-        throw Exception('Download failed (${response.statusCode})');
-      }
-      final total = response.contentLength ?? 0;
-      final sink = file.openWrite();
-      var received = 0;
-      await for (final chunk in response.stream) {
-        received += chunk.length;
-        sink.add(chunk);
-        if (total > 0 && onProgress != null) {
-          onProgress(received / total);
+    Exception? lastError;
+    for (var attempt = 0; attempt <= _maxRetries; attempt++) {
+      final client = http.Client();
+      try {
+        final request = http.Request('GET', Uri.parse(update.url));
+        final response = await client
+            .send(request)
+            .timeout(const Duration(seconds: 30));
+        if (response.statusCode != 200) {
+          throw Exception('Download failed (${response.statusCode})');
         }
+        final total = response.contentLength ?? 0;
+        final sink = file.openWrite();
+        var received = 0;
+        final completer = Completer<void>();
+
+        // Overall 5-minute timeout for the entire download
+        final timer = Timer(const Duration(minutes: 5), () {
+          if (!completer.isCompleted) {
+            client.close();
+            completer.completeError(TimeoutException('Download timed out'));
+          }
+        });
+
+        try {
+          await response.stream.forEach((chunk) {
+            received += chunk.length;
+            sink.add(chunk);
+            if (total > 0 && onProgress != null) {
+              onProgress(received / total);
+            }
+          });
+          await sink.close();
+          if (!file.existsSync()) throw Exception('Download incomplete');
+          timer.cancel();
+          return file.path;
+        } catch (e) {
+          timer.cancel();
+          await sink.close();
+          rethrow;
+        }
+      } on SocketException catch (e) {
+        lastError = Exception('Network error: ${e.message}');
+      } on TimeoutException catch (_) {
+        lastError = Exception('Connection timed out');
+      } on http.ClientException catch (e) {
+        lastError = Exception('Connection error: ${e.message}');
+      } catch (e) {
+        lastError = Exception(e.toString());
+      } finally {
+        client.close();
       }
-      await sink.close();
-      if (!file.existsSync()) throw Exception('Download incomplete');
-      return file.path;
-    } finally {
-      client.close();
+
+      // Clean up partial download before retry
+      if (file.existsSync()) file.deleteSync();
+
+      if (attempt < _maxRetries) {
+        // Brief delay before retry
+        await Future<void>.delayed(const Duration(seconds: 2));
+      }
     }
+    throw lastError ?? Exception('Download failed');
   }
 
   /// Opens the Android package installer for the APK at [path].

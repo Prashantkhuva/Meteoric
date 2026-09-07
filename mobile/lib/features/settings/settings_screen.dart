@@ -5,7 +5,7 @@ import '../../core/app_version.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
-import '../../core/updater.dart';
+import '../../core/update_state.dart';
 import '../../shared/widgets/common.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -20,14 +20,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _role = '';
   bool _editingProfile = false;
   bool _editingPassword = false;
-
-  // Update check state
-  bool _checkingUpdate = false;
-  bool _downloading = false;
-  double? _downloadProgress;
-  String? _updateError;
-  AppUpdate? _availableUpdate;
-  bool _updateChecked = false;
 
   late final TextEditingController _name;
   late final TextEditingController _email;
@@ -48,21 +40,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _email = TextEditingController(text: user?.email ?? '');
     _originalEmail = user?.email ?? '';
     _loadRole();
+    // Listen to shared update state so UI rebuilds when HomeShell triggers a check
+    UpdateState.instance.addListener(_onUpdateState);
+  }
+
+  @override
+  void dispose() {
+    UpdateState.instance.removeListener(_onUpdateState);
+    _name.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
+    super.dispose();
+  }
+
+  void _onUpdateState() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadRole() async {
     final data = await AuthService.myRole;
     if (!mounted) return;
     setState(() => _role = data?['role'] ?? '');
-  }
-
-  @override
-  void dispose() {
-    _name.dispose();
-    _email.dispose();
-    _password.dispose();
-    _confirmPassword.dispose();
-    super.dispose();
   }
 
   void _snack(String msg, {bool error = false}) =>
@@ -142,57 +141,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _checkForUpdate() async {
-    setState(() {
-      _checkingUpdate = true;
-      _updateError = null;
-      _availableUpdate = null;
-      _updateChecked = false;
-    });
-    try {
-      final update = await Updater.checkForUpdate();
-      if (!mounted) return;
-      setState(() {
-        _availableUpdate = update;
-        _updateChecked = true;
-      });
-      if (update == null) {
-        if (mounted) Toast.info(context, 'You are on the latest version');
-      }
-    } catch (_) {
-      if (mounted) {
-        setState(() => _updateError = 'Could not check for updates');
-      }
-    } finally {
-      if (mounted) setState(() => _checkingUpdate = false);
-    }
-  }
-
-  Future<void> _downloadAndInstall() async {
-    if (_availableUpdate == null || _downloading) return;
-    setState(() {
-      _downloading = true;
-      _downloadProgress = 0;
-      _updateError = null;
-    });
-    try {
-      final path = await Updater.download(
-        _availableUpdate!,
-        onProgress: (p) {
-          if (mounted) setState(() => _downloadProgress = p);
-        },
-      );
-      await Updater.install(path);
-      if (mounted) setState(() => _downloading = false);
-    } catch (err) {
-      if (mounted) {
-        setState(() {
-          _downloading = false;
-          _downloadProgress = null;
-          _updateError =
-              'Install failed. Allow "Install unknown apps" for Meteoric '
-              'Admin in Android settings, then retry.';
-        });
-      }
+    await UpdateState.instance.checkForUpdate();
+    if (!mounted) return;
+    final state = UpdateState.instance;
+    if (state.update == null && state.error == null) {
+      Toast.info(context, 'You are on the latest version');
     }
   }
 
@@ -441,9 +394,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ── Sub-widgets ───────────────────────────────────────────────
 
   Widget _buildUpdateChecker() {
-    final checking = _checkingUpdate;
-    final downloading = _downloading;
-    final update = _availableUpdate;
+    final state = UpdateState.instance;
+    final checking = state.checking;
+    final downloading = state.downloading;
+    final update = state.update;
+    final error = state.error;
 
     return Container(
       decoration: BoxDecoration(
@@ -490,12 +445,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       children: [
                         Text(
                           checking
-                              ? 'Checking…'
+                              ? 'Checking\u2026'
                               : update != null
                                   ? 'Update Available'
-                                  : _updateChecked
-                                      ? 'Up to Date'
-                                      : 'Check for Updates',
+                                  : 'Check for Updates',
                           style: const TextStyle(
                             color: AppColors.text,
                             fontSize: 14,
@@ -506,12 +459,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const SizedBox(height: 2),
                         Text(
                           checking
-                              ? 'Looking for the latest version…'
+                              ? 'Looking for the latest version\u2026'
                               : update != null
                                   ? 'Version ${update.version} is ready'
-                                  : _updateChecked
-                                      ? 'Running the latest version'
-                                      : 'Tap to check for a newer version',
+                                  : 'Tap to check for a newer version',
                           style: TextStyle(
                             color: update != null
                                 ? AppColors.accent
@@ -559,7 +510,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: _downloadAndInstall,
+                  onPressed: state.downloadAndInstall,
                   style: TextButton.styleFrom(
                     backgroundColor: AppColors.accent,
                     foregroundColor: Colors.black,
@@ -595,7 +546,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     children: [
                       const Expanded(
                         child: Text(
-                          'Downloading update…',
+                          'Downloading update\u2026',
                           style: TextStyle(
                             color: AppColors.text,
                             fontSize: 13,
@@ -604,7 +555,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       Text(
-                        '${((_downloadProgress ?? 0) * 100).toInt()}%',
+                        '${((state.progress ?? 0) * 100).toInt()}%',
                         style: const TextStyle(
                           color: AppColors.accent,
                           fontSize: 12,
@@ -618,7 +569,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(2),
                     child: LinearProgressIndicator(
-                      value: (_downloadProgress ?? 0).clamp(0.0, 1.0),
+                      value: (state.progress ?? 0).clamp(0.0, 1.0),
                       minHeight: 3,
                       backgroundColor: AppColors.border,
                       valueColor: const AlwaysStoppedAnimation<Color>(
@@ -630,7 +581,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ],
-          if (_updateError != null) ...[
+          if (error != null) ...[
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Divider(height: 1, color: AppColors.border),
@@ -638,7 +589,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
               child: Text(
-                _updateError!,
+                error,
                 style: const TextStyle(
                   color: AppColors.red,
                   fontSize: 12,

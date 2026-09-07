@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
-import '../../core/updater.dart';
+import '../../core/update_state.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../leads/leads_screen.dart';
 import '../clients/clients_screen.dart';
@@ -16,9 +16,7 @@ class HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<HomeShell> {
-  AppUpdate? _update;
-  double? _progress;
-  String? _error;
+  final _updater = UpdateState.instance;
 
   static const _tabs = [
     DashboardScreen(),
@@ -30,46 +28,20 @@ class _HomeShellState extends State<HomeShell> {
   @override
   void initState() {
     super.initState();
-    _checkForUpdate();
+    _updater.addListener(_onUpdateState);
+    // Check for updates on launch (fire-and-forget)
+    _updater.checkForUpdate();
   }
 
-  Future<void> _checkForUpdate() async {
-    final update = await Updater.checkForUpdate();
-    if (mounted && update != null) setState(() => _update = update);
+  @override
+  void dispose() {
+    _updater.removeListener(_onUpdateState);
+    super.dispose();
   }
 
-  Future<void> _downloadAndInstall() async {
-    if (_update == null || _progress != null) return;
-    setState(() {
-      _progress = 0;
-      _error = null;
-    });
-    try {
-      final path = await Updater.download(
-        _update!,
-        onProgress: (p) {
-          if (mounted) setState(() => _progress = p);
-        },
-      );
-      await Updater.install(path);
-      if (mounted) setState(() => _progress = null);
-    } catch (err) {
-      if (mounted) {
-        setState(() {
-          _progress = null;
-          _error =
-              'Install failed. Allow "Install unknown apps" for Meteoric '
-              'Admin in Android settings, then retry.';
-        });
-      }
-    }
+  void _onUpdateState() {
+    if (mounted) setState(() {});
   }
-
-  void _dismiss() => setState(() {
-    _update = null;
-    _progress = null;
-    _error = null;
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +54,7 @@ class _HomeShellState extends State<HomeShell> {
               Expanded(
                 child: IndexedStack(index: index, children: _tabs),
               ),
-              if (_update != null) _buildUpdateBanner(),
+              if (_updater.hasUpdate) _buildUpdateBanner(),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -113,7 +85,11 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Widget _buildUpdateBanner() {
-    final downloading = _progress != null;
+    final update = _updater.update!;
+    final downloading = _updater.downloading;
+    final progress = _updater.progress;
+    final error = _updater.error;
+
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.card,
@@ -147,7 +123,7 @@ class _HomeShellState extends State<HomeShell> {
                 ),
                 if (!downloading)
                   GestureDetector(
-                    onTap: _dismiss,
+                    onTap: _updater.dismiss,
                     child: const Icon(
                       Icons.close,
                       size: 16,
@@ -158,17 +134,29 @@ class _HomeShellState extends State<HomeShell> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Version ${_update!.version} is ready to install.',
+              'Version ${update.version} is ready to install.',
               style: const TextStyle(
                 color: AppColors.text,
                 fontSize: 13,
                 fontFamily: 'Inter',
               ),
             ),
-            if (_error != null) ...[
+            if (update.notes != null && update.notes!.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                update.notes!,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 11,
+                  fontFamily: 'Inter',
+                  height: 1.4,
+                ),
+              ),
+            ],
+            if (error != null) ...[
               const SizedBox(height: 6),
               Text(
-                _error!,
+                error,
                 style: const TextStyle(
                   color: AppColors.red,
                   fontSize: 11,
@@ -181,7 +169,7 @@ class _HomeShellState extends State<HomeShell> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(2),
                 child: LinearProgressIndicator(
-                  value: _progress!.clamp(0.0, 1.0),
+                  value: (progress ?? 0).clamp(0.0, 1.0),
                   minHeight: 3,
                   backgroundColor: AppColors.border,
                   valueColor: const AlwaysStoppedAnimation<Color>(
@@ -193,7 +181,7 @@ class _HomeShellState extends State<HomeShell> {
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: _downloadAndInstall,
+                  onPressed: _updater.downloadAndInstall,
                   style: TextButton.styleFrom(
                     backgroundColor: AppColors.accent,
                     foregroundColor: Colors.black,

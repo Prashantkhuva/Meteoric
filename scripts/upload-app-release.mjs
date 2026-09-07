@@ -40,13 +40,13 @@ const apkUrl = `https://github.com/${REPO}/releases/download/v${version}/univers
 // 1. GitHub release with the APK (falls back to re-upload if release exists)
 try {
   execSync(
-    `gh release create v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --title "v${version}" --notes "${notes}"`,
+    `gh release create v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --title "v${version}" --notes "${notes}" --draft=false`,
     { stdio: "inherit" }
   );
 } catch {
   console.log(`Release v${version} already exists — uploading asset instead`);
   execSync(
-    `gh release upload v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --clobber`,
+    `gh release upload v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --clobber && gh release edit v${version} --repo ${REPO} --draft=false`,
     { stdio: "inherit" }
   );
 }
