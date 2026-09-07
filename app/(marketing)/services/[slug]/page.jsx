@@ -47,81 +47,173 @@ const serviceData = {
     ],
   },
   "saas-development": {
-    title: "SaaS Development — From Idea to Launch | Meteoric",
-    desc: "We turn ideas into production-ready SaaS — auth, billing, dashboards, and deployment included. Founder-led, MVP in weeks, not months.",
+    title: "SaaS Development Agency — MVP to Production | Meteoric",
+    desc: "Meteoric is a SaaS development agency that builds production-ready SaaS products — auth, billing, dashboards, and deployment — in weeks, not months. Founder-led, no account managers.",
     h1: ["SaaS", "Development"],
     tagline: "From idea to production SaaS — MVP in weeks, not months.",
+    relatedBlogPosts: [
+      {
+        slug: "how-to-build-a-saas-mvp-step-by-step-guide",
+        title: "How to Build a SaaS MVP: Step-by-Step Guide",
+      },
+      {
+        slug: "supabase-vs-firebase-2026-comparison",
+        title: "Supabase vs Firebase 2026",
+      },
+      {
+        slug: "mongodb-vs-postgresql-for-saas",
+        title: "MongoDB vs PostgreSQL for SaaS",
+      },
+    ],
     sections: [
       {
-        heading: "We build SaaS like a product studio",
-        body: "Founder-level involvement, no account managers. We handle the entire lifecycle — from database schema to subscription billing to deployment. You get a production-ready SaaS platform, not a prototype.",
+        heading: "What is a SaaS development agency?",
+        body: "A SaaS development agency designs, builds, and launches software-as-a-service products — from database architecture to subscription billing to deployment. Unlike generalist agencies, a SaaS-focused agency understands the specific challenges of subscription businesses: recurring revenue logic, multi-tenant architecture, usage-based billing, and the need to iterate fast without breaking what works. Meteoric is a founder-led SaaS agency: you work directly with the person writing the code, not an account manager. We've shipped 12+ production SaaS platforms across fintech, edtech, healthtech, and B2B tools.",
       },
       {
-        heading: "What we ship",
-        body: "Auth & user management, dashboard interfaces, subscription billing (Stripe), real-time features, API integrations, admin panels, and analytics. Every project includes performance optimization, SEO foundations, and post-launch support.",
+        heading: "What we build",
+        body: "Complete SaaS platforms with authentication and user management, subscription billing via Stripe, real-time dashboards, admin panels, API integrations, and analytics. Our SaaS development covers the full stack: Next.js frontend, Supabase or PostgreSQL backend, third-party integrations, and Vercel deployment. We don't just build features — we architect your product for growth.",
       },
       {
-        heading: "Our process",
-        body: "Week 1: Scope & architect (database, API, auth flows). Weeks 2–4: Build & ship MVP. Week 5–6: Polish, deploy, and handoff. Weekly updates, transparent communication, no surprises.",
+        heading: "The SaaS problems we solve",
+        body: "Choosing the right tech stack when every framework claims to be the best. Building an MVP in weeks, not months, when your runway is burning. Designing billing architecture that handles upgrades, downgrades, trials, and cancellations without bugs. Getting SEO right for a SaaS product so organic growth actually works. Scaling from 100 to 10,000 users without a rewrite. Integrating auth, payments, CRM, and analytics without duct tape. We've solved all of these — for real products, with real users.",
+      },
+      {
+        heading: "Our SaaS development process",
+        body: "Week 1: Scope and architect — database schema, API design, auth flows, billing integration plan. Weeks 2–4: Build and ship MVP — core features, user flows, and real-time capabilities. Week 5–6: Polish, deploy, and handoff — performance optimization, SEO foundations, monitoring, and documentation. Weekly demos keep you in the loop. No surprises, no scope creep.",
+      },
+      {
+        heading: "Tech stack for SaaS development",
+        body: "We build SaaS products on Next.js (frontend + API routes), Supabase (auth, database, real-time, storage), Stripe (subscription billing), Tailwind CSS (UI), and Vercel (deployment). This stack covers every layer of a SaaS product with minimal boilerplate and generous free tiers — you can launch your MVP for near-zero infrastructure cost.",
+      },
+      {
+        heading: "Who we work with",
+        body: "Pre-seed and seed SaaS founders who need an MVP to validate or raise. Series A startups scaling from MVP to production. Technical founders who need a design and product partner. Non-technical founders who need someone to translate ideas into buildable products. If you're building a SaaS product and need a team that moves at startup speed, we're a fit.",
       },
     ],
     faqs: [
       {
-        question: "How long does it take to build a SaaS MVP?",
+        question: "What does a SaaS development agency do?",
         answer:
-          "Most SaaS MVPs ship in 3–6 weeks. Timeline depends on feature complexity, third-party integrations, and design requirements. We give you a precise timeline after the free strategy call.",
+          "A SaaS development agency designs, builds, and launches software-as-a-service products. This includes database architecture, user authentication, subscription billing, dashboards, APIs, and deployment. A good SaaS agency handles the entire lifecycle from idea to production.",
       },
       {
-        question: "What tech stack do you use for SaaS?",
+        question: "How much does it cost to build a SaaS MVP?",
         answer:
-          "Next.js, React, Supabase (PostgreSQL), Stripe, Tailwind CSS, and Framer Motion. We adapt to your existing stack if needed.",
+          "SaaS MVP costs depend on complexity. A focused MVP with auth, billing, and core features typically starts at a fixed project fee. Factors that affect cost: number of user roles, third-party integrations, real-time requirements, and design complexity. We quote fixed prices after a free strategy call — no hourly billing surprises.",
       },
       {
-        question: "Can you add features after the MVP launches?",
+        question: "How long does it take to build a SaaS product?",
         answer:
-          "Yes. Every project includes post-launch support. We treat each product as a long-term partnership and iterate based on real user feedback.",
+          "Most SaaS MVPs ship in 3–6 weeks with a focused scope. Full-featured products take 3–6 months. Timeline depends on feature complexity, integrations, and design requirements. We give you a precise timeline after a free strategy call.",
       },
       {
-        question: "How is Meteoric different from other SaaS agencies?",
+        question: "What tech stack do you use for SaaS development?",
         answer:
-          "Direct founder involvement, no account managers, 10-day sprint cycles, and a track record of 12+ production projects with 100% client satisfaction.",
+          "Next.js, React, Supabase (PostgreSQL), Stripe, Tailwind CSS, and Framer Motion. We adapt to your existing stack if needed, but this is our proven stack for shipping SaaS products fast with low infrastructure costs.",
+      },
+      {
+        question: "Do you build MVPs for early-stage startups?",
+        answer:
+          "Yes. MVP acceleration is a core service. We run a 3–6 week sprint from idea to deployed product with auth, payments, and a landing page. The goal is to get something in front of real users as fast as possible.",
+      },
+      {
+        question: "Can you help rebuild or scale an existing SaaS product?",
+        answer:
+          "Yes. We handle tech stack migration, performance optimization, feature scaling, and architecture overhauls. If your current product is slow, buggy, or hard to maintain, we can fix it.",
+      },
+      {
+        question: "How is Meteoric different from other SaaS development agencies?",
+        answer:
+          "Direct founder involvement, no account managers, 10-day sprint cycles, fixed pricing, and a track record of 12+ production projects with 100% client satisfaction. You work with the person who builds your product.",
+      },
+      {
+        question: "Do you provide ongoing support after launch?",
+        answer:
+          "Yes. Performance monitoring, feature iteration, SEO optimization, and maintenance retainers. We treat every project as a long-term partnership and iterate based on real user feedback.",
       },
     ],
   },
   "startup-web-development": {
-    title: "Startup Web Development — Websites for Founders | Meteoric",
-    desc: "Premium websites for startups that ship in days, not quarters. Modern stack, honest timelines, and a founder who knows speed matters.",
+    title: "Web Development Agency for Startups — Ship Fast | Meteoric",
+    desc: "Meteoric is a web development agency for startups. We build high-performance websites, MVPs, and SaaS products that ship in days, not quarters.",
     h1: ["Startup Web", "Development"],
-    tagline: "Your startup's website ships in days, not quarters.",
+    tagline: "The web development agency that ships like a startup.",
+    relatedBlogPosts: [
+      {
+        slug: "how-much-does-a-startup-website-cost",
+        title: "How Much Does a Startup Website Cost?",
+      },
+      {
+        slug: "how-to-choose-a-web-development-agency",
+        title: "How to Choose a Web Development Agency",
+      },
+      {
+        slug: "react-vs-nextjs-for-startup-websites",
+        title: "React vs Next.js for Startup Websites",
+      },
+    ],
     sections: [
       {
-        heading: "Built for startups",
-        body: "Speed matters. We build high-performance websites that load fast, convert visitors, and scale with your startup. No bloated CMS, no unnecessary dependencies — just clean, modern code.",
+        heading: "What is a startup web development agency?",
+        body: "A startup web development agency is a specialized partner that builds websites, MVPs, and web applications for early-stage companies. Unlike generalist agencies, startup-focused agencies understand limited runway, rapid iteration cycles, and the pressure to ship before competitors. They move faster, charge less, and deliver products that validate ideas — not bloated enterprise builds that take months. Meteoric is a web development agency built for founders: founder-led, no account managers, 10-day sprint cycles, and fixed pricing.",
       },
       {
-        heading: "What we deliver",
-        body: "Marketing websites, landing pages, documentation sites, and web applications. Every project includes SEO foundations, performance optimization, mobile responsiveness, and analytics setup.",
+        heading: "What we build for startups",
+        body: "Landing pages that convert, marketing websites that rank, MVPs that validate, and SaaS platforms that scale. Our web development for startups covers the full spectrum: custom design, modern stack (Next.js + Supabase), SEO foundations, performance optimization, and deployment. Every project includes analytics, mobile responsiveness, and post-launch support.",
       },
       {
-        heading: "Typical timeline",
-        body: "Landing pages: 3–7 days. Multi-page websites: 1–3 weeks. Web applications: 2–6 weeks. We work in 10-day sprints with weekly updates so you're never in the dark.",
+        heading: "Startup problems we solve",
+        body: "You need an MVP but can't afford a full-time engineering team. Your Webflow site is slow and limits what you can build. You need to raise but your current site looks amateur. You're technical but need design and product strategy. You need to validate an idea before committing months of development. We solve these problems every week — with focused sprints, fixed pricing, and a stack that ships fast.",
+      },
+      {
+        heading: "Why startups choose Meteoric over freelancers and large agencies",
+        body: "Freelancers are cheap but unreliable — they disappear, miss deadlines, or can't handle full-stack work. Large agencies are thorough but slow — 3-month timelines and $100K+ budgets that burn runway. Meteoric sits in the middle: founder-level attention, startup-speed execution, and pricing that matches your stage. We work in 10-day sprints with weekly updates. You get a production-grade product without the enterprise overhead.",
+      },
+      {
+        heading: "Our startup development process",
+        body: "We work in 10-day sprints with weekly updates. Week 1: Discovery and design direction. Weeks 2–3: Build core features. Week 4: Polish and deploy. For larger projects, we add sprints as needed. You get daily updates during active development, a clear timeline from day one, and a founder who picks up the phone. No project managers, no communication gaps.",
+      },
+      {
+        heading: "Startup-friendly pricing",
+        body: "We publish the ranges we work in: landing pages ship in 3–7 days, multi-page websites in 1–3 weeks, web applications in 2–6 weeks, and SaaS MVPs in 3–6 weeks. Every project is quoted at a fixed price after a free strategy call. No hourly billing, no surprise invoices. We work with pre-seed, seed, and Series A startups — the budget matches your stage.",
       },
     ],
     faqs: [
       {
+        question: "What does a web development agency for startups do?",
+        answer:
+          "A web development agency for startups builds websites, MVPs, and SaaS products tailored to early-stage companies. This includes landing pages, marketing sites, web applications, and full-stack SaaS platforms — designed to ship fast and scale with the startup.",
+      },
+      {
         question: "How much does a startup website cost?",
         answer:
-          "Landing pages start at a fixed price and deliver in 3–7 days. Multi-page websites and web applications are scoped per project. Contact us for a free quote based on your specific needs.",
+          "Landing pages start at a fixed price and deliver in 3–7 days. Multi-page websites range from 1–3 weeks. Web applications and SaaS MVPs from 2–6 weeks. Contact us for a free quote based on your specific needs.",
       },
       {
-        question: "Do you work with pre-seed startups?",
+        question: "How long does it take to build a startup MVP?",
         answer:
-          "Yes. We specialize in helping early-stage startups launch their first website or MVP. Our process is designed for founders who need to move fast without sacrificing quality.",
+          "Most startup MVPs ship in 3–6 weeks. The timeline depends on feature complexity and integrations. We give you a precise timeline after a free strategy call.",
       },
       {
-        question: "Can I update the website myself after launch?",
+        question: "Should I use no-code or hire a web development agency?",
         answer:
-          "Yes. We build on Next.js with a clean, documented codebase. We'll walk you through the basics or set up a simple CMS if needed. Post-launch support is included.",
+          "Use no-code for validation and prototyping — it's fast and cheap. Hire an agency when you need performance, SEO, scalability, or complex features. Many startups start with no-code and migrate to custom code once they've validated the idea.",
+      },
+      {
+        question: "What tech stack is best for a startup in 2026?",
+        answer:
+          "Next.js + Supabase + Tailwind CSS for most SaaS startups. Fast to build, scales well, strong SEO, low cost to operate. This is the stack we use and recommend.",
+      },
+      {
+        question: "Do you work with non-technical founders?",
+        answer:
+          "Yes. We provide product strategy, technical guidance, and translate ideas into buildable specs. You focus on the vision; we handle execution.",
+      },
+      {
+        question: "What's included in post-launch support?",
+        answer:
+          "Bug fixes, performance monitoring, feature iteration, SEO optimization, and content updates. Available as a retainer or on-demand.",
       },
     ],
   },

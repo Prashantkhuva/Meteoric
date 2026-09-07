@@ -30,7 +30,7 @@ export default function sitemap() {
 
   const serviceRoutes = serviceSlugs.map((slug) => ({
     url: `${SITE_URL}/services/${slug}`,
-    lastModified: "2026-07-25",
+    lastModified: "2026-09-06",
     changeFrequency: "monthly",
     priority: 0.8,
   }));
