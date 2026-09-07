@@ -59,9 +59,11 @@ class Status {
   };
 
   static const Map<String, StatusMeta> bookings = {
-    'ACCEPTED': StatusMeta('Accepted', AppColors.emerald),
-    'PENDING': StatusMeta('Pending', AppColors.amber),
-    'CANCELLED': StatusMeta('Cancelled', AppColors.red),
+    'accepted': StatusMeta('Accepted', AppColors.emerald),
+    'pending': StatusMeta('Pending', AppColors.amber),
+    'rejected': StatusMeta('Rejected', AppColors.red),
+    'cancelled': StatusMeta('Cancelled', AppColors.textFaint),
+    'awaiting': StatusMeta('Awaiting', AppColors.amber),
   };
 
   static const Map<String, StatusMeta> leadSources = {

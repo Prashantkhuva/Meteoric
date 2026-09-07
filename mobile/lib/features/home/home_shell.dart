@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/notification_state.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
 import '../dashboard/dashboard_screen.dart';
@@ -17,6 +18,7 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   final _updater = UpdateState.instance;
+  final _notif = NotificationState.instance;
 
   static const _tabs = [
     DashboardScreen(),
@@ -29,12 +31,17 @@ class _HomeShellState extends State<HomeShell> {
   void initState() {
     super.initState();
     _updater.addListener(_onUpdateState);
+    _notif.addListener(_onUpdateState);
+    // Start global notification polling (heads-up on every screen)
+    _notif.startPolling();
     // Check for updates on launch (fire-and-forget)
     _updater.checkForUpdate();
   }
 
   @override
   void dispose() {
+    _notif.stopPolling();
+    _notif.removeListener(_onUpdateState);
     _updater.removeListener(_onUpdateState);
     super.dispose();
   }

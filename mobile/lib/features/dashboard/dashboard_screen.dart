@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
@@ -7,7 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/api_client.dart';
 import '../../core/formatters.dart';
-import '../../core/notification_service.dart';
+import '../../core/notification_state.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/error_views.dart';
@@ -28,68 +27,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Map<String, dynamic>? _data;
   Object? _error;
   bool _loading = true;
-  int _unread = 0;
-  Timer? _notifTimer;
-  DateTime? _notifWatermark;
 
   @override
   void initState() {
     super.initState();
     _load();
-    _pollNotifications();
-    // Keep the bell fresh while the dashboard is visible.
-    _notifTimer = Timer.periodic(
-      const Duration(seconds: 60),
-      (_) => _pollNotifications(),
-    );
+    NotificationState.instance.addListener(_onNotifChange);
   }
 
   @override
   void dispose() {
-    _notifTimer?.cancel();
+    NotificationState.instance.removeListener(_onNotifChange);
     super.dispose();
   }
 
-  /// Fetches notifications: updates the bell badge and surfaces brand-new
-  /// alerts as heads-up notifications. First run only sets the watermark so
-  /// existing history isn't replayed.
-  Future<void> _pollNotifications() async {
-    try {
-      final res = await ApiClient.instance.notificationsList();
-      final items = ((res['data'] as List?) ?? const [])
-          .map((e) => (e as Map).cast<String, dynamic>())
-          .toList();
-      final unread = (res['unreadCount'] as num?)?.toInt() ?? _unread;
-
-      DateTime? latest;
-      final fresh = <Map<String, dynamic>>[];
-      for (final item in items) {
-        final at = DateTime.tryParse('${item['created_at']}')?.toLocal();
-        if (at == null) continue;
-        if (latest == null || at.isAfter(latest)) latest = at;
-        if (_notifWatermark != null && at.isAfter(_notifWatermark!)) {
-          fresh.add(item);
-        }
-      }
-
-      if (_notifWatermark == null && latest != null) {
-        _notifWatermark = latest;
-      } else if (latest != null && latest.isAfter(_notifWatermark!)) {
-        _notifWatermark = latest;
-      }
-
-      // Surface at most 3 new alerts per poll as heads-up notifications.
-      for (final item in fresh.take(3)) {
-        await NotificationService.instance.show(
-          title: '${item['title'] ?? 'Alert'}',
-          body: '${item['body'] ?? ''}'.isEmpty ? null : '${item['body']}',
-        );
-      }
-
-      if (mounted) setState(() => _unread = unread);
-    } catch (_) {
-      // Silent — the bell just stays stale until the next tick.
-    }
+  void _onNotifChange() {
+    if (mounted) setState(() {});
   }
 
   /// [silent] keeps the current content on screen while refreshing — used
@@ -129,12 +82,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: _BellIcon(unread: _unread),
+            icon: _BellIcon(unread: NotificationState.instance.unread),
             onPressed: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const NotificationsScreen()),
               );
-              _pollNotifications();
+              NotificationState.instance.refresh();
             },
             tooltip: 'Notifications',
           ),
