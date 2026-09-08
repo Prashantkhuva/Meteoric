@@ -480,7 +480,8 @@ export async function updateBookingStatus(bookingId, status) {
   let safeId;
   try {
     safeStatus = statusSchema(["accepted", "rejected"]).parse(status);
-    safeId = idSchema.parse(bookingId);
+    // Cal.com v2 uses string UIDs — accept both numbers and strings
+    safeId = z.string().min(1).parse(String(bookingId));
   } catch (err) {
     return { error: err.message || "Invalid booking or status" };
   }

@@ -41,6 +41,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       ? (widget.booking['id'] as num).toInt()
       : null;
 
+  String get _bookingUid =>
+      '${widget.booking['uid'] ?? widget.booking['id'] ?? ''}';
+
   String get _status =>
       '${widget.booking['status'] ?? 'pending'}'.toLowerCase();
 
@@ -49,7 +52,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
   Future<void> _run(Future<void> Function() action, String successMsg) async {
     if (_busy) return;
-    if (_bookingId == null) {
+    if (_bookingUid.isEmpty) {
       _snack('Booking id missing — cannot update', isError: true);
       return;
     }
@@ -67,7 +70,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   }
 
   Future<void> _setStatus(String status) => _run(
-    () => ApiClient.instance.bookingStatus('$_bookingId', status),
+    () => ApiClient.instance.bookingStatus(_bookingUid, status),
     status == 'accepted' ? 'Booking accepted' : 'Booking rejected',
   );
 
