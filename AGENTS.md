@@ -104,6 +104,52 @@ scripts/          — Build/utility scripts (generate-sitemap, proxy)
 - **Release signing:** `mobile/android/key.properties` (gitignored) + `app/meteoric-release.jks` (gitignored); alias `meteoric`. Sideloadable install APK (with Shorebird engine so OTA patches apply): `shorebird releases get-apks --release-version 0.1.0+1 -o build/app/outputs/flutter-apk` → `universal.apk`. Do NOT use plain `flutter build apk --release` for installs — that build has no Shorebird engine and can never receive patches.
 - **OTA updates (Shorebird):** `shorebird` CLI at `~/.shorebird/bin` (add to PATH per session); logged in as `work.prashantkhuva@gmail.com`; `app_id: 39ba27c5-5735-4c86-a9b9-e037da640ec0` in `mobile/shorebird.yaml` (checked in). Workflow: new release → `shorebird release android` (also uploads AAB to Play Store if ever needed); code change → `shorebird patch android --release-version 0.1.0+1` (tiny diff, phones auto-update on next launch, no reinstall). Limits: patches can't change native plugins/AndroidManifest/icons/assets — those need a new release. Bumping `pubspec.yaml` version = new release, not patch. Verify patch w/o publishing: `--dry-run`. Patches fail on icon-font diffs (new `Icons.*` glyphs change the tree-shaken font) — avoid new icons in patches or do a release.
 - **Version tracking:** after EVERY ship (release or patch), update `mobile/lib/core/app_version.dart` — new release → bump `version` (+ `pubspec.yaml`) and reset `patch` to 0; shorebird patch → increment `patch`, leave `version`; always set `updatedAt` to ship time. Settings screen displays these.
+
+### Versioning Policy (adopted 2026-09-07)
+**Format:** `MAJOR.MINOR.PATCH+BUILD` (e.g., `0.10.2+1`)
+- **MAJOR (X):** Breaking API changes, new auth model, DB migration requiring reinstall
+- **MINOR (y):** New features (booking filters, PDF export, bulk actions)
+- **PATCH (z):** Bug fixes, performance, copy changes, styling, Dart-only logic
+- **BUILD (+N):** Auto-incrementing build number (never reset; always increases)
+
+**Shorebird patch number** (`app_version.dart` `patch` field) is separate from the `+BUILD` number. Patch increments only when an OTA ship occurs. `updatedAt` is always set to ship time.
+
+#### Patch vs Release Decision Framework
+| Change type | Ship method |
+|---|---|
+| Dart-only, no new native dependencies | Shorebird patch (OTA) |
+| New plugin, AndroidManifest change, icon/font change, pubspec major bump | New APK release |
+| Bug fix, styling, copy change, Dart logic | Shorebird patch (OTA) |
+| New feature needing Play Store review | New APK release (with staged rollout via tracks) |
+| Critical security fix (auth bypass, data leak) | Shorebird patch → forced upgrade via `latest.json` `min_supported_build` if needed |
+
+#### Staged Rollout via Shorebird Tracks
+Shorebird supports tracks (`stable`, `staging`, `beta`, custom) — created implicitly, no registration needed.
+- **Day 0:** Publish patch to `staging` track → test on your own device
+- **Day 1:** Promote to `stable` via `shorebird patches set-track` or Shorebird Console
+- **For percentage-based rollouts:** Use `shorebird_code_push` v2 + cloud KV store to route devices to beta/stable tracks based on group number (1–100) vs rollout percentage. See [Shorebird % rollout guide](https://docs.shorebird.dev/code-push/guides/percentage-based-rollouts/).
+
+```bash
+# Publish to staging first
+shorebird patch android --track=staging
+# Preview locally
+shorebird preview --track staging --app-id <id> --release-version <ver>
+# Promote to stable when confident
+shorebird patches set-track --release-version <ver> --patch-number <N> --track stable
+```
+
+#### Forced Upgrade (minimum supported version)
+Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) already checks `remoteBuild > localBuild` — extend it to block use when `localBuild < min_supported_build` with a full-screen modal (no dismiss). Reserve for critical security only (auth bypass, data exposure).
+
+#### Release Checklist (follow for every ship)
+1. `flutter analyze` — zero issues
+2. Update `app_version.dart` (version/patch/build + updatedAt)
+3. If new release: bump `pubspec.yaml` version too
+4. Shorebird: `shorebird patch android` (or `shorebird release android` for new APK)
+5. If new APK: `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]`
+6. Verify `latest.json` updated in Supabase Storage
+7. Test: install APK → check Settings shows correct version → trigger update banner if applicable
+8. Commit + push to `main`
 - **In-app updater (0.4.0+):** app polls `latest.json` in public Supabase Storage bucket `app-releases` on launch; if remote build > local, shows an update banner → downloads APK (from GitHub Releases asset) with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES). Ship flow: `shorebird release android` → `shorebird releases get-apks --release-version X -o build/app/outputs/flutter-apk` → `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]` (uploads APK to public repo Prashantkhuva/meteoric-app-releases as release asset + updates Supabase manifest; Supabase free tier caps uploads at 50MB so APK must live on GitHub). User still needs ONE manual install of 0.4.0+5 to bootstrap the updater.
 - **Verification:** `flutter analyze` + `flutter build web --release`
 - **Session persistence:** handled by supabase_flutter itself — `AuthService.init()` passes `persistSession: true` + `localStorage: SharedPreferencesLocalStorage(persistSessionKey: 'sb_session')` (`mobile/lib/core/supabase.dart`). Do NOT switch back to flutter_secure_storage for sessions (v11 silently dropped session writes on the emulator). `sb_session` lives in plain `FlutterSharedPreferences.xml`; the SDK auto-refreshes + re-persists tokens. Keep `AuthService.refreshSession()` as the 401 fallback in `ApiClient`.
