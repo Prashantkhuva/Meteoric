@@ -74,6 +74,50 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: SITE_NAME,
+              url: SITE_URL,
+              logo: `${SITE_URL}/logo.svg`,
+              foundingDate: "2026",
+              founders: [
+                {
+                  "@type": "Person",
+                  name: "Prashant Khuva",
+                },
+              ],
+              sameAs: [
+                "https://github.com/Prashantkhuva",
+                "https://linkedin.com/company/withmeteoric",
+                "https://x.com/prashantkhuva_",
+              ],
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer service",
+                email: "contact@withmeteoric.com",
+              },
+              areaServed: "Worldwide",
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "5.0",
+                ratingCount: "12",
+                bestRating: "5",
+                worstRating: "1",
+              },
+              knowsAbout: [
+                "Web Development",
+                "SaaS Development",
+                "React",
+                "Next.js",
+                "Node.js",
+              ],
+            }),
+          }}
+        />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link
           rel="preconnect"
@@ -97,6 +141,12 @@ export default function RootLayout({ children }) {
           href="/llms-full.txt"
           type="text/plain"
           title="Meteoric extended AI index"
+        />
+        <link
+          rel="alternate"
+          href="/feed.xml"
+          type="application/rss+xml"
+          title="Meteoric Blog"
         />
       </head>
       <body className="font-primary" suppressHydrationWarning>

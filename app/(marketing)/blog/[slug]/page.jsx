@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { SITE_URL } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
 
 export function generateStaticParams() {
@@ -19,6 +19,11 @@ export async function generateMetadata({ params }) {
       title: post.title,
       description: post.description,
       url: `${SITE_URL}/blog/${slug}`,
+      type: "article",
+      publishedTime: post.published,
+      modifiedTime: post.dateModified || post.published,
+      authors: [post.author?.name || "Prashant Khuva"],
+      tags: post.tags,
       images: [
         {
           url: `${SITE_URL}/og.jpg`,
@@ -147,6 +152,41 @@ export default async function BlogPost({ params }) {
     ],
   };
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.description,
+    image: `${SITE_URL}/og.jpg`,
+    datePublished: post.published,
+    dateModified: post.dateModified || post.published,
+    author: {
+      "@type": "Person",
+      name: post.author?.name || "Prashant Khuva",
+      url: post.author?.url || `${SITE_URL}/about`,
+      jobTitle: "Founder & Full-Stack Developer",
+      sameAs: [
+        "https://x.com/prashantkhuva_",
+        "https://linkedin.com/in/prashantkhuva",
+      ],
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/logo.svg`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${slug}`,
+    },
+    keywords: post.tags.join(", "),
+    inLanguage: "en-US",
+  };
+
   const faqSchema =
     post.faqs.length > 0
       ? {
@@ -160,6 +200,21 @@ export default async function BlogPost({ params }) {
         }
       : null;
 
+  const howToSchema = post.howTo
+    ? {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: post.howTo.name,
+        description: post.howTo.description,
+        step: post.howTo.step.map((s, i) => ({
+          "@type": "HowToStep",
+          position: i + 1,
+          name: s.name,
+          text: s.text,
+        })),
+      }
+    : null;
+
   const speakableJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -170,9 +225,14 @@ export default async function BlogPost({ params }) {
     },
   };
 
-  const relatedPosts = blogPosts
-    .filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t)))
-    .slice(0, 3);
+  const relatedPosts = post.relatedBlogPosts?.length
+    ? post.relatedBlogPosts
+        .map((rp) => blogPosts.find((p) => p.slug === rp.slug))
+        .filter(Boolean)
+        .slice(0, 3)
+    : blogPosts
+        .filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t)))
+        .slice(0, 3);
 
   return (
     <>
@@ -182,12 +242,22 @@ export default async function BlogPost({ params }) {
       />
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
       {faqSchema && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+      {howToSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
         />
       )}
       <article className="min-h-screen bg-[#070707] text-white">
@@ -347,6 +417,98 @@ export default async function BlogPost({ params }) {
               </div>
             </div>
           )}
+
+          {/* ═══════════════════════════════════════
+               KEY METRICS
+             ═══════════════════════════════════════ */}
+          {post.metrics && post.metrics.length > 0 && (
+            <div className="mt-20 pt-14 border-t border-white/[0.06] max-w-3xl">
+              <div className="flex items-center gap-4 mb-8">
+                <span className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-[11px] font-medium">
+                  Key Metrics
+                </span>
+                <span className="flex-1 h-px bg-gradient-to-r from-white/[0.06] to-transparent" />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                {post.metrics.map((metric, i) => (
+                  <div key={i} className="p-4 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
+                    <div className="text-lg font-medium text-white/70 mb-1">{metric.value}</div>
+                    <div className="text-[11px] text-white/25 tracking-wide">{metric.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ═══════════════════════════════════════
+               FURTHER READING
+             ═══════════════════════════════════════ */}
+          {post.furtherReading && post.furtherReading.length > 0 && (
+            <div className="mt-20 pt-14 border-t border-white/[0.06] max-w-3xl">
+              <div className="flex items-center gap-4 mb-8">
+                <span className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-[11px] font-medium">
+                  Further Reading
+                </span>
+                <span className="flex-1 h-px bg-gradient-to-r from-white/[0.06] to-transparent" />
+              </div>
+              <div className="space-y-3">
+                {post.furtherReading.map((link, i) => (
+                  <a
+                    key={i}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 p-4 rounded-xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-200"
+                  >
+                    <svg className="w-4 h-4 text-white/15 group-hover:text-white/30 transition-colors shrink-0" viewBox="0 0 16 16" fill="none">
+                      <path d="M6 3H13V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[13px] text-white/50 group-hover:text-white/70 transition-colors truncate">{link.title}</div>
+                      <div className="text-[10px] text-white/20 tracking-wider mt-0.5">{link.source}</div>
+                    </div>
+                    <svg className="w-3 h-3 text-white/10 group-hover:text-white/25 transition-colors shrink-0" viewBox="0 0 12 12" fill="none">
+                      <path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ═══════════════════════════════════════
+               AUTHOR BIO
+             ═══════════════════════════════════════ */}
+          <div className="mt-20 pt-14 border-t border-white/[0.06] max-w-3xl">
+            <div className="flex items-start gap-5">
+              <span className="relative w-12 h-12 rounded-full bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center text-xs text-white/40 overflow-hidden shrink-0">
+                <svg viewBox="0 0 32 32" className="absolute inset-0 w-full h-full">
+                  <circle cx="16" cy="12" r="5" fill="rgba(255,255,255,0.06)" />
+                  <ellipse cx="16" cy="26" rx="9" ry="6" fill="rgba(255,255,255,0.04)" />
+                </svg>
+                <span className="relative z-10">PK</span>
+              </span>
+              <div>
+                <h3 className="text-sm font-medium text-white/60 mb-1">
+                  <a href="/author/prashant-khuva" className="hover:text-white/80 transition-colors">
+                    Written by Prashant Khuva
+                  </a>
+                </h3>
+                <p className="text-white/25 text-[13px] leading-[1.7] font-[350]">
+                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups since 2020.
+                </p>
+                <div className="flex items-center gap-4 mt-3">
+                  <a href="https://x.com/prashantkhuva_" target="_blank" rel="noopener noreferrer" className="text-white/15 hover:text-white/40 text-[11px] font-mono tracking-wider transition-colors duration-200">
+                    @prashantkhuva_
+                  </a>
+                  <a href="https://linkedin.com/in/prashantkhuva" target="_blank" rel="noopener noreferrer" className="text-white/15 hover:text-white/40 text-[11px] font-mono tracking-wider transition-colors duration-200">
+                    LinkedIn
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* ═══════════════════════════════════════
                RELATED

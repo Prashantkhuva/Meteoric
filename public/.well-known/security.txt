@@ -1,11 +1,5 @@
-# Meteoric — Security Contact
-# https://withmeteoric.com
-
 Contact: mailto:contact@withmeteoric.com
+Expires: 2027-09-08T00:00:00.000Z
 Preferred-Languages: en
-Encryption: https://keys.openpgp.org/search?q=contact%40withmeteoric.com
 Canonical: https://withmeteoric.com/.well-known/security.txt
-Policy: https://withmeteoric.com/.well-known/security-policy (if applicable)
-
-# The above contact information is for reporting security vulnerabilities.
-# For general inquiries, use the contact form on the website.
+Policy: https://withmeteoric.com/privacy

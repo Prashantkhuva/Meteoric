@@ -50,6 +50,8 @@ export default function Footer() {
               <StaggerLink href="/privacy" hoverColor="#fff" style={{ fontSize: 12, fontWeight: 400, color: "rgba(255,255,255,0.25)", padding: "6px 10px" }}>Privacy</StaggerLink>
               <span className="text-white/8 text-xs">/</span>
               <StaggerLink href="/terms" hoverColor="#fff" style={{ fontSize: 12, fontWeight: 400, color: "rgba(255,255,255,0.25)", padding: "6px 10px" }}>Terms</StaggerLink>
+              <span className="text-white/8 text-xs">/</span>
+              <StaggerLink href="/editorial-policy" hoverColor="#fff" style={{ fontSize: 12, fontWeight: 400, color: "rgba(255,255,255,0.25)", padding: "6px 10px" }}>Editorial</StaggerLink>
             </div>
           </div>
         </div>

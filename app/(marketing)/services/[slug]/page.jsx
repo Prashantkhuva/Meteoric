@@ -514,6 +514,26 @@ export default async function ServicePage({ params }) {
     ],
   };
 
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.h1.join(" "),
+    description: service.desc,
+    url: `${SITE_URL}/services/${slug}`,
+    provider: {
+      "@type": "Organization",
+      name: "Meteoric",
+      url: SITE_URL,
+    },
+    areaServed: "Worldwide",
+    serviceType: service.h1.join(" "),
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+  };
+
   return (
     <>
       <script
@@ -527,6 +547,10 @@ export default async function ServicePage({ params }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       <script
         type="application/ld+json"
