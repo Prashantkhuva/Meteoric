@@ -226,11 +226,12 @@ class _HomeShellState extends State<HomeShell> {
             else
               SizedBox(
                 width: double.infinity,
-                child: TextButton(
+                child:               TextButton(
                   onPressed: _updater.downloadAndInstall,
                   style: TextButton.styleFrom(
                     backgroundColor: forced ? AppColors.red : AppColors.accent,
-                    foregroundColor: Colors.white,
+                    foregroundColor:
+                        forced ? Colors.white : const Color(0xFF121212),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2),

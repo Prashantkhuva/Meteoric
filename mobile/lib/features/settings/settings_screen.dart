@@ -518,7 +518,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onPressed: state.downloadAndInstall,
                   style: TextButton.styleFrom(
                     backgroundColor: forced ? AppColors.red : AppColors.accent,
-                    foregroundColor: Colors.white,
+                    foregroundColor:
+                        forced ? Colors.white : const Color(0xFF121212),
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2),
