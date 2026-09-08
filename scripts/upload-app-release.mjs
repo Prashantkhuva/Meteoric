@@ -31,7 +31,9 @@ const args = process.argv.slice(2);
 const minBuildIdx = args.indexOf("--min-build");
 const minBuild =
   minBuildIdx !== -1 ? Number(args[minBuildIdx + 1]) || undefined : undefined;
-const positional = args.filter((_, i) => i !== minBuildIdx && i !== minBuildIdx + 1);
+const positional = args.filter(
+  (_, i) => minBuildIdx === -1 || (i !== minBuildIdx && i !== minBuildIdx + 1)
+);
 const [apkPath, version, build, notes = ""] = positional;
 if (!apkPath || !version || !build) {
   console.error(
