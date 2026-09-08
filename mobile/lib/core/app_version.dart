@@ -6,8 +6,8 @@
 /// Always set [updatedAt] to the ship time. Settings shows these values.
 class AppVersion {
   static const String version = '0.10.2+1';
-  static const int patch = 1;
-  static const String updatedAt = '7 Sep 2026 · 1:30 AM';
+  static const int patch = 2;
+  static const String updatedAt = '8 Sep 2026 · 12:30 PM';
 
   static String get display => patch > 0 ? '$version (patch $patch)' : version;
 }
