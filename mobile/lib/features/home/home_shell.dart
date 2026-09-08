@@ -108,6 +108,7 @@ class _HomeShellState extends State<HomeShell> {
     final progress = _updater.progress;
     final error = _updater.error;
     final forced = _updater.forceUpgrade;
+    final needsPermission = _updater.needsInstallPermission;
 
     return Container(
       decoration: const BoxDecoration(
@@ -140,7 +141,7 @@ class _HomeShellState extends State<HomeShell> {
                     ),
                   ),
                 ),
-                if (!downloading && !forced)
+                if (!downloading && !forced && !needsPermission)
                   GestureDetector(
                     onTap: _updater.dismiss,
                     child: const Icon(
@@ -195,6 +196,30 @@ class _HomeShellState extends State<HomeShell> {
                   backgroundColor: AppColors.border,
                   valueColor: const AlwaysStoppedAnimation<Color>(
                     AppColors.accent,
+                  ),
+                ),
+              )
+            else if (needsPermission)
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: _updater.retryInstall,
+                  style: TextButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  child: const Text(
+                    'INSTALL',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
               )

@@ -2,6 +2,8 @@ package com.meteoric.meteoric_admin
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -19,12 +21,41 @@ class MainActivity : FlutterActivity() {
             updaterChannel
         ).setMethodCallHandler { call, result ->
             when (call.method) {
+                "canInstallPackages" -> {
+                    val canInstall = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        packageManager.canRequestPackageInstalls()
+                    } else {
+                        true
+                    }
+                    result.success(canInstall)
+                }
+                "requestInstallPermission" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                            data = Uri.parse("package:$packageName")
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        startActivity(intent)
+                    }
+                    result.success(true)
+                }
                 "installApk" -> {
                     try {
                         val path = call.arguments as String
                         val file = File(path)
                         if (!file.exists()) {
                             result.error("FILE_NOT_FOUND", "APK not found at $path", null)
+                            return@setMethodCallHandler
+                        }
+                        // Check install permission on Android O+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                            !packageManager.canRequestPackageInstalls()
+                        ) {
+                            result.error(
+                                "INSTALL_PERMISSION_DENIED",
+                                "Install unknown apps permission not granted",
+                                null
+                            )
                             return@setMethodCallHandler
                         }
                         val uri = FileProvider.getUriForFile(

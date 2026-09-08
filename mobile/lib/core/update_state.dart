@@ -80,6 +80,16 @@ class UpdateState extends ChangeNotifier {
           notifyListeners();
         },
       );
+      // Check install permission — if denied, open settings and pause
+      if (!await Updater.canInstallPackages()) {
+        _progress = null;
+        _needsInstallPermission = true;
+        _pendingInstallPath = path;
+        _error = 'Allow "Install unknown apps" for Meteoric Admin, then tap INSTALL.';
+        notifyListeners();
+        await Updater.requestInstallPermission();
+        return;
+      }
       await Updater.install(path);
       _progress = null;
       notifyListeners();
@@ -91,6 +101,29 @@ class UpdateState extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Retries the install after the user has granted permission.
+  Future<void> retryInstall() async {
+    if (_pendingInstallPath == null) return;
+    _error = null;
+    _needsInstallPermission = false;
+    notifyListeners();
+    try {
+      await Updater.install(_pendingInstallPath!);
+      _pendingInstallPath = null;
+      notifyListeners();
+    } catch (err) {
+      _progress = null;
+      _error =
+          'Install failed. Allow "Install unknown apps" for Meteoric '
+          'Admin in Android settings, then retry.';
+      notifyListeners();
+    }
+  }
+
+  bool _needsInstallPermission = false;
+  String? _pendingInstallPath;
+  bool get needsInstallPermission => _needsInstallPermission;
 
   /// Dismisses the update banner (user chose not to update right now).
   /// Blocked when a forced upgrade is active — user must update.

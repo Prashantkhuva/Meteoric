@@ -194,8 +194,25 @@ class Updater {
     throw lastError ?? Exception('Download failed');
   }
 
+  /// Checks whether the app has permission to install unknown apps.
+  static Future<bool> canInstallPackages() async {
+    try {
+      return await _channel.invokeMethod<bool>('canInstallPackages') ?? true;
+    } catch (_) {
+      return true; // Assume allowed on older Android versions
+    }
+  }
+
+  /// Opens the system settings for "Install unknown apps" permission.
+  static Future<void> requestInstallPermission() async {
+    await _channel.invokeMethod<void>('requestInstallPermission');
+  }
+
   /// Opens the Android package installer for the APK at [path].
-  static Future<void> install(String path) async {
+  /// Checks install permission first — returns false if permission not granted.
+  static Future<bool> install(String path) async {
+    if (!await canInstallPackages()) return false;
     await _channel.invokeMethod<void>('installApk', path);
+    return true;
   }
 }
