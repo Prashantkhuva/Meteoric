@@ -36,10 +36,13 @@ class _HomeShellState extends State<HomeShell> {
     _notif.startPolling();
     // Check for updates on launch (fire-and-forget)
     _updater.checkForUpdate();
+    // Listen for forced upgrades — auto-start download
+    _updater.addListener(_onForceUpgrade);
   }
 
   @override
   void dispose() {
+    _updater.removeListener(_onForceUpgrade);
     _notif.stopPolling();
     _notif.removeListener(_onUpdateState);
     _updater.removeListener(_onUpdateState);
@@ -48,6 +51,14 @@ class _HomeShellState extends State<HomeShell> {
 
   void _onUpdateState() {
     if (mounted) setState(() {});
+  }
+
+  void _onForceUpgrade() {
+    if (_updater.forceUpgrade &&
+        !_updater.downloading &&
+        _updater.update != null) {
+      _updater.downloadAndInstall();
+    }
   }
 
   @override
@@ -61,7 +72,7 @@ class _HomeShellState extends State<HomeShell> {
               Expanded(
                 child: IndexedStack(index: index, children: _tabs),
               ),
-              if (_updater.hasUpdate) _buildUpdateBanner(),
+              if (_updater.showBanner) _buildUpdateBanner(),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -96,6 +107,7 @@ class _HomeShellState extends State<HomeShell> {
     final downloading = _updater.downloading;
     final progress = _updater.progress;
     final error = _updater.error;
+    final forced = _updater.forceUpgrade;
 
     return Container(
       decoration: const BoxDecoration(
@@ -116,11 +128,11 @@ class _HomeShellState extends State<HomeShell> {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'UPDATE AVAILABLE',
+                    forced ? 'UPDATE REQUIRED' : 'UPDATE AVAILABLE',
                     style: TextStyle(
-                      color: AppColors.textFaint,
+                      color: forced ? AppColors.red : AppColors.textFaint,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.2,
@@ -128,7 +140,7 @@ class _HomeShellState extends State<HomeShell> {
                     ),
                   ),
                 ),
-                if (!downloading)
+                if (!downloading && !forced)
                   GestureDetector(
                     onTap: _updater.dismiss,
                     child: const Icon(
@@ -141,7 +153,9 @@ class _HomeShellState extends State<HomeShell> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Version ${update.version} is ready to install.',
+              forced
+                  ? 'This version is no longer supported. Please update to continue.'
+                  : 'Version ${update.version} is ready to install.',
               style: const TextStyle(
                 color: AppColors.text,
                 fontSize: 13,
@@ -190,16 +204,16 @@ class _HomeShellState extends State<HomeShell> {
                 child: TextButton(
                   onPressed: _updater.downloadAndInstall,
                   style: TextButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
+                    backgroundColor: forced ? AppColors.red : AppColors.accent,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  child: const Text(
-                    'DOWNLOAD & INSTALL',
-                    style: TextStyle(
+                  child: Text(
+                    forced ? 'UPDATE NOW' : 'DOWNLOAD & INSTALL',
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,

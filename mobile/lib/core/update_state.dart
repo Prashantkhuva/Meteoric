@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import 'app_version.dart';
 import 'updater.dart';
 
 /// Shared, observable state for the in-app updater.
@@ -26,6 +27,23 @@ class UpdateState extends ChangeNotifier {
   bool get dismissed => _dismissed;
   bool get downloading => _progress != null;
   bool get hasUpdate => _update != null && !_dismissed;
+
+  /// True when the remote manifest's `min_supported_build` exceeds the
+  /// running build — the user MUST update and cannot dismiss the banner.
+  bool get forceUpgrade {
+    final u = _update;
+    if (u?.minSupportedBuild == null) return false;
+    final localBuild = _parseLocalBuild();
+    return localBuild < u!.minSupportedBuild!;
+  }
+
+  /// Forced upgrades override dismissal — always show the banner.
+  bool get showBanner => hasUpdate || (forceUpgrade && _update != null);
+
+  static int _parseLocalBuild() {
+    final plus = AppVersion.version.split('+');
+    return plus.length > 1 ? int.tryParse(plus[1]) ?? 0 : 0;
+  }
 
   /// Checks for an update from the remote manifest. Called on app launch and
   /// can be triggered manually from Settings.
@@ -75,7 +93,9 @@ class UpdateState extends ChangeNotifier {
   }
 
   /// Dismisses the update banner (user chose not to update right now).
+  /// Blocked when a forced upgrade is active — user must update.
   void dismiss() {
+    if (forceUpgrade) return;
     _update = null;
     _progress = null;
     _error = null;

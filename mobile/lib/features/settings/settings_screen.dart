@@ -399,6 +399,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final downloading = state.downloading;
     final update = state.update;
     final error = state.error;
+    final forced = state.forceUpgrade;
 
     return Container(
       decoration: BoxDecoration(
@@ -418,9 +419,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     height: 36,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColors.accent.withValues(alpha: 0.06),
+                      color: (forced ? AppColors.red : AppColors.accent)
+                          .withValues(alpha: 0.06),
                       border: Border.all(
-                        color: AppColors.accent.withValues(alpha: 0.12),
+                        color: (forced ? AppColors.red : AppColors.accent)
+                            .withValues(alpha: 0.12),
                       ),
                     ),
                     child: checking
@@ -432,10 +435,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: AppColors.accent,
                             ),
                           )
-                        : const Icon(
-                            Icons.system_update_rounded,
+                        : Icon(
+                            forced
+                                ? Icons.warning_rounded
+                                : Icons.system_update_rounded,
                             size: 16,
-                            color: AppColors.accent,
+                            color: forced ? AppColors.red : AppColors.accent,
                           ),
                   ),
                   const SizedBox(width: 14),
@@ -447,10 +452,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           checking
                               ? 'Checking\u2026'
                               : update != null
-                                  ? 'Update Available'
+                                  ? (forced ? 'Update Required' : 'Update Available')
                                   : 'Check for Updates',
-                          style: const TextStyle(
-                            color: AppColors.text,
+                          style: TextStyle(
+                            color: forced ? AppColors.red : AppColors.text,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Inter',
@@ -465,7 +470,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   : 'Tap to check for a newer version',
                           style: TextStyle(
                             color: update != null
-                                ? AppColors.accent
+                                ? (forced ? AppColors.red : AppColors.accent)
                                 : AppColors.textFaint,
                             fontSize: 11,
                             fontFamily: 'Inter',
@@ -512,16 +517,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: TextButton(
                   onPressed: state.downloadAndInstall,
                   style: TextButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
+                    backgroundColor: forced ? AppColors.red : AppColors.accent,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  child: const Text(
-                    'DOWNLOAD & INSTALL',
-                    style: TextStyle(
+                  child: Text(
+                    forced ? 'UPDATE NOW' : 'DOWNLOAD & INSTALL',
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,

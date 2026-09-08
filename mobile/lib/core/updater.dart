@@ -17,6 +17,7 @@ class AppUpdate {
     required this.build,
     required this.url,
     this.notes,
+    this.minSupportedBuild,
   });
 
   factory AppUpdate.fromJson(Map<String, dynamic> json) => AppUpdate(
@@ -24,12 +25,14 @@ class AppUpdate {
     build: (json['build'] as num?)?.toInt() ?? 0,
     url: json['url'] as String? ?? '',
     notes: json['notes'] as String?,
+    minSupportedBuild: (json['min_supported_build'] as num?)?.toInt(),
   );
 
   final String version;
   final int build;
   final String url;
   final String? notes;
+  final int? minSupportedBuild;
 
   @override
   String toString() => 'AppUpdate(v$version, build=$build)';

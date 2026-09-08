@@ -1,7 +1,8 @@
 // Ship a new Meteoric Admin mobile release.
 //
-// Usage: node scripts/upload-app-release.mjs <path-to-apk> <version> <build> [notes]
+// Usage: node scripts/upload-app-release.mjs <path-to-apk> <version> <build> [notes] [--min-build N]
 //   e.g. node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/universal.apk 0.4.1 6 "Bug fixes"
+//   e.g. node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/universal.apk 0.5.0 10 "" --min-build 8
 //
 // What it does:
 //   1. Uploads the APK as a GitHub Release asset on the public
@@ -26,10 +27,15 @@ try {
   }
 } catch {}
 
-const [apkPath, version, build, notes = ""] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const minBuildIdx = args.indexOf("--min-build");
+const minBuild =
+  minBuildIdx !== -1 ? Number(args[minBuildIdx + 1]) || undefined : undefined;
+const positional = args.filter((_, i) => i !== minBuildIdx && i !== minBuildIdx + 1);
+const [apkPath, version, build, notes = ""] = positional;
 if (!apkPath || !version || !build) {
   console.error(
-    "Usage: node scripts/upload-app-release.mjs <apk> <version> <build> [notes]"
+    "Usage: node scripts/upload-app-release.mjs <apk> <version> <build> [notes] [--min-build N]"
   );
   process.exit(1);
 }
@@ -58,15 +64,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY,
   { auth: { persistSession: false } }
 );
-const manifest = JSON.stringify({
+const manifest = {
   version,
   build: Number(build),
   url: apkUrl,
   notes,
-});
+};
+if (minBuild !== undefined) manifest.min_supported_build = minBuild;
 const { error } = await supabase.storage
   .from("app-releases")
-  .upload("latest.json", Buffer.from(manifest), {
+  .upload("latest.json", Buffer.from(JSON.stringify(manifest)), {
     contentType: "application/json",
     upsert: true,
   });
