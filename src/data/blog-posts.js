@@ -14,7 +14,7 @@ export const blogPosts = [
     sections: [
       {
         heading: "Why MongoDB for SaaS Billing?",
-        body: "MongoDB's document model is a strong fit for billing data because subscriptions, invoices, and plans have nested, variable structures that map naturally to JSON documents. Relational databases require multiple JOIN tables for the same data — MongoDB keeps related billing entities in a single document, reducing query complexity and read latency. For a SaaS product, this means faster invoice generation, simpler plan changes, and easier audit trails.",
+        body: "**MongoDB** is a document-oriented NoSQL database designed for flexibility and scale — it stores data as JSON-like documents rather than rows and tables. Its document model is a strong fit for billing data because subscriptions, invoices, and plans have nested, variable structures that map naturally to JSON documents. Relational databases require multiple JOIN tables for the same data — MongoDB keeps related billing entities in a single document, reducing query complexity and read latency. For a **SaaS** (Software as a Service) product, this means faster invoice generation, simpler plan changes, and easier audit trails.",
       },
       {
         heading: "Core Collections",
@@ -26,11 +26,11 @@ export const blogPosts = [
       },
       {
         heading: "Subscription Schema",
-        body: "Each subscription document links a customer to a plan with start and end dates, status (active/past_due/canceled/trialing), and a nested currentPeriod object. Store the Stripe or payment provider subscription ID for reconciliation. The trick is embedding enough context — plan name, price at time of subscription — so invoice generation doesn't require joining back to the plans collection. This makes the subscription document self-contained for billing operations.",
+        body: "Each subscription document links a customer to a plan with start and end dates, status (active/past_due/canceled/trialing), and a nested currentPeriod object. Store the [Stripe](https://docs.stripe.com/api) or payment provider subscription ID for reconciliation. **Stripe** is a payment processing platform that handles subscription billing, invoicing, and payment collection via APIs and webhooks. The trick is embedding enough context — plan name, price at time of subscription — so invoice generation doesn't require joining back to the plans collection. This makes the subscription document self-contained for billing operations.",
       },
       {
         heading: "Invoice Schema with Embedded Line Items",
-        body: "Invoices should embed line items as an array of sub-documents, each with description, quantity, unit price in cents, and total. Top-level fields include customerId, subscriptionId, status (draft/paid/overdue/voided), dueDate, and totals. The embedded approach means fetching a single document gives you the complete invoice — no JOINs needed. Index by customerId and status for the most common queries: list unpaid invoices for a customer or find all overdue invoices.",
+        body: "Invoices should **embed** line items as an array of sub-documents — **embedded documents** are nested JSON objects stored directly inside a parent document rather than referenced by ID. Each line item includes description, quantity, unit price in cents, and total. Top-level fields include customerId, subscriptionId, status (draft/paid/overdue/voided), dueDate, and totals. The embedded approach means fetching a single document gives you the complete invoice — no JOINs needed. Index by customerId and status for the most common queries: list unpaid invoices for a customer or find all overdue invoices.",
       },
       {
         heading: "Credit and Usage Tracking",
@@ -38,7 +38,7 @@ export const blogPosts = [
       },
       {
         heading: "Indexing Strategy",
-        body: "Key indexes for a billing system: compound index on subscription (customerId + status) for customer billing lookups, index on invoices (dueDate + status) for dunning workflows, unique index on payment provider IDs to prevent duplicates, and TTL index on stale invoices for automatic cleanup. Use MongoDB's explain() to verify query coverage before deploying to production.",
+        body: "Key indexes for a billing system: compound index on subscription (customerId + status) for customer billing lookups, index on invoices (dueDate + status) for dunning workflows, unique index on payment provider IDs to prevent duplicates, and a **TTL index** — a [time-to-live index](https://www.mongodb.com/docs/manual/core/index-ttl/) that automatically deletes documents after a specified expiry period — on stale invoices for automatic cleanup. Use MongoDB's explain() to verify query coverage before deploying to production.",
       },
       {
         heading: "Schema Evolution in Practice",
@@ -85,7 +85,7 @@ export const blogPosts = [
     sections: [
       {
         heading: "What is a SaaS MVP?",
-        body: "A SaaS MVP (Minimum Viable Product) is the leanest version of your product that still delivers core value to early users. It includes only essential features needed to validate your idea, gather real feedback, and start generating revenue — without over-investing in polish before proving product-market fit. For most SaaS products, an MVP can ship in 3–6 weeks with the right approach.",
+        body: "A **SaaS MVP (Minimum Viable Product)** is the leanest version of your product that still delivers core value to early users. It includes only essential features needed to validate your idea, gather real feedback, and start generating revenue — without over-investing in polish before proving **product-market fit**. For most SaaS products, an MVP can ship in 3–6 weeks with the right approach.",
       },
       {
         heading: "Step 1: Scope the Core Feature Set",
@@ -93,11 +93,11 @@ export const blogPosts = [
       },
       {
         heading: "Step 2: Choose Your Tech Stack",
-        body: "A modern SaaS stack: Next.js for frontend and API routes, Supabase for authentication, database (PostgreSQL), and real-time features, Stripe for subscription billing, Tailwind CSS for UI, and Vercel for deployment. This stack covers auth, database, billing, and hosting with minimal boilerplate. Each tool has generous free tiers — you can launch your MVP for near-zero infrastructure cost.",
+        body: "A modern SaaS stack: [Next.js](https://nextjs.org/docs) for frontend and API routes, [Supabase](https://supabase.com/docs) for authentication, database ([PostgreSQL](https://www.postgresql.org/docs/)), and real-time features, [Stripe](https://stripe.com/docs) for subscription billing, Tailwind CSS for UI, and [Vercel](https://vercel.com/docs) for deployment. This stack covers auth, database, billing, and hosting with minimal boilerplate. Each tool has generous free tiers — you can launch your MVP for near-zero infrastructure cost.",
       },
       {
         heading: "Step 3: Build Authentication First",
-        body: "Authentication is the foundation of any SaaS product. Set up email/password sign-up and Google OAuth at minimum. Implement protected routes, session management, and role-based access if needed. Supabase Auth handles this out of the box with Row Level Security policies that extend to your database — meaning your auth and data permissions are configured in one place.",
+        body: "Authentication is the foundation of any SaaS product. Set up email/password sign-up and Google OAuth at minimum. Implement protected routes, session management, and role-based access if needed. [Supabase Auth](https://supabase.com/docs/guides/auth) handles this out of the box with **Row Level Security (RLS)** — a [PostgreSQL feature](https://supabase.com/docs/guides/database/postgres/row-level-security) that lets you define access policies directly in the database schema — meaning your auth and data permissions are configured in one place.",
       },
       {
         heading: "Step 4: Implement the Core Workflow",
@@ -105,7 +105,7 @@ export const blogPosts = [
       },
       {
         heading: "Step 5: Add Subscription Billing",
-        body: "Integrate Stripe for subscription management. Create customer records on sign-up, sync subscription status via webhooks, and gate features based on plan tier. Use Stripe's customer portal for self-serve billing management — it handles plan changes, payment method updates, and invoice history without you writing any code.",
+        body: "Integrate [Stripe](https://stripe.com/docs) for subscription management. Create customer records on sign-up, sync subscription status via **webhooks** — [automated HTTP callbacks](https://stripe.com/docs/webhooks) that notify your app when events occur in Stripe — and gate features based on plan tier. Use Stripe's customer portal for self-serve billing management — it handles plan changes, payment method updates, and invoice history without you writing any code.",
       },
       {
         heading: "Step 6: Deploy and Launch",
@@ -177,11 +177,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Short Answer",
-        body: "PostgreSQL is the better default choice for most SaaS products in 2026. Its JSON support has narrowed the gap with MongoDB on flexibility, while offering superior ACID compliance, mature tooling, and a richer ecosystem. MongoDB excels when you need horizontal scaling from day one, have highly variable document structures, or are building real-time analytics pipelines that benefit from its aggregation framework.",
+        body: "**PostgreSQL** is the better default choice for most SaaS products in 2026. Its JSON support has narrowed the gap with **MongoDB** on flexibility, while offering superior **ACID** (Atomicity, Consistency, Isolation, Durability) compliance, mature tooling, and a richer ecosystem. MongoDB excels when you need horizontal scaling from day one, have highly variable document structures, or are building real-time analytics pipelines that benefit from its aggregation framework.",
       },
       {
         heading: "Schema Flexibility",
-        body: "MongoDB's schema-less document model lets you store different-shaped documents in the same collection — useful when your data structure evolves rapidly or varies across customers. PostgreSQL now offers robust JSONB support with indexing, making it nearly as flexible while keeping the benefits of a relational model. For most SaaS apps, PostgreSQL's JSONB provides enough flexibility without sacrificing the query power of SQL.",
+        body: "MongoDB's schema-less document model lets you store different-shaped documents in the same collection — useful when your data structure evolves rapidly or varies across customers. PostgreSQL now offers robust **JSONB** — a [binary JSON data type](https://www.postgresql.org/docs/current/datatype-json.html) with indexing and query operators — support, making it nearly as flexible while keeping the benefits of a relational model. For most SaaS apps, PostgreSQL's JSONB provides enough flexibility without sacrificing the query power of SQL.",
       },
       {
         heading: "Performance and Scaling",
@@ -197,7 +197,7 @@ export const blogPosts = [
       },
       {
         heading: "Ecosystem and Tooling",
-        body: "PostgreSQL has decades of tooling — Prisma, Drizzle, Supabase, pgAdmin, and every major ORM has first-class support. MongoDB's ecosystem is smaller but includes Mongoose, Compass, and Atlas. Cloud services like Supabase (PostgreSQL) and MongoDB Atlas both offer managed hosting, but Supabase's generous free tier and built-in auth/real-time features make it particularly attractive for early-stage SaaS products.",
+        body: "PostgreSQL has decades of tooling — Prisma, Drizzle, Supabase, pgAdmin, and every major ORM has first-class support. MongoDB's ecosystem is smaller but includes Mongoose, Compass, and [Atlas](https://www.mongodb.com/atlas). Cloud services like [Supabase](https://supabase.com/docs) (PostgreSQL) and MongoDB Atlas both offer managed hosting, but Supabase's generous free tier and built-in auth/real-time features make it particularly attractive for early-stage SaaS products.",
       },
       {
         heading: "When to Choose MongoDB",
@@ -248,15 +248,15 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Landscape in 2026",
-        body: "GSAP and Framer Motion are the two dominant animation libraries for the web. GSAP is a framework-agnostic animation engine with 4M+ weekly npm downloads, and it has been completely free — including every plugin — since April 2025, when Webflow stepped in to sponsor the licensing. Framer Motion (now branded simply as Motion) is the React-native animation library from the Framer team with 41M+ weekly downloads. Both are production-ready, but they excel in different scenarios. Choosing between them depends on your framework, animation complexity, and performance requirements.",
+        body: "**GSAP** (GreenSock Animation Platform) and **Framer Motion** (now branded simply as **Motion**) are the two dominant animation libraries for the web. GSAP is a framework-agnostic animation engine with [4M+ weekly npm downloads](https://www.npmjs.com/package/gsap), and it has been completely free — including every plugin — since April 2025, when Webflow stepped in to sponsor the licensing. Framer Motion is the React-native animation library from the Framer team with [41M+ weekly npm downloads](https://www.npmjs.com/package/framer-motion). Both are production-ready, but they excel in different scenarios. Choosing between them depends on your framework, animation complexity, and performance requirements.",
       },
       {
         heading: "Bundle Size and Performance",
-        body: "GSAP core is roughly 27KB gzipped — lightweight for its capabilities. Framer Motion is larger at around 60KB gzipped (less with aggressive tree-shaking), partly because it includes React-specific features like layout animations and AnimatePresence. For simple UI animations in a React app, Framer Motion's tree-shaking works well. For complex timeline-based animations or scroll-driven sequences, GSAP's smaller footprint and lower overhead make it the performance winner.",
+        body: "GSAP core is roughly 27KB gzipped — lightweight for its capabilities. Framer Motion is larger at around 60KB gzipped (less with aggressive tree-shaking), partly because it includes React-specific features like layout animations and AnimatePresence. For simple UI animations in a React app, Framer Motion's tree-shaking works well. For complex timeline-based animations or scroll-driven sequences, GSAP's smaller footprint and lower overhead make it the performance winner. Check [GSAP's documentation](https://greensock.com/docs/) for detailed API reference.",
       },
       {
         heading: "Scroll Animations",
-        body: "GSAP's ScrollTrigger plugin is the industry standard for scroll-based animations — pinning, scrubbing, parallax, and timeline-driven scroll sequences. It works across frameworks and has no React dependency. Framer Motion uses useScroll and useInView hooks for scroll detection, which are simpler for basic scroll-reveal animations but lack the power of ScrollTrigger's pinning and scrub features. For serious scroll work, GSAP is the clear choice.",
+        body: "GSAP's **ScrollTrigger** plugin — documented in the [GSAP plugin reference](https://greensock.com/docs/) — is the industry standard for scroll-based animations: pinning, scrubbing, parallax, and timeline-driven scroll sequences. It works across frameworks and has no React dependency. **Framer Motion** uses useScroll and useInView hooks for scroll detection, which are simpler for basic scroll-reveal animations but lack the power of ScrollTrigger's pinning and scrub features. For serious scroll work, GSAP is the clear choice.",
       },
       {
         heading: "React Integration",
@@ -316,15 +316,15 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Current State",
-        body: "Supabase has matured significantly since its 2020 launch and is now a serious Firebase alternative. Both platforms offer authentication, database, storage, real-time features, and serverless functions. Firebase has a larger ecosystem and longer track record, but Supabase's open-source nature, PostgreSQL foundation, and transparent pricing have made it the preferred choice for new SaaS projects.",
+        body: "**Supabase** is an open-source backend-as-a-service platform built on PostgreSQL that provides auth, database, storage, and real-time subscriptions out of the box. It has matured significantly since its 2020 launch and is now a serious Firebase alternative. Both platforms offer authentication, database, storage, real-time features, and serverless functions. **Firebase** is Google's proprietary backend platform built around Firestore (a NoSQL document database) and tightly integrated with Google Cloud services. Firebase has a larger ecosystem and longer track record, but Supabase's open-source nature, PostgreSQL foundation, and transparent pricing have made it the preferred choice for new SaaS projects.",
       },
       {
         heading: "Database: PostgreSQL vs Firestore",
-        body: "This is the biggest difference. Supabase uses PostgreSQL — a relational database with decades of optimization, full SQL support, JSONB, and ACID compliance. Firebase uses Firestore, a NoSQL document database. PostgreSQL gives you migrations, JOINs, window functions, and any tool from the SQL ecosystem. For SaaS products with billing, multi-tenant data, or reporting needs, PostgreSQL's relational model is a significant advantage.",
+        body: "This is the biggest difference. Supabase uses **PostgreSQL** — an advanced open-source [relational database](https://www.postgresql.org/docs/current/) with decades of optimization, full SQL support, JSONB, and ACID compliance. Firebase uses Firestore, a [NoSQL document database](https://firebase.google.com/docs/firestore/data-model). PostgreSQL gives you migrations, JOINs, window functions, and any tool from the SQL ecosystem. For SaaS products with billing, multi-tenant data, or reporting needs, PostgreSQL's relational model is a significant advantage.",
       },
       {
         heading: "Pricing Comparison",
-        body: "Supabase's free tier includes a 500MB PostgreSQL database, 5GB of egress bandwidth (plus 5GB cached), 50,000 monthly active users, and 1GB of file storage — across 2 free projects, with the database pausing after 7 days of inactivity. The Pro plan at $25/month bumps that to an 8GB database, 100GB storage, 250GB egress, and 100,000 monthly active users. Firebase's Spark free tier includes 1GB of Firestore, 50K document reads / 20K writes / 20K deletes per day, 10GB of egress, and 2M Cloud Function invocations per month — but Google removed Cloud Storage from the free tier in February 2026, so file uploads now require a paid Blaze plan. Blaze bills per operation ($0.06 per 100K reads, $0.18 per 100K writes) with no spending cap. For a growing SaaS, Supabase's pricing is more predictable since it's based on database size and bandwidth, not per-operation costs. Firebase's per-read pricing can surprise teams as their app grows.",
+        body: "Supabase's [free tier](https://supabase.com/pricing) includes a 500MB PostgreSQL database, 5GB of egress bandwidth (plus 5GB cached), 50,000 monthly active users, and 1GB of file storage — across 2 free projects, with the database pausing after 7 days of inactivity. The Pro plan at $25/month bumps that to an 8GB database, 100GB storage, 250GB egress, and 100,000 monthly active users. Firebase's Spark free tier includes 1GB of Firestore, 50K document reads / 20K writes / 20K deletes per day, 10GB of egress, and 2M Cloud Function invocations per month — but [Google removed Cloud Storage from the free tier in February 2026](https://firebase.google.com/pricing), so file uploads now require a paid Blaze plan. Blaze bills per operation ($0.06 per 100K reads, $0.18 per 100K writes) with no spending cap. For a growing SaaS, Supabase's pricing is more predictable since it's based on database size and bandwidth, not per-operation costs. Firebase's per-read pricing can surprise teams as their app grows.",
       },
       {
         heading: "Open Source vs Vendor Lock-in",
@@ -332,7 +332,7 @@ export const blogPosts = [
       },
       {
         heading: "Authentication",
-        body: "Both offer email/password, OAuth (Google, GitHub, and others), and magic link authentication in their free tiers, which cover roughly 50,000 monthly active users. Supabase's Row Level Security (RLS) ties auth directly to database permissions — a powerful feature that makes your data secure by default. Firebase's auth is solid but its security rules (Firestore Security Rules) are a separate system to learn, and the Firebase Admin SDK bypasses them by design, so server-side code must enforce its own permissions. For teams already comfortable with SQL, Supabase's RLS approach is more intuitive. Phone authentication is a paid add-on on both platforms, and enterprise features like SAML SSO require Firebase Identity Platform on Google's side.",
+        body: "Both offer email/password, OAuth (Google, GitHub, and others), and magic link authentication in their free tiers, which cover roughly 50,000 monthly active users. Supabase's **Row Level Security (RLS)** — a [PostgreSQL feature](https://supabase.com/docs/guides/database/postgres/row-level-security) that lets you define access policies directly in the database schema — ties auth directly to database permissions, making your data secure by default. Firebase's auth is solid but its security rules (Firestore Security Rules) are a separate system to learn, and the Firebase Admin SDK bypasses them by design, so server-side code must enforce its own permissions. For teams already comfortable with SQL, Supabase's RLS approach is more intuitive. Phone authentication is a paid add-on on both platforms, and enterprise features like SAML SSO require Firebase Identity Platform on Google's side.",
       },
       {
         heading: "Real-time and Realtime Features",
@@ -403,11 +403,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Current State of React Frameworks",
-        body: "Next.js and Remix are the two leading full-stack React frameworks. Next.js, backed by Vercel, has a larger ecosystem, more tutorials, and deeper integration with the Vercel platform. Remix, acquired by Shopify in 2022, focuses on web standards and progressive enhancement. Both are excellent choices, but they have different philosophies that matter for specific project types.",
+        body: "**Next.js** is a [React framework](https://nextjs.org/docs) built by Vercel that provides server-side rendering (SSR), static site generation (SSG), API routes, and a file-based routing system. **Remix** is a full-stack React framework that focuses on web standards and progressive enhancement. Next.js, backed by Vercel, has a larger ecosystem, more tutorials, and deeper integration with the Vercel platform. Remix, acquired by Shopify in 2022, focuses on web standards and progressive enhancement. Both are excellent choices, but they have different philosophies that matter for specific project types.",
       },
       {
         heading: "Performance and Rendering",
-        body: "Next.js offers multiple rendering strategies — static generation (SSG), server-side rendering (SSR), incremental static regeneration (ISR), and React Server Components. This flexibility lets you optimize each page for its specific content type. Remix focuses on SSR with progressive enhancement — it sends HTML first, then hydrates. For content-heavy sites (marketing pages, blogs), Next.js's SSG and ISR provide better performance. For highly dynamic apps with frequent data changes, Remix's SSR approach is simpler and effective.",
+        body: "Next.js offers multiple rendering strategies — **static generation (SSG)** pre-builds pages at build time, **server-side rendering (SSR)** renders pages on each request, **incremental static regeneration (ISR)** revalidates static pages on a timer, and [React Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components) run exclusively on the server. This flexibility lets you optimize each page for its specific content type. Remix focuses on SSR with progressive enhancement — it sends HTML first, then hydrates. For content-heavy sites (marketing pages, blogs), Next.js's SSG and ISR provide better performance. For highly dynamic apps with frequent data changes, Remix's SSR approach is simpler and effective.",
       },
       {
         heading: "Developer Experience",
@@ -419,7 +419,7 @@ export const blogPosts = [
       },
       {
         heading: "Deployment and Hosting",
-        body: "Next.js deploys seamlessly to Vercel (its creator) but also works on Netlify, AWS, and other platforms. Some advanced features (ISR, Middleware) are Vercel-optimized. Remix deploys to any Node.js or serverless platform equally well — it doesn't prefer any specific host. For teams that want deployment flexibility or are already on AWS/GCP, Remix's agnostic approach is appealing.",
+        body: "Next.js deploys seamlessly to [Vercel](https://vercel.com/docs) (its creator) but also works on Netlify, AWS, and other platforms. Some advanced features (ISR, Middleware) are Vercel-optimized. Remix deploys to any Node.js or serverless platform equally well — it doesn't prefer any specific host. For teams that want deployment flexibility or are already on AWS/GCP, Remix's agnostic approach is appealing.",
       },
       {
         heading: "When to Choose Each",
@@ -473,11 +473,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "Definition",
-        body: "A web development agency is a company that designs, builds, and deploys websites, web applications, and digital products for clients. Unlike freelancers who work independently, agencies typically have teams with specialized roles — designers, frontend developers, backend engineers, project managers, and QA testers. Agencies range from small boutique studios (2-10 people) to large firms with hundreds of employees.",
+        body: "A **web development agency** is a company that designs, builds, and deploys websites, web applications, and digital products for clients. Unlike freelancers who work independently, agencies typically have teams with specialized roles — designers, frontend developers, backend engineers, project managers, and QA testers. **UX/UI design** is the practice of designing user experiences and interfaces that are both functional and visually effective. Agencies range from small boutique studios (2-10 people) to large firms with hundreds of employees.",
       },
       {
         heading: "Services Agencies Provide",
-        body: "Most web development agencies offer a range of services beyond just coding: UX/UI design, frontend and backend development, API integration, database design, performance optimization, SEO setup, and post-launch maintenance. Some specialize in specific technologies (React, WordPress, Shopify) while others are full-stack generalists. The best agencies for founders are those that combine design thinking with technical execution — agencies that understand product strategy, not just code.",
+        body: "Most web development agencies offer a range of services beyond just coding: UX/UI design, frontend and backend development, **API** (Application Programming Interface) integration, database design, **performance optimization** — techniques to improve site speed measured by metrics like [Core Web Vitals](https://web.dev/vitals/) — SEO setup, and post-launch maintenance. Some specialize in specific technologies (React, WordPress, Shopify) while others are full-stack generalists. The best agencies for founders are those that combine design thinking with technical execution — agencies that understand product strategy, not just code.",
       },
       {
         heading: "Agency vs Freelancer vs In-House",
@@ -485,7 +485,7 @@ export const blogPosts = [
       },
       {
         heading: "The Engagement Process",
-        body: "A typical agency engagement follows four phases: discovery (understanding your vision, audience, and requirements), design (wireframes, visual design, and user flows), development (sprints with regular updates and demos), and launch (deployment, testing, and handoff). Good agencies keep the process transparent with weekly updates, clear milestones, and no surprises. The best engagements feel like a partnership, not a vendor relationship.",
+        body: "A typical agency engagement follows four phases: discovery (understanding your vision, audience, and requirements), design (wireframes, visual design, and user flows), development (sprints with regular updates and demos), and launch ([deployment](https://vercel.com/docs/deployments/overview), testing, and handoff). Good agencies keep the process transparent with weekly updates, clear milestones, and no surprises. The best engagements feel like a partnership, not a vendor relationship.",
       },
       {
         heading: "How to Choose the Right Agency",
@@ -538,7 +538,7 @@ export const blogPosts = [
     sections: [
       {
         heading: "Landing Pages: Quickly Ship a Single Page",
-        body: "A single landing page with custom design, animations, contact forms, and SEO setup typically costs less and ships in 3-7 days. This is the entry point for most startups — a professional first impression that establishes your brand and starts capturing leads. At this price, expect: custom design, responsive layout, basic SEO, contact form or Cal.com integration, and one round of revisions.",
+        body: "A single **landing page** is a standalone web page designed to convert visitors into leads or customers through a focused call-to-action. One with custom design, animations, contact forms, and **SEO** (Search Engine Optimization) setup typically costs less and ships in 3-7 days. This is the entry point for most startups — a professional first impression that establishes your brand and starts capturing leads. At this price, expect: custom design, responsive layout, basic SEO, contact form or Cal.com integration, and one round of revisions.",
       },
       {
         heading: "Multi-Page Marketing Sites",
@@ -550,11 +550,11 @@ export const blogPosts = [
       },
       {
         heading: "SaaS Products and Platforms",
-        body: "Full SaaS products with subscription billing, multi-tenant architecture, user dashboards, and admin panels are the most significant investment. A SaaS MVP ships in 3-6 weeks, with ongoing development for feature expansion. Costs reflect the complexity of building a production-ready platform with auth, billing, real-time features, and scalable infrastructure. Many agencies offer milestone-based payments to make this manageable for funded startups.",
+        body: "Full **SaaS** (Software as a Service) products with subscription billing, multi-tenant architecture, user dashboards, and admin panels are the most significant investment. A **SaaS MVP** (Minimum Viable Product) ships in 3-6 weeks, with ongoing development for feature expansion. Costs reflect the complexity of building a production-ready platform with auth, billing, real-time features, and scalable infrastructure. Many agencies offer milestone-based payments to make this manageable for funded startups.",
       },
       {
         heading: "Hidden Costs to Consider",
-        body: "Beyond development, budget for: domain registration ($10-15/year), hosting (Vercel free tier or $20/month Pro), SSL (free with most hosts), email service ($20-30/month for transactional emails), analytics tools (free tier available), and ongoing maintenance (10-15% of development cost annually). Factor these into your total budget to avoid surprises after launch.",
+        body: "Beyond development, budget for: domain registration ($10-15/year), hosting ([Vercel](https://vercel.com/pricing) free tier or $20/month Pro), SSL (free with most hosts), email service ($20-30/month for transactional emails), analytics tools (free tier available), and ongoing maintenance (10-15% of development cost annually). Factor these into your total budget to avoid surprises after launch.",
       },
       {
         heading: "What Actually Drives the Price",
@@ -623,11 +623,11 @@ export const blogPosts = [
       },
       {
         heading: "Tech Stack and Architecture",
-        body: "We chose Next.js with Supabase for rapid development. Next.js handled frontend, API routes, and server-side rendering. Supabase provided auth, PostgreSQL database, real-time subscriptions, and file storage — all with a generous free tier. Tailwind CSS for UI, Framer Motion for interactions. Total backend setup took 2 days: auth configured, database schema designed, and storage buckets created.",
+        body: "We chose [Next.js](https://nextjs.org/docs) with [Supabase](https://supabase.com/docs) for rapid development. Next.js handled frontend, API routes, and **server-side rendering** — [generating pages on the server before sending to the browser](https://nextjs.org/docs/app/building-your-application/rendering/server-components) for faster initial load and better SEO. Supabase provided auth, [PostgreSQL](https://www.postgresql.org/docs/) database, **real-time subscriptions** — [live database updates](https://supabase.com/docs/guides/realtime) pushed to clients over WebSockets — and file storage — all with a generous free tier. Tailwind CSS for UI, Framer Motion for interactions. Total backend setup took 2 days: auth configured, database schema designed, and storage buckets created.",
       },
       {
         heading: "Week 1: Foundation",
-        body: "Day 1-2: Database schema, auth setup, project scaffolding. Day 3-4: User onboarding flow — sign up, create workspace, invite team members. Day 5: Real-time collaboration foundations — WebSocket connections via Supabase Realtime. By end of week 1, users could sign up, create a workspace, and see other team members online.",
+        body: "Day 1-2: Database schema, auth setup, project scaffolding. Day 3-4: User onboarding flow — sign up, create workspace, invite team members. Day 5: Real-time collaboration foundations — WebSocket connections via [Supabase Realtime](https://supabase.com/docs/guides/realtime). By end of week 1, users could sign up, create a workspace, and see other team members online.",
       },
       {
         heading: "Week 2: Core Features",
@@ -635,7 +635,7 @@ export const blogPosts = [
       },
       {
         heading: "Week 3: Polish and Deploy",
-        body: "Day 13-14: UI polish, responsive design for mobile, dark mode. Day 15: Deployment to Vercel with custom domain and SSL. Day 16-17: Beta user onboarding, bug fixes from real usage. Day 18-19: Performance optimization — image compression, lazy loading, database query optimization. Day 20: Final polish and handoff. The prototype was deployed and functional in 3 weeks, with the first beta users onboarded by day 21.",
+        body: "Day 13-14: UI polish, responsive design for mobile, dark mode. Day 15: Deployment to [Vercel](https://vercel.com/docs) with custom domain and SSL. Day 16-17: Beta user onboarding, bug fixes from real usage. Day 18-19: Performance optimization — image compression, lazy loading, database query optimization. Day 20: Final polish and handoff. The prototype was deployed and functional in 3 weeks, with the first beta users onboarded by day 21.",
       },
       {
         heading: "Results and Lessons",
@@ -688,11 +688,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "Start With Your Product, Not Your Stack",
-        body: "The most common mistake founders make is choosing a tech stack before defining their product. Start with what your product needs to do: is it content-heavy (SEO matters), data-intensive (dashboards, analytics), or interaction-heavy (real-time collaboration)? Each type of product benefits from different technologies. A content-driven marketing site needs different tools than a real-time collaboration platform. Define the product requirements first, then map them to technology.",
+        body: "The most common mistake founders make is choosing a **tech stack** — the combination of programming languages, frameworks, and tools used to build a product — before defining their product. Start with what your product needs to do: is it content-heavy (**SEO** matters), data-intensive (dashboards, analytics), or interaction-heavy (real-time collaboration)? Each type of product benefits from different technologies. A content-driven marketing site needs different tools than a real-time collaboration platform. Define the product requirements first, then map them to technology.",
       },
       {
         heading: "The Meteoric Stack",
-        body: "Our recommended default stack for most SaaS and web projects: Next.js (React framework with SSR, SSG, and API routes), Supabase (PostgreSQL, auth, real-time, storage), Tailwind CSS (utility-first styling), Stripe (payment processing and subscription billing), and Vercel (hosting and deployment). This stack covers frontend, backend, database, auth, billing, and hosting — everything you need to launch a modern web product. Every component has generous free tiers and excellent documentation.",
+        body: "Our recommended default stack for most SaaS and web projects: [Next.js](https://nextjs.org/docs) (React framework with SSR, SSG, and API routes), [Supabase](https://supabase.com/docs) (PostgreSQL, auth, real-time, storage), Tailwind CSS (utility-first styling), [Stripe](https://stripe.com/docs) (payment processing and subscription billing), and [Vercel](https://vercel.com/docs) (hosting and deployment). This stack covers frontend, backend, database, auth, billing, and hosting — everything you need to launch a modern web product. Every component has generous free tiers and excellent documentation.",
       },
       {
         heading: "React vs Vue vs Svelte",
@@ -700,7 +700,7 @@ export const blogPosts = [
       },
       {
         heading: "Database Decisions",
-        body: "PostgreSQL is the default recommendation for most startups — it's battle-tested, ACID-compliant, has excellent JSON support, and runs everything from simple blogs to complex SaaS platforms. MongoDB excels for content-heavy apps or when you need horizontal scaling. Supabase makes PostgreSQL easy with a generous free tier and built-in features. The database decision matters more than any other technology choice since data is the hardest to migrate.",
+        body: "**PostgreSQL** is the default recommendation for most startups — it's battle-tested, **ACID** (Atomicity, Consistency, Isolation, Durability) compliant, has excellent JSON support, and runs everything from simple blogs to complex SaaS platforms. **MongoDB** excels for content-heavy apps or when you need horizontal scaling. [Supabase](https://supabase.com/docs) makes PostgreSQL easy with a generous free tier and built-in features. The database decision matters more than any other technology choice since data is the hardest to migrate.",
       },
       {
         heading: "Hosting and Infrastructure",
@@ -757,15 +757,15 @@ export const blogPosts = [
     sections: [
       {
         heading: "Define Your Project First",
-        body: "Before evaluating agencies, define your project scope, budget, timeline, and success criteria. A clear brief helps agencies give accurate proposals and makes comparison easier. Include: project type (landing page, SaaS, web app), target audience, core features, design preferences, timeline expectations, and budget range. Agencies can't give meaningful proposals without this context — the more specific you are, the better the proposals you'll receive.",
+        body: "Before evaluating agencies, define your project scope, budget, timeline, and success criteria. A clear brief helps agencies give accurate proposals and makes comparison easier. Include: project type (landing page, SaaS, web app), target audience, core features, design preferences, timeline expectations, and budget range. **API** (Application Programming Interface) integrations, database requirements, and third-party services should be part of this scope. Agencies can't give meaningful proposals without this context — the more specific you are, the better the proposals you'll receive.",
       },
       {
         heading: "Portfolio Review",
-        body: "Look for agencies with experience in your type of project. A portfolio of marketing websites doesn't qualify an agency for a complex SaaS product. Check for: relevant industry experience, similar project scale, design quality, and technical complexity. Ask about their specific role in each portfolio project — some agencies showcase work where they only handled design while another team did development.",
+        body: "Look for agencies with experience in your type of project. A portfolio of marketing websites doesn't qualify an agency for a complex **SaaS** (Software as a Service) product. Check for: relevant industry experience, similar project scale, design quality, and technical complexity. Ask about their specific role in each portfolio project — some agencies showcase work where they only handled design while another team did development.",
       },
       {
         heading: "Process Evaluation",
-        body: "A good agency has a clear, documented process. Ask about: how discovery works, how they handle scope changes, what communication looks like during development, how they test and QA, and what happens after launch. The best agencies are transparent about their process and happy to share references. Beware of agencies that are vague about how they work — it often means disorganized delivery.",
+        body: "A good agency has a clear, documented process. Ask about: how discovery works, how they handle scope changes, what communication looks like during development, how they test and **QA** (Quality Assurance — systematic testing to find defects before release), and what happens after launch. The best agencies are transparent about their process and happy to share references. Beware of agencies that are vague about how they work — it often means disorganized delivery.",
       },
       {
         heading: "Team Assessment",
@@ -837,11 +837,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Short Answer",
-        body: "If you're building a startup website — a marketing site, landing page, documentation, or a web app that needs to rank in search — choose Next.js. It's React with the server-side pieces that matter for startups built in: server-side rendering for SEO, static generation for speed, and a place for API routes when you need them. Plain React (via Vite or Create React App) is still a reasonable choice for internal tools, prototype demos, or apps that never need SEO and never touch a server. But for the overwhelming majority of startup websites, Next.js removes friction without adding meaningful complexity.",
+        body: "If you're building a startup website — a marketing site, landing page, documentation, or a web app that needs to rank in search — choose **Next.js**. It's **React** with the server-side pieces that matter for startups built in: [server-side rendering](https://nextjs.org/docs/app/building-your-application/rendering/server-components) for SEO, static generation for speed, and a place for API routes when you need them. Plain React (via Vite or Create React App) is still a reasonable choice for internal tools, prototype demos, or apps that never need SEO and never touch a server. But for the overwhelming majority of startup websites, Next.js removes friction without adding meaningful complexity.",
       },
       {
         heading: "What Plain React Gives You",
-        body: "A plain React app is a client-rendered single-page application. The browser downloads a JavaScript bundle, then renders your content locally. For apps that live behind a login — dashboards, admin tools, internal panels — this is completely fine: the user is already authenticated, SEO doesn't matter, and the client-rendered model keeps things simple. React's component model, state management, and the surrounding ecosystem are identical whether you use it with Vite or Next.js. If your startup's need is an internal tool used by your own team, plain React keeps the toolchain minimal and the deployment trivial — you can even host it as static files. The catch only appears when you want your content visible to the public and to search engines.",
+        body: "A plain [React](https://react.dev/) app is a client-rendered single-page application. The browser downloads a JavaScript bundle, then renders your content locally. For apps that live behind a login — dashboards, admin tools, internal panels — this is completely fine: the user is already authenticated, SEO doesn't matter, and the client-rendered model keeps things simple. React's component model, state management, and the surrounding ecosystem are identical whether you use it with Vite or Next.js. If your startup's need is an internal tool used by your own team, plain React keeps the toolchain minimal and the deployment trivial — you can even host it as static files. The catch only appears when you want your content visible to the public and to search engines.",
       },
       {
         heading: "What Next.js Adds on Top",
@@ -849,7 +849,7 @@ export const blogPosts = [
       },
       {
         heading: "SEO and Performance: Where Next.js Wins Decisively",
-        body: "This is the category that decides the choice for public-facing sites. Search engines can index server-rendered HTML immediately; a client-rendered React app produces most of its content in the browser, and while Google executes JavaScript, it does so less efficiently and with more delay — which is why client-rendered sites historically struggle to rank and to display featured snippets and rich results. Next.js renders real HTML on the server, so the content, headings, and structured data are visible to crawlers on the first request. Performance follows the same pattern: static HTML from a CDN has near-zero Time to First Byte, while client-rendered pages block on JavaScript download and execution. Both matter for your startup: SEO is how new visitors find you, and speed is how you keep them. For any site whose traffic depends on Google, the SEO advantage alone justifies Next.js.",
+        body: "This is the category that decides the choice for public-facing sites. **SEO** (Search Engine Optimization) is how new visitors find you, and speed is how you keep them. Search engines can index server-rendered HTML immediately; a client-rendered React app produces most of its content in the browser, and while Google executes JavaScript, it does so less efficiently and with more delay — which is why client-rendered sites historically struggle to rank and to display featured snippets and rich results. [Next.js](https://nextjs.org/docs) renders real HTML on the server, so the content, headings, and structured data are visible to crawlers on the first request. Performance follows the same pattern: static HTML from a **CDN** (Content Delivery Network) has near-zero Time to First Byte, while client-rendered pages block on JavaScript download and execution. Both matter for your startup. For any site whose traffic depends on Google, the SEO advantage alone justifies Next.js.",
       },
       {
         heading: "Deployment and Hosting Compared",
@@ -908,15 +908,15 @@ export const blogPosts = [
     sections: [
       {
         heading: "What is AEO (Answer Engine Optimization)?",
-        body: "AEO is the practice of structuring your website content so AI-powered search engines — ChatGPT, Perplexity, Google AI Overviews, Claude — can parse, cite, and recommend it. Unlike traditional SEO which targets blue links on Google, AEO targets the text snippets AI models pull when answering user questions. If someone asks ChatGPT 'what's the best SaaS billing platform?', AEO determines whether your product gets mentioned.",
+        body: "**AEO (Answer Engine Optimization)** is the practice of structuring your website content so AI-powered search engines — ChatGPT, Perplexity, Google AI Overviews, Claude — can parse, cite, and recommend it. Unlike traditional SEO which targets blue links on Google, AEO targets the text snippets AI models pull when answering user questions. If someone asks ChatGPT 'what's the best SaaS billing platform?', AEO determines whether your product gets mentioned.",
       },
       {
         heading: "Why AEO Matters for SaaS in 2026",
-        body: "Search behavior is shifting. Users increasingly ask AI chatbots for recommendations instead of Googling. Perplexity processes millions of queries daily. Google AI Overviews appear on 30%+ of searches. If your SaaS isn't structured for AI consumption, you're invisible to a growing share of potential customers. AEO isn't replacing SEO — it's a new channel you need to occupy alongside it.",
+        body: "Search behavior is shifting. Users increasingly ask AI chatbots for recommendations instead of Googling. Perplexity processes millions of queries daily. [Google AI Overviews](https://developers.google.com/search/docs/appearance/google-overview) appear on 30%+ of searches. If your SaaS isn't structured for AI consumption, you're invisible to a growing share of potential customers. **SEO (Search Engine Optimization)** is the practice of improving organic search visibility, and AEO complements it — it's a new channel you need to occupy alongside traditional ranking.",
       },
       {
         heading: "Step 1: Create an llms.txt File",
-        body: "llms.txt is a plain-text file at your domain root (like robots.txt) that tells AI crawlers what your site is about. Include a one-paragraph description of your product, links to key pages (pricing, features, documentation), and structured data points AI can cite. We implemented this on our own site at withmeteoric.com/llms.txt — it takes 30 minutes to create and gives AI models a clear map of your content.",
+        body: "**llms.txt** is a plain-text file at your domain root (like robots.txt) that tells AI crawlers what your site is about. Include a one-paragraph description of your product, links to key pages (pricing, features, documentation), and structured data points AI can cite. We implemented this on our own site at withmeteoric.com/llms.txt — it takes 30 minutes to create and gives AI models a clear map of your content.",
       },
       {
         heading: "Step 2: Write Definition-First Content",
@@ -924,11 +924,11 @@ export const blogPosts = [
       },
       {
         heading: "Step 3: Add Structured Data (JSON-LD)",
-        body: "AI models parse structured data more reliably than raw HTML. Add JSON-LD schema for Article, FAQPage, HowTo, Product, and Organization on relevant pages. Use specific properties like dateModified, author, and mainEntityOfPage. We added Article schema to every blog post on our site with author, publisher, and dateModified fields — this tells AI models the content is current and authored by a real person.",
+        body: "AI models parse structured data more reliably than raw HTML. Add [JSON-LD](https://developers.google.com/search/docs/appearance/structured-data) schema for Article, FAQPage, HowTo, Product, and Organization on relevant pages. Use specific properties like dateModified, author, and mainEntityOfPage. We added Article schema to every blog post on our site with author, publisher, and dateModified fields — this tells AI models the content is current and authored by a real person.",
       },
       {
         heading: "Step 4: Build Answer Capsules",
-        body: "Answer capsules are 2-3 sentence blocks that directly answer a specific question. Create them for every question your ideal customer would ask an AI: 'How much does a SaaS MVP cost?', 'What tech stack should I use for a startup?', 'How long does web development take?'. Place these at the top of relevant pages. AI models extract these clean, self-contained answers for citations.",
+        body: "Answer capsules are 2-3 sentence blocks that directly answer a specific question. Create them for every question your ideal customer would ask an AI: 'How much does a SaaS MVP cost?', 'What tech stack should I use for a startup?', 'How long does web development take?'. Place these at the top of relevant pages. AI models extract these clean, self-contained answers for citations. Google recommends clear structure and direct answers in [Search appearance in Google Search](https://developers.google.com/search/docs/appearance/rich-results).",
       },
       {
         heading: "Step 5: Earn Citations Through Authority Signals",
@@ -991,11 +991,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Hidden Cost of Website Bounce",
-        body: "Every visitor who leaves without acting is money wasted — on ads, content, and design. The average website bounces 40-60% of visitors. For SaaS landing pages, that number can hit 70%+. Each percentage point of bounce rate you reduce translates directly to more signups, demos, and revenue. This guide covers the seven most common reasons visitors leave and the exact technical fixes for each.",
+        body: "Every visitor who leaves without acting is money wasted — on ads, content, and design. The average website bounces 40-60% of visitors. For SaaS landing pages, that number can hit 70%+. Each percentage point of **bounce rate** — the [percentage of sessions](https://support.google.com/analytics/answer/9193538) where users view only one page before leaving — you reduce translates directly to more signups, demos, and revenue. This guide covers the seven most common reasons visitors leave and the exact technical fixes for each.",
       },
       {
         heading: "1. Slow Page Load (Over 3 Seconds)",
-        body: "53% of mobile visitors abandon sites that take over 3 seconds to load. The fix: compress images to WebP format (60-80% smaller than PNG), implement lazy loading for below-the-fold content, use a CDN for static assets, and minimize JavaScript bundles. We audited a client site last month and cut load time from 4.2s to 1.1s by compressing hero images and deferring non-critical scripts. Bounce rate dropped 23%.",
+        body: "53% of mobile visitors abandon sites that take over 3 seconds to load. The fix: compress images to WebP format (60-80% smaller than PNG), implement **lazy loading** — [deferring offscreen resources](https://web.dev/lazy-loading/) until users scroll to them — use a CDN for static assets, and minimize JavaScript bundles. We audited a client site last month and cut load time from 4.2s to 1.1s by compressing hero images and deferring non-critical scripts. Bounce rate dropped 23%.",
       },
       {
         heading: "2. No Clear Value Proposition Above the Fold",
@@ -1003,7 +1003,7 @@ export const blogPosts = [
       },
       {
         heading: "3. Poor Mobile Experience",
-        body: "68% of web traffic is mobile. If buttons are too small to tap, text requires pinching to zoom, or forms are impossible to fill on a phone, you're losing two-thirds of potential customers. Fix: test every page on a real phone (not just browser dev tools). Ensure touch targets are at least 44x44px, forms use appropriate input types (email, tel, number), and navigation works with thumb reach.",
+        body: "68% of web traffic is mobile. If buttons are too small to tap, text requires pinching to zoom, or forms are impossible to fill on a phone, you're losing two-thirds of potential customers. Fix: test every page on a real phone (not just browser dev tools). Ensure touch targets are at least [44x44px](https://www.nngroup.com/articles/touch-target-size/), forms use appropriate input types (email, tel, number), and navigation works with thumb reach.",
       },
       {
         heading: "4. Confusing Navigation",
@@ -1066,7 +1066,7 @@ export const blogPosts = [
       },
       {
         heading: "Section 1: Hero — The 5-Second Test",
-        body: "The hero section must pass the 5-second test: can a visitor understand what you do, who it's for, and why they should care in 5 seconds? Structure: headline (what you do in plain language), subheadline (who it's for + key benefit), one primary CTA button, and a supporting visual (product screenshot or short demo video — not a generic illustration). Example: 'SaaS MVPs for Funded Startups. Ship in 4-6 weeks, not 6 months. [Book a Free Strategy Call]'.",
+        body: "The hero section must pass the **5-second test** — a [usability check](https://www.nngroup.com/articles/5-second-test/) where a visitor understands what you do, who it's for, and why they should care in 5 seconds or less. Structure: headline (what you do in plain language), subheadline (who it's for + key benefit), one primary **CTA (Call to Action)** — a clickable element like a button or link that prompts visitors to take the next step, such as signing up or booking a call — and a supporting visual (product screenshot or short demo video — not a generic illustration). Example: 'SaaS MVPs for Funded Startups. Ship in 4-6 weeks, not 6 months. [Book a Free Strategy Call]'.",
       },
       {
         heading: "Section 2: Problem — Agitate the Pain",
@@ -1078,7 +1078,7 @@ export const blogPosts = [
       },
       {
         heading: "Section 4: Social Proof — Evidence That It Works",
-        body: "Place social proof immediately after the solution. This is where skepticism is highest. Use 3-5 specific testimonials with real names, titles, and companies. Add measurable results: 'Launched in 5 weeks' or 'Cut development time by 60%'. If you have client logos, show them here. If you don't have testimonials yet, use case study snippets, review scores, or client count ('47 SaaS products launched').",
+        body: "Place **social proof** — evidence that other people trust and benefit from your product, such as testimonials, client logos, review scores, or case study snippets — immediately after the solution. This is where skepticism is highest. Use 3-5 specific testimonials with real names, titles, and companies. Add measurable results: 'Launched in 5 weeks' or 'Cut development time by 60%'. If you have client logos, show them here. If you don't have testimonials yet, use case study snippets, review scores, or client count ('47 SaaS products launched'). Strong **CRO (Conversion Rate Optimization)** — the practice of increasing the percentage of visitors who complete a desired action — depends on placing proof where decisions happen.",
       },
       {
         heading: "Section 5: Process — How It Works",
@@ -1086,7 +1086,7 @@ export const blogPosts = [
       },
       {
         heading: "Section 6: Pricing — Transparency Builds Trust",
-        body: "If you sell services, show starting prices or pricing ranges. If you sell software, show plan tiers. Transparent pricing qualifies leads (people who can't afford you self-select out) and builds trust with those who can. Include a comparison table if you have multiple tiers. Always include a 'Book a Call' or 'Talk to Us' option for custom requirements.",
+        body: "If you sell services, show starting prices or pricing ranges. If you sell software, show plan tiers. Transparent pricing qualifies leads (people who can't afford you self-select out) and builds trust with those who can. Include a comparison table if you have multiple tiers. Always include a 'Book a Call' or 'Talk to Us' option for custom requirements. For billing pages and subscriptions, clear [Stripe](https://stripe.com/docs) integration reduces friction at checkout.",
       },
       {
         heading: "Section 7: FAQ — Overcome Final Objections",
@@ -1138,11 +1138,11 @@ export const blogPosts = [
     sections: [
       {
         heading: "Why Startups Can't Compete on Head Terms",
-        body: "Competing for keywords like 'CRM software' or 'project management tool' against Salesforce and Asana is a losing strategy. These domains have millions of backlinks and decades of authority. But long-tail keywords — specific, multi-word queries with lower search volume — are where startups win. 'Best CRM for freelance photographers' or 'project management tool for remote dev teams' are queries where a focused startup can rank in weeks, not years.",
+        body: "Competing for keywords like 'CRM software' or 'project management tool' against Salesforce and Asana is a losing strategy. These domains have millions of backlinks and decades of authority. But **long-tail keywords** — specific, multi-word queries with lower search volume — are where startups win. 'Best CRM for freelance photographers' or 'project management tool for remote dev teams' are queries where a focused startup can rank in weeks, not years. [Moz](https://moz.com/learn/seo/long-tail-keywords) notes long-tail terms typically convert at 2–5x the rate of broad head terms.",
       },
       {
         heading: "What Are Long-Tail Keywords?",
-        body: "Long-tail keywords are specific search phrases with 3+ words and lower individual search volume. They convert better because they match precise user intent. Someone searching 'best project management tool' is browsing. Someone searching 'project management tool for remote software teams with Jira integration' is ready to buy. The traffic is smaller per keyword, but the conversion rate is 2-5x higher than head terms.",
+        body: "**Long-tail keywords** are specific search phrases with 3+ words and lower individual search volume. They convert better because they match precise user intent. Someone searching 'best project management tool' is browsing. Someone searching 'project management tool for remote software teams with Jira integration' is ready to buy. The traffic is smaller per keyword, but the conversion rate is 2-5x higher than head terms. Ahrefs explains that long-tail queries capture intent closer to purchase and face less competition — see [Ahrefs keyword research](https://ahrefs.com/keyword-research).",
       },
       {
         heading: "Step 1: Mine Your Customer Language",
@@ -1150,7 +1150,7 @@ export const blogPosts = [
       },
       {
         heading: "Step 2: Build Topic Clusters, Not Isolated Posts",
-        body: "Pick 3-5 core topics related to your product. For a project management tool: 'remote team coordination', 'agile project tracking', 'client project management'. Create a pillar page for each core topic, then 5-10 supporting blog posts targeting specific long-tail queries within that cluster. Link them together. This builds topical authority — Google sees you as an expert on the entire topic, not just one keyword.",
+        body: "Pick 3-5 core topics related to your product. For a project management tool: 'remote team coordination', 'agile project tracking', 'client project management'. Create a pillar page for each core topic, then 5-10 supporting blog posts targeting specific long-tail queries within that cluster. Link them together. This builds **topical authority** — the signal [Google uses](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) to assess whether your site demonstrates depth and expertise across a subject area.",
       },
       {
         heading: "Step 3: Create Comparison and Alternative Content",
@@ -1158,7 +1158,7 @@ export const blogPosts = [
       },
       {
         heading: "Step 4: Optimize for Featured Snippets",
-        body: "Featured snippets are the answer boxes at the top of Google results. They're dominated by long-tail queries. To win them: use the exact question as your H2, provide a 40-60 word direct answer immediately after, then expand with details. Structure lists as numbered steps or bullet points. Use tables for comparisons. Featured snippets give you position 0 — above all paid and organic results.",
+        body: "Featured snippets are the answer boxes at the top of Google results. They're dominated by long-tail queries. To win them: use the exact question as your H2, provide a 40-60 word direct answer immediately after, then expand with details. Structure lists as numbered steps or bullet points. Use tables for comparisons. Featured snippets give you position 0 — above all paid and organic results. Google explains snippet formats and eligibility in [Search appearance in Google Search](https://developers.google.com/search/docs/appearance/rich-results).",
       },
       {
         heading: "Step 5: Measure Long-Tail ROI, Not Traffic Volume",
@@ -1205,15 +1205,15 @@ export const blogPosts = [
     sections: [
       {
         heading: "How AI Search Engines Choose What to Cite",
-        body: "AI search engines — ChatGPT, Perplexity, Google AI Overviews, Claude — don't use traditional ranking algorithms. They parse content, evaluate authority signals, and select the most credible, structured source that answers the query. If your website has clear definitions, structured data, and verifiable authority signals, AI models cite it. If your content is vague, unstructured, or lacks provenance, it gets skipped.",
+        body: "AI search engines — ChatGPT, Perplexity, Google AI Overviews, Claude — don't use traditional ranking algorithms. They parse content, evaluate authority signals, and select the most credible, structured source that answers the query. If your website has clear definitions, structured data, and verifiable authority signals, AI models cite it. If your content is vague, unstructured, or lacks provenance, it gets skipped. Google describes how AI surfaces information in [Google AI Overviews](https://developers.google.com/search/docs/appearance/google-overview).",
       },
       {
         heading: "Step 1: Create an llms.txt File",
-        body: "llms.txt is a plain-text file at your domain root that gives AI crawlers a structured overview of your site. Include: what your business does (1-2 sentences), key pages (pricing, features, about), data points worth citing (client count, metrics, founding year), and links to authoritative content. We created ours at withmeteoric.com/llms.txt — it's 15 lines and took 20 minutes. This single file tells AI models exactly what to cite about your business.",
+        body: "**llms.txt** is a plain-text file at your domain root that gives AI crawlers a structured overview of your site. Include: what your business does (1-2 sentences), key pages (pricing, features, about), data points worth citing (client count, metrics, founding year), and links to authoritative content. We created ours at withmeteoric.com/llms.txt — it's 15 lines and took 20 minutes. This single file tells AI models exactly what to cite about your business.",
       },
       {
         heading: "Step 2: Structure Content for Extraction",
-        body: "AI models extract answers from content that follows predictable patterns. Use: definition-first paragraphs (answer the question in the first sentence), numbered lists for processes (AI models parse lists reliably), tables for comparisons (structured data that's easy to cite), and bold key terms (helps AI models identify important concepts). Every page on your site should have a 2-3 sentence block that directly answers a question your customer would ask.",
+        body: "AI models extract answers from content that follows predictable patterns. Use: definition-first paragraphs (answer the question in the first sentence), numbered lists for processes (AI models parse lists reliably), tables for comparisons (**structured data** — machine-readable content formats like JSON-LD — that's easy to cite), and bold key terms (helps AI models identify important concepts). Every page on your site should have a 2-3 sentence block that directly answers a question your customer would ask.",
       },
       {
         heading: "Step 3: Add JSON-LD Structured Data",
@@ -1229,7 +1229,7 @@ export const blogPosts = [
       },
       {
         heading: "Step 6: Monitor AI Citations",
-        body: "Ask ChatGPT, Perplexity, and Claude about topics you want to own. Check if your brand appears in their answers. Track which pages get cited and which don't. Use Perplexity's source links to see what content it references. Update your llms.txt, structured data, and answer capsules based on what's working. AI search optimization is iterative — the first version is never the last.",
+        body: "Ask ChatGPT, Perplexity, and Claude about topics you want to own. Check if your brand appears in their answers. Track which pages get cited and which don't. Use Perplexity's source links to see what content it references. Update your llms.txt, structured data, and answer capsules based on what's working. **GEO (Generative Engine Optimization)** — optimizing content for AI-powered search engines — is iterative; the first version is never the last.",
       },
     ],
     faqs: [
@@ -1283,7 +1283,7 @@ export const blogPosts = [
     sections: [
       {
         heading: "Why Pretty Websites Don't Convert",
-        body: "Awards-winning design and conversion-optimized design are often opposites. Award sites prioritize visual complexity, animations, and creative layouts. Conversion sites prioritize clarity, speed, and directing attention to one action. The most beautiful website in the world is worthless if visitors can't figure out what to do next. Conversion-focused design isn't ugly — it's intentional. Every element exists to guide visitors toward a specific outcome.",
+        body: "Awards-winning design and conversion-optimized design are often opposites. Award sites prioritize visual complexity, animations, and creative layouts. **CRO (Conversion Rate Optimization)** focuses on clarity, speed, and directing attention to one action. The most beautiful website in the world is worthless if visitors can't figure out what to do next. Conversion-focused design isn't ugly — it's intentional. Every element exists to guide visitors toward a specific outcome.",
       },
       {
         heading: "The Conversion Hierarchy",
@@ -1295,7 +1295,7 @@ export const blogPosts = [
       },
       {
         heading: "Pattern 2: Visual Hierarchy Through Size and Contrast",
-        body: "The most important element on every section should be the largest and highest-contrast element. Your CTA button should be the most visually prominent thing on the page. Your headline should be the largest text. Your supporting copy should be smaller and lower-contrast. Use size, color, and whitespace to create a clear visual path: eye goes to headline → subheadline → CTA → supporting details. If everything is equally prominent, nothing stands out.",
+        body: "The most important element on every section should be the largest and highest-contrast element — **visual hierarchy** guides eye movement and improves comprehension. Your CTA button should be the most visually prominent thing on the page. Your headline should be the largest text. Your supporting copy should be smaller and lower-contrast. Use size, color, and whitespace to create a clear visual path: eye goes to headline → subheadline → CTA → supporting details. If everything is equally prominent, nothing stands out.",
       },
       {
         heading: "Pattern 3: Reduce Form Fields to the Minimum",
@@ -1307,7 +1307,7 @@ export const blogPosts = [
       },
       {
         heading: "Pattern 5: Speed as a Design Decision",
-        body: "Page speed is a design choice, not just a technical one. Every animation, every third-party script, every unoptimized image is a design decision that trades conversion for aesthetics. A page that loads in 1 second converts 3x higher than a page that loads in 5 seconds. Make speed a constraint in your design process — not an afterthought. Compress images, defer non-critical JavaScript, and use system fonts where possible.",
+        body: "**Page speed** — how quickly content loads and becomes interactive — is a design choice, not just a technical one. Every animation, every third-party script, every unoptimized image is a design decision that trades conversion for aesthetics. A page that loads in 1 second converts 3x higher than a page that loads in 5 seconds. Make speed a constraint in your design process — not an afterthought. Compress images, defer non-critical JavaScript, and use system fonts where possible. Google documents impact data in [PageSpeed Insights](https://pagespeed.web.dev/) and [Web Vitals](https://web.dev/vitals/).",
       },
     ],
     faqs: [
@@ -1350,15 +1350,15 @@ export const blogPosts = [
     sections: [
       {
         heading: "The Startup SEO Reality",
-        body: "Most startups can't afford a $5,000/month SEO retainer. But they can do 80% of the work themselves with 5-10 hours per week and free tools. The key is prioritization — focus on the activities that compound over time and skip the ones that require massive budgets. This guide covers exactly what to do first, second, and third, with specific tools and timelines.",
+        body: "Most startups can't afford a $5,000/month SEO retainer. But they can do 80% of the work themselves with 5-10 hours per week and free tools. The key is prioritization — follow the **80/20 rule** and focus on the activities that compound over time while skipping the ones that require massive budgets. This guide covers exactly what to do first, second, and third, with specific tools and timelines.",
       },
       {
         heading: "Week 1-2: Technical Foundation (Free)",
-        body: "Fix the basics before creating any content. Use Google Search Console (free) to find: indexing errors (pages Google can't crawl), mobile usability issues (pages that break on phones), and Core Web Vitals problems (slow pages). Fix broken links, submit your sitemap, and ensure every page has a meta description. This takes 2-3 hours and costs nothing. Skip this step and nothing else you do will matter.",
+        body: "Fix the basics before creating any content. Use [Google Search Console](https://support.google.com/webmasters/answer/9128668) (free) to find: indexing errors (pages Google can't crawl), mobile usability issues (pages that break on phones), and **Core Web Vitals** — [page experience signals](https://web.dev/vitals/) that measure loading, interactivity, and visual stability — problems (slow pages). Fix broken links, submit your sitemap, and ensure every page has a meta description. This takes 2-3 hours and costs nothing. Skip this step and nothing else you do will matter.",
       },
       {
         heading: "Week 3-4: Keyword Research (Free Tools)",
-        body: "Use Google's free tools for keyword research: Google Search Console shows queries you already rank for, Google Autocomplete reveals what people actually search, Google's 'People Also Ask' shows related questions, and AnswerThePublic (free tier) maps question-based queries. Build a list of 20-30 long-tail keywords with low competition (search volume under 1,000/month). These are your first content targets.",
+        body: "Use Google's free tools for keyword research: [Google Search Console](https://support.google.com/webmasters/answer/9128668) shows queries you already rank for, Google Autocomplete reveals what people actually search, Google's 'People Also Ask' shows related questions, and AnswerThePublic (free tier) maps question-based queries. Build a list of 20-30 **long-tail keywords** — specific, multi-word search phrases with lower search volume but higher conversion intent, like 'best project management software for remote teams' — with low competition (search volume under 1,000/month). These are your first content targets.",
       },
       {
         heading: "Month 2: Create 5 Pillar Pages",
@@ -1374,7 +1374,7 @@ export const blogPosts = [
       },
       {
         heading: "Free Tools Stack",
-        body: "Your complete free SEO toolkit: Google Search Console (indexing + performance), Google Analytics 4 (traffic + conversions), Google Keyword Planner (keyword volume), Ubersuggest free tier (competitor analysis), Screaming Frog free tier (technical audits up to 500 URLs), and Google PageSpeed Insights (performance). These tools cover everything a startup needs for the first 6 months of SEO.",
+        body: "Your complete free SEO toolkit: [Google Search Console](https://support.google.com/webmasters/answer/9128668) (indexing + performance), Google Analytics 4 (traffic + conversions), Google Keyword Planner (keyword volume), Ubersuggest free tier (competitor analysis), Screaming Frog free tier (technical audits up to 500 URLs), and [Google PageSpeed Insights](https://pagespeed.web.dev/) (performance). These tools cover everything a startup needs for the first 6 months of SEO.",
       },
     ],
     faqs: [
@@ -1432,15 +1432,15 @@ export const blogPosts = [
       },
       {
         heading: "Technical SEO (15 Points)",
-        body: "Use Google Search Console and Screaming Frog free tier. Check: 1) All pages are indexed (no 'Discovered - currently not indexed' errors), 2) XML sitemap is submitted and current, 3) Robots.txt isn't blocking important pages, 4) Every page has a unique meta title (under 60 characters), 5) Every page has a unique meta description (under 155 characters), 6) Canonical tags are set correctly (no duplicate content), 7) No broken links (404 errors), 8) HTTPS on all pages (no mixed content warnings), 9) Mobile-friendly (no horizontal scrolling), 10) Structured data is valid (test with Google's Rich Results tool), 11) hreflang tags if multilingual, 12) No redirect chains (max 1 hop), 13) Clean URL structure (no query parameters for main pages), 14) Proper 301 redirects for moved pages, 15) XML sitemap includes all indexable pages.",
+        body: "Use [Google Search Console](https://support.google.com/webmasters/answer/9128668) and Screaming Frog free tier. Check: 1) All pages are indexed (no 'Discovered - currently not indexed' errors), 2) **XML sitemap** — a structured file listing all pages on your site that helps search engines discover and crawl content efficiently — is submitted and current, 3) **Robots.txt** — a file at your domain root that instructs search engine crawlers which pages to access and which to skip — isn't blocking important pages, 4) Every page has a unique meta title (under 60 characters), 5) Every page has a unique meta description (under 155 characters), 6) **Canonical tags** — [rel=canonical elements](https://developers.google.com/search/docs/crawling-indexing/consolidate-urls) that tell search engines which URL version to index — are set correctly (no duplicate content), 7) No broken links (404 errors), 8) HTTPS on all pages (no mixed content warnings), 9) Mobile-friendly (no horizontal scrolling), 10) **Structured data** — [machine-readable markup](https://developers.google.com/search/docs/appearance/structured-data) like JSON-LD — is valid (test with Google's Rich Results tool), 11) hreflang tags if multilingual, 12) No redirect chains (max 1 hop), 13) Clean URL structure (no query parameters for main pages), 14) Proper 301 redirects for moved pages, 15) XML sitemap includes all indexable pages.",
       },
       {
         heading: "Performance (10 Points)",
-        body: "Use Google PageSpeed Insights and GTmetrix (free). Check: 1) Largest Contentful Paint under 2.5 seconds, 2) First Input Delay under 100ms, 3) Cumulative Layout Shift under 0.1, 4) Time to First Byte under 800ms, 5) Images optimized to WebP format, 6) JavaScript bundles compressed and code-split, 7) CSS minified and critical CSS inlined, 8) Font loading optimized (font-display: swap), 9) CDN configured for static assets, 10) Browser caching headers set correctly.",
+        body: "Use [Google PageSpeed Insights](https://pagespeed.web.dev/) and GTmetrix (free). Check: 1) Largest Contentful Paint under 2.5 seconds, 2) First Input Delay under 100ms, 3) Cumulative Layout Shift under 0.1, 4) Time to First Byte under 800ms, 5) Images optimized to WebP format, 6) JavaScript bundles compressed and code-split, 7) CSS minified and critical CSS inlined, 8) Font loading optimized (font-display: swap), 9) CDN configured for static assets, 10) Browser caching headers set correctly.",
       },
       {
         heading: "Conversion (10 Points)",
-        body: "Manual review required. Check: 1) Clear value proposition visible in 5 seconds, 2) Primary CTA is the most prominent element above the fold, 3) Contact/demo form has 5 or fewer fields, 4) Phone number or chat widget visible on desktop, 5) Social proof (testimonials, logos, reviews) visible before first CTA, 6) Pricing page exists and is accessible from main navigation, 7) No dead-end pages (every page has a next step), 8) Mobile CTA buttons are thumb-accessible (44x44px minimum), 9) Forms show validation errors clearly, 10) Thank you/confirmation pages exist and track conversions.",
+        body: "Manual review required. Check: 1) Clear value proposition visible in 5 seconds, 2) Primary CTA is the most prominent element above the fold, 3) Contact/demo form has 5 or fewer fields, 4) Phone number or chat widget visible on desktop, 5) Social proof (testimonials, logos, reviews) visible before first CTA, 6) Pricing page exists and is accessible from main navigation, 7) No dead-end pages (every page has a next step), 8) Mobile CTA buttons are thumb-accessible ([44x44px](https://www.nngroup.com/articles/touch-target-size/) minimum), 9) Forms show validation errors clearly, 10) Thank you/confirmation pages exist and track conversions.",
       },
       {
         heading: "Content (10 Points)",
