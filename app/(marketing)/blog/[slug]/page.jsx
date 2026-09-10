@@ -391,7 +391,7 @@ export default async function BlogPost({ params }) {
                 {post.faqs.map((faq, i) => (
                   <div
                     key={i}
-                    className="group p-6 md:p-8 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:border-white/[0.08] hover:shadow-[0_0_30px_rgba(234,239,255,0.02)] transition-all duration-400"
+                    className="group p-6 md:p-8 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] hover:border-white/[0.08] hover:shadow-[0_0_30px_rgba(234,239,255,0.02)] transition-all duration-400"
                   >
                     <div className="flex items-start gap-4 mb-3">
                       <span className="text-[#EAEFFF]/25 text-[11px] font-mono shrink-0 mt-0.5 tabular-nums">
@@ -423,7 +423,7 @@ export default async function BlogPost({ params }) {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 {post.metrics.map((metric, i) => (
-                  <div key={i} className="p-5 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                  <div key={i} className="p-5 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05]">
                     <div className="text-lg font-medium text-white/65 mb-1">{metric.value}</div>
                     <div className="text-[11px] text-white/20 tracking-wide">{metric.label}</div>
                   </div>
@@ -448,7 +448,7 @@ export default async function BlogPost({ params }) {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:border-white/[0.1] hover:shadow-[0_0_20px_rgba(234,239,255,0.02)] transition-all duration-300"
+                    className="group flex items-center gap-3 p-4 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] hover:border-white/[0.1] hover:shadow-[0_0_20px_rgba(234,239,255,0.02)] transition-all duration-300"
                   >
                     <svg className="w-4 h-4 text-white/12 group-hover:text-white/25 transition-colors shrink-0" viewBox="0 0 16 16" fill="none">
                       <path d="M6 3H13V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -512,7 +512,7 @@ export default async function BlogPost({ params }) {
                   <Link
                     key={rp.slug}
                     href={`/blog/${rp.slug}`}
-                    className="group relative p-6 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:border-[#EAEFFF]/[0.1] hover:shadow-[0_0_30px_rgba(234,239,255,0.02)] transition-all duration-400 overflow-hidden"
+                    className="group relative p-6 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] hover:border-[#EAEFFF]/[0.1] hover:shadow-[0_0_30px_rgba(234,239,255,0.02)] transition-all duration-400 overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-[#EAEFFF]/[0.015] to-transparent rounded-bl-[100px] pointer-events-none" />
                     <div className="relative">
@@ -543,7 +543,7 @@ export default async function BlogPost({ params }) {
           )}
 
           {/* ═══ CTA ═══ */}
-          <div className="relative mt-24 p-8 md:p-14 rounded-2xl bg-white/[0.03] border border-white/[0.05] max-w-3xl overflow-hidden hover:border-white/[0.08] transition-all duration-500">
+          <div className="relative mt-24 p-8 md:p-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] max-w-3xl overflow-hidden hover:border-white/[0.08] transition-all duration-500">
             <div className="absolute top-0 right-0 w-56 h-56 bg-gradient-to-bl from-[#EAEFFF]/[0.03] to-transparent rounded-bl-[180px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-36 h-36 bg-gradient-to-tr from-white/[0.015] to-transparent pointer-events-none" />
 

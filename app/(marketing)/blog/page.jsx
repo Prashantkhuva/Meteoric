@@ -106,7 +106,7 @@ export default function BlogIndex() {
 
             <Link
               href={`/blog/${featured.slug}`}
-              className="group relative block overflow-hidden rounded-2xl border border-white/[0.06] hover:border-[#EAEFFF]/[0.12] bg-white/[0.03] transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,239,255,0.03)]"
+              className="group relative block overflow-hidden rounded-2xl border border-white/[0.06] hover:border-[#EAEFFF]/[0.12] bg-gradient-to-b from-white/[0.03] to-transparent transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,239,255,0.03)]"
             >
               {/* Corner glow */}
               <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#EAEFFF]/[0.025] to-transparent rounded-bl-[250px] pointer-events-none" />
