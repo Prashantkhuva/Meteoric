@@ -108,7 +108,12 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "Terms of Service", item: `${SITE_URL}/terms` },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Terms of Service",
+      item: `${SITE_URL}/terms`,
+    },
   ],
 };
 
@@ -133,67 +138,52 @@ export default function Terms() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
-    <div className="min-h-screen bg-black text-white">
-      <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
-        {/* Header */}
-        <div className="mb-16">
-          <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
-            Legal
-          </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6">
-            Terms of Service
-          </h1>
-          <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-white/10" />
-            <span className="text-white/20 text-xs font-mono tracking-wider">
-              Last updated — July 6, 2026
+      <div className="min-h-screen bg-black text-white">
+        <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
+          {/* Header */}
+          <div className="mb-16">
+            <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+              Legal
             </span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6">
+              Terms of Service
+            </h1>
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-white/10" />
+              <span className="text-white/20 text-xs font-mono tracking-wider">
+                Last updated — July 6, 2026
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Sections */}
-        <div className="space-y-0">
-          {sections.map((section) => (
-            <section
-              key={section.num}
-              className="py-10 border-t border-white/[0.06]"
-            >
-              <div className="flex gap-6 md:gap-10">
-                {/* Number */}
-                <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
-                  {section.num}
-                </span>
+          {/* Sections */}
+          <div className="space-y-0">
+            {sections.map((section) => (
+              <section
+                key={section.num}
+                className="py-10 border-t border-white/[0.06]"
+              >
+                <div className="flex gap-6 md:gap-10">
+                  {/* Number */}
+                  <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
+                    {section.num}
+                  </span>
 
-                {/* Content */}
-                <div>
-                  <h2 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-4">
-                    {section.title}
-                  </h2>
-                  <p className="text-white/35 text-[15px] leading-[1.8]">
-                    {section.content}
-                  </p>
+                  {/* Content */}
+                  <div>
+                    <h2 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-4">
+                      {section.title}
+                    </h2>
+                    <p className="text-white/35 text-[15px] leading-[1.8]">
+                      {section.content}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </section>
-          ))}
-        </div>
-
-        {/* Footer note */}
-        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/15 text-xs font-mono tracking-wider">
-            Meteoric · withmeteoric.com
-          </p>
-          <div className="flex items-center gap-4">
-            <Link href="/services" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
-              Our Services
-            </Link>
-            <Link href="/" className="text-white/20 hover:text-white/50 text-xs font-mono tracking-wider transition-colors duration-200">
-              Meteoric Home
-            </Link>
+              </section>
+            ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
     </>
   );
 }

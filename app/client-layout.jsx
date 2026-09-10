@@ -55,7 +55,13 @@ export default function ClientLayout({ children }) {
       tl.fromTo(
         navbarRef.current,
         { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", clearProps: "transform" },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+          clearProps: "transform",
+        },
         0,
       );
     }

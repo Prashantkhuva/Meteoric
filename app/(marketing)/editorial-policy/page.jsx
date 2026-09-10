@@ -30,7 +30,7 @@ export default function EditorialPolicyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-[#070707] text-white">
+      <div className="min-h-screen bg-black text-white">
         <div className="fixed top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-[#EAEFFF]/[0.015] via-transparent to-transparent pointer-events-none" />
         <div className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           <div className="mb-12">
@@ -53,7 +53,8 @@ export default function EditorialPolicyPage() {
               How We Create Content
             </h1>
             <p className="text-white/25 text-[15px] leading-[1.8] font-[350]">
-              Transparency about our content creation process, editorial standards, and commitment to accuracy.
+              Transparency about our content creation process, editorial
+              standards, and commitment to accuracy.
             </p>
           </header>
 
@@ -63,7 +64,12 @@ export default function EditorialPolicyPage() {
                 Who Writes Our Content
               </h2>
               <p className="text-white/30 text-[15px] leading-[1.85] font-[350]">
-                All blog content on withmeteoric.com is written or reviewed by Prashant Khuva, Founder &amp; Full-Stack Developer at Meteoric. Every article reflects real project experience — we only write about technologies and approaches we have shipped in production for clients. We do not publish AI-generated content without human review and hands-on verification.
+                All blog content on withmeteoric.com is written or reviewed by
+                Prashant Khuva, Founder &amp; Full-Stack Developer at Meteoric.
+                Every article reflects real project experience — we only write
+                about technologies and approaches we have shipped in production
+                for clients. We do not publish AI-generated content without
+                human review and hands-on verification.
               </p>
             </section>
 
@@ -73,21 +79,40 @@ export default function EditorialPolicyPage() {
               </h2>
               <div className="space-y-4">
                 <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
-                  <h3 className="text-sm font-medium text-white/60 mb-2">Accuracy First</h3>
+                  <h3 className="text-sm font-medium text-white/60 mb-2">
+                    Accuracy First
+                  </h3>
                   <p className="text-white/25 text-[14px] leading-[1.7] font-[350]">
-                    Every technical claim is verified against official documentation. Code examples are tested. Statistics are sourced from published research, official benchmarks, or our own project data. When we reference metrics (e.g., &quot;Lighthouse scores of 95+&quot;), those numbers come from real projects we have shipped.
+                    Every technical claim is verified against official
+                    documentation. Code examples are tested. Statistics are
+                    sourced from published research, official benchmarks, or our
+                    own project data. When we reference metrics (e.g.,
+                    &quot;Lighthouse scores of 95+&quot;), those numbers come
+                    from real projects we have shipped.
                   </p>
                 </div>
                 <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
-                  <h3 className="text-sm font-medium text-white/60 mb-2">No Speculation</h3>
+                  <h3 className="text-sm font-medium text-white/60 mb-2">
+                    No Speculation
+                  </h3>
                   <p className="text-white/25 text-[14px] leading-[1.7] font-[350]">
-                    We do not publish opinion pieces without evidence. If we recommend a technology, we explain why based on production experience — not marketing claims. If we compare tools, we disclose when we have direct experience versus when we are citing third-party benchmarks.
+                    We do not publish opinion pieces without evidence. If we
+                    recommend a technology, we explain why based on production
+                    experience — not marketing claims. If we compare tools, we
+                    disclose when we have direct experience versus when we are
+                    citing third-party benchmarks.
                   </p>
                 </div>
                 <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
-                  <h3 className="text-sm font-medium text-white/60 mb-2">Regular Updates</h3>
+                  <h3 className="text-sm font-medium text-white/60 mb-2">
+                    Regular Updates
+                  </h3>
                   <p className="text-white/25 text-[14px] leading-[1.7] font-[350]">
-                    Every article shows its last modified date. We review content quarterly for accuracy and freshness. When technology versions change or new data becomes available, we update the article and note the changes. Outdated content is either updated or archived.
+                    Every article shows its last modified date. We review
+                    content quarterly for accuracy and freshness. When
+                    technology versions change or new data becomes available, we
+                    update the article and note the changes. Outdated content is
+                    either updated or archived.
                   </p>
                 </div>
               </div>
@@ -123,14 +148,17 @@ export default function EditorialPolicyPage() {
                 Corrections
               </h2>
               <p className="text-white/30 text-[15px] leading-[1.85] font-[350]">
-                If you find an error in any of our articles, please contact us at{" "}
+                If you find an error in any of our articles, please contact us
+                at{" "}
                 <a
                   href="mailto:contact@withmeteoric.com"
                   className="text-[#EAEFFF]/40 hover:text-[#EAEFFF]/60 transition-colors"
                 >
                   contact@withmeteoric.com
                 </a>
-                . We will review the claim, correct the article if needed, and note the correction. Accuracy matters more than being right — if we made a mistake, we fix it.
+                . We will review the claim, correct the article if needed, and
+                note the correction. Accuracy matters more than being right — if
+                we made a mistake, we fix it.
               </p>
             </section>
 
@@ -139,7 +167,12 @@ export default function EditorialPolicyPage() {
                 Conflicts of Interest
               </h2>
               <p className="text-white/30 text-[15px] leading-[1.85] font-[350]">
-                Some articles reference technologies we use in client projects (Next.js, Supabase, Stripe, GSAP). We disclose when we have direct commercial experience with a tool. Our recommendations are based on technical merit and production experience — not affiliate relationships or sponsorship. We do not accept paid placements in editorial content.
+                Some articles reference technologies we use in client projects
+                (Next.js, Supabase, Stripe, GSAP). We disclose when we have
+                direct commercial experience with a tool. Our recommendations
+                are based on technical merit and production experience — not
+                affiliate relationships or sponsorship. We do not accept paid
+                placements in editorial content.
               </p>
             </section>
           </div>
