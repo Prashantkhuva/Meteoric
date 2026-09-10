@@ -101,7 +101,7 @@ export default function AuthorPage() {
       />
       <article className="min-h-screen bg-black text-white">
         <div className="fixed top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-[#EAEFFF]/[0.015] via-transparent to-transparent pointer-events-none" />
-        <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-32 pb-24">
+        <div className="relative max-w-4xl mx-auto px-5 sm:px-6 md:px-12 pt-28 md:pt-32 pb-20 md:pb-24">
           <div className="mb-12">
             <Link
               href="/blog"
@@ -115,25 +115,25 @@ export default function AuthorPage() {
           </div>
 
           <header className="mb-16">
-            <div className="flex items-start gap-6 mb-8">
-              <span className="relative w-20 h-20 rounded-full bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center text-lg text-white/40 overflow-hidden shrink-0">
+            <div className="flex items-start gap-4 md:gap-6 mb-8">
+              <span className="relative w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center text-base md:text-lg text-white/40 overflow-hidden shrink-0">
                 <svg viewBox="0 0 32 32" className="absolute inset-0 w-full h-full">
                   <circle cx="16" cy="12" r="5" fill="rgba(255,255,255,0.06)" />
                   <ellipse cx="16" cy="26" rx="9" ry="6" fill="rgba(255,255,255,0.04)" />
                 </svg>
                 <span className="relative z-10">PK</span>
               </span>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-secondary-italic text-white/80 mb-2">
+              <div className="min-w-0">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-secondary-italic text-white/80 mb-2">
                   {authorData.name}
                 </h1>
-                <p className="text-[#EAEFFF]/40 text-sm mb-4">
+                <p className="text-[#EAEFFF]/40 text-xs sm:text-sm mb-3 md:mb-4">
                   {authorData.title} at {authorData.company}
                 </p>
-                <p className="text-white/25 text-[15px] leading-[1.8] font-[350] max-w-2xl">
+                <p className="text-white/25 text-[14px] md:text-[15px] leading-[1.7] md:leading-[1.8] font-[350] max-w-2xl">
                   {authorData.bio}
                 </p>
-                <div className="flex items-center gap-4 mt-4">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 md:mt-4">
                   <a
                     href={authorData.social.twitter}
                     target="_blank"
@@ -162,44 +162,44 @@ export default function AuthorPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               {authorData.credentials.map((cred, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06]"
+                  className="p-3 md:p-4 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06]"
                 >
-                  <div className="text-[13px] text-white/40">{cred}</div>
+                  <div className="text-[12px] md:text-[13px] text-white/40">{cred}</div>
                 </div>
               ))}
             </div>
           </header>
 
           <div className="mb-8">
-            <div className="flex items-center gap-4 mb-8">
-              <span className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-[11px] font-medium">
+            <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+              <span className="text-[#EAEFFF]/30 uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[10px] sm:text-[11px] font-medium">
                 Published Articles ({authorPosts.length})
               </span>
               <span className="flex-1 h-px bg-gradient-to-r from-white/[0.06] to-transparent" />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {authorPosts.map((post) => (
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block p-6 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                  className="group block p-4 sm:p-6 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
                 >
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start justify-between gap-3 sm:gap-4">
                     <div className="min-w-0 flex-1">
-                      <h2 className="text-lg font-medium text-white/60 group-hover:text-white/80 transition-colors mb-2">
+                      <h2 className="text-base sm:text-lg font-medium text-white/60 group-hover:text-white/80 transition-colors mb-1.5 sm:mb-2">
                         {post.title}
                       </h2>
-                      <p className="text-white/25 text-[13px] leading-[1.6] line-clamp-2">
+                      <p className="text-white/25 text-[12px] sm:text-[13px] leading-[1.6] line-clamp-2">
                         {post.description}
                       </p>
-                      <div className="flex items-center gap-3 mt-3">
+                      <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-3">
                         <time
                           dateTime={post.published}
-                          className="text-white/15 text-[11px] font-mono"
+                          className="text-white/15 text-[10px] sm:text-[11px] font-mono"
                         >
                           {new Date(post.published).toLocaleDateString("en-US", {
                             month: "short",
@@ -210,7 +210,7 @@ export default function AuthorPage() {
                         {post.tags?.slice(0, 2).map((tag) => (
                           <span
                             key={tag}
-                            className="text-[10px] text-white/15 tracking-wider"
+                            className="text-[9px] sm:text-[10px] text-white/15 tracking-wider"
                           >
                             {tag}
                           </span>
@@ -218,7 +218,7 @@ export default function AuthorPage() {
                       </div>
                     </div>
                     <svg
-                      className="w-4 h-4 text-white/10 group-hover:text-white/30 transition-colors shrink-0 mt-1"
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/10 group-hover:text-white/30 transition-colors shrink-0 mt-1"
                       viewBox="0 0 16 16"
                       fill="none"
                     >
