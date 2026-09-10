@@ -1,5 +1,5 @@
 version: 1.0
-last-updated: 2026-07-26
+last-updated: 2026-09-10
 contact: contact@withmeteoric.com
 see-also: https://withmeteoric.com
 
@@ -64,6 +64,29 @@ End-to-end web application development including database design, server-side lo
 ## Case Studies
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
+
+## Blog (20 posts, sorted newest first)
+
+- [Startup SEO on a Budget: What to Do First When You Can't Afford an Agency](https://withmeteoric.com/blog/startup-seo-on-a-budget-what-to-do-first) — 2026-09-10
+- [Complete Website Audit Checklist for Startups: 50-Point Guide](https://withmeteoric.com/blog/complete-website-audit-checklist-for-startups) — 2026-09-13
+- [Conversion-Focused Web Design: Beyond Pretty UI](https://withmeteoric.com/blog/conversion-focused-web-design-beyond-pretty-ui) — 2026-09-07
+- [AI Search Optimization: How to Get Your Brand Cited by ChatGPT and Perplexity](https://withmeteoric.com/blog/ai-search-optimization-how-to-get-cited-by-chatgpt) — 2026-09-04
+- [Long-Tail SEO Strategy: How Funded Startups Can Outrank Giants](https://withmeteoric.com/blog/long-tail-seo-strategy-for-funded-startups) — 2026-09-01
+- [High-Converting Landing Page Structure for SaaS: A Developer's Guide](https://withmeteoric.com/blog/high-converting-landing-page-structure-for-saas) — 2026-08-28
+- [Why Visitors Leave Your Website in 2026: Issues & Solutions](https://withmeteoric.com/blog/why-visitors-leave-your-website-issues-and-solutions) — 2026-08-25
+- [How to Implement AEO (Answer Engine Optimization) for Your SaaS in 2026](https://withmeteoric.com/blog/how-to-implement-aeo-answer-engine-optimization-for-saas) — 2026-08-22
+- [React vs Next.js for Startup Websites: Which Should You Choose?](https://withmeteoric.com/blog/react-vs-nextjs-for-startup-websites) — 2026-08-04
+- [How to Choose a Web Development Agency](https://withmeteoric.com/blog/how-to-choose-a-web-development-agency) — 2026-07-08
+- [Building a SaaS Prototype in 3 Weeks: A Case Study](https://withmeteoric.com/blog/building-a-saas-prototype-in-3-weeks-a-case-study) — 2026-07-05
+- [Next.js vs Remix 2026: Which React Framework to Choose?](https://withmeteoric.com/blog/nextjs-vs-remix-2026-comparison) — 2026-07-01
+- [How Much Does a Startup Website Cost?](https://withmeteoric.com/blog/how-much-does-a-startup-website-cost) — 2026-06-28
+- [Supabase vs Firebase 2026: Which Backend Platform Should You Choose?](https://withmeteoric.com/blog/supabase-vs-firebase-2026-comparison) — 2026-06-25
+- [MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?](https://withmeteoric.com/blog/mongodb-vs-postgresql-for-saas) — 2026-06-20
+- [How to Build a SaaS MVP: Step-by-Step Guide](https://withmeteoric.com/blog/how-to-build-a-saas-mvp-step-by-step-guide) — 2026-06-15
+- [The Meteoric Guide to Choosing Your Tech Stack](https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack) — 2026-06-12
+- [MongoDB Schema Design for SaaS Billing](https://withmeteoric.com/blog/mongodb-schema-design-for-saas-billing) — 2026-06-10
+- [GSAP vs Framer Motion: Production Animation Guide](https://withmeteoric.com/blog/gsap-vs-framer-motion-production-guide) — 2026-06-08
+- [What Is a Web Development Agency?](https://withmeteoric.com/blog/what-is-a-web-development-agency) — 2026-06-05
 
 ## Outbound links
 
