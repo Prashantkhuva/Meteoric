@@ -6,7 +6,7 @@ const authorData = {
   name: "Prashant Khuva",
   title: "Founder & Full-Stack Developer",
   company: SITE_NAME,
-  bio: "Building high-performance web applications and SaaS products for startups since 2020. Specializing in React, Next.js, Node.js, and the MERN stack. Direct founder involvement on every project — no account managers.",
+  bio: "Building high-performance web applications and SaaS products for startups since 2025. Specializing in React, Next.js, Node.js, and the MERN stack. Direct founder involvement on every project — no account managers.",
   credentials: [
     "12+ production projects shipped",
     "100% client satisfaction rate",
