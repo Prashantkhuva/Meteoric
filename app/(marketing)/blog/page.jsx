@@ -61,7 +61,7 @@ export default function BlogIndex() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <main className="min-h-screen bg-[#070707] text-white">
+      <main className="min-h-screen bg-black text-white">
         {/* Ambient glow */}
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(234,239,255,0.02)_0%,transparent_70%)] pointer-events-none" />
 
