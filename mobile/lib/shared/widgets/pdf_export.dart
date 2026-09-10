@@ -2,7 +2,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 /// Builds print-ready PDFs that mirror the web preview pages
-/// (`app/preview/{invoice,proposal}/[id]/route.js`) — dark premium theme.
+/// (`app/preview/{invoice,proposal}/[id]/route.js`) — clean light theme.
 ///
 /// Uses only built-in Helvetica (WinAnsi); text is sanitized so exotic
 /// glyphs never crash generation.
@@ -10,14 +10,14 @@ class PdfExport {
   PdfExport._();
 
   // ── Design tokens (mirror of web preview CSS) ───────────────────────────
-  static const _bg = PdfColor.fromInt(0xFF070707);
-  static const _card = PdfColor.fromInt(0xFF0A0A0A);
-  static const _border = PdfColor.fromInt(0x14FFFFFF);
-  static const _borderSoft = PdfColor.fromInt(0x0DFFFFFF);
-  static const _text = PdfColor.fromInt(0xD9FFFFFF);
-  static const _textMuted = PdfColor.fromInt(0x99FFFFFF);
-  static const _textFaint = PdfColor.fromInt(0x40FFFFFF);
-  static const _heading = PdfColor.fromInt(0xF2FFFFFF);
+  static const _bg = PdfColor.fromInt(0xFFF5F5F5);
+  static const _card = PdfColor.fromInt(0xFFFFFFFF);
+  static const _border = PdfColor.fromInt(0xFFE5E7EB);
+  static const _borderSoft = PdfColor.fromInt(0xFFF3F4F6);
+  static const _text = PdfColor.fromInt(0xFF111827);
+  static const _textMuted = PdfColor.fromInt(0xFF6B7280);
+  static const _textFaint = PdfColor.fromInt(0xFF9CA3AF);
+  static const _heading = PdfColor.fromInt(0xFF111827);
 
   static const Map<String, String> _currencySymbols = {
     'USD': '\$',
@@ -79,19 +79,37 @@ class PdfExport {
   static pw.Widget _statusBadge(String status) {
     final meta = switch (status.toLowerCase()) {
       'paid' ||
-      'accepted' => (color: PdfColor.fromInt(0xFF4ADE80), label: 'Paid'),
-      'overdue' => (color: PdfColor.fromInt(0xFFF87171), label: 'Overdue'),
-      'sent' => (color: PdfColor.fromInt(0xFFE8E4FF), label: 'Sent'),
+      'accepted' => (
+        color: PdfColor.fromInt(0xFF16A34A),
+        bg: PdfColor.fromInt(0xFFF0FDF4),
+        border: PdfColor.fromInt(0xFFBBF7D0),
+        label: 'Paid',
+      ),
+      'overdue' => (
+        color: PdfColor.fromInt(0xFFDC2626),
+        bg: PdfColor.fromInt(0xFFFEF2F2),
+        border: PdfColor.fromInt(0xFFFECACA),
+        label: 'Overdue',
+      ),
+      'sent' => (
+        color: PdfColor.fromInt(0xFF4F46E5),
+        bg: PdfColor.fromInt(0xFFF0F0FF),
+        border: PdfColor.fromInt(0xFFC7D2FE),
+        label: 'Sent',
+      ),
       _ => (
         color: _textFaint,
+        bg: PdfColor.fromInt(0xFFF9FAFB),
+        border: _border,
         label: sanitize(status.isEmpty ? 'Draft' : status),
       ),
     };
     return pw.Container(
       padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: pw.BoxDecoration(
-        border: pw.Border.all(color: meta.color.shade(.5)),
-        color: meta.color.shade(.92),
+        border: pw.Border.all(color: meta.border),
+        color: meta.bg,
+        borderRadius: pw.BorderRadius.circular(10),
       ),
       child: pw.Row(
         mainAxisSize: pw.MainAxisSize.min,
@@ -183,9 +201,6 @@ class PdfExport {
     final client = invoice['client'] is Map
         ? (invoice['client'] as Map).cast<String, dynamic>()
         : null;
-    final bank = invoice['bank_account'] is Map
-        ? (invoice['bank_account'] as Map).cast<String, dynamic>()
-        : null;
     final status = '${invoice['status'] ?? 'draft'}';
     final number = sanitize(invoice['invoice_number'] ?? '');
 
@@ -240,7 +255,7 @@ class PdfExport {
                             dateLine(
                               'Paid:',
                               invoice['paid_at'],
-                              color: PdfColor.fromInt(0xFF34D399),
+                              color: PdfColor.fromInt(0xFF16A34A),
                             ),
                         ],
                       ),
@@ -387,7 +402,7 @@ class PdfExport {
                           decoration: const pw.BoxDecoration(
                             border: pw.Border(
                               top: pw.BorderSide(
-                                color: PdfColor.fromInt(0x33FFFFFF),
+                                color: PdfColor.fromInt(0xFFE5E7EB),
                               ),
                             ),
                           ),
@@ -418,66 +433,6 @@ class PdfExport {
                     ),
                   ),
                 ),
-                // Bank details
-                if (status.toLowerCase() != 'paid' && bank != null) ...[
-                  pw.SizedBox(height: 16),
-                  pw.Container(
-                    width: double.infinity,
-                    padding: const pw.EdgeInsets.all(12),
-                    color: PdfColor.fromInt(0xFF111111),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          'BANK TRANSFER DETAILS',
-                          style: pw.TextStyle(
-                            fontSize: 7,
-                            fontWeight: pw.FontWeight.bold,
-                            letterSpacing: 1.2,
-                            color: PdfColor.fromInt(0xFFEAEFFF),
-                          ),
-                        ),
-                        pw.SizedBox(height: 6),
-                        for (final pair in const [
-                          ('bank_name', 'Bank'),
-                          ('account_holder', 'Name'),
-                          ('account_number', 'Account No'),
-                          ('iban', 'IBAN'),
-                          ('swift_bic', 'SWIFT/BIC'),
-                          ('routing_number', 'Routing'),
-                          ('ifsc', 'IFSC'),
-                          ('currency', 'Currency'),
-                          ('country', 'Country'),
-                        ])
-                          if (bank[pair.$1] != null &&
-                              '${bank[pair.$1]}'.isNotEmpty)
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.only(bottom: 2),
-                              child: pw.RichText(
-                                text: pw.TextSpan(
-                                  children: [
-                                    pw.TextSpan(
-                                      text: '${pair.$2}: ',
-                                      style: pw.TextStyle(
-                                        fontSize: 8,
-                                        color: PdfColor.fromInt(0xFFAAAAAA),
-                                      ),
-                                    ),
-                                    pw.TextSpan(
-                                      text: sanitize(bank[pair.$1]),
-                                      style: pw.TextStyle(
-                                        fontSize: 8,
-                                        color: PdfColor.fromInt(0xFFE0E0E0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                      ],
-                    ),
-                  ),
-                ],
                 // Notes / Terms
                 if (invoice['notes'] != null || invoice['terms'] != null)
                   pw.Padding(
@@ -593,7 +548,7 @@ class PdfExport {
                               fontWeight: pw.FontWeight.bold,
                               letterSpacing: 1,
                               color: status == 'sent'
-                                  ? PdfColor.fromInt(0xFF34D399)
+                                  ? PdfColor.fromInt(0xFF16A34A)
                                   : _textFaint,
                             ),
                           ),
@@ -750,7 +705,7 @@ class PdfExport {
             decoration: const pw.BoxDecoration(
               border: pw.Border(
                 left: pw.BorderSide(
-                  color: PdfColor.fromInt(0xFFEAEFFF),
+                  color: PdfColor.fromInt(0xFF4F46E5),
                   width: 2,
                 ),
               ),
@@ -807,7 +762,7 @@ class PdfExport {
                     marker,
                     style: pw.TextStyle(
                       fontSize: 10,
-                      color: PdfColor.fromInt(0xFFEAEFFF),
+                      color: PdfColor.fromInt(0xFF4F46E5),
                     ),
                   ),
                 ),

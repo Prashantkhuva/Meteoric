@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
-import { isRazorpayConfigured } from "@/lib/razorpay";
 import fs from "fs";
 import path from "path";
 
@@ -107,22 +106,11 @@ export async function GET(request, { params }) {
             ? "Draft"
             : invoice.status;
 
-  let showUPI = false;
-  if (
-    token &&
-    invoice.status !== "paid" &&
-    invoice.currency === "INR" &&
-    invoice.bank_account?.upi_id &&
-    isRazorpayConfigured()
-  ) {
-    showUPI = true;
-  }
-
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
     const logoBuf = fs.readFileSync(
-      path.join(process.cwd(), "public", "new-meteoric-lg.svg"),
+      path.join(process.cwd(), "public", "new-meteoric-lg-black.svg"),
     );
     logoSrc = `data:image/svg+xml;base64,${logoBuf.toString("base64")}`;
   } catch {
@@ -142,74 +130,56 @@ export async function GET(request, { params }) {
 <meta property="og:image:height" content="962" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-${showUPI ? '<script src="https://checkout.razorpay.com/v1/checkout.js"></script>' : ""}
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #070707; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.85); }
+body { background: #f5f5f5; padding: 40px 20px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: #1a1a1a; }
 .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; max-width: 800px; margin-left: auto; margin-right: auto; }
-.toolbar a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-.toolbar a:hover { color: rgba(255,255,255,0.7); }
-.print-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.08); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
-.print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
-.wise-btn { background: #9FE870; color: #0a0a0a !important; border: none; padding: 12px 20px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
-.wise-btn:hover { background: #8BD660; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(159, 232, 112, 0.25); }
-.wise-btn img { filter: brightness(0); display: block; width: 72px; height: 16px; }
-.paypal-btn { background: #0070BA; color: #ffffff !important; border: none; padding: 12px 16px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; border-radius: 6px; }
-.paypal-btn:hover { background: #005C99; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 112, 186, 0.35); }
-.paypal-btn img { filter: brightness(0) invert(1); display: block; width: 20px; height: 20px; }
-.toolbar-right { display: flex; gap: 10px; align-items: center; }
-.invoice { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
-.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.toolbar a { color: #6b7280; text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+.toolbar a:hover { color: #111827; }
+.print-btn { background: #111827; color: #ffffff; border: none; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; border-radius: 6px; }
+.print-btn:hover { background: #374151; }
+.invoice { max-width: 800px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; padding: 48px 56px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid #e5e7eb; }
 .brand { display: flex; align-items: center; }
 .brand-logo { height: 32px; width: auto; }
 .meta { text-align: right; }
-.meta .number { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
-.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 4px; margin-top: 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; border: 1px solid; }
+.meta .number { font-size: 22px; font-weight: 700; color: #111827; }
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 9999px; margin-top: 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; border: 1px solid; }
 .status-badge .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.status-badge.draft { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); }
-.status-badge.draft .dot { background: rgba(255,255,255,0.3); }
-.status-badge.sent { background: rgba(34,34,37,1); border-color: rgba(232,228,255,0.12); color: #E8E4FF; }
-.status-badge.sent .dot { background: #E8E4FF; }
-.status-badge.paid { background: rgba(74,222,128,0.10); border-color: rgba(74,222,128,0.18); color: #4ade80; }
-.status-badge.paid .dot { background: #4ade80; }
-.status-badge.overdue { background: rgba(248,113,113,0.10); border-color: rgba(248,113,113,0.18); color: #f87171; }
-.status-badge.overdue .dot { background: #f87171; }
-.meta .dates { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 8px; line-height: 1.6; }
-.meta .dates .paid { color: #34d399; font-weight: 600; }
+.status-badge.draft { background: #f9fafb; border-color: #e5e7eb; color: #9ca3af; }
+.status-badge.draft .dot { background: #9ca3af; }
+.status-badge.sent { background: #f0f0ff; border-color: #c7d2fe; color: #4f46e5; }
+.status-badge.sent .dot { background: #4f46e5; }
+.status-badge.paid { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+.status-badge.paid .dot { background: #16a34a; }
+.status-badge.overdue { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+.status-badge.overdue .dot { background: #dc2626; }
+.meta .dates { font-size: 12px; color: #9ca3af; margin-top: 8px; line-height: 1.6; }
+.meta .dates .paid { color: #16a34a; font-weight: 600; }
 .parties { display: flex; justify-content: space-between; margin-bottom: 48px; gap: 40px; }
-.from h3, .to h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 8px; }
-.from p, .to p { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.6); }
-.from .name, .to .name { font-weight: 600; color: rgba(255,255,255,0.85); }
+.from h3, .to h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 8px; }
+.from p, .to p { font-size: 13px; line-height: 1.5; color: #6b7280; }
+.from .name, .to .name { font-weight: 600; color: #111827; }
 .to { text-align: right; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
-thead th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+thead th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
 thead th:not(:first-child) { text-align: right; }
-tbody td { padding: 12px 0; font-size: 13px; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.04); }
+tbody td { padding: 12px 0; font-size: 13px; color: #4b5563; border-bottom: 1px solid #f3f4f6; }
 tbody td:not(:first-child) { text-align: right; }
-tbody td:first-child { color: rgba(255,255,255,0.85); }
+tbody td:first-child { color: #111827; font-weight: 500; }
 .totals { margin-left: auto; width: 280px; }
-.totals .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; color: rgba(255,255,255,0.5); }
-.totals .row.total { padding: 12px 0 0; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.95); }
-.footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
-.footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px; }
-.footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
-.bank-section { margin-top: 24px; padding: 16px; background: #111111; border: 1px solid #222222; }
-.bank-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #EAEFFF; margin-bottom: 10px; }
-.bank-line { font-size: 12px; color: #e0e0e0; line-height: 1.8; }
-.bank-line strong { color: #aaaaaa; }
-.upi-btn { background: #0a0a0a; color: #ffffff !important; border: 1px solid #1B1B1B; padding: 12px 20px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
-.upi-btn:hover { background: #111111; transform: translateY(-1px); }
-.upi-btn img { display: block; }
+.totals .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; color: #6b7280; }
+.totals .row.total { padding: 12px 0 0; margin-top: 4px; border-top: 1px solid #e5e7eb; font-size: 16px; font-weight: 700; color: #111827; }
+.footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid #e5e7eb; }
+.footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 4px; }
+.footer p { font-size: 13px; color: #6b7280; white-space: pre-wrap; margin-bottom: 16px; }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
-  .toolbar { flex-wrap: wrap; gap: 8px; }
-  .toolbar-right { flex-wrap: wrap; gap: 8px; }
-  .wise-btn { padding: 10px 14px; }
-  .wise-btn img { width: 56px; height: 13px; }
-  .paypal-btn { padding: 10px 12px; }
-  .paypal-btn img { width: 16px; height: 16px; }
-  .print-btn { padding: 10px 14px; font-size: 12px; }
+  .toolbar { gap: 8px; }
+  .toolbar a { white-space: nowrap; }
+  .print-btn { padding: 10px 16px; white-space: nowrap; }
   .invoice { padding: 24px 16px; }
   .header { flex-direction: column; gap: 12px; margin-bottom: 32px; padding-bottom: 24px; }
   .brand-logo { height: 28px; }
@@ -220,9 +190,9 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   .footer { margin-top: 32px; padding-top: 24px; }
 }
 @media print {
-  body { background: #070707; padding: 0; }
+  body { background: #ffffff; padding: 0; }
   .toolbar { display: none !important; }
-  .invoice { box-shadow: none; padding: 40px 48px; }
+  .invoice { border: none; box-shadow: none; padding: 40px 48px; }
   @page { margin: 20mm 15mm; }
 }
 </style>
@@ -230,21 +200,16 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
 <body>
 <div class="toolbar">
   ${token ? "" : '<a href="/admin/invoices">&larr; Back to Invoices</a>'}
-  <div class="toolbar-right">
-    ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="wise-btn" href="https://wise.com/pay/business/khuvaprashantdayanandbhai1?currency=' + (invoice.currency || "USD") + "&amount=" + total.toFixed(2) + '" target="_blank" aria-label="Pay with Wise"><img src="/wiselogo.svg" alt="Wise" width="72" height="16" /></a>' : ""}
-    ${invoice.status !== "paid" && invoice.currency !== "INR" ? '<a class="paypal-btn" href="https://paypal.me/Prashantkhuva/' + total.toFixed(2) + (invoice.currency || "USD") + '" target="_blank" aria-label="Pay with PayPal"><img src="/paypal.svg" alt="PayPal" width="20" height="20" /></a>' : ""}
-    ${invoice.status !== "paid" && invoice.currency === "INR" && showUPI ? '<button class="upi-btn" onclick="payWithUPI()"><img src="/new-upi-lg.svg" alt="UPI" width="63" height="20" /></button>' : ""}
-    <button class="print-btn" onclick="window.print()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      Download PDF
-    </button>
-  </div>
+  <button class="print-btn" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Download PDF
+  </button>
 </div>
 
 <div class="invoice">
   <div class="header">
     <div class="brand">
-      ${logoSrc ? '<img class="brand-logo" src="' + logoSrc + '" alt="Meteoric" />' : '<span class="brand-logo" style="font-size:28px;font-weight:500;background:linear-gradient(135deg,#fff 0%,#a0a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><span style="font-family:\'Playfair Display\',serif;font-style:normal">meteor</span><span style="font-family:Inter,system-ui,sans-serif">ic</span></span>'}
+      ${logoSrc ? '<img class="brand-logo" src="' + logoSrc + '" alt="Meteoric" />' : '<span class="brand-logo" style="font-size:28px;font-weight:600;color:#111827"><span style="font-family:\'Playfair Display\',serif;font-style:normal">meteor</span><span style="font-family:Inter,system-ui,sans-serif">ic</span></span>'}
     </div>
     <div class="meta">
       <p class="number">${invoice.invoice_number}</p>
@@ -312,25 +277,6 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
   </div>
 
   ${
-    invoice.status !== "paid" && invoice.bank_account
-      ? `
-  <div class="bank-section">
-    <h4>Bank Transfer Details</h4>
-    ${invoice.bank_account.bank_name ? '<p class="bank-line"><strong>Bank:</strong> ' + esc(invoice.bank_account.bank_name) + "</p>" : ""}
-    ${invoice.bank_account.account_holder ? '<p class="bank-line"><strong>Name:</strong> ' + esc(invoice.bank_account.account_holder) + "</p>" : ""}
-    ${invoice.bank_account.account_number ? '<p class="bank-line"><strong>Account No:</strong> ' + esc(invoice.bank_account.account_number) + "</p>" : ""}
-    ${invoice.bank_account.iban ? '<p class="bank-line"><strong>IBAN:</strong> ' + esc(invoice.bank_account.iban) + "</p>" : ""}
-    ${invoice.bank_account.swift_bic ? '<p class="bank-line"><strong>SWIFT/BIC:</strong> ' + esc(invoice.bank_account.swift_bic) + "</p>" : ""}
-    ${invoice.bank_account.routing_number ? '<p class="bank-line"><strong>Routing:</strong> ' + esc(invoice.bank_account.routing_number) + "</p>" : ""}
-    ${invoice.bank_account.ifsc ? '<p class="bank-line"><strong>IFSC:</strong> ' + esc(invoice.bank_account.ifsc) + "</p>" : ""}
-    ${invoice.bank_account.currency ? '<p class="bank-line"><strong>Currency:</strong> ' + esc(invoice.bank_account.currency) + "</p>" : ""}
-    ${invoice.bank_account.country ? '<p class="bank-line"><strong>Country:</strong> ' + esc(invoice.bank_account.country) + "</p>" : ""}
-  </div>
-  `
-      : ""
-  }
-
-  ${
     invoice.notes || invoice.terms
       ? `
   <div class="footer">
@@ -341,135 +287,6 @@ tbody td:first-child { color: rgba(255,255,255,0.85); }
       : ""
   }
 </div>
-${
-  showUPI
-    ? `<script>
-(function() {
-  var INVOICE_ID = ${invoice.id};
-  var INVOICE_NUMBER = ${JSON.stringify(invoice.invoice_number)};
-  var AMOUNT = ${total.toFixed(2)};
-  var CLIENT_NAME = ${JSON.stringify(invoice.client?.name || "")};
-  var CLIENT_EMAIL = ${JSON.stringify(invoice.client?.email || "")};
-  var RAZORPAY_KEY = ${JSON.stringify(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "")};
-
-  var UPI_BTN_HTML = '<img src="/new-upi-lg.svg" alt="UPI" width="63" height="20" />';
-  var btn = document.querySelector(".upi-btn");
-  var paying = false;
-
-  function setLoading(loading) {
-    if (!btn) return;
-    btn.disabled = loading;
-    if (loading) {
-      btn.dataset.original = btn.innerHTML;
-      btn.innerHTML = "Processing...";
-    } else {
-      btn.innerHTML = btn.dataset.original || UPI_BTN_HTML;
-    }
-  }
-
-  function resetButton() {
-    paying = false;
-    setLoading(false);
-  }
-
-  function showError(msg) {
-    alert(msg);
-  }
-
-  window.payWithUPI = function() {
-    if (!btn || paying) return;
-
-    paying = true;
-    setLoading(true);
-
-    fetch("/api/razorpay/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: AMOUNT, currency: "INR", receipt: INVOICE_NUMBER })
-    })
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      if (data.error) {
-        showError("Failed to create payment order: " + data.error);
-        resetButton();
-        return;
-      }
-
-      var rzp = new Razorpay({
-        key: RAZORPAY_KEY,
-        amount: data.amount,
-        currency: data.currency,
-        name: "Meteoric",
-        description: "Invoice " + INVOICE_NUMBER,
-        order_id: data.order_id,
-        prefill: { name: CLIENT_NAME, email: CLIENT_EMAIL },
-        theme: { color: "#5F259F" },
-        handler: function(response) {
-          response.invoice_id = INVOICE_ID;
-          fetch("/api/razorpay/verify-payment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response)
-          })
-          .then(function(res) { return res.json(); })
-          .then(function(result) {
-            if (result.success) {
-              // Update UI in-place — no redirect
-              var badges = document.querySelectorAll(".status-badge");
-              badges.forEach(function(b) {
-                b.className = "status-badge paid";
-                b.innerHTML = '<span class="dot"></span>Paid';
-              });
-              var btns = document.querySelectorAll(".upi-btn");
-              btns.forEach(function(b) { b.style.display = "none"; });
-              var paidEl = document.createElement("p");
-              paidEl.className = "paid";
-              paidEl.textContent = "Paid: " + new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-              var datesEl = document.querySelector(".dates");
-              if (datesEl) datesEl.appendChild(paidEl);
-            } else {
-              showError("Payment verification failed. Please contact us.");
-            }
-            resetButton();
-          })
-          .catch(function() {
-            showError("Payment verification failed. Please contact us.");
-            resetButton();
-          });
-        },
-        modal: {
-          ondismiss: function() {
-            // User cancelled or closed the Razorpay modal — release the button
-            resetButton();
-          }
-        }
-      });
-
-      rzp.on("payment.failed", function(e) {
-        showError(e.error && e.error.description || "Payment failed.");
-        resetButton();
-      });
-
-      try {
-        rzp.open();
-      } catch (e) {
-        showError("Could not open the payment window. Please try again.");
-        resetButton();
-      }
-    })
-    .catch(function() {
-      showError("Failed to connect to payment service. Please try again.");
-      resetButton();
-    });
-  };
-
-  if (new URLSearchParams(location.search).get("rp") === "1") {
-    payWithUPI();
-  }
-})();
-</script>`
-    : ""
-}
 </body>
 </html>`;
 

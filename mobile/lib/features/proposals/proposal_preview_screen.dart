@@ -3,11 +3,18 @@ import 'package:flutter/services.dart';
 
 import '../../core/formatters.dart';
 import '../../core/native.dart';
-import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/pdf_export.dart';
 import '../../shared/widgets/tiptap_view.dart';
 import '../invoices/invoice_preview_screen.dart' show StatusDot;
+
+// ── Light preview colors (local to this screen) ─────────────────────────
+const _bg = Color(0xFFF5F5F5);
+const _card = Color(0xFFFFFFFF);
+const _border = Color(0xFFE5E7EB);
+const _text = Color(0xFF111827);
+const _textMuted = Color(0xFF6B7280);
+const _textFaint = Color(0xFF9CA3AF);
 
 /// Full-page proposal preview mirroring the web `/preview/proposal/[id]`
 /// page — brand header with status, Prepared-for block, TipTap content,
@@ -25,15 +32,27 @@ class ProposalPreviewScreen extends StatelessWidget {
         : null;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Proposal preview')),
+      backgroundColor: _bg,
+      appBar: AppBar(
+        backgroundColor: _bg,
+        foregroundColor: _text,
+        title: const Text(
+          'Proposal preview',
+          style: TextStyle(
+            color: _text,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.card,
-            border: Border.all(color: AppColors.border),
+            color: _card,
+            border: Border.all(color: _border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +61,7 @@ class ProposalPreviewScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: AppColors.border)),
+                  border: Border(bottom: BorderSide(color: _border)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +78,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                     Text(
                       '${proposal['title'] ?? '-'}',
                       style: const TextStyle(
-                        color: Color(0xF2FFFFFF),
+                        color: _text,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Inter',
@@ -88,7 +107,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                   const Text(
                     'PREPARED FOR',
                     style: TextStyle(
-                      color: AppColors.textFaint,
+                      color: _textFaint,
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
@@ -99,7 +118,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                   Text(
                     '${lead?['name'] ?? '-'}',
                     style: const TextStyle(
-                      color: AppColors.text,
+                      color: _text,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Inter',
@@ -110,7 +129,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                     Text(
                       '${lead!['company']}',
                       style: const TextStyle(
-                        color: AppColors.textMuted,
+                        color: _textMuted,
                         fontSize: 11.5,
                         height: 1.5,
                         fontFamily: 'Inter',
@@ -120,7 +139,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                     Text(
                       '${lead!['email']}',
                       style: const TextStyle(
-                        color: AppColors.textMuted,
+                        color: _textMuted,
                         fontSize: 11.5,
                         height: 1.5,
                         fontFamily: 'Inter',
@@ -134,7 +153,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: AppColors.border)),
+                    border: Border(top: BorderSide(color: _border)),
                   ),
                   child: TipTapView(content: proposal['content']),
                 ),
@@ -146,7 +165,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: AppColors.border)),
+                    border: Border(top: BorderSide(color: _border)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,22 +194,7 @@ class ProposalPreviewScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: AccentButton(
-            onPressed: () => _exportPdf(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.picture_as_pdf_outlined,
-                  size: 16,
-                  color: Color(0xFF121212),
-                ),
-                SizedBox(width: 8),
-                Text('Export PDF'),
-              ],
-            ),
-          ),
+          child: _ExportButton(onPressed: () => _exportPdf(context)),
         ),
       ),
     );
@@ -223,30 +227,27 @@ class _Brand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.white, Color(0xFFA0A0A0)],
-      ).createShader(bounds),
-      child: const Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: 'meteor',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Inter',
-              ),
+    return const Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: 'meteor',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: _text,
+              fontFamily: 'Inter',
             ),
-            TextSpan(
-              text: 'ic',
-              style: TextStyle(fontSize: 22, fontFamily: 'Inter'),
+          ),
+          TextSpan(
+            text: 'ic',
+            style: TextStyle(
+              fontSize: 22,
+              color: _text,
+              fontFamily: 'Inter',
             ),
-          ],
-        ),
-        style: TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
   }
@@ -262,11 +263,52 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       text.toUpperCase(),
       style: const TextStyle(
-        color: AppColors.textFaint,
+        color: _textFaint,
         fontSize: 9,
         fontWeight: FontWeight.w700,
         letterSpacing: 1.2,
         fontFamily: 'Inter',
+      ),
+    );
+  }
+}
+
+class _ExportButton extends StatelessWidget {
+  const _ExportButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: _text,
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          height: 46,
+          alignment: Alignment.center,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.picture_as_pdf_outlined,
+                size: 16,
+                color: Colors.white,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'Export PDF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -278,7 +320,7 @@ Widget _dateLine(String label, String value) => Padding(
     TextSpan(
       text: label,
       style: const TextStyle(
-        color: AppColors.textFaint,
+        color: _textFaint,
         fontSize: 11,
         fontFamily: 'Inter',
       ),
@@ -286,7 +328,7 @@ Widget _dateLine(String label, String value) => Padding(
         TextSpan(
           text: ' $value',
           style: const TextStyle(
-            color: AppColors.textFaint,
+            color: _textFaint,
             fontSize: 11,
             fontFamily: 'Inter',
           ),
@@ -299,7 +341,7 @@ Widget _dateLine(String label, String value) => Padding(
 Widget _wrapText(String text) => Text(
   text,
   style: const TextStyle(
-    color: AppColors.textMuted,
+    color: _textMuted,
     fontSize: 11.5,
     height: 1.55,
     fontFamily: 'Inter',

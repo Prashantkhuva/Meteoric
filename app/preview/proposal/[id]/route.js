@@ -74,7 +74,7 @@ export async function GET(request, { params }) {
   let logoSrc = "";
   try {
     const logoBuf = fs.readFileSync(
-      path.join(process.cwd(), "public", "new-meteoric-lg.svg"),
+      path.join(process.cwd(), "public", "new-meteoric-lg-black.svg"),
     );
     logoSrc = `data:image/svg+xml;base64,${logoBuf.toString("base64")}`;
   } catch {
@@ -95,37 +95,38 @@ export async function GET(request, { params }) {
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #070707; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.85); }
+body { background: #f5f5f5; padding: 40px 20px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: #1a1a1a; }
 .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; max-width: 800px; margin-left: auto; margin-right: auto; }
-.toolbar a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-.toolbar a:hover { color: rgba(255,255,255,0.7); }
-.print-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.08); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
-.print-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.15); }
-.proposal { max-width: 800px; margin: 0 auto; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
-.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.toolbar a { color: #6b7280; text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+.toolbar a:hover { color: #111827; }
+.print-btn { background: #111827; color: #ffffff; border: none; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; border-radius: 6px; }
+.print-btn:hover { background: #374151; }
+.proposal { max-width: 800px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; padding: 48px 56px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid #e5e7eb; }
 .brand { display: flex; align-items: center; }
 .brand-logo { height: 32px; width: auto; }
 .meta { text-align: right; }
-.meta .title { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.95); }
-.meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: rgba(255,255,255,0.3); }
-.meta .status.sent { color: #34d399; }
-.meta .date { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 8px; }
+.meta .title { font-size: 22px; font-weight: 700; color: #111827; }
+.meta .status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; color: #9ca3af; }
+.meta .status.sent { color: #16a34a; }
+.meta .date { font-size: 12px; color: #9ca3af; margin-top: 8px; }
 .to { margin-bottom: 48px; }
-.to h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 8px; }
-.to p { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.6); }
-.to .name { font-weight: 600; color: rgba(255,255,255,0.85); }
-.content { line-height: 1.7; color: rgba(255,255,255,0.65); font-size: 14px; }
-.content h2 { font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9); margin-top: 32px; margin-bottom: 12px; }
-.content h3 { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.85); margin-top: 24px; margin-bottom: 8px; }
+.to h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 8px; }
+.to p { font-size: 13px; line-height: 1.5; color: #6b7280; }
+.to .name { font-weight: 600; color: #111827; }
+.content { line-height: 1.7; color: #4b5563; font-size: 14px; }
+.content h2 { font-size: 18px; font-weight: 700; color: #111827; margin-top: 32px; margin-bottom: 12px; }
+.content h3 { font-size: 16px; font-weight: 600; color: #111827; margin-top: 24px; margin-bottom: 8px; }
 .content p { margin-bottom: 16px; }
 .content ul, .content ol { margin-bottom: 16px; padding-left: 24px; }
 .content li { margin-bottom: 4px; }
-.content strong { color: rgba(255,255,255,0.9); }
-.content a { color: #EAEFFF; text-decoration: underline; }
-.footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
-.footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px; }
-.footer p { font-size: 13px; color: rgba(255,255,255,0.5); white-space: pre-wrap; margin-bottom: 16px; }
+.content strong { color: #111827; }
+.content a { color: #4f46e5; text-decoration: underline; }
+.footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid #e5e7eb; }
+.footer h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 4px; }
+.footer p { font-size: 13px; color: #6b7280; white-space: pre-wrap; margin-bottom: 16px; }
 @media (max-width: 639px) {
   body { padding: 16px 10px; }
   .toolbar { gap: 8px; }
@@ -142,9 +143,9 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
   .footer { margin-top: 32px; padding-top: 24px; }
 }
 @media print {
-  body { background: #070707; padding: 0; }
+  body { background: #ffffff; padding: 0; }
   .toolbar { display: none !important; }
-  .proposal { box-shadow: none; padding: 40px 48px; }
+  .proposal { border: none; box-shadow: none; padding: 40px 48px; }
   @page { margin: 20mm 15mm; }
 }
 </style>
@@ -161,7 +162,7 @@ body { background: #070707; padding: 40px 20px; font-family: -apple-system, Blin
 <div class="proposal">
   <div class="header">
     <div class="brand">
-      ${logoSrc ? '<img class="brand-logo" src="' + logoSrc + '" alt="Meteoric" />' : '<span class="brand-logo" style="font-size:28px;font-weight:500;background:linear-gradient(135deg,#fff 0%,#a0a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><span style="font-family:\'Playfair Display\',serif;font-style:normal">meteor</span><span style="font-family:Inter,system-ui,sans-serif">ic</span></span>'}
+      ${logoSrc ? '<img class="brand-logo" src="' + logoSrc + '" alt="Meteoric" />' : '<span class="brand-logo" style="font-size:28px;font-weight:600;color:#111827"><span style="font-family:\'Playfair Display\',serif;font-style:normal">meteor</span><span style="font-family:Inter,system-ui,sans-serif">ic</span></span>'}
     </div>
     <div class="meta">
       <p class="title">${esc(proposal.title)}</p>

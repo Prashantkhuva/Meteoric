@@ -3,13 +3,24 @@ import 'package:flutter/services.dart';
 
 import '../../core/formatters.dart';
 import '../../core/native.dart';
-import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/pdf_export.dart';
 
+// ── Light preview colors (local to this screen) ─────────────────────────
+const _bg = Color(0xFFF5F5F5);
+const _card = Color(0xFFFFFFFF);
+const _border = Color(0xFFE5E7EB);
+const _borderSoft = Color(0xFFF3F4F6);
+const _text = Color(0xFF111827);
+const _textMuted = Color(0xFF6B7280);
+const _textFaint = Color(0xFF9CA3AF);
+const _green = Color(0xFF16A34A);
+const _red = Color(0xFFDC2626);
+const _indigo = Color(0xFF4F46E5);
+
 /// Full-page invoice preview mirroring the web `/preview/invoice/[id]` page —
-/// dark premium document with brand header, parties, items table, totals,
-/// bank transfer details and notes/terms, plus one-tap PDF export.
+/// clean light theme with brand header, parties, items table, totals,
+/// and notes/terms, plus one-tap PDF export.
 class InvoicePreviewScreen extends StatelessWidget {
   const InvoicePreviewScreen({super.key, required this.invoice});
 
@@ -43,22 +54,31 @@ class InvoicePreviewScreen extends StatelessWidget {
     final client = invoice['client'] is Map
         ? (invoice['client'] as Map).cast<String, dynamic>()
         : null;
-    final bank = invoice['bank_account'] is Map
-        ? (invoice['bank_account'] as Map).cast<String, dynamic>()
-        : null;
 
     String money(num v) => '$symbol${v.toStringAsFixed(2)}';
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: Text('Invoice ${invoice['invoice_number'] ?? ''}')),
+      backgroundColor: _bg,
+      appBar: AppBar(
+        backgroundColor: _bg,
+        foregroundColor: _text,
+        title: Text(
+          'Invoice ${invoice['invoice_number'] ?? ''}',
+          style: const TextStyle(
+            color: _text,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.card,
-            border: Border.all(color: AppColors.border),
+            color: _card,
+            border: Border.all(color: _border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +87,7 @@ class InvoicePreviewScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: AppColors.border)),
+                  border: Border(bottom: BorderSide(color: _border)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,17 +97,14 @@ class InvoicePreviewScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const _Brand(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [StatusDot(status: status)],
-                        ),
+                        StatusDot(status: status),
                       ],
                     ),
                     const SizedBox(height: 14),
                     Text(
                       '${invoice['invoice_number'] ?? '-'}',
                       style: const TextStyle(
-                        color: Color(0xF2FFFFFF),
+                        color: _text,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Inter',
@@ -127,7 +144,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         const Text(
                           'Meteoric',
                           style: TextStyle(
-                            color: AppColors.text,
+                            color: _text,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Inter',
@@ -136,7 +153,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         const Text(
                           'contact@withmeteoric.com',
                           style: TextStyle(
-                            color: AppColors.textMuted,
+                            color: _textMuted,
                             fontSize: 11,
                             height: 1.5,
                             fontFamily: 'Inter',
@@ -155,7 +172,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         Text(
                           '${client?['name'] ?? '-'}',
                           style: const TextStyle(
-                            color: AppColors.text,
+                            color: _text,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Inter',
@@ -166,7 +183,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                           Text(
                             '${client!['company']}',
                             style: const TextStyle(
-                              color: AppColors.textMuted,
+                              color: _textMuted,
                               fontSize: 11,
                               height: 1.5,
                               fontFamily: 'Inter',
@@ -177,7 +194,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                           Text(
                             '${client!['email']}',
                             style: const TextStyle(
-                              color: AppColors.textMuted,
+                              color: _textMuted,
                               fontSize: 11,
                               height: 1.5,
                               fontFamily: 'Inter',
@@ -199,14 +216,12 @@ class InvoicePreviewScreen extends StatelessWidget {
                     3: FixedColumnWidth(74),
                   },
                   border: TableBorder(
-                    horizontalInside: BorderSide(color: AppColors.borderSoft),
+                    horizontalInside: BorderSide(color: _borderSoft),
                   ),
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: AppColors.borderSoft),
-                        ),
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: _border)),
                       ),
                       children: [
                         _th('Description'),
@@ -261,12 +276,8 @@ class InvoicePreviewScreen extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(top: 4),
                         padding: const EdgeInsets.only(top: 8),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.15),
-                            ),
-                          ),
+                        decoration: const BoxDecoration(
+                          border: Border(top: BorderSide(color: _border)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,7 +285,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             const Text(
                               'Total',
                               style: TextStyle(
-                                color: Color(0xF2FFFFFF),
+                                color: _text,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Inter',
@@ -283,7 +294,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             Text(
                               money(total),
                               style: const TextStyle(
-                                color: Color(0xF2FFFFFF),
+                                color: _text,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Inter',
@@ -296,18 +307,13 @@ class InvoicePreviewScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              // ── Bank details ──────────────────────────────────────────
-              if (status != 'paid' && bank != null) ...[
-                const SizedBox(height: 20),
-                _BankSection(bank: bank),
-              ],
               // ── Notes / Terms ─────────────────────────────────────────
               if (invoice['notes'] != null || invoice['terms'] != null) ...[
                 const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: AppColors.border)),
+                    border: Border(top: BorderSide(color: _border)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,22 +342,7 @@ class InvoicePreviewScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: AccentButton(
-            onPressed: () => _exportPdf(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.picture_as_pdf_outlined,
-                  size: 16,
-                  color: Color(0xFF121212),
-                ),
-                SizedBox(width: 8),
-                Text('Export PDF'),
-              ],
-            ),
-          ),
+          child: _ExportButton(onPressed: () => _exportPdf(context)),
         ),
       ),
     );
@@ -387,7 +378,7 @@ class InvoicePreviewScreen extends StatelessWidget {
         TextSpan(
           text: label,
           style: const TextStyle(
-            color: AppColors.textFaint,
+            color: _textFaint,
             fontSize: 11,
             fontFamily: 'Inter',
           ),
@@ -395,7 +386,7 @@ class InvoicePreviewScreen extends StatelessWidget {
             TextSpan(
               text: ' $value',
               style: TextStyle(
-                color: highlight ? AppColors.emerald : AppColors.textFaint,
+                color: highlight ? _green : _textFaint,
                 fontSize: 11,
                 fontWeight: highlight ? FontWeight.w600 : FontWeight.w400,
                 fontFamily: 'Inter',
@@ -413,30 +404,27 @@ class _Brand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.white, Color(0xFFA0A0A0)],
-      ).createShader(bounds),
-      child: const Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: 'meteor',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Inter',
-              ),
+    return const Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: 'meteor',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: _text,
+              fontFamily: 'Inter',
             ),
-            TextSpan(
-              text: 'ic',
-              style: TextStyle(fontSize: 22, fontFamily: 'Inter'),
+          ),
+          TextSpan(
+            text: 'ic',
+            style: TextStyle(
+              fontSize: 22,
+              color: _text,
+              fontFamily: 'Inter',
             ),
-          ],
-        ),
-        style: TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
   }
@@ -452,7 +440,7 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       text.toUpperCase(),
       style: const TextStyle(
-        color: AppColors.textFaint,
+        color: _textFaint,
         fontSize: 9,
         fontWeight: FontWeight.w700,
         letterSpacing: 1.2,
@@ -470,21 +458,31 @@ class StatusDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (color, label) = switch (status.toLowerCase()) {
-      'paid' || 'accepted' => (AppColors.emerald, 'Paid'),
+    final (color, bgColor, borderColor, label) = switch (
+      status.toLowerCase()
+    ) {
+      'paid' || 'accepted' => (_green, const Color(0xFFF0FDF4), const Color(0xFFBBF7D0), 'Paid'),
       'overdue' || 'rejected' => (
-        AppColors.red,
+        _red,
+        const Color(0xFFFEF2F2),
+        const Color(0xFFFECACA),
         status == 'overdue' ? 'Overdue' : 'Rejected',
       ),
-      'sent' => (const Color(0xFFE8E4FF), 'Sent'),
-      'cancelled' => (AppColors.textMuted, 'Cancelled'),
-      _ => (AppColors.textFaint, 'Draft'),
+      'sent' => (
+        _indigo,
+        const Color(0xFFF0F0FF),
+        const Color(0xFFC7D2FE),
+        'Sent',
+      ),
+      'cancelled' => (_textMuted, _bg, _border, 'Cancelled'),
+      _ => (_textFaint, const Color(0xFFF9FAFB), _border, 'Draft'),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-        borderRadius: BorderRadius.circular(3),
+        color: bgColor,
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -511,13 +509,54 @@ class StatusDot extends StatelessWidget {
   }
 }
 
+class _ExportButton extends StatelessWidget {
+  const _ExportButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: _text,
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          height: 46,
+          alignment: Alignment.center,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.picture_as_pdf_outlined,
+                size: 16,
+                color: Colors.white,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'Export PDF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 Widget _th(String text, {bool right = false}) => Padding(
   padding: const EdgeInsets.only(bottom: 10),
   child: Text(
     text.toUpperCase(),
     textAlign: right ? TextAlign.right : TextAlign.left,
     style: const TextStyle(
-      color: AppColors.textFaint,
+      color: _textFaint,
       fontSize: 9,
       fontWeight: FontWeight.w700,
       letterSpacing: 1.2,
@@ -533,7 +572,7 @@ Widget _td(Object? value, {bool right = false, bool emphasize = false}) =>
         '$value',
         textAlign: right ? TextAlign.right : TextAlign.left,
         style: TextStyle(
-          color: emphasize ? AppColors.text : AppColors.textMuted,
+          color: emphasize ? _text : _textMuted,
           fontSize: 11.5,
           fontFamily: 'Inter',
         ),
@@ -548,7 +587,7 @@ Widget _totalRow(String label, String amount) => Padding(
       Text(
         label,
         style: const TextStyle(
-          color: AppColors.textMuted,
+          color: _textMuted,
           fontSize: 11.5,
           fontFamily: 'Inter',
         ),
@@ -556,7 +595,7 @@ Widget _totalRow(String label, String amount) => Padding(
       Text(
         amount,
         style: const TextStyle(
-          color: AppColors.textMuted,
+          color: _textMuted,
           fontSize: 11.5,
           fontFamily: 'Inter',
         ),
@@ -568,80 +607,9 @@ Widget _totalRow(String label, String amount) => Padding(
 Widget _preWrapText(String text) => Text(
   text,
   style: const TextStyle(
-    color: AppColors.textMuted,
+    color: _textMuted,
     fontSize: 11.5,
     height: 1.55,
     fontFamily: 'Inter',
   ),
 );
-
-class _BankSection extends StatelessWidget {
-  const _BankSection({required this.bank});
-
-  final Map<String, dynamic> bank;
-
-  static const _fields = [
-    ('bank_name', 'Bank'),
-    ('account_holder', 'Name'),
-    ('account_number', 'Account No'),
-    ('iban', 'IBAN'),
-    ('swift_bic', 'SWIFT/BIC'),
-    ('routing_number', 'Routing'),
-    ('ifsc', 'IFSC'),
-    ('currency', 'Currency'),
-    ('country', 'Country'),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF111111),
-        border: Border.all(color: const Color(0xFF222222)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'BANK TRANSFER DETAILS',
-            style: TextStyle(
-              color: AppColors.accent,
-              fontSize: 9,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.2,
-              fontFamily: 'Inter',
-            ),
-          ),
-          const SizedBox(height: 8),
-          for (final (key, label) in _fields)
-            if (bank[key] != null && '${bank[key]}'.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: Text.rich(
-                  TextSpan(
-                    text: '$label  ',
-                    style: const TextStyle(
-                      color: Color(0xFFAAAAAA),
-                      fontSize: 10.5,
-                      fontFamily: 'Inter',
-                    ),
-                    children: [
-                      TextSpan(
-                        text: '${bank[key]}',
-                        style: const TextStyle(
-                          color: Color(0xFFE0E0E0),
-                          fontSize: 10.5,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-        ],
-      ),
-    );
-  }
-}
