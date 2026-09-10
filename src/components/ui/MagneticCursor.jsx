@@ -45,11 +45,11 @@ export default function MagneticCursor() {
     document.documentElement.classList.add("no-native-cursor");
     gsap.set(el, { x: -9999, y: -9999 });
     quickX.current = gsap.quickTo(el, "x", {
-      duration: 0.22,
+      duration: 0.18,
       ease: "power3.out",
     });
     quickY.current = gsap.quickTo(el, "y", {
-      duration: 0.22,
+      duration: 0.18,
       ease: "power3.out",
     });
 
@@ -80,15 +80,15 @@ export default function MagneticCursor() {
       hoveredRef.current = true;
 
       const magnetize = (me) => {
-        const dx = (me.clientX - cx) * 0.3;
-        const dy = (me.clientY - cy) * 0.3;
-        gsap.to(t, { x: dx, y: dy, duration: 0.3, ease: "power2.out" });
+        const dx = (me.clientX - cx) * 0.25;
+        const dy = (me.clientY - cy) * 0.25;
+        gsap.to(t, { x: dx, y: dy, duration: 0.35, ease: "power2.out" });
       };
 
       const onLeave = () => {
         setIsHovered(false);
         hoveredRef.current = false;
-        gsap.to(t, { x: 0, y: 0, duration: 0.4, ease: "power3.out" });
+        gsap.to(t, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });
         t.removeEventListener("mousemove", magnetize);
         t.removeEventListener("mouseleave", onLeave);
       };
@@ -100,12 +100,17 @@ export default function MagneticCursor() {
     window.addEventListener("mousemove", onMove, { passive: true });
 
     const onInteractDown = () => {
+      gsap.to(el, { scale: 0.85, duration: 0.15, ease: "power2.out" });
       if (hoveredRef.current) {
         setIsHovered(false);
         hoveredRef.current = false;
       }
     };
+    const onInteractUp = () => {
+      gsap.to(el, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.4)" });
+    };
     window.addEventListener("mousedown", onInteractDown, { passive: true });
+    window.addEventListener("mouseup", onInteractUp, { passive: true });
 
     const onMouseLeave = () => {
       quickX.current(-9999);
@@ -144,6 +149,7 @@ export default function MagneticCursor() {
       document.documentElement.classList.remove("no-native-cursor");
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mousedown", onInteractDown);
+      window.removeEventListener("mouseup", onInteractUp);
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
       observer.disconnect();
@@ -178,7 +184,7 @@ export default function MagneticCursor() {
           opacity: isHovered ? 0 : 1,
           transform: isHovered ? "scale(0)" : "scale(1)",
           transformOrigin: "center center",
-          transition: "opacity 0.15s ease, transform 0.15s ease",
+          transition: "opacity 0.2s ease, transform 0.2s ease",
         }}
       >
         <svg
@@ -212,7 +218,7 @@ export default function MagneticCursor() {
           opacity: isHovered ? 1 : 0,
           transform: isHovered ? "scale(1)" : "scale(0)",
           transformOrigin: "center center",
-          transition: "opacity 0.18s ease, transform 0.18s ease",
+          transition: "opacity 0.25s ease, transform 0.25s ease",
         }}
       >
         <span
