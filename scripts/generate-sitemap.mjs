@@ -146,6 +146,20 @@ Disallow: /login
 Disallow: /editor
 Disallow: /*?q=
 
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /editor
+Disallow: /*?q=
+
 Sitemap: ${SITE_URL}/sitemap.xml
 `;
 

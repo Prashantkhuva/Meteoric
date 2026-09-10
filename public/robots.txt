@@ -83,11 +83,4 @@ Disallow: /login
 Disallow: /editor
 Disallow: /*?q=
 
-User-agent: anthropic-ai
-Allow: /
-Disallow: /admin
-Disallow: /login
-Disallow: /editor
-Disallow: /*?q=
-
 Sitemap: https://withmeteoric.com/sitemap.xml
