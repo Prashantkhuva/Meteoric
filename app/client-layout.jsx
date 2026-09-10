@@ -85,7 +85,7 @@ export default function ClientLayout({ children }) {
       {isAdmin ? (
         children
       ) : (
-        <main ref={contentRef} id="main-content">
+        <main ref={contentRef} id="main-content" className="bg-[#070707]">
           {children}
         </main>
       )}

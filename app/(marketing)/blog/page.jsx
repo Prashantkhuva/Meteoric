@@ -84,13 +84,13 @@ export default function BlogIndex() {
               {pageDesc}
             </p>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
               {blogTags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-mono tracking-wider text-white/25 bg-white/[0.015] border border-white/[0.05] rounded-full hover:bg-[#EAEFFF]/[0.04] hover:text-[#EAEFFF]/50 hover:border-[#EAEFFF]/[0.1] transition-all duration-300 cursor-default"
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-mono tracking-wider text-white/20 bg-white/[0.015] border border-white/[0.04] rounded-full hover:bg-[#EAEFFF]/[0.03] hover:text-[#EAEFFF]/40 hover:border-[#EAEFFF]/[0.08] transition-all duration-300 cursor-default"
                 >
-                  <span className="text-[#EAEFFF]/25 text-[9px]">{getIcon(tag)}</span>
+                  <span className="text-[#EAEFFF]/20 text-[8px]">{getIcon(tag)}</span>
                   {tag}
                 </span>
               ))}
