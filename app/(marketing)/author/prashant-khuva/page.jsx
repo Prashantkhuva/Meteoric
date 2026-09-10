@@ -166,7 +166,7 @@ export default function AuthorPage() {
               {authorData.credentials.map((cred, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-xl bg-[#0a0a0a] border border-white/[0.06]"
+                  className="p-4 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06]"
                 >
                   <div className="text-[13px] text-white/40">{cred}</div>
                 </div>
@@ -186,7 +186,7 @@ export default function AuthorPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                  className="group block p-6 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
