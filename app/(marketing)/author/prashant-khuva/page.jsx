@@ -99,7 +99,7 @@ export default function AuthorPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <article className="min-h-screen bg-[#070707] text-white">
+      <article className="min-h-screen bg-black text-white">
         <div className="fixed top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-[#EAEFFF]/[0.015] via-transparent to-transparent pointer-events-none" />
         <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-32 pb-24">
           <div className="mb-12">
