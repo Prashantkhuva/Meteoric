@@ -20,6 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _role = '';
   bool _editingProfile = false;
   bool _editingPassword = false;
+  int _runtimePatch = AppVersion.patch;
 
   late final TextEditingController _name;
   late final TextEditingController _email;
@@ -42,6 +43,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadRole();
     // Listen to shared update state so UI rebuilds when HomeShell triggers a check
     UpdateState.instance.addListener(_onUpdateState);
+    _loadRuntimePatch();
+  }
+
+  Future<void> _loadRuntimePatch() async {
+    final p = await AppVersion.runtimePatch;
+    if (mounted) setState(() => _runtimePatch = p);
   }
 
   @override
@@ -365,9 +372,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             child: Column(
               children: [
-                _infoRow('Version', AppVersion.display),
+                _infoRow('Version', _runtimePatch > 0 ? '${AppVersion.version} (patch $_runtimePatch)' : AppVersion.display),
                 _divider(),
-                _infoRow('Build', 'Patch ${AppVersion.patch}'),
+                _infoRow('Build', 'Patch $_runtimePatch'),
                 _divider(),
                 _infoRow('Updated', AppVersion.updatedAt),
               ],
