@@ -1286,7 +1286,10 @@ export async function getLeadsPaginated(params) {
   query = query.range(from, from + pageSize - 1);
 
   const { data, count, error } = await query;
-  if (error) return { data: [], total: 0 };
+  if (error) {
+    console.error("getLeadsPaginated error:", error.message);
+    return { data: [], total: 0, error: error.message };
+  }
   return { data: data || [], total: count || 0 };
 }
 
@@ -1303,7 +1306,10 @@ export async function getClientsPaginated(params) {
   query = query.range(from, from + pageSize - 1);
 
   const { data, count, error } = await query;
-  if (error) return { data: [], total: 0 };
+  if (error) {
+    console.error("getClientsPaginated error:", error.message);
+    return { data: [], total: 0, error: error.message };
+  }
   return { data: data || [], total: count || 0 };
 }
 
@@ -1314,7 +1320,14 @@ export async function getProposalsPaginated(params) {
   let query = supabase
     .from("proposals")
     .select("*, lead:leads(name, email, phone, company)", { count: "exact" });
-  if (search) query = query.or(`title.ilike.%${sanitizeSearch(search)}%,lead.name.ilike.%${sanitizeSearch(search)}%`);
+  if (search) {
+    const s = sanitizeSearch(search);
+    try {
+      query = query.or(`title.ilike.%${s}%,lead.name.ilike.%${s}%`);
+    } catch {
+      query = query.ilike("title", `%${s}%`);
+    }
+  }
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -1322,7 +1335,10 @@ export async function getProposalsPaginated(params) {
   query = query.range(from, from + pageSize - 1);
 
   const { data, count, error } = await query;
-  if (error) return { data: [], total: 0 };
+  if (error) {
+    console.error("getProposalsPaginated error:", error.message);
+    return { data: [], total: 0, error: error.message };
+  }
   return { data: data || [], total: count || 0 };
 }
 
@@ -1333,7 +1349,14 @@ export async function getInvoicesPaginated(params) {
   let query = supabase
     .from("invoices")
     .select("*, client:clients(name, email, phone, company), proposal:proposals(id, title), bank_account:bank_accounts(*)", { count: "exact" });
-  if (search) query = query.or(`invoice_number.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`);
+  if (search) {
+    const s = sanitizeSearch(search);
+    try {
+      query = query.or(`invoice_number.ilike.%${s}%,client.name.ilike.%${s}%`);
+    } catch {
+      query = query.ilike("invoice_number", `%${s}%`);
+    }
+  }
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -1341,7 +1364,10 @@ export async function getInvoicesPaginated(params) {
   query = query.range(from, from + pageSize - 1);
 
   const { data, count, error } = await query;
-  if (error) return { data: [], total: 0 };
+  if (error) {
+    console.error("getInvoicesPaginated error:", error.message);
+    return { data: [], total: 0, error: error.message };
+  }
   return { data: data || [], total: count || 0 };
 }
 
@@ -1384,7 +1410,14 @@ export async function getProjectsPaginated(params) {
   let query = supabase
     .from("projects")
     .select("*, client:clients(name, email, company)", { count: "exact" });
-  if (search) query = query.or(`name.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`);
+  if (search) {
+    const s = sanitizeSearch(search);
+    try {
+      query = query.or(`name.ilike.%${s}%,client.name.ilike.%${s}%`);
+    } catch {
+      query = query.ilike("name", `%${s}%`);
+    }
+  }
   if (status !== "all") query = query.eq("status", status);
   const order = resolveOrder(col, dir, sort);
   query = query.order(order.column, { ascending: order.ascending });
@@ -1392,7 +1425,10 @@ export async function getProjectsPaginated(params) {
   query = query.range(from, from + pageSize - 1);
 
   const { data, count, error } = await query;
-  if (error) return { data: [], total: 0 };
+  if (error) {
+    console.error("getProjectsPaginated error:", error.message);
+    return { data: [], total: 0, error: error.message };
+  }
   return { data: data || [], total: count || 0 };
 }
 
