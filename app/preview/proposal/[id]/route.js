@@ -182,6 +182,45 @@ body { background: #f5f5f5; padding: 40px 20px; font-family: 'Inter', -apple-sys
   </div>
 
   ${
+    Array.isArray(proposal.pricing) && proposal.pricing.length > 0
+      ? (() => {
+          let subtotal = 0;
+          const rows = proposal.pricing.map((item) => {
+            const qty = Number(item?.quantity) || 1;
+            const rate = Number(item?.rate) || 0;
+            const lineTotal = qty * rate;
+            subtotal += lineTotal;
+            return `<tr><td>${esc(item?.description || "")}</td><td style="text-align:center">${qty}</td><td style="text-align:right">$${rate.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td><td style="text-align:right;font-weight:600">$${lineTotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td></tr>`;
+          }).join("");
+          return `
+  <div class="footer">
+    <h4>Pricing</h4>
+    <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;color:#4b5563">
+      <thead>
+        <tr style="border-bottom:1px solid #e5e7eb">
+          <th style="text-align:left;padding:6px 0;font-weight:600;color:#111827">Description</th>
+          <th style="text-align:center;padding:6px 8px;font-weight:600;color:#111827">Qty</th>
+          <th style="text-align:right;padding:6px 8px;font-weight:600;color:#111827">Rate</th>
+          <th style="text-align:right;padding:6px 0;font-weight:600;color:#111827">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+      <tfoot>
+        <tr style="border-top:2px solid #111827">
+          <td colspan="3" style="text-align:right;padding:8px 0;font-weight:700;color:#111827">Total</td>
+          <td style="text-align:right;padding:8px 0;font-weight:700;color:#111827;font-size:15px">$${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  `;
+        })()
+      : ""
+  }
+
+  ${
     proposal.timeline
       ? `
   <div class="footer">
