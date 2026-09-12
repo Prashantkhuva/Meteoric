@@ -25,7 +25,9 @@ class _EmailScreenState extends State<EmailScreen> {
           children: [
             Material(
               color: AppColors.card,
+              borderRadius: AppRadius.mdAll,
               child: InkWell(
+                borderRadius: AppRadius.mdAll,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -36,6 +38,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
+                    borderRadius: AppRadius.mdAll,
                     border: Border.all(color: AppColors.border),
                   ),
                   child: const Row(
@@ -70,7 +73,9 @@ class _EmailScreenState extends State<EmailScreen> {
             const SizedBox(height: 8),
             Material(
               color: AppColors.card,
+              borderRadius: AppRadius.mdAll,
               child: InkWell(
+                borderRadius: AppRadius.mdAll,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const SentEmailsScreen()),
@@ -79,6 +84,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
+                    borderRadius: AppRadius.mdAll,
                     border: Border.all(color: AppColors.border),
                   ),
                   child: const Row(

@@ -10,11 +10,14 @@ import '../../core/notification_state.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/error_views.dart';
+import '../../shared/widgets/skeleton.dart';
+import '../clients/clients_screen.dart';
 import '../clients/client_detail_screen.dart';
 import '../home/home_tab.dart';
 import '../invoices/invoice_detail_screen.dart';
 import '../leads/lead_detail_screen.dart';
 import '../notifications/notifications_screen.dart';
+import '../projects/projects_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -103,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: _loading
-          ? const LoadingView()
+          ? const SkeletonDetail()
           : _error != null
           ? ErrorStateView(error: _error, onRetry: () => _load())
           : _buildContent(),
@@ -192,7 +195,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             title: 'RECENT CLIENTS',
             kind: 'client',
             items: (stats['recentClients'] as List?) ?? const [],
-            onViewAll: () => homeTab.value = 2,
+            onViewAll: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ClientsScreen()),
+            ),
             onOpen: (item) => _open((_) => ClientDetailScreen(client: item)),
           ),
           const SizedBox(height: 16),
@@ -688,19 +693,24 @@ class _StatStrip extends StatelessWidget {
         label: 'CLIENTS',
         value: '${stats['totalClients'] ?? 0}',
         sub: _mom(clientsMom.toDouble(), 'clients'),
-        onTap: () => homeTab.value = 2,
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const ClientsScreen()),
+        ),
       ),
       (
         label: 'PROJECTS',
         value: '${stats['totalProjects'] ?? 0}',
         sub: '${stats['activeProjects'] ?? 0} active',
-        onTap: () => homeTab.value = 3,
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const ProjectsScreen()),
+        ),
       ),
     ];
 
     return Container(
       decoration: BoxDecoration(
         color: AppColors.card,
+        borderRadius: AppRadius.mdAll,
         border: Border.all(color: AppColors.border),
       ),
       child: Row(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
+export '../core/theme.dart' show AppRadius, AppSpacing, AppShadows;
 
 class StatusMeta {
   const StatusMeta(this.label, this.color);
@@ -93,6 +94,7 @@ class StatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: meta.color.withValues(alpha: 0.35)),
         color: meta.color.withValues(alpha: 0.08),
+        borderRadius: AppRadius.smAll,
       ),
       child: Text(
         meta.label.toUpperCase(),

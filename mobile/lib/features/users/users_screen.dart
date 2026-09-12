@@ -4,7 +4,7 @@ import '../../core/api_client.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
-import '../../shared/widgets/common.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/filter_bar.dart';
 
 class UsersScreen extends StatefulWidget {
@@ -156,10 +156,7 @@ class _UsersScreenState extends State<UsersScreen> {
             onPressed: () => Navigator.pop(ctx, false),
             child: const Text(
               'Cancel',
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontFamily: 'Inter',
-              ),
+              style: TextStyle(color: AppColors.textMuted, fontFamily: 'Inter'),
             ),
           ),
           TextButton(
@@ -181,9 +178,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
     setState(() => _deletingFor = userId);
     try {
-      final res = await ApiClient.instance.usersDelete({
-        'userId': userId,
-      });
+      final res = await ApiClient.instance.usersDelete({'userId': userId});
       if (!mounted) return;
       if (res['error'] != null) {
         Toast.error(context, res['error']);
@@ -203,10 +198,12 @@ class _UsersScreenState extends State<UsersScreen> {
       isScrollControlled: true,
       backgroundColor: AppColors.cardRaised,
       shape: const RoundedRectangleBorder(),
-      builder: (_) => _InviteSheet(onInvited: () {
-        Navigator.pop(context);
-        _loadUsers();
-      }),
+      builder: (_) => _InviteSheet(
+        onInvited: () {
+          Navigator.pop(context);
+          _loadUsers();
+        },
+      ),
     );
   }
 
@@ -238,8 +235,9 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final filtered = _filteredUsers;
-    final superadminCount =
-        _users.where((u) => u['role'] == 'superadmin').length;
+    final superadminCount = _users
+        .where((u) => u['role'] == 'superadmin')
+        .length;
     final adminCount = _users.where((u) => u['role'] == 'admin').length;
     final speakerCount = _users.where((u) => u['role'] == 'speaker').length;
 
@@ -257,153 +255,152 @@ class _UsersScreenState extends State<UsersScreen> {
         ],
       ),
       body: _loading
-          ? const LoadingView()
+          ? const SkeletonList()
           : _users.isEmpty
-              ? _buildEmptyState()
-              : Column(
-                  children: [
-                    // Summary bar
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                      child: Row(
-                        children: [
-                          Text(
-                            '${_users.length} member${_users.length != 1 ? 's' : ''}',
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          if (superadminCount > 0)
-                            _SummaryDot(
-                                label: '$superadminCount superadmin',
-                                color: AppColors.accent),
-                          if (adminCount > 0) ...[
-                            const SizedBox(width: 6),
-                            _SummaryDot(
-                                label: '$adminCount admin',
-                                color: AppColors.emerald),
-                          ],
-                          if (speakerCount > 0) ...[
-                            const SizedBox(width: 6),
-                            _SummaryDot(
-                                label: '$speakerCount speaker',
-                                color: AppColors.textMuted),
-                          ],
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    // Search
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextField(
-                        controller: _search,
-                        onChanged: (_) => setState(() {}),
+          ? _buildEmptyState()
+          : Column(
+              children: [
+                // Summary bar
+                Container(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${_users.length} member${_users.length != 1 ? 's' : ''}',
                         style: const TextStyle(
-                          color: AppColors.text,
-                          fontSize: 14,
+                          color: AppColors.textMuted,
+                          fontSize: 12,
                           fontFamily: 'Inter',
                         ),
-                        decoration: InputDecoration(
-                          hintText: 'Search name, email...',
-                          hintStyle: const TextStyle(
-                            color: AppColors.textFaint,
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            size: 18,
-                            color: AppColors.textFaint,
-                          ),
-                          suffixIcon: _search.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(
-                                    Icons.close,
-                                    size: 16,
-                                    color: AppColors.textMuted,
-                                  ),
-                                  onPressed: () {
-                                    _search.clear();
-                                    setState(() {});
-                                  },
-                                )
-                              : null,
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide:
-                                BorderSide(color: AppColors.border),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide:
-                                BorderSide(color: AppColors.border),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide: BorderSide(
-                                color: AppColors.accent.withValues(alpha: 0.3)),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.card,
-                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    // Role filter pills
-                    FilterBar(
-                      groups: [
-                        FilterGroup(
-                          key: 'role',
-                          label: 'Role',
-                          options: _roleOptions,
+                      const SizedBox(width: 8),
+                      if (superadminCount > 0)
+                        _SummaryDot(
+                          label: '$superadminCount superadmin',
+                          color: AppColors.accent,
+                        ),
+                      if (adminCount > 0) ...[
+                        const SizedBox(width: 6),
+                        _SummaryDot(
+                          label: '$adminCount admin',
+                          color: AppColors.emerald,
                         ),
                       ],
-                      values: {'role': _roleFilter},
-                      onChanged: (v) =>
-                          setState(() => _roleFilter = v['role'] ?? 'all'),
+                      if (speakerCount > 0) ...[
+                        const SizedBox(width: 6),
+                        _SummaryDot(
+                          label: '$speakerCount speaker',
+                          color: AppColors.textMuted,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Search
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    controller: _search,
+                    onChanged: (_) => setState(() {}),
+                    style: const TextStyle(
+                      color: AppColors.text,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
                     ),
-                    // User list
-                    Expanded(
-                      child: filtered.isEmpty
-                          ? _buildNoResults()
-                          : RefreshIndicator(
-                              onRefresh: _loadUsers,
-                              child: ListView.separated(
-                                padding: const EdgeInsets.all(16),
-                                itemCount: filtered.length,
-                                separatorBuilder: (_, _) =>
-                                    const SizedBox(height: 8),
-                                itemBuilder: (context, i) => _UserTile(
-                                  user: filtered[i],
-                                  canManage: _canManageUsers,
-                                  isSuperadmin: _isSuperadmin,
-                                  currentUserId: _currentUserId,
-                                  changing:
-                                      _changingRoleFor == filtered[i]['id'],
-                                  resending:
-                                      _resendingFor == filtered[i]['id'],
-                                  deleting:
-                                      _deletingFor == filtered[i]['id'],
-                                  onRoleChanged: (role) =>
-                                      _changeRole(filtered[i]['id'], role),
-                                  onResend: () =>
-                                      _resendInvite(filtered[i]['id']),
-                                  onDelete: () =>
-                                      _deleteUser(filtered[i]),
-                                  onTap: () => _openDetail(filtered[i]),
-                                ),
+                    decoration: InputDecoration(
+                      hintText: 'Search name, email...',
+                      hintStyle: const TextStyle(
+                        color: AppColors.textFaint,
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        size: 18,
+                        color: AppColors.textFaint,
+                      ),
+                      suffixIcon: _search.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                                size: 16,
+                                color: AppColors.textMuted,
                               ),
-                            ),
+                              onPressed: () {
+                                _search.clear();
+                                setState(() {});
+                              },
+                            )
+                          : null,
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: AppRadius.mdAll,
+                        borderSide: BorderSide(color: AppColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: AppRadius.mdAll,
+                        borderSide: BorderSide(color: AppColors.border),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: AppRadius.mdAll,
+                        borderSide: BorderSide(
+                          color: AppColors.accent.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.card,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Role filter pills
+                FilterBar(
+                  groups: [
+                    FilterGroup(
+                      key: 'role',
+                      label: 'Role',
+                      options: _roleOptions,
                     ),
                   ],
+                  values: {'role': _roleFilter},
+                  onChanged: (v) =>
+                      setState(() => _roleFilter = v['role'] ?? 'all'),
                 ),
+                // User list
+                Expanded(
+                  child: filtered.isEmpty
+                      ? _buildNoResults()
+                      : RefreshIndicator(
+                          onRefresh: _loadUsers,
+                          child: ListView.separated(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: filtered.length,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(height: 8),
+                            itemBuilder: (context, i) => _UserTile(
+                              user: filtered[i],
+                              canManage: _canManageUsers,
+                              isSuperadmin: _isSuperadmin,
+                              currentUserId: _currentUserId,
+                              changing: _changingRoleFor == filtered[i]['id'],
+                              resending: _resendingFor == filtered[i]['id'],
+                              deleting: _deletingFor == filtered[i]['id'],
+                              onRoleChanged: (role) =>
+                                  _changeRole(filtered[i]['id'], role),
+                              onResend: () => _resendInvite(filtered[i]['id']),
+                              onDelete: () => _deleteUser(filtered[i]),
+                              onTap: () => _openDetail(filtered[i]),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
     );
   }
 
@@ -535,11 +532,7 @@ class _SummaryDot extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 4,
-          height: 4,
-          decoration: BoxDecoration(color: color),
-        ),
+        Container(width: 4, height: 4, decoration: BoxDecoration(color: color)),
         const SizedBox(width: 4),
         Text(
           label,
@@ -604,8 +597,8 @@ class _UserTile extends StatelessWidget {
     final initial = name.isNotEmpty
         ? name[0].toUpperCase()
         : email.isNotEmpty
-            ? email[0].toUpperCase()
-            : '?';
+        ? email[0].toUpperCase()
+        : '?';
     final color = _roleColors[role] ?? AppColors.textFaint;
     final canDelete = isSuperadmin && user['id'] != currentUserId;
     final canEditRole = canManage && role.isNotEmpty;
@@ -614,6 +607,7 @@ class _UserTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
+          borderRadius: AppRadius.mdAll,
           color: AppColors.card,
           border: Border.all(color: AppColors.border),
         ),
@@ -678,17 +672,19 @@ class _UserTile extends StatelessWidget {
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
                                 color: onboarded
                                     ? AppColors.emerald.withValues(alpha: 0.1)
                                     : AppColors.amber.withValues(alpha: 0.1),
                                 border: Border.all(
                                   color: onboarded
-                                      ? AppColors.emerald
-                                          .withValues(alpha: 0.25)
-                                      : AppColors.amber
-                                          .withValues(alpha: 0.25),
+                                      ? AppColors.emerald.withValues(
+                                          alpha: 0.25,
+                                        )
+                                      : AppColors.amber.withValues(alpha: 0.25),
                                 ),
                               ),
                               child: Row(
@@ -736,17 +732,21 @@ class _UserTile extends StatelessWidget {
                                 width: 14,
                                 height: 14,
                                 child: CircularProgressIndicator(
-                                    strokeWidth: 1.5),
+                                  strokeWidth: 1.5,
+                                ),
                               )
                             : GestureDetector(
                                 onTap: () => _showRolePicker(context),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: color.withValues(alpha: 0.08),
                                     border: Border.all(
-                                        color: color.withValues(alpha: 0.2)),
+                                      color: color.withValues(alpha: 0.2),
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -754,8 +754,7 @@ class _UserTile extends StatelessWidget {
                                       Container(
                                         width: 5,
                                         height: 5,
-                                        decoration:
-                                            BoxDecoration(color: color),
+                                        decoration: BoxDecoration(color: color),
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
@@ -781,11 +780,14 @@ class _UserTile extends StatelessWidget {
                       else
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: color.withValues(alpha: 0.08),
                             border: Border.all(
-                                color: color.withValues(alpha: 0.2)),
+                              color: color.withValues(alpha: 0.2),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -821,7 +823,8 @@ class _UserTile extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 10),
                   decoration: const BoxDecoration(
                     border: Border(
-                        top: BorderSide(color: AppColors.borderSoft)),
+                      top: BorderSide(color: AppColors.borderSoft),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -831,7 +834,8 @@ class _UserTile extends StatelessWidget {
                                 width: 12,
                                 height: 12,
                                 child: CircularProgressIndicator(
-                                    strokeWidth: 1),
+                                  strokeWidth: 1,
+                                ),
                               )
                             : GestureDetector(
                                 onTap: onResend,
@@ -863,8 +867,9 @@ class _UserTile extends StatelessWidget {
                                 width: 12,
                                 height: 12,
                                 child: CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    color: AppColors.red),
+                                  strokeWidth: 1,
+                                  color: AppColors.red,
+                                ),
                               )
                             : GestureDetector(
                                 onTap: onDelete,
@@ -930,8 +935,11 @@ class _UserTile extends StatelessWidget {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.close,
-                        size: 18, color: AppColors.textMuted),
+                    icon: const Icon(
+                      Icons.close,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
                     onPressed: () => Navigator.pop(ctx),
                   ),
                 ],
@@ -945,10 +953,13 @@ class _UserTile extends StatelessWidget {
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 14),
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   decoration: const BoxDecoration(
                     border: Border(
-                        bottom: BorderSide(color: AppColors.borderSoft)),
+                      bottom: BorderSide(color: AppColors.borderSoft),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -956,7 +967,8 @@ class _UserTile extends StatelessWidget {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _UserTile._roleColors[entry.key] ??
+                          color:
+                              _UserTile._roleColors[entry.key] ??
                               AppColors.textFaint,
                         ),
                       ),
@@ -977,8 +989,11 @@ class _UserTile extends StatelessWidget {
                         ),
                       ),
                       if (entry.key == role)
-                        const Icon(Icons.check_rounded,
-                            size: 18, color: AppColors.accent),
+                        const Icon(
+                          Icons.check_rounded,
+                          size: 18,
+                          color: AppColors.accent,
+                        ),
                     ],
                   ),
                 ),
@@ -1048,8 +1063,8 @@ class _UserDetailScreen extends StatelessWidget {
     final initial = name.isNotEmpty
         ? name[0].toUpperCase()
         : email.isNotEmpty
-            ? email[0].toUpperCase()
-            : '?';
+        ? email[0].toUpperCase()
+        : '?';
     final color = _roleColors[role] ?? AppColors.textFaint;
     final canDelete = isSuperadmin && user['id'] != currentUserId;
     final createdAt = user['created_at'] as String?;
@@ -1058,12 +1073,27 @@ class _UserDetailScreen extends StatelessWidget {
       try {
         final dt = DateTime.parse(createdAt);
         final months = [
-          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
         ];
         final days = [
-          'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-          'Friday', 'Saturday', 'Sunday'
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
         ];
         formattedDate =
             '${days[dt.weekday - 1]}, ${months[dt.month - 1]} ${dt.day}, ${dt.year}';
@@ -1085,8 +1115,11 @@ class _UserDetailScreen extends StatelessWidget {
           if (canDelete)
             IconButton(
               onPressed: onDelete,
-              icon: const Icon(Icons.delete_outline,
-                  size: 20, color: AppColors.red),
+              icon: const Icon(
+                Icons.delete_outline,
+                size: 20,
+                color: AppColors.red,
+              ),
               tooltip: 'Delete user',
             ),
         ],
@@ -1158,7 +1191,9 @@ class _UserDetailScreen extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 5),
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.08),
                       border: Border.all(color: color.withValues(alpha: 0.2)),
@@ -1219,8 +1254,7 @@ class _UserDetailScreen extends StatelessWidget {
                   Text(
                     onboarded ? 'Active' : 'Pending',
                     style: TextStyle(
-                      color:
-                          onboarded ? AppColors.emerald : AppColors.amber,
+                      color: onboarded ? AppColors.emerald : AppColors.amber,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'Inter',
@@ -1273,8 +1307,7 @@ class _UserDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (final perm
-                      in _rolePermissions[role] ?? []) ...[
+                  for (final perm in _rolePermissions[role] ?? []) ...[
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Row(
@@ -1283,7 +1316,8 @@ class _UserDetailScreen extends StatelessWidget {
                             width: 3,
                             height: 3,
                             decoration: const BoxDecoration(
-                                color: AppColors.textFaint),
+                              color: AppColors.textFaint,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -1337,7 +1371,8 @@ class _UserDetailScreen extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.red,
                     side: BorderSide(
-                        color: AppColors.red.withValues(alpha: 0.3)),
+                      color: AppColors.red.withValues(alpha: 0.3),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: const RoundedRectangleBorder(),
                     textStyle: const TextStyle(
@@ -1386,8 +1421,11 @@ class _UserDetailScreen extends StatelessWidget {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.close,
-                        size: 18, color: AppColors.textMuted),
+                    icon: const Icon(
+                      Icons.close,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
                     onPressed: () => Navigator.pop(ctx),
                   ),
                 ],
@@ -1401,10 +1439,13 @@ class _UserDetailScreen extends StatelessWidget {
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 14),
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   decoration: const BoxDecoration(
                     border: Border(
-                        bottom: BorderSide(color: AppColors.borderSoft)),
+                      bottom: BorderSide(color: AppColors.borderSoft),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -1412,8 +1453,7 @@ class _UserDetailScreen extends StatelessWidget {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _roleColors[entry.key] ??
-                              AppColors.textFaint,
+                          color: _roleColors[entry.key] ?? AppColors.textFaint,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -1433,8 +1473,11 @@ class _UserDetailScreen extends StatelessWidget {
                         ),
                       ),
                       if (entry.key == role)
-                        const Icon(Icons.check_rounded,
-                            size: 18, color: AppColors.accent),
+                        const Icon(
+                          Icons.check_rounded,
+                          size: 18,
+                          color: AppColors.accent,
+                        ),
                     ],
                   ),
                 ),
@@ -1460,6 +1503,7 @@ class _InfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
+        borderRadius: AppRadius.mdAll,
         color: AppColors.card,
         border: Border.all(color: AppColors.border),
       ),
@@ -1557,7 +1601,11 @@ class _InviteSheetState extends State<_InviteSheet> {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+        20,
+        20,
+        20,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1572,7 +1620,8 @@ class _InviteSheetState extends State<_InviteSheet> {
                   decoration: BoxDecoration(
                     color: AppColors.accent.withValues(alpha: 0.08),
                     border: Border.all(
-                        color: AppColors.accent.withValues(alpha: 0.2)),
+                      color: AppColors.accent.withValues(alpha: 0.2),
+                    ),
                   ),
                   child: const Icon(
                     Icons.person_add_outlined,
@@ -1616,7 +1665,10 @@ class _InviteSheetState extends State<_InviteSheet> {
               controller: _name,
               enabled: !_busy,
               style: const TextStyle(
-                  color: AppColors.text, fontSize: 14, fontFamily: 'Inter'),
+                color: AppColors.text,
+                fontSize: 14,
+                fontFamily: 'Inter',
+              ),
               decoration: _input(),
             ),
             const SizedBox(height: 14),
@@ -1628,7 +1680,10 @@ class _InviteSheetState extends State<_InviteSheet> {
               enabled: !_busy,
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(
-                  color: AppColors.text, fontSize: 14, fontFamily: 'Inter'),
+                color: AppColors.text,
+                fontSize: 14,
+                fontFamily: 'Inter',
+              ),
               decoration: _input(),
             ),
             const SizedBox(height: 14),
@@ -1638,8 +1693,10 @@ class _InviteSheetState extends State<_InviteSheet> {
             GestureDetector(
               onTap: _busy ? null : _showRolePicker,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.border),
                 ),
@@ -1742,8 +1799,11 @@ class _InviteSheetState extends State<_InviteSheet> {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.close,
-                        size: 18, color: AppColors.textMuted),
+                    icon: const Icon(
+                      Icons.close,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
                     onPressed: () => Navigator.pop(ctx),
                   ),
                 ],
@@ -1757,10 +1817,13 @@ class _InviteSheetState extends State<_InviteSheet> {
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 14),
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   decoration: const BoxDecoration(
                     border: Border(
-                        bottom: BorderSide(color: AppColors.borderSoft)),
+                      bottom: BorderSide(color: AppColors.borderSoft),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -1801,8 +1864,11 @@ class _InviteSheetState extends State<_InviteSheet> {
                         ),
                       ),
                       if (entry.key == _role)
-                        const Icon(Icons.check_rounded,
-                            size: 18, color: AppColors.accent),
+                        const Icon(
+                          Icons.check_rounded,
+                          size: 18,
+                          color: AppColors.accent,
+                        ),
                     ],
                   ),
                 ),
@@ -1815,34 +1881,33 @@ class _InviteSheetState extends State<_InviteSheet> {
   }
 
   Widget _label(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: AppColors.textFaint,
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-            fontFamily: 'Inter',
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: AppColors.textFaint,
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 1.2,
+        fontFamily: 'Inter',
+      ),
+    ),
+  );
 
   InputDecoration _input() => InputDecoration(
-        isDense: true,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.zero,
-            borderSide: BorderSide(color: AppColors.border)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: BorderSide(color: AppColors.border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide:
-              BorderSide(color: AppColors.accent.withValues(alpha: 0.3)),
-        ),
-      );
+    isDense: true,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    border: OutlineInputBorder(
+      borderRadius: AppRadius.mdAll,
+      borderSide: BorderSide(color: AppColors.border),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: AppRadius.mdAll,
+      borderSide: BorderSide(color: AppColors.border),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: AppRadius.mdAll,
+      borderSide: BorderSide(color: AppColors.accent.withValues(alpha: 0.3)),
+    ),
+  );
 }

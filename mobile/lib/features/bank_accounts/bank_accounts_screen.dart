@@ -4,6 +4,7 @@ import '../../core/api_client.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/error_views.dart';
 import 'bank_account_form_screen.dart';
 
@@ -129,14 +130,14 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
         onPressed: () => _openForm(),
         backgroundColor: AppColors.accent,
         foregroundColor: const Color(0xFF121212),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
         child: const Icon(Icons.add),
       ),
     );
   }
 
   Widget _buildBody() {
-    if (_loading) return const LoadingView();
+    if (_loading) return const SkeletonList();
     if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_accounts.isEmpty) {
       return const EmptyState(
@@ -158,6 +159,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
           return Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
+              borderRadius: AppRadius.mdAll,
               border: Border.all(color: AppColors.border),
               color: AppColors.card,
             ),

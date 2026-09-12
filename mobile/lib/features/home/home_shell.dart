@@ -5,7 +5,8 @@ import '../../core/theme.dart';
 import '../../core/update_state.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../leads/leads_screen.dart';
-import '../clients/clients_screen.dart';
+import '../proposals/proposals_screen.dart';
+import '../invoices/invoices_screen.dart';
 import '../more/more_screen.dart';
 import 'home_tab.dart';
 
@@ -23,7 +24,8 @@ class _HomeShellState extends State<HomeShell> {
   static const _tabs = [
     DashboardScreen(),
     LeadsScreen(),
-    ClientsScreen(),
+    ProposalsScreen(),
+    InvoicesScreen(),
     MoreScreen(),
   ];
 
@@ -32,11 +34,8 @@ class _HomeShellState extends State<HomeShell> {
     super.initState();
     _updater.addListener(_onUpdateState);
     _notif.addListener(_onUpdateState);
-    // Start global notification polling (heads-up on every screen)
     _notif.startPolling();
-    // Check for updates on launch (fire-and-forget)
     _updater.checkForUpdate();
-    // Listen for forced upgrades — auto-start download
     _updater.addListener(_onForceUpgrade);
   }
 
@@ -77,19 +76,26 @@ class _HomeShellState extends State<HomeShell> {
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: index,
-            onTap: (i) => homeTab.value = i,
+            onTap: (i) {
+              Haptic.tap();
+              homeTab.value = i;
+            },
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.dashboard_outlined, size: 22),
-                label: 'Dashboard',
+                label: 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_search_outlined, size: 22),
                 label: 'Leads',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.people_outline, size: 22),
-                label: 'Clients',
+                icon: Icon(Icons.description_outlined, size: 22),
+                label: 'Proposals',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.receipt_long_outlined, size: 22),
+                label: 'Invoices',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.grid_view_outlined, size: 22),
@@ -189,7 +195,7 @@ class _HomeShellState extends State<HomeShell> {
             const SizedBox(height: 10),
             if (downloading)
               ClipRRect(
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: AppRadius.smAll,
                 child: LinearProgressIndicator(
                   value: (progress ?? 0).clamp(0.0, 1.0),
                   minHeight: 3,
@@ -209,7 +215,7 @@ class _HomeShellState extends State<HomeShell> {
                     foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: AppRadius.mdAll,
                     ),
                   ),
                   child: const Text(
@@ -226,7 +232,7 @@ class _HomeShellState extends State<HomeShell> {
             else
               SizedBox(
                 width: double.infinity,
-                child:               TextButton(
+                child: TextButton(
                   onPressed: _updater.downloadAndInstall,
                   style: TextButton.styleFrom(
                     backgroundColor: forced ? AppColors.red : AppColors.accent,
@@ -234,7 +240,7 @@ class _HomeShellState extends State<HomeShell> {
                         forced ? Colors.white : const Color(0xFF121212),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: AppRadius.mdAll,
                     ),
                   ),
                   child: Text(

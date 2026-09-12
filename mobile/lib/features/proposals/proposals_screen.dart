@@ -11,6 +11,7 @@ import '../../core/toast.dart';
 import '../../shared/widgets/bulk_actions_bar.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/error_views.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/csv_export.dart';
 import '../../shared/widgets/filter_bar.dart';
 import '../../shared/widgets/share_sheet.dart';
@@ -360,11 +361,14 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
       floatingActionButton: _selecting
           ? null
           : FloatingActionButton(
-              onPressed: () => _openForm(),
+              onPressed: () {
+                Haptic.tap();
+                _openForm();
+              },
               backgroundColor: AppColors.accent,
               foregroundColor: const Color(0xFF121212),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: AppRadius.mdAll,
               ),
               child: const Icon(Icons.add),
             ),
@@ -372,7 +376,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
   }
 
   Widget _buildList() {
-    if (_loading) return const LoadingView();
+    if (_loading) return const SkeletonList();
     if (_error != null) return ErrorStateView(error: _error, onRetry: _load);
     if (_proposals.isEmpty) {
       return const EmptyState(
@@ -467,12 +471,15 @@ class _ProposalCard extends StatelessWidget {
 
     return Material(
       color: selected ? AppColors.cardRaised : AppColors.card,
+      borderRadius: AppRadius.mdAll,
       child: InkWell(
+        borderRadius: AppRadius.mdAll,
         onTap: onTap,
         onLongPress: onLongPress,
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
+            borderRadius: AppRadius.mdAll,
             border: Border.all(
               color: selected
                   ? AppColors.accent.withValues(alpha: 0.5)

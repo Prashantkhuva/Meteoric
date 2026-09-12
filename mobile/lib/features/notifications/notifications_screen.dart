@@ -7,6 +7,7 @@ import '../../features/bookings/bookings_screen.dart';
 import '../../features/invoices/invoice_detail_screen.dart';
 import '../../features/home/home_tab.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/error_views.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -158,7 +159,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
       ),
       body: _loading
-          ? const LoadingView()
+          ? const SkeletonList()
           : _error != null
           ? ErrorStateView(error: _error, onRetry: () => _load())
           : RefreshIndicator(

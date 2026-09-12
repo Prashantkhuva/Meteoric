@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
-import '../proposals/proposals_screen.dart';
-import '../invoices/invoices_screen.dart';
+import '../clients/clients_screen.dart';
 import '../projects/projects_screen.dart';
 import '../reviews/reviews_screen.dart';
 import '../bookings/bookings_screen.dart';
@@ -36,8 +35,7 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   static const _baseItems = [
-    _Item('Proposals', Icons.description_outlined, ProposalsScreen()),
-    _Item('Invoices', Icons.receipt_long_outlined, InvoicesScreen()),
+    _Item('Clients', Icons.people_outline, ClientsScreen()),
     _Item('Projects', Icons.folder_outlined, ProjectsScreen()),
     _Item('Reviews', Icons.star_outline, ReviewsScreen()),
     _Item('Bookings', Icons.event_outlined, BookingsScreen()),
@@ -67,7 +65,9 @@ class _MoreScreenState extends State<MoreScreen> {
           final item = items[i];
           return Material(
             color: AppColors.card,
+            borderRadius: AppRadius.mdAll,
             child: InkWell(
+              borderRadius: AppRadius.mdAll,
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => item.screen));
@@ -76,6 +76,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.border),
+                  borderRadius: AppRadius.mdAll,
                 ),
                 child: Row(
                   children: [

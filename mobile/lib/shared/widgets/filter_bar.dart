@@ -50,7 +50,7 @@ class FilterBar extends StatelessWidget {
     final selected = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
       builder: (ctx) => _FilterSheet(group: group, current: current),
     );
     if (selected == null || selected == current) return;

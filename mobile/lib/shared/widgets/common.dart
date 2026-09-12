@@ -65,7 +65,9 @@ class KpiCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.card,
+        borderRadius: AppRadius.mdAll,
         border: Border.all(color: AppColors.border),
+        boxShadow: AppShadows.subtle,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,6 +96,7 @@ class KpiCard extends StatelessWidget {
                     border: Border.all(
                       color: accentColor.withValues(alpha: 0.22),
                     ),
+                    borderRadius: AppRadius.smAll,
                   ),
                   child: Icon(icon, size: 13, color: accentColor),
                 ),
@@ -172,6 +175,7 @@ class SectionCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.card,
+        borderRadius: AppRadius.mdAll,
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
@@ -205,10 +209,20 @@ class SectionCard extends StatelessWidget {
 
 /// Empty state placeholder — centered in parent.
 class EmptyState extends StatelessWidget {
-  const EmptyState({super.key, required this.message, this.icon});
+  const EmptyState({
+    super.key,
+    required this.message,
+    this.title,
+    this.icon,
+    this.action,
+    this.onAction,
+  });
 
   final String message;
+  final String? title;
   final IconData? icon;
+  final String? action;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -219,8 +233,21 @@ class EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, color: AppColors.textFaint, size: 32),
-              const SizedBox(height: 12),
+              Icon(icon, color: AppColors.textFaint, size: 48),
+              const SizedBox(height: 16),
+            ],
+            if (title != null) ...[
+              Text(
+                title!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              const SizedBox(height: 8),
             ],
             Text(
               message,
@@ -231,6 +258,14 @@ class EmptyState extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
+            if (action != null && onAction != null) ...[
+              const SizedBox(height: 20),
+              AccentButton(
+                onPressed: onAction,
+                height: 40,
+                child: Text(action!),
+              ),
+            ],
           ],
         ),
       ),

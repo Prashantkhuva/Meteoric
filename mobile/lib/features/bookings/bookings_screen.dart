@@ -6,6 +6,7 @@ import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/csv_export.dart';
 import 'booking_detail_screen.dart';
@@ -208,7 +209,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
         ],
       ),
       body: _loading
-          ? const LoadingView()
+          ? const SkeletonList()
           : _error != null
           ? ErrorStateView(error: _error, onRetry: () => _load())
           : _calendarMode
@@ -600,11 +601,14 @@ class _BookingCard extends StatelessWidget {
 
     return Material(
       color: AppColors.card,
+      borderRadius: AppRadius.mdAll,
       child: InkWell(
         onTap: onTap,
+        borderRadius: AppRadius.mdAll,
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
+            borderRadius: AppRadius.mdAll,
             border: Border.all(color: AppColors.border),
           ),
           child: Column(

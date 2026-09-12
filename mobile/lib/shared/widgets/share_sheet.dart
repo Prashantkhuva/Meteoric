@@ -15,7 +15,7 @@ Future<void> showShareSheet(
   return showModalBottomSheet<void>(
     context: context,
     backgroundColor: AppColors.card,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+    shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
     builder: (ctx) => SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
