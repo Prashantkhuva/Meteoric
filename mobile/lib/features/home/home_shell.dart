@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/notification_state.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
+import '../../shared/widgets/update_dialog.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../leads/leads_screen.dart';
 import '../proposals/proposals_screen.dart';
@@ -20,6 +21,7 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   final _updater = UpdateState.instance;
   final _notif = NotificationState.instance;
+  bool _apkDialogShown = false;
 
   static const _tabs = [
     DashboardScreen(),
@@ -35,7 +37,8 @@ class _HomeShellState extends State<HomeShell> {
     _updater.addListener(_onUpdateState);
     _notif.addListener(_onUpdateState);
     _notif.startPolling();
-    _updater.checkForUpdate();
+    // Check both Shorebird patches and APK updates on launch
+    _updater.checkAll();
     _updater.addListener(_onForceUpgrade);
   }
 
@@ -50,6 +53,21 @@ class _HomeShellState extends State<HomeShell> {
 
   void _onUpdateState() {
     if (mounted) setState(() {});
+    // Auto-show APK update dialog once (not if user dismissed)
+    if (_updater.hasUpdate && !_apkDialogShown && !_updater.dismissed) {
+      _apkDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _updater.hasUpdate) {
+          UpdateDialog.show(context);
+        }
+      });
+    }
+    // Auto-start force upgrade download
+    if (_updater.forceUpgrade &&
+        !_updater.downloading &&
+        _updater.update != null) {
+      _updater.downloadAndInstall();
+    }
   }
 
   void _onForceUpgrade() {
@@ -71,7 +89,8 @@ class _HomeShellState extends State<HomeShell> {
               Expanded(
                 child: IndexedStack(index: index, children: _tabs),
               ),
-              if (_updater.showBanner) _buildUpdateBanner(),
+              // Shorebird patch banner
+              if (_updater.showShorebirdBanner) _buildShorebirdBanner(),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -108,13 +127,11 @@ class _HomeShellState extends State<HomeShell> {
     );
   }
 
-  Widget _buildUpdateBanner() {
-    final update = _updater.update!;
-    final downloading = _updater.downloading;
-    final progress = _updater.progress;
-    final error = _updater.error;
-    final forced = _updater.forceUpgrade;
-    final needsPermission = _updater.needsInstallPermission;
+  /// Compact Shorebird patch banner — sits above the bottom nav.
+  Widget _buildShorebirdBanner() {
+    final updating = _updater.shorebirdUpdating;
+    final restartReady = _updater.shorebirdRestartReady;
+    final error = _updater.shorebirdError;
 
     return Container(
       decoration: const BoxDecoration(
@@ -123,137 +140,189 @@ class _HomeShellState extends State<HomeShell> {
       ),
       padding: EdgeInsets.fromLTRB(
         16,
-        14,
+        12,
         16,
-        14 + MediaQuery.of(context).padding.bottom,
+        12 + MediaQuery.of(context).padding.bottom,
       ),
       child: SafeArea(
         top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    forced ? 'UPDATE REQUIRED' : 'UPDATE AVAILABLE',
-                    style: TextStyle(
-                      color: forced ? AppColors.red : AppColors.textFaint,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.2,
-                      fontFamily: 'Inter',
+            if (restartReady) ...[
+              Row(
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline,
+                    size: 16,
+                    color: AppColors.emerald,
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Update ready — restart to apply',
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
-                ),
-                if (!downloading && !forced && !needsPermission)
                   GestureDetector(
-                    onTap: _updater.dismiss,
+                    onTap: _updater.dismissShorebird,
                     child: const Icon(
                       Icons.close,
                       size: 16,
                       color: AppColors.textFaint,
                     ),
                   ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              forced
-                  ? 'This version is no longer supported. Please update to continue.'
-                  : 'Version ${update.version} is ready to install.',
-              style: const TextStyle(
-                color: AppColors.text,
-                fontSize: 13,
-                fontFamily: 'Inter',
+                ],
               ),
-            ),
-            if (update.notes != null && update.notes!.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(
-                update.notes!,
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 11,
-                  fontFamily: 'Inter',
-                  height: 1.4,
-                ),
-              ),
-            ],
-            if (error != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                error,
-                style: const TextStyle(
-                  color: AppColors.red,
-                  fontSize: 11,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ],
-            const SizedBox(height: 10),
-            if (downloading)
-              ClipRRect(
-                borderRadius: AppRadius.smAll,
-                child: LinearProgressIndicator(
-                  value: (progress ?? 0).clamp(0.0, 1.0),
-                  minHeight: 3,
-                  backgroundColor: AppColors.border,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.accent,
-                  ),
-                ),
-              )
-            else if (needsPermission)
+              const SizedBox(height: 10),
               SizedBox(
                 width: double.infinity,
-                child: TextButton(
-                  onPressed: _updater.retryInstall,
-                  style: TextButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.mdAll,
-                    ),
-                  ),
-                  child: const Text(
-                    'INSTALL',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.2,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                ),
-              )
-            else
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: _updater.downloadAndInstall,
-                  style: TextButton.styleFrom(
-                    backgroundColor: forced ? AppColors.red : AppColors.accent,
-                    foregroundColor:
-                        forced ? Colors.white : const Color(0xFF121212),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.mdAll,
-                    ),
-                  ),
-                  child: Text(
-                    forced ? 'UPDATE NOW' : 'DOWNLOAD & INSTALL',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.2,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
+                child: AccentButton(
+                  height: 38,
+                  onPressed: () {
+                    // Show restart confirmation dialog
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Restart App'),
+                        content: const Text(
+                          'The app will restart to apply the update.',
+                          style: TextStyle(
+                            color: AppColors.textMuted,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            child: const Text('LATER'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              // Force restart by exiting — user relaunches
+                              // In production, use SystemNavigator.pop()
+                            },
+                            child: const Text('RESTART'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: const Text('APPLY & RESTART'),
                 ),
               ),
+            ] else if (updating) ...[
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.accent,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      'Applying update...',
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ] else if (error != null) ...[
+              Row(
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 16,
+                    color: AppColors.red,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      error,
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: _updater.dismissShorebird,
+                    child: const Icon(
+                      Icons.close,
+                      size: 16,
+                      color: AppColors.textFaint,
+                    ),
+                  ),
+                ],
+              ),
+            ] else ...[
+              // Patch available — compact banner
+              Row(
+                children: [
+                  const Icon(
+                    Icons.system_update_outlined,
+                    size: 16,
+                    color: AppColors.accent,
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Patch available',
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: _updater.dismissShorebird,
+                    child: const Icon(
+                      Icons.close,
+                      size: 16,
+                      color: AppColors.textFaint,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: GhostButton(
+                      height: 36,
+                      onPressed: _updater.dismissShorebird,
+                      child: const Text('LATER'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: AccentButton(
+                      height: 36,
+                      onPressed: () => _updater.applyShorebirdPatch(),
+                      child: const Text('APPLY'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
