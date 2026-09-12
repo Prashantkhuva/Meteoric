@@ -39,8 +39,8 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   }
 
   double get _subtotal {
-    final items = _invoice['items'];
-    if (items is! List) return 0;
+    final items = parseJsonList(_invoice['items']);
+    if (items.isEmpty) return 0;
     return items.fold<double>(0, (sum, item) {
       final qty =
           (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
@@ -278,8 +278,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               child: Column(
                 children: [
                   for (final item
-                      in (_invoice['items'] as List?)?.cast<Map>() ??
-                          const <Map>[])
+                      in parseJsonList(_invoice['items']))
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Row(

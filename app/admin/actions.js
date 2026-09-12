@@ -28,6 +28,7 @@ import {
   statusSchema,
   validateFormData,
   sanitizeProposalContent,
+  sanitizePricing,
   VALID_LEAD_STATUSES,
   VALID_CLIENT_STATUSES,
   VALID_PROPOSAL_STATUSES,
@@ -617,16 +618,18 @@ export async function createProposal(formData) {
     const supabase = await getSupabase();
     const data = validateFormData(proposalSchema, formData);
 
-    const content = data.content
+      const content = data.content
       ? sanitizeProposalContent(data.content)
       : null;
+
+    const pricing = sanitizePricing(data.pricing);
 
     const { error } = await supabase.from("proposals").insert({
       lead_id: data.lead_id,
       title: data.title,
       status: "draft",
       content,
-      pricing: data.pricing || [],
+      pricing,
       timeline: data.timeline,
       terms: data.terms,
     });
@@ -648,6 +651,8 @@ export async function updateProposal(formData) {
       ? sanitizeProposalContent(data.content)
       : null;
 
+    const pricing = sanitizePricing(data.pricing);
+
     const { error } = await supabase
       .from("proposals")
       .update({
@@ -655,7 +660,7 @@ export async function updateProposal(formData) {
         title: data.title,
         status: data.status || "draft",
         content,
-        pricing: data.pricing || [],
+        pricing,
         timeline: data.timeline,
         terms: data.terms,
         updated_at: new Date().toISOString(),

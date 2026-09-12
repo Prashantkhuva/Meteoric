@@ -218,6 +218,21 @@ export function sanitizeProposalContent(content) {
   return walk(content);
 }
 
+export function sanitizePricing(pricing) {
+  if (!pricing) return [];
+  if (typeof pricing === "string") {
+    try {
+      pricing = JSON.parse(pricing);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(pricing)) return [];
+  return pricing.filter(
+    (item) => item && typeof item === "object" && (item.description || item.rate)
+  );
+}
+
 export function validateFormData(schema, formData) {
   const raw = Object.fromEntries(formData.entries());
   const result = schema.safeParse(raw);

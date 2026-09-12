@@ -29,10 +29,7 @@ class InvoicePreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = '${invoice['status'] ?? 'draft'}';
-    final items = ((invoice['items'] as List?) ?? const [])
-        .whereType<Map>()
-        .map((e) => e.cast<String, dynamic>())
-        .toList();
+    final items = parseJsonList(invoice['items']);
     final subtotal = items.fold<double>(
       0,
       (s, i) =>

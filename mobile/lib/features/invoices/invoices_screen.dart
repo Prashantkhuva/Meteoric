@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
@@ -150,9 +151,18 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
   }
 
   double totalOf(Map<String, dynamic> invoice) {
-    final items = invoice['items'];
+    final rawItems = invoice['items'];
     final tax = (invoice['tax'] as num?)?.toDouble() ?? 0;
-    if (items is! List) return 0;
+    List? items;
+    if (rawItems is List) {
+      items = rawItems;
+    } else if (rawItems is String) {
+      try {
+        final parsed = jsonDecode(rawItems);
+        if (parsed is List) items = parsed;
+      } catch (_) {}
+    }
+    if (items == null || items.isEmpty) return 0;
     final subtotal = items.fold<double>(0, (sum, item) {
       final qty =
           (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
@@ -463,9 +473,9 @@ class _InvoiceCard extends StatelessWidget {
   final bool selecting;
 
   double get _total {
-    final items = invoice['items'];
+    final items = parseJsonList(invoice['items']);
     final tax = (invoice['tax'] as num?)?.toDouble() ?? 0;
-    if (items is! List) return 0;
+    if (items.isEmpty) return 0;
     final subtotal = items.fold<double>(0, (sum, item) {
       final qty =
           (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;

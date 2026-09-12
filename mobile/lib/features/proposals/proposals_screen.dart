@@ -432,8 +432,8 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
 }
 
 double totalOf(Map<String, dynamic> proposal) {
-  final pricing = proposal['pricing'];
-  if (pricing is! List) return 0;
+  final pricing = parseJsonList(proposal['pricing']);
+  if (pricing.isEmpty) return 0;
   return pricing.fold<double>(0, (sum, item) {
     final qty =
         (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;

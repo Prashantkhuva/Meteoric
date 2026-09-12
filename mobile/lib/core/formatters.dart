@@ -1,4 +1,23 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
+
+List<Map<String, dynamic>> parseJsonList(dynamic raw) {
+  if (raw is List) return raw.cast<Map<String, dynamic>>();
+  if (raw is String) {
+    try {
+      final parsed = jsonDecode(raw);
+      if (parsed is List) return parsed.cast<Map<String, dynamic>>();
+    } catch (_) {}
+  }
+  return const [];
+}
+
+num parseJsonNum(dynamic v, [num fallback = 0]) {
+  if (v is num) return v;
+  if (v is String) return num.tryParse(v) ?? fallback;
+  return fallback;
+}
 
 class Fmt {
   static final DateFormat _date = DateFormat('MMM d, yyyy');

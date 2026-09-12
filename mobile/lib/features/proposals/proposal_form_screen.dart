@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
+import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
@@ -43,12 +44,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     super.initState();
     _leadId = widget.proposal?['lead_id'];
     _content = widget.proposal?['content'];
-    final pricing = widget.proposal?['pricing'];
-    if (pricing is List) {
-      _pricing = pricing
-          .map((e) => (e as Map).cast<String, dynamic>())
-          .toList();
-    }
+    final raw = widget.proposal?['pricing'];
+    _pricing = parseJsonList(raw);
     _loadLeads();
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
+import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
@@ -52,9 +53,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     _tax = '${widget.invoice?['tax'] ?? 0}';
     _dueDate = widget.invoice?['due_date'];
     final items = widget.invoice?['items'];
-    if (items is List) {
-      _items = items.map((e) => (e as Map).cast<String, dynamic>()).toList();
-    }
+    _items = parseJsonList(items);
     _loadRefs();
   }
 

@@ -39,6 +39,8 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
     return lead is Map ? lead.cast<String, dynamic>() : null;
   }
 
+  List<Map<String, dynamic>> get _pricingList => parseJsonList(_proposal['pricing']);
+
   Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
@@ -219,14 +221,12 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                 child: TipTapView(content: _proposal['content']),
               ),
             const SizedBox(height: 16),
-            if (_proposal['pricing'] is List &&
-                (_proposal['pricing'] as List).isNotEmpty)
+            if (_pricingList.isNotEmpty)
               SectionCard(
                 title: 'Pricing',
                 child: Column(
                   children: [
-                    for (final item
-                        in (_proposal['pricing'] as List).cast<Map>())
+                    for (final item in _pricingList)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
