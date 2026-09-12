@@ -34,6 +34,7 @@ export default function Footer() {
             <StaggerLink href="/case-studies" hoverColor="#fff" style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "8px 14px" }}>Case Studies</StaggerLink>
             <StaggerLink href="/services" hoverColor="#fff" style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "8px 14px" }}>Services</StaggerLink>
             <StaggerLink href="/about" hoverColor="#fff" style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "8px 14px" }}>About</StaggerLink>
+            <StaggerLink href="/blog" hoverColor="#fff" style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "8px 14px" }}>Blog</StaggerLink>
             <StaggerLink href="/booking" hoverColor="#fff" style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.4)", padding: "8px 14px" }}>Book a Call</StaggerLink>
           </div>
 

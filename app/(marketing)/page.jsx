@@ -1,13 +1,13 @@
 import HomePage from "@/components/pages/Home";
 import HomeHashScroll from "./HomeHashScroll";
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import { buildHowToJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { homeFaqs } from "@/data/faqs";
 
 const pageTitle =
   "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const pageDesc =
-   "Meteoric is a founder-led web development agency for startups and SaaS. We design and ship high-performance websites and software that convert — fast, and built to last.";
+  "Meteoric is a founder-led software development studio for startups and SaaS. We design and ship high-performance websites, apps, and platforms that convert.";
 
 export const metadata = {
   title: pageTitle,
@@ -79,84 +79,9 @@ const howToSchema = buildHowToJsonLd([
 
 const faqSchema = buildFaqJsonLd(homeFaqs);
 
-const fallbackTestimonials = [
-  {
-    rating: 5,
-    author: "Rohan Mehta",
-    quote:
-      "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference.",
-  },
-  {
-    rating: 5,
-    author: "Sarah Mitchell",
-    quote:
-      "Working with Meteoric felt more like a partnership than a vendor relationship. They understood our B2B SaaS vision from day one and brought UX ideas we hadn't even considered.",
-  },
-  {
-    rating: 5,
-    author: "James Park",
-    quote:
-      "We needed a complete brand website redesign and got way more than we expected. The attention to detail in both design and performance is rare to find.",
-  },
-];
-
-const reviewSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": `${SITE_URL}/#organization`,
-  name: "Meteoric",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "5",
-    bestRating: "5",
-    ratingCount: "3",
-    datePublished: "2026-07-25",
-  },
-  review: fallbackTestimonials.map((t, i) => ({
-    "@type": "Review",
-    "@id": `${SITE_URL}/#review-${i + 1}`,
-    itemReviewed: { "@type": "Organization", "@id": `${SITE_URL}/#organization` },
-    reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: "5" },
-    author: { "@type": "Person", name: t.author },
-    reviewBody: t.quote,
-    datePublished: "2026-07-25",
-  })),
-};
-
 const organizationSchema = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${SITE_URL}/#organization`,
-      name: SITE_NAME,
-      alternateName: "Meteoric Agency",
-      url: SITE_URL,
-      logo: `${SITE_URL}/m.png`,
-      image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-      description:
-        "Meteoric is a web development agency that builds high-performance websites, SaaS platforms, and full-stack applications for startups and founders.",
-      founder: { "@type": "Person", name: "Prashant Khuva" },
-      foundingDate: "2026",
-      areaServed: "Worldwide",
-      knowsAbout: [
-        "Web Development",
-        "SaaS Development",
-        "React Development",
-        "Next.js Development",
-        "Node.js Development",
-        "Full-Stack Development",
-        "Landing Page Design",
-        "Startup Web Development",
-      ],
-      sameAs: [
-        "https://github.com/Prashantkhuva",
-        "https://www.linkedin.com/company/withmeteoric",
-        "https://x.com/prashantkhuva_",
-        "https://www.instagram.com/officialmeteoric/",
-        "https://www.wikidata.org/wiki/Q140453413",
-      ],
-    },
     {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
@@ -284,10 +209,6 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
       />
       <HomePage />
       <HomeHashScroll />

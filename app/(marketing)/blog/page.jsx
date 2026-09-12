@@ -35,6 +35,26 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const blogIndexJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Blog — SaaS, Web Development & Design Insights | Meteoric",
+  description:
+    "Notes on building products that convert — written by the founder from real shipped work.",
+  url: `${SITE_URL}/blog`,
+  isPartOf: { "@id": `${SITE_URL}/#website` },
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: blogPosts.length,
+    itemListElement: blogPosts.slice(0, 10).map((post, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${SITE_URL}/blog/${post.slug}`,
+      name: post.title,
+    })),
+  },
+};
+
 const tagIcons = {
   "SaaS": "◇", "MongoDB": "⎔", "Database Design": "⊞", "Billing": "₿",
   "Development": "⌘", "Startup": "▲", "Database": "◈", "PostgreSQL": "▤",
@@ -61,6 +81,7 @@ export default function BlogIndex() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogIndexJsonLd) }} />
       <main className="min-h-screen bg-black text-white">
         {/* Ambient glow */}
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(234,239,255,0.02)_0%,transparent_70%)] pointer-events-none" />

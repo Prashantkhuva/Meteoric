@@ -21,7 +21,7 @@ const playfairDisplay = Playfair_Display({
 const metaTitle =
   "Meteoric — Web & Software Development Agency for Startups & SaaS";
 const metaDesc =
-  "Meteoric is a founder-led web development agency building high-performance websites, SaaS platforms, and full-stack applications that convert — not just look good. Free strategy call.";
+  "Meteoric is a founder-led software development studio building high-performance websites, SaaS platforms, and full-stack applications for startups and founders.";
 const metaDescOg =
   "Meteoric is a founder-led web development agency building high-performance websites, SaaS platforms, and full-stack applications that actually convert. No account managers — just shipped products.";
 
@@ -80,41 +80,37 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
+              "@id": `${SITE_URL}/#organization`,
               name: SITE_NAME,
               url: SITE_URL,
-              logo: `${SITE_URL}/logo.svg`,
+              logo: `${SITE_URL}/m.png`,
+              image: `${SITE_URL}/og.jpg`,
+              description:
+                "Meteoric is a software development studio that builds high-performance websites, SaaS platforms, and full-stack applications for startups and founders.",
+              founder: { "@type": "Person", name: "Prashant Khuva" },
               foundingDate: "2026",
-              founders: [
-                {
-                  "@type": "Person",
-                  name: "Prashant Khuva",
-                },
+              areaServed: "Worldwide",
+              knowsAbout: [
+                "Web Development",
+                "SaaS Development",
+                "React Development",
+                "Next.js Development",
+                "Node.js Development",
+                "Full-Stack Development",
+                "Landing Page Design",
+                "Startup Web Development",
               ],
               sameAs: [
                 "https://github.com/Prashantkhuva",
-                "https://linkedin.com/company/withmeteoric",
+                "https://www.linkedin.com/company/withmeteoric",
                 "https://x.com/prashantkhuva_",
+                "https://www.wikidata.org/wiki/Q140453413",
               ],
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "customer service",
                 email: "contact@withmeteoric.com",
               },
-              areaServed: "Worldwide",
-              aggregateRating: {
-                "@type": "AggregateRating",
-                ratingValue: "5.0",
-                ratingCount: "12",
-                bestRating: "5",
-                worstRating: "1",
-              },
-              knowsAbout: [
-                "Web Development",
-                "SaaS Development",
-                "React",
-                "Next.js",
-                "Node.js",
-              ],
             }),
           }}
         />

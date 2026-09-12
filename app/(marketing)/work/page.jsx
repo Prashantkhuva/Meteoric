@@ -62,6 +62,7 @@ const creativeWorkSchema = {
     name: p.name,
     description: p.description,
     url: `${SITE_URL}/work/${p.slug}`,
+    image: `${SITE_URL}${p.image}`,
     keywords: p.tags.join(", "),
     author: {
       "@type": "Organization",

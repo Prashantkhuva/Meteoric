@@ -8,7 +8,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { trackEvent } from "@/lib/analytics/gtag";
 
-export default function ServiceLanding({ service }) {
+export default function ServiceLanding({ service, relatedServices = [] }) {
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
     const cal = await getCalApi({ namespace: "let-s-build" });
@@ -110,6 +110,35 @@ export default function ServiceLanding({ service }) {
                   </h3>
                   <span className="text-white/20 text-xs font-mono group-hover:text-white/40 transition-colors duration-300">
                     Read more →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Related Services */}
+      {relatedServices.length > 0 && (
+        <section className="border-t border-white/[0.06] py-16">
+          <div className="max-w-4xl mx-auto px-6 md:px-12">
+            <ScrollReveal direction="down" delay={0}>
+              <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-6">
+                Related Services
+              </p>
+            </ScrollReveal>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {relatedServices.map((rs) => (
+                <Link
+                  key={rs.slug}
+                  href={`/services/${rs.slug}`}
+                  className="group p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06] hover:border-[#EAEFFF]/[0.12] transition-all duration-300"
+                >
+                  <h3 className="text-sm font-secondary-italic text-white/70 group-hover:text-[#EAEFFF] transition-colors duration-300 mb-2">
+                    {rs.name}
+                  </h3>
+                  <span className="text-white/20 text-xs font-mono group-hover:text-white/40 transition-colors duration-300">
+                    View service →
                   </span>
                 </Link>
               ))}

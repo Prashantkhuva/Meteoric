@@ -46,52 +46,76 @@ export async function generateMetadata({ params }) {
 
 const postService = {
   "mongodb-schema-design-for-saas-billing": {
-    href: "/services/saas-development-agency",
-    label: "SaaS Development Agency",
+    href: "/services/saas-development",
+    label: "SaaS Development",
   },
   "how-to-build-a-saas-mvp-step-by-step-guide": {
-    href: "/services/saas-development-agency",
-    label: "SaaS Development Agency",
+    href: "/services/saas-development",
+    label: "SaaS Development",
   },
   "mongodb-vs-postgresql-for-saas": {
-    href: "/services/saas-development-agency",
-    label: "SaaS Development Agency",
+    href: "/services/saas-development",
+    label: "SaaS Development",
   },
   "gsap-vs-framer-motion-production-guide": {
     href: "/services/landing-pages",
     label: "Landing Page Design",
   },
   "supabase-vs-firebase-2026-comparison": {
-    href: "/services/saas-development-agency",
-    label: "SaaS Development Agency",
+    href: "/services/saas-development",
+    label: "SaaS Development",
   },
   "nextjs-vs-remix-2026-comparison": {
     href: "/services/nextjs-development",
     label: "Next.js Development",
   },
   "what-is-a-web-development-agency": {
-    href: "/services/web-development-agency-for-startups",
-    label: "Web Development for Startups",
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
   },
   "how-much-does-a-startup-website-cost": {
-    href: "/services/web-development-agency-for-startups",
-    label: "Web Development for Startups",
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
   },
   "building-a-saas-prototype-in-3-weeks-a-case-study": {
-    href: "/services/saas-development-agency",
-    label: "SaaS Development Agency",
+    href: "/services/saas-development",
+    label: "SaaS Development",
   },
   "the-meteoric-guide-to-choosing-your-tech-stack": {
-    href: "/services/saas-development-agency",
-    label: "SaaS Development Agency",
+    href: "/services/saas-development",
+    label: "SaaS Development",
   },
   "how-to-choose-a-web-development-agency": {
-    href: "/services/web-development-agency-for-startups",
-    label: "Web Development for Startups",
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
   },
   "react-vs-nextjs-for-startup-websites": {
-    href: "/services/web-development-agency-for-startups",
-    label: "Web Development for Startups",
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "how-to-implement-aeo-answer-engine-optimization-for-saas": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "why-visitors-leave-your-website-issues-and-solutions": {
+    href: "/services/landing-pages",
+    label: "Landing Page Design",
+  },
+  "high-converting-landing-page-structure-for-saas": {
+    href: "/services/landing-pages",
+    label: "Landing Page Design",
+  },
+  "long-tail-seo-strategy-for-funded-startups": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "ai-search-optimization-how-to-get-cited-by-chatgpt": {
+    href: "/services/landing-pages",
+    label: "Landing Page Design",
+  },
+  "startup-seo-on-a-budget-what-to-do-first": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
   },
 };
 

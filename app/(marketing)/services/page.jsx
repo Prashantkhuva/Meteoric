@@ -5,7 +5,7 @@ import { serviceFaqs } from "@/data/faqs";
 
 const pageTitle = "Services — Web Development & SaaS for Startups | Meteoric";
 const pageDesc =
-  "Landing pages, SaaS products, and full-stack applications — designed and built in-house, shipped with the founder on the line. Clear scope, honest timelines, premium results.";
+  "Landing pages, SaaS products, and full-stack applications — designed and built in-house, shipped with the founder on the line.";
 
 export const metadata = {
   title: pageTitle,

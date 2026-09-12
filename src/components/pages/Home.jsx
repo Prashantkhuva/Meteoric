@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 
+const StatsBar = dynamic(() => import("../sections/StatsBar"));
 const ManifestoSection = dynamic(() => import("../sections/ManifestoSection"));
 const ServicesSection = dynamic(() => import("../sections/ServicesSection"));
 const Projects = dynamic(() => import("@/components/sections/Projects"));
@@ -52,6 +53,7 @@ export default function Home() {
         post-launch support.
       </div>
       <Hero />
+      <StatsBar />
       <ManifestoSection />
       <ServicesSection />
       <Projects />

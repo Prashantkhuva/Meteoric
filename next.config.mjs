@@ -32,6 +32,16 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/services/saas-development-agency",
+        destination: "/services/saas-development",
+        permanent: true,
+      },
+      {
+        source: "/services/web-development-agency-for-startups",
+        destination: "/services/startup-web-development",
+        permanent: true,
+      },
+      {
         source: "/services/api-development",
         destination: "/services",
         permanent: true,
