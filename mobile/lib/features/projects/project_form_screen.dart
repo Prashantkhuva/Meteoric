@@ -62,7 +62,6 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
   Future<void> _loadClients() async {
     setState(() {
-      _clientsLoaded = true;
       _clientsError = null;
     });
     try {
@@ -72,10 +71,16 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           _clients = ((res['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
+          _clientsLoaded = true;
         });
       }
     } catch (err) {
-      if (mounted) setState(() => _clientsError = err.toString());
+      if (mounted) {
+        setState(() {
+          _clientsError = err.toString();
+          _clientsLoaded = true;
+        });
+      }
     }
   }
 
@@ -247,8 +252,11 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
       );
     }
 
+    final validValues = <String?>{'', ..._clients.map((c) => '${c['id']}')};
+    final safeClientId = validValues.contains(_clientId) ? _clientId : null;
+
     return DropdownButtonFormField<String>(
-      initialValue: _clientId,
+      initialValue: safeClientId,
       decoration: const InputDecoration(labelText: 'Client'),
       items: [
         const DropdownMenuItem(value: '', child: Text('No client linked')),

@@ -59,7 +59,6 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
 
   Future<void> _loadLeads() async {
     setState(() {
-      _leadsLoaded = true;
       _leadsError = null;
     });
     try {
@@ -69,10 +68,16 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           _leads = ((res['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
+          _leadsLoaded = true;
         });
       }
     } catch (err) {
-      if (mounted) setState(() => _leadsError = err.toString());
+      if (mounted) {
+        setState(() {
+          _leadsError = err.toString();
+          _leadsLoaded = true;
+        });
+      }
     }
   }
 
@@ -253,8 +258,11 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
       );
     }
 
+    final validValues = <String?>{'', ..._leads.map((l) => '${l['id']}')};
+    final safeLeadId = validValues.contains(_leadId) ? _leadId : null;
+
     return DropdownButtonFormField<String>(
-      initialValue: _leadId,
+      initialValue: safeLeadId,
       decoration: const InputDecoration(labelText: 'Lead'),
       items: [
         const DropdownMenuItem(value: '', child: Text('No lead linked')),
@@ -351,6 +359,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
             ),
           for (var i = 0; i < _pricing.length; i++)
             Padding(
+              key: ValueKey('pricing_$i'),
               padding: const EdgeInsets.only(bottom: 10),
               child: _pricingRow(i),
             ),
@@ -366,9 +375,6 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
 
   Widget _pricingRow(int i) {
     final item = _pricing[i];
-    final desc = TextEditingController(text: item['description'] ?? '');
-    final qty = TextEditingController(text: '${item['quantity'] ?? 1}');
-    final rate = TextEditingController(text: '${item['rate'] ?? 0}');
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -381,8 +387,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: desc,
+                child: TextFormField(
+                  initialValue: item['description']?.toString() ?? '',
                   decoration: const InputDecoration(
                     labelText: 'Description',
                     isDense: true,
@@ -404,8 +410,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: qty,
+                child: TextFormField(
+                  initialValue: '${item['quantity'] ?? 1}',
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Qty',
@@ -416,8 +422,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: TextField(
-                  controller: rate,
+                child: TextFormField(
+                  initialValue: '${item['rate'] ?? 0}',
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Rate',

@@ -66,7 +66,6 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
 
   Future<void> _loadRefs() async {
     setState(() {
-      _clientsLoaded = true;
       _clientsError = null;
     });
     try {
@@ -87,10 +86,16 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           _proposals = ((proposals['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
+          _clientsLoaded = true;
         });
       }
     } catch (err) {
-      if (mounted) setState(() => _clientsError = err.toString());
+      if (mounted) {
+        setState(() {
+          _clientsError = err.toString();
+          _clientsLoaded = true;
+        });
+      }
     }
   }
 
@@ -182,6 +187,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                     ),
                   for (var i = 0; i < _items.length; i++)
                     Padding(
+                      key: ValueKey('item_$i'),
                       padding: const EdgeInsets.only(bottom: 10),
                       child: _itemRow(i),
                     ),
@@ -327,10 +333,17 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
       );
     }
 
+    final validClientValues = <String?>{'', ..._clients.map((c) => '${c['id']}')};
+    final validProposalValues = <String?>{
+      '',
+      ..._proposals.map((p) => '${p['id']}'),
+    };
+    final validBankValues = <String?>{'', ..._banks.map((b) => '${b['id']}')};
+
     return Column(
       children: [
         DropdownButtonFormField<String>(
-          initialValue: _clientId,
+          initialValue: validClientValues.contains(_clientId) ? _clientId : null,
           decoration: const InputDecoration(labelText: 'Client'),
           items: [
             const DropdownMenuItem(value: '', child: Text('No client linked')),
@@ -348,7 +361,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          initialValue: _proposalId,
+          initialValue: validProposalValues.contains(_proposalId) ? _proposalId : null,
           decoration: const InputDecoration(labelText: 'Proposal (optional)'),
           items: [
             const DropdownMenuItem(
@@ -369,7 +382,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          initialValue: _bankAccountId,
+          initialValue: validBankValues.contains(_bankAccountId)
+              ? _bankAccountId
+              : null,
           decoration: const InputDecoration(
             labelText: 'Bank account (optional)',
           ),
@@ -393,9 +408,6 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
 
   Widget _itemRow(int i) {
     final item = _items[i];
-    final desc = TextEditingController(text: item['description'] ?? '');
-    final qty = TextEditingController(text: '${item['quantity'] ?? 1}');
-    final rate = TextEditingController(text: '${item['rate'] ?? 0}');
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -408,8 +420,8 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: desc,
+                child: TextFormField(
+                  initialValue: item['description']?.toString() ?? '',
                   decoration: const InputDecoration(
                     labelText: 'Description',
                     isDense: true,
@@ -431,8 +443,8 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: qty,
+                child: TextFormField(
+                  initialValue: '${item['quantity'] ?? 1}',
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Qty',
@@ -443,8 +455,8 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: TextField(
-                  controller: rate,
+                child: TextFormField(
+                  initialValue: '${item['rate'] ?? 0}',
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Rate',
