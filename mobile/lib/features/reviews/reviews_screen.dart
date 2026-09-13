@@ -96,24 +96,22 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   Future<void> _action(int id, String action, {bool? verified}) async {
     try {
-      final res = action == 'verified'
-          ? await ApiClient.instance.reviewVerified(id, verified ?? true)
-          : await ApiClient.instance.reviewStatus(id, action);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (action == 'verified') {
+        await ApiClient.instance.reviewVerified(id, verified ?? true);
       } else {
-        _snack(
-          action == 'verified'
-              ? (verified == true ? 'Marked verified' : 'Marked unverified')
-              : switch (action) {
-                  'approved' => 'Review approved',
-                  'rejected' => 'Review rejected',
-                  _ => 'Review set to pending',
-                },
-        );
-        _load();
+        await ApiClient.instance.reviewStatus(id, action);
       }
+      if (!mounted) return;
+      _snack(
+        action == 'verified'
+            ? (verified == true ? 'Marked verified' : 'Marked unverified')
+            : switch (action) {
+                'approved' => 'Review approved',
+                'rejected' => 'Review rejected',
+                _ => 'Review set to pending',
+              },
+      );
+      _load();
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     }
@@ -142,14 +140,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
     if (ok != true) return;
     try {
-      final res = await ApiClient.instance.reviewDelete(id);
+      await ApiClient.instance.reviewDelete(id);
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('Review deleted');
-        _load();
-      }
+      _snack('Review deleted');
+      _load();
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     }

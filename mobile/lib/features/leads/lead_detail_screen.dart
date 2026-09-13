@@ -38,18 +38,10 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      final res = await fn();
+      await fn();
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('$label done');
-        setState(() {
-          _changed = true;
-          _lead = Map<String, dynamic>.from(_lead)
-            ..addAll(res.cast<String, dynamic>());
-        });
-      }
+      _snack('$label done');
+      _changed = true;
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -62,14 +54,12 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
 
   Future<void> _changeStatus(String status) async {
     await _run('Status updated', () async {
-      final res = await ApiClient.instance.leadStatus(
+      await ApiClient.instance.leadStatus(
         (_lead['id'] as num).toInt(),
         status,
       );
-      if (!res.containsKey('error')) {
-        setState(() => _lead = {..._lead, 'status': status});
-      }
-      return res;
+      setState(() => _lead = {..._lead, 'status': status});
+      return {};
     });
   }
 
@@ -103,13 +93,11 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (ok != true) return;
 
     await _run('Lead converted', () async {
-      final res = await ApiClient.instance.leadConvert(
+      await ApiClient.instance.leadConvert(
         (_lead['id'] as num).toInt(),
       );
-      if (!res.containsKey('error')) {
-        setState(() => _lead = {..._lead, 'status': 'completed'});
-      }
-      return res;
+      setState(() => _lead = {..._lead, 'status': 'completed'});
+      return {};
     });
   }
 
@@ -144,13 +132,11 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (ok != true) return;
 
     await _run('Lead deleted', () async {
-      final res = await ApiClient.instance.leadDelete(
+      await ApiClient.instance.leadDelete(
         (_lead['id'] as num).toInt(),
       );
-      if (!res.containsKey('error') && mounted) {
-        Navigator.of(context).pop(true);
-      }
-      return res;
+      if (mounted) Navigator.of(context).pop(true);
+      return {};
     });
   }
 

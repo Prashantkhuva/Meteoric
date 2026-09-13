@@ -44,20 +44,16 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
   Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.proposalStatus(
+      await ApiClient.instance.proposalStatus(
         (_proposal['id'] as num).toInt(),
         status,
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() {
-          _proposal = {..._proposal, 'status': status};
-          _changed = true;
-        });
-        _snack('Status updated');
-      }
+      setState(() {
+        _proposal = {..._proposal, 'status': status};
+        _changed = true;
+      });
+      _snack('Status updated');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -68,19 +64,15 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
   Future<void> _send() async {
     setState(() => _sending = true);
     try {
-      final res = await ApiClient.instance.proposalSend(
+      await ApiClient.instance.proposalSend(
         (_proposal['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() {
-          _proposal = {..._proposal, 'status': 'sent'};
-          _changed = true;
-        });
-        _snack('Proposal sent by email');
-      }
+      setState(() {
+        _proposal = {..._proposal, 'status': 'sent'};
+        _changed = true;
+      });
+      _snack('Proposal sent by email');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -94,10 +86,6 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
         (_proposal['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-        return;
-      }
       final token = res['token'];
       final url = '${AppConfig.siteUrl}/share/proposal/$token';
       await showShareSheet(
@@ -135,15 +123,11 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.proposalDelete(
+      await ApiClient.instance.proposalDelete(
         (_proposal['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        Navigator.of(context).pop(true);
-      }
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -157,7 +141,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
         (_proposal['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res['data'] is Map && !(res.containsKey('error'))) {
+      if (res['data'] is Map) {
         setState(
           () => _proposal = (res['data'] as Map).cast<String, dynamic>(),
         );

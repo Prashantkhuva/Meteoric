@@ -130,8 +130,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     var failed = 0;
     for (final id in _selected.toList()) {
       try {
-        final res = await ApiClient.instance.leadDelete(id);
-        if (res.containsKey('error')) failed++;
+        await ApiClient.instance.leadDelete(id);
       } catch (_) {
         failed++;
       }
@@ -154,8 +153,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     var failed = 0;
     for (final id in _selected.toList()) {
       try {
-        final res = await ApiClient.instance.leadStatus(id, status);
-        if (res.containsKey('error')) failed++;
+        await ApiClient.instance.leadStatus(id, status);
       } catch (_) {
         failed++;
       }

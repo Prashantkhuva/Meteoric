@@ -75,16 +75,12 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
     if (ok != true) return;
 
     try {
-      final res = await ApiClient.instance.bankAccountDelete(
+      await ApiClient.instance.bankAccountDelete(
         (account['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('Bank account deleted');
-        _load();
-      }
+      _snack('Bank account deleted');
+      _load();
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     }

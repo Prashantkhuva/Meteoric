@@ -30,17 +30,13 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
   Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.clientStatus(
+      await ApiClient.instance.clientStatus(
         (_client['id'] as num).toInt(),
         status,
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() => _client = {..._client, 'status': status});
-        _snack('Status updated');
-      }
+      setState(() => _client = {..._client, 'status': status});
+      _snack('Status updated');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -80,15 +76,11 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.clientDelete(
+      await ApiClient.instance.clientDelete(
         (_client['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        Navigator.of(context).pop(true);
-      }
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

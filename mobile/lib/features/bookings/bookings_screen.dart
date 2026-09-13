@@ -10,6 +10,7 @@ import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/error_views.dart';
 import '../../shared/widgets/csv_export.dart';
 import 'booking_detail_screen.dart';
+import 'bookings_helpers.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -21,23 +22,6 @@ class BookingsScreen extends StatefulWidget {
 /// Normalizes a raw Cal.com v2 booking row:
 /// - attendee lives in the `attendees` array (first entry)
 /// - `id` is numeric, `uid` is the string key
-Map<String, dynamic> _attendeeOf(Map<String, dynamic> booking) {
-  final list = booking['attendees'];
-  if (list is List && list.isNotEmpty && list.first is Map) {
-    return (list.first as Map).cast<String, dynamic>();
-  }
-  if (booking['attendee'] is Map) {
-    return (booking['attendee'] as Map).cast<String, dynamic>();
-  }
-  return const <String, dynamic>{};
-}
-
-String _shortTitle(String? title) {
-  if (title == null) return '';
-  final idx = title.indexOf(' between ');
-  return idx > -1 ? title.substring(0, idx) : title;
-}
-
 DateTime? _startOf(Map<String, dynamic> booking) {
   final s = booking['start'] ?? booking['startTime'];
   if (s == null) return null;
@@ -113,7 +97,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
         return false;
       }
       if (q.isEmpty) return true;
-      final attendee = _attendeeOf(b);
+      final attendee = attendeeOf(b);
       final haystack = [
         attendee['name'],
         attendee['email'],
@@ -153,12 +137,12 @@ class _BookingsScreenState extends State<BookingsScreen> {
         rows: [
           ['Attendee', 'Email', 'Phone', 'Event', 'Start', 'Status'],
           ...rows.map((b) {
-            final attendee = _attendeeOf(b);
+            final attendee = attendeeOf(b);
             return [
               '${attendee['name'] ?? ''}',
               '${attendee['email'] ?? ''}',
               '${attendee['phoneNumber'] ?? attendee['phone'] ?? ''}',
-              _shortTitle(b['title'] as String?),
+              shortTitle(b['title'] as String?),
               csvDate(b['start'] ?? b['startTime']),
               '${b['status'] ?? 'pending'}',
             ];
@@ -591,12 +575,12 @@ class _BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final attendee = _attendeeOf(booking);
+    final attendee = attendeeOf(booking);
     final name = attendee['name'] ?? '—';
     final email = attendee['email'] ?? '—';
     final start = booking['start'] ?? booking['startTime'];
     final status = '${booking['status'] ?? 'pending'}'.toLowerCase();
-    final title = _shortTitle(booking['title'] as String?);
+    final title = shortTitle(booking['title'] as String?);
     final duration = (booking['duration'] as num?)?.toInt();
 
     return Material(

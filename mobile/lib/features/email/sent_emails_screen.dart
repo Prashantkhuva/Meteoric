@@ -89,14 +89,10 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
     if (ok != true) return;
 
     try {
-      final res = await ApiClient.instance.emailDelete(id);
+      await ApiClient.instance.emailDelete(id);
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('Email record deleted');
-        _load();
-      }
+      _snack('Email record deleted');
+      _load();
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     }
@@ -113,8 +109,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
     var failed = 0;
     for (final id in _selected.toList()) {
       try {
-        final res = await ApiClient.instance.emailDelete(id);
-        if (res.containsKey('error')) failed++;
+        await ApiClient.instance.emailDelete(id);
       } catch (_) {
         failed++;
       }

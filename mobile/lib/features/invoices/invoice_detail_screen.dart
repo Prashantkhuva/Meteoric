@@ -42,10 +42,8 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     final items = parseJsonList(_invoice['items']);
     if (items.isEmpty) return 0;
     return items.fold<double>(0, (sum, item) {
-      final qty =
-          (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
-      final rate =
-          (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
+      final qty = (item['quantity'] as num?)?.toDouble() ?? 1;
+      final rate = (item['rate'] as num?)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
   }
@@ -59,19 +57,15 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   Future<void> _send() async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceSend(
+      await ApiClient.instance.invoiceSend(
         (_invoice['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() {
-          _invoice = {..._invoice, 'status': 'sent'};
-          _changed = true;
-        });
-        _snack('Invoice sent by email');
-      }
+      setState(() {
+        _invoice = {..._invoice, 'status': 'sent'};
+        _changed = true;
+      });
+      _snack('Invoice sent by email');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -87,17 +81,13 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         DateTime.now().toIso8601String(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() {
-          _invoice = {..._invoice, 'status': 'paid'};
-          _changed = true;
-        });
-        _snack('Invoice marked as paid');
-        final wa = res['whatsappUrl'];
-        if (wa is String && wa.isNotEmpty) Native.openUrl(wa);
-      }
+      setState(() {
+        _invoice = {..._invoice, 'status': 'paid'};
+        _changed = true;
+      });
+      _snack('Invoice marked as paid');
+      final wa = res['whatsappUrl'];
+      if (wa is String && wa.isNotEmpty) Native.openUrl(wa);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -112,13 +102,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         (_invoice['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('Payment confirmation sent');
-        final wa = res['whatsappUrl'];
-        if (wa is String && wa.isNotEmpty) Native.openUrl(wa);
-      }
+      _snack('Payment confirmation sent');
+      final wa = res['whatsappUrl'];
+      if (wa is String && wa.isNotEmpty) Native.openUrl(wa);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -129,20 +115,16 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceStatus(
+      await ApiClient.instance.invoiceStatus(
         (_invoice['id'] as num).toInt(),
         status,
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() {
-          _invoice = {..._invoice, 'status': status};
-          _changed = true;
-        });
-        _snack('Status updated');
-      }
+      setState(() {
+        _invoice = {..._invoice, 'status': status};
+        _changed = true;
+      });
+      _snack('Status updated');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -156,10 +138,6 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         (_invoice['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-        return;
-      }
       final token = res['token'];
       final url = '${AppConfig.siteUrl}/share/invoice/$token';
       await showShareSheet(
@@ -197,15 +175,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.invoiceDelete(
+      await ApiClient.instance.invoiceDelete(
         (_invoice['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        Navigator.of(context).pop(true);
-      }
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -219,7 +193,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         (_invoice['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res['data'] is Map && !(res.containsKey('error'))) {
+      if (res['data'] is Map) {
         setState(() => _invoice = (res['data'] as Map).cast<String, dynamic>());
       }
     } catch (_) {

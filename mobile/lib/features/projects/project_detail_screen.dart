@@ -37,20 +37,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.projectStatus(
+      await ApiClient.instance.projectStatus(
         (_project['id'] as num).toInt(),
         status,
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        setState(() {
-          _project = {..._project, 'status': status};
-          _changed = true;
-        });
-        _snack('Status updated');
-      }
+      setState(() {
+        _project = {..._project, 'status': status};
+        _changed = true;
+      });
+      _snack('Status updated');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -83,15 +79,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.projectDelete(
+      await ApiClient.instance.projectDelete(
         (_project['id'] as num).toInt(),
       );
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        Navigator.of(context).pop(true);
-      }
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

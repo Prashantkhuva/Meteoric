@@ -32,7 +32,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
   String _from = 'contact';
   final _subject = TextEditingController();
   final _search = TextEditingController();
-  dynamic _body;
+  String _body = '';
 
   final List<String> _to = [];
   final List<PlatformFile> _files = [];
@@ -157,14 +157,14 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
   }
 
   Future<void> _send() async {
-    if (_to.isEmpty || _subject.text.trim().isEmpty || _body == null) {
+    if (_to.isEmpty || _subject.text.trim().isEmpty || _body.isEmpty) {
       _snack('Add recipients, subject and body', isError: true);
       return;
     }
     setState(() => _sending = true);
     try {
       final uploaded = await _uploadAttachments();
-      final res = await ApiClient.instance.emailSend({
+      await ApiClient.instance.emailSend({
         'from': _from,
         'to': _to,
         'subject': _subject.text.trim(),
@@ -172,12 +172,8 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
         'files': uploaded,
       });
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        _snack('Email sent');
-        Navigator.of(context).pop(true);
-      }
+      _snack('Email sent');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

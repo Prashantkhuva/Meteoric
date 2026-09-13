@@ -5,23 +5,7 @@ import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
-
-Map<String, dynamic> _attendeeOf(Map<String, dynamic> booking) {
-  final list = booking['attendees'];
-  if (list is List && list.isNotEmpty && list.first is Map) {
-    return (list.first as Map).cast<String, dynamic>();
-  }
-  if (booking['attendee'] is Map) {
-    return (booking['attendee'] as Map).cast<String, dynamic>();
-  }
-  return const <String, dynamic>{};
-}
-
-String _shortTitle(String? title) {
-  if (title == null) return '';
-  final idx = title.indexOf(' between ');
-  return idx > -1 ? title.substring(0, idx) : title;
-}
+import 'bookings_helpers.dart';
 
 /// Full-screen booking detail — opened from the bookings list/calendar.
 /// Returns `true` when the booking was mutated so the caller can refresh.
@@ -75,7 +59,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   );
 
   Future<void> _createLead() {
-    final attendee = _attendeeOf(widget.booking);
+    final attendee = attendeeOf(widget.booking);
     return _run(
       () => ApiClient.instance.bookingCreateLead({
         'name': attendee['name'] ?? 'Booking guest',
@@ -90,7 +74,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final booking = widget.booking;
-    final attendee = _attendeeOf(booking);
+    final attendee = attendeeOf(booking);
     final name = '${attendee['name'] ?? '—'}';
     final email = '${attendee['email'] ?? ''}';
     final phone = '${attendee['phoneNumber'] ?? attendee['phone'] ?? ''}'
@@ -98,7 +82,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     final start = booking['start'] ?? booking['startTime'];
     final end = booking['end'] ?? booking['endTime'];
     final duration = (booking['duration'] as num?)?.toInt();
-    final title = _shortTitle(booking['title'] as String?);
+    final title = shortTitle(booking['title'] as String?);
     final location = booking['location'];
     final description = booking['description'];
     final timezone = booking['timeZone'];

@@ -120,8 +120,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     var failed = 0;
     for (final id in _selected.toList()) {
       try {
-        final res = await action(id);
-        if (res.containsKey('error')) failed++;
+        await action(id);
       } catch (_) {
         failed++;
       }

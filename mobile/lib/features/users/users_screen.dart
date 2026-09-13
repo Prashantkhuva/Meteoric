@@ -88,17 +88,13 @@ class _UsersScreenState extends State<UsersScreen> {
   Future<void> _changeRole(String userId, String newRole) async {
     setState(() => _changingRoleFor = userId);
     try {
-      final res = await ApiClient.instance.usersUpdateRole({
+      await ApiClient.instance.usersUpdateRole({
         'userId': userId,
         'role': newRole,
       });
       if (!mounted) return;
-      if (res['error'] != null) {
-        Toast.error(context, res['error']);
-      } else {
-        Toast.success(context, 'Role updated');
-        await _loadUsers();
-      }
+      Toast.success(context, 'Role updated');
+      await _loadUsers();
     } catch (err) {
       if (mounted) Toast.error(context, _clean(err));
     }
@@ -108,15 +104,11 @@ class _UsersScreenState extends State<UsersScreen> {
   Future<void> _resendInvite(String userId) async {
     setState(() => _resendingFor = userId);
     try {
-      final res = await ApiClient.instance.usersResendInvite({
+      await ApiClient.instance.usersResendInvite({
         'userId': userId,
       });
       if (!mounted) return;
-      if (res['error'] != null) {
-        Toast.error(context, res['error']);
-      } else {
-        Toast.success(context, 'Invitation resent');
-      }
+      Toast.success(context, 'Invitation resent');
     } catch (err) {
       if (mounted) Toast.error(context, _clean(err));
     }
@@ -178,14 +170,10 @@ class _UsersScreenState extends State<UsersScreen> {
 
     setState(() => _deletingFor = userId);
     try {
-      final res = await ApiClient.instance.usersDelete({'userId': userId});
+      await ApiClient.instance.usersDelete({'userId': userId});
       if (!mounted) return;
-      if (res['error'] != null) {
-        Toast.error(context, res['error']);
-      } else {
-        Toast.success(context, '$email has been removed');
-        await _loadUsers();
-      }
+      Toast.success(context, '$email has been removed');
+      await _loadUsers();
     } catch (err) {
       if (mounted) Toast.error(context, _clean(err));
     }
@@ -1573,18 +1561,14 @@ class _InviteSheetState extends State<_InviteSheet> {
 
     setState(() => _busy = true);
     try {
-      final res = await ApiClient.instance.usersInvite({
+      await ApiClient.instance.usersInvite({
         'name': name,
         'email': email,
         'role': _role,
       });
       if (!mounted) return;
-      if (res['error'] != null) {
-        Toast.error(context, res['error']);
-      } else {
-        Toast.success(context, 'Invitation sent');
-        widget.onInvited();
-      }
+      Toast.success(context, 'Invitation sent');
+      widget.onInvited();
     } catch (err) {
       if (mounted) {
         final s = err.toString().replaceFirst('Exception: ', '');

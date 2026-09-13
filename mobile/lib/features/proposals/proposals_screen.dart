@@ -121,8 +121,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
     var failed = 0;
     for (final id in _selected.toList()) {
       try {
-        final res = await action(id);
-        if (res.containsKey('error')) failed++;
+        await action(id);
       } catch (_) {
         failed++;
       }
@@ -194,10 +193,6 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
     try {
       final res = await ApiClient.instance.proposalShareToken(_id(proposal));
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        Toast.error(context, '${res['error']}');
-        return;
-      }
       await showShareSheet(
         context,
         title: proposal['title'] ?? 'Proposal',
@@ -439,9 +434,8 @@ double totalOf(Map<String, dynamic> proposal) {
   final pricing = parseJsonList(proposal['pricing']);
   if (pricing.isEmpty) return 0;
   return pricing.fold<double>(0, (sum, item) {
-    final qty =
-        (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
-    final rate = (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
+    final qty = (item['quantity'] as num?)?.toDouble() ?? 1;
+    final rate = (item['rate'] as num?)?.toDouble() ?? 0;
     return sum + qty * rate;
   });
 }

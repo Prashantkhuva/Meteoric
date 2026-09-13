@@ -122,8 +122,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     var failed = 0;
     for (final id in _selected.toList()) {
       try {
-        final res = await action(id);
-        if (res.containsKey('error')) failed++;
+        await action(id);
       } catch (_) {
         failed++;
       }
@@ -166,9 +165,9 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     if (items == null || items.isEmpty) return 0;
     final subtotal = items.fold<double>(0, (sum, item) {
       final qty =
-          (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
+          (item['quantity'] as num?)?.toDouble() ?? 1;
       final rate =
-          (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
+          (item['rate'] as num?)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
     return subtotal + tax;
@@ -219,10 +218,6 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     try {
       final res = await ApiClient.instance.invoiceShareToken(_id(invoice));
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        Toast.error(context, '${res['error']}');
-        return;
-      }
       await showShareSheet(
         context,
         title: invoice['invoice_number'] ?? 'Invoice',
@@ -482,9 +477,9 @@ class _InvoiceCard extends StatelessWidget {
     if (items.isEmpty) return 0;
     final subtotal = items.fold<double>(0, (sum, item) {
       final qty =
-          (item is Map ? (item['quantity'] as num?) : null)?.toDouble() ?? 1;
+          (item['quantity'] as num?)?.toDouble() ?? 1;
       final rate =
-          (item is Map ? (item['rate'] as num?) : null)?.toDouble() ?? 0;
+          (item['rate'] as num?)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
     return subtotal + tax;
