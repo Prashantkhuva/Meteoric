@@ -1,5 +1,6 @@
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
     const manifestUrl = `${env.SUPABASE_URL}/storage/v1/object/public/app-releases/latest.json`;
 
     let manifest;
@@ -13,11 +14,27 @@ export default {
       return new Response("Failed to fetch update manifest", { status: 502 });
     }
 
-    const { url, version, notes } = manifest;
-    if (!url) {
+    const { url: apkUrl, version, notes } = manifest;
+    if (!apkUrl) {
       return new Response("No download available", { status: 404 });
     }
 
+    // /download — proxy the APK with proper headers
+    if (url.pathname === "/download") {
+      const apkRes = await fetch(apkUrl);
+      if (!apkRes.ok) {
+        return new Response("Failed to fetch APK", { status: 502 });
+      }
+      return new Response(apkRes.body, {
+        headers: {
+          "Content-Type": "application/vnd.android.package-archive",
+          "Content-Disposition": `attachment; filename="Meteoric Admin ${version}.apk"`,
+          "Content-Length": apkRes.headers.get("Content-Length") || "",
+        },
+      });
+    }
+
+    // / — landing page
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,16 +75,8 @@ export default {
       font-weight: 700;
       color: #070707;
     }
-    h1 {
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .version {
-      color: rgba(255,255,255,0.5);
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
+    h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .version { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px; }
     .download-btn {
       display: inline-block;
       background: #EAEFFF;
@@ -94,7 +103,7 @@ export default {
     <div class="logo">M</div>
     <h1>Meteoric Admin</h1>
     <p class="version">Version ${version || "latest"}${notes ? " — " + notes : ""}</p>
-    <a href="${url}" class="download-btn" download>Download APK</a>
+    <a href="/download" class="download-btn">Download APK</a>
     <p class="note">
       <strong>Android only.</strong> Your browser may show a security warning — this is normal for apps installed outside the Play Store. Tap <strong>"Download anyway"</strong> to proceed.
     </p>
