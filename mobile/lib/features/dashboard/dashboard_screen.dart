@@ -447,7 +447,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
           Text(
             _leadsMode
                 ? '${widget.totalLeads}'
-                : Fmt.money(widget.totalRevenue),
+                : Fmt.money(widget.totalRevenue, currency: 'USD'),
             style: const TextStyle(
               color: AppColors.accent,
               fontSize: 30,
@@ -466,7 +466,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                 child: Text(
                   _leadsMode
                       ? 'total leads · ${widget.conversionRate}% won'
-                      : 'collected all-time · ${Fmt.money(widget.totalOutstanding)} outstanding',
+                      : 'collected all-time · ${Fmt.money(widget.totalOutstanding, currency: 'USD')} outstanding',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -820,7 +820,7 @@ class _OverdueBanner extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  '${invoices.length} overdue invoice${invoices.length == 1 ? '' : 's'} · ${Fmt.money(totalDue.toDouble())}',
+                  '${invoices.length} overdue invoice${invoices.length == 1 ? '' : 's'} · ${Fmt.money(totalDue.toDouble(), currency: 'USD')}',
                   style: const TextStyle(
                     color: AppColors.text,
                     fontSize: 12,

@@ -11,6 +11,7 @@ import { LeadFormModal } from "./LeadFormModal";
 import { useToast } from "./ToastContext";
 import { addLead } from "../actions";
 import { formatShort } from "@/lib/supabase/admin";
+import { getCurrencySymbol } from "@/lib/utils";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -160,7 +161,7 @@ function OverdueCard({ invoices, count }) {
               </p>
             </div>
             <span className="text-xs font-semibold text-red-400/90 tabular-nums shrink-0">
-              {inv.currency || "USD"} {Number(inv.total).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+              {getCurrencySymbol(inv.currency)}{Number(inv.total).toLocaleString(undefined, { maximumFractionDigits: 0 })}
             </span>
           </Link>
         ))}
@@ -361,7 +362,7 @@ function RecentInvoicesTable({ invoices }) {
                 <td className="px-5 py-3 text-xs text-white/60 tabular-nums">{inv.invoice_number}</td>
                 <td className="px-5 py-3 text-xs text-white/45">{inv.client?.name || "\u2014"}</td>
                 <td className="px-5 py-3 text-xs text-white/60 tabular-nums">
-                  {inv.currency || "USD"} {Number(inv.total).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  {getCurrencySymbol(inv.currency)}{Number(inv.total).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                 </td>
                 <td className="px-5 py-3">
                   <StatusBadge status={inv.status} />

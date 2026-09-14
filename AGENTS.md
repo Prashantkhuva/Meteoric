@@ -52,6 +52,8 @@ src/
 public/           — Static assets (logo, OG image, etc.)
 supabase/         — Migrations + seed
 scripts/          — Build/utility scripts (generate-sitemap, proxy)
+workers/          — Cloudflare Workers
+└── app-download/ — Download redirect worker (app.withmeteoric.com)
 ```
 
 ## Database
@@ -150,9 +152,11 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
    - **CRITICAL:** patches are release-specific. Always check `shorebird releases list` to confirm the CURRENT release version, then patch THAT release. Wrong target = device never sees patch.
 5. If new APK: `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]`
 6. Verify `latest.json` updated in Supabase Storage
-7. Test: install APK → check Settings shows correct version → trigger update banner if applicable
-8. Commit + push to `main`
+7. Verify `https://app.withmeteoric.com` redirects to new APK
+8. Test: install APK → check Settings shows correct version → trigger update banner if applicable
+9. Commit + push to `main`
 - **In-app updater (0.4.0+):** app polls `latest.json` in public Supabase Storage bucket `app-releases` on launch; if remote build > local, shows an update banner → downloads APK (from GitHub Releases asset) with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES). Ship flow: `shorebird release android` → `shorebird releases get-apks --release-version X -o build/app/outputs/flutter-apk` → `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]` (uploads APK to public repo Prashantkhuva/meteoric-app-releases as release asset + updates Supabase manifest; Supabase free tier caps uploads at 50MB so APK must live on GitHub). User still needs ONE manual install of 0.4.0+5 to bootstrap the updater.
+- **Download link (`app.withmeteoric.com`):** Cloudflare Worker at `workers/app-download/` that fetches `latest.json` from Supabase and 302 redirects to the GitHub APK URL. Always serves latest version. Deploy: `cd workers/app-download && npx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN` env var). Custom domain configured via Cloudflare dashboard. **On every mobile app release**, the worker picks up the new URL automatically from `latest.json` — no worker code changes needed. Only update worker code if the manifest structure changes.
 - **Verification:** `flutter analyze` + `flutter build web --release`
 - **Session persistence:** handled by supabase_flutter itself — `AuthService.init()` passes `persistSession: true` + `localStorage: SharedPreferencesLocalStorage(persistSessionKey: 'sb_session')` (`mobile/lib/core/supabase.dart`). Do NOT switch back to flutter_secure_storage for sessions (v11 silently dropped session writes on the emulator). `sb_session` lives in plain `FlutterSharedPreferences.xml`; the SDK auto-refreshes + re-persists tokens. Keep `AuthService.refreshSession()` as the 401 fallback in `ApiClient`.
 - **Emulator automation gotcha:** after focusing a login field, the keyboard opens and shifts the layout — later taps land on the keyboard. Use `input keyevent 61` (TAB) to move focus and `keyevent 66` (ENTER) to submit instead of tapping the button.
