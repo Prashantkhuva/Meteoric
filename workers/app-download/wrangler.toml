@@ -1,6 +1,10 @@
 name = "app-download"
 main = "index.js"
 compatibility_date = "2026-09-14"
+workers_dev = false
+routes = [
+  { pattern = "app.withmeteoric.com/*", zone_name = "withmeteoric.com" }
+]
 
 [vars]
 SUPABASE_URL = "https://hlxjljckxthmtssqrzwo.supabase.co"
