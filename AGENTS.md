@@ -98,6 +98,18 @@ workers/          — Cloudflare Workers
 - `npm run lint` — ESLint (ignores `mobile` + `build` dirs)
 - `npm run generate:sitemap` — Rebuild sitemap
 
+## API Tokens
+| Service | Token variable | Account/Email |
+|---------|---------------|---------------|
+| Supabase | `SUPABASE_ACCESS_TOKEN` | project: hlxjljckxthmtssqrzwo |
+| Supabase Service Role | `SUPABASE_SERVICE_ROLE_KEY` | — |
+| Cloudflare | `CLOUDFLARE_API_TOKEN` | Account: Prashantkhuva |
+| Shorebird | CLI login | `work.prashantkhuva@gmail.com`, app_id: `39ba27c5-5735-4c86-a9b9-e037da640ec0` |
+| Cal.com | `CALCOM_API_KEY` | — |
+| Resend | `RESEND_API_KEY` | — |
+| EmailJS | `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | service: `service_4nznchu`, template: `template_xx2t3io` |
+| Razorpay | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | test mode |
+
 ## Flutter Mobile App (mobile/)
 - **SDK:** Flutter 3.47.0 at `C:\flutter` (add `/c/flutter/flutter/bin` to PATH per session)
 - **Android SDK:** `C:\Users\PRASHANT\AppData\Local\Android\sdk` (setx `ANDROID_HOME`); cmdline-tools at `sdk/cmdline-tools/latest`
@@ -160,6 +172,14 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 - **Verification:** `flutter analyze` + `flutter build web --release`
 - **Session persistence:** handled by supabase_flutter itself — `AuthService.init()` passes `persistSession: true` + `localStorage: SharedPreferencesLocalStorage(persistSessionKey: 'sb_session')` (`mobile/lib/core/supabase.dart`). Do NOT switch back to flutter_secure_storage for sessions (v11 silently dropped session writes on the emulator). `sb_session` lives in plain `FlutterSharedPreferences.xml`; the SDK auto-refreshes + re-persists tokens. Keep `AuthService.refreshSession()` as the 401 fallback in `ApiClient`.
 - **Emulator automation gotcha:** after focusing a login field, the keyboard opens and shifts the layout — later taps land on the keyboard. Use `input keyevent 61` (TAB) to move focus and `keyevent 66` (ENTER) to submit instead of tapping the button.
+
+## Cloudflare Worker (`workers/app-download/`)
+- **Worker:** `app-download` — serves download page for Meteoric Admin APK
+- **Route:** `app.withmeteoric.com/*` → fetches `latest.json` from Supabase Storage → shows download page
+- **Deploy:** `cd workers/app-download && CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN npx wrangler deploy`
+- **Wrangler config:** `workers/app-download/wrangler.toml` — routes `app.withmeteoric.com/*`, env var `SUPABASE_URL`
+- **On every mobile release:** worker auto-picks up new `latest.json` — no code changes needed unless manifest structure changes
+- **To update worker code:** edit `workers/app-download/index.js` → `wrangler deploy`
 
 ## GEO (Generative Engine Optimization)
 - Goal: Get cited by ChatGPT, Claude, Perplexity, Gemini for queries about "web development agency", "SaaS development", etc.
@@ -224,6 +244,7 @@ FROM_EMAIL
 ADMIN_EMAIL
 CALCOM_API_KEY
 NEXT_PUBLIC_SITE_URL
+CLOUDFLARE_API_TOKEN
 ```
 
 ## Google Indexing API (Bulk Reindexing)
