@@ -147,6 +147,7 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 2. Update `app_version.dart` (version/patch/build + updatedAt)
 3. If new release: bump `pubspec.yaml` version too
 4. Shorebird: `shorebird patch android` (or `shorebird release android` for new APK)
+   - **CRITICAL:** patches are release-specific. Always check `shorebird releases list` to confirm the CURRENT release version, then patch THAT release. Wrong target = device never sees patch.
 5. If new APK: `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]`
 6. Verify `latest.json` updated in Supabase Storage
 7. Test: install APK → check Settings shows correct version → trigger update banner if applicable

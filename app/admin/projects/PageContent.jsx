@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
+import { getCurrencySymbol } from "@/lib/utils";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { Pagination } from "../components/Pagination";
 import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
@@ -504,7 +505,7 @@ function DesktopTable({ items, onView, onEdit, onDelete, onStatusChange, editing
                 />
               </td>
               <td className="px-5 py-3.5 text-sm text-white/60 tabular-nums">
-                {p.budget ? `$${Number(p.budget).toLocaleString()}` : "—"}
+                {p.budget ? `${getCurrencySymbol(p.currency)}${Number(p.budget).toLocaleString()}` : "—"}
               </td>
               <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
                 {p.deadline ? (
@@ -562,7 +563,7 @@ function MobileCards({ items, onView, onEdit, onDelete, onStatusChange, editingS
           </div>
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-3 text-xs text-white/30">
-              {p.budget && <span className="tabular-nums">${Number(p.budget).toLocaleString()}</span>}
+              {p.budget && <span className="tabular-nums">{getCurrencySymbol(p.currency)}{Number(p.budget).toLocaleString()}</span>}
               {p.deadline && (
                 <span className="tabular-nums">{new Date(p.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
               )}
@@ -676,6 +677,21 @@ function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }) 
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField label="Budget" name="budget" type="number" placeholder="5000" defaultValue={project?.budget || ""} />
+              <div>
+                <label htmlFor="field-currency" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Currency
+                </label>
+                <select
+                  id="field-currency"
+                  name="currency"
+                  defaultValue={project?.currency || "INR"}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                >
+                  {["INR", "USD", "EUR", "GBP", "AUD"].map((c) => (
+                    <option key={c} value={c}>{c} ({getCurrencySymbol(c)})</option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <label htmlFor="field-services" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Services (comma-separated)
@@ -812,7 +828,7 @@ function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChang
                       <DollarSign size={12} />
                       Budget
                     </div>
-                    <p className="text-lg font-semibold text-white/80 tabular-nums">${Number(project.budget).toLocaleString()}</p>
+                    <p className="text-lg font-semibold text-white/80 tabular-nums">{getCurrencySymbol(project.currency)}{Number(project.budget).toLocaleString()}</p>
                   </div>
                 )}
                 {project.deadline && (

@@ -117,16 +117,14 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     };
 
     try {
-      final res = _isEdit
-          ? await ApiClient.instance.invoiceUpdate(payload)
-          : await ApiClient.instance.invoiceCreate(payload);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (_isEdit) {
+        await ApiClient.instance.invoiceUpdate(payload);
       } else {
-        _snack(_isEdit ? 'Invoice updated' : 'Invoice created');
-        Navigator.of(context).pop(true);
+        await ApiClient.instance.invoiceCreate(payload);
       }
+      if (!mounted) return;
+      _snack(_isEdit ? 'Invoice updated' : 'Invoice created');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
 const pageTitle = "Privacy Policy — Meteoric";

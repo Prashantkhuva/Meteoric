@@ -1,12 +1,32 @@
-import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import Link from "next/link";
 
+const pageTitle = `Editorial Policy | ${SITE_NAME}`;
+const pageDesc =
+  "How Meteoric creates, reviews, and maintains blog content. Our editorial standards ensure accuracy, expertise, and usefulness for every article.";
+
 export const metadata = {
-  title: `Editorial Policy | ${SITE_NAME}`,
-  description:
-    "How Meteoric creates, reviews, and maintains blog content. Our editorial standards ensure accuracy, expertise, and usefulness for every article.",
+  title: pageTitle,
+  description: pageDesc,
   alternates: {
     canonical: `${SITE_URL}/editorial-policy`,
+  },
+  openGraph: {
+    title: pageTitle,
+    description: pageDesc,
+    url: `${SITE_URL}/editorial-policy`,
+    siteName: SITE_NAME,
+    type: "website",
+    locale: "en_US",
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@prashantkhuva_",
+    creator: "@prashantkhuva_",
+    title: pageTitle,
+    description: pageDesc,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

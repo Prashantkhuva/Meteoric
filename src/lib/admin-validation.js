@@ -178,6 +178,7 @@ export const projectSchema = z.object({
   start_date: z.string().max(20).optional().or(z.literal("")).transform((v) => v || null),
   deadline: z.string().max(20).optional().or(z.literal("")).transform((v) => v || null),
   budget: z.coerce.number().min(0).max(999999999).optional().nullable().transform((v) => v ?? null),
+  currency: z.string().max(5).optional().default('INR').transform((v) => v || 'INR'),
   services: z.string().max(1000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   notes: z.string().max(10000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });

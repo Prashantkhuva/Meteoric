@@ -52,16 +52,14 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
     };
 
     try {
-      final res = _isEdit
-          ? await ApiClient.instance.clientUpdate(payload)
-          : await ApiClient.instance.clientAdd(payload);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (_isEdit) {
+        await ApiClient.instance.clientUpdate(payload);
       } else {
-        _snack(_isEdit ? 'Client updated' : 'Client added');
-        Navigator.of(context).pop(true);
+        await ApiClient.instance.clientAdd(payload);
       }
+      if (!mounted) return;
+      _snack(_isEdit ? 'Client updated' : 'Client added');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

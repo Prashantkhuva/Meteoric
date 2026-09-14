@@ -90,25 +90,21 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     try {
       final res = await ApiClient.instance.proposalDraft(int.parse(_leadId!));
       if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
-      } else {
-        final draft = res['data'] as Map<String, dynamic>? ?? const {};
-        setState(() {
-          if (draft['title'] != null) _title.text = draft['title'] as String;
-          if (draft['timeline'] != null) {
-            _timeline.text = draft['timeline'] as String;
-          }
-          if (draft['terms'] != null) _terms.text = draft['terms'] as String;
-          if (draft['content'] != null) _content = draft['content'];
-          if (draft['pricing'] is List) {
-            _pricing = (draft['pricing'] as List)
-                .map((e) => (e as Map).cast<String, dynamic>())
-                .toList();
-          }
-        });
-        _snack('Draft generated');
-      }
+      final draft = res['data'] as Map<String, dynamic>? ?? const {};
+      setState(() {
+        if (draft['title'] != null) _title.text = draft['title'] as String;
+        if (draft['timeline'] != null) {
+          _timeline.text = draft['timeline'] as String;
+        }
+        if (draft['terms'] != null) _terms.text = draft['terms'] as String;
+        if (draft['content'] != null) _content = draft['content'];
+        if (draft['pricing'] is List) {
+          _pricing = (draft['pricing'] as List)
+              .map((e) => (e as Map).cast<String, dynamic>())
+              .toList();
+        }
+      });
+      _snack('Draft generated');
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -131,16 +127,14 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     };
 
     try {
-      final res = _isEdit
-          ? await ApiClient.instance.proposalUpdate(payload)
-          : await ApiClient.instance.proposalCreate(payload);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (_isEdit) {
+        await ApiClient.instance.proposalUpdate(payload);
       } else {
-        _snack(_isEdit ? 'Proposal updated' : 'Proposal created');
-        Navigator.of(context).pop(true);
+        await ApiClient.instance.proposalCreate(payload);
       }
+      if (!mounted) return;
+      _snack(_isEdit ? 'Proposal updated' : 'Proposal created');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

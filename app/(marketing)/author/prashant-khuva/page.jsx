@@ -33,6 +33,13 @@ export function generateMetadata() {
       url: `${SITE_URL}/author/prashant-khuva`,
       type: "profile",
     },
+    twitter: {
+      card: "summary_large_image",
+      site: "@prashantkhuva_",
+      creator: "@prashantkhuva_",
+      title: `${authorData.name} — ${authorData.title}`,
+      description: authorData.bio,
+    },
   };
 }
 

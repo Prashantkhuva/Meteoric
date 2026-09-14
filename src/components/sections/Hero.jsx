@@ -91,13 +91,6 @@ function Hero() {
         <MeteorBackground showBrand={false} />
       </div>
 
-      <div className="sr-only">
-        Meteoric has shipped 12+ production projects since 2026 with 100% client
-        satisfaction. Average project delivery takes 7-14 days. Services include
-        SaaS development, landing pages, web applications, and full-stack
-        development for startups and founders worldwide.
-      </div>
-
       <div
         ref={containerRef}
         className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 px-5 sm:px-6 md:px-0 md:-translate-y-12"

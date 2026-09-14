@@ -31,6 +31,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   );
 
   String? _clientId;
+  String _currency = 'INR';
   String? _startDate;
   String? _deadline;
   bool _saving = false;
@@ -45,6 +46,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   void initState() {
     super.initState();
     _clientId = widget.project?['client_id'];
+    _currency = (widget.project?['currency'] as String?) ?? 'INR';
     _startDate = widget.project?['start_date'];
     _deadline = widget.project?['deadline'];
     _loadClients();
@@ -116,22 +118,21 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
       'description': _description.text.trim(),
       'services': _services.text.trim(),
       'budget': num.tryParse(_budget.text.trim()),
+      'currency': _currency,
       'start_date': _startDate,
       'deadline': _deadline,
       'notes': _notes.text.trim(),
     };
 
     try {
-      final res = _isEdit
-          ? await ApiClient.instance.projectUpdate(payload)
-          : await ApiClient.instance.projectCreate(payload);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (_isEdit) {
+        await ApiClient.instance.projectUpdate(payload);
       } else {
-        _snack(_isEdit ? 'Project updated' : 'Project created');
-        Navigator.of(context).pop(true);
+        await ApiClient.instance.projectCreate(payload);
       }
+      if (!mounted) return;
+      _snack(_isEdit ? 'Project updated' : 'Project created');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -175,6 +176,19 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               controller: _budget,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Budget'),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              initialValue: _currency,
+              decoration: const InputDecoration(labelText: 'Currency'),
+              items: const [
+                DropdownMenuItem(value: 'INR', child: Text('INR (\u20B9)')),
+                DropdownMenuItem(value: 'USD', child: Text('USD (\$)')),
+                DropdownMenuItem(value: 'EUR', child: Text('EUR (\u20AC)')),
+                DropdownMenuItem(value: 'GBP', child: Text('GBP (\u00A3)')),
+                DropdownMenuItem(value: 'AUD', child: Text('AUD (A\$)')),
+              ],
+              onChanged: (v) => setState(() => _currency = v ?? 'INR'),
             ),
             const SizedBox(height: 12),
             Row(

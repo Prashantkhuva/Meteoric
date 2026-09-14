@@ -71,16 +71,14 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     }..removeWhere((k, v) => v == null);
 
     try {
-      final res = _isEdit
-          ? await ApiClient.instance.leadUpdate(payload)
-          : await ApiClient.instance.leadAdd(payload);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (_isEdit) {
+        await ApiClient.instance.leadUpdate(payload);
       } else {
-        _snack(_isEdit ? 'Lead updated' : 'Lead added');
-        Navigator.of(context).pop(true);
+        await ApiClient.instance.leadAdd(payload);
       }
+      if (!mounted) return;
+      _snack(_isEdit ? 'Lead updated' : 'Lead added');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

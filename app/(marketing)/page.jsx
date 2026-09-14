@@ -99,7 +99,6 @@ const organizationSchema = {
       description:
         "Full-stack web development, SaaS products, and landing pages for startups.",
       areaServed: "Worldwide",
-      priceRange: "$$",
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer service",

@@ -98,6 +98,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Widget build(BuildContext context) {
     final client = _client;
     final budget = (_project['budget'] as num?)?.toDouble();
+    final currency = (_project['currency'] as String?) ?? 'INR';
 
     return PopScope(
       canPop: false,
@@ -149,7 +150,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   DetailRow(
                     label: 'Budget',
                     value: budget != null && budget > 0
-                        ? Fmt.money(budget)
+                        ? Fmt.money(budget, currency: currency)
                         : '—',
                   ),
                   DetailRow(

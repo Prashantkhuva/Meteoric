@@ -83,16 +83,14 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
     };
 
     try {
-      final res = _isEdit
-          ? await ApiClient.instance.bankAccountUpdate(payload)
-          : await ApiClient.instance.bankAccountCreate(payload);
-      if (!mounted) return;
-      if (res.containsKey('error')) {
-        _snack(res['error'] as String, isError: true);
+      if (_isEdit) {
+        await ApiClient.instance.bankAccountUpdate(payload);
       } else {
-        _snack(_isEdit ? 'Bank account updated' : 'Bank account added');
-        Navigator.of(context).pop(true);
+        await ApiClient.instance.bankAccountCreate(payload);
       }
+      if (!mounted) return;
+      _snack(_isEdit ? 'Bank account updated' : 'Bank account added');
+      Navigator.of(context).pop(true);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {

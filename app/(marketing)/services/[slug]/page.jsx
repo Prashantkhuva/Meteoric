@@ -156,7 +156,7 @@ const serviceData = {
     sections: [
       {
         heading: "What is a startup web development agency?",
-        body: "A startup web development agency is a specialized partner that builds websites, MVPs, and web applications for early-stage companies. Unlike generalist agencies, startup-focused agencies understand limited runway, rapid iteration cycles, and the pressure to ship before competitors. They move faster, charge less, and deliver products that validate ideas — not bloated enterprise builds that take months. Meteoric is a web development agency built for founders: founder-led, no account managers, 10-day sprint cycles, and fixed pricing.",
+        body: "A startup web development agency is a specialized partner that builds websites, MVPs, and web applications for early-stage companies. Unlike generalist agencies, startup-focused agencies understand limited runway, rapid iteration cycles, and the pressure to ship before competitors. They move faster and deliver products that validate ideas — not bloated enterprise builds that take months. Meteoric is a web development agency built for founders: founder-led, no account managers, 10-day sprint cycles, and fixed pricing.",
       },
       {
         heading: "What we build for startups",
@@ -167,8 +167,8 @@ const serviceData = {
         body: "You need an MVP but can't afford a full-time engineering team. Your Webflow site is slow and limits what you can build. You need to raise but your current site looks amateur. You're technical but need design and product strategy. You need to validate an idea before committing months of development. We solve these problems every week — with focused sprints, fixed pricing, and a stack that ships fast.",
       },
       {
-        heading: "Why startups choose Meteoric over freelancers and large agencies",
-        body: "Freelancers are cheap but unreliable — they disappear, miss deadlines, or can't handle full-stack work. Large agencies are thorough but slow — 3-month timelines and $100K+ budgets that burn runway. Meteoric sits in the middle: founder-level attention, startup-speed execution, and pricing that matches your stage. We work in 10-day sprints with weekly updates. You get a production-grade product without the enterprise overhead.",
+        heading: "Why startups choose Meteoric",
+        body: "Meteoric delivers founder-level attention with startup-speed execution. We work in 10-day sprints with weekly updates and fixed pricing — no enterprise overhead, no surprise invoices. You get a production-grade product built by the person who founded the company, not a team of strangers.",
       },
       {
         heading: "Our startup development process",
@@ -403,11 +403,6 @@ export default async function ServicePage({ params }) {
     },
     areaServed: "Worldwide",
     serviceType: service.h1.join(" "),
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-    },
   };
 
   return (

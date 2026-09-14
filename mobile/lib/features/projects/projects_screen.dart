@@ -170,12 +170,13 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       await CsvExport.share(
         filename: CsvExport.datedName('projects'),
         rows: [
-          ['Name', 'Client', 'Budget', 'Status', 'Deadline', 'Created'],
+          ['Name', 'Client', 'Budget', 'Currency', 'Status', 'Deadline', 'Created'],
           ...all.map(
             (p) => [
               '${p['name'] ?? ''}',
               p['client'] is Map ? '${p['client']['name'] ?? ''}' : '',
               '${p['budget'] ?? ''}',
+              '${p['currency'] ?? ''}',
               '${p['status'] ?? ''}',
               csvDate(p['deadline']),
               csvDate(p['created_at']),
@@ -436,6 +437,7 @@ class _ProjectCard extends StatelessWidget {
     final client = project['client'];
     final clientName = client is Map ? (client['name'] ?? '—') : '—';
     final budget = (project['budget'] as num?)?.toDouble();
+    final currency = (project['currency'] as String?) ?? 'INR';
 
     return Material(
       borderRadius: AppRadius.mdAll,
@@ -505,7 +507,7 @@ class _ProjectCard extends StatelessWidget {
                       children: [
                         if (budget != null && budget > 0)
                           Text(
-                            Fmt.money(budget),
+                            Fmt.money(budget, currency: currency),
                             style: const TextStyle(
                               color: AppColors.accent,
                               fontSize: 13,

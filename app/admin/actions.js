@@ -1175,6 +1175,7 @@ export async function createProject(formData) {
       start_date: data.start_date,
       deadline: data.deadline,
       budget: data.budget,
+      currency: data.currency || "INR",
       services: data.services || null,
       notes: data.notes,
     });
@@ -1202,6 +1203,7 @@ export async function updateProject(formData) {
         start_date: data.start_date,
         deadline: data.deadline,
         budget: data.budget,
+        currency: data.currency || "INR",
         services: data.services || null,
         notes: data.notes,
         updated_at: new Date().toISOString(),
