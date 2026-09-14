@@ -116,6 +116,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   Future<void> _runBulk(
     Future<Map<String, dynamic>> Function(int id) action,
   ) async {
+    if (!mounted) return;
     setState(() => _busy = true);
     var failed = 0;
     for (final id in _selected.toList()) {
@@ -404,6 +405,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => ProjectDetailScreen(project: project)),
     );
+    if (!mounted) return;
     _load();
   }
 
@@ -411,6 +413,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     final changed = await Navigator.of(context).push<bool>(
       MaterialPageRoute(builder: (_) => ProjectFormScreen(project: project)),
     );
+    if (!mounted) return;
     if (changed == true) _load();
   }
 }

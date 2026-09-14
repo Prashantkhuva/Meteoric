@@ -95,6 +95,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
         builder: (_) => BankAccountFormScreen(account: account),
       ),
     );
+    if (!mounted) return;
     if (changed == true) _load();
   }
 

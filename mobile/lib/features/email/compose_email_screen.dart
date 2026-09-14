@@ -59,7 +59,6 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
 
   Future<void> _loadRecipients() async {
     setState(() {
-      _recipientsLoaded = true;
       _recipientsError = null;
     });
     try {
@@ -69,10 +68,16 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
           _recipients = ((res['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
+          _recipientsLoaded = true;
         });
       }
     } catch (err) {
-      if (mounted) setState(() => _recipientsError = err.toString());
+      if (mounted) {
+        setState(() {
+          _recipientsError = err.toString();
+          _recipientsLoaded = true;
+        });
+      }
     }
   }
 

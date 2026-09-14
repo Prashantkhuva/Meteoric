@@ -65,6 +65,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
     if (!_state.downloading &&
         _state.progress == null &&
         _state.error == null &&
+        !_state.needsInstallPermission &&
         _downloadStart != null) {
       _downloadStart = null;
       if (mounted) Navigator.of(context).maybePop();

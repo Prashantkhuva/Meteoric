@@ -125,7 +125,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   Future<void> _bulkDelete() async {
     final ok = await confirmBulkDelete(context, count: _selected.length);
-    if (!ok) return;
+    if (!ok || !mounted) return;
     setState(() => _busy = true);
     var failed = 0;
     for (final id in _selected.toList()) {
@@ -522,6 +522,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
   Future<void> _openDetail(Map<String, dynamic> lead) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => LeadDetailScreen(lead: lead)));
+    if (!mounted) return;
     _load();
   }
 
@@ -529,6 +530,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     final changed = await Navigator.of(
       context,
     ).push<bool>(MaterialPageRoute(builder: (_) => LeadFormScreen(lead: lead)));
+    if (!mounted) return;
     if (changed == true) _load();
   }
 }

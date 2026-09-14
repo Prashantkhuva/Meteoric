@@ -175,52 +175,23 @@ class TipTapView extends StatelessWidget {
     final marks = (node['marks'] as List?)?.cast<Map>() ?? const <Map>[];
     final markTypes = marks.map((m) => m['type']).toSet();
 
-    Widget child = Text(
-      text,
-      style: const TextStyle(
-        color: AppColors.textMuted,
-        fontSize: 13,
-        height: 1.6,
-        fontFamily: 'Inter',
-      ),
+    var style = const TextStyle(
+      color: AppColors.textMuted,
+      fontSize: 13,
+      height: 1.6,
+      fontFamily: 'Inter',
     );
 
     if (markTypes.contains('bold')) {
-      child = Text(
-        text,
-        style: const TextStyle(
-          color: AppColors.textMuted,
-          fontSize: 13,
-          height: 1.6,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Inter',
-        ),
-      );
+      style = style.copyWith(fontWeight: FontWeight.w700);
     }
     if (markTypes.contains('italic')) {
-      child = Text(
-        text,
-        style: const TextStyle(
-          color: AppColors.textMuted,
-          fontSize: 13,
-          height: 1.6,
-          fontStyle: FontStyle.italic,
-          fontFamily: 'Inter',
-        ),
-      );
+      style = style.copyWith(fontStyle: FontStyle.italic);
     }
     if (markTypes.contains('underline')) {
-      child = Text(
-        text,
-        style: const TextStyle(
-          color: AppColors.textMuted,
-          fontSize: 13,
-          height: 1.6,
-          decoration: TextDecoration.underline,
-          fontFamily: 'Inter',
-        ),
-      );
+      style = style.copyWith(decoration: TextDecoration.underline);
     }
+    Widget child = Text(text, style: style);
     if (markTypes.contains('link')) {
       final href =
           marks.firstWhere(

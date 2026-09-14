@@ -86,6 +86,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
     final changed = await Navigator.of(context).push<bool>(
       MaterialPageRoute(builder: (_) => BookingDetailScreen(booking: booking)),
     );
+    if (!mounted) return;
     if (changed == true) _load(silent: true);
   }
 

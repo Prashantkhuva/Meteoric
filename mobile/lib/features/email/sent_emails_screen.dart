@@ -104,7 +104,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
       count: _selected.length,
       label: 'email records',
     );
-    if (!ok) return;
+    if (!ok || !mounted) return;
     setState(() => _busy = true);
     var failed = 0;
     for (final id in _selected.toList()) {

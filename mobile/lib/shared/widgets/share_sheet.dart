@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 import '../../core/native.dart';
 import '../../core/theme.dart';
-import '../../core/toast.dart';
 
 /// Bottom sheet mirroring the web admin's share actions:
 /// copy link, open preview, WhatsApp, system share.
@@ -54,7 +53,6 @@ Future<void> showShareSheet(
             onTap: () {
               Clipboard.setData(ClipboardData(text: url));
               Navigator.pop(ctx);
-              Toast.success(ctx, 'Link copied');
             },
           ),
           _ShareAction(

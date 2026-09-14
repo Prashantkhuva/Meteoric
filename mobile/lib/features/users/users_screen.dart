@@ -115,10 +115,10 @@ class _UsersScreenState extends State<UsersScreen> {
     if (mounted) setState(() => _resendingFor = null);
   }
 
-  Future<void> _deleteUser(Map<String, dynamic> user) async {
+  Future<bool> _deleteUser(Map<String, dynamic> user) async {
     final email = user['email'] as String? ?? '';
     final userId = user['id'] as String?;
-    if (userId == null) return;
+    if (userId == null) return false;
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -166,18 +166,20 @@ class _UsersScreenState extends State<UsersScreen> {
       ),
     );
 
-    if (confirmed != true || !mounted) return;
+    if (confirmed != true || !mounted) return false;
 
     setState(() => _deletingFor = userId);
     try {
       await ApiClient.instance.usersDelete({'userId': userId});
-      if (!mounted) return;
+      if (!mounted) return false;
       Toast.success(context, '$email has been removed');
       await _loadUsers();
+      return true;
     } catch (err) {
       if (mounted) Toast.error(context, _clean(err));
     }
     if (mounted) setState(() => _deletingFor = null);
+    return false;
   }
 
   void _showInviteSheet() {
@@ -207,8 +209,8 @@ class _UsersScreenState extends State<UsersScreen> {
           onRoleChanged: (role) => _changeRole(user['id'], role),
           onResend: () => _resendInvite(user['id']),
           onDelete: () async {
-            await _deleteUser(user);
-            if (mounted) Navigator.pop(context);
+            final deleted = await _deleteUser(user);
+            if (deleted && mounted) Navigator.pop(context);
           },
         ),
       ),

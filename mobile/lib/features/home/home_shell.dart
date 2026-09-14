@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/notification_state.dart';
 import '../../core/theme.dart';
@@ -205,8 +206,7 @@ class _HomeShellState extends State<HomeShell> {
                           TextButton(
                             onPressed: () {
                               Navigator.of(ctx).pop();
-                              // Force restart by exiting — user relaunches
-                              // In production, use SystemNavigator.pop()
+                              SystemNavigator.pop();
                             },
                             child: const Text('RESTART'),
                           ),
