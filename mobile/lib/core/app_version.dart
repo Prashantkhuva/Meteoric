@@ -8,8 +8,8 @@ import 'package:shorebird_code_push/shorebird_code_push.dart';
 /// Always set [updatedAt] to the ship time (IST). Settings shows these values.
 class AppVersion {
   static const String version = '0.15.0+1';
-  static const int patch = 4;
-  static const String updatedAt = '15 Sep 2026 · 8:25 PM';
+  static const int patch = 5;
+  static const String updatedAt = '15 Sep 2026 · 8:40 PM';
 
   static final _updater = ShorebirdUpdater();
 
