@@ -5,11 +5,16 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'core/theme.dart';
 import 'core/supabase.dart';
 import 'core/notification_service.dart';
+import 'core/error_reporter.dart';
 import 'features/auth/login_screen.dart';
 import 'features/home/home_shell.dart';
 
+final _navKey = GlobalKey<NavigatorState>();
+final _routeObserver = ErrorRouteObserver();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ErrorReporter.init();
   await AuthService.init();
   await NotificationService.instance.init();
   runApp(const MeteoricAdminApp());
@@ -24,6 +29,8 @@ class MeteoricAdminApp extends StatelessWidget {
       title: 'Meteoric Admin',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
+      navigatorKey: _navKey,
+      navigatorObservers: [_routeObserver],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

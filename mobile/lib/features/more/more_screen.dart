@@ -10,6 +10,7 @@ import '../bank_accounts/bank_accounts_screen.dart';
 import '../email/email_screen.dart';
 import '../users/users_screen.dart';
 import '../settings/settings_screen.dart';
+import 'report_issue_screen.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -47,6 +48,7 @@ class _MoreScreenState extends State<MoreScreen> {
   Widget build(BuildContext context) {
     final items = [
       ..._baseItems,
+      const _Item('Report Issue', Icons.bug_report_outlined, ReportIssueScreen()),
       if (_canManageUsers)
         const _Item('Team', Icons.group_outlined, UsersScreen()),
       const _Item('Settings', Icons.settings_outlined, SettingsScreen()),
