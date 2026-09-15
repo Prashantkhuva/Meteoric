@@ -1,6 +1,8 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../../core/formatters.dart' show parseJsonList;
+
 /// Builds print-ready PDFs that mirror the web preview pages
 /// (`app/preview/{invoice,proposal}/[id]/route.js`) — clean light theme.
 ///
@@ -593,6 +595,7 @@ class PdfExport {
                   ),
                 pw.SizedBox(height: 20),
                 ..._contentBlocks(proposal['content']),
+                ..._proposalPricingBlock(proposal),
                 ..._footerSections([
                   MapEntry('Timeline', proposal['timeline'] as String?),
                   MapEntry('Terms & Conditions', proposal['terms'] as String?),
@@ -603,6 +606,82 @@ class PdfExport {
         ],
       ),
     );
+  }
+
+  static List<pw.Widget> _proposalPricingBlock(Map<String, dynamic> proposal) {
+    final raw = proposal['pricing'];
+    final items = parseJsonList(raw);
+    if (items.isEmpty) return [];
+    final currency = (proposal['currency'] as String?) ?? 'USD';
+    final symbol = currencySymbol(currency);
+    final total = items.fold<double>(0, (sum, item) {
+      final qty = (item['quantity'] as num?)?.toDouble() ?? 1;
+      final rate = (item['rate'] as num?)?.toDouble() ?? 0;
+      return sum + qty * rate;
+    });
+    return [
+      pw.SizedBox(height: 20),
+      _label('Pricing'),
+      pw.SizedBox(height: 8),
+      for (final item in items)
+        pw.Container(
+          padding: const pw.EdgeInsets.symmetric(vertical: 4),
+          decoration: const pw.BoxDecoration(
+            border: pw.Border(bottom: pw.BorderSide(color: _borderSoft)),
+          ),
+          child: pw.Row(
+            children: [
+              pw.Expanded(
+                child: pw.Text(
+                  '${sanitize(item['description'])} × ${item['quantity'] ?? 1}',
+                  style: pw.TextStyle(fontSize: 9, color: _textMuted),
+                ),
+              ),
+              pw.Text(
+                _money(
+                  ((item['rate'] as num?)?.toDouble() ?? 0) *
+                      ((item['quantity'] as num?)?.toDouble() ?? 1),
+                  symbol,
+                ),
+                style: pw.TextStyle(
+                  fontSize: 9,
+                  fontWeight: pw.FontWeight.bold,
+                  color: _text,
+                ),
+              ),
+            ],
+          ),
+        ),
+      pw.Container(
+        margin: const pw.EdgeInsets.only(top: 6),
+        padding: const pw.EdgeInsets.only(top: 6),
+        decoration: const pw.BoxDecoration(
+          border: pw.Border(top: pw.BorderSide(color: _border)),
+        ),
+        child: pw.Row(
+          children: [
+            pw.Text(
+              'TOTAL',
+              style: pw.TextStyle(
+                fontSize: 7,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 1,
+                color: _textFaint,
+              ),
+            ),
+            pw.Spacer(),
+            pw.Text(
+              _money(total, symbol),
+              style: pw.TextStyle(
+                fontSize: 11,
+                fontWeight: pw.FontWeight.bold,
+                color: _text,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
   }
 
   static String _fmtDate(dynamic iso) {

@@ -464,7 +464,8 @@ class _ProposalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final lead = proposal['lead'];
     final leadName = lead is Map ? (lead['name'] ?? '—') : '—';
-    final total = Fmt.money(totalOf(proposal));
+    final currency = proposal['currency'] as String?;
+    final total = Fmt.money(totalOf(proposal), currency: currency);
 
     return Material(
       color: selected ? AppColors.cardRaised : AppColors.card,

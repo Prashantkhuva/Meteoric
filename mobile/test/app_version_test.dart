@@ -18,11 +18,11 @@ void main() {
     });
 
     test('display shows version when patch is 0', () {
-      // AppVersion.patch is const 8, so display always shows patch info
-      // Test that display format is correct
       final display = AppVersion.display;
       expect(display, contains(AppVersion.version));
-      expect(display, contains('patch'));
+      if (AppVersion.patch > 0) {
+        expect(display, contains('patch'));
+      }
     });
 
     test('display always contains version string', () {

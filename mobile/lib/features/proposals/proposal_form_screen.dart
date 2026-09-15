@@ -29,6 +29,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
   );
 
   String? _leadId;
+  String _currency = 'USD';
   dynamic _content;
   List<Map<String, dynamic>> _pricing = [];
   bool _saving = false;
@@ -43,6 +44,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
   void initState() {
     super.initState();
     _leadId = widget.proposal?['lead_id'];
+    _currency = widget.proposal?['currency'] ?? 'USD';
     _content = widget.proposal?['content'];
     final raw = widget.proposal?['pricing'];
     _pricing = parseJsonList(raw);
@@ -122,6 +124,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
       'title': _title.text.trim(),
       if (_content != null) 'content': _content,
       'pricing': _pricing,
+      'currency': _currency,
       'timeline': _timeline.text.trim(),
       'terms': _terms.text.trim(),
     };
@@ -191,7 +194,20 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
             _contentSection(),
             const SizedBox(height: 20),
             _pricingSection(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              initialValue: _currency,
+              decoration: const InputDecoration(labelText: 'Currency'),
+              items: const [
+                DropdownMenuItem(value: 'USD', child: Text('USD')),
+                DropdownMenuItem(value: 'EUR', child: Text('EUR')),
+                DropdownMenuItem(value: 'GBP', child: Text('GBP')),
+                DropdownMenuItem(value: 'INR', child: Text('INR')),
+                DropdownMenuItem(value: 'AED', child: Text('AED')),
+              ],
+              onChanged: (v) => setState(() => _currency = v ?? 'USD'),
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _timeline,
               decoration: const InputDecoration(labelText: 'Timeline'),

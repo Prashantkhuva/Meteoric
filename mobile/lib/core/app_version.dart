@@ -7,9 +7,9 @@ import 'package:shorebird_code_push/shorebird_code_push.dart';
 ///   • shorebird patch → increment [patch], leave [version] alone
 /// Always set [updatedAt] to the ship time (IST). Settings shows these values.
 class AppVersion {
-  static const String version = '0.14.0+1';
-  static const int patch = 9;
-  static const String updatedAt = '14 Sep 2026 · 7:48 PM';
+  static const String version = '0.15.0+1';
+  static const int patch = 0;
+  static const String updatedAt = '15 Sep 2026 · 5:36 PM';
 
   static final _updater = ShorebirdUpdater();
 

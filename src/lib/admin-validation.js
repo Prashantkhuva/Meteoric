@@ -129,6 +129,7 @@ export const proposalSchema = z.object({
   status: statusSchema(VALID_PROPOSAL_STATUSES).optional(),
   content: z.any().optional(),
   pricing: z.any().optional(),
+  currency: z.string().max(10).optional().default("USD"),
   timeline: z.string().max(5000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   terms: z.string().max(10000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });

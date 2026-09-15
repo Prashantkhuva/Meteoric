@@ -630,6 +630,7 @@ export async function createProposal(formData) {
       status: "draft",
       content,
       pricing,
+      currency: data.currency || "USD",
       timeline: data.timeline,
       terms: data.terms,
     });
@@ -661,6 +662,7 @@ export async function updateProposal(formData) {
         status: data.status || "draft",
         content,
         pricing,
+        currency: data.currency || "USD",
         timeline: data.timeline,
         terms: data.terms,
         updated_at: new Date().toISOString(),

@@ -12,6 +12,7 @@ import '../invoices/invoice_preview_screen.dart' show StatusDot;
 const _bg = Color(0xFFF5F5F5);
 const _card = Color(0xFFFFFFFF);
 const _border = Color(0xFFE5E7EB);
+const _borderSoft = Color(0xFFF3F4F6);
 const _text = Color(0xFF111827);
 const _textMuted = Color(0xFF6B7280);
 const _textFaint = Color(0xFF9CA3AF);
@@ -30,6 +31,8 @@ class ProposalPreviewScreen extends StatelessWidget {
     final lead = proposal['lead'] is Map
         ? (proposal['lead'] as Map).cast<String, dynamic>()
         : null;
+    final currency = (proposal['currency'] as String?) ?? 'USD';
+    final pricing = parseJsonList(proposal['pricing']);
 
     return Scaffold(
       backgroundColor: _bg,
@@ -156,6 +159,92 @@ class ProposalPreviewScreen extends StatelessWidget {
                     border: Border(top: BorderSide(color: _border)),
                   ),
                   child: TipTapView(content: proposal['content']),
+                ),
+              ],
+              // ── Pricing ─────────────────────────────────────────────
+              if (pricing.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.only(top: 18),
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: _border)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const _SectionLabel('Pricing'),
+                      const SizedBox(height: 10),
+                      for (final item in pricing)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
+                                  style: const TextStyle(
+                                    color: _textMuted,
+                                    fontSize: 11.5,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                Fmt.money(
+                                  ((item['rate'] as num?)?.toDouble() ?? 0) *
+                                      ((item['quantity'] as num?)?.toDouble() ?? 1),
+                                  currency: currency,
+                                ),
+                                style: const TextStyle(
+                                  color: _text,
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.only(top: 8),
+                        decoration: const BoxDecoration(
+                          border: Border(top: BorderSide(color: _borderSoft)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'TOTAL',
+                              style: TextStyle(
+                                color: _textFaint,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 1.2,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              Fmt.money(
+                                pricing.fold<double>(0, (sum, item) {
+                                  final qty = (item['quantity'] as num?)?.toDouble() ?? 1;
+                                  final rate = (item['rate'] as num?)?.toDouble() ?? 0;
+                                  return sum + qty * rate;
+                                }),
+                                currency: currency,
+                              ),
+                              style: const TextStyle(
+                                color: _text,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
               // ── Timeline / Terms ──────────────────────────────────────

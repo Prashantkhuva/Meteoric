@@ -41,6 +41,8 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
 
   List<Map<String, dynamic>> get _pricingList => parseJsonList(_proposal['pricing']);
 
+  String get _currency => (_proposal['currency'] as String?) ?? 'USD';
+
   Future<void> _changeStatus(String status) async {
     setState(() => _busy = true);
     try {
@@ -230,6 +232,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                                 ((item['rate'] as num?)?.toDouble() ?? 0) *
                                     ((item['quantity'] as num?)?.toDouble() ??
                                         1),
+                                currency: _currency,
                               ),
                               style: const TextStyle(
                                 color: AppColors.text,

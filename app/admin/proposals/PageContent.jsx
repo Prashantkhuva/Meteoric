@@ -662,9 +662,29 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
   const [timelineVal, setTimelineVal] = useState(proposal?.timeline || "");
   const [termsVal, setTermsVal] = useState(proposal?.terms || "");
   const [leadId, setLeadId] = useState(proposal?.lead_id || "");
-  const [pricingJson, setPricingJson] = useState(null);
+  const [items, setItems] = useState(
+    proposal?.pricing
+      ? (typeof proposal.pricing === "string" ? JSON.parse(proposal.pricing) : proposal.pricing).map((p) => ({
+          description: p.description || "",
+          quantity: p.quantity || 1,
+          rate: p.rate || p.amount || 0,
+        }))
+      : []
+  );
+  const [currency, setCurrency] = useState(proposal?.currency || "USD");
+  const [currencyOpen, setCurrencyOpen] = useState(false);
   const addToast = useToast();
   const trapRef = useFocusTrap(open);
+
+  const CURRENCIES = [
+    { code: "USD", symbol: "$" },
+    { code: "EUR", symbol: "\u20AC" },
+    { code: "GBP", symbol: "\u00A3" },
+    { code: "INR", symbol: "\u20B9" },
+    { code: "AED", symbol: "AED" },
+  ];
+  const currencySymbol = CURRENCIES.find((c) => c.code === currency)?.symbol || "$";
+  const subtotal = items.reduce((s, i) => s + (Number(i.quantity) || 0) * (Number(i.rate) || 0), 0);
 
   useEffect(() => {
     if (open) {
@@ -684,11 +704,29 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
       setTimelineVal(draft.timeline || "");
       setTermsVal(draft.terms || "");
       if (draft.content) setContent(draft.content);
-      if (draft.pricing) setPricingJson(draft.pricing);
+      if (draft.pricing) {
+        setItems(draft.pricing.map((p) => ({
+          description: p.description || "",
+          quantity: p.quantity || 1,
+          rate: p.rate || p.amount || 0,
+        })));
+      }
     } catch (err) {
       addToast(err?.message || "AI proposal generation failed", "error");
     }
     setGenerating(false);
+  }
+
+  function addItem() {
+    setItems((prev) => [...prev, { description: "", quantity: 1, rate: 0 }]);
+  }
+
+  function removeItem(index) {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updateItem(index, field, value) {
+    setItems((prev) => prev.map((item, i) => i === index ? { ...item, [field]: value } : item));
   }
 
   async function handleSubmit(e) {
@@ -696,7 +734,9 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
     setSubmitting(true);
     const fd = new FormData(e.target);
     fd.set("content", JSON.stringify(content));
-    if (pricingJson) fd.set("pricing", JSON.stringify(pricingJson));
+    const validItems = items.filter((i) => i.description.trim() || (Number(i.rate) || 0) > 0);
+    if (validItems.length > 0) fd.set("pricing", JSON.stringify(validItems));
+    fd.set("currency", currency);
     if (proposal) fd.set("id", proposal.id);
     await onSubmit(fd);
     setSubmitting(false);
@@ -775,6 +815,100 @@ function ProposalFormModal({ open, onClose, onSubmit, leads, proposal, title }) 
                 onChange={setContent}
                 placeholder="Start writing your proposal..."
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                Line Items
+              </label>
+              <div className="border border-white/[0.06] bg-black/60 p-3 space-y-2">
+                {items.length === 0 && (
+                  <p className="text-xs text-white/25 py-2">No line items yet.</p>
+                )}
+                {items.map((item, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <input
+                      type="text"
+                      placeholder="Description"
+                      value={item.description}
+                      onChange={(e) => updateItem(i, "description", e.target.value)}
+                      className="flex-1 border border-white/[0.06] bg-black/60 px-3 py-2 text-xs text-white/80 outline-none focus:border-[#EAEFFF]/20"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Qty"
+                      value={item.quantity}
+                      onChange={(e) => updateItem(i, "quantity", Number(e.target.value))}
+                      className="w-16 border border-white/[0.06] bg-black/60 px-3 py-2 text-xs text-white/80 outline-none focus:border-[#EAEFFF]/20"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Rate"
+                      value={item.rate}
+                      onChange={(e) => updateItem(i, "rate", Number(e.target.value))}
+                      className="w-20 border border-white/[0.06] bg-black/60 px-3 py-2 text-xs text-white/80 outline-none focus:border-[#EAEFFF]/20"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeItem(i)}
+                      className="shrink-0 p-2 text-white/30 hover:text-red-400/60 transition-colors"
+                    >
+                      <X size={13} />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addItem}
+                  className="border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 px-3 py-2 text-xs font-medium text-[#EAEFFF]/60 transition-all hover:bg-[#EAEFFF]/10 hover:text-[#EAEFFF]/80"
+                >
+                  + Add Line Item
+                </button>
+                {items.length > 0 && (
+                  <div className="flex justify-end pt-2 border-t border-white/[0.06] mt-2">
+                    <span className="text-xs text-white/40">
+                      Subtotal: <span className="text-white/70 font-medium">{currencySymbol}{subtotal.toLocaleString()}</span>
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="field-currency" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Currency
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setCurrencyOpen(!currencyOpen)}
+                    className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 text-left flex items-center justify-between transition-all focus:border-[#EAEFFF]/20 outline-none"
+                    style={{ colorScheme: "dark" }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-white/40">{currencySymbol}</span>
+                      <span>{currency}</span>
+                    </span>
+                    <span className="text-white/20 text-xs">▾</span>
+                  </button>
+                  {currencyOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-full bg-[#151515] border border-white/[0.06] overflow-hidden z-20">
+                      {CURRENCIES.map((c) => (
+                        <button
+                          key={c.code}
+                          type="button"
+                          onClick={() => { setCurrency(c.code); setCurrencyOpen(false); }}
+                          className={`w-full px-3.5 py-2 text-xs text-left flex items-center gap-2 hover:bg-white/[0.04] transition-colors ${currency === c.code ? "text-[#EAEFFF]" : "text-white/60"}`}
+                        >
+                          <span className="text-white/30 w-6">{c.symbol}</span>
+                          <span>{c.code}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div>
