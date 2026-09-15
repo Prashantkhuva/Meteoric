@@ -139,8 +139,8 @@ export async function POST(request) {
     // Attach labels separately if we have them
     if (issue?.id && labelIds.length > 0) {
       const labelMutation = `
-        mutation IssueUpdate($input: IssueUpdateInput!) {
-          issueUpdate(input: $input) { success }
+        mutation IssueUpdate($id: String!, $input: IssueUpdateInput!) {
+          issueUpdate(id: $id, input: $input) { success }
         }
       `;
       await fetch("https://api.linear.app/graphql", {
@@ -152,8 +152,8 @@ export async function POST(request) {
         body: JSON.stringify({
           query: labelMutation,
           variables: {
+            id: issue.id,
             input: {
-              id: issue.id,
               labelIds,
             },
           },
