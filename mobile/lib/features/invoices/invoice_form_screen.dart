@@ -46,12 +46,12 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
   @override
   void initState() {
     super.initState();
-    _clientId = widget.invoice?['client_id'];
-    _proposalId = widget.invoice?['proposal_id'];
-    _bankAccountId = widget.invoice?['bank_account_id'];
-    _currency = widget.invoice?['currency'] ?? 'USD';
+    _clientId = widget.invoice?['client_id']?.toString();
+    _proposalId = widget.invoice?['proposal_id']?.toString();
+    _bankAccountId = widget.invoice?['bank_account_id']?.toString();
+    _currency = widget.invoice?['currency']?.toString() ?? 'USD';
     _tax = '${widget.invoice?['tax'] ?? 0}';
-    _dueDate = widget.invoice?['due_date'];
+    _dueDate = widget.invoice?['due_date']?.toString();
     final items = widget.invoice?['items'];
     _items = parseJsonList(items);
     _loadRefs();
@@ -105,9 +105,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
 
     final payload = {
       if (_isEdit) 'id': (widget.invoice!['id'] as num).toInt(),
-      'client_id': _clientId,
-      'proposal_id': _proposalId,
-      'bank_account_id': _bankAccountId,
+      'client_id': _clientId != null ? int.tryParse(_clientId!) : null,
+      'proposal_id': _proposalId != null ? int.tryParse(_proposalId!) : null,
+      'bank_account_id': _bankAccountId != null ? int.tryParse(_bankAccountId!) : null,
       'items': _items,
       'tax': num.tryParse(_tax) ?? 0,
       'currency': _currency,

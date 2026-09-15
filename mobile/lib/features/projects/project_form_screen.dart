@@ -24,7 +24,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
     text: widget.project?['services'] ?? '',
   );
   late final _budget = TextEditingController(
-    text: (widget.project?['budget'] as num?)?.toString() ?? '',
+    text: widget.project?['budget']?.toString() ?? '',
   );
   late final _notes = TextEditingController(
     text: widget.project?['notes'] ?? '',
@@ -45,10 +45,10 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   @override
   void initState() {
     super.initState();
-    _clientId = widget.project?['client_id'];
-    _currency = (widget.project?['currency'] as String?) ?? 'INR';
-    _startDate = widget.project?['start_date'];
-    _deadline = widget.project?['deadline'];
+    _clientId = widget.project?['client_id']?.toString();
+    _currency = widget.project?['currency']?.toString() ?? 'INR';
+    _startDate = widget.project?['start_date']?.toString();
+    _deadline = widget.project?['deadline']?.toString();
     _loadClients();
   }
 
@@ -113,7 +113,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
     final payload = {
       if (_isEdit) 'id': (widget.project!['id'] as num).toInt(),
-      'client_id': _clientId,
+      'client_id': _clientId != null ? int.tryParse(_clientId!) : null,
       'name': _name.text.trim(),
       'description': _description.text.trim(),
       'services': _services.text.trim(),

@@ -43,7 +43,7 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
   late final _upiId = TextEditingController(
     text: widget.account?['upi_id'] ?? '',
   );
-  late String _currency = (widget.account?['currency'] as String?) ?? 'USD';
+  late String _currency = widget.account?['currency']?.toString() ?? 'USD';
   late bool _isDefault = widget.account?['is_default'] == true;
   bool _saving = false;
 

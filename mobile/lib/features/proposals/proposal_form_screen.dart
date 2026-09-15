@@ -43,8 +43,9 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
   @override
   void initState() {
     super.initState();
-    _leadId = widget.proposal?['lead_id'];
-    _currency = widget.proposal?['currency'] ?? 'USD';
+    final rawLeadId = widget.proposal?['lead_id'];
+    _leadId = rawLeadId?.toString();
+    _currency = widget.proposal?['currency']?.toString() ?? 'USD';
     _content = widget.proposal?['content'];
     final raw = widget.proposal?['pricing'];
     _pricing = parseJsonList(raw);
@@ -120,7 +121,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
 
     final payload = {
       if (_isEdit) 'id': (widget.proposal!['id'] as num).toInt(),
-      'lead_id': _leadId,
+      if (_leadId != null && _leadId!.isNotEmpty) 'lead_id': int.tryParse(_leadId!),
       'title': _title.text.trim(),
       if (_content != null) 'content': _content,
       'pricing': _pricing,
