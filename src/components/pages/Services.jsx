@@ -28,7 +28,7 @@ const services = [
         },
         {
           title: "Build & Optimize",
-          desc: "Next.js, Tailwind CSS, GSAP. Blazing fast load times, perfect Lighthouse scores, and SEO foundations baked in from day one.",
+          desc: "Next.js, Tailwind CSS, GSAP. Blazing fast load times, optimized performance, and SEO foundations baked in from day one.",
         },
       ],
     },

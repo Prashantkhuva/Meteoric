@@ -59,7 +59,7 @@ const postService = {
   },
   "gsap-vs-framer-motion-production-guide": {
     href: "/services/landing-pages",
-    label: "Landing Page Design",
+    label: "Landing Pages",
   },
   "supabase-vs-firebase-2026-comparison": {
     href: "/services/saas-development",
@@ -99,11 +99,11 @@ const postService = {
   },
   "why-visitors-leave-your-website-issues-and-solutions": {
     href: "/services/landing-pages",
-    label: "Landing Page Design",
+    label: "Landing Pages",
   },
   "high-converting-landing-page-structure-for-saas": {
     href: "/services/landing-pages",
-    label: "Landing Page Design",
+    label: "Landing Pages",
   },
   "long-tail-seo-strategy-for-funded-startups": {
     href: "/services/startup-web-development",
@@ -111,7 +111,7 @@ const postService = {
   },
   "ai-search-optimization-how-to-get-cited-by-chatgpt": {
     href: "/services/landing-pages",
-    label: "Landing Page Design",
+    label: "Landing Pages",
   },
   "startup-seo-on-a-budget-what-to-do-first": {
     href: "/services/startup-web-development",

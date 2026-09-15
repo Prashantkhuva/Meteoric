@@ -8,8 +8,11 @@ import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { trackEvent } from "@/lib/analytics/gtag";
+import siteStats from "@/data/site-stats";
 
-const RequestModal = lazy(() => import("@/components/layout/NavBar/RequestModal"));
+const RequestModal = lazy(
+  () => import("@/components/layout/NavBar/RequestModal"),
+);
 
 const values = [
   {
@@ -30,12 +33,6 @@ const values = [
     description:
       "We build for production, not perfection. Clean code, clear timelines, and real results that go live.",
   },
-];
-
-const stats = [
-  { value: "95+", label: "Lighthouse Scores" },
-  { value: "12+", label: "Projects Shipped" },
-  { value: "100%", label: "Client Satisfaction" },
 ];
 
 const socials = [
@@ -80,7 +77,7 @@ export default function AboutPage({ faqs = [] }) {
             </div>
 
             {/* Founder badge */}
-              <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-black/80 backdrop-blur-sm">
+            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-black/80 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#EAEFFF] shadow-[0_0_8px_rgba(234,239,255,0.6)]" />
               <span className="text-[11px] text-white/50 font-medium tracking-wide">
                 Founder & Product Builder
@@ -110,7 +107,10 @@ export default function AboutPage({ faqs = [] }) {
             <div className="space-y-4 text-white/35 text-[15px] leading-[1.8]">
               <p>
                 Meteoric is a{" "}
-                <Link href="/" className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">
+                <Link
+                  href="/"
+                  className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200"
+                >
                   web development agency
                 </Link>{" "}
                 that partners with founders to design, develop, and launch
@@ -119,20 +119,29 @@ export default function AboutPage({ faqs = [] }) {
               <p>
                 I started Meteoric to close the gap between what founders
                 envision and what agencies deliver. No bloat, no
-                over-engineering — just clean, production-ready work that
-                ships on time.
+                over-engineering — just clean, production-ready work that ships
+                on time.
               </p>
               <p>
-                Every project is built with the same care as if it were our
-                own. From <Link href="/services" className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">landing pages to full SaaS platforms</Link>, we treat your
-                product like a startup, not a ticket queue.
+                Every project is built with the same care as if it were our own.
+                From{" "}
+                <Link
+                  href="/services"
+                  className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200"
+                >
+                  landing pages to full SaaS platforms
+                </Link>
+                , we treat your product like a startup, not a ticket queue.
               </p>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 py-8 border-y border-white/[0.06]">
-              {stats.map((s, i) => (
-                <div key={s.label} className={i !== 0 ? "pl-4 border-l border-white/[0.06]" : ""}>
+              {siteStats.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={i !== 0 ? "pl-4 border-l border-white/[0.06]" : ""}
+                >
                   <p className="text-3xl md:text-4xl font-secondary-italic font-normal text-white mb-1">
                     {s.value}
                   </p>
@@ -157,12 +166,12 @@ export default function AboutPage({ faqs = [] }) {
                   contact@withmeteoric.com
                 </a>
                 <a
-                  href="https://wa.me/1234567890"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="mailto:contact@withmeteoric.com"
                   data-no-magnetic
                   className="text-white/40 hover:text-white text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
-                  onClick={() => trackEvent("whatsapp_click", { click_location: "/about" })}
+                  onClick={() =>
+                    trackEvent("whatsapp_click", { click_location: "/about" })
+                  }
                 >
                   WhatsApp
                   <ArrowUpRight size={12} />
@@ -203,7 +212,10 @@ export default function AboutPage({ faqs = [] }) {
                 className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white/60 hover:text-white border border-white/[0.08] hover:border-white/20 px-7 py-3 transition-all duration-300 cursor-pointer"
               >
                 <span className="relative z-10">
-                  <StaggerText text="Book a Free Strategy Call" hoverColor="#fff" />
+                  <StaggerText
+                    text="Book a Free Strategy Call"
+                    hoverColor="#fff"
+                  />
                 </span>
               </button>
             </div>
@@ -221,8 +233,7 @@ export default function AboutPage({ faqs = [] }) {
           </ScrollReveal>
           <ScrollReveal direction="down" delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-14">
-              Frequently Asked{" "}
-              <span className="not-italic">Questions</span>
+              Frequently Asked <span className="not-italic">Questions</span>
             </h2>
           </ScrollReveal>
           <div className="space-y-0">
@@ -237,13 +248,28 @@ export default function AboutPage({ faqs = [] }) {
                     <span className="text-base md:text-lg font-secondary-italic font-normal text-white/70 group-hover:text-white/90 transition-colors duration-200 pr-4">
                       {faq.question}
                     </span>
-                    <span className={`shrink-0 w-6 h-6 rounded-full border border-white/[0.08] flex items-center justify-center transition-transform duration-300 ${openFaq === i ? "rotate-45" : ""}`}>
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M5 1v8M1 5h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-white/30"/>
+                    <span
+                      className={`shrink-0 w-6 h-6 rounded-full border border-white/[0.08] flex items-center justify-center transition-transform duration-300 ${openFaq === i ? "rotate-45" : ""}`}
+                    >
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                      >
+                        <path
+                          d="M5 1v8M1 5h8"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          className="text-white/30"
+                        />
                       </svg>
                     </span>
                   </button>
-                  <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"}`}>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${openFaq === i ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"}`}
+                  >
                     <p className="text-white/35 text-[15px] leading-[1.8] pr-8">
                       {faq.answer}
                     </p>
@@ -268,8 +294,7 @@ export default function AboutPage({ faqs = [] }) {
         </ScrollReveal>
         <ScrollReveal direction="down" delay={0.1}>
           <h2 className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-14">
-            Our{" "}
-            <span className="not-italic">Principles</span>
+            Our <span className="not-italic">Principles</span>
           </h2>
         </ScrollReveal>
 

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
+import { caseStudies } from "@/data/case-studies";
 import { SITE_URL } from "@/lib/seo/config";
 import CaseStudy from "@/components/pages/CaseStudy";
 
@@ -11,8 +12,21 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
-  const title = project.metaTitle ?? `${project.name} — Case Study | Meteoric`;
+
+  const csSlug = {
+    "lete-em-know": "letem-know",
+    "habit-flow": "habit-flow",
+    megablog: "megablog",
+    "mobile-preview-simulator": "mobile-preview-simulator",
+  };
+  const cs = caseStudies.find((cs) => cs.slug === csSlug[slug]);
+
+  const title =
+    cs?.metaTitle ??
+    project.metaTitle ??
+    `${project.name} — Case Study | Meteoric`;
   const desc =
+    cs?.metaDescription ??
     project.metaDescription ??
     (project.description
       ? project.description.split(". ").slice(0, 2).join(". ") + "."
@@ -50,7 +64,15 @@ export default async function CaseStudyPage({ params }) {
   const project = projects.find((p) => p.slug === slug);
   if (!project) notFound();
 
-  const pageTitle = `${project.name} — Case Study | Meteoric`;
+  const csSlug = {
+    "lete-em-know": "letem-know",
+    "habit-flow": "habit-flow",
+    megablog: "megablog",
+    "mobile-preview-simulator": "mobile-preview-simulator",
+  };
+  const cs = caseStudies.find((c) => c.slug === csSlug[slug]);
+
+  const pageTitle = cs?.metaTitle ?? `${project.name} — Case Study | Meteoric`;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -86,12 +108,11 @@ export default async function CaseStudyPage({ params }) {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     name: project.name,
-    description: project.description,
+    description: cs?.metaDescription ?? project.description,
     url: `${SITE_URL}/work/${project.slug}`,
     keywords: project.tags?.join(", "),
     author: { "@type": "Organization", name: "Meteoric", url: SITE_URL },
     about: project.tagline,
-    datePublished: "2026-01-15",
     inLanguage: "en-US",
   };
 

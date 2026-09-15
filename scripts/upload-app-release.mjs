@@ -1,8 +1,8 @@
 // Ship a new Meteoric Admin mobile release.
 //
 // Usage: node scripts/upload-app-release.mjs <path-to-apk> <version> <build> [notes] [--min-build N]
-//   e.g. node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/universal.apk 0.4.1 6 "Bug fixes"
-//   e.g. node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/universal.apk 0.5.0 10 "" --min-build 8
+//   e.g. node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/app-release.apk 0.4.1 6 "Bug fixes"
+//   e.g. node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/app-release.apk 0.5.0 10 "" --min-build 8
 //
 // What it does:
 //   1. Uploads the APK as a GitHub Release asset on the public
@@ -43,18 +43,18 @@ if (!apkPath || !version || !build) {
 }
 
 const REPO = "Prashantkhuva/meteoric-app-releases";
-const apkUrl = `https://github.com/${REPO}/releases/download/v${version}/universal.apk`;
+const apkUrl = `https://github.com/${REPO}/releases/download/v${version}/app-release.apk`;
 
 // 1. GitHub release with the APK (falls back to re-upload if release exists)
 try {
   execSync(
-    `gh release create v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --title "v${version}" --notes "${notes}" --draft=false`,
+    `gh release create v${version} "${apkPath}#Meteoric Admin ${version}" --repo ${REPO} --title "v${version}" --notes "${notes}" --draft=false`,
     { stdio: "inherit" }
   );
 } catch {
   console.log(`Release v${version} already exists — uploading asset instead`);
   execSync(
-    `gh release upload v${version} "${apkPath}#Meteoric Admin ${version} (universal)" --repo ${REPO} --clobber && gh release edit v${version} --repo ${REPO} --draft=false`,
+    `gh release upload v${version} "${apkPath}#Meteoric Admin ${version}" --repo ${REPO} --clobber && gh release edit v${version} --repo ${REPO} --draft=false`,
     { stdio: "inherit" }
   );
 }

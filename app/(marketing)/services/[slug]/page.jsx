@@ -6,7 +6,7 @@ import ServiceLanding from "@/components/pages/ServiceLanding";
 const serviceData = {
   "landing-pages": {
     title: "Landing Pages That Convert — Design & Build | Meteoric",
-    desc: "Custom landing pages designed and built to convert — no templates. Premium design, GSAP motion, and 95+ Lighthouse scores, shipped in days.",
+    desc: "Custom landing pages designed and built to convert — no templates. Premium design, GSAP motion, and fast load times, shipped in days.",
     h1: ["Landing Page", "Design"],
     tagline: "High-converting landing pages that ship in days.",
     sections: [
@@ -16,7 +16,7 @@ const serviceData = {
       },
       {
         heading: "What we deliver",
-        body: "Custom design, GSAP/Framer Motion animations, SEO structure, contact forms, Cal.com integration, and analytics setup. Every page ships with 95+ Lighthouse scores and is fully responsive across all devices.",
+        body: "Custom design, GSAP/Framer Motion animations, SEO structure, contact forms, Cal.com integration, and analytics setup. Every page is optimized for fast load times and fully responsive across all devices.",
       },
       {
         heading: "Timeline",
@@ -42,7 +42,7 @@ const serviceData = {
       {
         question: "What makes Meteoric's landing pages different?",
         answer:
-          "We combine design, animation, and performance in one package. GSAP scroll animations, 95+ Lighthouse scores, and a conversion-focused layout — not a template, not a WordPress theme.",
+          "We combine design, animation, and performance in one package. GSAP scroll animations, fast load times, and a conversion-focused layout — not a template, not a WordPress theme.",
       },
     ],
   },
@@ -68,7 +68,7 @@ const serviceData = {
     sections: [
       {
         heading: "What is a SaaS development agency?",
-        body: "A SaaS development agency designs, builds, and launches software-as-a-service products — from database architecture to subscription billing to deployment. Unlike generalist agencies, a SaaS-focused agency understands the specific challenges of subscription businesses: recurring revenue logic, multi-tenant architecture, usage-based billing, and the need to iterate fast without breaking what works. Meteoric is a founder-led SaaS agency: you work directly with the person writing the code, not an account manager. We've shipped 12+ production SaaS platforms across fintech, edtech, healthtech, and B2B tools.",
+        body: "A SaaS development agency designs, builds, and launches software-as-a-service products — from database architecture to subscription billing to deployment. Unlike generalist agencies, a SaaS-focused agency understands the specific challenges of subscription businesses: recurring revenue logic, multi-tenant architecture, usage-based billing, and the need to iterate fast without breaking what works. Meteoric is a founder-led SaaS agency: you work directly with the person writing the code, not an account manager.",
       },
       {
         heading: "What we build",
@@ -125,7 +125,7 @@ const serviceData = {
       {
         question: "How is Meteoric different from other SaaS development agencies?",
         answer:
-          "Direct founder involvement, no account managers, 10-day sprint cycles, fixed pricing, and a track record of 12+ production projects with 100% client satisfaction. You work with the person who builds your product.",
+          "Direct founder involvement, no account managers, 10-day sprint cycles, and fixed pricing. You work with the person who builds your product.",
       },
       {
         question: "Do you provide ongoing support after launch?",
@@ -225,11 +225,11 @@ const serviceData = {
     sections: [
       {
         heading: "Why Next.js",
-        body: "Server-side rendering, static generation, API routes, and React Server Components — Next.js gives you the performance of static with the power of dynamic. We've shipped 12+ production Next.js applications.",
+        body: "Server-side rendering, static generation, API routes, and React Server Components — Next.js gives you the performance of static with the power of dynamic.",
       },
       {
         heading: "What we build with Next.js",
-        body: "Marketing websites with SSR/SSG, SaaS dashboards with real-time data, e-commerce fronts, API backends, and full-stack applications. Every project gets SEO-optimized metadata, image optimization, and fast Lighthouse scores.",
+        body: "Marketing websites with SSR/SSG, SaaS dashboards with real-time data, e-commerce fronts, API backends, and full-stack applications. Every project gets SEO-optimized metadata, image optimization, and fast load times.",
       },
       {
         heading: "Our expertise",

@@ -3,10 +3,14 @@
 import { useCallback, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
-import MeteorBackground from "./MeteorBackground";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
 import { trackEvent } from "@/lib/analytics/gtag";
+
+const MeteorBackground = dynamic(() => import("./MeteorBackground"), {
+  ssr: false,
+});
 function Hero() {
   const containerRef = useRef(null);
   const mainTextRef = useRef(null);

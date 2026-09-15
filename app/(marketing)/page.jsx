@@ -84,16 +84,11 @@ const organizationSchema = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": `${SITE_URL}/#website`,
       name: SITE_NAME,
       url: SITE_URL,
-      publisher: {
-        "@id": `${SITE_URL}/#organization`,
-      },
     },
     {
       "@type": "ProfessionalService",
-      "@id": `${SITE_URL}/#service`,
       name: SITE_NAME,
       url: SITE_URL,
       description:
@@ -156,7 +151,6 @@ const organizationSchema = {
     },
     {
       "@type": "SiteNavigationElement",
-      "@id": `${SITE_URL}/#navigation`,
       name: "Main Navigation",
       description: "Primary site navigation links",
       url: SITE_URL,

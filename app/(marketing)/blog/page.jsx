@@ -42,11 +42,10 @@ const blogIndexJsonLd = {
   description:
     "Notes on building products that convert — written by the founder from real shipped work.",
   url: `${SITE_URL}/blog`,
-  isPartOf: { "@id": `${SITE_URL}/#website` },
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: blogPosts.length,
-    itemListElement: blogPosts.slice(0, 10).map((post, i) => ({
+    itemListElement: blogPosts.map((post, i) => ({
       "@type": "ListItem",
       position: i + 1,
       url: `${SITE_URL}/blog/${post.slug}`,

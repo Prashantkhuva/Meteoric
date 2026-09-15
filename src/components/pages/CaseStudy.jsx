@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, ArrowLeft } from "lucide-react";
+import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
 import { caseStudies } from "@/data/case-studies";
 
@@ -17,14 +17,51 @@ const fadeUp = {
   }),
 };
 
+function SectionHeading({ children }) {
+  return (
+    <h2 className="text-[11px] uppercase tracking-[0.2em] text-white/30 mb-5 font-medium">
+      {children}
+    </h2>
+  );
+}
+
+function Prose({ children }) {
+  return (
+    <p className="text-white/50 text-[15px] leading-[1.8]">{children}</p>
+  );
+}
+
+function DecisionList({ items }) {
+  return (
+    <ul className="space-y-4">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-3">
+          <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-white/20" />
+          <span className="text-sm text-white/40 leading-relaxed">{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function CaseStudy({ project }) {
-  const csLookup = { "lete-em-know": "letem-know", "habit-flow": "habit-flow", "megablog": "megablog", "mobile-preview-simulator": "mobile-preview-simulator" };
-  const caseStudy = caseStudies.find((cs) => cs.slug === csLookup[project.slug]);
+  const csLookup = {
+    "lete-em-know": "letem-know",
+    "habit-flow": "habit-flow",
+    megablog: "megablog",
+    "mobile-preview-simulator": "mobile-preview-simulator",
+  };
+  const caseStudy = caseStudies.find(
+    (cs) => cs.slug === csLookup[project.slug],
+  );
+
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
     const cal = await getCalApi({ namespace: "let-s-build" });
     cal("modal", { calLink: "prashantkhuva/let-s-build" });
   }, []);
+
+  if (!caseStudy) return null;
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -49,17 +86,14 @@ export default function CaseStudy({ project }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <span
-            className="text-[11px] font-mono tracking-widest uppercase mb-4 block"
-            style={{ color: project.accent }}
-          >
-            Project {String(project.id).padStart(2, "0")}
+          <span className="text-[11px] font-mono tracking-widest uppercase mb-4 block text-[#EAEFFF]">
+            Case Study
           </span>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight mb-4">
-            {project.name}
+            {caseStudy.name}
           </h1>
-          <p className="text-lg md:text-xl max-w-2xl" style={{ color: project.accent }}>
-            {project.tagline}
+          <p className="text-lg md:text-xl max-w-2xl text-[#EAEFFF]">
+            {caseStudy.tagline}
           </p>
         </motion.div>
       </section>
@@ -74,7 +108,7 @@ export default function CaseStudy({ project }) {
         >
           <Image
             src={project.image}
-            alt={`${project.name} — ${project.tagline} — Meteoric`}
+            alt={`${caseStudy.name} — ${caseStudy.tagline} — Meteoric`}
             width={1280}
             height={720}
             className="w-full h-auto object-cover"
@@ -83,63 +117,105 @@ export default function CaseStudy({ project }) {
         </motion.div>
       </section>
 
-      {/* Content */}
+      {/* Meta Row */}
+      <section className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pb-12 border-b border-white/[0.06]"
+        >
+          <div>
+            <SectionHeading>Client</SectionHeading>
+            <p className="text-white/60 text-sm">{caseStudy.client}</p>
+          </div>
+          <div>
+            <SectionHeading>Timeline</SectionHeading>
+            <p className="text-white/60 text-sm">{caseStudy.timeline}</p>
+          </div>
+          <div>
+            <SectionHeading>Role</SectionHeading>
+            <p className="text-white/60 text-sm">{caseStudy.role}</p>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Main Content */}
       <section className="relative max-w-4xl mx-auto px-6 md:px-12 pb-24">
-        <div className="grid md:grid-cols-2 gap-16">
-          {/* Left — Description */}
+        <div className="space-y-20">
+          {/* The Challenge */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-6">
-              Overview
-            </h2>
-            <p className="text-white/50 text-[15px] leading-[1.8]">
-              {project.description}
-            </p>
-
-            {caseStudy && (
-              <>
-                <div className="mt-10 pt-10 border-t border-white/[0.06]">
-                  <h3 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-4">The Problem</h3>
-                  <p className="text-white/40 text-[15px] leading-[1.8]">{caseStudy.problem}</p>
-                </div>
-                <div className="mt-8">
-                  <h3 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-4">The Solution</h3>
-                  <p className="text-white/40 text-[15px] leading-[1.8]">{caseStudy.solution}</p>
-                </div>
-                {caseStudy.results && (
-                  <div className="mt-8 pt-8 border-t border-white/[0.06]">
-                    <h3 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-4">Results</h3>
-                    <div className="space-y-4">
-                      {caseStudy.results.map((r, ri) => (
-                        <div key={ri}>
-                          <p className="text-lg font-display text-white">{r.value}</p>
-                          <p className="text-[11px] text-white/30 uppercase tracking-[0.1em]">{r.metric}</p>
-                          <p className="text-xs text-white/25">{r.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
+            <SectionHeading>The Challenge</SectionHeading>
+            <Prose>{caseStudy.problem}</Prose>
           </motion.div>
 
-          {/* Right — Features + Stack */}
-          <div className="space-y-12">
+          {/* The Approach */}
+          {caseStudy.approach && (
             <motion.div
               variants={fadeUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              custom={1}
             >
-              <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-6">
-                Key Features
-              </h2>
+              <SectionHeading>The Approach</SectionHeading>
+              <Prose>{caseStudy.approach}</Prose>
+            </motion.div>
+          )}
+
+          {/* What Was Built */}
+          {caseStudy.whatWasBuilt && (
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <SectionHeading>What Was Built</SectionHeading>
+              <Prose>{caseStudy.whatWasBuilt}</Prose>
+            </motion.div>
+          )}
+
+          {/* Product / UX Decisions */}
+          {caseStudy.productDecisions && (
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <SectionHeading>Product Decisions</SectionHeading>
+              <DecisionList items={caseStudy.productDecisions} />
+            </motion.div>
+          )}
+
+          {/* Technical Implementation */}
+          {caseStudy.technicalImplementation && (
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <SectionHeading>Technical Implementation</SectionHeading>
+              <Prose>{caseStudy.technicalImplementation}</Prose>
+            </motion.div>
+          )}
+
+          {/* Key Features + Tech Stack — side by side on desktop */}
+          <div className="grid md:grid-cols-2 gap-16">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <SectionHeading>Key Features</SectionHeading>
               <div className="space-y-3">
                 {project.features.map((f, i) => (
                   <div key={i} className="flex items-start gap-3">
@@ -147,7 +223,9 @@ export default function CaseStudy({ project }) {
                       className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
                       style={{ backgroundColor: project.accent }}
                     />
-                    <span className="text-sm text-white/45 leading-relaxed">{f}</span>
+                    <span className="text-sm text-white/45 leading-relaxed">
+                      {f}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -158,17 +236,18 @@ export default function CaseStudy({ project }) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              custom={2}
+              custom={1}
             >
-              <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 mb-6">
-                Tech Stack
-              </h2>
+              <SectionHeading>Tech Stack</SectionHeading>
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
                     className="text-[10px] px-3 py-1 rounded-full border text-white/40 font-medium tracking-wide uppercase"
-                    style={{ borderColor: `${project.accent}33`, backgroundColor: `${project.accent}0a` }}
+                    style={{
+                      borderColor: `${project.accent}33`,
+                      backgroundColor: `${project.accent}0a`,
+                    }}
                   >
                     {tag}
                   </span>
@@ -176,25 +255,111 @@ export default function CaseStudy({ project }) {
               </div>
             </motion.div>
           </div>
+
+          {/* Outcome */}
+          {caseStudy.results && (
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <SectionHeading>Outcome</SectionHeading>
+              <div className="grid sm:grid-cols-3 gap-8">
+                {caseStudy.results.map((r, ri) => (
+                  <div key={ri}>
+                    <p className="text-2xl md:text-3xl font-display text-white mb-1">
+                      {r.value}
+                    </p>
+                    <p className="text-[11px] text-white/30 uppercase tracking-[0.1em] mb-1">
+                      {r.metric}
+                    </p>
+                    <p className="text-xs text-white/25">{r.description}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
 
-        {/* Actions */}
+        {/* Related Services */}
+        {caseStudy.serviceLink && (
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mt-20 pt-12 border-t border-white/[0.06]"
+          >
+            <p className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-4">
+              If this looks like what you need…
+            </p>
+            <Link
+              href={caseStudy.serviceLink.href}
+              className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[#EAEFFF]/70 hover:text-[#EAEFFF] transition-colors duration-300"
+            >
+              <span>Explore {caseStudy.serviceLink.label}</span>
+              <ArrowRight
+                size={14}
+                className="transition-transform duration-300 group-hover/serv:translate-x-1"
+              />
+            </Link>
+          </motion.div>
+        )}
+
+        {/* Related Projects */}
+        {caseStudy.relatedProjects && (
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mt-16"
+          >
+            <SectionHeading>Related Work</SectionHeading>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {caseStudy.relatedProjects.map((slug) => {
+                const related = caseStudies.find((cs) => cs.slug === slug);
+                if (!related) return null;
+                return (
+                  <Link
+                    key={slug}
+                    href={`/work/${slug === "letem-know" ? "lete-em-know" : slug}`}
+                    className="group block p-6 rounded-xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                  >
+                    <p className="text-sm font-display text-white mb-1 group-hover:text-[#EAEFFF] transition-colors">
+                      {related.name}
+                    </p>
+                    <p className="text-xs text-white/30">{related.tagline}</p>
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+
+        {/* CTAs */}
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          custom={3}
-          className="flex flex-wrap gap-4 mt-16 pt-16 border-t border-white/[0.06]"
+          className="flex flex-wrap gap-4 mt-20 pt-12 border-t border-white/[0.06]"
         >
           <a
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
             className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5"
-            style={{ border: `1.5px solid ${project.accent}`, color: project.accent }}
+            style={{
+              border: `1.5px solid ${project.accent}`,
+              color: project.accent,
+            }}
           >
-            <span className="fill-circle" style={{ backgroundColor: project.accent }} />
+            <span
+              className="fill-circle"
+              style={{ backgroundColor: project.accent }}
+            />
             <span className="relative z-10 flex items-center gap-2 group-hover/btn:text-black transition-colors duration-300">
               <StaggerText hoverColor="#000">View Live Project</StaggerText>
               <ArrowUpRight size={15} />
@@ -205,7 +370,7 @@ export default function CaseStudy({ project }) {
             onClick={openCal}
             className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300"
           >
-            Book a Free Strategy Call
+            Start a Project
           </button>
         </motion.div>
       </section>

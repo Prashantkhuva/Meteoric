@@ -9,13 +9,6 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
 import { trackEvent } from "@/lib/analytics/gtag";
 
-const serviceLinks = {
-  "letem-know": { label: "Landing Pages", href: "/services#landing-pages" },
-  "habit-flow": { label: "SaaS Development", href: "/services/saas-development" },
-  "megablog": { label: "Web Applications", href: "/services" },
-  "mobile-preview-simulator": { label: "Full-Stack Development", href: "/services/startup-web-development" },
-};
-
 export default function CaseStudiesPage() {
   // Track case study page view
   trackEvent("case_study_view", {
@@ -202,14 +195,14 @@ export default function CaseStudiesPage() {
                   </ScrollReveal>
 
                   {/* Service link */}
-                  {serviceLinks[cs.slug] && (
+                  {cs.serviceLink && (
                     <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8 border-t border-white/[0.06]">
                       <p className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-3">If this looks like what you need…</p>
                       <Link
-                        href={serviceLinks[cs.slug].href}
+                        href={cs.serviceLink.href}
                         className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[#EAEFFF]/70 hover:text-[#EAEFFF] transition-colors duration-300"
                       >
-                        <span>Need {serviceLinks[cs.slug].label}?</span>
+                        <span>Explore {cs.serviceLink.label}</span>
                         <ArrowRight
                           size={14}
                           className="transition-transform duration-300 group-hover/serv:translate-x-1"

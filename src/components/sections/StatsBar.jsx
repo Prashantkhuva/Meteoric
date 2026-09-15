@@ -2,13 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { gsap } from "@/lib/gsap-setup";
-
-const stats = [
-  { value: "12+", label: "Projects Shipped" },
-  { value: "100%", label: "Client Satisfaction" },
-  { value: "10", label: "Day Sprint Cycles" },
-  { value: "2026", label: "Founded" },
-];
+import siteStats from "@/data/site-stats";
 
 function AnimatedNumber({ target, inView }) {
   const [display, setDisplay] = useState(() => {
@@ -67,7 +61,7 @@ export default function StatsBar() {
     <section ref={ref} className="relative bg-black py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-          {stats.map((stat) => (
+          {siteStats.map((stat) => (
             <div
               key={stat.label}
               className="stat-item text-center md:text-left opacity-0"

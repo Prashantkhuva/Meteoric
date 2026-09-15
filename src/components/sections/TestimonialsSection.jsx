@@ -17,32 +17,7 @@ const ReviewFormModal = dynamic(() => import("./ReviewFormModal"), {
   loading: () => null,
 });
 
-const fallbackTestimonials = [
-  {
-    quote:
-      "Meteoric redesigned our entire SaaS dashboard and the result was exceptional — cleaner UX, faster load times, and our users actually noticed the difference. The team understood our product vision from day one.",
-    author: "Rohan Mehta",
-    role: "CTO, Finlytix",
-    project: "Finlytix Dashboard Redesign",
-    rating: 5,
-  },
-  {
-    quote:
-      "Working with Meteoric felt more like a partnership than a vendor relationship. They understood our B2B SaaS vision from day one and brought UX ideas we hadn't even considered. Our monthly recurring revenue grew 40% in the first quarter after launch.",
-    author: "Sarah Mitchell",
-    role: "CEO, LaunchBright",
-    project: "LaunchBright",
-    rating: 5,
-  },
-  {
-    quote:
-      "We needed a complete brand website redesign and got way more than we expected. The attention to detail in both design and performance is rare to find. Lighthouse scores went from 62 to 98, and our bounce rate dropped by half.",
-    author: "James Park",
-    role: "Product Lead, Stellar Labs",
-    project: "Stellar Labs",
-    rating: 5,
-  },
-];
+const fallbackTestimonials = [];
 
 function ReviewCard({ t }) {
   return (
@@ -71,8 +46,12 @@ function ReviewCard({ t }) {
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-white/90 text-xs font-medium truncate">{t.author}</p>
-            {t.isVerified && <BadgeCheck size={11} className="text-[#EAEFFF] shrink-0" />}
+            <p className="text-white/90 text-xs font-medium truncate">
+              {t.author}
+            </p>
+            {t.isVerified && (
+              <BadgeCheck size={11} className="text-[#EAEFFF] shrink-0" />
+            )}
           </div>
           <p className="text-white/30 text-[11px] truncate mt-0.5">
             {t.role}
@@ -93,9 +72,8 @@ export default function TestimonialsSection() {
   const faqHeaderRef = useRef(null);
   const faqListRef = useRef(null);
 
-  const displayReviews = reviews && reviews.length > 0
-    ? reviews
-    : fallbackTestimonials;
+  const displayReviews =
+    reviews && reviews.length > 0 ? reviews : fallbackTestimonials;
 
   useEffect(() => {
     async function load() {
@@ -111,58 +89,86 @@ export default function TestimonialsSection() {
             company: r.company,
             isVerified: r.is_verified,
             createdAt: r.created_at,
-          }))
+          })),
         );
       }
     }
     load();
   }, []);
 
-  useSectionAnimations(
-    sectionRef,
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useSectionAnimations(sectionRef, () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      const headerHeading = headerRef.current?.querySelector("h2");
-      if (headerHeading) {
-        const split = new SplitText(headerHeading, { type: "lines", linesClass: "split-line" });
-        gsap.fromTo(split.lines,
-          { y: 50, opacity: 0, rotateX: 15 },
-          {
-            y: 0, opacity: 1, rotateX: 0,
-            stagger: 0.12, ease: "power3.out", duration: 0.6,
-            scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none reverse none", invalidateOnRefresh: true },
+    const headerHeading = headerRef.current?.querySelector("h2");
+    if (headerHeading) {
+      const split = new SplitText(headerHeading, {
+        type: "lines",
+        linesClass: "split-line",
+      });
+      gsap.fromTo(
+        split.lines,
+        { y: 50, opacity: 0, rotateX: 15 },
+        {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          stagger: 0.12,
+          ease: "power3.out",
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
-        );
-      }
+        },
+      );
+    }
 
-      const fadeUp = (target, trigger, opts = {}) =>
-        gsap.fromTo(target, { y: 20, opacity: 0 }, {
-          y: 0, opacity: 1, ease: "power2.out", duration: 0.35,
-          scrollTrigger: { trigger, start: "top 88%", toggleActions: "play none reverse none", invalidateOnRefresh: true, ...opts },
-        });
+    const fadeUp = (target, trigger, opts = {}) =>
+      gsap.fromTo(
+        target,
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          ease: "power2.out",
+          duration: 0.35,
+          scrollTrigger: {
+            trigger,
+            start: "top 88%",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
+            ...opts,
+          },
+        },
+      );
 
-      fadeUp(faqHeaderRef.current, faqHeaderRef.current);
-      fadeUp(faqListRef.current, faqListRef.current);
-    },
-    [],
-  );
+    fadeUp(faqHeaderRef.current, faqHeaderRef.current);
+    fadeUp(faqListRef.current, faqListRef.current);
+  }, []);
 
   return (
     <>
-
-      <section ref={sectionRef} id="reviews" className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black">
+      <section
+        ref={sectionRef}
+        id="reviews"
+        className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black"
+      >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(234,239,255,0.03),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(234,239,255,0.015),transparent_60%)]" />
 
         <div className="relative z-10">
           {/* ── Header ── */}
-          <div ref={headerRef} className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
-            <p
-              className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5"
-            >
-              <span className="font-display text-white/40 not-italic mr-2">05</span>
+          <div
+            ref={headerRef}
+            className="max-w-7xl mx-auto px-6 md:px-12 mb-16"
+          >
+            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
+              <span className="font-display text-white/40 not-italic mr-2">
+                05
+              </span>
               Client Stories
-              </p>
+            </p>
 
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <h2 className="text-3xl md:text-5xl font-secondary-italic text-white tracking-tight leading-[1.1]">
@@ -184,7 +190,7 @@ export default function TestimonialsSection() {
                   {[...Array(6)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
                       <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
-                    ))
+                    )),
                   )}
                 </div>
               </div>
@@ -204,7 +210,7 @@ export default function TestimonialsSection() {
                   {[...Array(6)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
                       <ReviewCard key={`r2-${setIndex}-${i}`} t={t} />
-                    ))
+                    )),
                   )}
                 </div>
               </div>
@@ -216,9 +222,7 @@ export default function TestimonialsSection() {
           {/* ── Review CTA ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <ScrollReveal direction="up">
-              <div
-                className="inline-flex items-center gap-3"
-              >
+              <div className="inline-flex items-center gap-3">
                 <span className="text-white/40 text-xs uppercase tracking-wider">
                   Worked with us?
                 </span>
@@ -226,7 +230,10 @@ export default function TestimonialsSection() {
                   onClick={() => setShowForm(true)}
                   className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.08] text-white/40 text-xs hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all duration-200"
                 >
-                  <Sparkles size={11} className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors" />
+                  <Sparkles
+                    size={11}
+                    className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors"
+                  />
                   Leave a review
                 </button>
               </div>
@@ -242,14 +249,19 @@ export default function TestimonialsSection() {
                   <span className="text-white/40">great?</span>
                 </h3>
                 <p className="text-white/50 text-sm md:text-base max-w-md mb-8">
-                  Book a free strategy call and let&apos;s discuss your project, timeline, and how we can help.
+                  Book a free strategy call and let&apos;s discuss your project,
+                  timeline, and how we can help.
                 </p>
                 <button
                   onClick={() => {
-                    import("@calcom/embed-react").then(async ({ getCalApi }) => {
-                      const cal = await getCalApi({ namespace: "let-s-build" });
-                      cal("modal", { calLink: "prashantkhuva/let-s-build" });
-                    });
+                    import("@calcom/embed-react").then(
+                      async ({ getCalApi }) => {
+                        const cal = await getCalApi({
+                          namespace: "let-s-build",
+                        });
+                        cal("modal", { calLink: "prashantkhuva/let-s-build" });
+                      },
+                    );
                   }}
                   className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
                 >
@@ -263,9 +275,7 @@ export default function TestimonialsSection() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
             <div className="max-w-4xl">
               <div ref={faqHeaderRef}>
-                <p
-                  className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5"
-                >
+                <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
                   FAQs
                 </p>
                 <h2 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-10 max-w-2xl">

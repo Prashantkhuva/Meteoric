@@ -69,7 +69,6 @@ const creativeWorkSchema = {
       name: "Meteoric",
       url: SITE_URL,
     },
-    datePublished: "2026-01-15",
     inLanguage: "en-US",
   })),
 };

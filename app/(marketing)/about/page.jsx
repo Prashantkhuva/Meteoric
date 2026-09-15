@@ -69,7 +69,7 @@ const personJsonLd = {
     "Product Design",
   ],
   description:
-    "Founder of Meteoric, a product development studio. Full-stack developer with expertise in React, Next.js, Node.js, and the MERN stack. Previously built FullStack Craft. Has shipped 12+ production projects for startups and founders.",
+    "Founder of Meteoric, a product development studio. Full-stack developer with expertise in React, Next.js, Node.js, and the MERN stack. Previously built FullStack Craft.",
   affiliation: { "@id": `${SITE_URL}/#organization` },
 };
 
@@ -90,7 +90,7 @@ const aboutFaqs = [
   },
   {
     question: "What kind of projects does Meteoric take on?",
-    answer: "Meteoric builds SaaS platforms, landing pages, full-stack web applications, and MVPs for startups and founders. The agency has shipped 12+ production projects with clients including Finlytix, LaunchBright, and Stellar Labs.",
+    answer: "Meteoric builds SaaS platforms, landing pages, full-stack web applications, and MVPs for startups and founders. Every project is built directly by the founder.",
   },
   {
     question: "How does Meteoric differ from other agencies?",

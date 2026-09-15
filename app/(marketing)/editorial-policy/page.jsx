@@ -106,9 +106,8 @@ export default function EditorialPolicyPage() {
                     Every technical claim is verified against official
                     documentation. Code examples are tested. Statistics are
                     sourced from published research, official benchmarks, or our
-                    own project data. When we reference metrics (e.g.,
-                    &quot;Lighthouse scores of 95+&quot;), those numbers come
-                    from real projects we have shipped.
+                    own project data. When we reference metrics, those numbers
+                    come from real projects we have shipped.
                   </p>
                 </div>
                 <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">

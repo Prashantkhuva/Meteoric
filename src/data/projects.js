@@ -25,7 +25,7 @@ export const projects = [
     name: "Habit Flow",
     tagline: "Build habits. Track streaks. Stay consistent.",
     description:
-      "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time. Outcome: Shipped MVP in 3 weeks, validated concept with 200+ beta users, seed round successfully closed.",
+      "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time. Outcome: Shipped MVP in 3 weeks, validated concept with 200+ beta users.",
     link: "https://habitflow.indevs.in/",
     image: "/habit-flow.png",
     gradient: "from-white/[0.04] to-white/[0.01]",

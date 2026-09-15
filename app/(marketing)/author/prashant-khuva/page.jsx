@@ -8,8 +8,7 @@ const authorData = {
   company: SITE_NAME,
   bio: "Founder of Meteoric. Full-stack developer specializing in React, Next.js, Node.js, and Supabase. Direct founder involvement — no account managers.",
   credentials: [
-    "12+ production projects shipped",
-    "100% client satisfaction rate",
+    "Founder-led studio — direct involvement on every project",
     "10-day average sprint cycle",
     "Specializing in Next.js + Supabase stack",
   ],
@@ -23,13 +22,13 @@ const authorData = {
 export function generateMetadata() {
   return {
     title: `${authorData.name} — ${authorData.title} | ${SITE_NAME}`,
-    description: authorData.bio,
+    description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
     alternates: {
       canonical: `${SITE_URL}/author/prashant-khuva`,
     },
     openGraph: {
       title: `${authorData.name} — ${authorData.title}`,
-      description: authorData.bio,
+      description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
       url: `${SITE_URL}/author/prashant-khuva`,
       type: "profile",
     },
@@ -38,7 +37,7 @@ export function generateMetadata() {
       site: "@prashantkhuva_",
       creator: "@prashantkhuva_",
       title: `${authorData.name} — ${authorData.title}`,
-      description: authorData.bio,
+      description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
     },
   };
 }
