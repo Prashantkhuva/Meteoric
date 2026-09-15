@@ -157,7 +157,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
       for (var p = 1; p <= 100; p++) {
         final res = await ApiClient.instance.proposalsList({
           'page': p,
-          'pageSize': 200,
+          'pageSize': 100,
           'search': _search.text.trim(),
           'status': _status,
           'sort': _sort,

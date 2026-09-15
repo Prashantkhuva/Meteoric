@@ -155,7 +155,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
       for (var p = 1; p <= 100; p++) {
         final res = await ApiClient.instance.clientsList({
           'page': p,
-          'pageSize': 200,
+          'pageSize': 100,
           'search': _search.text.trim(),
           'status': _status,
           'sort': _sort,

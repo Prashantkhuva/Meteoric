@@ -177,7 +177,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     for (var p = 1; p <= pageCap; p++) {
       final res = await ApiClient.instance.leadsList({
         'page': p,
-        'pageSize': 200,
+        'pageSize': 100,
         'search': _search.text.trim(),
         'status': _status,
         'score': _score,
