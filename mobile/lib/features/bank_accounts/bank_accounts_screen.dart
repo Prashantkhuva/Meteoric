@@ -19,11 +19,30 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
   List<Map<String, dynamic>> _accounts = [];
   bool _loading = true;
   Object? _error;
+  String _searchQuery = '';
+  final _searchCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  List<Map<String, dynamic>> get _filtered {
+    if (_searchQuery.isEmpty) return _accounts;
+    final q = _searchQuery.toLowerCase();
+    return _accounts.where((a) {
+      final label = (a['label'] ?? '').toString().toLowerCase();
+      final bank = (a['bank_name'] ?? '').toString().toLowerCase();
+      final holder = (a['account_holder'] ?? '').toString().toLowerCase();
+      return label.contains(q) || bank.contains(q) || holder.contains(q);
+    }).toList();
   }
 
   Future<void> _load() async {
@@ -143,16 +162,64 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: _load,
-      color: AppColors.accent,
-      backgroundColor: AppColors.card,
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: _accounts.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
-        itemBuilder: (context, i) {
-          final account = _accounts[i];
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: TextField(
+            controller: _searchCtrl,
+            onChanged: (v) => setState(() => _searchQuery = v),
+            style: const TextStyle(
+              color: AppColors.text,
+              fontSize: 13,
+              fontFamily: 'Inter',
+            ),
+            decoration: InputDecoration(
+              hintText: 'Search accounts...',
+              hintStyle: TextStyle(
+                color: AppColors.text.withValues(alpha: 0.4),
+                fontFamily: 'Inter',
+              ),
+              prefixIcon: const Icon(Icons.search, size: 18),
+              prefixIconColor: AppColors.textMuted,
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: AppRadius.mdAll,
+                borderSide: BorderSide(color: AppColors.border),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: AppRadius.mdAll,
+                borderSide: BorderSide(color: AppColors.border),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: AppRadius.mdAll,
+                borderSide: const BorderSide(color: AppColors.accent),
+              ),
+              filled: true,
+              fillColor: AppColors.card,
+            ),
+          ),
+        ),
+        Expanded(
+          child: _filtered.isEmpty
+              ? const EmptyState(
+                  message: 'No matching accounts.',
+                  icon: Icons.search_off,
+                )
+              : RefreshIndicator(
+                  onRefresh: _load,
+                  color: AppColors.accent,
+                  backgroundColor: AppColors.card,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _filtered.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 10),
+                    itemBuilder: (context, i) {
+                      final account = _filtered[i];
           return Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -256,6 +323,9 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
           );
         },
       ),
+    ),
+    ),
+    ],
     );
   }
 }

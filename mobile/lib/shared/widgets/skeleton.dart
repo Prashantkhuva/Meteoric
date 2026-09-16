@@ -35,7 +35,8 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
+    return ExcludeSemantics(
+      child: AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         return ShaderMask(
@@ -57,6 +58,7 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
         );
       },
       child: widget.child,
+    ),
     );
   }
 }

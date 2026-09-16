@@ -61,7 +61,10 @@ class KpiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accentColor = accent ?? AppColors.textFaint;
-    Widget card = Container(
+    Widget card = Semantics(
+      label: '$label: $value${sub != null ? ', $sub' : ''}',
+      button: onTap != null,
+      child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.card,
@@ -143,6 +146,7 @@ class KpiCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
       ),
     );
     if (onTap != null) {
