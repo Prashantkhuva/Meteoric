@@ -130,40 +130,41 @@ export default function ProcessSection() {
     <section
         ref={sectionRef}
         id="process"
-        className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32 bg-black"
+        className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
+        style={{ background: "var(--bg-primary)" }}
       >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,239,255,0.03),transparent_70%)]" />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(circle_at_center, var(--accent-glow), transparent 70%)" }} />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
         <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
-          <p className="text-white/30 uppercase tracking-[0.2em] text-xs mb-5">
-            <span className="font-display text-white/30 not-italic mr-2">03</span>
+          <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-muted)" }}>
+            <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>03</span>
             Working Together
           </p>
 
-          <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-6xl">
-            A structured process built for <span className="text-white/55 font-secondary-italic">modern product development.</span>
+          <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight sm:text-4xl md:text-6xl" style={{ color: "var(--text-primary)" }}>
+            A structured process built for <span className="font-secondary-italic" style={{ color: "var(--text-secondary)" }}>modern product development.</span>
           </h2>
 
-          <p className="mt-5 sm:mt-6 lg:mt-8 max-w-2xl text-base leading-relaxed text-white/50 sm:text-lg">
+          <p className="mt-5 sm:mt-6 lg:mt-8 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: "var(--text-secondary)" }}>
             Every project moves through a clear workflow
           </p>
-          <p className="mt-3 sm:mt-3.5 max-w-2xl text-sm leading-relaxed text-white/40 sm:text-base">
-            <span className="mr-2 text-white/20 font-display not-italic">—</span>
+          <p className="mt-3 sm:mt-3.5 max-w-2xl text-sm leading-relaxed sm:text-base" style={{ color: "var(--text-muted)" }}>
+            <span className="mr-2 font-display not-italic" style={{ color: "var(--text-muted)" }}>—</span>
             from{" "}
-            <span className="text-white/70 font-secondary-italic">strategy and design</span>
+            <span className="font-secondary-italic" style={{ color: "var(--text-secondary)" }}>strategy and design</span>
             {" "}to{" "}
-            <span className="text-white/70 font-secondary-italic">development and launch</span>.
+            <span className="font-secondary-italic" style={{ color: "var(--text-secondary)" }}>development and launch</span>.
           </p>
         </div>
 
         <div ref={timelineRef} className="relative">
           <div className="absolute left-4 top-0 h-full w-0.5 overflow-hidden sm:left-5">
-            <div className="absolute inset-0 bg-white/10" />
+            <div className="absolute inset-0" style={{ background: "var(--border-color)" }} />
             <div
               ref={progressRef}
-              className="absolute top-0 left-0 w-full rounded-full bg-linear-to-b from-[#EAEFFF] via-[#EAEFFF]/60 to-transparent shadow-[0_0_14px_rgba(234,239,255,0.35)]"
-              style={{ height: "0%" }}
+              className="absolute top-0 left-0 w-full rounded-full"
+              style={{ height: "0%", background: "linear-gradient(to bottom, var(--accent), var(--accent-dim), transparent)", boxShadow: "0 0 14px var(--accent-glow)" }}
             />
           </div>
 
@@ -174,27 +175,28 @@ export default function ProcessSection() {
                 className="proc-step relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-5 sm:grid-cols-[40px_minmax(0,1fr)] sm:gap-x-6 md:grid-cols-[140px_minmax(0,1fr)] md:gap-x-24"
               >
                 <div className="relative flex items-start">
-                  <div className="proc-dot relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-[#111111] shadow-[0_0_20px_rgba(255,255,255,0.06)] sm:h-10 sm:w-10">
-                    <div className="absolute inset-0 rounded-full border border-white/10" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)] sm:h-3 sm:w-3" />
+                  <div className="proc-dot relative z-10 flex h-8 w-8 items-center justify-center rounded-full sm:h-10 sm:w-10" style={{ border: "1px solid var(--border-color)", background: "var(--bg-secondary)", boxShadow: "0 0 20px var(--accent-glow)" }}>
+                    <div className="absolute inset-0 rounded-full" style={{ border: "1px solid var(--border-color)" }} />
+                    <div className="h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3" style={{ background: "var(--text-primary)", boxShadow: "0 0 12px var(--accent-glow)" }} />
                   </div>
-                  <span className="proc-num hidden md:block absolute left-20 top-0 text-white/15 text-5xl font-semibold tracking-tight">
+                  <span className="proc-num hidden md:block absolute left-20 top-0 text-5xl font-semibold tracking-tight" style={{ color: "var(--text-muted)" }}>
                     {item.id}
                   </span>
                 </div>
 
                 <div className="min-w-0 pb-10 sm:pb-12 md:pb-16">
-                  <h3 className="proc-title mb-5 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:mb-8 md:text-5xl font-display">
+                  <h3 className="proc-title mb-5 text-2xl font-semibold tracking-tight sm:text-3xl md:mb-8 md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
                     {item.title}
                   </h3>
-                  <p className="proc-desc mb-8 max-w-2xl text-base leading-relaxed text-[#EAEFFF]/50 sm:text-lg md:mb-10 md:text-xl">
+                  <p className="proc-desc mb-8 max-w-2xl text-base leading-relaxed sm:text-lg md:mb-10 md:text-xl" style={{ color: "var(--accent-dim)" }}>
                     {item.description}
                   </p>
                   <div className="proc-tags flex flex-wrap gap-3">
                     {item.tags.map((tag, i) => (
                       <div
                         key={i}
-                        className="rounded-full border border-white/10 bg-white/3 px-3 py-1.5 text-xs text-white/40 transition-colors duration-300 hover:bg-white/5 sm:px-4 sm:py-2 sm:text-sm"
+                        className="rounded-full px-3 py-1.5 text-xs transition-colors duration-300 sm:px-4 sm:py-2 sm:text-sm"
+                        style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)", color: "var(--text-muted)" }}
                       >
                         {tag}
                       </div>

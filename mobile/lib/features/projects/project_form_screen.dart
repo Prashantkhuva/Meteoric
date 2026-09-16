@@ -145,7 +145,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit project' : 'New project',
       body: Form(
         key: _formKey,
@@ -225,7 +225,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Color(0xFF121212),
+                         color: AppColors.onAccent,
                       ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROJECT'),
@@ -234,7 +234,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           ],
         ),
       ),
-    );
+    ), );
   }
 
   Widget _clientField() {

@@ -73,18 +73,18 @@ export function CalendarCustom({
         <button
           onClick={prevMonth}
           disabled={!canGoPrev}
-          className="p-1 text-white/30 hover:text-white/70 transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+          className="p-1 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
           aria-label="Previous month"
         >
           <ChevronLeft size={16} />
         </button>
-        <span className="text-sm font-medium text-white/80">
+        <span className="text-sm font-medium text-[var(--text-secondary)]">
           {MONTHS[month]} {year}
         </span>
         <button
           onClick={nextMonth}
           disabled={!canGoNext}
-          className="p-1 text-white/30 hover:text-white/70 transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+          className="p-1 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
           aria-label="Next month"
         >
           <ChevronRight size={16} />
@@ -95,7 +95,7 @@ export function CalendarCustom({
         {WEEKDAYS.map((wd) => (
           <div
             key={wd}
-            className="flex items-center justify-center h-9 text-xs font-normal text-white/30"
+            className="flex items-center justify-center h-9 text-xs font-normal text-[var(--text-muted)]"
           >
             {wd}
           </div>
@@ -114,12 +114,12 @@ export function CalendarCustom({
               onClick={() => onSelect?.(cell.date)}
               className={cn(
                 "relative flex items-center justify-center h-9 w-full text-sm rounded-lg transition-all outline-none",
-                "focus-visible:ring-1 focus-visible:ring-[#EAEFFF]/30",
+                "focus-visible:ring-1 focus-visible:ring-[var(--accent)]/30",
                 cell.isSelected
-                  ? "bg-[#EAEFFF]/15 text-[#EAEFFF] font-semibold"
+                  ? "bg-[var(--accent)]/15 text-[var(--accent)] font-semibold"
                   : cell.isToday
-                    ? "text-[#EAEFFF] font-semibold"
-                    : "text-white/60 hover:bg-[#EAEFFF]/10 hover:text-white/90"
+                    ? "text-[var(--accent)] font-semibold"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--accent)]/10 hover:text-[var(--text-primary)]/90"
               )}
             >
               <span>{cell.day}</span>
@@ -130,7 +130,7 @@ export function CalendarCustom({
                       key={ci}
                       className={cn(
                         "block h-1 w-1 rounded-full",
-                        cell.isSelected ? "bg-[#EAEFFF]" : "bg-[#EAEFFF]/60"
+                        cell.isSelected ? "bg-[var(--accent)]" : "bg-[var(--accent)]/60"
                       )}
                     />
                   ))}

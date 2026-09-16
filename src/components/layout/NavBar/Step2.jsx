@@ -60,7 +60,7 @@ function Step2({
       <StepIndicator step={step} />
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
             Name <span className="text-red-400">*</span>
           </label>
           <input
@@ -68,11 +68,11 @@ function Step2({
             value={formData.name}
             onChange={handleChange}
             placeholder="Your name"
-            className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#EAEFFF]/30 transition-colors text-sm"
+            className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
             Email <span className="text-red-400">*</span>
           </label>
           <input
@@ -81,19 +81,19 @@ function Step2({
             value={formData.email}
             onChange={handleChange}
             placeholder="you@example.com"
-            className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#EAEFFF]/30 transition-colors text-sm"
+            className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-white/70 mb-2">
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
               Country Code
             </label>
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setCountryOpen(!countryOpen)}
-                className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white text-left flex items-center justify-between hover:border-[#EAEFFF]/25 transition-colors text-sm"
+                className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] text-left flex items-center justify-between hover:border-[var(--accent)]/25 transition-colors text-sm"
               >
                 <span className="flex items-center gap-2">
                   <span>{selectedCountry?.flag || ""}</span>
@@ -101,19 +101,19 @@ function Step2({
                 </span>
                 <ChevronDown
                   size={16}
-                  className={`text-white/40 transition-transform duration-200 ${countryOpen ? "rotate-180" : ""}`}
+                  className={`text-[var(--text-muted)] transition-transform duration-200 ${countryOpen ? "rotate-180" : ""}`}
                 />{" "}
               </button>
               {countryOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-[#151515] border border-[#EAEFFF]/10 rounded-xl z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+                <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-surface)] border border-[var(--accent)]/10 rounded-xl z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
                   {!formData.isCustomCode ? (
                     <>
-                      <div className="p-2 border-b border-[#EAEFFF]/8">
+                      <div className="p-2 border-b border-[var(--accent)]/8">
                         <input
                           placeholder="Search country or code..."
                           value={search}
                           onChange={(e) => setSearch(e.target.value)}
-                          className="w-full px-3 py-2 bg-black border border-[#EAEFFF]/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#EAEFFF]/30"
+                          className="w-full px-3 py-2 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-lg text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/60 focus:outline-none focus:border-[var(--accent)]/30"
                         />
                       </div>
                       <button
@@ -125,14 +125,14 @@ function Step2({
                             countryCode: "",
                           }))
                         }
-                        className="w-full px-4 py-3 flex items-center gap-2 hover:bg-white/5 text-white text-sm border-b border-[#EAEFFF]/8"
+                        className="w-full px-4 py-3 flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm border-b border-[var(--accent)]/8"
                       >
-                        <Plus size={16} className="text-white/60" />
+                        <Plus size={16} className="text-[var(--text-secondary)]" />
                         <div className="flex flex-col items-start">
                           <span className="font-medium">
                             Custom Country Code
                           </span>
-                          <span className="text-xs text-white/40">
+                          <span className="text-xs text-[var(--text-muted)]">
                             Enter your own code
                           </span>
                         </div>
@@ -151,17 +151,17 @@ function Step2({
                               setCountryOpen(false);
                               setSearch("");
                             }}
-                            className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-white/5 text-white text-sm"
+                            className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm"
                           >
                             <span>{c.flag}</span>
                             <span className="font-medium">{c.code}</span>
-                            <span className="text-white/40 text-xs">
+                            <span className="text-[var(--text-muted)] text-xs">
                               {c.label}
                             </span>
                           </button>
                         ))}
                         {filteredCountries.length === 0 && (
-                          <div className="px-4 py-3 text-white/40 text-sm">
+                          <div className="px-4 py-3 text-[var(--text-muted)] text-sm">
                             No results found
                           </div>
                         )}
@@ -174,9 +174,9 @@ function Step2({
                         onClick={() =>
                           setFormData((p) => ({ ...p, isCustomCode: false }))
                         }
-                        className="w-full px-4 py-3 flex items-center gap-2 hover:bg-white/5 text-white text-sm border-b border-[#EAEFFF]/8"
+                        className="w-full px-4 py-3 flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm border-b border-[var(--accent)]/8"
                       >
-                        <ArrowLeft size={16} className="text-white/60" />
+                        <ArrowLeft size={16} className="text-[var(--text-secondary)]" />
                         Back to countries
                       </button>
                       <div className="p-3">
@@ -197,9 +197,9 @@ function Step2({
                               setCountryOpen(false);
                             }
                           }}
-                          className="w-full px-3 py-3 bg-black border border-[#EAEFFF]/20 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#EAEFFF]/40"
+                          className="w-full px-3 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/20 rounded-lg text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/60 focus:outline-none focus:border-[var(--accent)]/40"
                         />
-                        <p className="text-xs text-white/40 mt-2">
+                        <p className="text-xs text-[var(--text-muted)] mt-2">
                           Press Enter to confirm
                         </p>
                       </div>
@@ -210,7 +210,7 @@ function Step2({
             </div>
           </div>
           <div className="sm:col-span-3">
-            <label className="block text-sm font-medium text-white/70 mb-2">
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
               Phone <span className="text-red-400">*</span>
             </label>
             <input
@@ -219,12 +219,12 @@ function Step2({
               value={formData.phone}
               onChange={handleChange}
               placeholder="1122334455"
-              className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#EAEFFF]/30 transition-colors text-sm"
+              className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
             />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
             Project Details <span className="text-red-400">*</span>
           </label>
           <textarea
@@ -233,14 +233,14 @@ function Step2({
             onChange={handleChange}
             placeholder="Tell me about your project..."
             rows={3}
-            className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#EAEFFF]/30 transition-colors resize-none text-sm"
+            className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors resize-none text-sm"
           />
         </div>
       </div>
       <div className="flex justify-between mt-8">
         <button
           onClick={() => setStep(1)}
-          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm"
+          className="px-6 py-2 border border-[var(--accent)]/10 rounded-full hover:border-[var(--accent)]/30 transition-colors text-sm"
         >
           Back
         </button>
@@ -249,8 +249,8 @@ function Step2({
           disabled={!step2Valid}
           className={`px-6 py-2 rounded-full transition-colors text-sm ${
             step2Valid
-              ? "bg-white text-black hover:bg-white/90"
-              : "bg-[#EAEFFF]/10 text-[#EAEFFF]/40 cursor-not-allowed"
+              ? "bg-[var(--text-primary)] text-[var(--accent-text)] hover:bg-[var(--text-primary)]/90"
+              : "bg-[var(--accent)]/10 text-[var(--accent)]/40 cursor-not-allowed"
           }`}
         >
           Next

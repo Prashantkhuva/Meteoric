@@ -167,7 +167,7 @@ Widget _actionButton({
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 15, color: const Color(0xFF121212)),
+          Icon(icon, size: 15, color: AppColors.onAccent),
           const SizedBox(width: 7),
           Text(label),
         ],
@@ -262,6 +262,7 @@ class _NoInternetViewState extends State<NoInternetView>
           label: 'TRY AGAIN',
           icon: Icons.refresh_rounded,
           onPressed: () {
+            Haptic.tap();
             _timer?.cancel();
             widget.onRetry?.call();
           },
@@ -358,7 +359,7 @@ class _AppErrorViewState extends State<AppErrorView> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0x99000000),
+               color: AppColors.inputFill,
               border: Border.all(color: AppColors.borderSoft),
             ),
             child: Text(

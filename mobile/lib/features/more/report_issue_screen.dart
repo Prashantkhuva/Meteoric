@@ -93,7 +93,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       appBar: AppBar(title: const Text('Report Issue')),
       body: Form(
         key: _formKey,
@@ -264,6 +264,6 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           ],
         ),
       ),
-    );
+    ), );
   }
 }

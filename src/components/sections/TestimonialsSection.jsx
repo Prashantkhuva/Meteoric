@@ -21,7 +21,7 @@ const fallbackTestimonials = [];
 
 function ReviewCard({ t }) {
   return (
-    <div className="w-[380px] shrink-0 rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4 mx-3">
+    <div className="w-[380px] shrink-0 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4 mx-3" style={{ border: "1px solid var(--border-color)" }}>
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
@@ -29,34 +29,35 @@ function ReviewCard({ t }) {
             size={11}
             className={
               i < t.rating
-                ? "text-[#EAEFFF] fill-[#EAEFFF] drop-shadow-[0_0_4px_rgba(234,239,255,0.3)]"
-                : "text-white/10"
+                ? "fill-[var(--accent)] drop-shadow-[0_0_4px_var(--accent-glow)]"
+                : ""
             }
+            style={i < t.rating ? { color: "var(--accent)" } : { color: "var(--border-color)" }}
           />
         ))}
       </div>
 
-      <p className="text-[13px] text-white/70 leading-[1.7] line-clamp-5 font-[350]">
+      <p className="text-[13px] leading-[1.7] line-clamp-5 font-[350]" style={{ color: "var(--text-secondary)" }}>
         &ldquo;{t.quote}&rdquo;
       </p>
 
       <div className="flex items-center gap-3 mt-auto pt-2">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-white/50 text-[11px] font-semibold border border-white/10 shrink-0">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-[11px] font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
           {t.author.charAt(0)}
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-white/90 text-xs font-medium truncate">
+            <p className="text-xs font-medium truncate" style={{ color: "var(--text-primary)" }}>
               {t.author}
             </p>
             {t.isVerified && (
-              <BadgeCheck size={11} className="text-[#EAEFFF] shrink-0" />
+              <BadgeCheck size={11} className="shrink-0" style={{ color: "var(--accent)" }} />
             )}
           </div>
-          <p className="text-white/30 text-[11px] truncate mt-0.5">
+          <p className="text-[11px] truncate mt-0.5" style={{ color: "var(--text-muted)" }}>
             {t.role}
             {t.role && t.company ? ", " : ""}
-            {t.company && <span className="text-white/40">{t.company}</span>}
+            {t.company && <span style={{ color: "var(--text-muted)" }}>{t.company}</span>}
           </p>
         </div>
       </div>
@@ -153,9 +154,10 @@ export default function TestimonialsSection() {
       <section
         ref={sectionRef}
         id="reviews"
-        className="relative py-24 sm:py-28 lg:py-32 overflow-hidden bg-black"
+        className="relative py-24 sm:py-28 lg:py-32 overflow-hidden"
+        style={{ background: "var(--bg-primary)" }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(234,239,255,0.03),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(234,239,255,0.015),transparent_60%)]" />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(circle_at_30%_20%, var(--accent-glow), transparent 60%), radial-gradient(circle_at_70%_80%, var(--accent-glow), transparent 60%)" }} />
 
         <div className="relative z-10">
           {/* ── Header ── */}
@@ -163,18 +165,18 @@ export default function TestimonialsSection() {
             ref={headerRef}
             className="max-w-7xl mx-auto px-6 md:px-12 mb-16"
           >
-            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
-              <span className="font-display text-white/40 not-italic mr-2">
+            <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
+              <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>
                 05
               </span>
               Client Stories
             </p>
 
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <h2 className="text-3xl md:text-5xl font-secondary-italic text-white tracking-tight leading-[1.1]">
+              <h2 className="text-3xl md:text-5xl font-secondary-italic tracking-tight leading-[1.1]" style={{ color: "var(--text-primary)" }}>
                 Trusted by teams
                 <br />
-                <span className="text-white/40">who build the future.</span>
+                <span style={{ color: "var(--text-muted)" }}>who build the future.</span>
               </h2>
             </div>
           </div>
@@ -194,8 +196,8 @@ export default function TestimonialsSection() {
                   )}
                 </div>
               </div>
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 z-10" style={{ background: "linear-gradient(to right, var(--bg-primary), transparent)" }} />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 z-10" style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
             </div>
           </ScrollReveal>
 
@@ -214,8 +216,8 @@ export default function TestimonialsSection() {
                   )}
                 </div>
               </div>
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black to-transparent z-10" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black to-transparent z-10" />
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 z-10" style={{ background: "linear-gradient(to right, var(--bg-primary), transparent)" }} />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 z-10" style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
             </div>
           </ScrollReveal>
 
@@ -223,16 +225,18 @@ export default function TestimonialsSection() {
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <ScrollReveal direction="up">
               <div className="inline-flex items-center gap-3">
-                <span className="text-white/40 text-xs uppercase tracking-wider">
+                <span className="text-xs uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
                   Worked with us?
                 </span>
                 <button
                   onClick={() => setShowForm(true)}
-                  className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.08] text-white/40 text-xs hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all duration-200"
+                  className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition-all duration-200"
+                  style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}
                 >
                   <Sparkles
                     size={11}
-                    className="text-[#EAEFFF]/50 group-hover:text-[#EAEFFF] transition-colors"
+                    className="transition-colors"
+                    style={{ color: "var(--accent-dim)" }}
                   />
                   Leave a review
                 </button>
@@ -243,12 +247,12 @@ export default function TestimonialsSection() {
           {/* ── CTA after social proof ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16">
             <ScrollReveal direction="up">
-              <div className="flex flex-col items-center text-center py-12 px-6 rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent">
-                <h3 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-4">
+              <div className="flex flex-col items-center text-center py-12 px-6 rounded-3xl bg-gradient-to-b from-white/[0.03] to-transparent" style={{ border: "1px solid var(--border-color)" }}>
+                <h3 className="text-2xl md:text-4xl font-secondary-italic tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
                   Ready to build something{" "}
-                  <span className="text-white/40">great?</span>
+                  <span style={{ color: "var(--text-muted)" }}>great?</span>
                 </h3>
-                <p className="text-white/50 text-sm md:text-base max-w-md mb-8">
+                <p className="text-sm md:text-base max-w-md mb-8" style={{ color: "var(--text-secondary)" }}>
                   Book a free strategy call and let&apos;s discuss your project,
                   timeline, and how we can help.
                 </p>
@@ -263,7 +267,8 @@ export default function TestimonialsSection() {
                       },
                     );
                   }}
-                  className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
+                  className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-semibold transition-all duration-300"
+                  style={{ background: "var(--accent)", color: "var(--accent-text)", boxShadow: "0 0 20px var(--accent-glow)" }}
                 >
                   Book a Free Strategy Call
                 </button>
@@ -275,12 +280,12 @@ export default function TestimonialsSection() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
             <div className="max-w-4xl">
               <div ref={faqHeaderRef}>
-                <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
+                <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
                   FAQs
                 </p>
-                <h2 className="text-2xl md:text-4xl font-secondary-italic text-white tracking-tight mb-10 max-w-2xl">
+                <h2 className="text-2xl md:text-4xl font-secondary-italic tracking-tight mb-10 max-w-2xl" style={{ color: "var(--text-primary)" }}>
                   Common questions
-                  <span className="text-white/25"> about working with us.</span>
+                  <span style={{ color: "var(--text-muted)" }}> about working with us.</span>
                 </h2>
               </div>
 

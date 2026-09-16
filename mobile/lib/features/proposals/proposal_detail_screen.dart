@@ -270,7 +270,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                         height: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Color(0xFF121212),
+                           color: AppColors.onAccent,
                         ),
                       )
                     : const Text('SEND TO LEAD'),

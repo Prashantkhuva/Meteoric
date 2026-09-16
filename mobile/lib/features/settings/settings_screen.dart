@@ -199,7 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         AuthService.user?.userMetadata?['name'] ??
         _originalEmail.split('@').first;
 
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: 'Settings',
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -395,7 +395,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 24),
         ],
       ),
-    );
+    ));
   }
 
   // ── Sub-widgets ───────────────────────────────────────────────
@@ -526,7 +526,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextButton.styleFrom(
                     backgroundColor: forced ? AppColors.red : AppColors.accent,
                     foregroundColor:
-                        forced ? Colors.white : const Color(0xFF121212),
+                         forced ? Colors.white : AppColors.onAccent,
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2),
@@ -690,7 +690,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Column(
       children: [
         InkWell(
-          onTap: onTap,
+          onTap: () {
+            Haptic.tap();
+            onTap();
+          },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

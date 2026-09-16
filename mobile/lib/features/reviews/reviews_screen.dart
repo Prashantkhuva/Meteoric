@@ -154,7 +154,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       appBar: AppBar(
         title: const Text('Reviews'),
         automaticallyImplyLeading: false,
@@ -247,7 +247,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               },
             )
           : null,
-    );
+    ), );
   }
 
   Widget _buildList() {
@@ -337,7 +337,7 @@ class _ReviewCard extends StatelessWidget {
                   s <= rating ? Icons.star : Icons.star_border,
                   size: 15,
                   color: s <= rating
-                      ? const Color(0xFFF5C451)
+                       ? AppColors.starGold
                       : AppColors.textFaint,
                 ),
               const Spacer(),
@@ -394,7 +394,7 @@ class _ReviewCard extends StatelessWidget {
               if (status != 'approved')
                 _chip(
                   'APPROVE',
-                  const Color(0xFF4CAF50),
+                   AppColors.emerald,
                   () => onStatus('approved'),
                 ),
               if (status != 'rejected')

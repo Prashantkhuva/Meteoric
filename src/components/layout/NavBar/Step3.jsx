@@ -73,14 +73,14 @@ function Step3({
       <StepIndicator step={step} />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
             Currency
           </label>
           <div className="relative">
             <button
               type="button"
               onClick={() => setCurrencyOpen(!currencyOpen)}
-              className="w-full px-4 py-3 bg-black border border-[#EAEFFF]/10 rounded-xl text-white text-left flex items-center justify-between hover:border-[#EAEFFF]/25 transition-colors text-sm"
+              className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] text-left flex items-center justify-between hover:border-[var(--accent)]/25 transition-colors text-sm"
             >
               <span className="flex items-center gap-2">
                 <span>
@@ -91,10 +91,10 @@ function Step3({
                 </span>
                 <span>{formData.currency}</span>
               </span>
-              <span className="text-white/30 text-xs">▾</span>
+              <span className="text-[var(--text-muted)] text-xs">▾</span>
             </button>
             {currencyOpen && (
-              <div className="absolute top-full left-0 mt-1 w-full bg-[#151515] border border-[#EAEFFF]/10 rounded-xl overflow-hidden z-20">
+              <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-surface)] border border-[var(--accent)]/10 rounded-xl overflow-hidden z-20">
                 {CURRENCIES.map((c) => (
                   <button
                     key={c.label}
@@ -103,11 +103,11 @@ function Step3({
                       setFormData((p) => ({ ...p, currency: c.label }));
                       setCurrencyOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-white/5 text-white text-sm"
+                    className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm"
                   >
                     <span>{c.symbol}</span>
                     <span>{c.label}</span>
-                    <span className="ml-auto text-white/20 text-xs">
+                    <span className="ml-auto text-[var(--text-muted)]/40 text-xs">
                       Min {c.symbol}{formatNum(getMinPrice(c.label))}
                     </span>
                   </button>
@@ -117,7 +117,7 @@ function Step3({
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
             Budget <span className="text-red-400">*</span>
           </label>
           <input
@@ -125,10 +125,10 @@ function Step3({
             value={formData.budget}
             onChange={handleChange}
             placeholder={`Min ${CURRENCIES.find((c) => c.label === formData.currency)?.symbol || "$"}${formatNum(minPrice)}`}
-            className={`w-full px-4 py-3 bg-black border rounded-xl text-white placeholder:text-white/20 focus:outline-none transition-colors text-sm ${
+            className={`w-full px-4 py-3 bg-[var(--bg-primary)] border rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none transition-colors text-sm ${
               belowMin
                 ? "border-red-500/40 focus:border-red-500/60"
-                : "border-[#EAEFFF]/10 focus:border-[#EAEFFF]/30"
+                : "border-[var(--accent)]/10 focus:border-[var(--accent)]/30"
             }`}
           />
           {belowMin && (
@@ -140,33 +140,33 @@ function Step3({
           )}
         </div>
       </div>
-      <div className="bg-black p-4 rounded-xl mb-6 border border-[#EAEFFF]/10">
-        <h4 className="font-medium text-white mb-3 text-sm">
+      <div className="bg-[var(--bg-primary)] p-4 rounded-xl mb-6 border border-[var(--accent)]/10">
+        <h4 className="font-medium text-[var(--text-primary)] mb-3 text-sm">
           Review Your Information
         </h4>
         <div className="space-y-2 text-sm">
           <p>
-            <span className="text-white/40">Name: </span>
-            <span className="text-white">{formData.name}</span>
+            <span className="text-[var(--text-muted)]">Name: </span>
+            <span className="text-[var(--text-primary)]">{formData.name}</span>
           </p>
           <p>
-            <span className="text-white/40">Email: </span>
-            <span className="text-white">{formData.email}</span>
+            <span className="text-[var(--text-muted)]">Email: </span>
+            <span className="text-[var(--text-primary)]">{formData.email}</span>
           </p>
           <p>
-            <span className="text-white/40">Phone: </span>
-            <span className="text-white">
+            <span className="text-[var(--text-muted)]">Phone: </span>
+            <span className="text-[var(--text-primary)]">
               {formData.countryCode} {formData.phone}
             </span>
           </p>
           <p>
-            <span className="text-white/40">Services: </span>
-            <span className="text-white">{formData.services.join(", ")}</span>
+            <span className="text-[var(--text-muted)]">Services: </span>
+            <span className="text-[var(--text-primary)]">{formData.services.join(", ")}</span>
           </p>
           {formData.budget && (
             <p>
-              <span className="text-white/40">Budget: </span>
-              <span className="text-white">
+              <span className="text-[var(--text-muted)]">Budget: </span>
+              <span className="text-[var(--text-primary)]">
                 {CURRENCIES.find((c) => c.label === formData.currency)?.symbol}
                 {formData.budget} {formData.currency}
               </span>
@@ -184,7 +184,7 @@ function Step3({
           type="button"
           onClick={() => setStep(2)}
           disabled={sending}
-          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm disabled:opacity-40"
+          className="px-6 py-2 border border-[var(--accent)]/10 rounded-full hover:border-[var(--accent)]/30 transition-colors text-sm disabled:opacity-40"
         >
           Back
         </button>
@@ -197,8 +197,8 @@ function Step3({
           disabled={!step3Valid}
           className={`inline-flex items-center gap-2 px-6 py-2 rounded-full transition-colors text-sm ${
             step3Valid
-              ? "bg-white text-black hover:bg-white/90"
-              : "bg-[#EAEFFF]/10 text-[#EAEFFF]/40 cursor-not-allowed"
+              ? "bg-[var(--text-primary)] text-[var(--accent-text)] hover:bg-[var(--text-primary)]/90"
+              : "bg-[var(--accent)]/10 text-[var(--accent)]/40 cursor-not-allowed"
           }`}
         >
           {sending && <Loader2 size={14} className="animate-spin" />}

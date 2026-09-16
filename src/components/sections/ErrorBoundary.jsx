@@ -19,21 +19,21 @@ export default class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-black flex items-center justify-center px-6">
+        <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-6">
           <div className="text-center max-w-md">
-            <p className="text-white/20 text-[6rem] font-bold leading-none mb-4 select-none">
+            <p className="text-[var(--text-muted)] text-[6rem] font-bold leading-none mb-4 select-none">
               !
             </p>
-            <h1 className="text-2xl font-semibold text-white mb-3">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] mb-3">
               Something went wrong
             </h1>
-            <p className="text-white/40 text-sm leading-relaxed mb-8">
+            <p className="text-[var(--text-muted)] text-sm leading-relaxed mb-8">
               An unexpected error occurred. Please try refreshing the page.
             </p>
             <button
               data-no-magnetic
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-[var(--accent-text)] text-sm font-semibold hover:opacity-90 transition-colors"
             >
               Refresh Page
             </button>

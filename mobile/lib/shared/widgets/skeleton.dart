@@ -45,9 +45,9 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
               begin: Alignment(-1.0 + 2.0 * t, 0),
               end: Alignment(-0.4 + 2.0 * t, 0),
               colors: const [
-                Color(0xFF1A1A1A),
-                Color(0xFF2A2A2A),
-                Color(0xFF1A1A1A),
+                AppColors.shimmerBase,
+                AppColors.shimmerHighlight,
+                AppColors.shimmerBase,
               ],
               stops: const [0.0, 0.5, 1.0],
             ).createShader(bounds);

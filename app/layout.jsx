@@ -2,7 +2,8 @@ import "../src/index.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ClientLayout from "./client-layout";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import ErrorBoundary from "@/components/sections/ErrorBoundary";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 
@@ -12,10 +13,15 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
+const switzer = localFont({
+  src: [
+    { path: "../public/fonts/switzer-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/switzer-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/switzer-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/switzer-700.woff2", weight: "700", style: "normal" },
+  ],
   display: "swap",
-  variable: "--font-playfair",
+  variable: "--font-switzer",
 });
 
 const metaTitle =
@@ -72,8 +78,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
+    <html lang="en" className={`${inter.variable} ${switzer.variable}`} suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var saved = localStorage.getItem('meteors-theme');
+                var theme = saved || 'dark';
+                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.style.colorScheme = theme;
+              })();
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

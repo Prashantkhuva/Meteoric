@@ -126,7 +126,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openForm(),
         backgroundColor: AppColors.accent,
-        foregroundColor: const Color(0xFF121212),
+         foregroundColor: AppColors.onAccent,
         shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
         child: const Icon(Icons.add),
       ),

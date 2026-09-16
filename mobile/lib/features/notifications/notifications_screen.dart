@@ -144,7 +144,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               size: 18,
               color: AppColors.textMuted,
             ),
-            onPressed: _markAllRead,
+            onPressed: () { Haptic.tap(); _markAllRead(); },
             tooltip: 'Mark all read',
           ),
           IconButton(
@@ -153,7 +153,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               size: 18,
               color: AppColors.textMuted,
             ),
-            onPressed: () => _load(),
+            onPressed: () { Haptic.tap(); _load(); },
             tooltip: 'Refresh',
           ),
         ],
@@ -254,7 +254,10 @@ class _NotificationRow extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          Haptic.tap();
+          onTap();
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(

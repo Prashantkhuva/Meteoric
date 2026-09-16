@@ -192,7 +192,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       appBar: AppBar(
         title: _selecting
             ? Text('${_selected.length} selected')
@@ -349,13 +349,13 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 _openForm();
               },
               backgroundColor: AppColors.accent,
-              foregroundColor: const Color(0xFF121212),
+               foregroundColor: AppColors.onAccent,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.mdAll,
               ),
               child: const Icon(Icons.add),
             ),
-    );
+    ), );
   }
 
   Widget _buildList() {

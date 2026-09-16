@@ -6,16 +6,10 @@ import '../../core/native.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/pdf_export.dart';
 import '../../shared/widgets/tiptap_view.dart';
-import '../invoices/invoice_preview_screen.dart' show StatusDot;
+import '../invoices/invoice_preview_screen.dart'
+    show StatusDot, previewBg, previewCard, previewBorder, previewBorderSoft, previewText, previewTextMuted, previewTextFaint;
 
-// ── Light preview colors (local to this screen) ─────────────────────────
-const _bg = Color(0xFFF5F5F5);
-const _card = Color(0xFFFFFFFF);
-const _border = Color(0xFFE5E7EB);
-const _borderSoft = Color(0xFFF3F4F6);
-const _text = Color(0xFF111827);
-const _textMuted = Color(0xFF6B7280);
-const _textFaint = Color(0xFF9CA3AF);
+// ── Light preview colors — shared from invoice_preview_screen ─────────────
 
 /// Full-page proposal preview mirroring the web `/preview/proposal/[id]`
 /// page — brand header with status, Prepared-for block, TipTap content,
@@ -35,14 +29,14 @@ class ProposalPreviewScreen extends StatelessWidget {
     final pricing = parseJsonList(proposal['pricing']);
 
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: previewBg,
       appBar: AppBar(
-        backgroundColor: _bg,
-        foregroundColor: _text,
+        backgroundColor: previewBg,
+        foregroundColor: previewText,
         title: const Text(
           'Proposal preview',
           style: TextStyle(
-            color: _text,
+            color: previewText,
             fontSize: 18,
             fontWeight: FontWeight.w600,
             fontFamily: 'Inter',
@@ -54,8 +48,8 @@ class ProposalPreviewScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: _card,
-            border: Border.all(color: _border),
+            color: previewCard,
+            border: Border.all(color: previewBorder),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +58,7 @@ class ProposalPreviewScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: _border)),
+                  border: Border(bottom: BorderSide(color: previewBorder)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +75,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                     Text(
                       '${proposal['title'] ?? '-'}',
                       style: const TextStyle(
-                        color: _text,
+                        color: previewText,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Inter',
@@ -110,7 +104,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                   const Text(
                     'PREPARED FOR',
                     style: TextStyle(
-                      color: _textFaint,
+                      color: previewTextFaint,
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
@@ -121,7 +115,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                   Text(
                     '${lead?['name'] ?? '-'}',
                     style: const TextStyle(
-                      color: _text,
+                      color: previewText,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Inter',
@@ -132,7 +126,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                     Text(
                       '${lead!['company']}',
                       style: const TextStyle(
-                        color: _textMuted,
+                        color: previewTextMuted,
                         fontSize: 11.5,
                         height: 1.5,
                         fontFamily: 'Inter',
@@ -142,7 +136,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                     Text(
                       '${lead!['email']}',
                       style: const TextStyle(
-                        color: _textMuted,
+                        color: previewTextMuted,
                         fontSize: 11.5,
                         height: 1.5,
                         fontFamily: 'Inter',
@@ -156,7 +150,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: _border)),
+                    border: Border(top: BorderSide(color: previewBorder)),
                   ),
                   child: TipTapView(content: proposal['content']),
                 ),
@@ -167,7 +161,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: _border)),
+                    border: Border(top: BorderSide(color: previewBorder)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,7 +177,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                                 child: Text(
                                   '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
                                   style: const TextStyle(
-                                    color: _textMuted,
+                                    color: previewTextMuted,
                                     fontSize: 11.5,
                                     fontFamily: 'Inter',
                                   ),
@@ -196,7 +190,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                                   currency: currency,
                                 ),
                                 style: const TextStyle(
-                                  color: _text,
+                                  color: previewText,
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Inter',
@@ -209,14 +203,14 @@ class ProposalPreviewScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(top: 8),
                         decoration: const BoxDecoration(
-                          border: Border(top: BorderSide(color: _borderSoft)),
+                          border: Border(top: BorderSide(color: previewBorderSoft)),
                         ),
                         child: Row(
                           children: [
                             const Text(
                               'TOTAL',
                               style: TextStyle(
-                                color: _textFaint,
+                                color: previewTextFaint,
                                 fontSize: 9,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 1.2,
@@ -234,7 +228,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                                 currency: currency,
                               ),
                               style: const TextStyle(
-                                color: _text,
+                                color: previewText,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Inter',
@@ -254,7 +248,7 @@ class ProposalPreviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: _border)),
+                    border: Border(top: BorderSide(color: previewBorder)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +318,7 @@ class _Brand extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w600,
-              color: _text,
+              color: previewText,
               fontFamily: 'Inter',
             ),
           ),
@@ -332,7 +326,7 @@ class _Brand extends StatelessWidget {
             text: 'ic',
             style: TextStyle(
               fontSize: 22,
-              color: _text,
+              color: previewText,
               fontFamily: 'Inter',
             ),
           ),
@@ -352,7 +346,7 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       text.toUpperCase(),
       style: const TextStyle(
-        color: _textFaint,
+        color: previewTextFaint,
         fontSize: 9,
         fontWeight: FontWeight.w700,
         letterSpacing: 1.2,
@@ -370,7 +364,7 @@ class _ExportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: _text,
+      color: previewText,
       child: InkWell(
         onTap: onPressed,
         child: Container(
@@ -409,7 +403,7 @@ Widget _dateLine(String label, String value) => Padding(
     TextSpan(
       text: label,
       style: const TextStyle(
-        color: _textFaint,
+        color: previewTextFaint,
         fontSize: 11,
         fontFamily: 'Inter',
       ),
@@ -417,7 +411,7 @@ Widget _dateLine(String label, String value) => Padding(
         TextSpan(
           text: ' $value',
           style: const TextStyle(
-            color: _textFaint,
+            color: previewTextFaint,
             fontSize: 11,
             fontFamily: 'Inter',
           ),
@@ -430,7 +424,7 @@ Widget _dateLine(String label, String value) => Padding(
 Widget _wrapText(String text) => Text(
   text,
   style: const TextStyle(
-    color: _textMuted,
+    color: previewTextMuted,
     fontSize: 11.5,
     height: 1.55,
     fontFamily: 'Inter',

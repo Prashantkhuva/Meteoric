@@ -93,7 +93,7 @@ export default function ReviewFormModal({ open, onClose }) {
         >
           <button
             onClick={handleClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 bg-[var(--bg-primary)]/70 backdrop-blur-md"
             aria-label="Close"
           />
           <motion.div
@@ -103,13 +103,13 @@ export default function ReviewFormModal({ open, onClose }) {
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative z-10 w-full max-w-lg"
           >
-            <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative rounded-2xl border border-white/[0.08] bg-[#0a0a0a] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto">
-              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#EAEFFF]/20 to-transparent" />
+            <div ref={(el) => { trapRef.current = el; scrollRef.current = el }} onWheel={handleWheel} className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-2xl shadow-[var(--bg-primary)]/60 max-h-[90vh] overflow-y-auto">
+              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/20 to-transparent" />
 
               <button
                 onClick={handleClose}
                 aria-label="Close review form"
-                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-white/50 hover:text-white transition-colors z-10"
+                className="absolute top-5 right-5 w-9 h-9 rounded-full border border-[var(--border-color)] bg-[var(--text-primary)]/[0.04] hover:bg-[var(--text-primary)]/[0.08] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors z-10"
               >
                 <X size={16} />
               </button>
@@ -120,28 +120,28 @@ export default function ReviewFormModal({ open, onClose }) {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/15 to-green-500/5 border border-green-500/15 flex items-center justify-center mx-auto mb-6">
                       <Check size={26} className="text-green-400" />
                     </div>
-                    <p className="text-white font-semibold text-xl mb-2 tracking-tight">
+                    <p className="text-[var(--text-primary)] font-semibold text-xl mb-2 tracking-tight">
                       Thank you, {form.name.split(" ")[0]}!
                     </p>
-                    <p className="text-white/55 text-sm leading-relaxed max-w-sm mx-auto">
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-sm mx-auto">
                       Your review has been submitted and will appear on the site after review.
                       We appreciate your honest feedback.
                     </p>
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2 text-white/50 text-[11px] uppercase tracking-[0.2em] mb-1">
-                      <Sparkles size={11} className="text-[#EAEFFF]/40" />
+                    <div className="flex items-center gap-2 text-[var(--text-muted)] text-[11px] uppercase tracking-[0.2em] mb-1">
+                      <Sparkles size={11} className="text-[var(--accent)]/40" />
                       Give Your Feedback
                     </div>
-                    <h3 className="text-2xl font-semibold text-white mb-8 tracking-tight">
+                    <h3 className="text-2xl font-semibold text-[var(--text-primary)] mb-8 tracking-tight">
                       Share your experience
                     </h3>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                             Name <span className="text-red-400/50">*</span>
                           </label>
                           <input
@@ -151,11 +151,11 @@ export default function ReviewFormModal({ open, onClose }) {
                             onChange={(e) => update("name", e.target.value)}
                             placeholder="Your name"
                             disabled={sending}
-                            className="w-full px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-[#EAEFFF]/25 focus:bg-white/[0.05] transition-all duration-200 disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--text-primary)]/[0.03] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/25 focus:bg-[var(--text-primary)]/[0.05] transition-all duration-200 disabled:opacity-50"
                           />
                         </div>
                         <div>
-                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                             Email <span className="text-red-400/50">*</span>
                           </label>
                           <input
@@ -165,14 +165,14 @@ export default function ReviewFormModal({ open, onClose }) {
                             onChange={(e) => update("email", e.target.value)}
                             placeholder="your@email.com"
                             disabled={sending}
-                            className="w-full px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-[#EAEFFF]/25 focus:bg-white/[0.05] transition-all duration-200 disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--text-primary)]/[0.03] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/25 focus:bg-[var(--text-primary)]/[0.05] transition-all duration-200 disabled:opacity-50"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                             Role
                           </label>
                           <input
@@ -181,11 +181,11 @@ export default function ReviewFormModal({ open, onClose }) {
                             onChange={(e) => update("role", e.target.value)}
                             placeholder="e.g. CEO"
                             disabled={sending}
-                            className="w-full px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-[#EAEFFF]/25 focus:bg-white/[0.05] transition-all duration-200 disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--text-primary)]/[0.03] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/25 focus:bg-[var(--text-primary)]/[0.05] transition-all duration-200 disabled:opacity-50"
                           />
                         </div>
                         <div>
-                          <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                             Company
                           </label>
                           <input
@@ -194,13 +194,13 @@ export default function ReviewFormModal({ open, onClose }) {
                             onChange={(e) => update("company", e.target.value)}
                             placeholder="Your company"
                             disabled={sending}
-                            className="w-full px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-[#EAEFFF]/25 focus:bg-white/[0.05] transition-all duration-200 disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--text-primary)]/[0.03] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/25 focus:bg-[var(--text-primary)]/[0.05] transition-all duration-200 disabled:opacity-50"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                           Project
                         </label>
                         <input
@@ -209,12 +209,12 @@ export default function ReviewFormModal({ open, onClose }) {
                           onChange={(e) => update("project", e.target.value)}
                           placeholder="What project did we work on?"
                           disabled={sending}
-                          className="w-full px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-[#EAEFFF]/25 focus:bg-white/[0.05] transition-all duration-200 disabled:opacity-50"
+                          className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--text-primary)]/[0.03] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/25 focus:bg-[var(--text-primary)]/[0.05] transition-all duration-200 disabled:opacity-50"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                           Rating <span className="text-red-400/50">*</span>
                         </label>
                         <div className="flex gap-1.5">
@@ -237,8 +237,8 @@ export default function ReviewFormModal({ open, onClose }) {
                                   size={20}
                                   className={`transition-all duration-150 ${
                                     active
-                                      ? "text-[#EAEFFF] fill-[#EAEFFF] drop-shadow-[0_0_6px_rgba(234,239,255,0.3)]"
-                                      : "text-white/15"
+                                      ? "text-[var(--accent)] fill-[var(--accent)] drop-shadow-[0_0_6px_rgba(234,239,255,0.3)]"
+                                      : "text-[var(--text-muted)]"
                                   }`}
                                 />
                               </button>
@@ -248,7 +248,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       </div>
 
                       <div>
-                        <label className="block text-white/50 text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
                           Your Review <span className="text-red-400/50">*</span>
                         </label>
                         <textarea
@@ -258,7 +258,7 @@ export default function ReviewFormModal({ open, onClose }) {
                           placeholder="Tell us about your experience working with Meteoric..."
                           rows={4}
                           disabled={sending}
-                          className="w-full px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-[#EAEFFF]/25 focus:bg-white/[0.05] transition-all duration-200 disabled:opacity-50 resize-none"
+                          className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--text-primary)]/[0.03] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/25 focus:bg-[var(--text-primary)]/[0.05] transition-all duration-200 disabled:opacity-50 resize-none"
                         />
                       </div>
 
@@ -278,7 +278,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       <button
                         type="submit"
                         disabled={sending}
-                        className="group relative w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                        className="group relative w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-sm font-semibold hover:opacity-90 transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                       >
                         {sending ? (
                           <Loader2 size={14} className="animate-spin" />

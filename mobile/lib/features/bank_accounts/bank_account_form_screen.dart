@@ -103,7 +103,7 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit bank account' : 'Add bank account',
       body: Form(
         key: _formKey,
@@ -225,7 +225,7 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Color(0xFF121212),
+                         color: AppColors.onAccent,
                       ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'ADD ACCOUNT'),
@@ -234,6 +234,6 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
           ],
         ),
       ),
-    );
+    ),);
   }
 }

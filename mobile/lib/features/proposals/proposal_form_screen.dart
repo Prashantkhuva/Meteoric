@@ -159,7 +159,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit proposal' : 'New proposal',
       body: Form(
         key: _formKey,
@@ -228,7 +228,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Color(0xFF121212),
+                         color: AppColors.onAccent,
                       ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROPOSAL'),
@@ -237,7 +237,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           ],
         ),
       ),
-    );
+    ), );
   }
 
   Widget _leadField() {

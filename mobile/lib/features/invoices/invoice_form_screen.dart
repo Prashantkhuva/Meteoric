@@ -158,7 +158,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit invoice' : 'New invoice',
       body: Form(
         key: _formKey,
@@ -290,7 +290,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Color(0xFF121212),
+                         color: AppColors.onAccent,
                       ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE INVOICE'),
@@ -299,7 +299,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _refsField() {

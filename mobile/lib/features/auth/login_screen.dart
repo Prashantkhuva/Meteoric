@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
@@ -137,9 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           const Text(
                             'Admin Dashboard',
                             style: TextStyle(
-                              color: Color(0x4DFFFFFF),
-                              fontSize: 13,
-                              letterSpacing: 0.4,
+                               color: AppColors.textFaint,
+                               fontSize: 13,
+                               letterSpacing: 0.4,
                               fontFamily: 'Inter',
                             ),
                           ),
@@ -149,12 +149,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: const EdgeInsets.all(28),
                         decoration: BoxDecoration(
-                          color: const Color(0xE60A0A0A),
-                          borderRadius: BorderRadius.circular(16),
+                          color: AppColors.card.withValues(alpha: 0.9),
+                          borderRadius: AppRadius.xlAll,
                           border: Border.all(color: AppColors.border),
-                          boxShadow: const [
+                           boxShadow: [
                             BoxShadow(
-                              color: Color(0x08EAEFFF),
+                              color: AppColors.accent.withValues(alpha: 0.03),
                               blurRadius: 80,
                               spreadRadius: 4,
                             ),
@@ -171,37 +171,37 @@ class _LoginScreenState extends State<LoginScreen> {
                               autocorrect: false,
                               enabled: !_loading,
                               style: const TextStyle(
-                                color: Color(0xE6FFFFFF),
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                              ),
-                              decoration: InputDecoration(
-                                hintText: 'you@example.com',
-                                hintStyle: const TextStyle(
-                                  color: Color(0x26FFFFFF),
+                               color: AppColors.text,
+                               fontSize: 14,
+                               fontFamily: 'Inter',
+                             ),
+                             decoration: InputDecoration(
+                               hintText: 'you@example.com',
+                               hintStyle: const TextStyle(
+                                 color: AppColors.textFaint,
                                   fontSize: 14,
                                   fontFamily: 'Inter',
                                 ),
                                 filled: true,
-                                fillColor: const Color(0x08FFFFFF),
+                                fillColor: AppColors.inputFillDark,
                                 contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 14,
+                                  horizontal: AppSpacing.lg,
+                                  vertical: AppSpacing.md2,
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   borderSide: const BorderSide(
                                     color: AppColors.border,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   borderSide: const BorderSide(
-                                    color: Color(0x33EAEFFF),
+                                    color: AppColors.accent,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   borderSide: const BorderSide(
                                     color: AppColors.border,
                                   ),
@@ -217,14 +217,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               enabled: !_loading,
                               onSubmitted: (_) => _submit(),
                               style: const TextStyle(
-                                color: Color(0xE6FFFFFF),
+                                color: AppColors.text,
                                 fontSize: 14,
                                 fontFamily: 'Inter',
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Enter your password',
                                 hintStyle: const TextStyle(
-                                  color: Color(0x26FFFFFF),
+                                  color: AppColors.textFaint,
                                   fontSize: 14,
                                   fontFamily: 'Inter',
                                 ),
@@ -234,31 +234,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ? Icons.visibility_off
                                         : Icons.visibility,
                                     size: 18,
-                                    color: const Color(0x66FFFFFF),
+                                    color: AppColors.textMuted,
                                   ),
                                   onPressed: () =>
                                       setState(() => _obscure = !_obscure),
                                 ),
                                 filled: true,
-                                fillColor: const Color(0x08FFFFFF),
+                                fillColor: AppColors.inputFillDark,
                                 contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 14,
+                                  horizontal: AppSpacing.lg,
+                                  vertical: AppSpacing.md2,
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   borderSide: const BorderSide(
                                     color: AppColors.border,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   borderSide: const BorderSide(
-                                    color: Color(0x33EAEFFF),
+                                    color: AppColors.accent,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   borderSide: const BorderSide(
                                     color: AppColors.border,
                                   ),
@@ -273,16 +273,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   vertical: 12,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0x0AF87171),
-                                  borderRadius: BorderRadius.circular(12),
+                                  color: AppColors.red.withValues(alpha: 0.04),
+                                  borderRadius: AppRadius.lgAll,
                                   border: Border.all(
-                                    color: const Color(0x1AF87171),
+                                    color: AppColors.red.withValues(alpha: 0.1),
                                   ),
                                 ),
                                 child: Text(
                                   _error!,
                                   style: const TextStyle(
-                                    color: Color(0xCCF87171),
+                                    color: AppColors.red,
                                     fontSize: 13,
                                     fontFamily: 'Inter',
                                   ),
@@ -294,11 +294,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 48,
                               child: Material(
                                 color: _loading
-                                    ? const Color(0x66EAEFFF)
+                                    ? AppColors.accent.withValues(alpha: 0.4)
                                     : AppColors.accent,
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: AppRadius.lgAll,
                                 child: InkWell(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.lgAll,
                                   onTap: _loading || _locked ? null : _submit,
                                   child: Center(
                                     child: _loading
@@ -311,14 +311,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 child:
                                                     CircularProgressIndicator(
                                                       strokeWidth: 2,
-                                                      color: Color(0xFF121212),
+                                                       color: AppColors.onAccent,
                                                     ),
                                               ),
                                               SizedBox(width: 8),
                                               Text(
                                                 'Signing in...',
                                                 style: TextStyle(
-                                                  color: Color(0xFF121212),
+                                                   color: AppColors.onAccent,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
                                                   fontFamily: 'Inter',
@@ -331,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ? 'Locked — try again shortly'
                                                 : 'Sign in',
                                             style: const TextStyle(
-                                              color: Color(0xFF121212),
+                                              color: AppColors.onAccent,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                               fontFamily: 'Inter',
@@ -349,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Protected area — authorized personnel only',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0x26FFFFFF),
+                          color: AppColors.textFaint,
                           fontSize: 11,
                           letterSpacing: 0.4,
                           fontFamily: 'Inter',
@@ -363,7 +363,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
-    );
+    ), );
   }
 }
 
@@ -377,7 +377,7 @@ class _FieldLabel extends StatelessWidget {
     return Text(
       text.toUpperCase(),
       style: const TextStyle(
-        color: Color(0x4DFFFFFF),
+        color: AppColors.textFaint,
         fontSize: 11,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.3,
@@ -453,7 +453,7 @@ class _DotGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0x07FFFFFF)
+      ..color = AppColors.borderSoft
       ..style = PaintingStyle.fill;
     const spacing = 32.0;
     const dotRadius = 1.0;

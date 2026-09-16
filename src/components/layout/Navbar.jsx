@@ -25,6 +25,48 @@ const navItems = [
   { label: "Case Studies", to: "/case-studies" },
 ];
 
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "dark";
+    return localStorage.getItem("meteors-theme") || "dark";
+  });
+
+  const toggle = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("meteors-theme", next);
+    document.documentElement.setAttribute("data-theme", next);
+    document.documentElement.style.colorScheme = next;
+  };
+
+  return (
+    <button
+      data-no-magnetic
+      onClick={toggle}
+      className="theme-toggle"
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+    >
+      {theme === "dark" ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -212,21 +254,22 @@ export default function Navbar() {
             ref={navRef}
             className="hidden md:flex items-center relative"
             style={{
-              background: "#0a0a0a",
+              background: "var(--nav-bg)",
               borderRadius: 100,
               boxShadow:
-                "inset 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 1px rgba(255,255,255,0.02)",
+                "inset 0 0 0 1px var(--border-color), 0 0 0 1px rgba(128,128,128,0.02)",
               gap: 4,
               padding: "6px",
               height: 42,
+              backdropFilter: "blur(20px) saturate(1.2)",
             }}
           >
             <span
               ref={pillRef}
               className="absolute top-1/2 -translate-y-1/2 left-0 h-[calc(100%-12px)] rounded-full pointer-events-none"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                boxShadow: "0 0 12px rgba(255,255,255,0.04)",
+                background: "var(--accent-glow)",
+                boxShadow: "0 0 12px var(--accent-glow)",
                 opacity: 0,
                 willChange: "transform, width",
               }}
@@ -239,13 +282,13 @@ export default function Navbar() {
                   navItemRefs.current[i] = el;
                 }}
                 onClick={() => setIsMenuOpen(false)}
-                hoverColor="white"
+                hoverColor="var(--text-primary)"
                 onMouseEnter={() => movePill(i)}
                 onMouseLeave={hidePill}
                 style={{
                   fontSize: 12,
                   fontWeight: 400,
-                  color: "rgb(128,128,128)",
+                  color: "var(--text-muted)",
                   letterSpacing: "normal",
                   textDecoration: "none",
                   cursor: "pointer",
@@ -260,8 +303,10 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right side: CTA + Mobile toggle */}
+          {/* Right side: Theme toggle + CTA + Mobile toggle */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
+
             <button
               data-no-magnetic
               onClick={() => {
@@ -271,8 +316,8 @@ export default function Navbar() {
               className="hidden md:inline-flex items-center cursor-pointer flip-btn"
             >
               <StaggerText
-                hoverColor="#1b1b1b"
-                style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}
+                hoverColor="var(--accent-text)"
+                style={{ fontSize: 14, fontWeight: 400, color: "var(--accent-text)" }}
               >
                 {"Book a Free Call"}
               </StaggerText>
@@ -287,12 +332,12 @@ export default function Navbar() {
               aria-expanded={isMenuOpen}
               onClick={() => (isMenuOpen ? closeMenu() : setIsMenuOpen(true))}
               className="md:hidden inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px]"
-              style={{ background: "rgba(255,255,255,0)", borderRadius: 8 }}
+              style={{ background: "transparent", borderRadius: 8 }}
             >
               <span
                 className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
                 style={{
-                  backgroundColor: "rgb(255,255,255)",
+                  backgroundColor: "var(--text-primary)",
                   transform: isMenuOpen
                     ? "translateY(3.25px) rotate(45deg)"
                     : "none",
@@ -301,7 +346,7 @@ export default function Navbar() {
               <span
                 className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
                 style={{
-                  backgroundColor: "rgb(255,255,255)",
+                  backgroundColor: "var(--text-primary)",
                   transform: isMenuOpen
                     ? "translateY(-3.25px) rotate(-45deg)"
                     : "none",
@@ -320,8 +365,7 @@ export default function Navbar() {
         className="md:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center"
         style={{
           display: "none",
-          background:
-            "linear-gradient(180deg, rgba(10,10,10,0.99) 0%, rgba(7,7,7,1) 100%)",
+          background: "var(--bg-primary)",
           backdropFilter: "blur(40px) saturate(1.2)",
         }}
       >
@@ -329,7 +373,12 @@ export default function Navbar() {
         <button
           data-no-magnetic
           onClick={closeMenu}
-          className="absolute top-5 right-6 w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/50 hover:text-white hover:border-white/25 transition-all duration-200"
+          className="absolute top-5 right-6 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200"
+          style={{
+            borderColor: "var(--border-color)",
+            color: "var(--text-muted)",
+            background: "var(--accent-glow)",
+          }}
           aria-label="Close menu"
         >
           <svg
@@ -356,16 +405,20 @@ export default function Navbar() {
               href={item.to}
               onClick={closeMenu}
               data-no-magnetic
-              className="group relative text-[28px] sm:text-[32px] font-display text-white/40 hover:text-white px-8 py-3.5 rounded-2xl hover:bg-white/[0.04] transition-all duration-200"
+              className="group relative text-[28px] sm:text-[32px] font-display px-8 py-3.5 rounded-2xl transition-all duration-200"
+              style={{ color: "var(--text-muted)" }}
             >
               <span className="relative z-10">{item.label}</span>
-              <span className="absolute left-8 right-8 bottom-3 h-px bg-white/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              <span
+                className="absolute left-8 right-8 bottom-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                style={{ background: "var(--border-color)" }}
+              />
             </Link>
           ))}
         </div>
 
         {/* Divider */}
-        <div className="w-12 h-px bg-white/[0.08] my-8" />
+        <div className="w-12 h-px my-8" style={{ background: "var(--border-color)" }} />
 
         {/* CTA */}
         <div ref={ctaRef}>
@@ -376,9 +429,10 @@ export default function Navbar() {
               closeMenu();
               openCal();
             }}
-            className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide text-black hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
+            className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
             style={{
-              background: "linear-gradient(180deg, #fff 0%, #cecece 100%)",
+              background: "var(--accent)",
+              color: "var(--accent-text)",
             }}
           >
             Book a Free Call

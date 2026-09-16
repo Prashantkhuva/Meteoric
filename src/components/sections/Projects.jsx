@@ -29,14 +29,14 @@ function ProjectCard({ project, index }) {
           sizes="(max-width: 768px) 100vw, 50vw"
           loading="lazy"
         />
-        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-          <ArrowUpRight size={14} className="text-white" />
+        <div className="absolute top-3 right-3 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0" style={{ background: "var(--accent-glow)", border: "1px solid var(--border-hover)" }}>
+          <ArrowUpRight size={14} style={{ color: "var(--text-primary)" }} />
         </div>
       </div>
-      <h3 className="text-lg md:text-xl font-display text-white mb-1 group-hover:text-white/80 transition-colors duration-300">
+      <h3 className="text-lg md:text-xl font-display mb-1 transition-colors duration-300" style={{ color: "var(--text-primary)" }}>
         {project.name}
       </h3>
-      <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
+      <p className="text-xs uppercase tracking-[0.2em] font-bold" style={{ color: "var(--text-muted)" }}>
         {project.tagline}
       </p>
     </a>
@@ -132,17 +132,18 @@ function Projects() {
     <section
       ref={sectionRef}
       id="work"
-      className="relative bg-black py-24 sm:py-28 lg:py-32 overflow-hidden"
+      className="relative py-24 sm:py-28 lg:py-32 overflow-hidden"
+      style={{ background: "var(--bg-primary)" }}
     >
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
         <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 md:gap-16 mb-16">
           <div>
-            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
-              <span className="font-display text-white/40 not-italic mr-2">04</span>
+            <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
+              <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>04</span>
               Curated Portfolio
             </p>
-            <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight text-white">
+            <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight" style={{ color: "var(--text-primary)" }}>
               Selected Works
             </h2>
           </div>
@@ -150,23 +151,25 @@ function Projects() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 shrink-0">
             <Link
               href="/work"
-              className="group relative inline-flex items-center gap-2 text-white/60 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300 hover:text-white"
+              className="group relative inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300"
+              style={{ color: "var(--text-secondary)" }}
             >
               <span className="relative inline-flex items-center gap-2">
                 <StaggerText text="Explore All Work" />
                 <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
-              <span className="absolute left-0 -bottom-1 h-px w-0 bg-white/40 group-hover:w-full transition-all duration-500" />
+              <span className="absolute left-0 -bottom-1 h-px w-0 group-hover:w-full transition-all duration-500" style={{ background: "var(--text-muted)" }} />
             </Link>
             <Link
               href="/case-studies"
-              className="group relative inline-flex items-center gap-2 text-white/40 text-xs uppercase tracking-[0.2em] font-medium transition-colors duration-300 hover:text-white/80"
+              className="group relative inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-medium transition-colors duration-300"
+              style={{ color: "var(--text-muted)" }}
             >
               <span className="relative inline-flex items-center gap-2">
                 <StaggerText text="Read Case Studies" />
                 <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
-              <span className="absolute left-0 -bottom-1 h-px w-0 bg-white/40 group-hover:w-full transition-all duration-500" />
+              <span className="absolute left-0 -bottom-1 h-px w-0 group-hover:w-full transition-all duration-500" style={{ background: "var(--text-muted)" }} />
             </Link>
           </div>
         </div>

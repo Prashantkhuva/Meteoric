@@ -390,7 +390,7 @@ class _ActionChip extends StatelessWidget {
           label,
           style: TextStyle(
             color: _filled
-                ? const Color(0xFF070707)
+                 ? AppColors.background
                 : AppColors.accent.withValues(alpha: enabled ? 1 : 0.35),
             fontSize: 11,
             fontWeight: FontWeight.w700,

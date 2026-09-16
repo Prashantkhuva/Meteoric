@@ -231,7 +231,7 @@ class _UsersScreenState extends State<UsersScreen> {
     final adminCount = _users.where((u) => u['role'] == 'admin').length;
     final speakerCount = _users.where((u) => u['role'] == 'speaker').length;
 
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       appBar: AppBar(
         title: const Text('Team'),
         automaticallyImplyLeading: true,
@@ -391,7 +391,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 ),
               ],
             ),
-    );
+    ));
   }
 
   Widget _buildEmptyState() {

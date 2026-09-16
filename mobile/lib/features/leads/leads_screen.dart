@@ -275,7 +275,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       appBar: AppBar(
         title: _selecting
             ? Text('${_selected.length} selected')
@@ -469,11 +469,11 @@ class _LeadsScreenState extends State<LeadsScreen> {
                 _openForm();
               },
               backgroundColor: AppColors.accent,
-              foregroundColor: const Color(0xFF121212),
+               foregroundColor: AppColors.onAccent,
               shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
               child: const Icon(Icons.add),
             ),
-    );
+    ), );
   }
 
   Widget _buildList() {

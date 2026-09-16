@@ -14,8 +14,8 @@ function WorkCard({ project, index }) {
   const isReversed = index % 2 === 1;
 
   return (
-    <div className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-white/[0.06] hover:ring-white/[0.12] transition-all duration-500 gsap-work-card">
-      <div className={`relative overflow-hidden bg-black ${isReversed ? "lg:order-2" : ""}`}>
+    <div className="group relative grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-500 gsap-work-card">
+      <div className={`relative overflow-hidden ${isReversed ? "lg:order-2" : ""}`} style={{ background: "var(--bg-primary)" }}>
         <div className="relative w-full h-full min-h-[16rem] sm:min-h-[20rem] flex items-center justify-center p-4 sm:p-8 overflow-hidden">
           <Image
             src={project.image}
@@ -36,7 +36,7 @@ function WorkCard({ project, index }) {
             Project {String(index + 1).padStart(2, "0")}
           </span>
         </div>
-        <h2 className="text-3xl lg:text-4xl font-display text-white mb-3 tracking-tight">{project.name}</h2>
+        <h2 className="text-3xl lg:text-4xl font-display text-[var(--text-primary)] mb-3 tracking-tight">{project.name}</h2>
         <p className="text-base font-medium leading-relaxed mb-6" style={{ color: project.accent }}>{project.tagline}</p>
         <Link href={`/work/${project.slug}`}
           className="group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.02] px-7 py-3.5 w-fit"
@@ -126,27 +126,27 @@ export default function WorkPage() {
   }, { scope: sectionRef });
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div className="min-h-screen text-[var(--text-primary)] overflow-x-hidden" style={{ background: "var(--bg-primary)" }}>
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#EAEFFF]/[0.015] blur-[200px] rounded-full" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[var(--accent)]/[0.015] blur-[200px] rounded-full" />
         <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-white/[0.01] blur-[150px] rounded-full" />
       </div>
 
       <section ref={sectionRef} className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24">
         {/* Header */}
         <div ref={headingRef} className="mb-16">
-          <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
-            <span className="font-display text-white/40 not-italic mr-2">01</span>
+          <p className="text-[var(--text-secondary)] uppercase tracking-[0.2em] text-xs mb-5">
+            <span className="font-display text-[var(--text-muted)] not-italic mr-2">01</span>
             Portfolio
           </p>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight max-w-4xl">
             Our Portfolio — SaaS & Web Development Projects
           </h1>
-          <p className="text-white/40 text-base md:text-lg max-w-2xl mt-6">
+          <p className="text-[var(--text-muted)] text-base md:text-lg max-w-2xl mt-6">
             Every project here went from concept to production — on time, on
             budget, and built to convert.{" "}
-            <Link href="/services" className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">
+            <Link href="/services" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200">
               Explore our services
             </Link>.
           </p>

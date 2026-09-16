@@ -70,13 +70,13 @@ export default function RazorpayCheckout({
       disabled={loading}
       className="inline-flex items-center justify-center px-5 py-3 transition-all hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60"
       style={{
-        backgroundColor: "#0a0a0a",
-        border: "1px solid #1B1B1B",
+        backgroundColor: "var(--bg-secondary)",
+        border: "1px solid var(--border-color)",
         borderRadius: "6px",
       }}
     >
       {loading ? (
-        <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
+        <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
           Processing...
         </span>
       ) : (

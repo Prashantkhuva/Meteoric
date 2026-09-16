@@ -196,7 +196,7 @@ export default function MagneticCursor() {
         >
           <path
             d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"
-            fill="#fff"
+            fill="var(--text-primary)"
           />
         </svg>
       </div>
@@ -207,10 +207,10 @@ export default function MagneticCursor() {
         style={{
           height: BADGE_SIZE,
           borderRadius: BADGE_SIZE,
-          background: "rgba(12, 12, 12, 0.85)",
+          background: "var(--bg-secondary)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid rgba(255, 255, 255, 0.12)",
+          border: "1px solid var(--border-hover)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -223,7 +223,7 @@ export default function MagneticCursor() {
       >
         <span
           style={{
-            color: "#fff",
+            color: "var(--text-primary)",
             fontSize: "11px",
             fontWeight: 700,
             textTransform: "uppercase",

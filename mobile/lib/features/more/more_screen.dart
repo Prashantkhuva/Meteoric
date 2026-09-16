@@ -71,6 +71,7 @@ class _MoreScreenState extends State<MoreScreen> {
             child: InkWell(
               borderRadius: AppRadius.mdAll,
               onTap: () {
+                Haptic.tap();
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => item.screen));
               },

@@ -93,6 +93,7 @@ class FilterBar extends StatelessWidget {
                 ),
                 tooltip: 'Clear filters',
                 onPressed: () {
+                  Haptic.tap();
                   onChanged({for (final g in groups) g.key: g.allValue});
                 },
               ),
@@ -114,7 +115,10 @@ class FilterBar extends StatelessWidget {
           ? AppColors.accent.withValues(alpha: 0.08)
           : AppColors.cardRaised,
       child: InkWell(
-        onTap: () => _select(context, group.key),
+        onTap: () {
+          Haptic.tap();
+          _select(context, group.key);
+        },
         child: Container(
           height: 30,
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -211,7 +215,10 @@ class _FilterSheet extends StatelessWidget {
                 children: [
                   for (final option in group.allOptions)
                     InkWell(
-                      onTap: () => Navigator.pop(context, option.key),
+                      onTap: () {
+                        Haptic.tap();
+                        Navigator.pop(context, option.key);
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,

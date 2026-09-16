@@ -130,7 +130,7 @@ function MeteorBackground({ showBrand = true }) {
         setTimeout(() => { animationFrameId = requestAnimationFrame(animate); }, 200);
         return;
       }
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = "var(--bg-primary)";
       ctx.fillRect(0, 0, width, height);
 
       drawStars(time);
@@ -157,7 +157,7 @@ function MeteorBackground({ showBrand = true }) {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const paintStatic = () => {
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = "var(--bg-primary)";
       ctx.fillRect(0, 0, width, height);
       drawStars(0);
     };
@@ -218,7 +218,7 @@ const styles = {
     height: "100vh",
     minHeight: "100vh",
     overflow: "hidden",
-    background: "#000000",
+    background: "var(--bg-primary)",
   },
   canvas: {
     position: "absolute",
@@ -240,7 +240,7 @@ const styles = {
   },
   title: {
     margin: 0,
-    color: "#fff",
+    color: "var(--text-primary)",
     fontFamily: "Georgia, 'Times New Roman', Times, serif",
     fontSize: "clamp(48px, 9vw, 118px)",
     fontWeight: 700,
@@ -249,7 +249,7 @@ const styles = {
   },
   tagline: {
     margin: "18px 0 0",
-    color: "#9A9A9A",
+    color: "var(--text-muted)",
     fontFamily:
       "var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     fontSize: "12px",

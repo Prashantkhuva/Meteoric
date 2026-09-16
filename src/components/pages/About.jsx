@@ -53,7 +53,7 @@ export default function AboutPage({ faqs = [] }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
       {/* ── HERO ── */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-16 md:pb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
@@ -64,7 +64,7 @@ export default function AboutPage({ faqs = [] }) {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <div className="relative overflow-hidden rounded-2xl aspect-[4/5] bg-[#0a0a0a]">
+            <div className="relative overflow-hidden rounded-2xl aspect-[4/5]" style={{ background: "var(--bg-secondary, #0a0a0a)" }}>
               <Image
                 src="/prashant.png"
                 alt="Prashant Khuva"
@@ -73,13 +73,13 @@ export default function AboutPage({ faqs = [] }) {
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
             </div>
 
             {/* Founder badge */}
-            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-black/80 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#EAEFFF] shadow-[0_0_8px_rgba(234,239,255,0.6)]" />
-              <span className="text-[11px] text-white/50 font-medium tracking-wide">
+            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--bg-primary)]/80 backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shadow-[0_0_8px_rgba(234,239,255,0.6)]" />
+              <span className="text-[11px] text-[var(--text-secondary)] font-medium tracking-wide">
                 Founder & Product Builder
               </span>
             </div>
@@ -93,23 +93,23 @@ export default function AboutPage({ faqs = [] }) {
             className="flex flex-col gap-8 md:pt-8"
           >
             <div>
-              <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+              <span className="text-[var(--accent)]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
                 About Meteoric
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-4">
                 Prashant Khuva — Founder of Meteoric
               </h1>
-              <p className="text-white/25 text-lg md:text-xl font-light">
+              <p className="text-[var(--text-muted)] text-lg md:text-xl font-light">
                 Web & Product Development Studio
               </p>
             </div>
 
-            <div className="space-y-4 text-white/35 text-[15px] leading-[1.8]">
+            <div className="space-y-4 text-[var(--text-secondary)] text-[15px] leading-[1.8]">
               <p>
                 Meteoric is a{" "}
                 <Link
                   href="/"
-                  className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200"
+                  className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200"
                 >
                   web development agency
                 </Link>{" "}
@@ -127,7 +127,7 @@ export default function AboutPage({ faqs = [] }) {
                 From{" "}
                 <Link
                   href="/services"
-                  className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200"
+                  className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-all duration-200"
                 >
                   landing pages to full SaaS platforms
                 </Link>
@@ -136,16 +136,16 @@ export default function AboutPage({ faqs = [] }) {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 py-8 border-y border-white/[0.06]">
+            <div className="grid grid-cols-3 gap-4 py-8 border-y border-[var(--border-color)]">
               {siteStats.map((s, i) => (
                 <div
                   key={s.label}
-                  className={i !== 0 ? "pl-4 border-l border-white/[0.06]" : ""}
+                  className={i !== 0 ? "pl-4 border-l border-[var(--border-color)]" : ""}
                 >
-                  <p className="text-3xl md:text-4xl font-secondary-italic font-normal text-white mb-1">
+                  <p className="text-3xl md:text-4xl font-secondary-italic font-normal text-[var(--text-primary)] mb-1">
                     {s.value}
                   </p>
-                  <p className="text-[11px] text-white/25 uppercase tracking-[0.1em]">
+                  <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em]">
                     {s.label}
                   </p>
                 </div>
@@ -154,21 +154,21 @@ export default function AboutPage({ faqs = [] }) {
 
             {/* Contact */}
             <div>
-              <p className="text-white/20 text-[11px] uppercase tracking-[0.2em] mb-4">
+              <p className="text-[var(--text-muted)] text-[11px] uppercase tracking-[0.2em] mb-4">
                 Let&apos;s work together
               </p>
               <div className="flex flex-col gap-2">
                 <a
                   href="mailto:contact@withmeteoric.com"
                   data-no-magnetic
-                  className="text-white/40 hover:text-white text-sm transition-colors duration-200"
+                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-sm transition-colors duration-200"
                 >
                   contact@withmeteoric.com
                 </a>
                 <a
                   href="mailto:contact@withmeteoric.com"
                   data-no-magnetic
-                  className="text-white/40 hover:text-white text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
+                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
                   onClick={() =>
                     trackEvent("whatsapp_click", { click_location: "/about" })
                   }
@@ -181,7 +181,7 @@ export default function AboutPage({ faqs = [] }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-no-magnetic
-                  className="text-white/40 hover:text-white text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
+                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-sm transition-colors duration-200 inline-flex items-center gap-1.5"
                 >
                   Book a strategy call
                   <ArrowUpRight size={12} />
@@ -198,7 +198,7 @@ export default function AboutPage({ faqs = [] }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-no-magnetic
-                  className="text-xs text-white/30 hover:text-white/70 uppercase tracking-[0.15em] transition-colors duration-300"
+                  className="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] uppercase tracking-[0.15em] transition-colors duration-300"
                 >
                   {link.label}
                 </a>
@@ -209,12 +209,12 @@ export default function AboutPage({ faqs = [] }) {
             <div>
               <button
                 onClick={openCal}
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white/60 hover:text-white border border-white/[0.08] hover:border-white/20 px-7 py-3 transition-all duration-300 cursor-pointer"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.2))] px-7 py-3 transition-all duration-300 cursor-pointer"
               >
                 <span className="relative z-10">
                   <StaggerText
                     text="Book a Free Strategy Call"
-                    hoverColor="#fff"
+                    hoverColor="var(--text-primary)"
                   />
                 </span>
               </button>
@@ -225,9 +225,9 @@ export default function AboutPage({ faqs = [] }) {
 
       {/* ── FAQ ── */}
       {faqs.length > 0 && (
-        <section className="relative max-w-3xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t border-white/[0.06]">
+        <section className="relative max-w-3xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t border-[var(--border-color)]">
           <ScrollReveal direction="down" delay={0}>
-            <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+            <span className="text-[var(--accent)]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
               FAQ
             </span>
           </ScrollReveal>
@@ -239,17 +239,17 @@ export default function AboutPage({ faqs = [] }) {
           <div className="space-y-0">
             {faqs.map((faq, i) => (
               <ScrollReveal key={i} direction="up" delay={i * 0.1}>
-                <div className="py-6 border-t border-white/[0.06]">
+                <div className="py-6 border-t border-[var(--border-color)]">
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full flex items-center justify-between text-left cursor-pointer group"
                     aria-expanded={openFaq === i}
                   >
-                    <span className="text-base md:text-lg font-secondary-italic font-normal text-white/70 group-hover:text-white/90 transition-colors duration-200 pr-4">
+                    <span className="text-base md:text-lg font-secondary-italic font-normal text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]/90 transition-colors duration-200 pr-4">
                       {faq.question}
                     </span>
                     <span
-                      className={`shrink-0 w-6 h-6 rounded-full border border-white/[0.08] flex items-center justify-center transition-transform duration-300 ${openFaq === i ? "rotate-45" : ""}`}
+                      className={`shrink-0 w-6 h-6 rounded-full border border-[var(--border-color)] flex items-center justify-center transition-transform duration-300 ${openFaq === i ? "rotate-45" : ""}`}
                     >
                       <svg
                         width="10"
@@ -262,7 +262,7 @@ export default function AboutPage({ faqs = [] }) {
                           stroke="currentColor"
                           strokeWidth="1.5"
                           strokeLinecap="round"
-                          className="text-white/30"
+                          className="text-[var(--text-muted)]"
                         />
                       </svg>
                     </span>
@@ -270,7 +270,7 @@ export default function AboutPage({ faqs = [] }) {
                   <div
                     className={`overflow-hidden transition-all duration-300 ${openFaq === i ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"}`}
                   >
-                    <p className="text-white/35 text-[15px] leading-[1.8] pr-8">
+                    <p className="text-[var(--text-secondary)] text-[15px] leading-[1.8] pr-8">
                       {faq.answer}
                     </p>
                   </div>
@@ -286,9 +286,9 @@ export default function AboutPage({ faqs = [] }) {
       </Suspense>
 
       {/* ── HOW WE WORK ── */}
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t border-white/[0.06]">
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t border-[var(--border-color)]">
         <ScrollReveal direction="down" delay={0}>
-          <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+          <span className="text-[var(--accent)]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
             How We Work
           </span>
         </ScrollReveal>
@@ -301,16 +301,16 @@ export default function AboutPage({ faqs = [] }) {
         <div className="space-y-0">
           {values.map((item, i) => (
             <ScrollReveal key={item.num} direction="left" delay={i * 0.15}>
-              <div className="py-10 border-t border-white/[0.06]">
+              <div className="py-10 border-t border-[var(--border-color)]">
                 <div className="flex gap-6 md:gap-10">
-                  <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
+                  <span className="text-4xl md:text-5xl font-secondary-italic text-[var(--accent)]/[0.06] leading-none mt-1 shrink-0">
                     {item.num}
                   </span>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-3">
+                    <h3 className="text-xl md:text-2xl font-secondary-italic font-normal text-[var(--text-primary)] mb-3">
                       {item.title}
                     </h3>
-                    <p className="text-white/35 text-[15px] leading-[1.8] max-w-xl">
+                    <p className="text-[var(--text-secondary)] text-[15px] leading-[1.8] max-w-xl">
                       {item.description}
                     </p>
                   </div>

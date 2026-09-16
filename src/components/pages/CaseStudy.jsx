@@ -19,7 +19,7 @@ const fadeUp = {
 
 function SectionHeading({ children }) {
   return (
-    <h2 className="text-[11px] uppercase tracking-[0.2em] text-white/30 mb-5 font-medium">
+    <h2 className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-5 font-medium">
       {children}
     </h2>
   );
@@ -27,7 +27,7 @@ function SectionHeading({ children }) {
 
 function Prose({ children }) {
   return (
-    <p className="text-white/50 text-[15px] leading-[1.8]">{children}</p>
+    <p className="text-[var(--text-secondary)] text-[15px] leading-[1.8]">{children}</p>
   );
 }
 
@@ -37,7 +37,7 @@ function DecisionList({ items }) {
       {items.map((item, i) => (
         <li key={i} className="flex items-start gap-3">
           <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-white/20" />
-          <span className="text-sm text-white/40 leading-relaxed">{item}</span>
+          <span className="text-sm text-[var(--text-muted)] leading-relaxed">{item}</span>
         </li>
       ))}
     </ul>
@@ -64,7 +64,7 @@ export default function CaseStudy({ project }) {
   if (!caseStudy) return null;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
       <section className="relative max-w-5xl mx-auto px-6 md:px-12 pt-32 pb-16">
         <motion.div
@@ -74,7 +74,7 @@ export default function CaseStudy({ project }) {
         >
           <Link
             href="/work"
-            className="inline-flex items-center gap-2 text-white/30 hover:text-white/60 text-xs uppercase tracking-[0.2em] transition-colors mb-10"
+            className="inline-flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--text-secondary)] text-xs uppercase tracking-[0.2em] transition-colors mb-10"
           >
             <ArrowLeft size={14} />
             All Projects
@@ -86,13 +86,13 @@ export default function CaseStudy({ project }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <span className="text-[11px] font-mono tracking-widest uppercase mb-4 block text-[#EAEFFF]">
+          <span className="text-[11px] font-mono tracking-widest uppercase mb-4 block text-[var(--accent)]">
             Case Study
           </span>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight mb-4">
             {caseStudy.name}
           </h1>
-          <p className="text-lg md:text-xl max-w-2xl text-[#EAEFFF]">
+          <p className="text-lg md:text-xl max-w-2xl text-[var(--accent)]">
             {caseStudy.tagline}
           </p>
         </motion.div>
@@ -104,7 +104,7 @@ export default function CaseStudy({ project }) {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="rounded-2xl overflow-hidden ring-1 ring-white/[0.06]"
+          className="rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)]"
         >
           <Image
             src={project.image}
@@ -124,19 +124,19 @@ export default function CaseStudy({ project }) {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pb-12 border-b border-white/[0.06]"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pb-12 border-b border-[var(--border-color)]"
         >
           <div>
             <SectionHeading>Client</SectionHeading>
-            <p className="text-white/60 text-sm">{caseStudy.client}</p>
+            <p className="text-[var(--text-secondary)] text-sm">{caseStudy.client}</p>
           </div>
           <div>
             <SectionHeading>Timeline</SectionHeading>
-            <p className="text-white/60 text-sm">{caseStudy.timeline}</p>
+            <p className="text-[var(--text-secondary)] text-sm">{caseStudy.timeline}</p>
           </div>
           <div>
             <SectionHeading>Role</SectionHeading>
-            <p className="text-white/60 text-sm">{caseStudy.role}</p>
+            <p className="text-[var(--text-secondary)] text-sm">{caseStudy.role}</p>
           </div>
         </motion.div>
       </section>
@@ -223,7 +223,7 @@ export default function CaseStudy({ project }) {
                       className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
                       style={{ backgroundColor: project.accent }}
                     />
-                    <span className="text-sm text-white/45 leading-relaxed">
+                    <span className="text-sm text-[var(--text-secondary)] leading-relaxed">
                       {f}
                     </span>
                   </div>
@@ -243,7 +243,7 @@ export default function CaseStudy({ project }) {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] px-3 py-1 rounded-full border text-white/40 font-medium tracking-wide uppercase"
+                    className="text-[10px] px-3 py-1 rounded-full border text-[var(--text-muted)] font-medium tracking-wide uppercase"
                     style={{
                       borderColor: `${project.accent}33`,
                       backgroundColor: `${project.accent}0a`,
@@ -268,13 +268,13 @@ export default function CaseStudy({ project }) {
               <div className="grid sm:grid-cols-3 gap-8">
                 {caseStudy.results.map((r, ri) => (
                   <div key={ri}>
-                    <p className="text-2xl md:text-3xl font-display text-white mb-1">
+                    <p className="text-2xl md:text-3xl font-display text-[var(--text-primary)] mb-1">
                       {r.value}
                     </p>
-                    <p className="text-[11px] text-white/30 uppercase tracking-[0.1em] mb-1">
+                    <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-1">
                       {r.metric}
                     </p>
-                    <p className="text-xs text-white/25">{r.description}</p>
+                    <p className="text-xs text-[var(--text-muted)]">{r.description}</p>
                   </div>
                 ))}
               </div>
@@ -289,14 +289,14 @@ export default function CaseStudy({ project }) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-20 pt-12 border-t border-white/[0.06]"
+            className="mt-20 pt-12 border-t border-[var(--border-color)]"
           >
-            <p className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-4">
+            <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-4">
               If this looks like what you need…
             </p>
             <Link
               href={caseStudy.serviceLink.href}
-              className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[#EAEFFF]/70 hover:text-[#EAEFFF] transition-colors duration-300"
+              className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)]/70 hover:text-[var(--accent)] transition-colors duration-300"
             >
               <span>Explore {caseStudy.serviceLink.label}</span>
               <ArrowRight
@@ -325,12 +325,12 @@ export default function CaseStudy({ project }) {
                   <Link
                     key={slug}
                     href={`/work/${slug === "letem-know" ? "lete-em-know" : slug}`}
-                    className="group block p-6 rounded-xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                    className="group block p-6 rounded-xl border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300"
                   >
-                    <p className="text-sm font-display text-white mb-1 group-hover:text-[#EAEFFF] transition-colors">
+                    <p className="text-sm font-display text-[var(--text-primary)] mb-1 group-hover:text-[var(--accent)] transition-colors">
                       {related.name}
                     </p>
-                    <p className="text-xs text-white/30">{related.tagline}</p>
+                    <p className="text-xs text-[var(--text-muted)]">{related.tagline}</p>
                   </Link>
                 );
               })}
@@ -344,7 +344,7 @@ export default function CaseStudy({ project }) {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="flex flex-wrap gap-4 mt-20 pt-12 border-t border-white/[0.06]"
+          className="flex flex-wrap gap-4 mt-20 pt-12 border-t border-[var(--border-color)]"
         >
           <a
             href={project.link}
@@ -368,7 +368,7 @@ export default function CaseStudy({ project }) {
 
           <button
             onClick={openCal}
-            className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-[#EAEFFF] text-black text-sm font-semibold hover:bg-white transition-all duration-300"
+            className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-[var(--accent)] text-[var(--accent-text)] text-sm font-semibold hover:bg-white transition-all duration-300"
           >
             Start a Project
           </button>

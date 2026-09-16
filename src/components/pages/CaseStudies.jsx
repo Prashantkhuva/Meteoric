@@ -16,14 +16,14 @@ export default function CaseStudiesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
       <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-28 flex flex-col items-center text-center">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-[#EAEFFF]/40 uppercase tracking-[0.3em] text-xs font-bold block mb-6"
+          className="text-[var(--accent)]/40 uppercase tracking-[0.3em] text-xs font-bold block mb-6"
         >
           Our Work
         </motion.span>
@@ -42,7 +42,7 @@ export default function CaseStudiesPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-white/40 text-base md:text-lg max-w-2xl font-light leading-relaxed mb-10"
+          className="text-[var(--text-muted)] text-base md:text-lg max-w-2xl font-light leading-relaxed mb-10"
         >
           Every project ships with measurable impact. Here&apos;s what we built
           and what it delivered.
@@ -63,24 +63,24 @@ export default function CaseStudiesPage() {
           <section
             key={cs.slug}
             id={cs.slug}
-            className="py-16 md:py-24 border-t border-white/[0.06]"
+            className="py-16 md:py-24 border-t border-[var(--border-color)]"
           >
             <div className="max-w-6xl mx-auto px-6 md:px-12">
               {/* Top: Large number + title */}
               <ScrollReveal direction="down" delay={0} className="mb-8 md:mb-12">
-                <span className="text-6xl md:text-8xl lg:text-9xl font-secondary-italic text-[#EAEFFF]/[0.06] block leading-none mb-4">
+                <span className="text-6xl md:text-8xl lg:text-9xl font-secondary-italic text-[var(--accent)]/[0.06] block leading-none mb-4">
                   {String(idx + 1).padStart(2, "0")}.
                 </span>
                 <h2 className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-3">
                   {cs.name}
                 </h2>
-                <p className="text-lg md:text-xl text-white/35 font-light">
+                <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light">
                   {cs.tagline}
                 </p>
               </ScrollReveal>
 
               {/* Image */}
-              <ScrollReveal direction="up" delay={0.1} className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14 bg-black">
+              <ScrollReveal direction="up" delay={0.1} className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14" style={{ background: "var(--bg-primary)" }}>
                 <div className="flex items-center justify-center p-4 sm:p-8 h-full">
                   <Image
                     src={cs.image}
@@ -99,36 +99,36 @@ export default function CaseStudiesPage() {
                 {/* Left: Meta + Problem/Solution */}
                 <div className={`md:col-span-7 ${isReversed ? "md:order-last" : ""}`}>
                   {/* Meta row */}
-                  <ScrollReveal direction="left" delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 mb-8 pb-8 border-b border-white/[0.06]">
+                  <ScrollReveal direction="left" delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 mb-8 pb-8 border-b border-[var(--border-color)]">
                     <div>
-                      <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-1">Client</p>
-                      <p className="text-white/70 text-sm">{cs.client}</p>
+                      <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.15em] mb-1">Client</p>
+                      <p className="text-[var(--text-secondary)] text-sm">{cs.client}</p>
                     </div>
                     <div>
-                      <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-1">Timeline</p>
-                      <p className="text-white/70 text-sm">{cs.timeline}</p>
+                      <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.15em] mb-1">Timeline</p>
+                      <p className="text-[var(--text-secondary)] text-sm">{cs.timeline}</p>
                     </div>
                     <div>
-                      <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-1">Role</p>
-                      <p className="text-white/70 text-sm">{cs.role}</p>
+                      <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.15em] mb-1">Role</p>
+                      <p className="text-[var(--text-secondary)] text-sm">{cs.role}</p>
                     </div>
                   </ScrollReveal>
 
                   {/* Problem */}
                   <ScrollReveal direction="left" delay={0.15} className="mb-6">
-                    <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Problem</h3>
-                    <p className="text-sm text-white/40 leading-relaxed">{cs.problem}</p>
+                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Problem</h3>
+                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">{cs.problem}</p>
                   </ScrollReveal>
 
                   {/* Solution */}
                   <ScrollReveal direction="left" delay={0.2} className="mb-8">
-                    <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Solution</h3>
-                    <p className="text-sm text-white/40 leading-relaxed">{cs.solution}</p>
+                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Solution</h3>
+                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">{cs.solution}</p>
                   </ScrollReveal>
 
                   {/* Features */}
                   <ScrollReveal direction="left" delay={0.25}>
-                    <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-4 font-secondary-italic normal-case text-sm">Key Features</h3>
+                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-4 font-secondary-italic normal-case text-sm">Key Features</h3>
                     <div className="space-y-3">
                       {cs.features.map((f, fi) => (
                         <div
@@ -136,7 +136,7 @@ export default function CaseStudiesPage() {
                           className="border-l-2 pl-5 transition-colors duration-300"
                           style={{ borderColor: `${cs.accent}30` }}
                         >
-                          <span className="text-sm text-white/35">{f}</span>
+                          <span className="text-sm text-[var(--text-secondary)]">{f}</span>
                         </div>
                       ))}
                     </div>
@@ -150,27 +150,27 @@ export default function CaseStudiesPage() {
                     {cs.results.map((r, ri) => (
                       <div
                         key={ri}
-                        className={`${ri !== 0 ? "pt-6 mt-6 border-t border-white/[0.06]" : ""}`}
+                        className={`${ri !== 0 ? "pt-6 mt-6 border-t border-[var(--border-color)]" : ""}`}
                       >
-                        <p className="text-3xl md:text-4xl font-secondary-italic font-normal tracking-tight mb-1 text-white">
+                        <p className="text-3xl md:text-4xl font-secondary-italic font-normal tracking-tight mb-1 text-[var(--text-primary)]">
                           {r.value}
                         </p>
-                        <p className="text-[11px] text-white/25 uppercase tracking-[0.1em]">
+                        <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em]">
                           {r.metric}
                         </p>
-                        <p className="text-xs text-white/30 mt-1">{r.description}</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">{r.description}</p>
                       </div>
                     ))}
                   </ScrollReveal>
 
                   {/* Tags */}
                   <ScrollReveal direction="right" delay={0.2} className="mb-8">
-                    <h3 className="text-xs font-medium text-white/50 uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">Tech Stack</h3>
+                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">Tech Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {cs.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-[10px] px-3 py-1.5 rounded-full border border-white/[0.08] font-medium tracking-wide uppercase text-white/40"
+                          className="text-[10px] px-3 py-1.5 rounded-full border border-[var(--border-color)] font-medium tracking-wide uppercase text-[var(--text-muted)]"
                         >
                           {tag}
                         </span>
@@ -184,9 +184,9 @@ export default function CaseStudiesPage() {
                       href={cs.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/cta inline-flex items-center gap-2 text-sm font-medium text-white/50 hover:text-white transition-colors duration-300"
+                      className="group/cta inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-300"
                     >
-                      <StaggerText text="View Live Project" hoverColor="#fff" />
+                      <StaggerText text="View Live Project" hoverColor="var(--text-primary)" />
                       <ArrowUpRight
                         size={15}
                         className="transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
@@ -196,11 +196,11 @@ export default function CaseStudiesPage() {
 
                   {/* Service link */}
                   {cs.serviceLink && (
-                    <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8 border-t border-white/[0.06]">
-                      <p className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-3">If this looks like what you need…</p>
+                    <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8 border-t border-[var(--border-color)]">
+                      <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-3">If this looks like what you need…</p>
                       <Link
                         href={cs.serviceLink.href}
-                        className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[#EAEFFF]/70 hover:text-[#EAEFFF] transition-colors duration-300"
+                        className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)]/70 hover:text-[var(--accent)] transition-colors duration-300"
                       >
                         <span>Explore {cs.serviceLink.label}</span>
                         <ArrowRight

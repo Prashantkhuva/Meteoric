@@ -87,6 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             icon: _BellIcon(unread: NotificationState.instance.unread),
             onPressed: () async {
+              Haptic.tap();
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const NotificationsScreen()),
               );
@@ -530,7 +531,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                     for (final _ in spotIndexes)
                       TouchedSpotIndicatorData(
                         const FlLine(
-                          color: Color(0x33FFFFFF),
+                          color: AppColors.border,
                           strokeWidth: 1,
                           dashArray: [3, 3],
                         ),
@@ -577,10 +578,10 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Color(0x2EEAEFFF), Color(0x00EAEFFF)],
+                         colors: [AppColors.accent.withValues(alpha: 0.18), AppColors.accent.withValues(alpha: 0)],
                       ),
                     ),
                   ),
@@ -590,7 +591,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                     curveSmoothness: 0.32,
                     preventCurveOverShooting: true,
                     barWidth: 1.5,
-                    color: const Color(0x61FFFFFF),
+                     color: AppColors.textMuted,
                     dashArray: const [5, 4],
                     isStrokeCapRound: true,
                     dotData: const FlDotData(show: false),
@@ -608,7 +609,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
               ),
               const SizedBox(width: 14),
               _ChartLegendDot(
-                color: const Color(0x61FFFFFF),
+                color: AppColors.textMuted,
                 label: _leadsMode ? 'Won' : 'Outstanding',
               ),
             ],
@@ -637,7 +638,10 @@ class _ModeSwitch extends StatelessWidget {
           for (final s in const ['Revenue', 'Leads'])
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => onChanged(s.toLowerCase()),
+              onTap: () {
+                Haptic.tap();
+                onChanged(s.toLowerCase());
+              },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 160),
                 curve: Curves.easeOut,
@@ -656,7 +660,7 @@ class _ModeSwitch extends StatelessWidget {
                     letterSpacing: 0.3,
                     fontFamily: 'Inter',
                     color: value == s.toLowerCase()
-                        ? const Color(0xFF070707)
+                        ? AppColors.background
                         : AppColors.textMuted,
                   ),
                 ),
@@ -722,7 +726,10 @@ class _StatStrip extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: items[i].onTap,
+                  onTap: () {
+                    Haptic.tap();
+                    items[i].onTap();
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 14,
@@ -803,7 +810,10 @@ class _OverdueBanner extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          Haptic.tap();
+          onTap();
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
           decoration: BoxDecoration(
@@ -1106,7 +1116,7 @@ class _RecentSection extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        child: InkWell(onTap: () => onOpen(map), child: row),
+        child: InkWell(onTap: () { Haptic.tap(); onOpen(map); }, child: row),
       ),
     );
   }
@@ -1121,7 +1131,10 @@ class _ViewAllButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: onTap,
+      onTap: () {
+        Haptic.tap();
+        onTap();
+      },
       child: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         child: Text(
@@ -1171,7 +1184,7 @@ class _BellIcon extends StatelessWidget {
               child: Text(
                 unread > 9 ? '9+' : '$unread',
                 style: const TextStyle(
-                  color: Color(0xFF070707),
+                  color: AppColors.background,
                   fontSize: 8,
                   fontWeight: FontWeight.w700,
                   fontFeatures: [FontFeature.tabularFigures()],

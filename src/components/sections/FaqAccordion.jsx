@@ -17,24 +17,30 @@ export default function FaqAccordion({ items }) {
             key={i}
             className={`group rounded-xl border transition-all duration-300 ${
               isOpen
-                ? "border-white/[0.12] bg-gradient-to-b from-white/[0.03] to-transparent"
-                : "border-white/[0.06] bg-white/[0.02] hover:border-white/10"
+                ? "bg-gradient-to-b from-white/[0.03] to-transparent"
+                : "bg-white/[0.02]"
             }`}
+            style={{ borderColor: isOpen ? "var(--border-hover)" : "var(--border-color)" }}
           >
             <button
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
               className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
             >
-              <span className="text-white/80 text-sm pr-4 leading-relaxed">
+              <span className="text-sm pr-4 leading-relaxed" style={{ color: "var(--text-primary)" }}>
                 {faq.question}
               </span>
               <span
                 className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${
                   isOpen
-                    ? "border-[#EAEFFF]/20 bg-[#EAEFFF]/10 text-[#EAEFFF] rotate-45"
-                    : "border-white/10 text-white/30 group-hover:border-white/20"
+                    ? "rotate-45"
+                    : ""
                 }`}
+                style={{
+                  borderColor: isOpen ? "var(--accent-dim)" : "var(--border-color)",
+                  background: isOpen ? "var(--accent-glow)" : "transparent",
+                  color: isOpen ? "var(--accent)" : "var(--text-muted)",
+                }}
               >
                 <Plus size={12} />
               </span>
@@ -43,7 +49,7 @@ export default function FaqAccordion({ items }) {
               className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
             >
               <div className="overflow-hidden">
-                <p className={`text-white/50 text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0"}`}>
+                <p className={`text-sm leading-relaxed px-5 md:px-6 pb-5 pt-1 max-w-2xl transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0"}`} style={{ color: "var(--text-secondary)" }}>
                   {faq.answer}
                 </p>
               </div>

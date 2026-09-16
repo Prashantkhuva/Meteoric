@@ -72,7 +72,7 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit client' : 'Add client',
       body: Form(
         key: _formKey,
@@ -111,7 +111,7 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Color(0xFF121212),
+                         color: AppColors.onAccent,
                       ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'ADD CLIENT'),
@@ -120,6 +120,6 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
           ],
         ),
       ),
-    );
+    ), );
   }
 }

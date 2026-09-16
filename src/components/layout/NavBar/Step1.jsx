@@ -25,7 +25,7 @@ function Step1({ step, setStep, formData, setFormData }) {
       transition={{ duration: 0.2 }}
     >
       <StepIndicator step={step} />
-      <p className="text-[#EAEFFF]/60 text-sm mb-6">
+      <p className="text-[var(--accent)]/60 text-sm mb-6">
         Select the services you're interested in. You can choose multiple.
       </p>
       <div className="grid grid-cols-2 gap-3 mb-6">
@@ -41,17 +41,17 @@ function Step1({ step, setStep, formData, setFormData }) {
               aria-checked={formData.services.includes(s)}
               className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
                 selected
-                  ? "bg-white/10 border-white text-white"
-                  : "border-[#EAEFFF]/10 text-white/70 hover:border-[#EAEFFF]/40"
+                  ? "bg-[var(--text-primary)]/10 border-[var(--text-primary)] text-[var(--text-primary)]"
+                  : "border-[var(--accent)]/10 text-[var(--text-secondary)] hover:border-[var(--accent)]/40"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
-                    selected ? "bg-white border-white" : "border-[#EAEFFF]/20"
+                    selected ? "bg-[var(--text-primary)] border-[var(--text-primary)]" : "border-[var(--accent)]/20"
                   }`}
                 >
-                  {selected && <Check size={10} className="text-black" />}
+                  {selected && <Check size={10} className="text-[var(--accent-text)]" />}
                 </div>
                 <span className="text-sm font-medium">{s}</span>
               </div>
@@ -63,7 +63,7 @@ function Step1({ step, setStep, formData, setFormData }) {
         <button
           type="button"
           onClick={() => setStep(0)}
-          className="px-6 py-2 border border-[#EAEFFF]/10 rounded-full hover:border-[#EAEFFF]/30 transition-colors text-sm"
+          className="px-6 py-2 border border-[var(--accent)]/10 rounded-full hover:border-[var(--accent)]/30 transition-colors text-sm"
         >
           Back
         </button>
@@ -73,8 +73,8 @@ function Step1({ step, setStep, formData, setFormData }) {
           disabled={!step1Valid}
           className={`px-6 py-2 rounded-full transition-colors text-sm ${
             step1Valid
-              ? "bg-white text-black hover:bg-white/90"
-              : "bg-[#EAEFFF]/10 text-[#EAEFFF]/40 cursor-not-allowed"
+              ? "bg-[var(--text-primary)] text-[var(--accent-text)] hover:bg-[var(--text-primary)]/90"
+              : "bg-[var(--accent)]/10 text-[var(--accent)]/40 cursor-not-allowed"
           }`}
         >
           Next

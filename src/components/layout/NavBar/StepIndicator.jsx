@@ -19,14 +19,14 @@ function StepIndicator({ step }) {
               className={`relative w-11 h-11 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-300
               ${
                 isActive
-                  ? "bg-white text-black scale-[1.06] shadow-[0_0_20px_rgba(234,239,255,0.22)]"
+                  ? "bg-[var(--text-primary)] text-[var(--accent-text)] scale-[1.06] shadow-[0_0_20px_rgba(234,239,255,0.22)]"
                   : isCompleted
-                    ? "bg-white text-black"
-                    : "bg-[#141414] text-white/40 border border-[#EAEFFF]/10"
+                    ? "bg-[var(--text-primary)] text-[var(--accent-text)]"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--accent)]/10"
               }`}
             >
               {isActive && (
-                <div className="absolute inset-0 rounded-full border border-white/30 animate-pulse motion-reduce:animate-none" />
+                <div className="absolute inset-0 rounded-full border border-[var(--text-primary)]/30 animate-pulse motion-reduce:animate-none" />
               )}
 
               {isCompleted ? <Check size={16} /> : s}
@@ -36,11 +36,11 @@ function StepIndicator({ step }) {
             {i !== 2 && (
               <div className="relative mx-4">
                 {/* base line */}
-                <div className="w-10 sm:w-16 h-0.5 bg-[#EAEFFF]/10" />
+                <div className="w-10 sm:w-16 h-0.5 bg-[var(--accent)]/10" />
 
                 {/* progress line */}
                 <div
-                  className={`absolute top-0 left-0 h-0.5 bg-white transition-all duration-500
+                  className={`absolute top-0 left-0 h-0.5 bg-[var(--text-primary)] transition-all duration-500
                   ${step > s ? "w-full" : "w-0"}`}
                 />
               </div>

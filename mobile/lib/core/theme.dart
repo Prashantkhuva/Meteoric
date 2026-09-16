@@ -9,7 +9,7 @@ class AppColors {
   static const Color border = Color(0x14FFFFFF); // white @ 8%
   static const Color borderSoft = Color(0x0DFFFFFF); // white @ 5%
   static const Color text = Color(0xD9FFFFFF); // white @ 85%
-  static const Color textMuted = Color(0x66FFFFFF); // white @ 40%
+  static const Color textMuted = Color(0x80FFFFFF); // white @ 50%
   static const Color textFaint = Color(0x4DFFFFFF); // white @ 30%
   static const Color accent = Color(0xFFEAEFFF);
 
@@ -18,25 +18,43 @@ class AppColors {
   static const Color red = Color(0xFFF87171);
   static const Color sky = Color(0xFF38BDF8);
   static const Color violet = Color(0xFFA78BFA);
+  static const Color starGold = Color(0xFFF5C451);
+
+  // Derived tokens
+  static const Color onAccent = Color(0xFF121212);
+  static const Color inputFill = Color(0x99000000); // black @ 60%
+  static const Color inputFillDark = Color(0x08FFFFFF); // white @ 3%
+  static const Color overlay = Color(0x99000000); // black @ 60%
+
+  // Skeleton shimmer
+  static const Color shimmerBase = Color(0xFF1A1A1A);
+  static const Color shimmerHighlight = Color(0xFF2A2A2A);
 }
 
 /// Shared design constants.
 class AppRadius {
+  static const double xxs = 2;
   static const double sm = 6;
   static const double md = 8;
   static const double lg = 12;
   static const double xl = 16;
+  static const double pill = 999;
 
+  static BorderRadius get xxsAll => BorderRadius.circular(xxs);
   static BorderRadius get smAll => BorderRadius.circular(sm);
   static BorderRadius get mdAll => BorderRadius.circular(md);
   static BorderRadius get lgAll => BorderRadius.circular(lg);
   static BorderRadius get xlAll => BorderRadius.circular(xl);
+  static BorderRadius get pillAll => BorderRadius.circular(pill);
 }
 
 class AppSpacing {
   static const double xs = 4;
+  static const double xs2 = 6;
   static const double sm = 8;
+  static const double sm2 = 10;
   static const double md = 12;
+  static const double md2 = 14;
   static const double lg = 16;
   static const double xl = 24;
   static const double xxl = 32;
@@ -58,7 +76,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.accent,
-        onPrimary: Color(0xFF121212),
+        onPrimary: AppColors.onAccent,
         surface: AppColors.card,
         onSurface: AppColors.text,
         error: AppColors.red,
@@ -96,11 +114,11 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0x99000000),
+        fillColor: AppColors.inputFill,
         hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 14),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 14,
+          horizontal: AppSpacing.md2,
+          vertical: AppSpacing.md2,
         ),
         border: OutlineInputBorder(
           borderRadius: AppRadius.mdAll,
@@ -127,7 +145,7 @@ class AppTheme {
         backgroundColor: AppColors.cardRaised,
         contentTextStyle: const TextStyle(color: AppColors.text, fontSize: 13),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.card,
@@ -191,7 +209,10 @@ class AccentButton extends StatelessWidget {
         color: backgroundColor ?? AppColors.accent,
         borderRadius: AppRadius.mdAll,
         child: InkWell(
-          onTap: onPressed,
+          onTap: () {
+            Haptic.tap();
+            onPressed?.call();
+          },
           borderRadius: AppRadius.mdAll,
           child: Container(
             height: height,
@@ -199,7 +220,7 @@ class AccentButton extends StatelessWidget {
             alignment: Alignment.center,
             child: DefaultTextStyle.merge(
               style: const TextStyle(
-                color: Color(0xFF121212),
+                color: AppColors.onAccent,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Inter',
@@ -239,7 +260,10 @@ class GhostButton extends StatelessWidget {
         color: Colors.transparent,
         borderRadius: AppRadius.mdAll,
         child: InkWell(
-          onTap: onPressed,
+          onTap: () {
+            Haptic.tap();
+            onPressed?.call();
+          },
           borderRadius: AppRadius.mdAll,
           child: Container(
             height: height,
@@ -274,4 +298,19 @@ class Haptic {
 
   /// Success — pull-to-refresh complete, action completed.
   static void success() => HapticFeedback.heavyImpact();
+}
+
+/// Wraps child to dismiss keyboard on tap outside text fields.
+class UnfocusOnTap extends StatelessWidget {
+  const UnfocusOnTap({super.key, required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: child,
+    );
+  }
 }

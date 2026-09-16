@@ -53,19 +53,20 @@ export default function ManifestoSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-black py-32 sm:py-40 lg:py-48"
+      className="relative py-32 sm:py-40 lg:py-48"
+      style={{ background: "var(--bg-primary)" }}
     >
       <div className="max-w-5xl mx-auto px-6 md:px-12">
         <ScrollReveal direction="down">
-          <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-10">
-            <span className="font-display text-white/40 not-italic mr-2">01</span>
+          <p className="uppercase tracking-[0.2em] text-xs mb-10" style={{ color: "var(--text-secondary)" }}>
+            <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>01</span>
             Our Philosophy
           </p>
         </ScrollReveal>
 
-        <h2 ref={headingRef} className="text-3xl md:text-5xl font-secondary-italic leading-snug text-white/80">
+        <h2 ref={headingRef} className="text-3xl md:text-5xl font-secondary-italic leading-snug" style={{ color: "var(--text-primary)" }}>
           We build digital products that feel inevitable — clean interfaces, solid architecture, software that actually works.
-          <span className="block mt-2 text-white/40">No noise. Just results.</span>
+          <span className="block mt-2" style={{ color: "var(--text-muted)" }}>No noise. Just results.</span>
         </h2>
       </div>
     </section>

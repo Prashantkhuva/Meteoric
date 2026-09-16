@@ -6,17 +6,17 @@ import '../../core/native.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/pdf_export.dart';
 
-// ── Light preview colors (local to this screen) ─────────────────────────
-const _bg = Color(0xFFF5F5F5);
-const _card = Color(0xFFFFFFFF);
-const _border = Color(0xFFE5E7EB);
-const _borderSoft = Color(0xFFF3F4F6);
-const _text = Color(0xFF111827);
-const _textMuted = Color(0xFF6B7280);
-const _textFaint = Color(0xFF9CA3AF);
-const _green = Color(0xFF16A34A);
-const _red = Color(0xFFDC2626);
-const _indigo = Color(0xFF4F46E5);
+// ── Light preview colors (shared with proposal preview) ───────────────────
+const previewBg = Color(0xFFF5F5F5);
+const previewCard = Color(0xFFFFFFFF);
+const previewBorder = Color(0xFFE5E7EB);
+const previewBorderSoft = Color(0xFFF3F4F6);
+const previewText = Color(0xFF111827);
+const previewTextMuted = Color(0xFF6B7280);
+const previewTextFaint = Color(0xFF9CA3AF);
+const previewGreen = Color(0xFF16A34A);
+const previewRed = Color(0xFFDC2626);
+const previewIndigo = Color(0xFF4F46E5);
 
 /// Full-page invoice preview mirroring the web `/preview/invoice/[id]` page —
 /// clean light theme with brand header, parties, items table, totals,
@@ -55,14 +55,14 @@ class InvoicePreviewScreen extends StatelessWidget {
     String money(num v) => '$symbol${v.toStringAsFixed(2)}';
 
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: previewBg,
       appBar: AppBar(
-        backgroundColor: _bg,
-        foregroundColor: _text,
+        backgroundColor: previewBg,
+        foregroundColor: previewText,
         title: Text(
           'Invoice ${invoice['invoice_number'] ?? ''}',
           style: const TextStyle(
-            color: _text,
+            color: previewText,
             fontSize: 18,
             fontWeight: FontWeight.w600,
             fontFamily: 'Inter',
@@ -74,8 +74,8 @@ class InvoicePreviewScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: _card,
-            border: Border.all(color: _border),
+            color: previewCard,
+            border: Border.all(color: previewBorder),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +84,7 @@ class InvoicePreviewScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: _border)),
+                  border: Border(bottom: BorderSide(color: previewBorder)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +101,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                     Text(
                       '${invoice['invoice_number'] ?? '-'}',
                       style: const TextStyle(
-                        color: _text,
+                        color: previewText,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Inter',
@@ -141,7 +141,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         const Text(
                           'Meteoric',
                           style: TextStyle(
-                            color: _text,
+                            color: previewText,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Inter',
@@ -150,7 +150,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         const Text(
                           'contact@withmeteoric.com',
                           style: TextStyle(
-                            color: _textMuted,
+                            color: previewTextMuted,
                             fontSize: 11,
                             height: 1.5,
                             fontFamily: 'Inter',
@@ -169,7 +169,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         Text(
                           '${client?['name'] ?? '-'}',
                           style: const TextStyle(
-                            color: _text,
+                            color: previewText,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Inter',
@@ -180,7 +180,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                           Text(
                             '${client!['company']}',
                             style: const TextStyle(
-                              color: _textMuted,
+                              color: previewTextMuted,
                               fontSize: 11,
                               height: 1.5,
                               fontFamily: 'Inter',
@@ -191,7 +191,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                           Text(
                             '${client!['email']}',
                             style: const TextStyle(
-                              color: _textMuted,
+                              color: previewTextMuted,
                               fontSize: 11,
                               height: 1.5,
                               fontFamily: 'Inter',
@@ -213,12 +213,12 @@ class InvoicePreviewScreen extends StatelessWidget {
                     3: FixedColumnWidth(74),
                   },
                   border: TableBorder(
-                    horizontalInside: BorderSide(color: _borderSoft),
+                    horizontalInside: BorderSide(color: previewBorderSoft),
                   ),
                   children: [
                     TableRow(
                       decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: _border)),
+                        border: Border(bottom: BorderSide(color: previewBorder)),
                       ),
                       children: [
                         _th('Description'),
@@ -274,7 +274,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 4),
                         padding: const EdgeInsets.only(top: 8),
                         decoration: const BoxDecoration(
-                          border: Border(top: BorderSide(color: _border)),
+                          border: Border(top: BorderSide(color: previewBorder)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -282,7 +282,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             const Text(
                               'Total',
                               style: TextStyle(
-                                color: _text,
+                                color: previewText,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Inter',
@@ -291,7 +291,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             Text(
                               money(total),
                               style: const TextStyle(
-                                color: _text,
+                                color: previewText,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Inter',
@@ -310,7 +310,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 18),
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: _border)),
+                    border: Border(top: BorderSide(color: previewBorder)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +375,7 @@ class InvoicePreviewScreen extends StatelessWidget {
         TextSpan(
           text: label,
           style: const TextStyle(
-            color: _textFaint,
+            color: previewTextFaint,
             fontSize: 11,
             fontFamily: 'Inter',
           ),
@@ -383,7 +383,7 @@ class InvoicePreviewScreen extends StatelessWidget {
             TextSpan(
               text: ' $value',
               style: TextStyle(
-                color: highlight ? _green : _textFaint,
+                color: highlight ? previewGreen : previewTextFaint,
                 fontSize: 11,
                 fontWeight: highlight ? FontWeight.w600 : FontWeight.w400,
                 fontFamily: 'Inter',
@@ -409,7 +409,7 @@ class _Brand extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w600,
-              color: _text,
+              color: previewText,
               fontFamily: 'Inter',
             ),
           ),
@@ -417,7 +417,7 @@ class _Brand extends StatelessWidget {
             text: 'ic',
             style: TextStyle(
               fontSize: 22,
-              color: _text,
+              color: previewText,
               fontFamily: 'Inter',
             ),
           ),
@@ -437,7 +437,7 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       text.toUpperCase(),
       style: const TextStyle(
-        color: _textFaint,
+        color: previewTextFaint,
         fontSize: 9,
         fontWeight: FontWeight.w700,
         letterSpacing: 1.2,
@@ -458,21 +458,21 @@ class StatusDot extends StatelessWidget {
     final (color, bgColor, borderColor, label) = switch (
       status.toLowerCase()
     ) {
-      'paid' || 'accepted' => (_green, const Color(0xFFF0FDF4), const Color(0xFFBBF7D0), 'Paid'),
+      'paid' || 'accepted' => (previewGreen, const Color(0xFFF0FDF4), const Color(0xFFBBF7D0), 'Paid'),
       'overdue' || 'rejected' => (
-        _red,
+        previewRed,
         const Color(0xFFFEF2F2),
         const Color(0xFFFECACA),
         status == 'overdue' ? 'Overdue' : 'Rejected',
       ),
       'sent' => (
-        _indigo,
+        previewIndigo,
         const Color(0xFFF0F0FF),
         const Color(0xFFC7D2FE),
         'Sent',
       ),
-      'cancelled' => (_textMuted, _bg, _border, 'Cancelled'),
-      _ => (_textFaint, const Color(0xFFF9FAFB), _border, 'Draft'),
+      'cancelled' => (previewTextMuted, previewBg, previewBorder, 'Cancelled'),
+      _ => (previewTextFaint, const Color(0xFFF9FAFB), previewBorder, 'Draft'),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -514,7 +514,7 @@ class _ExportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: _text,
+      color: previewText,
       child: InkWell(
         onTap: onPressed,
         child: Container(
@@ -553,7 +553,7 @@ Widget _th(String text, {bool right = false}) => Padding(
     text.toUpperCase(),
     textAlign: right ? TextAlign.right : TextAlign.left,
     style: const TextStyle(
-      color: _textFaint,
+      color: previewTextFaint,
       fontSize: 9,
       fontWeight: FontWeight.w700,
       letterSpacing: 1.2,
@@ -569,7 +569,7 @@ Widget _td(Object? value, {bool right = false, bool emphasize = false}) =>
         '$value',
         textAlign: right ? TextAlign.right : TextAlign.left,
         style: TextStyle(
-          color: emphasize ? _text : _textMuted,
+          color: emphasize ? previewText : previewTextMuted,
           fontSize: 11.5,
           fontFamily: 'Inter',
         ),
@@ -584,7 +584,7 @@ Widget _totalRow(String label, String amount) => Padding(
       Text(
         label,
         style: const TextStyle(
-          color: _textMuted,
+          color: previewTextMuted,
           fontSize: 11.5,
           fontFamily: 'Inter',
         ),
@@ -592,7 +592,7 @@ Widget _totalRow(String label, String amount) => Padding(
       Text(
         amount,
         style: const TextStyle(
-          color: _textMuted,
+          color: previewTextMuted,
           fontSize: 11.5,
           fontFamily: 'Inter',
         ),
@@ -604,7 +604,7 @@ Widget _totalRow(String label, String amount) => Padding(
 Widget _preWrapText(String text) => Text(
   text,
   style: const TextStyle(
-    color: _textMuted,
+    color: previewTextMuted,
     fontSize: 11.5,
     height: 1.55,
     fontFamily: 'Inter',

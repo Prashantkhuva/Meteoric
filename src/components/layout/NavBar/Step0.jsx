@@ -26,14 +26,14 @@ function Step0({ setStep }) {
       className="flex justify-center"
     >
       <div className="w-full max-w-sm">
-        <p className="text-white text-2xl ml-0 mt-0 mb-10 ">
+        <p className="text-[var(--text-primary)] text-2xl ml-0 mt-0 mb-10 ">
           How would you like to get started?
         </p>
 
         <button
           type="button"
           onClick={openCal}
-          className="w-full mb-3 bg-white text-black py-3 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-white/90 transition-colors"
+          className="w-full mb-3 bg-[var(--accent)] text-[var(--accent-text)] py-3 rounded-xl flex items-center justify-center gap-2 font-semibold hover:opacity-90 transition-colors"
         >
           <Calendar size={18} />
           Book a Free Strategy Call
@@ -42,7 +42,7 @@ function Step0({ setStep }) {
         <button
           type="button"
           onClick={() => setStep(1)}
-          className="w-full border border-white/10 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-white/5 transition-colors"
+          className="w-full border border-[var(--border-color)] py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-[var(--text-primary)]/5 transition-colors"
         >
           <FileText size={18} />
           Request Services

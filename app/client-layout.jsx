@@ -76,7 +76,7 @@ export default function ClientLayout({ children }) {
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:rounded-lg focus:bg-[#EAEFFF] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-black focus:outline-none focus:ring-2 focus:ring-black"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:rounded-lg focus:bg-[var(--accent)] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[var(--accent-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
       >
         Skip to content
       </a>
@@ -91,7 +91,7 @@ export default function ClientLayout({ children }) {
       {isAdmin ? (
         children
       ) : (
-        <main ref={contentRef} id="main-content" className="bg-black">
+        <main ref={contentRef} id="main-content" style={{ background: "var(--bg-primary)" }}>
           {children}
         </main>
       )}

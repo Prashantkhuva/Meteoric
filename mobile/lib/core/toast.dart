@@ -72,7 +72,7 @@ class _ToastView extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF070707).withValues(alpha: 0.5),
+            color: AppColors.background.withValues(alpha: 0.5),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),

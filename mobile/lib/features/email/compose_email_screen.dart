@@ -191,7 +191,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: 'Compose email',
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -472,7 +472,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                     height: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Color(0xFF121212),
+                       color: AppColors.onAccent,
                     ),
                   )
                 : const Text('SEND EMAIL'),
@@ -480,6 +480,6 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
           const SizedBox(height: 16),
         ],
       ),
-    );
+    ), );
   }
 }

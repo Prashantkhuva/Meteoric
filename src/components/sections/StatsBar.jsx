@@ -58,7 +58,7 @@ export default function StatsBar() {
   }, [inView]);
 
   return (
-    <section ref={ref} className="relative bg-black py-16 sm:py-20">
+    <section ref={ref} className="relative py-16 sm:py-20" style={{ background: "var(--bg-primary)" }}>
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
           {siteStats.map((stat) => (
@@ -66,10 +66,10 @@ export default function StatsBar() {
               key={stat.label}
               className="stat-item text-center md:text-left opacity-0"
             >
-              <div className="text-4xl md:text-5xl font-display tracking-tight text-white mb-2">
+              <div className="text-4xl md:text-5xl font-display tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>
                 <AnimatedNumber target={stat.value} inView={inView} />
               </div>
-              <p className="text-sm text-white/40 uppercase tracking-[0.15em]">
+              <p className="text-sm uppercase tracking-[0.15em]" style={{ color: "var(--text-muted)" }}>
                 {stat.label}
               </p>
             </div>

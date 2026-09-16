@@ -91,7 +91,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit lead' : 'Add lead',
       body: Form(
         key: _formKey,
@@ -156,7 +156,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                           source.toUpperCase(),
                           style: TextStyle(
                             color: _source == source
-                                ? const Color(0xFF121212)
+                                 ? AppColors.onAccent
                                 : AppColors.textMuted,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
@@ -177,7 +177,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Color(0xFF121212),
+                         color: AppColors.onAccent,
                       ),
                     )
                   : Text(_isEdit ? 'SAVE CHANGES' : 'ADD LEAD'),
@@ -186,7 +186,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
           ],
         ),
       ),
-    );
+    ), );
   }
 
   Widget _field(

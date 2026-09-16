@@ -6,6 +6,7 @@ import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import GridLines from "@/components/ui/GridLines";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 
 const services = [
@@ -188,20 +189,22 @@ export default function ServicesSection() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative w-full bg-black"
+      className="relative w-full"
+      style={{ background: "var(--bg-primary)" }}
     >
+      <GridLines />
       {/* Header */}
       <div ref={headingRef} className="px-6 md:px-16 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-4">
           <div>
-            <p className="text-white/60 uppercase tracking-[0.2em] text-xs mb-5">
-              <span className="font-display text-white/40 not-italic mr-2">
+            <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
+              <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>
                 02
               </span>
               Our Services
             </p>
 
-            <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal text-white">
+            <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal" style={{ color: "var(--text-primary)" }}>
               What we build{" "}
               <span
                 className="block font-secondary-italic text-transparent bg-clip-text"
@@ -215,7 +218,7 @@ export default function ServicesSection() {
           </div>
 
           <ScrollReveal direction="right" delay={0.3}>
-            <div className="hidden md:flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 pb-2">
+            <div className="hidden md:flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] pb-2" style={{ color: "var(--text-muted)" }}>
               <span>Scroll to explore</span>
               <svg
                 className="w-4 h-4"
@@ -244,11 +247,13 @@ export default function ServicesSection() {
             return (
               <div
                 key={s.num}
-                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300 hover:border-white/[0.12]"
+                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300"
+                style={{ border: "1px solid var(--border-color)" }}
               >
                 {/* Ghost number */}
-                <span
-                  className="absolute top-6 right-8 text-[120px] md:text-[180px] font-display leading-none text-white/[0.02] select-none pointer-events-none"
+                  <span
+                    className="absolute top-6 right-8 text-[120px] md:text-[180px] font-display leading-none select-none pointer-events-none"
+                    style={{ color: "var(--accent-glow)" }}
                   aria-hidden="true"
                 >
                   {s.num}
@@ -256,20 +261,20 @@ export default function ServicesSection() {
 
                 {/* Top row: label + icon */}
                 <div className="relative z-10 flex items-center justify-between mb-10">
-                  <span className="text-[10px] tracking-[0.3em] font-bold text-white/30 uppercase">
+                  <span className="text-[10px] tracking-[0.3em] font-bold uppercase" style={{ color: "var(--text-muted)" }}>
                     Service — {s.num}
                   </span>
-                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/40 group-hover:text-white/60 group-hover:border-white/20 transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)", color: "var(--text-muted)" }}>
                     <Icon size={20} strokeWidth={1.5} />
                   </div>
                 </div>
 
                 {/* Title + description */}
                 <div className="relative z-10 flex-1">
-                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-display text-white mb-5 leading-tight">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-display mb-5 leading-tight" style={{ color: "var(--text-primary)" }}>
                     {s.title}
                   </h3>
-                  <p className="text-sm md:text-base leading-relaxed text-white/45 max-w-md">
+                  <p className="text-sm md:text-base leading-relaxed max-w-md" style={{ color: "var(--text-muted)" }}>
                     {s.desc}
                   </p>
                 </div>
@@ -280,7 +285,8 @@ export default function ServicesSection() {
                     {s.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1.5 rounded-full border border-white/10 text-[10px] uppercase tracking-[0.15em] text-white/30"
+                        className="px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.15em]"
+                        style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}
                       >
                         {tag}
                       </span>
@@ -288,7 +294,8 @@ export default function ServicesSection() {
                   </div>
                   <Link
                     href={s.href}
-                    className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 border-b border-white/15 pb-1 group-hover:text-white/60 group-hover:border-white/30 transition-colors duration-300"
+                    className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold pb-1 transition-colors duration-300"
+                    style={{ color: "var(--text-muted)", borderBottom: "1px solid var(--border-color)" }}
                   >
                     The full picture
                     <svg
@@ -309,15 +316,15 @@ export default function ServicesSection() {
           })}
 
           {/* CTA card */}
-          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px]">
+          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px]" style={{ border: "1px solid var(--border-color)" }}>
             <div className="relative z-10">
-              <span className="text-[10px] tracking-[0.3em] font-bold text-[#EAEFFF]/30 uppercase block mb-10">
+              <span className="text-[10px] tracking-[0.3em] font-bold uppercase block mb-10" style={{ color: "var(--accent-text)" }}>
                 And then some
               </span>
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-display text-white mb-5 leading-tight">
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-display mb-5 leading-tight" style={{ color: "var(--text-primary)" }}>
                 Something custom in mind?
               </h3>
-              <p className="text-sm md:text-base leading-relaxed text-white/45 max-w-md">
+              <p className="text-sm md:text-base leading-relaxed max-w-md" style={{ color: "var(--text-muted)" }}>
                 Every project begins with understanding your vision. Whether
                 it's a landing page, SaaS, or a full-stack app — we'll build it
                 tailored to your goals.
@@ -333,8 +340,8 @@ export default function ServicesSection() {
               >
                 <StaggerText
                   hovered={ctaHovered}
-                  hoverColor="#1b1b1b"
-                  style={{ fontSize: 14, fontWeight: 400, color: "#1b1b1b" }}
+                  hoverColor="var(--accent-text)"
+                  style={{ fontSize: 14, fontWeight: 400, color: "var(--accent-text)" }}
                 >
                   {"Book a Free Call"}
                 </StaggerText>
@@ -356,33 +363,36 @@ export default function ServicesSection() {
               return (
                 <div
                   key={s.num}
-                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4"
+                  className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden p-6 flex flex-col gap-4"
                   style={{
                     zIndex: services.length - i,
                     width: "calc(100vw - 40px)",
+                    border: "1px solid var(--border-color)",
+                    background: "var(--bg-secondary)",
                   }}
                 >
                   {/* Ghost number */}
                   <span
-                    className="absolute top-4 right-5 text-[100px] font-display leading-none text-white/[0.02] select-none pointer-events-none"
+                    className="absolute top-4 right-5 text-[100px] font-display leading-none select-none pointer-events-none"
+                    style={{ color: "var(--accent-glow)" }}
                     aria-hidden="true"
                   >
                     {s.num}
                   </span>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] tracking-[0.3em] font-bold text-white/40 uppercase">
+                    <span className="text-[10px] tracking-[0.3em] font-bold uppercase" style={{ color: "var(--text-muted)" }}>
                       Service — {s.num}
                     </span>
-                    <div className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center text-white/40">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "var(--accent-glow)", color: "var(--text-muted)" }}>
                       <Icon size={18} strokeWidth={1.5} />
                     </div>
                   </div>
 
-                  <h3 className="text-[22px] font-secondary-italic text-white leading-[1.1]">
+                  <h3 className="text-[22px] font-secondary-italic leading-[1.1]" style={{ color: "var(--text-primary)" }}>
                     {s.title}
                   </h3>
-                  <p className="text-white/60 text-[12px] leading-relaxed">
+                  <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                     {s.desc}
                   </p>
 
@@ -391,7 +401,8 @@ export default function ServicesSection() {
                       {s.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-2.5 py-1 rounded-full border border-white/[0.08] text-[9px] uppercase tracking-[0.15em] text-white/35"
+                          className="px-2.5 py-1 rounded-full text-[9px] uppercase tracking-[0.15em]"
+                          style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}
                         >
                           {tag}
                         </span>
@@ -399,7 +410,8 @@ export default function ServicesSection() {
                     </div>
                     <Link
                       href={s.href}
-                      className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-white/40 border-b border-white/[0.12] pb-1 hover:text-white/60 hover:border-white/25 transition-colors"
+                      className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold pb-1 transition-colors"
+                      style={{ color: "var(--text-muted)", borderBottom: "1px solid var(--border-color)" }}
                     >
                       The full picture
                       <svg
@@ -421,16 +433,16 @@ export default function ServicesSection() {
 
             {/* CTA card */}
             <div
-              className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden border border-white/[0.06] bg-[#0a0a0a] p-6 flex flex-col gap-4"
-              style={{ zIndex: 0, width: "calc(100vw - 40px)" }}
+              className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden p-6 flex flex-col gap-4"
+              style={{ zIndex: 0, width: "calc(100vw - 40px)", border: "1px solid var(--border-color)", background: "var(--bg-secondary)" }}
             >
-              <span className="text-[10px] tracking-[0.3em] font-bold text-white/25 uppercase block">
+              <span className="text-[10px] tracking-[0.3em] font-bold uppercase block" style={{ color: "var(--text-muted)" }}>
                 And then some
               </span>
-              <h3 className="text-[22px] font-secondary-italic text-white leading-[1.1]">
+              <h3 className="text-[22px] font-secondary-italic leading-[1.1]" style={{ color: "var(--text-primary)" }}>
                 Something custom in mind?
               </h3>
-              <p className="text-white/60 text-[12px] leading-relaxed">
+              <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                 Every project begins with understanding your vision. Whether
                 it&apos;s a landing page, SaaS, or a full-stack app — we&apos;ll
                 build it tailored to your goals.
@@ -445,8 +457,8 @@ export default function ServicesSection() {
                 >
                   <StaggerText
                     hovered={ctaHovered}
-                    hoverColor="#1b1b1b"
-                    style={{ fontSize: 13, fontWeight: 400, color: "#1b1b1b" }}
+                    hoverColor="var(--accent-text)"
+                    style={{ fontSize: 13, fontWeight: 400, color: "var(--accent-text)" }}
                   >
                     {"Book a Free Call"}
                   </StaggerText>

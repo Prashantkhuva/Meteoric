@@ -157,7 +157,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnfocusOnTap(child: Scaffold(
       appBar: AppBar(
         title: const Text('Bookings'),
         automaticallyImplyLeading: false,
@@ -200,7 +200,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
           : _calendarMode
           ? _buildCalendarBody()
           : _buildListBody(),
-    );
+    ), );
   }
 
   // ── Calendar mode ───────────────────────────────────────────────────────
@@ -536,7 +536,7 @@ class _MonthCalendarState extends State<_MonthCalendar> {
                   '$dayNum',
                   style: TextStyle(
                     color: isSelected
-                        ? const Color(0xFF070707)
+                         ? AppColors.background
                         : AppColors.text,
                     fontSize: 11.5,
                     fontWeight: isSelected || isToday

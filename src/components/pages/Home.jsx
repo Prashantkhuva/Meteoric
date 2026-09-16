@@ -1,6 +1,9 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 
+const ClientLogoMarquee = dynamic(
+  () => import("@/components/sections/ClientLogoMarquee"),
+);
 const StatsBar = dynamic(() => import("../sections/StatsBar"));
 const ManifestoSection = dynamic(() => import("../sections/ManifestoSection"));
 const ServicesSection = dynamic(() => import("../sections/ServicesSection"));
@@ -19,6 +22,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <ClientLogoMarquee />
       <StatsBar />
       <ManifestoSection />
       <ServicesSection />

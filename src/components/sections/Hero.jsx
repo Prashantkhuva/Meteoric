@@ -6,6 +6,7 @@ import { gsap, SplitText } from "@/lib/gsap-setup";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import StaggerText from "@/components/layout/StaggerText";
+import GridLines from "@/components/ui/GridLines";
 import { trackEvent } from "@/lib/analytics/gtag";
 
 const MeteorBackground = dynamic(() => import("./MeteorBackground"), {
@@ -89,23 +90,27 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden bg-black flex items-center pt-28 md:pt-0"
+      className="relative min-h-screen w-full overflow-hidden flex items-center pt-28 md:pt-0"
+      style={{ background: "var(--bg-primary)" }}
     >
       <div className="absolute inset-0 pointer-events-none">
         <MeteorBackground showBrand={false} />
       </div>
 
+      <GridLines />
+
       <div
         ref={containerRef}
         className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 px-5 sm:px-6 md:px-0 md:-translate-y-12"
       >
-        <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight text-white">
+        <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight" style={{ color: "var(--text-primary)" }}>
           <span ref={mainTextRef} className="block">
             Meteoric — a web development agency
           </span>
           <span
             ref={mutedTextRef}
-            className="block text-white/55 mt-2 font-secondary-italic"
+            className="block mt-2 font-secondary-italic"
+            style={{ color: "var(--text-secondary)" }}
           >
             for founders who ship fast.
           </span>
@@ -113,7 +118,8 @@ function Hero() {
 
         <p
           ref={subtextRef}
-          className="relative max-w-2xl text-base md:text-lg text-white/60 leading-relaxed"
+          className="relative max-w-2xl text-base md:text-lg leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
         >
           Meteoric is a software development agency that partners with founders
           to design, develop, and launch modern websites and SaaS products that
@@ -130,13 +136,13 @@ function Hero() {
               trackEvent("booking_click", { button_location: "/hero" });
               openCal();
             }}
-            className="group relative inline-flex items-center overflow-hidden border-2 border-[#EAEFFF] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-transform duration-300 ease-out hover:scale-[1.03]"
+            className="group relative inline-flex items-center overflow-hidden border-2 border-[var(--accent)] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-transform duration-300 ease-out hover:scale-[1.03]"
             onMouseEnter={() => setCtaHovered(true)}
             onMouseLeave={() => setCtaHovered(false)}
           >
-            <span className="fill-circle bg-[#EAEFFF]" />
+            <span className="fill-circle bg-[var(--accent)]" />
             <span className="relative z-10">
-              <StaggerText hovered={ctaHovered} hoverColor="#070707">
+              <StaggerText hovered={ctaHovered} hoverColor="var(--accent-text)">
                 {"Book a Free Strategy Call"}
               </StaggerText>
             </span>
@@ -144,7 +150,8 @@ function Hero() {
 
           <Link
             href="/#process"
-            className="group relative inline-flex items-center gap-2 text-base font-medium text-white/60 hover:text-white transition-colors duration-200"
+            className="group relative inline-flex items-center gap-2 text-base font-medium transition-colors duration-200"
+            style={{ color: "var(--text-secondary)" }}
           >
             See How We Build
             <svg
@@ -159,7 +166,7 @@ function Hero() {
               <path d="M12 5v14" />
               <path d="m19 12-7 7-7-7" />
             </svg>
-            <span className="absolute bottom-0 left-0 h-px w-0 bg-white/60 transition-all duration-300 group-hover:w-full" />
+            <span className="absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full" style={{ background: "var(--text-secondary)" }} />
           </Link>
         </div>
       </div>

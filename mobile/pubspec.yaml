@@ -16,7 +16,6 @@ dependencies:
     sdk: flutter
   flutter_quill: ^11.5.1
   flutter_quill_delta_from_html: ^1.5.3
-  google_fonts: ^8.2.1
   http: ^1.6.0
   intl: ^0.20.3
   local_auth: ^3.0.2

@@ -122,12 +122,15 @@ export default function Preloader({ onDone }) {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#070707] overflow-hidden"
-      style={{ cursor: "none" }}
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
+      style={{ cursor: "none", background: "var(--bg-primary)" }}
     >
       {/* ambient glow behind everything */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full bg-[#EAEFFF]/[0.02] blur-[120px]" />
+        <div
+          className="w-[600px] h-[600px] rounded-full blur-[120px]"
+          style={{ background: "var(--accent-glow)" }}
+        />
       </div>
 
       {/* comet streak */}
@@ -137,9 +140,18 @@ export default function Preloader({ onDone }) {
       >
         <div className="relative">
           {/* head */}
-          <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_20px_6px_rgba(234,239,255,0.8),0_0_60px_20px_rgba(234,239,255,0.3)]" />
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{
+              background: "var(--accent)",
+              boxShadow: "0 0 20px 6px var(--accent-glow), 0 0 60px 20px var(--accent-glow)",
+            }}
+          />
           {/* tail */}
-          <div className="absolute top-1/2 -translate-y-1/2 right-full w-40 h-[1px] bg-gradient-to-l from-white/60 via-white/20 to-transparent" />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 right-full w-40 h-[1px]"
+            style={{ background: "linear-gradient(90deg, transparent, var(--accent-dim))" }}
+          />
         </div>
       </div>
 
@@ -148,8 +160,7 @@ export default function Preloader({ onDone }) {
         ref={trailRef}
         className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-[1px] origin-left opacity-0"
         style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, rgba(234,239,255,0.15) 30%, rgba(234,239,255,0.4) 50%, rgba(234,239,255,0.15) 70%, transparent 100%)",
+          background: `linear-gradient(90deg, transparent 0%, var(--accent-glow) 30%, var(--accent-dim) 50%, var(--accent-glow) 70%, transparent 100%)`,
         }}
       />
 
@@ -161,8 +172,8 @@ export default function Preloader({ onDone }) {
             ref={(el) => {
               charsRef.current[i] = el;
             }}
-            className="inline-block text-[clamp(2.5rem,8vw,72px)] leading-none tracking-[-0.03em] text-white opacity-0"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
+            className="inline-block text-[clamp(2.5rem,8vw,72px)] leading-none tracking-[-0.03em] opacity-0"
+            style={{ fontFamily: "var(--font-secondary)", color: "var(--text-primary)" }}
           >
             {char}
           </span>
@@ -172,8 +183,8 @@ export default function Preloader({ onDone }) {
       {/* tagline */}
       <span
         ref={tagRef}
-        className="mt-3 text-[11px] uppercase tracking-[0.35em] text-white/25 opacity-0"
-        style={{ fontFamily: "var(--font-primary)" }}
+        className="mt-3 text-[11px] uppercase tracking-[0.35em] opacity-0"
+        style={{ fontFamily: "var(--font-primary)", color: "var(--text-muted)" }}
       >
         Digital Craftsmanship
       </span>
@@ -183,15 +194,15 @@ export default function Preloader({ onDone }) {
         ref={counterWrapRef}
         className="mt-8 flex items-center gap-3 opacity-0"
       >
-        <div className="w-12 h-[1px] bg-white/10" />
+        <div className="w-12 h-[1px]" style={{ background: "var(--border-color)" }} />
         <span
           ref={counterRef}
-          className="text-sm tracking-[0.2em] text-white/40 tabular-nums"
-          style={{ fontFamily: "var(--font-primary)" }}
+          className="text-sm tracking-[0.2em] tabular-nums"
+          style={{ fontFamily: "var(--font-primary)", color: "var(--text-muted)" }}
         >
           0
         </span>
-        <div className="w-12 h-[1px] bg-white/10" />
+        <div className="w-12 h-[1px]" style={{ background: "var(--border-color)" }} />
       </div>
     </div>
   );
