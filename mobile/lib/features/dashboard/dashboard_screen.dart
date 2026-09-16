@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: _loading
-          ? const SkeletonDetail()
+          ? const SkeletonDashboard()
           : _error != null
           ? ErrorStateView(error: _error, onRetry: () => _load())
           : _buildContent(),
