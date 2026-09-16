@@ -34,6 +34,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
   List<Map<String, dynamic>> _pricing = [];
   bool _saving = false;
   bool _generating = false;
+  bool _dirty = false;
   bool _leadsLoaded = false;
   List<Map<String, dynamic>> _leads = [];
   String? _leadsError;
@@ -50,6 +51,11 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     final raw = widget.proposal?['pricing'];
     _pricing = parseJsonList(raw);
     _loadLeads();
+    for (final c in [_title, _timeline, _terms]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
   }
 
   @override
@@ -157,9 +163,40 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     setState(() => _pricing.removeAt(i));
   }
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit proposal' : 'New proposal',
       body: Form(
         key: _formKey,
@@ -168,6 +205,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           children: [
             TextFormField(
               controller: _title,
+              textInputAction: TextInputAction.next,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Title is required' : null,
               decoration: const InputDecoration(labelText: 'Title'),
@@ -211,12 +250,14 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _timeline,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Timeline'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _terms,
               maxLines: 3,
+              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(labelText: 'Terms'),
             ),
             const SizedBox(height: 24),
@@ -237,7 +278,9 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           ],
         ),
       ),
-    ), );
+    ),
+    ),
+    );
   }
 
   Widget _leadField() {
@@ -400,6 +443,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               Expanded(
                 child: TextFormField(
                   initialValue: item['description']?.toString() ?? '',
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: 'Description',
                     isDense: true,
@@ -424,6 +468,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 child: TextFormField(
                   initialValue: '${item['quantity'] ?? 1}',
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: 'Qty',
                     isDense: true,
@@ -436,6 +481,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 child: TextFormField(
                   initialValue: '${item['rate'] ?? 0}',
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
                   decoration: const InputDecoration(
                     labelText: 'Rate',
                     isDense: true,

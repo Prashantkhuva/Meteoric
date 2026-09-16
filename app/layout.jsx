@@ -70,7 +70,7 @@ export const metadata = {
     images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
   },
   other: {
-    "theme-color": "#070707",
+    "theme-color": "#050505",
     referrer: "origin-when-cross-origin",
     "og:image:secure_url": `${SITE_URL}${DEFAULT_OG_IMAGE}`,
   },
@@ -80,18 +80,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${switzer.variable}`} suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var saved = localStorage.getItem('meteors-theme');
-                var theme = saved || 'dark';
-                document.documentElement.setAttribute('data-theme', theme);
-                document.documentElement.style.colorScheme = theme;
-              })();
-            `,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

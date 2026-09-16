@@ -35,6 +35,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   String? _startDate;
   String? _deadline;
   bool _saving = false;
+  bool _dirty = false;
 
   bool _clientsLoaded = false;
   List<Map<String, dynamic>> _clients = [];
@@ -50,6 +51,11 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
     _startDate = widget.project?['start_date']?.toString();
     _deadline = widget.project?['deadline']?.toString();
     _loadClients();
+    for (final c in [_name, _description, _services, _budget, _notes]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
   }
 
   @override
@@ -143,9 +149,40 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   void _snack(String msg, {bool isError = false}) =>
       isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit project' : 'New project',
       body: Form(
         key: _formKey,
@@ -154,6 +191,8 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           children: [
             TextFormField(
               controller: _name,
+              textInputAction: TextInputAction.next,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Name is required' : null,
               decoration: const InputDecoration(labelText: 'Name'),
@@ -164,17 +203,20 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             TextFormField(
               controller: _description,
               maxLines: 3,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Description'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _services,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Services'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _budget,
               keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Budget'),
             ),
             const SizedBox(height: 12),
@@ -214,6 +256,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             TextFormField(
               controller: _notes,
               maxLines: 3,
+              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(labelText: 'Notes'),
             ),
             const SizedBox(height: 24),
@@ -234,7 +277,9 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           ],
         ),
       ),
-    ), );
+    ),
+    ),
+    );
   }
 
   Widget _clientField() {

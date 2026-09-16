@@ -27,8 +27,19 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
     text: widget.client?['company'] ?? '',
   );
   bool _saving = false;
+  bool _dirty = false;
 
   bool get _isEdit => widget.client != null;
+
+  @override
+  void initState() {
+    super.initState();
+    for (final c in [_name, _email, _phone, _company]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -70,56 +81,95 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
   void _snack(String msg, {bool isError = false}) =>
       isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
-      title: _isEdit ? 'Edit client' : 'Add client',
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _name,
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
-              decoration: const InputDecoration(labelText: 'Name'),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(
+        child: AppScaffold(
+          title: _isEdit ? 'Edit client' : 'Add client',
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                TextFormField(
+                  controller: _name,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _phone,
+                  keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Phone'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _company,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(labelText: 'Company'),
+                ),
+                const SizedBox(height: 24),
+                AccentButton(
+                  onPressed: _saving ? null : _save,
+                  child: _saving
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.onAccent,
+                          ),
+                        )
+                      : Text(_isEdit ? 'SAVE CHANGES' : 'ADD CLIENT'),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _email,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _phone,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(labelText: 'Phone'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _company,
-              decoration: const InputDecoration(labelText: 'Company'),
-            ),
-            const SizedBox(height: 24),
-            AccentButton(
-              onPressed: _saving ? null : _save,
-              child: _saving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                         color: AppColors.onAccent,
-                      ),
-                    )
-                  : Text(_isEdit ? 'SAVE CHANGES' : 'ADD CLIENT'),
-            ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
-    ), );
+    );
   }
 }

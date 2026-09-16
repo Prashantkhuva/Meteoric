@@ -21,12 +21,23 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   final _descCtrl = TextEditingController();
   String _type = 'bug';
   bool _submitting = false;
+  bool _dirty = false;
 
   static const _types = [
     ('bug', 'Bug Report', Icons.bug_report_outlined),
     ('suggestion', 'Suggestion', Icons.lightbulb_outline),
     ('feedback', 'Feedback', Icons.chat_bubble_outline),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    for (final c in [_titleCtrl, _descCtrl]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -91,9 +102,40 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(child: Scaffold(
       appBar: AppBar(title: const Text('Report Issue')),
       body: Form(
         key: _formKey,
@@ -177,6 +219,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             const SizedBox(height: 8),
             TextFormField(
               controller: _titleCtrl,
+              textInputAction: TextInputAction.next,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               style: const TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
@@ -209,6 +253,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             TextFormField(
               controller: _descCtrl,
               maxLines: 6,
+              textInputAction: TextInputAction.done,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               style: const TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
@@ -264,6 +310,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           ],
         ),
       ),
-    ), );
+    ),
+    ),
+    );
   }
 }

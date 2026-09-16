@@ -46,8 +46,29 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
   late String _currency = widget.account?['currency']?.toString() ?? 'USD';
   late bool _isDefault = widget.account?['is_default'] == true;
   bool _saving = false;
+  bool _dirty = false;
 
   bool get _isEdit => widget.account != null;
+
+  @override
+  void initState() {
+    super.initState();
+    for (final c in [
+      _label,
+      _bankName,
+      _accountHolder,
+      _accountNumber,
+      _iban,
+      _swift,
+      _routingNumber,
+      _country,
+      _upiId,
+    ]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -101,9 +122,40 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
   void _snack(String msg, {bool isError = false}) =>
       isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit bank account' : 'Add bank account',
       body: Form(
         key: _formKey,
@@ -112,6 +164,8 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
           children: [
             TextFormField(
               controller: _label,
+              textInputAction: TextInputAction.next,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Label is required' : null,
               decoration: const InputDecoration(
@@ -121,6 +175,8 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _accountHolder,
+              textInputAction: TextInputAction.next,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (v) => (v == null || v.trim().isEmpty)
                   ? 'Account holder is required'
                   : null,
@@ -145,37 +201,44 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _country,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Country'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _bankName,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Bank name'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _accountNumber,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Account number'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _iban,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'IBAN'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _swift,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'SWIFT / BIC'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _routingNumber,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Routing number'),
             ),
             if (_currency == 'INR') ...[
               const SizedBox(height: 12),
               TextFormField(
                 controller: _upiId,
+                textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(labelText: 'UPI ID'),
               ),
             ],
@@ -234,6 +297,8 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
           ],
         ),
       ),
-    ),);
+    ),
+    ),
+    );
   }
 }

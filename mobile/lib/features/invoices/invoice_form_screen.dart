@@ -32,6 +32,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
   String? _dueDate;
   List<Map<String, dynamic>> _items = [];
   bool _saving = false;
+  bool _dirty = false;
 
   bool _clientsLoaded = false;
   List<Map<String, dynamic>> _clients = [];
@@ -55,6 +56,11 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     final items = widget.invoice?['items'];
     _items = parseJsonList(items);
     _loadRefs();
+    for (final c in [_notes, _terms]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
   }
 
   @override
@@ -156,9 +162,40 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     setState(() => _items.removeAt(i));
   }
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit invoice' : 'New invoice',
       body: Form(
         key: _formKey,
@@ -204,6 +241,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                   child: TextFormField(
                     initialValue: _tax,
                     keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(labelText: 'Tax'),
                     onChanged: (v) => _tax = v,
                   ),
@@ -273,12 +311,14 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
             TextFormField(
               controller: _notes,
               maxLines: 3,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Notes'),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _terms,
               maxLines: 3,
+              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(labelText: 'Terms'),
             ),
             const SizedBox(height: 24),
@@ -299,7 +339,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           ],
         ),
       ),
-    ));
+    ),
+    ),
+    );
   }
 
   Widget _refsField() {
@@ -420,6 +462,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
               Expanded(
                 child: TextFormField(
                   initialValue: item['description']?.toString() ?? '',
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: 'Description',
                     isDense: true,
@@ -444,6 +487,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                 child: TextFormField(
                   initialValue: '${item['quantity'] ?? 1}',
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: 'Qty',
                     isDense: true,
@@ -456,6 +500,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                 child: TextFormField(
                   initialValue: '${item['rate'] ?? 0}',
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
                   decoration: const InputDecoration(
                     labelText: 'Rate',
                     isDense: true,

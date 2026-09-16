@@ -33,6 +33,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   );
   late String _source;
   bool _saving = false;
+  bool _dirty = false;
 
   bool get _isEdit => widget.lead != null;
 
@@ -40,6 +41,11 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   void initState() {
     super.initState();
     _source = widget.lead?['source'] ?? 'manual';
+    for (final c in [_name, _email, _phone, _company, _services, _budget, _details]) {
+      c.addListener(() {
+        if (!_dirty) setState(() => _dirty = true);
+      });
+    }
   }
 
   @override
@@ -89,9 +95,40 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   void _snack(String msg, {bool isError = false}) =>
       isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
+  Future<bool> _onWillPop() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardRaised,
+        title: const Text('Discard changes?'),
+        content: const Text('You have unsaved changes that will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Discard',
+                style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    return discard == true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) Navigator.pop(context);
+      },
+      child: UnfocusOnTap(child: AppScaffold(
       title: _isEdit ? 'Edit lead' : 'Add lead',
       body: Form(
         key: _formKey,
@@ -110,7 +147,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
             const SizedBox(height: 12),
             _field(_budget, 'Budget'),
             const SizedBox(height: 12),
-            _field(_details, 'Details', maxLines: 4),
+            _field(_details, 'Details', maxLines: 4, textInputAction: TextInputAction.done),
             if (!_isEdit) ...[
               const SizedBox(height: 16),
               const Text(
@@ -186,7 +223,9 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
           ],
         ),
       ),
-    ), );
+    ),
+    ),
+    );
   }
 
   Widget _field(
@@ -195,11 +234,14 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     bool required = false,
     int maxLines = 1,
     TextInputType? keyboard,
+    TextInputAction textInputAction = TextInputAction.next,
   }) {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
       keyboardType: keyboard,
+      textInputAction: textInputAction,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: required
           ? (v) => (v == null || v.trim().isEmpty) ? '$label is required' : null
           : null,
