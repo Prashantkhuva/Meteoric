@@ -29,18 +29,19 @@ export async function proxy(request) {
   const host = request.headers.get("host") || "";
   const pn = request.nextUrl.pathname;
 
-  // 1. Redirect http → https
-  if (request.nextUrl.protocol === "http:") {
+  // 1. Redirect http → https (skip localhost/127.0.0.1 in dev)
+  const isLocalhost = host.includes("localhost") || host.startsWith("127.") || host.startsWith("0.0.0.0");
+  if (request.nextUrl.protocol === "http:" && !isLocalhost) {
     const url = new URL(
       `https://${host}${pn}${request.nextUrl.search}`,
     );
     return Response.redirect(url, 301);
   }
 
-  // 2. Redirect www → non-www
+  // 2. Redirect www → non-www (skip localhost)
   if (
     (host === "www.withmeteoric.com" || host.startsWith("www.")) &&
-    !pn.startsWith("/api")
+    !pn.startsWith("/api") && !isLocalhost
   ) {
     const url = new URL(
       `https://withmeteoric.com${pn}${request.nextUrl.search}`,
@@ -53,6 +54,35 @@ export async function proxy(request) {
     const url = request.nextUrl.clone();
     url.searchParams.delete("q");
     return Response.redirect(url.toString(), 301);
+  }
+
+  // 4. Maintenance mode — redirect all public routes to /maintenance
+  //    Admin, API, and static assets remain accessible so you can disable it
+  if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true") {
+    const isMaintenancePage = pn === "/maintenance";
+    const isApiOrStatic =
+      pn.startsWith("/api") ||
+      pn.startsWith("/_next") ||
+      pn.startsWith("/admin") ||
+      pn.startsWith("/login") ||
+      pn.startsWith("/editor") ||
+      pn.startsWith("/preview") ||
+      pn.startsWith("/share") ||
+      pn === "/favicon.svg" ||
+      pn === "/og.jpg" ||
+      pn === "/apple-touch-icon.png" ||
+      pn === "/site.webmanifest" ||
+      pn === "/robots.txt" ||
+      pn === "/sitemap.xml" ||
+      pn === "/llms.txt" ||
+      pn === "/llms-full.txt" ||
+      pn === "/feed.xml";
+
+    if (!isMaintenancePage && !isApiOrStatic) {
+      const maintenanceUrl = request.nextUrl.clone();
+      maintenanceUrl.pathname = "/maintenance";
+      return NextResponse.redirect(maintenanceUrl);
+    }
   }
 
   const isDev = process.env.NODE_ENV === "development";
