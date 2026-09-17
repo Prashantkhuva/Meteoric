@@ -16,8 +16,8 @@ export default function FaqAccordion({ items }) {
             key={i}
             className={`group rounded-xl border transition-all duration-400 ${
               isOpen
-                ? "bg-gradient-to-b from-white/[0.03] to-transparent"
-                : "bg-white/[0.02]"
+                ? "bg-[var(--bg-elevated)]"
+                : "bg-transparent"
             }`}
             style={{
               borderColor: isOpen ? "var(--border-hover)" : "var(--border-color)",

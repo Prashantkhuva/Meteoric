@@ -139,7 +139,7 @@ export default function ProcessSection() {
         <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
           <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-muted)" }}>
             <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>03</span>
-            Working Together
+            Our Process
           </p>
 
           <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight sm:text-4xl md:text-6xl" style={{ color: "var(--text-primary)" }}>
@@ -188,7 +188,7 @@ export default function ProcessSection() {
                   <h3 className="proc-title mb-5 text-2xl font-semibold tracking-tight sm:text-3xl md:mb-8 md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
                     {item.title}
                   </h3>
-                  <p className="proc-desc mb-8 max-w-2xl text-base leading-relaxed sm:text-lg md:mb-10 md:text-xl" style={{ color: "var(--accent-dim)" }}>
+                  <p className="proc-desc mb-8 max-w-2xl text-base leading-relaxed sm:text-lg md:mb-10 md:text-xl" style={{ color: "var(--text-secondary)" }}>
                     {item.description}
                   </p>
                   <div className="proc-tags flex flex-wrap gap-3">

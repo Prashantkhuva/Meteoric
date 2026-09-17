@@ -31,7 +31,7 @@ export default function ManifestoSection() {
       });
       if (!split.words?.length) return;
 
-      gsap.set(split.words, { opacity: 0.08, filter: "blur(8px)" });
+      gsap.set(split.words, { opacity: 0.15, filter: "blur(4px)" });
 
       gsap.to(split.words, {
         opacity: 1,
@@ -60,7 +60,7 @@ export default function ManifestoSection() {
         <ScrollReveal direction="down">
           <p className="uppercase tracking-[0.2em] text-xs mb-10" style={{ color: "var(--text-secondary)" }}>
             <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>01</span>
-            Our Philosophy
+            Our Vision
           </p>
         </ScrollReveal>
 

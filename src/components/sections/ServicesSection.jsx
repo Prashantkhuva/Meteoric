@@ -210,10 +210,8 @@ export default function ServicesSection() {
             <h2 className="text-[clamp(2.5rem,7vw,72px)] leading-[0.92] tracking-[-0.03em] font-normal" style={{ color: "var(--text-primary)" }}>
               What we build{" "}
               <span
-                className="block font-secondary-italic text-transparent bg-clip-text"
-                style={{
-                  backgroundImage: "linear-gradient(97deg, #fff 0%, #999 100%)",
-                }}
+                className="block font-secondary-italic"
+                style={{ color: "var(--text-muted)" }}
               >
                 for founders.
               </span>
@@ -248,8 +246,8 @@ export default function ServicesSection() {
           {services.map((s) => (
               <div
                 key={s.num}
-                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300"
-                style={{ border: "1px solid var(--border-color)" }}
+                className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300"
+                style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}
               >
                 {/* Ghost number */}
                 <span
@@ -323,9 +321,9 @@ export default function ServicesSection() {
           ))}
 
           {/* CTA card */}
-          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px]" style={{ border: "1px solid var(--border-color)" }}>
+          <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden p-8 md:p-10 flex flex-col justify-between min-h-[420px]" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
             <div className="relative z-10">
-              <span className="text-[10px] tracking-[0.3em] font-bold uppercase block mb-10" style={{ color: "var(--accent-text)" }}>
+              <span className="text-[10px] tracking-[0.3em] font-bold uppercase block mb-10" style={{ color: "var(--text-muted)" }}>
                 And then some
               </span>
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-display mb-5 leading-tight" style={{ color: "var(--text-primary)" }}>
@@ -347,8 +345,8 @@ export default function ServicesSection() {
               >
                 <StaggerText
                   hovered={ctaHovered}
-                  hoverColor="var(--accent-text)"
-                  style={{ fontSize: 14, fontWeight: 400, color: "var(--accent-text)" }}
+                  hoverColor="var(--accent)"
+                  style={{ fontSize: 14, fontWeight: 400, color: "var(--accent)" }}
                 >
                   {"Book a Free Call"}
                 </StaggerText>
@@ -470,8 +468,8 @@ export default function ServicesSection() {
                 >
                   <StaggerText
                     hovered={ctaHovered}
-                    hoverColor="var(--accent-text)"
-                    style={{ fontSize: 13, fontWeight: 400, color: "var(--accent-text)" }}
+                    hoverColor="var(--accent)"
+                    style={{ fontSize: 13, fontWeight: 400, color: "var(--accent)" }}
                   >
                     {"Book a Free Call"}
                   </StaggerText>
