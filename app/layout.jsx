@@ -82,7 +82,7 @@ export default function RootLayout({ children }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem("meteoring-theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}})();`,
+            __html: `(function(){var t=localStorage.getItem("meteoring-theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark")}})();`,
           }}
         />
         <script

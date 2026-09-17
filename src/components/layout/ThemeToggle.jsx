@@ -3,11 +3,11 @@
 import { useSyncExternalStore } from "react";
 
 function getSnapshot() {
-  return document.documentElement.getAttribute("data-theme") || "dark";
+  return document.documentElement.getAttribute("data-theme") || "light";
 }
 
 function getServerSnapshot() {
-  return "dark";
+  return "light";
 }
 
 function subscribe(callback) {

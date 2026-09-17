@@ -55,7 +55,7 @@ export default function AboutPage({ faqs = [] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           {/* Left — Photo */}
           <div className="relative">
-            <div className="relative overflow-hidden rounded-2xl aspect-[4/5]" style={{ background: "#0a0a0a" }}>
+            <div className="relative overflow-hidden rounded-2xl aspect-[4/5]" style={{ background: "var(--bg-surface)" }}>
               <img
                 src="/prashant.png"
                 alt="Prashant Khuva"
@@ -63,7 +63,7 @@ export default function AboutPage({ faqs = [] }) {
               />
               <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-primary), transparent)" }} />
             </div>
-            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ border: "1px solid var(--border-color)", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}>
+            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ border: "1px solid var(--border-color)", background: "var(--nav-bg)", backdropFilter: "blur(8px)" }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent)" }} />
               <span className="text-[11px] font-medium tracking-wide" style={{ color: "var(--text-secondary)" }}>
                 Founder & Product Builder

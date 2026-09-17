@@ -80,7 +80,7 @@ export default function StatsBar() {
                 <div className="hidden md:block w-px h-[52px]" style={{ background: "rgba(255,255,255,0.16)" }} />
               )}
               <div>
-                <div className="text-[42px] md:text-[48px] font-display tracking-tight mb-2" style={{ color: "var(--text-primary)", textShadow: "0 0 12px rgba(0,0,0,0.6)" }}>
+                <div className="text-[42px] md:text-[48px] font-display tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>
                   <AnimatedNumber target={stat.value} inView={inView} />
                 </div>
                 <p className="text-xs uppercase tracking-[0.15em]" style={{ color: "var(--text-muted)" }}>
