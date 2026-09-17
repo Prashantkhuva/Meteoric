@@ -156,20 +156,71 @@ shorebird patches set-track --release-version <ver> --patch-number <N> --track s
 #### Forced Upgrade (minimum supported version)
 Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) already checks `remoteBuild > localBuild` — extend it to block use when `localBuild < min_supported_build` with a full-screen modal (no dismiss). Reserve for critical security only (auth bypass, data exposure).
 
-#### Release Checklist (follow for every ship)
-1. `flutter analyze` — zero issues
-2. Update `app_version.dart` (version/patch/build + updatedAt)
-3. If new release: bump `pubspec.yaml` version too
-4. Build: `flutter build apk --release --no-tree-shake-icons`
-5. **DO NOT use `jarsigner`** — Gradle already signs with v2/v3. jarsigner strips v2, causing "cannot install" on Android 15+.
-6. If new APK: `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]`
-7. Verify `latest.json` updated in Supabase Storage
-8. Verify `https://app.withmeteoric.com` redirects to new APK
-9. Test: install APK → check Settings shows correct version → trigger update banner if applicable
-10. Commit + push to `main`
-- **In-app updater (0.4.0+):** app polls `latest.json` in public Supabase Storage bucket `app-releases` on launch; if remote build > local, shows an update banner → downloads APK (from GitHub Releases asset) with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES). Ship flow: `shorebird release android` → `shorebird releases get-apks --release-version X -o build/app/outputs/flutter-apk` → `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]` (uploads APK to public repo Prashantkhuva/meteoric-app-releases as release asset + updates Supabase manifest; Supabase free tier caps uploads at 50MB so APK must live on GitHub). User still needs ONE manual install of 0.4.0+5 to bootstrap the updater.
-- **Download link (`app.withmeteoric.com`):** Cloudflare Worker at `workers/app-download/` that fetches `latest.json` from Supabase and 302 redirects to the GitHub APK URL. Always serves latest version. Deploy: `cd workers/app-download && npx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN` env var). Custom domain configured via Cloudflare dashboard. **On every mobile app release**, the worker picks up the new URL automatically from `latest.json` — no worker code changes needed. Only update worker code if the manifest structure changes.
-- **Verification:** `flutter analyze` + `flutter build web --release`
+#### Release Flow — Exact Steps (follow for every ship)
+
+**New release:**
+```
+1. Edit mobile/lib/core/app_version.dart
+   - version: '0.17.0+1'    ← bump (reset to +1 on new semver)
+   - patch: 0                ← reset to 0
+   - updatedAt: '17 Sep 2026 · 5:19 PM'  ← real IST from webfetch https://time.is/IST
+
+2. Edit mobile/pubspec.yaml
+   - version: 0.17.0+1      ← MUST match app_version.dart exactly
+
+3. Build
+   export PATH="$HOME/.shorebird/bin/cache/flutter/e16cf749ccaa38d7050335ff305def49b1c7c84c/bin:$PATH"
+   cd mobile
+   flutter build apk --release --no-tree-shake-icons
+
+4. VERIFY signature (MANDATORY — skip = Android 15/16 install fails)
+   "C:/Users/PRASHANT/AppData/Local/Android/sdk/build-tools/37.0.0/apksigner.bat" verify --verbose mobile/build/app/outputs/flutter-apk/app-release.apk
+   MUST show: "Verified using v2 scheme (APK Signature Scheme v2): true"
+   MUST NOT show: jarsigner anywhere
+
+5. Upload
+   cd ..
+   node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/app-release.apk 0.17.0 1 "Release notes here"
+
+6. Verify manifest
+   curl -s "https://hlxjljckxthmtssqrzwo.supabase.co/storage/v1/object/public/app-releases/latest.json"
+   MUST show correct build number and URL
+
+7. Verify download page
+   curl -sI "https://app.withmeteoric.com/download"
+   MUST show: Content-Type: application/vnd.android.package-archive
+
+8. git add mobile/pubspec.yaml mobile/lib/core/app_version.dart
+   git commit -m "chore(mobile): v0.17.0+1 — description"
+   git push origin main
+```
+
+**Patch release (Shorebird OTA):**
+```
+1. Edit mobile/lib/core/app_version.dart
+   - patch: 1                ← increment (leave version unchanged)
+   - updatedAt: timestamp    ← real IST from time.is/IST
+
+2. cd mobile
+   shorebird patch android
+
+3. git add mobile/lib/core/app_version.dart
+   git commit -m "patch(mobile): v0.17.0+1 patch 1"
+   git push origin main
+```
+
+**Key invariants (never break these):**
+1. **NEVER run jarsigner** — Gradle signs with v2. jarsigner destroys it. Causes "cannot install" on Android 15+.
+2. **ALWAYS use `app-release.apk`** from build output — NOT `universal.apk` from Shorebird (unsigned).
+3. **ALWAYS `--no-tree-shake-icons`** — without it, MaterialIcons-Regular.otf shrinks to 15KB and icons vanish.
+4. **ALWAYS verify with `apksigner verify`** before upload — takes 1 second, prevents broken releases.
+5. **Version in `app_version.dart` MUST match `pubspec.yaml`** — updater parses build number from version string `X.Y.Z+N`.
+6. **`updatedAt` must be real IST** — fetch from `webfetch https://time.is/IST`, never system clock.
+7. **Work on `main` only** — other OpenCode session may be on different branch.
+
+**In-app updater:** app polls `latest.json` in Supabase Storage bucket `app-releases` on launch; if remote build > local, shows update banner → downloads APK from GitHub Releases with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES).
+
+**Download link (`app.withmeteoric.com`):** Cloudflare Worker at `workers/app-download/` fetches `latest.json` from Supabase and proxies the APK. Auto-picks up new releases — no worker code changes needed unless manifest structure changes. Deploy: `cd workers/app-download && CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN npx wrangler deploy`.
 - **Session persistence:** handled by supabase_flutter itself — `AuthService.init()` passes `persistSession: true` + `localStorage: SharedPreferencesLocalStorage(persistSessionKey: 'sb_session')` (`mobile/lib/core/supabase.dart`). Do NOT switch back to flutter_secure_storage for sessions (v11 silently dropped session writes on the emulator). `sb_session` lives in plain `FlutterSharedPreferences.xml`; the SDK auto-refreshes + re-persists tokens. Keep `AuthService.refreshSession()` as the 401 fallback in `ApiClient`.
 - **Emulator automation gotcha:** after focusing a login field, the keyboard opens and shifts the layout — later taps land on the keyboard. Use `input keyevent 61` (TAB) to move focus and `keyevent 66` (ENTER) to submit instead of tapping the button.
 
