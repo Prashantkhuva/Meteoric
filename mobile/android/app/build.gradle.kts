@@ -16,7 +16,7 @@ if (hasKeystore) {
 
 android {
     namespace = "com.meteoric.meteoric_admin"
-    compileSdk = 37
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
