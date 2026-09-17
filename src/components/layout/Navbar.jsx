@@ -14,6 +14,7 @@ import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import StaggerLink from "./StaggerLink";
 import StaggerText from "./StaggerText";
 import { trackEvent } from "@/lib/analytics/gtag";
+import ThemeToggle from "./ThemeToggle";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -261,8 +262,12 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right side: CTA + Mobile toggle */}
+          {/* Right side: Theme + CTA + Mobile toggle */}
           <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
+
             <button
               data-no-magnetic
               onClick={() => {

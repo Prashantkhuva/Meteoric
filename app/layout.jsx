@@ -81,6 +81,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${switzer.variable}`} suppressHydrationWarning>
       <head>
         <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem("meteoring-theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}})();`,
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
