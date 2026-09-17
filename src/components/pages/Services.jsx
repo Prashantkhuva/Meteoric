@@ -2,119 +2,79 @@
 
 import { useCallback } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 import { serviceFaqs } from "@/data/faqs";
 import { trackEvent } from "@/lib/analytics/gtag";
 
 const services = [
   {
     num: "01",
-    title: ["Landing", "Pages"],
+    title: "Landing Pages",
     desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
     slug: "landing-pages",
+    image: "/images/service-web.webp",
+    metric: "3x faster launch",
     process: {
       intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
       steps: [
-        {
-          title: "Strategy & Wireframe",
-          desc: "We map your audience, message, and conversion flow before a single pixel is designed. Every section has a job — no filler, no decoration.",
-        },
-        {
-          title: "Design & Animate",
-          desc: "Visual identity meets motion design. We craft scroll-triggered animations, micro-interactions, and a layout that guides the eye exactly where it needs to go.",
-        },
-        {
-          title: "Build & Optimize",
-          desc: "Next.js, Tailwind CSS, GSAP. Blazing fast load times, optimized performance, and SEO foundations baked in from day one.",
-        },
+        { title: "Strategy & Wireframe", desc: "We map your audience, message, and conversion flow before a single pixel is designed." },
+        { title: "Design & Animate", desc: "Visual identity meets motion design. Scroll-triggered animations and micro-interactions." },
+        { title: "Build & Optimize", desc: "Next.js, Tailwind CSS, GSAP. Blazing fast load times and SEO foundations baked in." },
       ],
     },
   },
   {
     num: "02",
-    title: ["SaaS", "Development"],
+    title: "SaaS Development",
     desc: "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
     slug: "saas-development",
+    image: "/images/service-saas.webp",
+    metric: "3-6 week MVP",
     process: {
-      intro: "We build SaaS like a product studio, not an agency. Founder-level involvement, no account managers, and a technical stack built to scale.",
+      intro: "We build SaaS like a product studio, not an agency. Founder-level involvement and a technical stack built to scale.",
       steps: [
-        {
-          title: "Scope & Architect",
-          desc: "We define your core 20% — the features that deliver 80% of value. Database schema, API design, auth flows, and subscription billing mapped out before development begins.",
-        },
-        {
-          title: "Build & Ship MVP",
-          desc: "Full-stack development with Next.js, Supabase, and Stripe. Auth, dashboards, real-time features, and payment integration — production-ready in 3-6 weeks.",
-        },
-        {
-          title: "Scale & Iterate",
-          desc: "Post-launch support, feature additions, performance optimization, and ongoing maintenance. We treat every project as a long-term partnership.",
-        },
+        { title: "Scope & Architect", desc: "Core 20% features that deliver 80% of value. Database schema, API design, auth flows mapped." },
+        { title: "Build & Ship MVP", desc: "Full-stack with Next.js, Supabase, and Stripe. Production-ready in 3-6 weeks." },
+        { title: "Scale & Iterate", desc: "Post-launch support, feature additions, and performance optimization." },
       ],
     },
   },
   {
     num: "03",
-    title: ["Web", "Applications"],
+    title: "Web Applications",
     desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
     slug: "web-applications",
+    image: "/images/service-mobile.webp",
+    metric: "99.9% uptime",
     process: {
       intro: "Whether it's an internal dashboard or a customer-facing platform, we build web apps that are fast, reliable, and a pleasure to use.",
       steps: [
-        {
-          title: "Discover & Map",
-          desc: "User research, competitor analysis, and journey mapping. We understand how your users think and what they need before we design a single screen.",
-        },
-        {
-          title: "Design & Prototype",
-          desc: "Wireframes → high-fidelity design → interactive prototype. We test and refine until the experience feels natural from the first click.",
-        },
-        {
-          title: "Develop & Deploy",
-          desc: "Clean, efficient code with Next.js, Node.js, and Supabase. Real-time features, API integrations, and deployment to Vercel with monitoring baked in.",
-        },
+        { title: "Discover & Map", desc: "User research, competitor analysis, and journey mapping." },
+        { title: "Design & Prototype", desc: "Wireframes to high-fidelity design to interactive prototype." },
+        { title: "Develop & Deploy", desc: "Clean code with Next.js, Node.js, and Supabase. Real-time features and API integrations." },
       ],
     },
   },
   {
     num: "04",
-    title: ["Full-Stack", "Development"],
+    title: "Full-Stack Development",
     desc: "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
     slug: "startup-web-development",
+    image: "/images/service-web.webp",
+    metric: "One team, full stack",
     process: {
-      intro: "No coordinating multiple vendors. We handle the entire stack — from the database schema to the pixel-perfect UI — so you get one cohesive product.",
+      intro: "No coordinating multiple vendors. We handle the entire stack — from database schema to pixel-perfect UI.",
       steps: [
-        {
-          title: "Architecture & Planning",
-          desc: "Technical stack selection, system architecture, and database design. We plan for performance, scalability, and security from day one — no retrofitting.",
-        },
-        {
-          title: "Build & Integrate",
-          desc: "Frontend, backend, APIs, third-party integrations. Stripe, Resend, Supabase, Cal.com — everything built to work together seamlessly with proper error handling.",
-        },
-        {
-          title: "Launch & Optimize",
-          desc: "Performance optimization, SEO foundations, accessibility checks, and speed audits. Your app launches strong and stays fast as it grows.",
-        },
+        { title: "Architecture & Planning", desc: "Technical stack selection, system architecture, and database design." },
+        { title: "Build & Integrate", desc: "Frontend, backend, APIs, third-party integrations. Everything built to work together." },
+        { title: "Launch & Optimize", desc: "Performance optimization, SEO foundations, accessibility checks, and speed audits." },
       ],
     },
   },
 ];
 
-const techStack = [
-  "Next.js",
-  "React",
-  "Supabase",
-  "Node.js",
-  "Tailwind CSS",
-  "GSAP",
-  "Stripe",
-  "PostgreSQL",
-  "Framer Motion",
-];
+const techStack = ["Next.js", "React", "Supabase", "Node.js", "Tailwind CSS", "GSAP", "Stripe", "PostgreSQL"];
 
 export default function ServicesPage() {
   const openCal = useCallback(async () => {
@@ -124,217 +84,125 @@ export default function ServicesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-32 flex flex-col items-center text-center">
-        <motion.span
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-[var(--accent)]/40 uppercase tracking-[0.3em] text-xs font-bold block mb-6"
-        >
-          Our Expertise
-        </motion.span>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-secondary-italic font-normal leading-[1.1] tracking-tight max-w-4xl mb-8"
-        >
-          Web Development Services{" "}
-          <span className="font-secondary-italic font-normal">for Startups & SaaS</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-[var(--text-muted)] text-base md:text-lg max-w-2xl font-light leading-relaxed mb-10"
-        >
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-28">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display tracking-tight leading-[1.05] max-w-4xl mb-6" style={{ color: "var(--text-primary)" }}>
+          Web Development Services for Startups & SaaS
+        </h1>
+        <p className="text-base md:text-lg max-w-2xl leading-relaxed mb-10" style={{ color: "var(--text-secondary)" }}>
           Meteoric partners with founders to design, build, and launch modern web
-          products. Every project ships with the same care as if it were our
-          own — because it is.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent"
-        />
+          products. Every project ships with the same care as if it were our own.
+        </p>
+        <button
+          onClick={() => {
+            trackEvent("services_cta_click", { button_location: "/services" });
+            openCal();
+          }}
+          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
+          style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
+        >
+          Book a Free Strategy Call
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
       </section>
 
-      {/* Service Sections */}
-      {services.map((svc, idx) => {
-        const isReversed = idx % 2 === 1;
-        return (
-          <section
-            key={svc.num}
-            id={svc.title.join("-").toLowerCase().replace(/\s+/g, "-")}
-            className="py-20 md:py-28 relative border-t border-[var(--border-color)]"
-          >
-            <div className="max-w-6xl mx-auto px-6 md:px-12">
-              <div className={`grid md:grid-cols-12 gap-10 md:gap-12 items-start ${isReversed ? "" : ""}`}>
-                {/* Left: Sticky text */}
-                <div
-                  className={`md:col-span-5 md:sticky md:top-32 ${
-                    isReversed ? "md:order-last" : ""
-                  }`}
-                >
-                  <ScrollReveal direction="down" delay={0}>
-                    <span className="text-6xl md:text-8xl font-secondary-italic text-[var(--accent)]/[0.08] mb-6 block leading-none">
-                      {svc.num}.
-                    </span>
-                  </ScrollReveal>
-
-                  <ScrollReveal direction="down" delay={0.1}>
-                    <h2 className="text-3xl md:text-5xl lg:text-[clamp(2.25rem,4vw,3.5rem)] font-secondary-italic font-normal leading-[1.15] tracking-tight mb-6">
-                      {svc.title[0]}
-                      <br />
-                      {svc.title[1]}
-                    </h2>
-                  </ScrollReveal>
-
-                  <ScrollReveal direction="down" delay={0.2}>
-                    <p className="text-[var(--text-muted)] text-base leading-relaxed">
-                      {svc.desc}
-                    </p>
-                  </ScrollReveal>
-                  {svc.slug && (
-                    <ScrollReveal direction="down" delay={0.25}>
-                      <Link
-                        href={`/services/${svc.slug}`}
-                        className="inline-flex items-center gap-1.5 text-sm text-[var(--accent)]/60 hover:text-[var(--text-primary)] mt-4 transition-colors"
-                      >
-                        Learn more <ArrowUpRight size={14} />
-                      </Link>
-                    </ScrollReveal>
-                  )}
+      {/* Service Cards */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {services.map((svc) => (
+              <Link
+                key={svc.num}
+                href={`/services/${svc.slug}`}
+                className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:translate-y-[-4px]"
+                style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}
+              >
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img
+                    src={svc.image}
+                    alt={svc.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    loading="lazy"
+                  />
                 </div>
-
-                {/* Right: Process card */}
-                <ScrollReveal direction="up" delay={0.2} className="md:col-span-7">
-                  <div className="rounded-2xl border border-[var(--border-color)] bg-gradient-to-b from-white/[0.03] to-transparent p-10 md:p-14 lg:p-16">
-                    <h3 className="text-xl md:text-2xl font-secondary-italic text-[var(--text-primary)]/80 mb-4">
-                      Our Process
-                    </h3>
-                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-8">
-                      {svc.process.intro}
-                    </p>
-
-                    <div className="space-y-6">
-                      {svc.process.steps.map((step, si) => (
-                        <div
-                          key={si}
-                          className="border-l-2 border-[var(--accent)]/10 pl-6 hover:border-[var(--accent)]/30 transition-colors duration-300"
-                        >
-                          <h4 className="uppercase tracking-widest text-[11px] font-bold text-[var(--text-secondary)] mb-2">
-                            {step.title}
-                          </h4>
-                          <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-                            {step.desc}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+                <div className="p-8">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: "var(--text-muted)" }}>
+                      {svc.num}
+                    </span>
+                    <span className="text-[11px] font-medium" style={{ color: "var(--text-muted)" }}>
+                      {svc.metric}
+                    </span>
                   </div>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
-        );
-      })}
-
-      {/* Tech Stack Marquee */}
-      <section className="py-20 md:py-28 relative border-t border-[var(--border-color)] overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 mb-12 text-center">
-          <ScrollReveal direction="down" delay={0}>
-            <span className="text-[var(--accent)]/40 uppercase tracking-widest text-xs font-bold block mb-4">
-              Our Stack
-            </span>
-          </ScrollReveal>
-          <ScrollReveal direction="down" delay={0.1}>
-            <h2 className="text-3xl md:text-5xl font-secondary-italic">
-              Technologies We Master
-            </h2>
-          </ScrollReveal>
-        </div>
-
-        <div className="relative w-full overflow-hidden py-6 flex items-center">
-          {/* Edge masks */}
-          <div className="absolute left-0 top-0 w-24 md:w-48 h-full bg-gradient-to-r from-[var(--bg-primary)] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 w-24 md:w-48 h-full bg-gradient-to-l from-[var(--bg-primary)] to-transparent z-10 pointer-events-none" />
-
-          <div
-            className="flex w-max whitespace-nowrap animate-marquee-left"
-            style={{ "--sets": 6 }}
-          >
-            {[...Array(6)]
-              .flatMap(() => techStack)
-              .map((tech, i) => (
-                <span
-                  key={i}
-                  className="px-6 md:px-10 text-3xl md:text-5xl font-secondary-italic text-[var(--accent)]/[0.08] hover:text-[var(--text-muted)] transition-colors duration-500"
-                >
-                  {tech}
-                </span>
-              ))}
+                  <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+                    {svc.title}
+                  </h2>
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>
+                    {svc.desc}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-300" style={{ color: "rgba(255,255,255,0.6)" }}>
+                    Learn more
+                    <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ Section for AEO / GEO */}
-      <section className="py-20 md:py-28 relative border-t border-[var(--border-color)]">
-        <div className="max-w-4xl mx-auto px-6 md:px-12">
-          <ScrollReveal direction="down" delay={0}>
-            <span className="text-[var(--accent)]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-5">
-              FAQ
-            </span>
-          </ScrollReveal>
-          <ScrollReveal direction="down" delay={0.1}>
-            <h2 className="text-3xl md:text-5xl font-secondary-italic mb-14">
-              Common questions about our services.
-            </h2>
-          </ScrollReveal>
+      {/* Tech Stack Marquee */}
+      <section className="py-20 md:py-28 overflow-hidden" style={{ borderTop: "1px solid var(--border-color)" }}>
+        <div className="max-w-6xl mx-auto px-6 md:px-12 mb-12 text-center">
+          <h2 className="text-3xl md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
+            Technologies We Master
+          </h2>
+        </div>
+        <div className="relative w-full overflow-hidden py-6 flex items-center">
+          <div className="absolute left-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--bg-primary), transparent)" }} />
+          <div className="absolute right-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
+          <div className="flex w-max whitespace-nowrap animate-marquee-left" style={{ "--sets": 6 }}>
+            {[...Array(6)].flatMap(() => techStack).map((tech, i) => (
+              <span key={i} className="px-6 md:px-10 text-3xl md:text-5xl font-display transition-colors duration-500" style={{ color: "rgba(255,255,255,0.08)" }}>
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* FAQ */}
+      <section className="py-20 md:py-28" style={{ borderTop: "1px solid var(--border-color)" }}>
+        <div className="max-w-4xl mx-auto px-6 md:px-12">
+          <h2 className="text-3xl md:text-5xl font-display mb-14" style={{ color: "var(--text-primary)" }}>
+            Common questions about our services.
+          </h2>
           <FaqAccordion items={serviceFaqs} />
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 md:py-28 relative border-t border-[var(--border-color)]">
+      {/* CTA */}
+      <section className="py-20 md:py-28" style={{ borderTop: "1px solid var(--border-color)" }}>
         <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <ScrollReveal direction="down" delay={0}>
-            <span className="text-[var(--accent)]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-5">
-              Ready to start?
-            </span>
-          </ScrollReveal>
-          <ScrollReveal direction="down" delay={0.1}>
-            <h2 className="text-3xl md:text-5xl font-secondary-italic mb-6">
-              Let&apos;s build something <span className="text-[var(--text-muted)]">together.</span>
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal direction="down" delay={0.2}>
-            <p className="text-[var(--text-muted)] text-base md:text-lg max-w-xl mx-auto mb-10">
-              Book a free strategy call and Meteoric will discuss your project, timeline, and how we can help.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal direction="up" delay={0.3}>
-            <button
-              onClick={() => {
-                trackEvent("services_cta_click", { button_location: "/services" });
-                openCal();
-              }}
-              className="inline-flex items-center justify-center rounded-full px-8 py-4 bg-[var(--accent)] text-[var(--accent-text)] text-sm font-semibold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(234,239,255,0.06)] hover:shadow-[0_0_30px_rgba(234,239,255,0.12)]"
-            >
-              Get a Free Estimate
-            </button>
-          </ScrollReveal>
+          <h2 className="text-3xl md:text-5xl font-display mb-6" style={{ color: "var(--text-primary)" }}>
+            Let&apos;s build something <span style={{ color: "var(--text-muted)" }}>together.</span>
+          </h2>
+          <p className="text-base md:text-lg max-w-xl mx-auto mb-10" style={{ color: "var(--text-secondary)" }}>
+            Book a free strategy call and we&apos;ll discuss your project, timeline, and how we can help.
+          </p>
+          <button
+            onClick={() => {
+              trackEvent("services_cta_click", { button_location: "/services" });
+              openCal();
+            }}
+            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-medium transition-all duration-300"
+            style={{ background: "var(--accent)", color: "var(--accent-text)" }}
+          >
+            Get a Free Estimate
+          </button>
         </div>
       </section>
-
-
     </div>
   );
 }

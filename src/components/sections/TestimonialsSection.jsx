@@ -21,12 +21,12 @@ const fallbackTestimonials = [];
 
 function ReviewCard({ t }) {
   return (
-    <div className="w-[380px] shrink-0 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent p-6 flex flex-col gap-4 mx-3" style={{ border: "1px solid var(--border-color)" }}>
+    <div className="w-[400px] shrink-0 rounded-[24px] p-8 flex flex-col gap-5 mx-3" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
-            size={11}
+            size={14}
             className={
               i < t.rating
                 ? "fill-[var(--accent)] drop-shadow-[0_0_4px_var(--accent-glow)]"
@@ -37,24 +37,24 @@ function ReviewCard({ t }) {
         ))}
       </div>
 
-      <p className="text-[13px] leading-[1.7] line-clamp-5 font-[350]" style={{ color: "var(--text-secondary)" }}>
+      <p className="text-[20px] leading-[1.5] font-medium" style={{ color: "var(--text-primary)" }}>
         &ldquo;{t.quote}&rdquo;
       </p>
 
       <div className="flex items-center gap-3 mt-auto pt-2">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-[11px] font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-xs font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
           {t.author.charAt(0)}
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-xs font-medium truncate" style={{ color: "var(--text-primary)" }}>
+            <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
               {t.author}
             </p>
             {t.isVerified && (
-              <BadgeCheck size={11} className="shrink-0" style={{ color: "var(--accent)" }} />
+              <BadgeCheck size={12} className="shrink-0" style={{ color: "var(--accent)" }} />
             )}
           </div>
-          <p className="text-[11px] truncate mt-0.5" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs truncate mt-0.5" style={{ color: "var(--text-muted)" }}>
             {t.role}
             {t.role && t.company ? ", " : ""}
             {t.company && <span style={{ color: "var(--text-muted)" }}>{t.company}</span>}
@@ -165,15 +165,8 @@ export default function TestimonialsSection() {
             ref={headerRef}
             className="max-w-7xl mx-auto px-6 md:px-12 mb-16"
           >
-            <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
-              <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>
-                05
-              </span>
-              Client Stories
-            </p>
-
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <h2 className="text-3xl md:text-5xl font-secondary-italic tracking-tight leading-[1.1]" style={{ color: "var(--text-primary)" }}>
+              <h2 className="text-3xl md:text-5xl font-display tracking-tight leading-[1.1]" style={{ color: "var(--text-primary)" }}>
                 Trusted by teams
                 <br />
                 <span style={{ color: "var(--text-muted)" }}>who build the future.</span>
@@ -247,8 +240,8 @@ export default function TestimonialsSection() {
           {/* ── CTA after social proof ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16">
             <ScrollReveal direction="up">
-              <div className="flex flex-col items-center text-center py-12 px-6 rounded-3xl bg-gradient-to-b from-white/[0.03] to-transparent" style={{ border: "1px solid var(--border-color)" }}>
-                <h3 className="text-2xl md:text-4xl font-secondary-italic tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
+              <div className="flex flex-col items-center text-center py-12 px-6 rounded-[24px]" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+                <h3 className="text-2xl md:text-4xl font-display tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
                   Ready to build something{" "}
                   <span style={{ color: "var(--text-muted)" }}>great?</span>
                 </h3>
@@ -267,8 +260,8 @@ export default function TestimonialsSection() {
                       },
                     );
                   }}
-                  className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-semibold transition-all duration-300"
-                  style={{ background: "var(--accent)", color: "var(--accent-text)", boxShadow: "0 0 20px var(--accent-glow)" }}
+                  className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-medium transition-all duration-300"
+                  style={{ background: "var(--accent)", color: "var(--accent-text)" }}
                 >
                   Book a Free Strategy Call
                 </button>
@@ -280,10 +273,7 @@ export default function TestimonialsSection() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
             <div className="max-w-4xl">
               <div ref={faqHeaderRef}>
-                <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
-                  FAQs
-                </p>
-                <h2 className="text-2xl md:text-4xl font-secondary-italic tracking-tight mb-10 max-w-2xl" style={{ color: "var(--text-primary)" }}>
+                <h2 className="text-2xl md:text-4xl font-display tracking-tight mb-10 max-w-2xl" style={{ color: "var(--text-primary)" }}>
                   Common questions
                   <span style={{ color: "var(--text-muted)" }}> about working with us.</span>
                 </h2>

@@ -22,7 +22,7 @@ function StepIndicator({ step }) {
                   ? "bg-[var(--text-primary)] text-[var(--accent-text)] scale-[1.06] shadow-[0_0_20px_rgba(234,239,255,0.22)]"
                   : isCompleted
                     ? "bg-[var(--text-primary)] text-[var(--accent-text)]"
-                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--accent)]/10"
+                    : "bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--accent)]/10"
               }`}
             >
               {isActive && (

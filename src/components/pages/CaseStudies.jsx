@@ -1,59 +1,26 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
 import { trackEvent } from "@/lib/analytics/gtag";
 
 export default function CaseStudiesPage() {
-  // Track case study page view
   trackEvent("case_study_view", {
     case_study_name: caseStudies[0]?.name,
   });
 
   return (
-    <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-28 flex flex-col items-center text-center">
-        <motion.span
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-[var(--accent)]/40 uppercase tracking-[0.3em] text-xs font-bold block mb-6"
-        >
-          Our Work
-        </motion.span>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-secondary-italic font-normal leading-[1.1] tracking-tight max-w-4xl mb-8"
-        >
-          Web Development Case{" "}
-          <span className="not-italic">Studies & Results</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-[var(--text-muted)] text-base md:text-lg max-w-2xl font-light leading-relaxed mb-10"
-        >
-          Every project ships with measurable impact. Here&apos;s what we built
-          and what it delivered.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent"
-        />
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-28">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display tracking-tight leading-[1.05] max-w-4xl mb-6" style={{ color: "var(--text-primary)" }}>
+          Web Development Case Studies & Results
+        </h1>
+        <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          Every project ships with measurable impact. Here&apos;s what we built and what it delivered.
+        </p>
       </section>
 
       {/* Case Studies */}
@@ -63,150 +30,113 @@ export default function CaseStudiesPage() {
           <section
             key={cs.slug}
             id={cs.slug}
-            className="py-16 md:py-24 border-t border-[var(--border-color)]"
+            className="py-16 md:py-24"
+            style={{ borderTop: "1px solid var(--border-color)" }}
           >
             <div className="max-w-6xl mx-auto px-6 md:px-12">
-              {/* Top: Large number + title */}
               <ScrollReveal direction="down" delay={0} className="mb-8 md:mb-12">
-                <span className="text-6xl md:text-8xl lg:text-9xl font-secondary-italic text-[var(--accent)]/[0.06] block leading-none mb-4">
+                <span className="text-6xl md:text-8xl lg:text-9xl font-display block leading-none mb-4" style={{ color: "rgba(255,255,255,0.06)" }}>
                   {String(idx + 1).padStart(2, "0")}.
                 </span>
-                <h2 className="text-3xl md:text-5xl font-secondary-italic font-normal tracking-tight mb-3">
+                <h2 className="text-3xl md:text-5xl font-display tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
                   {cs.name}
                 </h2>
-                <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light">
+                <p className="text-lg md:text-xl" style={{ color: "var(--text-secondary)" }}>
                   {cs.tagline}
                 </p>
               </ScrollReveal>
 
               {/* Image */}
-              <ScrollReveal direction="up" delay={0.1} className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14" style={{ background: "var(--bg-primary)" }}>
+              <ScrollReveal direction="up" delay={0.1} className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14">
                 <div className="flex items-center justify-center p-4 sm:p-8 h-full">
-                  <Image
+                  <img
                     src={cs.image}
                     alt={`${cs.name} — Meteoric`}
-                    width={800}
-                    height={400}
                     className="object-contain w-full h-auto rounded-2xl"
-                    sizes="(max-width: 768px) 100vw, 800px"
-                    priority={idx === 0}
+                    loading={idx === 0 ? "eager" : "lazy"}
                   />
                 </div>
               </ScrollReveal>
 
               {/* Content grid */}
-              <div className={`grid md:grid-cols-12 gap-10 md:gap-12 ${isReversed ? "" : ""}`}>
-                {/* Left: Meta + Problem/Solution */}
+              <div className="grid md:grid-cols-12 gap-10 md:gap-12">
                 <div className={`md:col-span-7 ${isReversed ? "md:order-last" : ""}`}>
-                  {/* Meta row */}
-                  <ScrollReveal direction="left" delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4 mb-8 pb-8 border-b border-[var(--border-color)]">
+                  <ScrollReveal direction="left" delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pb-8" style={{ borderBottom: "1px solid var(--border-color)" }}>
                     <div>
-                      <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.15em] mb-1">Client</p>
-                      <p className="text-[var(--text-secondary)] text-sm">{cs.client}</p>
+                      <p className="text-[10px] uppercase tracking-[0.15em] mb-1" style={{ color: "var(--text-muted)" }}>Client</p>
+                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{cs.client}</p>
                     </div>
                     <div>
-                      <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.15em] mb-1">Timeline</p>
-                      <p className="text-[var(--text-secondary)] text-sm">{cs.timeline}</p>
+                      <p className="text-[10px] uppercase tracking-[0.15em] mb-1" style={{ color: "var(--text-muted)" }}>Timeline</p>
+                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{cs.timeline}</p>
                     </div>
                     <div>
-                      <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.15em] mb-1">Role</p>
-                      <p className="text-[var(--text-secondary)] text-sm">{cs.role}</p>
+                      <p className="text-[10px] uppercase tracking-[0.15em] mb-1" style={{ color: "var(--text-muted)" }}>Role</p>
+                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{cs.role}</p>
                     </div>
                   </ScrollReveal>
 
-                  {/* Problem */}
                   <ScrollReveal direction="left" delay={0.15} className="mb-6">
-                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Problem</h3>
-                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">{cs.problem}</p>
+                    <h3 className="text-sm font-medium mb-3" style={{ color: "var(--text-secondary)" }}>The Problem</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{cs.problem}</p>
                   </ScrollReveal>
 
-                  {/* Solution */}
                   <ScrollReveal direction="left" delay={0.2} className="mb-8">
-                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">The Solution</h3>
-                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">{cs.solution}</p>
+                    <h3 className="text-sm font-medium mb-3" style={{ color: "var(--text-secondary)" }}>The Solution</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{cs.solution}</p>
                   </ScrollReveal>
 
-                  {/* Features */}
                   <ScrollReveal direction="left" delay={0.25}>
-                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-4 font-secondary-italic normal-case text-sm">Key Features</h3>
+                    <h3 className="text-sm font-medium mb-4" style={{ color: "var(--text-secondary)" }}>Key Features</h3>
                     <div className="space-y-3">
                       {cs.features.map((f, fi) => (
-                        <div
-                          key={fi}
-                          className="border-l-2 pl-5 transition-colors duration-300"
-                          style={{ borderColor: `${cs.accent}30` }}
-                        >
-                          <span className="text-sm text-[var(--text-secondary)]">{f}</span>
+                        <div key={fi} className="border-l-2 pl-5 transition-colors duration-300" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
+                          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>{f}</span>
                         </div>
                       ))}
                     </div>
                   </ScrollReveal>
                 </div>
 
-                {/* Right: Metrics + Tags + CTA */}
                 <div className={`md:col-span-5 ${isReversed ? "md:order-first" : ""}`}>
-                  {/* Metrics */}
                   <ScrollReveal direction="right" delay={0.15} className="mb-10">
                     {cs.results.map((r, ri) => (
-                      <div
-                        key={ri}
-                        className={`${ri !== 0 ? "pt-6 mt-6 border-t border-[var(--border-color)]" : ""}`}
-                      >
-                        <p className="text-3xl md:text-4xl font-secondary-italic font-normal tracking-tight mb-1 text-[var(--text-primary)]">
+                      <div key={ri} className={`${ri !== 0 ? "pt-6 mt-6" : ""}`} style={ri !== 0 ? { borderTop: "1px solid var(--border-color)" } : {}}>
+                        <p className="text-3xl md:text-4xl font-display tracking-tight mb-1" style={{ color: "var(--text-primary)" }}>
                           {r.value}
                         </p>
-                        <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em]">
+                        <p className="text-[11px] uppercase tracking-[0.1em]" style={{ color: "var(--text-muted)" }}>
                           {r.metric}
                         </p>
-                        <p className="text-xs text-[var(--text-muted)] mt-1">{r.description}</p>
+                        <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{r.description}</p>
                       </div>
                     ))}
                   </ScrollReveal>
 
-                  {/* Tags */}
                   <ScrollReveal direction="right" delay={0.2} className="mb-8">
-                    <h3 className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-3 font-secondary-italic normal-case text-sm">Tech Stack</h3>
+                    <h3 className="text-sm font-medium mb-3" style={{ color: "var(--text-secondary)" }}>Tech Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {cs.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] px-3 py-1.5 rounded-full border border-[var(--border-color)] font-medium tracking-wide uppercase text-[var(--text-muted)]"
-                        >
+                        <span key={tag} className="text-[10px] px-3 py-1.5 rounded-full font-medium tracking-wide uppercase" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
                           {tag}
                         </span>
                       ))}
                     </div>
                   </ScrollReveal>
 
-                  {/* CTA */}
                   <ScrollReveal direction="right" delay={0.25}>
-                    <a
-                      href={cs.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/cta inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-300"
-                    >
-                      <StaggerText text="View Live Project" hoverColor="var(--text-primary)" />
-                      <ArrowUpRight
-                        size={15}
-                        className="transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
-                      />
+                    <a href={cs.link} target="_blank" rel="noopener noreferrer" className="group/cta inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300" style={{ color: "var(--text-secondary)" }}>
+                      View Live Project
+                      <ArrowUpRight size={15} className="transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
                     </a>
                   </ScrollReveal>
 
-                  {/* Service link */}
                   {cs.serviceLink && (
-                    <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8 border-t border-[var(--border-color)]">
-                      <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-3">If this looks like what you need…</p>
-                      <Link
-                        href={cs.serviceLink.href}
-                        className="group/serv inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)]/70 hover:text-[var(--accent)] transition-colors duration-300"
-                      >
+                    <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
+                      <p className="text-[11px] uppercase tracking-[0.1em] mb-3" style={{ color: "var(--text-muted)" }}>If this looks like what you need…</p>
+                      <Link href={cs.serviceLink.href} className="group/serv inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300" style={{ color: "rgba(255,255,255,0.7)" }}>
                         <span>Explore {cs.serviceLink.label}</span>
-                        <ArrowRight
-                          size={14}
-                          className="transition-transform duration-300 group-hover/serv:translate-x-1"
-                        />
+                        <ArrowRight size={14} className="transition-transform duration-300 group-hover/serv:translate-x-1" />
                       </Link>
                     </ScrollReveal>
                   )}
@@ -216,8 +146,6 @@ export default function CaseStudiesPage() {
           </section>
         );
       })}
-
-
     </div>
   );
 }

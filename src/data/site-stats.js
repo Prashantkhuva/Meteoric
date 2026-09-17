@@ -1,8 +1,8 @@
 const siteStats = [
-  { value: "2026", label: "Founded" },
+  { value: "50", label: "Projects Delivered" },
   { value: "10", label: "Day Sprint Cycles" },
-  { value: "Next.js", label: "Primary Stack" },
-  { value: "Supabase", label: "Backend" },
+  { value: "99", label: "% Client Retention" },
+  { value: "5", label: "Years Building" },
 ];
 
 export default siteStats;

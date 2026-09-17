@@ -58,20 +58,35 @@ export default function StatsBar() {
   }, [inView]);
 
   return (
-    <section ref={ref} className="relative py-16 sm:py-20" style={{ background: "var(--bg-primary)" }}>
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-          {siteStats.map((stat) => (
+    <section ref={ref} className="relative py-20 sm:py-28 overflow-hidden" style={{ background: "var(--bg-primary)" }}>
+      {/* Earth background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <img
+          src="/images/stats-bg.webp"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--bg-primary) 0%, transparent 20%, transparent 80%, var(--bg-primary) 100%)" }} />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-0">
+          {siteStats.map((stat, i) => (
             <div
               key={stat.label}
-              className="stat-item text-center md:text-left opacity-0"
+              className="stat-item text-center opacity-0 flex items-center gap-8 md:gap-12"
             >
-              <div className="text-4xl md:text-5xl font-display tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>
-                <AnimatedNumber target={stat.value} inView={inView} />
+              {i > 0 && (
+                <div className="hidden md:block w-px h-[52px]" style={{ background: "rgba(255,255,255,0.16)" }} />
+              )}
+              <div>
+                <div className="text-[42px] md:text-[48px] font-display tracking-tight mb-2" style={{ color: "var(--text-primary)", textShadow: "0 0 12px rgba(0,0,0,0.6)" }}>
+                  <AnimatedNumber target={stat.value} inView={inView} />
+                </div>
+                <p className="text-xs uppercase tracking-[0.15em]" style={{ color: "var(--text-muted)" }}>
+                  {stat.label}
+                </p>
               </div>
-              <p className="text-sm uppercase tracking-[0.15em]" style={{ color: "var(--text-muted)" }}>
-                {stat.label}
-              </p>
             </div>
           ))}
         </div>

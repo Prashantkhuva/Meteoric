@@ -1,0 +1,53 @@
+AI Image Generation Prompts for Meteoric Website
+================================================
+Generate these images using ChatGPT (DALL-E) and save to public/images/
+
+NOTE: All images should be dark/black background themed to match the site.
+
+
+1. HERO BACKGROUND
+File: hero-bg.webp (or .png)
+Size: 1920x1080 or wider
+
+Prompt:
+Dark abstract background with flowing white and light gray light streaks radiating outward from the center, resembling fiber optic strands or warp speed effect, deep pure black background, subtle cool white tones, ultra high quality 4K cinematic, no text, no objects, abstract energy flow pattern, dark moody atmosphere, suitable for website hero section background
+
+
+2. SERVICE - WEB DEVELOPMENT
+File: service-web.webp (or .png)
+Size: 800x600
+
+Prompt:
+3D rendered dark matte rocket spaceship floating in deep space, minimalist design, black and charcoal color scheme, subtle white rim lighting from left, deep black background with faint distant stars, clean modern product shot aesthetic, no text, octane render quality, suitable for website service card
+
+
+3. SERVICE - SAAS PLATFORM
+File: service-saas.webp (or .png)
+Size: 800x600
+
+Prompt:
+Abstract 3D visualization of interconnected glowing white nodes and flowing data streams on pure black background, representing cloud software architecture, clean minimalist style, white and light gray tones, futuristic tech aesthetic, no text, abstract network constellation pattern, suitable for website service card
+
+
+4. SERVICE - MOBILE APPS
+File: service-mobile.webp (or .png)
+Size: 800x600
+
+Prompt:
+Lone astronaut in white spacesuit sitting in modern minimalist black chair, using a glowing tablet device, dark space station interior with large window showing stars, soft ambient lighting, black white and gray color palette, clean composition, cinematic film quality, no text, suitable for website service card
+
+
+5. STATS SECTION BACKGROUND
+File: stats-bg.webp (or .png)
+Size: 2560x1080 (ultrawide) or 1920x1080
+
+Prompt:
+Planet Earth seen from low orbit at night side, city lights visible on continents, thin blue-white atmosphere glow on curved horizon, deep black space above with faint stars, photorealistic NASA quality, wide panoramic composition, cinematic, no text, ultra high resolution, suitable for website dark section background
+
+
+6. CTA SECTION BACKGROUND
+File: cta-bg.webp (or .png)
+Size: 2560x1080 (ultrawide) or 1920x1080
+
+Prompt:
+Sleek dark spacecraft or space station module orbiting above a planet surface, dramatic underlighting from the planet below, black and white color scheme with subtle warm edge light, cinematic wide composition, deep space background, clean modern aesthetic, no text, suitable for website call-to-action section background

@@ -105,7 +105,7 @@ function Step2({
                 />{" "}
               </button>
               {countryOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-surface)] border border-[var(--accent)]/10 rounded-xl z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+                <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-elevated)] border border-[var(--accent)]/10 rounded-xl z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
                   {!formData.isCustomCode ? (
                     <>
                       <div className="p-2 border-b border-[var(--accent)]/8">

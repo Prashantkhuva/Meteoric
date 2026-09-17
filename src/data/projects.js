@@ -9,7 +9,7 @@ export const projects = [
     link: "https://agency-v2-theta.vercel.app/",
     image: "/lete'm-know.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "var(--accent)",
+    accent: "#ffffff",
     tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
     features: [
       "Canvas particle system hero animation",
@@ -29,7 +29,7 @@ export const projects = [
     link: "https://habitflow.indevs.in/",
     image: "/habit-flow.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "var(--accent)",
+    accent: "#ffffff",
     tags: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
     features: [
       "Streak tracking with daily check-ins",
@@ -52,7 +52,7 @@ export const projects = [
     link: "https://megablog.vercel.app/",
     image: "/megablog.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "var(--accent)",
+    accent: "#ffffff",
     tags: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
     features: [
       "Rich text editor with TinyMCE",
@@ -72,7 +72,7 @@ export const projects = [
     link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
     image: "/mobile-simulator.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "var(--accent)",
+    accent: "#ffffff",
     tags: [
       "VS Code Extension",
       "JavaScript",

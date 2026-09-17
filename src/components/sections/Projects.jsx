@@ -4,8 +4,6 @@ import { useRef } from "react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import StaggerText from "@/components/layout/StaggerText";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 import { projects as allProjects } from "@/data/projects";
 
@@ -19,26 +17,37 @@ function ProjectCard({ project, index }) {
       rel="noopener noreferrer"
       className={`group block gsap-proj-card ${index % 2 === 1 ? "md:mt-12" : ""}`}
     >
-      <div className="relative rounded-4xl overflow-hidden mb-5 bg-white/[0.03]">
-        <Image
+      <div className="relative rounded-[24px] overflow-hidden mb-5" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}>
+        <img
           src={project.image}
           alt={`${project.name} — ${project.tagline} — Meteoric`}
-          width={800}
-          height={500}
-          className="w-full h-auto block max-w-[85%] mx-auto rounded-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] gsap-proj-img"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          className="w-full h-auto block max-w-[90%] mx-auto mt-6 rounded-[14px] transition-all duration-500 ease-out group-hover:scale-[1.02] gsap-proj-img shadow-[0_0_20px_rgba(0,0,0,0.2)]"
           loading="lazy"
         />
-        <div className="absolute top-3 right-3 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0" style={{ background: "var(--accent-glow)", border: "1px solid var(--border-hover)" }}>
+        <div className="absolute top-4 right-4 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--border-color)" }}>
           <ArrowUpRight size={14} style={{ color: "var(--text-primary)" }} />
         </div>
       </div>
-      <h3 className="text-lg md:text-xl font-display mb-1 transition-colors duration-300" style={{ color: "var(--text-primary)" }}>
-        {project.name}
-      </h3>
-      <p className="text-xs uppercase tracking-[0.2em] font-bold" style={{ color: "var(--text-muted)" }}>
-        {project.tagline}
-      </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-semibold mb-1 transition-colors duration-300" style={{ color: "var(--text-primary)" }}>
+            {project.name}
+          </h3>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            {project.tagline}
+          </p>
+        </div>
+        {project.stats && (
+          <div className="flex gap-4 shrink-0">
+            {project.stats.map((s) => (
+              <div key={s.label} className="text-right">
+                <div className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{s.value}</div>
+                <div className="text-[10px] uppercase tracking-[0.1em]" style={{ color: "var(--text-muted)" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </a>
   );
 }
@@ -137,39 +146,29 @@ function Projects() {
     >
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
-        <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 md:gap-16 mb-16">
+        <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
           <div>
-            <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-secondary)" }}>
-              <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>04</span>
-              Curated Portfolio
-            </p>
-            <h2 className="text-4xl md:text-6xl leading-[1.05] font-display tracking-tight" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-3xl md:text-5xl font-display tracking-tight leading-[1.1]" style={{ color: "var(--text-primary)" }}>
               Selected Works
             </h2>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 shrink-0">
+          <div className="flex items-center gap-6 shrink-0">
             <Link
               href="/work"
-              className="group relative inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold transition-colors duration-300"
+              className="group inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
               style={{ color: "var(--text-secondary)" }}
             >
-              <span className="relative inline-flex items-center gap-2">
-                <StaggerText text="Explore All Work" />
-                <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-              <span className="absolute left-0 -bottom-1 h-px w-0 group-hover:w-full transition-all duration-500" style={{ background: "var(--text-muted)" }} />
+              Explore All Work
+              <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <Link
               href="/case-studies"
-              className="group relative inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-medium transition-colors duration-300"
+              className="group inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
               style={{ color: "var(--text-muted)" }}
             >
-              <span className="relative inline-flex items-center gap-2">
-                <StaggerText text="Read Case Studies" />
-                <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-              <span className="absolute left-0 -bottom-1 h-px w-0 group-hover:w-full transition-all duration-500" style={{ background: "var(--text-muted)" }} />
+              Case Studies
+              <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
         </div>

@@ -94,7 +94,7 @@ function Step3({
               <span className="text-[var(--text-muted)] text-xs">▾</span>
             </button>
             {currencyOpen && (
-              <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-surface)] border border-[var(--accent)]/10 rounded-xl overflow-hidden z-20">
+              <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-elevated)] border border-[var(--accent)]/10 rounded-xl overflow-hidden z-20">
                 {CURRENCIES.map((c) => (
                   <button
                     key={c.label}

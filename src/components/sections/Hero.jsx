@@ -1,24 +1,18 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import StaggerText from "@/components/layout/StaggerText";
 import GridLines from "@/components/ui/GridLines";
 import { trackEvent } from "@/lib/analytics/gtag";
 
-const MeteorBackground = dynamic(() => import("./MeteorBackground"), {
-  ssr: false,
-});
 function Hero() {
   const containerRef = useRef(null);
   const mainTextRef = useRef(null);
   const mutedTextRef = useRef(null);
   const subtextRef = useRef(null);
   const ctaRef = useRef(null);
-  const [ctaHovered, setCtaHovered] = useState(false);
 
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
@@ -43,8 +37,6 @@ function Hero() {
         }
         return;
       }
-      // Defer text-splitting (expensive DOM work) until the browser is idle so
-      // it doesn't compete with LCP rendering on low-end devices.
       const run = () => {
         const mainSplit = new SplitText(mainTextRef.current, {
           type: "lines",
@@ -90,84 +82,85 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden flex items-center pt-28 md:pt-0"
+      className="relative min-h-screen w-full overflow-hidden flex items-center"
       style={{ background: "var(--bg-primary)" }}
     >
+      {/* Hero background image */}
       <div className="absolute inset-0 pointer-events-none">
-        <MeteorBackground showBrand={false} />
+        <img
+          src="/images/hero-bg.webp"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, var(--bg-primary) 0%, transparent 40%, transparent 60%, var(--bg-primary) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--bg-primary) 0%, transparent 15%, transparent 85%, var(--bg-primary) 100%)" }} />
       </div>
 
       <GridLines />
 
-      <div
-        ref={containerRef}
-        className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center gap-8 px-5 sm:px-6 md:px-0 md:-translate-y-12"
-      >
-        <h1 className="relative font-semibold text-4xl sm:text-6xl md:text-7xl leading-[1.15] tracking-tight" style={{ color: "var(--text-primary)" }}>
-          <span ref={mainTextRef} className="block">
-            Meteoric — a web development agency
-          </span>
-          <span
-            ref={mutedTextRef}
-            className="block mt-2 font-secondary-italic"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            for founders who ship fast.
-          </span>
-        </h1>
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 py-24 md:py-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8 items-center">
+          {/* Left: Text content */}
+          <div ref={containerRef}>
+            {/* Status badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl mb-6" style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(4px)", border: "1px solid var(--border-color)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>Currently accepting new projects</span>
+            </div>
 
-        <p
-          ref={subtextRef}
-          className="relative max-w-2xl text-base md:text-lg leading-relaxed"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          Meteoric is a software development agency that partners with founders
-          to design, develop, and launch modern websites and SaaS products that
-          actually convert — not just look good.
-        </p>
-
-        <div
-          ref={ctaRef}
-          className="relative flex flex-col sm:flex-row items-center gap-4 mt-4"
-        >
-          <button
-            type="button"
-            onClick={() => {
-              trackEvent("booking_click", { button_location: "/hero" });
-              openCal();
-            }}
-            className="group relative inline-flex items-center overflow-hidden border-2 border-[var(--accent)] px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-transform duration-300 ease-out hover:scale-[1.03]"
-            onMouseEnter={() => setCtaHovered(true)}
-            onMouseLeave={() => setCtaHovered(false)}
-          >
-            <span className="fill-circle bg-[var(--accent)]" />
-            <span className="relative z-10">
-              <StaggerText hovered={ctaHovered} hoverColor="var(--accent-text)">
-                {"Book a Free Strategy Call"}
-              </StaggerText>
-            </span>
-          </button>
-
-          <Link
-            href="/#process"
-            className="group relative inline-flex items-center gap-2 text-base font-medium transition-colors duration-200"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            See How We Build
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+            <h1
+              className="font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight mb-8"
+              style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
             >
-              <path d="M12 5v14" />
-              <path d="m19 12-7 7-7-7" />
-            </svg>
-            <span className="absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full" style={{ background: "var(--text-secondary)" }} />
-          </Link>
+              <span ref={mainTextRef} className="block">
+                Ship Fast.
+              </span>
+              <span ref={mutedTextRef} className="block font-secondary-italic" style={{ color: "var(--text-secondary)" }}>
+                Ship Right. Ship Meteoric.
+              </span>
+            </h1>
+
+            <div
+              ref={subtextRef}
+              className="max-w-md text-base md:text-lg leading-relaxed mb-8"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              A software development agency that partners with founders
+              to design, develop, and launch modern websites and SaaS products that
+              actually convert.
+            </div>
+
+            <div
+              ref={ctaRef}
+              className="flex flex-col sm:flex-row items-start gap-4"
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  trackEvent("booking_click", { button_location: "/hero" });
+                  openCal();
+                }}
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
+                style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
+              >
+                Book a Free Strategy Call
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </button>
+
+              <Link
+                href="/#process"
+                className="group relative inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300"
+                style={{ background: "rgba(255,255,255,0.08)", color: "var(--text-primary)", backdropFilter: "blur(3px)" }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.14)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+              >
+                See How We Build
+              </Link>
+            </div>
+          </div>
+
+          {/* Right: Decorative space — image fills this area */}
+          <div className="hidden md:block" />
         </div>
       </div>
     </section>

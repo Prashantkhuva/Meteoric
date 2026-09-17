@@ -3,7 +3,6 @@
 import { useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
-import { Smartphone, Monitor, Code2, Layers } from "lucide-react";
 import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import GridLines from "@/components/ui/GridLines";
@@ -15,7 +14,8 @@ const services = [
     title: "Landing Page",
     desc: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
     tags: ["Strategy", "UX/UI", "Responsive", "Conversion"],
-    icon: Smartphone,
+    image: "/images/service-web.webp",
+    metric: "3x faster launch",
     href: "/services/landing-pages",
   },
   {
@@ -23,7 +23,8 @@ const services = [
     title: "SaaS Development",
     desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
     tags: ["Auth", "Dashboards", "Payments", "Scalable"],
-    icon: Monitor,
+    image: "/images/service-saas.webp",
+    metric: "10+ MVPs shipped",
     href: "/services/saas-development",
   },
   {
@@ -31,7 +32,8 @@ const services = [
     title: "Web Apps",
     desc: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
     tags: ["Frontend", "Backend", "Real-time", "API"],
-    icon: Code2,
+    image: "/images/service-mobile.webp",
+    metric: "99.9% uptime",
     href: "/services/web-applications",
   },
   {
@@ -39,7 +41,8 @@ const services = [
     title: "Full-Stack",
     desc: "Complete frontend and backend development — from APIs and databases to polished UI. Full stack, one team.",
     tags: ["APIs", "Databases", "UI", "DevOps"],
-    icon: Layers,
+    image: "/images/service-web.webp",
+    metric: "50+ projects delivered",
     href: "/services/nextjs-development",
   },
 ];
@@ -242,38 +245,43 @@ export default function ServicesSection() {
         className="relative hidden lg:flex min-h-screen items-center overflow-clip"
       >
         <div ref={cardsWrapRef} className="flex gap-6 px-6 md:px-16 w-max">
-          {services.map((s) => {
-            const Icon = s.icon;
-            return (
+          {services.map((s) => (
               <div
                 key={s.num}
                 className="service-card group relative flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px] transition-colors duration-300"
                 style={{ border: "1px solid var(--border-color)" }}
               >
                 {/* Ghost number */}
-                  <span
-                    className="absolute top-6 right-8 text-[120px] md:text-[180px] font-display leading-none select-none pointer-events-none"
-                    style={{ color: "var(--accent-glow)" }}
+                <span
+                  className="absolute top-6 right-8 text-[120px] md:text-[180px] font-display leading-none select-none pointer-events-none"
+                  style={{ color: "var(--accent-glow)" }}
                   aria-hidden="true"
                 >
                   {s.num}
                 </span>
 
-                {/* Top row: label + icon */}
-                <div className="relative z-10 flex items-center justify-between mb-10">
-                  <span className="text-[10px] tracking-[0.3em] font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+                {/* Top row: label + AI image */}
+                <div className="relative z-10 mb-8">
+                  <span className="text-[10px] tracking-[0.3em] font-bold uppercase mb-4 block" style={{ color: "var(--text-muted)" }}>
                     Service — {s.num}
                   </span>
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)", color: "var(--text-muted)" }}>
-                    <Icon size={20} strokeWidth={1.5} />
+                  <div className="w-full h-40 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-color)" }}>
+                    <img
+                      src={s.image}
+                      alt={s.title}
+                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                    />
                   </div>
                 </div>
 
                 {/* Title + description */}
                 <div className="relative z-10 flex-1">
-                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-display mb-5 leading-tight" style={{ color: "var(--text-primary)" }}>
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-display mb-3 leading-tight" style={{ color: "var(--text-primary)" }}>
                     {s.title}
                   </h3>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--text-muted)" }}>
+                    {s.metric}
+                  </p>
                   <p className="text-sm md:text-base leading-relaxed max-w-md" style={{ color: "var(--text-muted)" }}>
                     {s.desc}
                   </p>
@@ -281,7 +289,7 @@ export default function ServicesSection() {
 
                 {/* Tags + CTA */}
                 <div className="relative z-10 mt-8">
-                  <div className="flex flex-wrap gap-2 mb-8">
+                  <div className="flex flex-wrap gap-2 mb-6">
                     {s.tags.map((tag) => (
                       <span
                         key={tag}
@@ -297,7 +305,7 @@ export default function ServicesSection() {
                     className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold pb-1 transition-colors duration-300"
                     style={{ color: "var(--text-muted)", borderBottom: "1px solid var(--border-color)" }}
                   >
-                    The full picture
+                    Learn more
                     <svg
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                       viewBox="0 0 24 24"
@@ -312,8 +320,7 @@ export default function ServicesSection() {
                   </Link>
                 </div>
               </div>
-            );
-          })}
+          ))}
 
           {/* CTA card */}
           <div className="flex-shrink-0 w-[65vw] lg:w-[45vw] xl:w-[38vw] rounded-2xl overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 flex flex-col justify-between min-h-[420px]" style={{ border: "1px solid var(--border-color)" }}>
@@ -358,9 +365,7 @@ export default function ServicesSection() {
           className="sticky top-0 h-screen supports-[height:100dvh]:h-dvh relative will-change-transform"
         >
           <div className="absolute inset-0 px-5 flex flex-col justify-center">
-            {services.map((s, i) => {
-              const Icon = s.icon;
-              return (
+            {services.map((s, i) => (
                 <div
                   key={s.num}
                   className="svc-mob-card absolute inset-x-5 top-1/2 -translate-y-1/2 rounded-[2rem] overflow-hidden p-6 flex flex-col gap-4"
@@ -384,14 +389,23 @@ export default function ServicesSection() {
                     <span className="text-[10px] tracking-[0.3em] font-bold uppercase" style={{ color: "var(--text-muted)" }}>
                       Service — {s.num}
                     </span>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "var(--accent-glow)", color: "var(--text-muted)" }}>
-                      <Icon size={18} strokeWidth={1.5} />
-                    </div>
+                  </div>
+
+                  {/* AI image */}
+                  <div className="w-full h-28 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-color)" }}>
+                    <img
+                      src={s.image}
+                      alt={s.title}
+                      className="w-full h-full object-cover opacity-80"
+                    />
                   </div>
 
                   <h3 className="text-[22px] font-secondary-italic leading-[1.1]" style={{ color: "var(--text-primary)" }}>
                     {s.title}
                   </h3>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+                    {s.metric}
+                  </p>
                   <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                     {s.desc}
                   </p>
@@ -413,7 +427,7 @@ export default function ServicesSection() {
                       className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold pb-1 transition-colors"
                       style={{ color: "var(--text-muted)", borderBottom: "1px solid var(--border-color)" }}
                     >
-                      The full picture
+                      Learn more
                       <svg
                         className="w-3.5 h-3.5"
                         viewBox="0 0 24 24"
@@ -428,8 +442,7 @@ export default function ServicesSection() {
                     </Link>
                   </div>
                 </div>
-              );
-            })}
+            ))}
 
             {/* CTA card */}
             <div

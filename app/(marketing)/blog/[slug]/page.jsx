@@ -44,86 +44,47 @@ export async function generateMetadata({ params }) {
   };
 }
 
+const slugToImage = {
+  "mongodb-schema-design-for-saas-billing": "/images/blog/blog-mongodb-schema.webp",
+  "how-to-build-a-saas-mvp-step-by-step-guide": "/images/blog/blog-saas-mvp.webp",
+  "mongodb-vs-postgresql-for-saas": "/images/blog/blog-mongodb-vs-postgres.webp",
+  "gsap-vs-framer-motion-production-guide": "/images/blog/blog-gsap-vs-framer.webp",
+  "supabase-vs-firebase-2026-comparison": "/images/blog/blog-supabase-vs-firebase.webp",
+  "what-is-a-web-development-agency": "/images/blog/blog-web-agency.webp",
+  "the-meteoric-guide-to-choosing-your-tech-stack": "/images/blog/blog-tech-stack.webp",
+  "how-to-implement-aeo-answer-engine-optimization-for-saas": "/images/blog/blog-aeo.webp",
+  "why-visitors-leave-your-website-issues-and-solutions": "/images/blog/blog-website-issues.webp",
+  "high-converting-landing-page-structure-for-saas": "/images/blog/blog-landing-page.webp",
+  "long-tail-seo-strategy-for-funded-startups": "/images/blog/blog-long-tail-seo.webp",
+  "ai-search-optimization-how-to-get-cited-by-chatgpt": "/images/blog/blog-ai-search.webp",
+  "startup-seo-on-a-budget-what-to-do-first": "/images/blog/blog-startup-seo.webp",
+  "nextjs-vs-remix-2026-comparison": "/images/blog/blog-tech-stack.webp",
+  "react-vs-nextjs-for-startup-websites": "/images/blog/blog-tech-stack.webp",
+  "conversion-focused-web-design-beyond-pretty-ui": "/images/blog/blog-landing-page.webp",
+  "building-a-saas-prototype-in-3-weeks-a-case-study": "/images/blog/blog-saas-mvp.webp",
+  "how-much-does-a-startup-website-cost": "/images/blog/blog-startup-seo.webp",
+  "how-to-choose-a-web-development-agency": "/images/blog/blog-web-agency.webp",
+  "complete-website-audit-checklist-for-startups": "/images/blog/blog-website-issues.webp",
+};
+
 const postService = {
-  "mongodb-schema-design-for-saas-billing": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "how-to-build-a-saas-mvp-step-by-step-guide": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "mongodb-vs-postgresql-for-saas": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "gsap-vs-framer-motion-production-guide": {
-    href: "/services/landing-pages",
-    label: "Landing Pages",
-  },
-  "supabase-vs-firebase-2026-comparison": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "nextjs-vs-remix-2026-comparison": {
-    href: "/services/nextjs-development",
-    label: "Next.js Development",
-  },
-  "what-is-a-web-development-agency": {
-    href: "/services/startup-web-development",
-    label: "Startup Web Development",
-  },
-  "how-much-does-a-startup-website-cost": {
-    href: "/services/startup-web-development",
-    label: "Startup Web Development",
-  },
-  "building-a-saas-prototype-in-3-weeks-a-case-study": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "the-meteoric-guide-to-choosing-your-tech-stack": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "how-to-choose-a-web-development-agency": {
-    href: "/services/startup-web-development",
-    label: "Startup Web Development",
-  },
-  "react-vs-nextjs-for-startup-websites": {
-    href: "/services/startup-web-development",
-    label: "Startup Web Development",
-  },
-  "how-to-implement-aeo-answer-engine-optimization-for-saas": {
-    href: "/services/saas-development",
-    label: "SaaS Development",
-  },
-  "why-visitors-leave-your-website-issues-and-solutions": {
-    href: "/services/landing-pages",
-    label: "Landing Pages",
-  },
-  "high-converting-landing-page-structure-for-saas": {
-    href: "/services/landing-pages",
-    label: "Landing Pages",
-  },
-  "long-tail-seo-strategy-for-funded-startups": {
-    href: "/services/startup-web-development",
-    label: "Startup Web Development",
-  },
-  "ai-search-optimization-how-to-get-cited-by-chatgpt": {
-    href: "/services/landing-pages",
-    label: "Landing Pages",
-  },
-  "startup-seo-on-a-budget-what-to-do-first": {
-    href: "/services/startup-web-development",
-    label: "Startup Web Development",
-  },
+  "mongodb-schema-design-for-saas-billing": { href: "/services/saas-development", label: "SaaS Development" },
+  "how-to-build-a-saas-mvp-step-by-step-guide": { href: "/services/saas-development", label: "SaaS Development" },
+  "mongodb-vs-postgresql-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
+  "gsap-vs-framer-motion-production-guide": { href: "/services/landing-pages", label: "Landing Pages" },
+  "supabase-vs-firebase-2026-comparison": { href: "/services/saas-development", label: "SaaS Development" },
+  "what-is-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "the-meteoric-guide-to-choosing-your-tech-stack": { href: "/services/saas-development", label: "SaaS Development" },
+  "how-to-implement-aeo-answer-engine-optimization-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
+  "why-visitors-leave-your-website-issues-and-solutions": { href: "/services/landing-pages", label: "Landing Pages" },
+  "high-converting-landing-page-structure-for-saas": { href: "/services/landing-pages", label: "Landing Pages" },
+  "long-tail-seo-strategy-for-funded-startups": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "ai-search-optimization-how-to-get-cited-by-chatgpt": { href: "/services/landing-pages", label: "Landing Pages" },
+  "startup-seo-on-a-budget-what-to-do-first": { href: "/services/startup-web-development", label: "Startup Web Development" },
 };
 
 function readingTime(sections) {
-  const words = sections.reduce(
-    (acc, s) => acc + s.body.split(/\s+/).length,
-    0,
-  );
+  const words = sections.reduce((acc, s) => acc + s.body.split(/\s+/).length, 0);
   return Math.max(1, Math.ceil(words / 200));
 }
 
@@ -136,7 +97,8 @@ function renderRichBody(text) {
       <Link
         key={i}
         href={match[2]}
-        className="text-[#EAEFFF]/60 hover:text-[#EAEFFF] underline underline-offset-4 decoration-[#EAEFFF]/25 hover:decoration-[#EAEFFF]/60 transition-all duration-200"
+        className="underline underline-offset-4 transition-all duration-200 hover:text-white"
+        style={{ color: "rgba(255,255,255,0.6)" }}
       >
         {match[1]}
       </Link>
@@ -150,6 +112,7 @@ export default async function BlogPost({ params }) {
   if (!post) notFound();
 
   const readTime = readingTime(post.sections);
+  const image = slugToImage[slug] || "/images/blog/blog-tech-stack.webp";
   const relatedLinks = post.relatedLinks?.length
     ? post.relatedLinks
     : postService[post.slug]
@@ -161,18 +124,8 @@ export default async function BlogPost({ params }) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Blog",
-        item: `${SITE_URL}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: post.title,
-        item: `${SITE_URL}/blog/${slug}`,
-      },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${slug}` },
     ],
   };
 
@@ -181,7 +134,7 @@ export default async function BlogPost({ params }) {
     "@type": "Article",
     headline: post.title,
     description: post.description,
-    image: `${SITE_URL}/og.jpg`,
+    image: `${SITE_URL}${image}`,
     datePublished: post.published,
     dateModified: post.dateModified || post.published,
     author: {
@@ -189,332 +142,140 @@ export default async function BlogPost({ params }) {
       name: post.author?.name || "Prashant Khuva",
       url: post.author?.url || `${SITE_URL}/about`,
       jobTitle: "Founder & Full-Stack Developer",
-      sameAs: [
-        "https://x.com/prashantkhuva_",
-        "https://linkedin.com/in/prashantkhuva",
-      ],
+      sameAs: ["https://x.com/prashantkhuva_", "https://linkedin.com/in/prashantkhuva"],
     },
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
       url: SITE_URL,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE_URL}/logo.svg`,
-      },
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.svg` },
     },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${SITE_URL}/blog/${slug}`,
-    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
     keywords: post.tags.join(", "),
     inLanguage: "en-US",
   };
 
-  const faqSchema =
-    post.faqs.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: post.faqs.map((q) => ({
-            "@type": "Question",
-            name: q.question,
-            acceptedAnswer: { "@type": "Answer", text: q.answer },
-          })),
-        }
-      : null;
-
-  const howToSchema = post.howTo
-    ? {
-        "@context": "https://schema.org",
-        "@type": "HowTo",
-        name: post.howTo.name,
-        description: post.howTo.description,
-        step: post.howTo.step.map((s, i) => ({
-          "@type": "HowToStep",
-          position: i + 1,
-          name: s.name,
-          text: s.text,
-        })),
-      }
+  const faqSchema = post.faqs.length > 0
+    ? { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: post.faqs.map((q) => ({ "@type": "Question", name: q.question, acceptedAnswer: { "@type": "Answer", text: q.answer } })) }
     : null;
 
-  const speakableJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: post.title,
-    speakable: {
-      "@type": "SpeakableSpecification",
-      cssSelector: [".sr-only", "h1"],
-    },
-  };
+  const speakableJsonLd = { "@context": "https://schema.org", "@type": "WebPage", name: post.title, speakable: { "@type": "SpeakableSpecification", cssSelector: [".sr-only", "h1"] } };
 
   const relatedPosts = post.relatedBlogPosts?.length
-    ? post.relatedBlogPosts
-        .map((rp) => blogPosts.find((p) => p.slug === rp.slug))
-        .filter(Boolean)
-        .slice(0, 3)
-    : blogPosts
-        .filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t)))
-        .slice(0, 3);
+    ? post.relatedBlogPosts.map((rp) => blogPosts.find((p) => p.slug === rp.slug)).filter(Boolean).slice(0, 3)
+    : blogPosts.filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t))).slice(0, 3);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      {faqSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      )}
-      {howToSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-        />
-      )}
-      <article className="min-h-screen bg-black text-white">
-        {/* Ambient glow */}
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(234,239,255,0.02)_0%,transparent_70%)] pointer-events-none" />
-
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
+      <article className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
         <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-32 pb-24">
-          {/* ── Back Link ── */}
+
+          {/* Back link */}
           <div className="mb-14">
-            <Link
-              href="/blog"
-              className="group inline-flex items-center gap-2 text-[11px] font-mono tracking-wider text-white/18 hover:text-white/45 transition-colors duration-200"
-            >
-              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
-                ←
-              </span>
+            <Link href="/blog" className="group inline-flex items-center gap-2 text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
+              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               Back to all articles
             </Link>
           </div>
 
-          {/* ═══ HERO ═══ */}
-          <header className="mb-20 md:mb-24">
-            <div className="flex flex-wrap gap-2 mb-8">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[10px] font-mono tracking-wider text-[#EAEFFF]/40 bg-[#EAEFFF]/[0.04] border border-[#EAEFFF]/[0.07] px-3.5 py-1.5 rounded-full"
-                >
+          {/* Header */}
+          <header className="mb-12">
+            <div className="flex flex-wrap items-center gap-2 mb-6">
+              {post.tags.slice(0, 2).map((tag) => (
+                <span key={tag} className="text-[11px] font-medium px-3 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.08)", color: "var(--text-secondary)", border: "1px solid var(--border-color)" }}>
                   {tag}
                 </span>
               ))}
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-[3.5rem] font-secondary-italic font-normal leading-[1.05] tracking-tight mb-8 max-w-4xl">
+            <h1 className="text-3xl md:text-4xl lg:text-[44px] font-display leading-[1.1] tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
               {post.title}
             </h1>
 
-            <p className="text-white/35 text-base md:text-lg leading-[1.8] mb-10 max-w-3xl font-[350]">
+            <p className="text-base leading-[1.7] mb-8 max-w-3xl" style={{ color: "var(--text-secondary)" }}>
               {post.tagline}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono tracking-wider">
-              <div className="flex items-center gap-3">
-                <span className="relative w-9 h-9 rounded-full bg-[#0a0a0a] border border-white/[0.07] flex items-center justify-center text-[10px] text-white/35 overflow-hidden">
-                  <svg
-                    viewBox="0 0 32 32"
-                    className="absolute inset-0 w-full h-full"
-                  >
-                    <circle
-                      cx="16"
-                      cy="12"
-                      r="5"
-                      fill="rgba(255,255,255,0.05)"
-                    />
-                    <ellipse
-                      cx="16"
-                      cy="26"
-                      rx="9"
-                      ry="6"
-                      fill="rgba(255,255,255,0.03)"
-                    />
-                  </svg>
-                  <span className="relative z-10">PK</span>
-                </span>
-                <div>
-                  <span className="text-white/40 block leading-none mb-1">
-                    Prashant Khuva
-                  </span>
-                  <span className="text-white/10 text-[10px]">
-                    Founder &amp; Full-Stack Developer
-                  </span>
+            {/* Author card */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+                PK
+              </div>
+              <div>
+                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Prashant Khuva</p>
+                <div className="flex items-center gap-2 text-[11px]" style={{ color: "var(--text-muted)" }}>
+                  <time dateTime={post.published}>
+                    {new Date(post.published).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </time>
+                  <span className="w-1 h-1 rounded-full" style={{ background: "var(--text-muted)" }} />
+                  <span>{readTime} min read</span>
                 </div>
-              </div>
-              <div className="hidden sm:flex items-center gap-4 ml-2">
-                <span className="w-px h-4 bg-white/6" />
-                <time dateTime={post.published} className="text-white/22">
-                  {new Date(post.published).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </time>
-                <span className="w-px h-4 bg-white/6" />
-                <span className="text-white/12">{readTime} min read</span>
-              </div>
-              <div className="flex sm:hidden items-center gap-3 text-white/18 ml-1">
-                <time dateTime={post.published}>{post.published}</time>
-                <span className="w-px h-3 bg-white/8" />
-                <span className="text-white/12">{readTime} min</span>
               </div>
             </div>
           </header>
 
-          {/* ═══ CONTENT ═══ */}
-          <div className="max-w-3xl">
+          {/* Featured image */}
+          <div className="rounded-[24px] overflow-hidden mb-16" style={{ border: "1px solid var(--border-color)" }}>
+            <img src={image} alt={post.title} className="w-full h-auto" loading="lazy" />
+          </div>
+
+          {/* Article body */}
+          <div className="max-w-[720px] mx-auto">
             {post.sections.map((section, i) => (
-              <section key={i} className="mb-16 last:mb-0">
-                <div className="flex items-start gap-6">
-                  <div className="hidden md:flex shrink-0 flex-col items-center pt-0.5">
-                    <span className="text-white/6 text-[10px] font-mono tracking-wider tabular-nums">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="w-px flex-1 bg-gradient-to-b from-white/[0.04] to-transparent mt-2 min-h-[2rem]" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h2 className="text-xl md:text-2xl lg:text-3xl font-secondary-italic font-normal text-white/80 mb-6 leading-[1.3]">
-                      {section.heading}
-                    </h2>
-                    <p className="text-white/28 text-[15px] md:text-[16px] leading-[1.9] font-[350]">
-                      {renderRichBody(section.body)}
-                    </p>
-                    {i < post.sections.length - 1 && (
-                      <div className="mt-16 h-px bg-gradient-to-r from-white/[0.04] via-white/[0.02] to-transparent" />
-                    )}
-                  </div>
-                </div>
+              <section key={i} className="mb-12 last:mb-0">
+                <h2 className="text-[24px] font-semibold mb-4 leading-[1.3]" style={{ color: "var(--text-primary)" }}>
+                  {section.heading}
+                </h2>
+                <p className="text-[15px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
+                  {renderRichBody(section.body)}
+                </p>
               </section>
             ))}
           </div>
 
-          {/* ═══ FAQ ═══ */}
+          {/* FAQ */}
           {post.faqs.length > 0 && (
-            <div className="mt-24 pt-16 border-t border-white/[0.05] max-w-3xl">
-              <div className="flex items-center gap-4 mb-12">
-                <span className="text-[#EAEFFF]/25 uppercase tracking-[0.3em] text-[10px] font-medium">
-                  FAQ
-                </span>
-                <span className="flex-1 h-px bg-gradient-to-r from-white/[0.05] to-transparent" />
-              </div>
+            <div className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
+              <h2 className="text-[24px] font-semibold mb-8" style={{ color: "var(--text-primary)" }}>
+                Frequently Asked Questions
+              </h2>
               <div className="space-y-4">
                 {post.faqs.map((faq, i) => (
-                  <div
-                    key={i}
-                    className="group p-6 md:p-8 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] hover:border-white/[0.08] hover:shadow-[0_0_30px_rgba(234,239,255,0.02)] transition-all duration-400"
-                  >
-                    <div className="flex items-start gap-4 mb-3">
-                      <span className="text-[#EAEFFF]/25 text-[11px] font-mono shrink-0 mt-0.5 tabular-nums">
-                        Q{i + 1}
-                      </span>
-                      <h3 className="text-base md:text-lg font-medium text-white/65 leading-[1.45]">
-                        {faq.question}
-                      </h3>
-                    </div>
-                    <div className="flex items-start gap-4 pl-9">
-                      <p className="text-white/25 text-[15px] leading-[1.85] font-[350]">
-                        {faq.answer}
-                      </p>
-                    </div>
+                  <div key={i} className="p-6 rounded-2xl" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+                    <h3 className="text-base font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+                      {faq.question}
+                    </h3>
+                    <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
+                      {faq.answer}
+                    </p>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* ═══ KEY METRICS ═══ */}
-          {post.metrics && post.metrics.length > 0 && (
-            <div className="mt-24 pt-16 border-t border-white/[0.05] max-w-3xl">
-              <div className="flex items-center gap-4 mb-10">
-                <span className="text-[#EAEFFF]/25 uppercase tracking-[0.3em] text-[10px] font-medium">
-                  Key Metrics
-                </span>
-                <span className="flex-1 h-px bg-gradient-to-r from-white/[0.05] to-transparent" />
+          {/* Author bio */}
+          <div className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold shrink-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+                PK
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                {post.metrics.map((metric, i) => (
-                  <div key={i} className="p-5 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05]">
-                    <div className="text-lg font-medium text-white/65 mb-1">{metric.value}</div>
-                    <div className="text-[11px] text-white/20 tracking-wide">{metric.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ═══ FURTHER READING ═══ */}
-          {post.furtherReading && post.furtherReading.length > 0 && (
-            <div className="mt-24 pt-16 border-t border-white/[0.05] max-w-3xl">
-              <div className="flex items-center gap-4 mb-10">
-                <span className="text-[#EAEFFF]/25 uppercase tracking-[0.3em] text-[10px] font-medium">
-                  Further Reading
-                </span>
-                <span className="flex-1 h-px bg-gradient-to-r from-white/[0.05] to-transparent" />
-              </div>
-              <div className="space-y-3">
-                {post.furtherReading.map((link, i) => (
-                  <a
-                    key={i}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-3 p-4 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] hover:border-white/[0.1] hover:shadow-[0_0_20px_rgba(234,239,255,0.02)] transition-all duration-300"
-                  >
-                    <svg className="w-4 h-4 text-white/12 group-hover:text-white/25 transition-colors shrink-0" viewBox="0 0 16 16" fill="none">
-                      <path d="M6 3H13V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[13px] text-white/45 group-hover:text-white/65 transition-colors truncate">{link.title}</div>
-                      <div className="text-[10px] text-white/15 tracking-wider mt-0.5">{link.source}</div>
-                    </div>
-                    <svg className="w-3 h-3 text-white/8 group-hover:text-white/20 transition-colors shrink-0" viewBox="0 0 12 12" fill="none">
-                      <path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ═══ AUTHOR BIO ═══ */}
-          <div className="mt-24 pt-16 border-t border-white/[0.05] max-w-3xl">
-            <div className="flex items-start gap-6">
-              <span className="relative w-14 h-14 rounded-full bg-[#0a0a0a] border border-white/[0.07] flex items-center justify-center text-xs text-white/35 overflow-hidden shrink-0">
-                <svg viewBox="0 0 32 32" className="absolute inset-0 w-full h-full">
-                  <circle cx="16" cy="12" r="5" fill="rgba(255,255,255,0.05)" />
-                  <ellipse cx="16" cy="26" rx="9" ry="6" fill="rgba(255,255,255,0.03)" />
-                </svg>
-                <span className="relative z-10">PK</span>
-              </span>
               <div>
-                <h3 className="text-sm font-medium text-white/55 mb-1.5">
-                  <a href="/author/prashant-khuva" className="hover:text-white/75 transition-colors">
-                    Written by Prashant Khuva
-                  </a>
+                <h3 className="text-sm font-medium mb-1" style={{ color: "var(--text-primary)" }}>
+                  Written by Prashant Khuva
                 </h3>
-                <p className="text-white/22 text-[13px] leading-[1.75] font-[350]">
+                <p className="text-[13px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
                   Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups since 2020.
                 </p>
-                <div className="flex items-center gap-5 mt-4">
-                  <a href="https://x.com/prashantkhuva_" target="_blank" rel="noopener noreferrer" className="text-white/12 hover:text-white/35 text-[11px] font-mono tracking-wider transition-colors duration-200">
+                <div className="flex items-center gap-4 mt-3">
+                  <a href="https://x.com/prashantkhuva_" target="_blank" rel="noopener noreferrer" className="text-[11px] transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
                     @prashantkhuva_
                   </a>
-                  <a href="https://linkedin.com/in/prashantkhuva" target="_blank" rel="noopener noreferrer" className="text-white/12 hover:text-white/35 text-[11px] font-mono tracking-wider transition-colors duration-200">
+                  <a href="https://linkedin.com/in/prashantkhuva" target="_blank" rel="noopener noreferrer" className="text-[11px] transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
                     LinkedIn
                   </a>
                 </div>
@@ -522,99 +283,62 @@ export default async function BlogPost({ params }) {
             </div>
           </div>
 
-          {/* ═══ RELATED ═══ */}
+          {/* Related posts */}
           {relatedPosts.length > 0 && (
-            <div className="mt-24 pt-16 border-t border-white/[0.05]">
-              <div className="flex items-center gap-4 mb-12">
-                <span className="text-[#EAEFFF]/25 uppercase tracking-[0.3em] text-[10px] font-medium">
-                  Continue Reading
-                </span>
-                <span className="flex-1 h-px bg-gradient-to-r from-white/[0.05] to-transparent" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {relatedPosts.map((rp) => (
-                  <Link
-                    key={rp.slug}
-                    href={`/blog/${rp.slug}`}
-                    className="group relative p-6 rounded-xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] hover:border-[#EAEFFF]/[0.1] hover:shadow-[0_0_30px_rgba(234,239,255,0.02)] transition-all duration-400 overflow-hidden"
-                  >
-                    <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-[#EAEFFF]/[0.015] to-transparent rounded-bl-[100px] pointer-events-none" />
-                    <div className="relative">
-                      <div className="flex items-center gap-2 mb-3.5">
-                        {rp.tags.slice(0, 1).map((t) => (
-                          <span
-                            key={t}
-                            className="text-[9px] font-mono tracking-wider text-white/18 bg-white/[0.02] border border-white/[0.04] px-2 py-0.5 rounded-full"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                        <span className="text-white/8 text-[9px] font-mono">
-                          {rp.published}
-                        </span>
+            <div className="mt-20 pt-12" style={{ borderTop: "1px solid var(--border-color)" }}>
+              <h2 className="text-[24px] font-semibold mb-8" style={{ color: "var(--text-primary)" }}>
+                Continue Reading
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((rp) => {
+                  const rpImage = slugToImage[rp.slug] || "/images/blog/blog-tech-stack.webp";
+                  return (
+                    <Link key={rp.slug} href={`/blog/${rp.slug}`} className="group block">
+                      <div className="rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
+                        <img src={rpImage} alt={rp.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" />
                       </div>
-                      <h3 className="text-sm font-secondary-italic text-white/65 group-hover:text-[#EAEFFF] transition-colors duration-400 mb-2.5 leading-[1.35]">
+                      <h3 className="text-sm font-semibold mb-1 transition-opacity duration-300 group-hover:opacity-65" style={{ color: "var(--text-primary)" }}>
                         {rp.title}
                       </h3>
-                      <p className="text-white/18 text-xs font-mono leading-[1.6] line-clamp-2">
+                      <p className="text-[11px] line-clamp-2" style={{ color: "var(--text-muted)" }}>
                         {rp.tagline}
                       </p>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* ═══ CTA ═══ */}
-          <div className="relative mt-24 p-8 md:p-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.05] max-w-3xl overflow-hidden hover:border-white/[0.08] transition-all duration-500">
-            <div className="absolute top-0 right-0 w-56 h-56 bg-gradient-to-bl from-[#EAEFFF]/[0.03] to-transparent rounded-bl-[180px] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-36 h-36 bg-gradient-to-tr from-white/[0.015] to-transparent pointer-events-none" />
-
-            <div className="relative">
-              <p className="text-white/30 text-[10px] font-mono tracking-[0.2em] uppercase mb-4">
-                Let&apos;s work together
-              </p>
-              <p className="text-2xl md:text-3xl font-secondary-italic font-normal text-white/85 mb-3 leading-[1.2]">
-                Have a project in mind?
-              </p>
-              <p className="text-white/25 text-sm leading-[1.8] mb-10 max-w-lg">
-                From landing pages to full SaaS platforms — let&apos;s build
-                something exceptional.
-              </p>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <Link
-                  href="/booking"
-                  className="inline-flex items-center gap-2.5 px-6 py-3 bg-white text-black text-xs font-mono tracking-wider rounded-full hover:bg-[#EAEFFF] transition-colors duration-200"
-                >
-                  Book a Free Call
-                  <span className="text-black/40">→</span>
+          {/* CTA */}
+          <div className="mt-20 p-8 md:p-12 rounded-[24px] text-center" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+            <h3 className="text-2xl md:text-3xl font-display tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
+              Have a project in mind?
+            </h3>
+            <p className="text-sm mb-8 max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
+              From landing pages to full SaaS platforms — let&apos;s build something exceptional.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/booking"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
+                style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
+              >
+                Book a Free Call
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </Link>
+              {relatedLinks.map((rs) => (
+                <Link key={rs.href} href={rs.href} className="text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
+                  {rs.label} →
                 </Link>
-                {relatedLinks.map((rs) => (
-                  <Link
-                    key={rs.href}
-                    href={rs.href}
-                    className="inline-flex items-center gap-2 text-white/18 hover:text-white/45 text-xs font-mono tracking-wider transition-colors duration-200 group"
-                  >
-                    {rs.label}
-                    <span className="group-hover:translate-x-0.5 transition-transform duration-200">
-                      →
-                    </span>
-                  </Link>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* ── Back Link ── */}
-          <div className="mt-14 pt-8 border-t border-white/[0.05]">
-            <Link
-              href="/blog"
-              className="group inline-flex items-center gap-2 text-white/12 hover:text-white/35 text-[11px] font-mono tracking-wider transition-colors duration-200"
-            >
-              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
-                ←
-              </span>
+          {/* Back link */}
+          <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
+            <Link href="/blog" className="group inline-flex items-center gap-2 text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
+              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               Back to all articles
             </Link>
           </div>

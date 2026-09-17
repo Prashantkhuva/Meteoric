@@ -1,0 +1,75 @@
+# AI Image Prompts — Meteoric Blog Posts
+
+Generate each at **800x500px**, dark theme, save as `.webp` to `public/images/blog/`
+
+---
+
+## 1. blog-mongodb-schema.webp
+**Post:** MongoDB Schema Design for SaaS Billing
+
+> Dark abstract visualization of interconnected database schemas floating in 3D space, glowing white document nodes connected by thin light lines, MongoDB leaf icon subtly embedded, deep black background, minimal tech aesthetic, no text, 4K cinematic
+
+## 2. blog-saas-mvp.webp
+**Post:** How to Build a SaaS MVP: Step-by-Step Guide
+
+> Dark minimalist isometric illustration of a rocket launching from a laptop screen, surrounded by floating UI wireframe cards and checklist items, white and gray tones on pure black background, clean startup aesthetic, no text
+
+## 3. blog-mongodb-vs-postgres.webp
+**Post:** MongoDB vs PostgreSQL for SaaS
+
+> Split composition abstract art, left side flowing JSON document shapes, right side rigid table grid structures, both rendered as glowing white wireframes on deep black background, representing database comparison, no text
+
+## 4. blog-gsap-vs-framer.webp
+**Post:** GSAP vs Framer Motion: Production Animation Guide
+
+> Abstract motion trails and bezier curves floating in dark space, overlapping wave forms and keyframe dots connected by flowing lines, representing web animations, white and light gray on pure black, no text
+
+## 5. blog-supabase-vs-firebase.webp
+**Post:** Supabase vs Firebase 2026 Comparison
+
+> Two abstract glowing platforms facing each other in dark space, one with lightning bolt motif, other with database cylinder motif, connected by data streams, white wireframe style on black background, no text
+
+## 6. blog-web-agency.webp
+**Post:** What Is a Web Development Agency?
+
+> Dark cinematic workspace scene, multiple floating holographic screens showing website layouts and code, modern desk setup barely visible in shadow, white glow accents on black, no text
+
+## 7. blog-tech-stack.webp
+**Post:** The Meteoric Guide to Choosing Your Tech Stack
+
+> Abstract constellation of technology logos and icons connected by flowing light paths, forming a decision tree pattern, white nodes on deep black space background, clean minimalist tech map, no text
+
+## 8. blog-aeo.webp
+**Post:** How to Implement AEO for Your SaaS
+
+> Abstract visualization of AI search rays converging on a central glowing answer node, surrounded by structured data blocks and schema cards floating in dark space, white wireframe aesthetic, no text
+
+## 9. blog-website-issues.webp
+**Post:** Why Visitors Leave Your Website in 2026
+
+> Dark abstract scene of fragmented web page elements shattering and scattering into space, broken UI cards and loading spinners floating apart, representing user frustration, white fragments on black, no text
+
+## 10. blog-landing-page.webp
+**Post:** High-Converting Landing Page Structure for SaaS
+
+> Layered wireframe landing page sections fanning out in 3D space, hero section at front fading to CTA at back, each layer glowing white edge on deep black, clean architectural blueprint feel, no text
+
+## 11. blog-long-tail-seo.webp
+**Post:** Long-Tail SEO Strategy: How Funded Startups Can Outrank Giants
+
+> Abstract visualization of a small bright node rising above a field of large dim nodes, representing long-tail keyword ranking, connected by search rays, white and gray on black, no text
+
+## 12. blog-ai-search.webp
+**Post:** AI Search Optimization: How to Get Cited by ChatGPT
+
+> Abstract AI brain neural network with citation beams radiating outward to floating content cards, structured data blocks orbiting, white wireframe on deep black, representing AI citation flow, no text
+
+## 13. blog-startup-seo.webp
+**Post:** Startup SEO on a Budget: What to Do First
+
+> Minimalist dark scene of a small seedling growing from a laptop keyboard, surrounded by floating SEO metric cards and growth arrows, organic tech growth metaphor, white and green-tint on black, no text
+
+---
+
+**Total: 13 blog images**
+**Homepage images already exist:** hero-bg.webp, service-web.webp, service-saas.webp, service-mobile.webp, stats-bg.webp, cta-bg.webp
