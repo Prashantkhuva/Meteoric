@@ -1,18 +1,9 @@
-import {
-  useState,
-  lazy,
-  Suspense,
-  useRef,
-  useEffect,
-  useCallback,
-} from "react";
+import { useState, lazy, Suspense, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { gsap } from "@/lib/gsap-setup";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
-import StaggerLink from "./StaggerLink";
-import StaggerText from "./StaggerText";
 import { trackEvent } from "@/lib/analytics/gtag";
 import ThemeToggle from "./ThemeToggle";
 
@@ -26,17 +17,14 @@ const navItems = [
   { label: "Case Studies", to: "/case-studies" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ isHome = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const overlayRef = useRef(null);
   const linksRef = useRef(null);
   const ctaRef = useRef(null);
   const isAnimating = useRef(false);
-  const navRef = useRef(null);
-  const pillRef = useRef(null);
-  const navItemRefs = useRef([]);
-  const activeIndex = useRef(-1);
 
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
@@ -48,30 +36,12 @@ export default function Navbar() {
     trackEvent("booking_click", { button_location: buttonLocation });
   }, []);
 
-  const movePill = useCallback((index) => {
-    const nav = navRef.current;
-    const pill = pillRef.current;
-    const item = navItemRefs.current[index];
-    if (!nav || !pill || !item) return;
-
-    const navRect = nav.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-
-    gsap.to(pill, {
-      x: itemRect.left - navRect.left,
-      width: itemRect.width,
-      opacity: 1,
-      duration: 0.35,
-      ease: "power3.out",
-    });
-    activeIndex.current = index;
-  }, []);
-
-  const hidePill = useCallback(() => {
-    const pill = pillRef.current;
-    if (!pill) return;
-    gsap.to(pill, { opacity: 0, duration: 0.25, ease: "power2.in" });
-    activeIndex.current = -1;
+  // Scroll listener — toggle compact nav
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const closeMenu = () => {
@@ -195,76 +165,45 @@ export default function Navbar() {
     unlockScroll();
   }, [isMenuOpen]);
 
+  const linkColor = isHome ? "var(--hero-text)" : "var(--text-primary)";
+
   return (
     <>
-      <header className="fixed md:static top-0 left-0 w-full max-w-full z-50 py-4 md:pt-6 bg-transparent overflow-hidden">
-        <div className="flex items-center justify-between w-full max-w-7xl mx-auto px-6 md:px-[72px]">
-          {/* Logo */}
+      {/* ═══════ STATE 1: Top nav — transparent, overlays hero ═══════ */}
+      <header
+        className="relative z-20 shrink-0"
+        style={{
+          opacity: scrolled ? 0 : 1,
+          pointerEvents: scrolled ? "none" : "auto",
+          transition: "opacity 0.2s ease",
+        }}
+      >
+        <div className="mx-auto max-w-6xl flex items-center justify-between lg:h-28 lg:items-start lg:py-10 px-3 py-3.5 sm:px-8 sm:py-6 md:px-6 xl:px-8">
           <Link
             href="/"
             data-no-magnetic
-            className="flex shrink-0 items-center cursor-pointer"
+            className="flex shrink-0 items-center gap-2.5"
           >
-            <Logo />
+            <Logo light={!isHome} />
           </Link>
 
-          {/* Desktop Nav */}
-          <nav
-            ref={navRef}
-            className="hidden md:flex items-center relative"
-            style={{
-              background: "var(--nav-bg)",
-              borderRadius: 100,
-              boxShadow:
-                "inset 0 0 0 1px var(--border-color), 0 0 0 1px rgba(128,128,128,0.02)",
-              gap: 4,
-              padding: "6px",
-              height: 42,
-              backdropFilter: "blur(20px) saturate(1.2)",
-            }}
-          >
-            <span
-              ref={pillRef}
-              className="absolute top-1/2 -translate-y-1/2 left-0 h-[calc(100%-12px)] rounded-full pointer-events-none"
-              style={{
-                background: "var(--accent-glow)",
-                boxShadow: "0 0 12px var(--accent-glow)",
-                opacity: 0,
-                willChange: "transform, width",
-              }}
-            />
-            {navItems.map((item, i) => (
-              <StaggerLink
+          {/* Desktop Nav — centered links */}
+          <div className="absolute top-10 left-1/2 hidden h-[38px] -translate-x-1/2 items-center gap-8 text-[13px] font-medium lg:flex">
+            {navItems.map((item) => (
+              <Link
                 key={item.to}
                 href={item.to}
-                ref={(el) => {
-                  navItemRefs.current[i] = el;
-                }}
-                onClick={() => setIsMenuOpen(false)}
-                hoverColor="var(--text-primary)"
-                onMouseEnter={() => movePill(i)}
-                onMouseLeave={hidePill}
-                style={{
-                  fontSize: 12,
-                  fontWeight: 400,
-                  color: "var(--text-muted)",
-                  letterSpacing: "normal",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                  padding: "8px 20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="transition-opacity hover:opacity-70"
+                style={{ color: linkColor }}
               >
                 {item.label}
-              </StaggerLink>
+              </Link>
             ))}
-          </nav>
+          </div>
 
-          {/* Right side: Theme + CTA + Mobile toggle */}
-          <div className="flex items-center gap-3">
-            <div className="hidden md:block">
+          {/* Right: Theme + CTA + Mobile toggle */}
+          <div className="flex items-center gap-2 lg:py-[3px]">
+            <div className="hidden lg:block">
               <ThemeToggle />
             </div>
 
@@ -274,133 +213,193 @@ export default function Navbar() {
                 trackBookingClick("/navbar");
                 openCal();
               }}
-              className="hidden md:inline-flex items-center cursor-pointer flip-btn"
+              className="hidden lg:inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group"
+              style={
+                isHome
+                  ? { background: "var(--hero-text)", color: "var(--hero-bg)" }
+                  : { background: "var(--text-primary)", color: "var(--bg-primary)" }
+              }
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              <StaggerText
-                hoverColor="var(--accent-text)"
-                style={{ fontSize: 14, fontWeight: 400, color: "var(--accent-text)" }}
+              Book a call
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 12 12"
+                className="size-2 -rotate-90 transition-transform duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-px motion-reduce:transition-none motion-reduce:transform-none"
               >
-                {"Book a Free Call"}
-              </StaggerText>
+                <path
+                  fill="currentColor"
+                  d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z"
+                />
+              </svg>
             </button>
 
+            {/* Mobile hamburger */}
             <button
               type="button"
               data-no-magnetic
-              aria-label={
-                isMenuOpen ? "Close navigation menu" : "Open navigation menu"
-              }
+              aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMenuOpen}
               onClick={() => (isMenuOpen ? closeMenu() : setIsMenuOpen(true))}
-              className="md:hidden inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px]"
-              style={{ background: "transparent", borderRadius: 8 }}
+              className="lg:hidden -mr-2.5 flex size-11 shrink-0 items-center justify-center rounded-full outline-none"
             >
-              <span
-                className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
-                style={{
-                  backgroundColor: "var(--text-primary)",
-                  transform: isMenuOpen
-                    ? "translateY(3.25px) rotate(45deg)"
-                    : "none",
-                }}
-              />
-              <span
-                className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
-                style={{
-                  backgroundColor: "var(--text-primary)",
-                  transform: isMenuOpen
-                    ? "translateY(-3.25px) rotate(-45deg)"
-                    : "none",
-                }}
-              />
+              <span className="flex flex-col items-center justify-center gap-[5px]">
+                <span
+                  className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: linkColor,
+                    transform: isMenuOpen ? "translateY(3.25px) rotate(45deg)" : "none",
+                  }}
+                />
+                <span
+                  className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: linkColor,
+                    transform: isMenuOpen ? "translateY(-3.25px) rotate(-45deg)" : "none",
+                  }}
+                />
+              </span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile fullscreen overlay — portaled to body to escape GSAP transform containing block */}
-      {createPortal(
+      {/* ═══════ STATE 2: Compact pill nav — fixed, centered, after scroll ═══════ */}
       <div
-        ref={overlayRef}
-        tabIndex={-1}
-        className="md:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center"
+        className="fixed top-4 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium"
         style={{
-          display: "none",
-          background: "var(--bg-primary)",
-          backdropFilter: "blur(40px) saturate(1.2)",
+          opacity: scrolled ? 1 : 0,
+          pointerEvents: scrolled ? "auto" : "none",
+          transform: `translateY(${scrolled ? "0" : "-12px"})`,
+          transition: "opacity 0.3s ease, transform 0.3s ease",
         }}
       >
-        {/* Close button */}
-        <button
-          data-no-magnetic
-          onClick={closeMenu}
-          className="absolute top-5 right-6 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200"
+        <div
+          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium min-w-[700px]"
           style={{
-            borderColor: "var(--border-color)",
-            color: "var(--text-muted)",
-            background: "var(--accent-glow)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--border-color)",
+            backdropFilter: "blur(20px)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
           }}
-          aria-label="Close menu"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 1L13 13M13 1L1 13"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
+        <Link
+          href="/"
+          data-no-magnetic
+          className="flex shrink-0 items-center pl-3"
+        >
+          <Logo light />
+        </Link>
 
-        {/* Nav links */}
-        <div ref={linksRef} className="flex flex-col items-center gap-1">
+        <div className="flex items-center gap-5">
           {navItems.map((item) => (
             <Link
               key={item.to}
               href={item.to}
-              onClick={closeMenu}
-              data-no-magnetic
-              className="group relative text-[28px] sm:text-[32px] font-display px-8 py-3.5 rounded-2xl transition-all duration-200"
-              style={{ color: "var(--text-muted)" }}
+              className="transition-opacity hover:opacity-70 whitespace-nowrap"
+              style={{ color: "var(--text-primary)" }}
             >
-              <span className="relative z-10">{item.label}</span>
-              <span
-                className="absolute left-8 right-8 bottom-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-                style={{ background: "var(--border-color)" }}
-              />
+              {item.label}
             </Link>
           ))}
         </div>
 
-        {/* Divider */}
-        <div className="w-12 h-px my-8" style={{ background: "var(--border-color)" }} />
-
-        {/* CTA */}
-        <div ref={ctaRef}>
+        <div className="flex items-center gap-1.5 pl-1">
+          <ThemeToggle />
           <button
             data-no-magnetic
             onClick={() => {
-              trackBookingClick("/navbar-mobile");
-              closeMenu();
+              trackBookingClick("/navbar-pill");
               openCal();
             }}
-            className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-4 text-[13px] font-semibold shadow-none"
             style={{
-              background: "var(--accent)",
-              color: "var(--accent-text)",
+              background: "var(--text-primary)",
+              color: "var(--bg-primary)",
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            Book a Free Call
+            Book a call
           </button>
         </div>
-      </div>,
-      document.body,
+        </div>
+      </div>
+
+      {/* ═══════ Mobile fullscreen overlay ═══════ */}
+      {createPortal(
+        <div
+          ref={overlayRef}
+          tabIndex={-1}
+          className="lg:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center"
+          style={{
+            display: "none",
+            background: "var(--bg-primary)",
+            backdropFilter: "blur(40px) saturate(1.2)",
+          }}
+        >
+          <button
+            data-no-magnetic
+            onClick={closeMenu}
+            className="absolute top-5 right-6 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200"
+            style={{
+              borderColor: "var(--border-color)",
+              color: "var(--text-muted)",
+              background: "var(--accent-glow)",
+            }}
+            aria-label="Close menu"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+
+          <div ref={linksRef} className="flex flex-col items-center gap-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                href={item.to}
+                onClick={closeMenu}
+                data-no-magnetic
+                className="group relative text-[28px] sm:text-[32px] font-display px-8 py-3.5 rounded-2xl transition-all duration-200"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <span className="relative z-10">{item.label}</span>
+                <span
+                  className="absolute left-8 right-8 bottom-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  style={{ background: "var(--border-color)" }}
+                />
+              </Link>
+            ))}
+          </div>
+
+          <div className="my-4">
+            <ThemeToggle />
+          </div>
+
+          <div className="w-12 h-px my-4" style={{ background: "var(--border-color)" }} />
+
+          <div ref={ctaRef}>
+            <button
+              data-no-magnetic
+              onClick={() => {
+                trackBookingClick("/navbar-mobile");
+                closeMenu();
+                openCal();
+              }}
+              className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                background: "var(--accent)",
+                color: "var(--accent-text)",
+              }}
+            >
+              Book a Free Call
+            </button>
+          </div>
+        </div>,
+        document.body,
       )}
 
       <Suspense fallback={null}>

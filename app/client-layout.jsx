@@ -83,8 +83,16 @@ export default function ClientLayout({ children }) {
       <Preloader onDone={() => setPreloaderDone(true)} />
       {!isAdmin && <SmoothScroll />}
       {!isAdmin && preloaderDone && (
-        <div ref={navbarRef} style={{ opacity: 0 }} className="relative z-50">
-          <Navbar />
+        <div
+          ref={navbarRef}
+          style={{ opacity: 0 }}
+          className={
+            pathname === "/"
+              ? "absolute top-0 left-0 right-0 z-50"
+              : "relative z-50"
+          }
+        >
+          <Navbar isHome={pathname === "/"} />
         </div>
       )}
       {!isAdmin && preloaderDone && <MagneticCursor />}

@@ -93,7 +93,7 @@ export async function POST(request) {
     return fail("Invalid JSON body");
   }
 
-  const { type, issueType, title, description, version, patch, platform, osVersion } =
+  const { issueType, title, description, version, patch, platform, osVersion } =
     body || {};
 
   if (!title?.trim()) return fail("Missing title");
