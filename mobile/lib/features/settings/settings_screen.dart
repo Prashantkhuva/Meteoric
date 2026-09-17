@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/app_version.dart';
+import '../../core/biometric_service.dart';
+import '../../core/device_info.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -21,6 +23,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _editingProfile = false;
   bool _editingPassword = false;
   int _runtimePatch = AppVersion.patch;
+  bool _biometricEnabled = false;
+  bool _biometricAvailable = false;
 
   late final TextEditingController _name;
   late final TextEditingController _email;
@@ -41,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _email = TextEditingController(text: user?.email ?? '');
     _originalEmail = user?.email ?? '';
     _loadRole();
-    // Listen to shared update state so UI rebuilds when HomeShell triggers a check
+    _loadBiometric();
     UpdateState.instance.addListener(_onUpdateState);
     _loadRuntimePatch();
   }
@@ -69,6 +73,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final data = await AuthService.myRole;
     if (!mounted) return;
     setState(() => _role = data?['role'] ?? '');
+  }
+
+  Future<void> _loadBiometric() async {
+    final avail = await BiometricService.isAvailable;
+    final enabled = await BiometricService.isEnabled;
+    if (!mounted) return;
+    setState(() {
+      _biometricAvailable = avail;
+      _biometricEnabled = enabled;
+    });
+  }
+
+  Future<void> _toggleBiometric(bool value) async {
+    Haptic.tap();
+    final next = await BiometricService.toggle();
+    if (mounted) setState(() => _biometricEnabled = next);
   }
 
   void _snack(String msg, {bool error = false}) =>
@@ -343,20 +363,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: AppColors.card,
               border: Border.all(color: AppColors.border),
             ),
-            child: _expandableRow(
-              icon: Icons.lock_outline_rounded,
-              label: 'Password',
-              subtitle: 'Update your password',
-              expanded: _editingPassword,
-              onTap: () {
-                setState(() {
-                  _editingPassword = !_editingPassword;
-                  if (_editingPassword) {
-                    _editingProfile = false;
-                  }
-                });
-              },
-              child: _editingPassword ? _buildPasswordForm() : null,
+            child: Column(
+              children: [
+                _expandableRow(
+                  icon: Icons.lock_outline_rounded,
+                  label: 'Password',
+                  subtitle: 'Update your password',
+                  expanded: _editingPassword,
+                  onTap: () {
+                    setState(() {
+                      _editingPassword = !_editingPassword;
+                      if (_editingPassword) {
+                        _editingProfile = false;
+                      }
+                    });
+                  },
+                  child: _editingPassword ? _buildPasswordForm() : null,
+                ),
+                if (_biometricAvailable) ...[
+                  _divider(),
+                  _toggleRow(
+                    icon: Icons.fingerprint_rounded,
+                    label: 'Biometric Lock',
+                    subtitle: 'Require fingerprint / face to open app',
+                    value: _biometricEnabled,
+                    onChanged: _toggleBiometric,
+                  ),
+                ],
+              ],
             ),
           ),
 
@@ -372,11 +406,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             child: Column(
               children: [
-                _infoRow('Version', _runtimePatch > 0 ? '${AppVersion.version} (patch $_runtimePatch)' : AppVersion.display),
-                _divider(),
-                _infoRow('Build', 'Patch $_runtimePatch'),
+                _infoRow(
+                  'Version',
+                  _runtimePatch > 0
+                      ? '${AppVersion.version} (patch $_runtimePatch)'
+                      : AppVersion.display,
+                ),
                 _divider(),
                 _infoRow('Updated', AppVersion.updatedAt),
+                if (DeviceInfo.model != 'unknown') ...[
+                  _divider(),
+                  _infoRow('Device', DeviceInfo.model),
+                ],
               ],
             ),
           ),
@@ -678,6 +719,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     ),
   );
+
+  Widget _toggleRow({
+    required IconData icon,
+    required String label,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: (value ? AppColors.accent : AppColors.textFaint)
+                  .withValues(alpha: 0.06),
+              border: Border.all(
+                color: (value ? AppColors.accent : AppColors.textFaint)
+                    .withValues(alpha: 0.12),
+              ),
+            ),
+            child: Icon(
+              icon,
+              size: 16,
+              color: value ? AppColors.accent : AppColors.textMuted,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 11,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: AppColors.onAccent,
+            activeTrackColor: AppColors.accent,
+            inactiveTrackColor: AppColors.border,
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _expandableRow({
     required IconData icon,

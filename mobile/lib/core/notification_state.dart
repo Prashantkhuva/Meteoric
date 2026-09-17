@@ -21,6 +21,14 @@ class NotificationState extends ChangeNotifier {
 
   int get unread => _unread;
 
+  /// Set unread count directly (used by FCM push updates).
+  void setUnread(int count) {
+    if (_unread != count) {
+      _unread = count;
+      notifyListeners();
+    }
+  }
+
   /// Starts the 60-second polling loop. Safe to call multiple times —
   /// subsequent calls are no-ops.
   void startPolling() {

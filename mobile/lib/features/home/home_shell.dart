@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/biometric_service.dart';
+import '../../core/fcm_service.dart';
 import '../../core/notification_state.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
@@ -19,10 +21,11 @@ class HomeShell extends StatefulWidget {
   State<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends State<HomeShell> {
+class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   final _updater = UpdateState.instance;
   final _notif = NotificationState.instance;
   bool _apkDialogShown = false;
+  bool _biometricLocked = false;
 
   static const _tabs = [
     DashboardScreen(),
@@ -35,21 +38,42 @@ class _HomeShellState extends State<HomeShell> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _updater.addListener(_onUpdateState);
     _notif.addListener(_onUpdateState);
     _notif.startPolling();
-    // Check both Shorebird patches and APK updates on launch
     _updater.checkAll();
     _updater.addListener(_onForceUpgrade);
+    _checkBiometricOnResume();
+    FcmService.instance.init();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _updater.removeListener(_onForceUpgrade);
     _notif.stopPolling();
     _notif.removeListener(_onUpdateState);
     _updater.removeListener(_onUpdateState);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkBiometricOnResume();
+    }
+  }
+
+  Future<void> _checkBiometricOnResume() async {
+    if (!await BiometricService.isEnabled) return;
+    if (!await BiometricService.isAvailable) return;
+    final ok = await BiometricService.authenticate(reason: 'Unlock Meteoric Admin');
+    if (!ok && mounted) {
+      setState(() => _biometricLocked = true);
+    } else if (mounted) {
+      setState(() => _biometricLocked = false);
+    }
   }
 
   void _onUpdateState() {
@@ -85,13 +109,63 @@ class _HomeShellState extends State<HomeShell> {
       valueListenable: homeTab,
       builder: (context, index, _) {
         return Scaffold(
-          body: Column(
+          body: Stack(
             children: [
-              Expanded(
-                child: IndexedStack(index: index, children: _tabs),
+              Column(
+                children: [
+                  Expanded(
+                    child: IndexedStack(index: index, children: _tabs),
+                  ),
+                  if (_updater.showShorebirdBanner) _buildShorebirdBanner(),
+                ],
               ),
-              // Shorebird patch banner
-              if (_updater.showShorebirdBanner) _buildShorebirdBanner(),
+              if (_biometricLocked)
+                Container(
+                  color: AppColors.background,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.lock_outline_rounded,
+                          size: 48,
+                          color: AppColors.accent,
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'App Locked',
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Authenticate to continue',
+                          style: TextStyle(
+                            color: AppColors.textFaint,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        AccentButton(
+                          onPressed: () async {
+                            final ok = await BiometricService.authenticate(
+                              reason: 'Unlock Meteoric Admin',
+                            );
+                            if (ok && mounted) {
+                              setState(() => _biometricLocked = false);
+                            }
+                          },
+                          child: const Text('UNLOCK'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(

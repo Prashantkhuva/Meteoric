@@ -10,6 +10,7 @@ import '../bank_accounts/bank_accounts_screen.dart';
 import '../email/email_screen.dart';
 import '../users/users_screen.dart';
 import '../settings/settings_screen.dart';
+import '../linear/linear_issues_screen.dart';
 import 'report_issue_screen.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -42,6 +43,7 @@ class _MoreScreenState extends State<MoreScreen> {
     _Item('Bookings', Icons.event_outlined, BookingsScreen()),
     _Item('Bank Accounts', Icons.account_balance_outlined, BankAccountsScreen()),
     _Item('Email', Icons.mail_outline, EmailScreen()),
+    _Item('Issues', Icons.bug_report_outlined, LinearIssuesScreen()),
   ];
 
   @override

@@ -5,6 +5,7 @@ import '../../core/config.dart';
 import '../../core/constants.dart';
 import '../../core/formatters.dart';
 import '../../core/native.dart';
+import '../../core/razorpay_service.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
@@ -31,6 +32,33 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   void initState() {
     super.initState();
     _invoice = widget.invoice;
+    RazorpayService.instance.init(
+      onSuccess: _onPaymentSuccess,
+      onError: (msg) {
+        if (mounted) {
+          setState(() => _busy = false);
+          Toast.error(context, msg);
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    RazorpayService.instance.dispose();
+    super.dispose();
+  }
+
+  void _onPaymentSuccess() async {
+    await _reload();
+    if (mounted) {
+      setState(() {
+        _invoice = {..._invoice, 'status': 'paid'};
+        _changed = true;
+        _busy = false;
+      });
+      Toast.success(context, 'Payment received');
+    }
   }
 
   Map<String, dynamic>? get _client {
@@ -93,6 +121,25 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  void _payNow() {
+    if (!mounted) return;
+    setState(() => _busy = true);
+
+    final client = _client;
+    final total = (_invoice['total'] as num?) ?? _total;
+
+    RazorpayService.instance.pay(
+      context: context,
+      invoiceId: (_invoice['id'] as num).toInt(),
+      invoiceNumber: _invoice['invoice_number'] ?? '',
+      amount: total,
+      currency: _currency,
+      customerName: client?['name'] ?? '',
+      customerEmail: client?['email'],
+      customerPhone: client?['phone'],
+    );
   }
 
   Future<void> _resendReceipt() async {
@@ -332,7 +379,13 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               ),
             if (status == 'sent' || status == 'overdue') ...[
               const SizedBox(height: 12),
-              AccentButton(
+              if (_currency == 'INR')
+                AccentButton(
+                  onPressed: _busy ? null : _payNow,
+                  child: const Text('PAY NOW'),
+                ),
+              if (_currency == 'INR') const SizedBox(height: 8),
+              GhostButton(
                 onPressed: _busy ? null : _markPaid,
                 child: const Text('MARK PAID'),
               ),

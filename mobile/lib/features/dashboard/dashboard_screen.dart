@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/api_client.dart';
+import '../../core/data_cache.dart';
 import '../../core/formatters.dart';
 import '../../core/notification_state.dart';
 import '../../core/theme.dart';
@@ -58,11 +59,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     }
     try {
-      final res = await ApiClient.instance.overview();
+      final (cached, isStale) = await DataCache.instance.getOrFetch(
+        key: 'overview',
+        fetch: () => ApiClient.instance.overview(),
+        ttl: const Duration(minutes: 3),
+      );
       if (mounted) {
         setState(() {
-          _data = res;
+          _data = cached;
           _error = null;
+          _loading = false;
         });
       }
     } catch (err) {

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../../core/app_version.dart';
 import '../../core/config.dart';
+import '../../core/device_info.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 
@@ -62,7 +63,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         'version': AppVersion.version,
         'patch': AppVersion.patch,
         'platform': Theme.of(context).platform.toString().split('.').last,
-        'osVersion': 'unknown',
+        'osVersion': DeviceInfo.osVersion,
+        'model': DeviceInfo.model,
+        'sdk': DeviceInfo.sdkInt,
       };
 
       final res = await http.post(
@@ -282,7 +285,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 border: Border.all(color: AppColors.border),
               ),
               child: Text(
-                'v${AppVersion.version} (patch ${AppVersion.patch}) — device info is sent automatically',
+                'v${AppVersion.version} (patch ${AppVersion.patch}) — ${DeviceInfo.summary}',
                 style: const TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 11,

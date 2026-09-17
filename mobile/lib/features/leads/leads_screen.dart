@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
+import '../../core/data_cache.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -76,7 +77,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
       _error = null;
     });
     try {
-      final res = await ApiClient.instance.leadsList({
+      final params = {
         'page': _page,
         'pageSize': _pageSize,
         'search': _search.text.trim(),
@@ -84,13 +85,21 @@ class _LeadsScreenState extends State<LeadsScreen> {
         'score': _score,
         'source': _source,
         'sort': _sort,
-      });
+      };
+      final cacheKey = 'leads_${_page}_${_status}_${_score}_${_source}_${_sort}_${_search.text.trim()}';
+
+      final (cached, isStale) = await DataCache.instance.getOrFetch(
+        key: cacheKey,
+        fetch: () => ApiClient.instance.leadsList(params),
+        ttl: const Duration(minutes: 5),
+      );
+
       if (mounted) {
         setState(() {
-          _leads = ((res['data'] as List?) ?? const [])
+          _leads = ((cached?['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
-          _total = (res['total'] as num?)?.toInt() ?? 0;
+          _total = (cached?['total'] as num?)?.toInt() ?? 0;
           _selected.clear();
           _loading = false;
         });

@@ -5,6 +5,7 @@ import {
   updateUserRole,
   deleteUser,
   getUsersWithRoles,
+  onboardUserComplete,
 } from "../../../admin/actions";
 
 export async function POST(request) {
@@ -45,6 +46,11 @@ export async function POST(request) {
       case "delete": {
         const result = await deleteUser(payload.userId);
         return Response.json(result);
+      }
+      case "onboard-complete": {
+        const result = await onboardUserComplete(auth.user.id);
+        if (result.error) return fail(result.error);
+        return Response.json({ success: true });
       }
       default:
         return fail(`Unknown action: ${action}`);

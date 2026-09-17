@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -6,16 +7,22 @@ import 'core/theme.dart';
 import 'core/supabase.dart';
 import 'core/notification_service.dart';
 import 'core/error_reporter.dart';
+import 'core/device_info.dart';
+import 'core/data_cache.dart';
 import 'features/auth/login_screen.dart';
 import 'features/home/home_shell.dart';
+import 'features/onboarding/onboarding_screen.dart';
 
 final _navKey = GlobalKey<NavigatorState>();
 final _routeObserver = ErrorRouteObserver();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   ErrorReporter.init();
   await AuthService.init();
+  await DeviceInfo.init();
+  await DataCache.instance.init();
   await NotificationService.instance.init();
   runApp(const MeteoricAdminApp());
 }
@@ -78,6 +85,14 @@ class _AuthGateState extends State<AuthGate> {
         ),
       );
     }
-    return AuthService.isSignedIn ? const HomeShell() : const LoginScreen();
+    if (!AuthService.isSignedIn) return const LoginScreen();
+
+    final user = AuthService.user;
+    final onboarded = user?.userMetadata?['onboarding_completed'] ?? true;
+    final isSuperadmin =
+        user?.email == 'work.prashantkhuva@gmail.com';
+
+    if (!onboarded && !isSuperadmin) return const OnboardingScreen();
+    return const HomeShell();
   }
 }

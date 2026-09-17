@@ -377,4 +377,57 @@ class ApiClient {
 
   Future<Map<String, dynamic>> usersDelete(Map<String, dynamic> data) =>
       _post('/api/admin/users', {'action': 'delete', ...data});
+
+  // ── Linear Issues ──────────────────────────────────────────────
+  Future<Map<String, dynamic>> linearIssues({
+    String status = 'all',
+    String assignee = 'all',
+    String search = '',
+    int limit = 50,
+    String? after,
+  }) async {
+    final params = <String, String>{
+      'status': status,
+      'assignee': assignee,
+      'search': search,
+      'limit': '$limit',
+    };
+    if (after != null) params['after'] = after;
+    final qs = params.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    return _get('/api/admin/linear-issues?$qs');
+  }
+
+  Future<Map<String, dynamic>> linearIssueUpdate(Map<String, dynamic> data) =>
+      _post('/api/admin/linear-issues', data);
+
+  // ── Onboarding ─────────────────────────────────────────────────
+  Future<Map<String, dynamic>> onboardComplete() =>
+      _post('/api/admin/users', {'action': 'onboard-complete'});
+
+  // ── Razorpay ───────────────────────────────────────────────────
+  Future<Map<String, dynamic>> razorpayCreateOrder({
+    required num amount,
+    required String currency,
+    required String receipt,
+  }) =>
+      _post('/api/razorpay/create-order', {
+        'amount': amount,
+        'currency': currency,
+        'receipt': receipt,
+      });
+
+  Future<Map<String, dynamic>> razorpayVerifyPayment({
+    required String orderId,
+    required String paymentId,
+    required String signature,
+    int? invoiceId,
+  }) =>
+      _post('/api/razorpay/verify-payment', {
+        'razorpay_order_id': orderId,
+        'razorpay_payment_id': paymentId,
+        'razorpay_signature': signature,
+        'invoice_id': invoiceId,
+      });
 }
