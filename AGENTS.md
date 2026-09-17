@@ -160,13 +160,13 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 1. `flutter analyze` — zero issues
 2. Update `app_version.dart` (version/patch/build + updatedAt)
 3. If new release: bump `pubspec.yaml` version too
-4. Shorebird: `shorebird patch android` (or `shorebird release android` for new APK)
-   - **CRITICAL:** patches are release-specific. Always check `shorebird releases list` to confirm the CURRENT release version, then patch THAT release. Wrong target = device never sees patch.
-5. If new APK: `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]`
-6. Verify `latest.json` updated in Supabase Storage
-7. Verify `https://app.withmeteoric.com` redirects to new APK
-8. Test: install APK → check Settings shows correct version → trigger update banner if applicable
-9. Commit + push to `main`
+4. Build: `flutter build apk --release --no-tree-shake-icons`
+5. **DO NOT use `jarsigner`** — Gradle already signs with v2/v3. jarsigner strips v2, causing "cannot install" on Android 15+.
+6. If new APK: `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]`
+7. Verify `latest.json` updated in Supabase Storage
+8. Verify `https://app.withmeteoric.com` redirects to new APK
+9. Test: install APK → check Settings shows correct version → trigger update banner if applicable
+10. Commit + push to `main`
 - **In-app updater (0.4.0+):** app polls `latest.json` in public Supabase Storage bucket `app-releases` on launch; if remote build > local, shows an update banner → downloads APK (from GitHub Releases asset) with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES). Ship flow: `shorebird release android` → `shorebird releases get-apks --release-version X -o build/app/outputs/flutter-apk` → `node scripts/upload-app-release.mjs <apk> <version> <build> [notes]` (uploads APK to public repo Prashantkhuva/meteoric-app-releases as release asset + updates Supabase manifest; Supabase free tier caps uploads at 50MB so APK must live on GitHub). User still needs ONE manual install of 0.4.0+5 to bootstrap the updater.
 - **Download link (`app.withmeteoric.com`):** Cloudflare Worker at `workers/app-download/` that fetches `latest.json` from Supabase and 302 redirects to the GitHub APK URL. Always serves latest version. Deploy: `cd workers/app-download && npx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN` env var). Custom domain configured via Cloudflare dashboard. **On every mobile app release**, the worker picks up the new URL automatically from `latest.json` — no worker code changes needed. Only update worker code if the manifest structure changes.
 - **Verification:** `flutter analyze` + `flutter build web --release`
