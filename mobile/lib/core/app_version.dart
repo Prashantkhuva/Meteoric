@@ -9,7 +9,7 @@ import 'package:shorebird_code_push/shorebird_code_push.dart';
 class AppVersion {
   static const String version = '0.17.0+1';
   static const int patch = 0;
-  static const String updatedAt = '17 Sep 2026 · 8:10 PM';
+  static const String updatedAt = '17 Sep 2026 · 8:53 PM';
 
   static final _updater = ShorebirdUpdater();
 
