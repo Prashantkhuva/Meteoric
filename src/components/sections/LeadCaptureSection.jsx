@@ -57,7 +57,7 @@ export default function LeadCaptureSection() {
       id="contact"
       ref={sectionRef}
       className="relative py-24 sm:py-28 lg:py-32 overflow-hidden scroll-mt-24"
-      style={{ background: "var(--bg-primary)" }}
+      style={{ background: "var(--hero-bg)" }}
     >
       {/* Spacecraft background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -66,17 +66,17 @@ export default function LeadCaptureSection() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--bg-primary) 0%, transparent 20%, transparent 80%, var(--bg-primary) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--hero-bg) 0%, transparent 20%, transparent 80%, var(--hero-bg) 100%)" }} />
       </div>
 
       <div
         ref={contentRef}
         className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center"
       >
-        <h2 ref={headingRef} className="text-3xl md:text-5xl font-display tracking-tight leading-[1.05] mb-4" style={{ color: "var(--text-primary)" }}>
+        <h2 ref={headingRef} className="text-3xl md:text-5xl font-display tracking-tight leading-[1.05] mb-4" style={{ color: "var(--hero-text)" }}>
           Let&apos;s ship your next product
         </h2>
-        <p className="text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto" style={{ color: "var(--hero-text-secondary)" }}>
           Book a free strategy call to discuss your project,
           timeline, and how we can help.
         </p>

@@ -83,7 +83,7 @@ function Hero() {
     <section
       id="home"
       className="relative min-h-screen w-full overflow-hidden flex items-center"
-      style={{ background: "var(--bg-primary)" }}
+      style={{ background: "var(--hero-bg)" }}
     >
       {/* Hero background image */}
       <div className="absolute inset-0 pointer-events-none">
@@ -92,8 +92,8 @@ function Hero() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, var(--bg-primary) 0%, transparent 40%, transparent 60%, var(--bg-primary) 100%)" }} />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--bg-primary) 0%, transparent 15%, transparent 85%, var(--bg-primary) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, var(--hero-bg) 0%, transparent 40%, transparent 60%, var(--hero-bg) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--hero-bg) 0%, transparent 15%, transparent 85%, var(--hero-bg) 100%)" }} />
       </div>
 
       <GridLines />
@@ -103,19 +103,19 @@ function Hero() {
           {/* Left: Text content */}
           <div ref={containerRef}>
             {/* Status badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl mb-6" style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(4px)", border: "1px solid var(--border-color)" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl mb-6" style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(4px)", border: "1px solid var(--hero-border)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>Currently accepting new projects</span>
+              <span className="text-xs font-medium" style={{ color: "var(--hero-text-muted)" }}>Currently accepting new projects</span>
             </div>
 
             <h1
               className="font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight mb-8"
-              style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
+              style={{ color: "var(--hero-text)", letterSpacing: "-0.02em" }}
             >
               <span ref={mainTextRef} className="block">
                 Ship Fast.
               </span>
-              <span ref={mutedTextRef} className="block font-secondary-italic" style={{ color: "var(--text-secondary)" }}>
+              <span ref={mutedTextRef} className="block font-secondary-italic" style={{ color: "var(--hero-text-secondary)" }}>
                 Ship Right. Ship Meteoric.
               </span>
             </h1>
@@ -123,7 +123,7 @@ function Hero() {
             <div
               ref={subtextRef}
               className="max-w-md text-base md:text-lg leading-relaxed mb-8"
-              style={{ color: "var(--text-secondary)" }}
+              style={{ color: "var(--hero-text-secondary)" }}
             >
               A software development agency that partners with founders
               to design, develop, and launch modern websites and SaaS products that
@@ -141,7 +141,7 @@ function Hero() {
                   openCal();
                 }}
                 className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
-                style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
+                style={{ background: "var(--hero-text)", color: "var(--hero-bg)" }}
               >
                 Book a Free Strategy Call
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -150,7 +150,7 @@ function Hero() {
               <Link
                 href="/#process"
                 className="group relative inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300"
-                style={{ background: "rgba(255,255,255,0.08)", color: "var(--text-primary)", backdropFilter: "blur(3px)" }}
+                style={{ background: "rgba(255,255,255,0.08)", color: "var(--hero-text)", backdropFilter: "blur(3px)" }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.14)"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
               >

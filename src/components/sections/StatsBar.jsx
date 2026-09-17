@@ -58,7 +58,7 @@ export default function StatsBar() {
   }, [inView]);
 
   return (
-    <section ref={ref} className="relative py-20 sm:py-28 overflow-hidden" style={{ background: "var(--bg-primary)" }}>
+    <section ref={ref} className="relative py-20 sm:py-28 overflow-hidden" style={{ background: "var(--hero-bg)" }}>
       {/* Earth background */}
       <div className="absolute inset-0 pointer-events-none">
         <img
@@ -66,7 +66,7 @@ export default function StatsBar() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-30"
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--bg-primary) 0%, transparent 20%, transparent 80%, var(--bg-primary) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--hero-bg) 0%, transparent 20%, transparent 80%, var(--hero-bg) 100%)" }} />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
@@ -77,13 +77,13 @@ export default function StatsBar() {
               className="stat-item text-center opacity-0 flex items-center gap-8 md:gap-12"
             >
               {i > 0 && (
-                <div className="hidden md:block w-px h-[52px]" style={{ background: "rgba(255,255,255,0.16)" }} />
+                <div className="hidden md:block w-px h-[52px]" style={{ background: "var(--hero-border)" }} />
               )}
               <div>
-                <div className="text-[42px] md:text-[48px] font-display tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>
+                <div className="text-[42px] md:text-[48px] font-display tracking-tight mb-2" style={{ color: "var(--hero-text)" }}>
                   <AnimatedNumber target={stat.value} inView={inView} />
                 </div>
-                <p className="text-xs uppercase tracking-[0.15em]" style={{ color: "var(--text-muted)" }}>
+                <p className="text-xs uppercase tracking-[0.15em]" style={{ color: "var(--hero-text-muted)" }}>
                   {stat.label}
                 </p>
               </div>

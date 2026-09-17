@@ -196,7 +196,7 @@ export default function ProcessSection() {
                       <div
                         key={i}
                         className="rounded-full px-3 py-1.5 text-xs transition-colors duration-300 sm:px-4 sm:py-2 sm:text-sm"
-                        style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)", color: "var(--text-muted)" }}
+                        style={{ border: "1px solid var(--border-color)", background: "transparent", color: "var(--text-secondary)" }}
                       >
                         {tag}
                       </div>

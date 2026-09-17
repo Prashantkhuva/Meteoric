@@ -24,7 +24,7 @@ function ProjectCard({ project, index }) {
           className="w-full h-auto block max-w-[90%] mx-auto mt-6 rounded-[14px] transition-all duration-500 ease-out group-hover:scale-[1.02] gsap-proj-img shadow-[0_0_20px_rgba(0,0,0,0.2)]"
           loading="lazy"
         />
-        <div className="absolute top-4 right-4 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--border-color)" }}>
+        <div className="absolute top-4 right-4 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0" style={{ background: "var(--accent-dim)", border: "1px solid var(--border-color)" }}>
           <ArrowUpRight size={14} style={{ color: "var(--text-primary)" }} />
         </div>
       </div>

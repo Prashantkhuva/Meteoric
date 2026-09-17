@@ -21,7 +21,7 @@ const fallbackTestimonials = [];
 
 function ReviewCard({ t }) {
   return (
-    <div className="w-[400px] shrink-0 rounded-[24px] p-8 flex flex-col gap-5 mx-3" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+    <div className="w-[400px] shrink-0 rounded-[24px] p-8 flex flex-col gap-5 mx-3" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
@@ -240,7 +240,7 @@ export default function TestimonialsSection() {
           {/* ── CTA after social proof ── */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16">
             <ScrollReveal direction="up">
-              <div className="flex flex-col items-center text-center py-12 px-6 rounded-[24px]" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+              <div className="flex flex-col items-center text-center py-12 px-6 rounded-[24px]" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
                 <h3 className="text-2xl md:text-4xl font-display tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
                   Ready to build something{" "}
                   <span style={{ color: "var(--text-muted)" }}>great?</span>
