@@ -9,8 +9,7 @@ dependencies:
   dart_quill_delta: ^10.8.3
   device_info_plus: ^12.0.0
   file_picker: ^10.1.2
-  firebase_core: ^4.1.0
-  firebase_messaging: ^16.0.0
+
   fl_chart: ^1.2.0
   flutter:
     sdk: flutter

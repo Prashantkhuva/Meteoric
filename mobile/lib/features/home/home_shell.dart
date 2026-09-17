@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../core/biometric_service.dart';
-import '../../core/fcm_service.dart';
 import '../../core/notification_state.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
@@ -45,7 +44,6 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     _updater.checkAll();
     _updater.addListener(_onForceUpgrade);
     _checkBiometricOnResume();
-    FcmService.instance.init();
   }
 
   @override
