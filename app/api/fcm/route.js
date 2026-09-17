@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, fail } from "../admin/_lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 
 // POST /api/fcm — register or remove FCM token
