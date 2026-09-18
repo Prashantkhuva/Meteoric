@@ -36,9 +36,32 @@ export default function Navbar({ isHome = false }) {
     trackEvent("booking_click", { button_location: buttonLocation });
   }, []);
 
-  // Scroll listener — toggle compact nav
+  // Toggle compact nav when first section leaves viewport
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    const hero = document.getElementById("home");
+    if (hero) {
+      const observer = new IntersectionObserver(
+        ([entry]) => setScrolled(!entry.isIntersecting),
+        { threshold: 0 },
+      );
+      observer.observe(hero);
+      return () => observer.disconnect();
+    }
+    // Fallback: observe the first section inside main content
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      const firstSection = mainContent.querySelector("section, [class*='hero'], [class*='Hero']");
+      if (firstSection) {
+        const observer = new IntersectionObserver(
+          ([entry]) => setScrolled(!entry.isIntersecting),
+          { threshold: 0 },
+        );
+        observer.observe(firstSection);
+        return () => observer.disconnect();
+      }
+    }
+    // Last resort: fixed threshold
+    const onScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -169,9 +192,104 @@ export default function Navbar({ isHome = false }) {
 
   return (
     <>
-      {/* ═══════ STATE 1: Top nav — transparent, overlays hero ═══════ */}
+      {/* ═══════ STATE 1: Mobile top nav — transparent on hero ═══════ */}
       <header
-        className="relative z-20 shrink-0"
+        className="shrink-0 lg:hidden"
+        style={{
+          position: "relative",
+          zIndex: 20,
+          opacity: scrolled ? 0 : 1,
+          pointerEvents: scrolled ? "none" : "auto",
+          transition: "opacity 0.2s ease",
+        }}
+      >
+        <div className="mx-auto max-w-6xl flex items-center justify-between px-3 py-3.5 sm:px-8 sm:py-6 md:px-6 xl:px-8">
+          <Link
+            href="/"
+            data-no-magnetic
+            className="flex shrink-0 items-center gap-2.5"
+          >
+            <Logo light={!isHome || scrolled} />
+          </Link>
+
+          <div className="flex items-center gap-2">
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              data-no-magnetic
+              aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMenuOpen}
+              onClick={() => (isMenuOpen ? closeMenu() : setIsMenuOpen(true))}
+              className="flex size-11 shrink-0 items-center justify-center rounded-full outline-none"
+            >
+              <span className="flex flex-col items-center justify-center gap-[5px]">
+                <span
+                  className="block h-[1.5px] w-5 rounded-full transition-all duration-300 origin-center"
+                  style={{
+                    backgroundColor: (!isHome || scrolled) ? "var(--text-primary)" : "var(--hero-text)",
+                    transform: isMenuOpen ? "translateY(3.25px) rotate(45deg)" : "none",
+                  }}
+                />
+                <span
+                  className="block h-[1.5px] w-5 rounded-full transition-all duration-300 origin-center"
+                  style={{
+                    backgroundColor: (!isHome || scrolled) ? "var(--text-primary)" : "var(--hero-text)",
+                    transform: isMenuOpen ? "translateY(-3.25px) rotate(-45deg)" : "none",
+                  }}
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ═══════ Mobile scrolled pill — atomik style ═══════ */}
+      <div
+        className="fixed top-4 left-0 right-0 z-[60] lg:hidden px-4"
+        style={{
+          opacity: scrolled ? 1 : 0,
+          pointerEvents: scrolled ? "auto" : "none",
+          transform: `translateY(${scrolled ? "0" : "-12px"})`,
+          transition: "opacity 0.3s ease, transform 0.3s ease",
+        }}
+      >
+        <div
+          className="flex w-full items-center justify-between gap-4 rounded-full pl-4 pr-1.5 py-1.5"
+          style={{
+            background: "var(--card-bg)",
+            border: "1px solid var(--border-color)",
+            backdropFilter: "blur(20px)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+          }}
+        >
+          <Link
+            href="/"
+            data-no-magnetic
+            className="flex shrink-0 items-center gap-2"
+          >
+            <Logo light />
+          </Link>
+          <button
+            data-no-magnetic
+            onClick={() => {
+              trackBookingClick("/navbar-pill-mobile");
+              openCal();
+            }}
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-medium transition-all duration-200 hover:opacity-85"
+            style={{
+              background: "var(--text-primary)",
+              color: "var(--bg-primary)",
+            }}
+          >
+            Book a call
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop top nav — transparent, overlays hero */}
+      <header
+        className="relative z-20 shrink-0 hidden lg:block"
         style={{
           opacity: scrolled ? 0 : 1,
           pointerEvents: scrolled ? "none" : "auto",
@@ -235,33 +353,6 @@ export default function Navbar({ isHome = false }) {
                 />
               </svg>
             </button>
-
-            {/* Mobile hamburger */}
-            <button
-              type="button"
-              data-no-magnetic
-              aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-              aria-expanded={isMenuOpen}
-              onClick={() => (isMenuOpen ? closeMenu() : setIsMenuOpen(true))}
-              className="lg:hidden -mr-2.5 flex size-11 shrink-0 items-center justify-center rounded-full outline-none"
-            >
-              <span className="flex flex-col items-center justify-center gap-[5px]">
-                <span
-                  className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
-                  style={{
-                    backgroundColor: linkColor,
-                    transform: isMenuOpen ? "translateY(3.25px) rotate(45deg)" : "none",
-                  }}
-                />
-                <span
-                  className="block h-[1.5px] w-4 rounded-full transition-all duration-300"
-                  style={{
-                    backgroundColor: linkColor,
-                    transform: isMenuOpen ? "translateY(-3.25px) rotate(-45deg)" : "none",
-                  }}
-                />
-              </span>
-            </button>
           </div>
         </div>
       </header>
@@ -277,7 +368,7 @@ export default function Navbar({ isHome = false }) {
         }}
       >
         <div
-          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium min-w-[700px]"
+          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium max-w-[calc(100vw-2rem)]"
           style={{
             background: "var(--card-bg)",
             border: "1px solid var(--border-color)",
@@ -328,7 +419,7 @@ export default function Navbar({ isHome = false }) {
         </div>
       </div>
 
-      {/* ═══════ Mobile fullscreen overlay ═══════ */}
+      {/* ═══════ Mobile fullscreen overlay — atomik style ═══════ */}
       {createPortal(
         <div
           ref={overlayRef}
@@ -337,51 +428,40 @@ export default function Navbar({ isHome = false }) {
           style={{
             display: "none",
             background: "var(--bg-primary)",
-            backdropFilter: "blur(40px) saturate(1.2)",
           }}
         >
+          {/* Close button */}
           <button
             data-no-magnetic
             onClick={closeMenu}
-            className="absolute top-5 right-6 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200"
-            style={{
-              borderColor: "var(--border-color)",
-              color: "var(--text-muted)",
-              background: "var(--accent-glow)",
-            }}
+            className="absolute top-5 right-6 w-11 h-11 flex items-center justify-center rounded-full outline-none"
             aria-label="Close menu"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1L13 13M13 1L1 13" stroke="var(--text-primary)" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
 
-          <div ref={linksRef} className="flex flex-col items-center gap-1">
+          {/* Nav links */}
+          <div ref={linksRef} className="flex flex-col items-center gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 href={item.to}
                 onClick={closeMenu}
                 data-no-magnetic
-                className="group relative text-[28px] sm:text-[32px] font-display px-8 py-3.5 rounded-2xl transition-all duration-200"
+                className="text-[28px] sm:text-[32px] font-display px-6 py-3 transition-colors duration-200"
                 style={{ color: "var(--text-muted)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
               >
-                <span className="relative z-10">{item.label}</span>
-                <span
-                  className="absolute left-8 right-8 bottom-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-                  style={{ background: "var(--border-color)" }}
-                />
+                {item.label}
               </Link>
             ))}
           </div>
 
-          <div className="my-4">
-            <ThemeToggle />
-          </div>
-
-          <div className="w-12 h-px my-4" style={{ background: "var(--border-color)" }} />
-
-          <div ref={ctaRef}>
+          {/* CTA */}
+          <div ref={ctaRef} className="mt-10">
             <button
               data-no-magnetic
               onClick={() => {
@@ -389,13 +469,14 @@ export default function Navbar({ isHome = false }) {
                 closeMenu();
                 openCal();
               }}
-              className="rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-medium transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
               style={{
-                background: "var(--accent)",
-                color: "var(--accent-text)",
+                background: "var(--text-primary)",
+                color: "var(--bg-primary)",
               }}
             >
-              Book a Free Call
+              Book a call
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
           </div>
         </div>,

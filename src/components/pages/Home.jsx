@@ -11,9 +11,6 @@ const ProcessSection = dynamic(
 const TestimonialsSection = dynamic(
   () => import("@/components/sections/TestimonialsSection"),
 );
-const LeadCaptureSection = dynamic(
-  () => import("@/components/sections/LeadCaptureSection"),
-);
 
 export default function Home() {
   return (
@@ -25,7 +22,6 @@ export default function Home() {
       <Projects />
       <ProcessSection />
       <TestimonialsSection />
-      <LeadCaptureSection />
     </div>
   );
 }

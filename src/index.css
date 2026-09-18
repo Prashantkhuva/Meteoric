@@ -30,10 +30,10 @@
   --grain-opacity: 0.02;
   --hero-gradient: linear-gradient(180deg, #fafaf7 0%, #f5f5f3 100%);
   --section-alt: #f5f5f3;
-  --footer-bg: #f0f0ee;
-  --footer-text: rgba(28, 25, 23, 0.5);
-  --footer-muted: rgba(28, 25, 23, 0.25);
-  --footer-border: rgba(28, 25, 23, 0.1);
+  --footer-bg: #030303;
+  --footer-text: rgba(255, 255, 255, 0.5);
+  --footer-muted: rgba(255, 255, 255, 0.25);
+  --footer-border: rgba(255, 255, 255, 0.06);
   --hero-bg: #050505;
   --hero-text: #e5e5e0;
   --hero-text-secondary: rgba(255, 255, 255, 0.6);
@@ -64,10 +64,6 @@
   --grain-opacity: 0.035;
   --hero-gradient: linear-gradient(180deg, #050505 0%, #030303 100%);
   --section-alt: #0a0a0a;
-  --footer-bg: #030303;
-  --footer-text: rgba(255, 255, 255, 0.5);
-  --footer-muted: rgba(255, 255, 255, 0.25);
-  --footer-border: rgba(255, 255, 255, 0.06);
   --hero-bg: #050505;
   --hero-text: #e5e5e0;
   --hero-text-secondary: rgba(255, 255, 255, 0.6);
