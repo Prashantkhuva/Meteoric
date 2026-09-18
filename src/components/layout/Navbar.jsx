@@ -21,6 +21,7 @@ export default function Navbar({ isHome = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [nearFooter, setNearFooter] = useState(false);
   const overlayRef = useRef(null);
   const linksRef = useRef(null);
   const ctaRef = useRef(null);
@@ -65,6 +66,18 @@ export default function Navbar({ isHome = false }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Hide scrolled pill when footer enters viewport
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setNearFooter(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(footer);
+    return () => observer.disconnect();
   }, []);
 
   const closeMenu = () => {
@@ -247,9 +260,9 @@ export default function Navbar({ isHome = false }) {
       <div
         className="fixed top-4 left-0 right-0 z-[60] lg:hidden px-4"
         style={{
-          opacity: scrolled ? 1 : 0,
-          pointerEvents: scrolled ? "auto" : "none",
-          transform: `translateY(${scrolled ? "0" : "-12px"})`,
+          opacity: scrolled && !nearFooter ? 1 : 0,
+          pointerEvents: scrolled && !nearFooter ? "auto" : "none",
+          transform: `translateY(${scrolled && !nearFooter ? "0" : "-12px"})`,
           transition: "opacity 0.3s ease, transform 0.3s ease",
         }}
       >
@@ -361,9 +374,9 @@ export default function Navbar({ isHome = false }) {
       <div
         className="fixed top-4 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium"
         style={{
-          opacity: scrolled ? 1 : 0,
-          pointerEvents: scrolled ? "auto" : "none",
-          transform: `translateY(${scrolled ? "0" : "-12px"})`,
+          opacity: scrolled && !nearFooter ? 1 : 0,
+          pointerEvents: scrolled && !nearFooter ? "auto" : "none",
+          transform: `translateY(${scrolled && !nearFooter ? "0" : "-12px"})`,
           transition: "opacity 0.3s ease, transform 0.3s ease",
         }}
       >
