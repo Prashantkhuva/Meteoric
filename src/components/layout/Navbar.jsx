@@ -39,6 +39,7 @@ export default function Navbar({ isHome = false }) {
 
   // Toggle compact nav when first section leaves viewport
   useEffect(() => {
+    // Home page: observe the hero section
     const hero = document.getElementById("home");
     if (hero) {
       const observer = new IntersectionObserver(
@@ -48,20 +49,8 @@ export default function Navbar({ isHome = false }) {
       observer.observe(hero);
       return () => observer.disconnect();
     }
-    // Fallback: observe the first section inside main content
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      const firstSection = mainContent.querySelector("section, [class*='hero'], [class*='Hero']");
-      if (firstSection) {
-        const observer = new IntersectionObserver(
-          ([entry]) => setScrolled(!entry.isIntersecting),
-          { threshold: 0 },
-        );
-        observer.observe(firstSection);
-        return () => observer.disconnect();
-      }
-    }
-    // Last resort: fixed threshold
+
+    // Non-home pages: use scroll threshold so full nav shows at top
     const onScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
