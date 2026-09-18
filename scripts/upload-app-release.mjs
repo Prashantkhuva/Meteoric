@@ -60,15 +60,27 @@ try {
 }
 console.log(`GitHub release v${version} created`);
 
-// 2. Update manifest on Supabase
+// 2. Update manifest on Supabase (preserve highest_build to prevent
+//    INSTALL_FAILED_VERSION_DOWNGRADE on user devices)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,
   { auth: { persistSession: false } }
 );
+let highestBuild = Number(build);
+try {
+  const { data } = await supabase.storage
+    .from("app-releases")
+    .download("latest.json");
+  if (data) {
+    const prev = JSON.parse(await data.text());
+    highestBuild = Math.max(highestBuild, prev.highest_build || prev.build || 0);
+  }
+} catch {}
 const manifest = {
   version,
   build: Number(build),
+  highest_build: highestBuild,
   url: apkUrl,
   notes,
 };
@@ -80,5 +92,5 @@ const { error } = await supabase.storage
     upsert: true,
   });
 if (error) throw error;
-console.log(`Manifest updated → build ${build}`);
+console.log(`Manifest updated → build ${build} (highest: ${highestBuild})`);
 console.log(`Verify: curl ${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/app-releases/latest.json`);

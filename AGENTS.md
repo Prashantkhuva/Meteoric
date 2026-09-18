@@ -160,13 +160,14 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 
 **New release:**
 ```
-1. Edit mobile/lib/core/app_version.dart
-   - version: '0.17.0+1'    ← bump (reset to +1 on new semver)
+1. Run version guard (auto-bumps build number above all published builds)
+   node scripts/check-version.mjs
+   This fetches latest.json, reads highest_build, and writes max(remote, local) + 1
+   into both pubspec.yaml and app_version.dart.
+
+2. Edit mobile/lib/core/app_version.dart
    - patch: 0                ← reset to 0
    - updatedAt: '17 Sep 2026 · 5:19 PM'  ← real IST from webfetch https://time.is/IST
-
-2. Edit mobile/pubspec.yaml
-   - version: 0.17.0+1      ← MUST match app_version.dart exactly
 
 3. Build
    export PATH="$HOME/.shorebird/bin/cache/flutter/e16cf749ccaa38d7050335ff305def49b1c7c84c/bin:$PATH"
@@ -178,20 +179,25 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
    MUST show: "Verified using v2 scheme (APK Signature Scheme v2): true"
    MUST NOT show: jarsigner anywhere
 
-5. Upload
+5. VERIFY versionCode (MANDATORY — skip = INSTALL_FAILED_VERSION_DOWNGRADE)
+   "C:/Users/PRASHANT/AppData/Local/Android/sdk/build-tools/37.0.0/aapt.exe" dump badging mobile/build/app/outputs/flutter-apk/app-release.apk | grep versionCode
+   MUST show versionCode higher than highest_build from step 1.
+
+6. Upload
    cd ..
-   node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/app-release.apk 0.17.0 1 "Release notes here"
+   node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/app-release.apk 0.17.0 <N> "Release notes here"
+   (The script auto-sets highest_build = max(highest_build, N) in latest.json)
 
-6. Verify manifest
+7. Verify manifest
    curl -s "https://hlxjljckxthmtssqrzwo.supabase.co/storage/v1/object/public/app-releases/latest.json"
-   MUST show correct build number and URL
+   MUST show correct build number, highest_build, and URL
 
-7. Verify download page
+8. Verify download page
    curl -sI "https://app.withmeteoric.com/download"
    MUST show: Content-Type: application/vnd.android.package-archive
 
-8. git add mobile/pubspec.yaml mobile/lib/core/app_version.dart
-   git commit -m "chore(mobile): v0.17.0+1 — description"
+9. git add mobile/pubspec.yaml mobile/lib/core/app_version.dart
+   git commit -m "chore(mobile): v0.17.0+N — description"
    git push origin main
 ```
 
@@ -214,9 +220,11 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 2. **ALWAYS use `app-release.apk`** from build output — NOT `universal.apk` from Shorebird (unsigned).
 3. **ALWAYS `--no-tree-shake-icons`** — without it, MaterialIcons-Regular.otf shrinks to 15KB and icons vanish.
 4. **ALWAYS verify with `apksigner verify`** before upload — takes 1 second, prevents broken releases.
-5. **Version in `app_version.dart` MUST match `pubspec.yaml`** — updater parses build number from version string `X.Y.Z+N`.
-6. **`updatedAt` must be real IST** — fetch from `webfetch https://time.is/IST`, never system clock.
-7. **Work on `main` only** — other OpenCode session may be on different branch.
+5. **ALWAYS run `check-version.mjs` before build** — auto-bumps build number above all published builds. Prevents `INSTALL_FAILED_VERSION_DOWNGRADE`.
+6. **ALWAYS verify `versionCode` with `aapt dump badging`** after build — must be higher than `highest_build` in latest.json.
+7. **Version in `app_version.dart` MUST match `pubspec.yaml`** — updater parses build number from version string `X.Y.Z+N`.
+8. **`updatedAt` must be real IST** — fetch from `webfetch https://time.is/IST`, never system clock.
+9. **Work on `main` only** — other OpenCode session may be on different branch.
 
 **In-app updater:** app polls `latest.json` in Supabase Storage bucket `app-releases` on launch; if remote build > local, shows update banner → downloads APK from GitHub Releases with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES).
 
