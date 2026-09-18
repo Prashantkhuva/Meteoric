@@ -25,12 +25,30 @@ class BiometricService {
     return prefs.getBool(_kBiometricKey) ?? false;
   }
 
-  /// Toggle the preference. Returns the new value.
-  static Future<bool> toggle() async {
+  /// Enable biometric lock. Prompts user to authenticate first.
+  /// Returns true only if authentication succeeds and preference is saved.
+  static Future<bool> enable({String? reason}) async {
+    final authed = await authenticate(
+      reason: reason ?? 'Enable biometric lock',
+    );
+    if (!authed) return false;
     final prefs = await SharedPreferences.getInstance();
-    final next = !(prefs.getBool(_kBiometricKey) ?? false);
-    await prefs.setBool(_kBiometricKey, next);
-    return next;
+    await prefs.setBool(_kBiometricKey, true);
+    return true;
+  }
+
+  /// Disable biometric lock. No prompt needed.
+  static Future<bool> disable() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kBiometricKey, false);
+    return true;
+  }
+
+  /// Toggle the preference. Prompts on enable, returns new value.
+  static Future<bool> toggle({String? reason}) async {
+    final current = await isEnabled;
+    if (current) return disable();
+    return enable(reason: reason);
   }
 
   /// Show the native biometric prompt. Returns true on success.

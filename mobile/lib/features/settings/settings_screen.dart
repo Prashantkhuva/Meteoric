@@ -87,8 +87,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _toggleBiometric(bool value) async {
     Haptic.tap();
-    final next = await BiometricService.toggle();
-    if (mounted) setState(() => _biometricEnabled = next);
+    final result = await BiometricService.toggle();
+    if (mounted) setState(() => _biometricEnabled = result);
   }
 
   void _snack(String msg, {bool error = false}) =>
@@ -219,227 +219,298 @@ class _SettingsScreenState extends State<SettingsScreen> {
         AuthService.user?.userMetadata?['name'] ??
         _originalEmail.split('@').first;
 
-    return UnfocusOnTap(child: AppScaffold(
-      title: 'Settings',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // ── Identity card ──────────────────────────────────────
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              border: Border.all(color: AppColors.border),
+    return UnfocusOnTap(
+      child: AppScaffold(
+        title: 'Settings',
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          children: [
+            // ── Profile header ──────────────────────────────────────
+            _buildProfileHeader(displayName),
+            const SizedBox(height: 24),
+
+            // ── Account section ─────────────────────────────────────
+            _sectionLabel('ACCOUNT'),
+            const SizedBox(height: 10),
+            _buildAccountCard(displayName),
+
+            // ── Edit profile (expanded) ────────────────────────────
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: _editingProfile
+                  ? _buildProfileForm()
+                  : const SizedBox.shrink(),
             ),
-            child: Row(
+
+            const SizedBox(height: 28),
+
+            // ── Security section ────────────────────────────────────
+            _sectionLabel('SECURITY'),
+            const SizedBox(height: 10),
+            _buildSecurityCard(),
+
+            const SizedBox(height: 28),
+
+            // ── App section ─────────────────────────────────────────
+            _sectionLabel('APP'),
+            const SizedBox(height: 10),
+            _buildAppCard(),
+            const SizedBox(height: 12),
+            _buildUpdateChecker(),
+
+            const SizedBox(height: 32),
+
+            // ── Sign out ──────────────────────────────────────────
+            _buildSignOutButton(),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Profile header ──────────────────────────────────────────────
+
+  Widget _buildProfileHeader(String displayName) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: AppRadius.lgAll,
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          // Avatar
+          Container(
+            width: 56,
+            height: 56,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _roleColor.withValues(alpha: 0.1),
+              borderRadius: AppRadius.lgAll,
+              border: Border.all(
+                color: _roleColor.withValues(alpha: 0.25),
+                width: 1.5,
+              ),
+            ),
+            child: Text(
+              displayName[0].toUpperCase(),
+              style: TextStyle(
+                color: _roleColor,
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          // Name + email
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: _roleColor.withValues(alpha: 0.1),
-                    border: Border.all(
-                      color: _roleColor.withValues(alpha: 0.25),
-                    ),
-                  ),
-                  child: Text(
-                    displayName[0].toUpperCase(),
-                    style: TextStyle(
-                      color: _roleColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter',
-                    ),
+                Text(
+                  displayName,
+                  style: const TextStyle(
+                    color: AppColors.text,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
                   ),
                 ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        displayName,
-                        style: const TextStyle(
-                          color: AppColors.text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        _originalEmail,
-                        style: const TextStyle(
-                          color: AppColors.textFaint,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 3),
+                Text(
+                  _originalEmail,
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
                   ),
                 ),
-                if (_role.isNotEmpty)
+                if (_role.isNotEmpty) ...[
+                  const SizedBox(height: 6),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
-                      vertical: 4,
+                      vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: _roleColor.withValues(alpha: 0.08),
-                      border: Border.all(
-                        color: _roleColor.withValues(alpha: 0.2),
-                      ),
+                      color: _roleColor.withValues(alpha: 0.1),
+                      borderRadius: AppRadius.smAll,
                     ),
                     child: Text(
                       _role.toUpperCase(),
                       style: TextStyle(
                         color: _roleColor,
-                        fontSize: 10,
+                        fontSize: 9,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter',
-                        letterSpacing: 0.8,
+                        letterSpacing: 1,
                       ),
                     ),
                   ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // ── Account ────────────────────────────────────────────
-          _sectionHeader('ACCOUNT'),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              children: [
-                _infoRow('Name', displayName),
-                _divider(),
-                _infoRow('Email', _originalEmail),
-                _divider(),
-                _infoRow('Role', _role.toUpperCase(), valueColor: _roleColor),
-              ],
-            ),
-          ),
-          const SizedBox(height: 6),
-          Align(
-            alignment: Alignment.centerRight,
-            child: _textButton(
-              _editingProfile ? 'CANCEL' : 'EDIT PROFILE',
-              onPressed: () {
-                setState(() {
-                  _editingProfile = !_editingProfile;
-                  if (_editingProfile) {
-                    _editingPassword = false;
-                    _password.clear();
-                    _confirmPassword.clear();
-                  }
-                });
-              },
-            ),
-          ),
-
-          // ── Edit profile (expanded) ────────────────────────────
-          AnimatedSize(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            alignment: Alignment.topCenter,
-            child: _editingProfile
-                ? _buildProfileForm()
-                : const SizedBox.shrink(),
-          ),
-
-          const SizedBox(height: 24),
-
-          // ── Security ───────────────────────────────────────────
-          _sectionHeader('SECURITY'),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              children: [
-                _expandableRow(
-                  icon: Icons.lock_outline_rounded,
-                  label: 'Password',
-                  subtitle: 'Update your password',
-                  expanded: _editingPassword,
-                  onTap: () {
-                    setState(() {
-                      _editingPassword = !_editingPassword;
-                      if (_editingPassword) {
-                        _editingProfile = false;
-                      }
-                    });
-                  },
-                  child: _editingPassword ? _buildPasswordForm() : null,
-                ),
-                if (_biometricAvailable) ...[
-                  _divider(),
-                  _toggleRow(
-                    icon: Icons.fingerprint_rounded,
-                    label: 'Biometric Lock',
-                    subtitle: 'Require fingerprint / face to open app',
-                    value: _biometricEnabled,
-                    onChanged: _toggleBiometric,
-                  ),
                 ],
               ],
             ),
           ),
-
-          const SizedBox(height: 24),
-
-          // ── App info ──────────────────────────────────────────
-          _sectionHeader('APP'),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              children: [
-                _infoRow(
-                  'Version',
-                  _runtimePatch > 0
-                      ? '${AppVersion.version} (patch $_runtimePatch)'
-                      : AppVersion.display,
-                ),
-                _divider(),
-                _infoRow('Updated', AppVersion.updatedAt),
-                if (DeviceInfo.model != 'unknown') ...[
-                  _divider(),
-                  _infoRow('Device', DeviceInfo.model),
-                ],
-              ],
+          // Edit chevron
+          GestureDetector(
+            onTap: () {
+              Haptic.tap();
+              setState(() {
+                _editingProfile = !_editingProfile;
+                if (_editingProfile) {
+                  _editingPassword = false;
+                  _password.clear();
+                  _confirmPassword.clear();
+                }
+              });
+            },
+            child: Container(
+              width: 32,
+              height: 32,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.textFaint.withValues(alpha: 0.06),
+                borderRadius: AppRadius.smAll,
+              ),
+              child: Icon(
+                _editingProfile
+                    ? Icons.close_rounded
+                    : Icons.chevron_right_rounded,
+                size: 18,
+                color: AppColors.textMuted,
+              ),
             ),
           ),
-          const SizedBox(height: 10),
-          _buildUpdateChecker(),
-
-          const SizedBox(height: 28),
-
-          // ── Sign out ──────────────────────────────────────────
-          GhostButton(
-            borderColor: AppColors.red.withValues(alpha: 0.4),
-            textColor: AppColors.red,
-            onPressed: _busy ? null : _signOut,
-            child: const Text('SIGN OUT'),
-          ),
-          const SizedBox(height: 24),
         ],
       ),
-    ));
+    );
   }
 
-  // ── Sub-widgets ───────────────────────────────────────────────
+  // ── Account card ────────────────────────────────────────────────
+
+  Widget _buildAccountCard(String displayName) {
+    return _CardContainer(
+      child: Column(
+        children: [
+          _infoRow('Name', displayName),
+          _rowDivider(),
+          _infoRow('Email', _originalEmail),
+          _rowDivider(),
+          _infoRow('Role', _role.toUpperCase(), valueColor: _roleColor),
+        ],
+      ),
+    );
+  }
+
+  // ── Security card ───────────────────────────────────────────────
+
+  Widget _buildSecurityCard() {
+    return _CardContainer(
+      child: Column(
+        children: [
+          _expandableRow(
+            icon: Icons.lock_outline_rounded,
+            label: 'Password',
+            subtitle: 'Update your password',
+            expanded: _editingPassword,
+            onTap: () {
+              setState(() {
+                _editingPassword = !_editingPassword;
+                if (_editingPassword) {
+                  _editingProfile = false;
+                }
+              });
+            },
+            child: _editingPassword ? _buildPasswordForm() : null,
+          ),
+          if (_biometricAvailable) ...[
+            _rowDivider(),
+            _toggleRow(
+              icon: Icons.fingerprint_rounded,
+              label: 'Biometric Lock',
+              subtitle: 'Fingerprint / face to open app',
+              value: _biometricEnabled,
+              onChanged: _toggleBiometric,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ── App card ────────────────────────────────────────────────────
+
+  Widget _buildAppCard() {
+    return _CardContainer(
+      child: Column(
+        children: [
+          _infoRow(
+            'Version',
+            _runtimePatch > 0
+                ? '${AppVersion.version} (patch $_runtimePatch)'
+                : AppVersion.display,
+          ),
+          _rowDivider(),
+          _infoRow('Updated', AppVersion.updatedAt),
+          if (DeviceInfo.model != 'unknown') ...[
+            _rowDivider(),
+            _infoRow('Device', DeviceInfo.model),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ── Sign out button ─────────────────────────────────────────────
+
+  Widget _buildSignOutButton() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: _busy ? null : _signOut,
+        borderRadius: AppRadius.lgAll,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: Color(0x08FF4242),
+            borderRadius: AppRadius.lgAll,
+            border: Border.all(
+              color: AppColors.red.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.logout_rounded,
+                size: 16,
+                color: AppColors.red,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'SIGN OUT',
+                style: TextStyle(
+                  color: AppColors.red,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.8,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Update checker ──────────────────────────────────────────────
 
   Widget _buildUpdateChecker() {
     final state = UpdateState.instance;
@@ -449,17 +520,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final error = state.error;
     final forced = state.forceUpgrade;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        border: Border.all(color: AppColors.border),
-      ),
+    return _CardContainer(
       child: Column(
         children: [
           InkWell(
             onTap: checking || downloading ? null : _checkForUpdate,
+            borderRadius: AppRadius.lgAll,
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
                   Container(
@@ -469,6 +537,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     decoration: BoxDecoration(
                       color: (forced ? AppColors.red : AppColors.accent)
                           .withValues(alpha: 0.06),
+                      borderRadius: AppRadius.smAll,
                       border: Border.all(
                         color: (forced ? AppColors.red : AppColors.accent)
                             .withValues(alpha: 0.12),
@@ -491,7 +560,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: forced ? AppColors.red : AppColors.accent,
                           ),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -500,7 +569,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           checking
                               ? 'Checking\u2026'
                               : update != null
-                                  ? (forced ? 'Update Required' : 'Update Available')
+                                  ? (forced
+                                      ? 'Update Required'
+                                      : 'Update Available')
                                   : 'Check for Updates',
                           style: TextStyle(
                             color: forced ? AppColors.red : AppColors.text,
@@ -538,13 +609,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           if (update != null && !downloading) ...[
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1, color: AppColors.border),
-            ),
+            _rowDivider(),
             if (update.notes != null && update.notes!.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -559,7 +627,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
               child: SizedBox(
                 width: double.infinity,
                 child: TextButton(
@@ -567,10 +635,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextButton.styleFrom(
                     backgroundColor: forced ? AppColors.red : AppColors.accent,
                     foregroundColor:
-                         forced ? Colors.white : AppColors.onAccent,
+                        forced ? Colors.white : AppColors.onAccent,
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: AppRadius.smAll,
                     ),
                   ),
                   child: Text(
@@ -587,12 +655,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
           if (downloading) ...[
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1, color: AppColors.border),
-            ),
+            _rowDivider(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -621,7 +686,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 8),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: AppRadius.xxsAll,
                     child: LinearProgressIndicator(
                       value: (state.progress ?? 0).clamp(0.0, 1.0),
                       minHeight: 3,
@@ -636,12 +701,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
           if (error != null) ...[
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1, color: AppColors.border),
-            ),
+            _rowDivider(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
               child: Text(
                 error,
                 style: const TextStyle(
@@ -658,13 +720,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _sectionHeader(String text) => Text(
+  // ── Helper widgets ──────────────────────────────────────────────
+
+  Widget _sectionLabel(String text) => Text(
     text,
     style: const TextStyle(
       color: AppColors.textFaint,
       fontSize: 10,
       fontWeight: FontWeight.w600,
-      letterSpacing: 1.2,
+      letterSpacing: 1.4,
       fontFamily: 'Inter',
     ),
   );
@@ -696,28 +760,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
-  Widget _divider() => const Padding(
+  Widget _rowDivider() => const Padding(
     padding: EdgeInsets.symmetric(horizontal: 16),
     child: Divider(height: 1, color: AppColors.border),
-  );
-
-  Widget _textButton(String text, {VoidCallback? onPressed}) => TextButton(
-    onPressed: onPressed,
-    style: TextButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      minimumSize: Size.zero,
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(
-        color: AppColors.accent,
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.6,
-        fontFamily: 'Inter',
-      ),
-    ),
   );
 
   Widget _toggleRow({
@@ -738,6 +783,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             decoration: BoxDecoration(
               color: (value ? AppColors.accent : AppColors.textFaint)
                   .withValues(alpha: 0.06),
+              borderRadius: AppRadius.smAll,
               border: Border.all(
                 color: (value ? AppColors.accent : AppColors.textFaint)
                     .withValues(alpha: 0.12),
@@ -802,6 +848,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Haptic.tap();
             onTap();
           },
+          borderRadius: AppRadius.lgAll,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -812,6 +859,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: AppColors.textFaint.withValues(alpha: 0.06),
+                    borderRadius: AppRadius.smAll,
                     border: Border.all(
                       color: AppColors.textFaint.withValues(alpha: 0.12),
                     ),
@@ -870,23 +918,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildProfileForm() {
     final emailChanged = _email.text.trim() != _originalEmail;
     return Container(
+      margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(bottom: 6),
-            child: Text(
-              'FULL NAME',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
+          _inputLabel('FULL NAME'),
           TextField(
             controller: _name,
             enabled: !_busy,
@@ -898,19 +935,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             decoration: _input(),
           ),
           const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 6),
-            child: Text(
-              'EMAIL',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
+          _inputLabel('EMAIL'),
           TextField(
             controller: _email,
             enabled: !_busy,
@@ -946,23 +971,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildPasswordForm() {
     return Container(
+      margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(bottom: 6),
-            child: Text(
-              'NEW PASSWORD',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
+          _inputLabel('NEW PASSWORD'),
           TextField(
             controller: _password,
             enabled: !_busy,
@@ -988,19 +1002,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 6),
-            child: Text(
-              'CONFIRM PASSWORD',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
+          _inputLabel('CONFIRM PASSWORD'),
           TextField(
             controller: _confirmPassword,
             enabled: !_busy,
@@ -1036,25 +1038,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _inputLabel(String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: AppColors.textFaint,
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 1.2,
+        fontFamily: 'Inter',
+      ),
+    ),
+  );
+
   InputDecoration _input({Widget? suffix}) => InputDecoration(
     isDense: true,
     suffixIcon: suffix,
     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
     border: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.border),
+      borderRadius: AppRadius.smAll,
+      borderSide: const BorderSide(color: AppColors.border),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.border),
+      borderRadius: AppRadius.smAll,
+      borderSide: const BorderSide(color: AppColors.border),
     ),
     focusedBorder: OutlineInputBorder(
+      borderRadius: AppRadius.smAll,
       borderSide: BorderSide(
         color: AppColors.accent.withValues(alpha: 0.3),
       ),
     ),
     disabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.border),
+      borderRadius: AppRadius.smAll,
+      borderSide: const BorderSide(color: AppColors.border),
     ),
   );
+}
+
+/// Reusable rounded card container for grouped sections.
+class _CardContainer extends StatelessWidget {
+  const _CardContainer({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: AppRadius.lgAll,
+        border: Border.all(color: AppColors.border),
+      ),
+      child: child,
+    );
+  }
 }
 
 class _SignedOut extends StatelessWidget {
