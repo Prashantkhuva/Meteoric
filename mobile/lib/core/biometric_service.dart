@@ -59,10 +59,7 @@ class BiometricService {
     try {
       return await _auth.authenticate(
         localizedReason: reason ?? 'Verify your identity',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          useErrorDialogs: true,
-        ),
+        persistAcrossBackgrounding: true,
       );
     } on PlatformException {
       return false;

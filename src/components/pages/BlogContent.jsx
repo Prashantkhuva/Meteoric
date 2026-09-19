@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { blogPosts, blogTags } from "@/data/blog-posts";
+import { blogPosts } from "@/data/blog-posts";
 
 const slugToImage = {
   "mongodb-schema-design-for-saas-billing": "/images/blog/blog-mongodb-schema.webp",
@@ -41,7 +41,23 @@ function formatDate(dateStr) {
   });
 }
 
-const categories = ["All", ...blogTags];
+const categories = [
+  "All",
+  "SaaS",
+  "Web Dev",
+  "SEO",
+  "Design",
+  "Startup",
+];
+
+const categoryMap = {
+  All: () => true,
+  SaaS: (p) => p.tags.some((t) => ["SaaS", "MongoDB", "PostgreSQL", "Database Design", "Billing", "MVP", "Backend", "Database"].includes(t)),
+  "Web Dev": (p) => p.tags.some((t) => ["React", "Next.js", "GSAP", "Framer Motion", "Animation", "Frameworks", "Performance"].includes(t)),
+  SEO: (p) => p.tags.some((t) => ["SEO", "AEO", "AI Search", "GEO", "Technical SEO", "Keywords", "Content Strategy"].includes(t)),
+  Design: (p) => p.tags.some((t) => ["Landing Pages", "CRO", "Conversion", "UI/UX", "Web Design"].includes(t)),
+  Startup: (p) => p.tags.some((t) => ["Startup", "Agency", "Startups", "Website Audit"].includes(t)),
+};
 
 function BlogCard({ post, index }) {
   const image = slugToImage[post.slug] || "/images/blog/blog-tech-stack.webp";
@@ -92,12 +108,8 @@ function BlogCard({ post, index }) {
 
 export default function BlogContent() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const filterRef = useRef(null);
 
-  const filteredPosts =
-    activeCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((p) => p.tags.includes(activeCategory));
+  const filteredPosts = blogPosts.filter((p) => categoryMap[activeCategory](p));
 
   return (
     <main className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
@@ -116,7 +128,7 @@ export default function BlogContent() {
         </div>
 
         {/* Category Filters — atomikgrowth style */}
-        <div ref={filterRef} className="flex flex-wrap gap-2 mb-14">
+        <div className="flex flex-wrap gap-2 mb-14">
           {categories.map((cat) => (
             <button
               key={cat}
