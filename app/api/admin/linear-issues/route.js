@@ -37,7 +37,7 @@ async function listIssues({ status, assignee, search, limit = 50, after }) {
 
   const query = `
     query Issues($filter: IssueFilter, $first: Int, $after: String) {
-      issues(filter: { and: $filter }, first: $first, after: $after, orderBy: createdAt desc) {
+      issues(filter: { and: $filter }, first: $first, after: $after, orderBy: createdAt) {
         pageInfo { hasNextPage endCursor }
         nodes {
           id identifier title url priority estimate

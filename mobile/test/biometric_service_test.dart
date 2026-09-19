@@ -26,7 +26,7 @@ void main() {
 
       final result = await BiometricService.disable();
 
-      expect(result, isTrue);
+      expect(result, isFalse);
       expect(await BiometricService.isEnabled, isFalse);
     });
   });

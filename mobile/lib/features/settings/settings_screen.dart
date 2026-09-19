@@ -75,19 +75,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _loadBiometric() async {
-    final avail = await BiometricService.isAvailable;
-    final enabled = await BiometricService.isEnabled;
-    if (!mounted) return;
-    setState(() {
-      _biometricAvailable = avail;
-      _biometricEnabled = enabled;
-    });
+    try {
+      final avail = await BiometricService.isAvailable;
+      final enabled = await BiometricService.isEnabled;
+      if (!mounted) return;
+      setState(() {
+        _biometricAvailable = avail;
+        _biometricEnabled = enabled;
+      });
+    } catch (e) {
+      debugPrint('[Settings] _loadBiometric error: $e');
+    }
   }
 
   Future<void> _toggleBiometric(bool value) async {
     Haptic.tap();
-    final result = await BiometricService.toggle();
-    if (mounted) setState(() => _biometricEnabled = result);
+    setState(() => _busy = true);
+    try {
+      final result = await BiometricService.toggle();
+      if (mounted) {
+        setState(() => _biometricEnabled = result);
+        if (result != value) {
+          _snack(
+            value
+                ? 'Biometric authentication failed — try again'
+                : 'Could not disable biometric lock',
+            error: true,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('[Settings] _toggleBiometric error: $e');
+      if (mounted) _snack('Biometric error: $e', error: true);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   void _snack(String msg, {bool error = false}) =>

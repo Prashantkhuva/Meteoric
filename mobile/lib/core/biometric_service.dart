@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,10 +15,16 @@ class BiometricService {
   static Future<bool> get isAvailable async {
     try {
       final canCheck = await _auth.canCheckBiometrics;
+      debugPrint('[Biometric] canCheckBiometrics=$canCheck');
       if (!canCheck) return false;
       final available = await _auth.getAvailableBiometrics();
+      debugPrint('[Biometric] available types=$available');
       return available.isNotEmpty;
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      debugPrint('[Biometric] isAvailable PlatformException: ${e.message}');
+      return false;
+    } catch (e) {
+      debugPrint('[Biometric] isAvailable unexpected error: $e');
       return false;
     }
   }
@@ -25,31 +32,39 @@ class BiometricService {
   /// Whether biometric lock is enabled by the user.
   static Future<bool> get isEnabled async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_kBiometricKey) ?? false;
+    final val = prefs.getBool(_kBiometricKey) ?? false;
+    debugPrint('[Biometric] isEnabled=$val');
+    return val;
   }
 
   /// Enable biometric lock. Prompts user to authenticate first.
   /// Returns true only if authentication succeeds and preference is saved.
   static Future<bool> enable({String? reason}) async {
+    debugPrint('[Biometric] enable() called, reason=$reason');
     final authed = await authenticate(
       reason: reason ?? 'Enable biometric lock',
     );
+    debugPrint('[Biometric] enable() authenticate result=$authed');
     if (!authed) return false;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_kBiometricKey, true);
+    debugPrint('[Biometric] enable() preference saved=true');
     return true;
   }
 
   /// Disable biometric lock. No prompt needed.
   static Future<bool> disable() async {
+    debugPrint('[Biometric] disable() called');
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_kBiometricKey, false);
-    return true;
+    debugPrint('[Biometric] disable() preference saved=false');
+    return false;
   }
 
   /// Toggle the preference. Prompts on enable, returns new value.
   static Future<bool> toggle({String? reason}) async {
     final current = await isEnabled;
+    debugPrint('[Biometric] toggle() current=$current');
     if (current) return disable();
     return enable(reason: reason);
   }
@@ -57,11 +72,18 @@ class BiometricService {
   /// Show the native biometric prompt. Returns true on success.
   static Future<bool> authenticate({String? reason}) async {
     try {
-      return await _auth.authenticate(
+      debugPrint('[Biometric] authenticate() showing prompt...');
+      final result = await _auth.authenticate(
         localizedReason: reason ?? 'Verify your identity',
         persistAcrossBackgrounding: true,
       );
-    } on PlatformException {
+      debugPrint('[Biometric] authenticate() result=$result');
+      return result;
+    } on PlatformException catch (e) {
+      debugPrint('[Biometric] authenticate() PlatformException: code=${e.code} message=${e.message}');
+      return false;
+    } catch (e) {
+      debugPrint('[Biometric] authenticate() unexpected error: $e');
       return false;
     }
   }

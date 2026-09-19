@@ -25,6 +25,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   final _notif = NotificationState.instance;
   bool _apkDialogShown = false;
   bool _biometricLocked = false;
+  DateTime? _lastBiometricAuth;
 
   static const _tabs = [
     DashboardScreen(),
@@ -64,15 +65,27 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   }
 
   Future<void> _checkBiometricOnResume() async {
-    if (!await BiometricService.isEnabled) return;
-    if (!await BiometricService.isAvailable) return;
-    final ok = await BiometricService.authenticate(
-      reason: 'Unlock Meteoric Admin',
-    );
-    if (!ok && mounted) {
-      setState(() => _biometricLocked = true);
-    } else if (mounted) {
-      setState(() => _biometricLocked = false);
+    try {
+      if (!await BiometricService.isEnabled) return;
+      if (!await BiometricService.isAvailable) return;
+      if (_lastBiometricAuth != null &&
+          DateTime.now().difference(_lastBiometricAuth!) <
+              const Duration(seconds: 3)) {
+        return;
+      }
+      final ok = await BiometricService.authenticate(
+        reason: 'Unlock Meteoric Admin',
+      );
+      if (ok) {
+        _lastBiometricAuth = DateTime.now();
+      }
+      if (!ok && mounted) {
+        setState(() => _biometricLocked = true);
+      } else if (mounted) {
+        setState(() => _biometricLocked = false);
+      }
+    } catch (e) {
+      debugPrint('[HomeShell] _checkBiometricOnResume error: $e');
     }
   }
 
@@ -167,11 +180,15 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                         const SizedBox(height: 24),
                         AccentButton(
                           onPressed: () async {
-                            final ok = await BiometricService.authenticate(
-                              reason: 'Unlock Meteoric Admin',
-                            );
-                            if (ok && mounted) {
-                              setState(() => _biometricLocked = false);
+                            try {
+                              final ok = await BiometricService.authenticate(
+                                reason: 'Unlock Meteoric Admin',
+                              );
+                              if (ok && mounted) {
+                                setState(() => _biometricLocked = false);
+                              }
+                            } catch (e) {
+                              debugPrint('[HomeShell] UNLOCK error: $e');
                             }
                           },
                           child: const Text('UNLOCK'),
