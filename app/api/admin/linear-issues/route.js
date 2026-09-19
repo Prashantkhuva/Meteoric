@@ -37,7 +37,7 @@ async function listIssues({ status, assignee, search, limit = 50, after }) {
 
   const query = `
     query Issues($filter: IssueFilter, $first: Int, $after: String) {
-      issues(filter: { and: $filter }, first: $first, after: $after, orderBy: createdAt) {
+      issues(filter: $filter, first: $first, after: $after, orderBy: createdAt) {
         pageInfo { hasNextPage endCursor }
         nodes {
           id identifier title url priority estimate
@@ -50,8 +50,10 @@ async function listIssues({ status, assignee, search, limit = 50, after }) {
     }
   `;
 
+  const filter = filters.length === 1 ? filters[0] : { and: filters };
+
   const data = await linearQuery(query, {
-    filter: filters.length === 1 ? filters[0] : { and: filters },
+    filter,
     first: limit,
     after: after || null,
   });
