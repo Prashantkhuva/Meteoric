@@ -143,12 +143,12 @@ function Hero() {
 
       <GridLines />
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-16 pb-20 md:pt-24 md:pb-24">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 flex flex-col justify-center min-h-screen py-16 md:py-20">
         <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-[1fr_0.55fr] gap-8 md:gap-12 items-start">
           {/* Left: Headline + Buttons */}
           <div className="max-w-md">
             <h1
-              className="font-semibold leading-[1.1] tracking-[-0.02em] mb-6"
+              className="font-semibold leading-[1.1] tracking-[-0.02em] mb-2"
               style={{
                 color: "#ffffff",
                 fontSize: "clamp(2.25rem, 6vw, 2.5rem)",
@@ -160,13 +160,13 @@ function Hero() {
               <span
                 ref={mutedTextRef}
                 className="block"
-                style={{ color: "rgba(255,255,255,0.5)" }}
+                style={{ color: "#ffffff" }}
               >
                 Ship Right.
               </span>
               <span
                 className="block"
-                style={{ color: "rgba(255,255,255,0.5)" }}
+                style={{ color: "#ffffff" }}
               >
                 Ship Meteoric.
               </span>
@@ -182,7 +182,7 @@ function Hero() {
                   trackEvent("booking_click", { button_location: "/hero" });
                   openCal();
                 }}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold transition-all duration-300 hover:scale-[1.02]"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
                 style={{
                   background: "#ffffff",
                   color: "#010405",
@@ -191,17 +191,14 @@ function Hero() {
                 Book a call
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  viewBox="0 0 12 12"
+                  className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px"
                 >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
+                  <path
+                    fill="currentColor"
+                    d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z"
+                  />
                 </svg>
               </button>
 
@@ -220,16 +217,16 @@ function Hero() {
           {/* Right: Description */}
           <div
             ref={subtextRef}
-            className="md:pt-2 max-w-sm"
+            className="md:pt-2 max-w-[260px] md:ml-20"
           >
             <p
               className="leading-relaxed"
               style={{
-                color: "rgba(255,255,255,0.55)",
+                color: "#ffffff",
                 fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
               }}
             >
-              SaaS products, web apps, and startup MVPs. From first deploy to
+              SaaS products, web apps, and startup MVPs — from first deploy to
               scale.
             </p>
           </div>

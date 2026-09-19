@@ -445,9 +445,13 @@ export default function CaseStudy({ project }) {
 
           <button
             onClick={openCal}
-            className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-[var(--text-primary)] text-[var(--bg-primary)] text-sm font-semibold hover:opacity-90 transition-all duration-300"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
+            style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
           >
-            Start a Project
+            Book a call
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px">
+              <path fill="currentColor" d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z" />
+            </svg>
           </button>
         </motion.div>
       </section>
