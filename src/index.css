@@ -104,29 +104,13 @@ html.lenis {
   scroll-behavior: auto !important;
 }
 
-/* ── Scrollbar ── */
+/* ── Scrollbar (hidden) ── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 10px;
-  transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-hover);
+  display: none;
 }
 
 * {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-width: none;
 }
 
 /* ── Selection ── */
