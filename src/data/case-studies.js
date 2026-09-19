@@ -50,9 +50,9 @@ export const caseStudies = [
       },
     ],
     link: "https://agency-v2-theta.vercel.app/",
-    image: "/lete'm-know.png",
+    image: "/letem-know.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#EAEFFF",
+    accent: "#1c1917",
     tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
     serviceLink: { label: "Landing Page Design", href: "/services/landing-pages" },
     relatedProjects: ["habit-flow", "megablog"],
@@ -106,7 +106,7 @@ export const caseStudies = [
     link: "https://habitflow.indevs.in/",
     image: "/habit-flow.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#EAEFFF",
+    accent: "#1c1917",
     tags: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
     serviceLink: {
       label: "SaaS Development",
@@ -167,7 +167,7 @@ export const caseStudies = [
     link: "https://megablog.vercel.app/",
     image: "/megablog.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#EAEFFF",
+    accent: "#1c1917",
     tags: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
     serviceLink: {
       label: "Web Application Development",
@@ -225,7 +225,7 @@ export const caseStudies = [
     link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
     image: "/mobile-simulator.png",
     gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#EAEFFF",
+    accent: "#1c1917",
     tags: [
       "VS Code Extension",
       "JavaScript",

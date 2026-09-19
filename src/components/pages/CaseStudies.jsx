@@ -35,7 +35,7 @@ export default function CaseStudiesPage() {
           >
             <div className="max-w-6xl mx-auto px-6 md:px-12">
               <ScrollReveal direction="down" delay={0} className="mb-8 md:mb-12">
-                <span className="text-6xl md:text-8xl lg:text-9xl font-display block leading-none mb-4" style={{ color: "rgba(255,255,255,0.06)" }}>
+                <span className="text-6xl md:text-8xl lg:text-9xl font-display block leading-none mb-4" style={{ color: "var(--accent-dim)" }}>
                   {String(idx + 1).padStart(2, "0")}.
                 </span>
                 <h2 className="text-3xl md:text-5xl font-display tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
@@ -90,7 +90,7 @@ export default function CaseStudiesPage() {
                     <h3 className="text-sm font-medium mb-4" style={{ color: "var(--text-secondary)" }}>Key Features</h3>
                     <div className="space-y-3">
                       {cs.features.map((f, fi) => (
-                        <div key={fi} className="border-l-2 pl-5 transition-colors duration-300" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
+                        <div key={fi} className="border-l-2 pl-5 transition-colors duration-300" style={{ borderColor: "var(--border-color)" }}>
                           <span className="text-sm" style={{ color: "var(--text-secondary)" }}>{f}</span>
                         </div>
                       ))}
@@ -134,7 +134,7 @@ export default function CaseStudiesPage() {
                   {cs.serviceLink && (
                     <ScrollReveal direction="right" delay={0.3} className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
                       <p className="text-[11px] uppercase tracking-[0.1em] mb-3" style={{ color: "var(--text-muted)" }}>If this looks like what you need…</p>
-                      <Link href={cs.serviceLink.href} className="group/serv inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300" style={{ color: "rgba(255,255,255,0.7)" }}>
+                      <Link href={cs.serviceLink.href} className="group/serv inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300" style={{ color: "var(--text-secondary)" }}>
                         <span>Explore {cs.serviceLink.label}</span>
                         <ArrowRight size={14} className="transition-transform duration-300 group-hover/serv:translate-x-1" />
                       </Link>

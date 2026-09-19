@@ -7,9 +7,9 @@ export const projects = [
     description:
       "A high-performance agency website built for Let'em Know, a Gurgaon-based marketing agency. Features a canvas particle hero, infinite-scroll testimonials, GSAP-powered animations, Lenis smooth scroll, and a Calendly-integrated contact flow — all shipped production-ready. Outcome: 40% faster load times vs previous site, seamless mobile experience across all breakpoints.",
     link: "https://agency-v2-theta.vercel.app/",
-    image: "/lete'm-know.png",
-    gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#ffffff",
+    image: "/letem-know.png",
+    category: "Web Design",
+    accent: "#1c1917",
     tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
     features: [
       "Canvas particle system hero animation",
@@ -28,8 +28,8 @@ export const projects = [
       "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time. Outcome: Shipped MVP in 3 weeks, validated concept with 200+ beta users.",
     link: "https://habitflow.indevs.in/",
     image: "/habit-flow.png",
-    gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#ffffff",
+    category: "SaaS",
+    accent: "#1c1917",
     tags: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
     features: [
       "Streak tracking with daily check-ins",
@@ -51,8 +51,8 @@ export const projects = [
       "A premium blog platform built with React 19 and Appwrite backend. Features a rich TinyMCE editor, full CRUD for posts, Redux Toolkit state management, and a dark editorial aesthetic with Framer Motion animations throughout. Outcome: Content publishing workflow reduced from hours to minutes, editors report 3x faster article turnaround.",
     link: "https://megablog.vercel.app/",
     image: "/megablog.png",
-    gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#ffffff",
+    category: "Web App",
+    accent: "#1c1917",
     tags: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
     features: [
       "Rich text editor with TinyMCE",
@@ -71,8 +71,8 @@ export const projects = [
       "A VS Code extension that helps developers preview responsive mobile layouts without leaving the editor. Built for frontend developers who want faster UI testing workflows with a clean in-editor mobile simulation experience. Outcome: 500+ installs on VS Code Marketplace, 4.5-star rating, active community with feature requests and contributions.",
     link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
     image: "/mobile-simulator.png",
-    gradient: "from-white/[0.04] to-white/[0.01]",
-    accent: "#ffffff",
+    category: "Developer Tools",
+    accent: "#1c1917",
     tags: [
       "VS Code Extension",
       "JavaScript",
