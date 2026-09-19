@@ -229,9 +229,8 @@ function Hero() {
                 fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
               }}
             >
-              A software development agency that partners with founders to
-              design, develop, and launch modern websites and SaaS products that
-              actually convert.
+              SaaS products, web apps, and startup MVPs. From first deploy to
+              scale.
             </p>
           </div>
         </div>
