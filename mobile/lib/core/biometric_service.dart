@@ -10,10 +10,13 @@ class BiometricService {
   BiometricService._();
   static final _auth = LocalAuthentication();
 
-  /// Whether the device supports biometric auth at all.
+  /// Whether the device supports biometric auth AND has enrolled biometrics.
   static Future<bool> get isAvailable async {
     try {
-      return await _auth.canCheckBiometrics;
+      final canCheck = await _auth.canCheckBiometrics;
+      if (!canCheck) return false;
+      final available = await _auth.getAvailableBiometrics();
+      return available.isNotEmpty;
     } on PlatformException {
       return false;
     }
@@ -56,6 +59,10 @@ class BiometricService {
     try {
       return await _auth.authenticate(
         localizedReason: reason ?? 'Verify your identity',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          useErrorDialogs: true,
+        ),
       );
     } on PlatformException {
       return false;

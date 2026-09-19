@@ -97,8 +97,8 @@ function renderRichBody(text) {
       <Link
         key={i}
         href={match[2]}
-        className="underline underline-offset-4 transition-all duration-200 hover:text-white"
-        style={{ color: "rgba(255,255,255,0.6)" }}
+        className="underline underline-offset-4 transition-all duration-200 hover:text-[var(--text-primary)]"
+        style={{ color: "var(--text-secondary)" }}
       >
         {match[1]}
       </Link>
@@ -186,7 +186,7 @@ export default async function BlogPost({ params }) {
           <header className="mb-12">
             <div className="flex flex-wrap items-center gap-2 mb-6">
               {post.tags.slice(0, 2).map((tag) => (
-                <span key={tag} className="text-[11px] font-medium px-3 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.08)", color: "var(--text-secondary)", border: "1px solid var(--border-color)" }}>
+                <span key={tag} className="text-[11px] font-medium px-3 py-1 rounded-full" style={{ background: "var(--accent-dim)", color: "var(--text-secondary)", border: "1px solid var(--border-color)" }}>
                   {tag}
                 </span>
               ))}
@@ -202,7 +202,7 @@ export default async function BlogPost({ params }) {
 
             {/* Author card */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold" style={{ background: "var(--accent-dim)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
                 PK
               </div>
               <div>
@@ -245,7 +245,7 @@ export default async function BlogPost({ params }) {
               </h2>
               <div className="space-y-4">
                 {post.faqs.map((faq, i) => (
-                  <div key={i} className="p-6 rounded-2xl" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+                  <div key={i} className="p-6 rounded-2xl" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)" }}>
                     <h3 className="text-base font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
                       {faq.question}
                     </h3>
@@ -261,7 +261,7 @@ export default async function BlogPost({ params }) {
           {/* Author bio */}
           <div className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold shrink-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+              <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold shrink-0" style={{ background: "var(--accent-dim)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
                 PK
               </div>
               <div>
@@ -311,7 +311,7 @@ export default async function BlogPost({ params }) {
           )}
 
           {/* CTA */}
-          <div className="mt-20 p-8 md:p-12 rounded-[24px] text-center" style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}>
+          <div className="mt-20 p-8 md:p-12 rounded-[24px] text-center" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)" }}>
             <h3 className="text-2xl md:text-3xl font-display tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
               Have a project in mind?
             </h3>
