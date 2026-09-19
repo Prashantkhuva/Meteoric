@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
-import StaggerText from "@/components/layout/StaggerText";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import GridLines from "@/components/ui/GridLines";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
@@ -43,52 +42,52 @@ function ServiceCard({ service, index }) {
   return (
     <ScrollReveal direction="up" delay={index * 0.1}>
       <Link href={service.href} className="block group">
-        <div className="flex flex-col gap-5 lg:gap-6">
-          {/* Image */}
-          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
-            <img
-              src={service.image}
-              alt={service.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-          </div>
+        <div
+          className="relative rounded-2xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1 aspect-[4/3]"
+          style={{
+            background: "var(--hero-bg)",
+            border: "1px solid var(--hero-border)",
+          }}
+        >
+          {/* Full background image */}
+          <img
+            src={service.image}
+            alt={service.title}
+            className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
 
-          {/* Content */}
-          <div className="flex flex-col gap-3">
+          {/* Content overlaid on image */}
+          <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-7">
             <h3
-              className="text-[28px] sm:text-[32px] lg:text-[36px] font-display leading-[1.1]"
-              style={{ color: "var(--text-primary)" }}
+              className="text-xl sm:text-2xl font-medium mb-2"
+              style={{ color: "var(--hero-text)" }}
             >
               {service.title}
             </h3>
             <p
-              className="text-sm sm:text-base leading-relaxed max-w-[500px]"
-              style={{ color: "var(--text-secondary)" }}
+              className="text-body-sm leading-normal mb-4 max-w-[90%]"
+              style={{ color: "var(--hero-text-secondary)" }}
             >
               {service.desc}
             </p>
 
             {/* Metric + CTA */}
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center justify-between">
               <span
-                className="text-xs font-semibold uppercase tracking-wider"
-                style={{ color: "var(--text-muted)" }}
+                className="text-caption font-medium uppercase tracking-[0.1em]"
+                style={{ color: "var(--hero-text-muted)" }}
               >
                 {service.metric}
               </span>
               <span
-                className="text-xs font-semibold uppercase tracking-wider"
-                style={{ color: "var(--border-color)" }}
-              >
-                |
-              </span>
-              <span
-                className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider group-hover:gap-2.5 transition-all duration-300"
-                style={{ color: "var(--text-muted)" }}
+                className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider group-hover:gap-2.5 transition-all duration-300"
+                style={{ color: "var(--hero-text-muted)" }}
               >
                 Learn more
                 <svg
-                  className="w-3.5 h-3.5"
+                  className="w-3 h-3"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -110,13 +109,6 @@ function ServiceCard({ service, index }) {
 export default function ServicesSection() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
-  const [ctaHovered, setCtaHovered] = useState(false);
-
-  const openCal = useCallback(async () => {
-    const { getCalApi } = await import("@calcom/embed-react");
-    const cal = await getCalApi({ namespace: "let-s-build" });
-    cal("modal", { calLink: "prashantkhuva/let-s-build" });
-  }, []);
 
   useSectionAnimations(
     sectionRef,
@@ -165,95 +157,38 @@ export default function ServicesSection() {
     >
       <GridLines />
 
-      <div className="px-6 md:px-16 lg:px-20 max-w-[1400px] mx-auto">
+      <div className="px-6 md:px-16 lg:px-20 max-w-[1200px] mx-auto">
         {/* Header */}
-        <div ref={headingRef} className="pt-24 pb-12 lg:pt-32 lg:pb-16">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div ref={headingRef} className="pt-16 pb-10 lg:pt-24 lg:pb-12">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
             <div>
               <p
-                className="text-sm mb-4"
+                className="uppercase tracking-[0.15em] text-caption mb-4 font-medium"
                 style={{ color: "var(--text-muted)" }}
               >
-                Our Services
+                What We Build
               </p>
               <h2
-                className="text-[clamp(2rem,5vw,48px)] leading-[1.05] tracking-[-0.02em] font-normal"
+                className="text-heading-1 leading-tight tracking-[-0.02em] font-normal"
                 style={{ color: "var(--text-primary)" }}
               >
-                What we build
+                Services built to
                 <span
                   className="block font-secondary-italic"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  for founders.
+                  ship results.
                 </span>
               </h2>
             </div>
-
-            <ScrollReveal direction="right" delay={0.3}>
-              <button
-                onClick={openCal}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  color: "var(--text-primary)",
-                }}
-              >
-                Book a call
-                <svg
-                  className="w-4 h-4 -rotate-90"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </ScrollReveal>
           </div>
         </div>
 
-        {/* Service cards — 2x2 grid on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12 lg:gap-x-8 lg:gap-y-16 pb-24 lg:pb-32">
+        {/* Service cards — 2x2 grid on desktop, full-image overlay */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5 pb-16 lg:pb-24">
           {services.map((s, i) => (
             <ServiceCard key={s.title} service={s} index={i} />
           ))}
-        </div>
-
-        {/* CTA */}
-        <div className="flex flex-col items-start gap-6 pb-24 lg:pb-32">
-          <h3
-            className="text-[clamp(1.75rem,4vw,36px)] leading-[1.1] font-normal max-w-[500px]"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Something custom in mind?
-          </h3>
-          <p
-            className="text-sm sm:text-base leading-relaxed max-w-[500px]"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Every project begins with understanding your vision. Whether
-            it&apos;s a landing page, SaaS, or a full-stack app — we&apos;ll
-            build it tailored to your goals.
-          </p>
-
-          <button
-            onClick={openCal}
-            className="inline-flex items-center justify-center flip-btn"
-            onMouseEnter={() => setCtaHovered(true)}
-            onMouseLeave={() => setCtaHovered(false)}
-          >
-            <StaggerText
-              hovered={ctaHovered}
-              hoverColor="var(--accent)"
-              style={{ fontSize: 14, fontWeight: 400, color: "var(--accent)" }}
-            >
-              {"Book a Free Call"}
-            </StaggerText>
-          </button>
         </div>
       </div>
     </section>

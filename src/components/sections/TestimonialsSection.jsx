@@ -21,12 +21,12 @@ const fallbackTestimonials = [];
 
 function ReviewCard({ t }) {
   return (
-    <div className="w-[400px] shrink-0 rounded-[24px] p-8 flex flex-col gap-5 mx-3" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
+    <div className="w-[320px] shrink-0 rounded-xl p-5 flex flex-col gap-4 mx-2" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
-            size={14}
+            size={12}
             className={
               i < t.rating
                 ? "fill-[var(--accent)] drop-shadow-[0_0_4px_var(--accent-glow)]"
@@ -37,24 +37,24 @@ function ReviewCard({ t }) {
         ))}
       </div>
 
-      <p className="text-[20px] leading-[1.5] font-medium" style={{ color: "var(--text-primary)" }}>
+      <p className="text-[14px] leading-[1.5] font-medium" style={{ color: "var(--text-primary)" }}>
         &ldquo;{t.quote}&rdquo;
       </p>
 
-      <div className="flex items-center gap-3 mt-auto pt-2">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-xs font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+      <div className="flex items-center gap-3 mt-auto pt-1">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-[11px] font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
           {t.author.charAt(0)}
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
+            <p className="text-[13px] font-medium truncate" style={{ color: "var(--text-primary)" }}>
               {t.author}
             </p>
             {t.isVerified && (
-              <BadgeCheck size={12} className="shrink-0" style={{ color: "var(--accent)" }} />
+              <BadgeCheck size={10} className="shrink-0" style={{ color: "var(--accent)" }} />
             )}
           </div>
-          <p className="text-xs truncate mt-0.5" style={{ color: "var(--text-muted)" }}>
+          <p className="text-[11px] truncate mt-0.5" style={{ color: "var(--text-muted)" }}>
             {t.role}
             {t.role && t.company ? ", " : ""}
             {t.company && <span style={{ color: "var(--text-muted)" }}>{t.company}</span>}
@@ -154,7 +154,7 @@ export default function TestimonialsSection() {
       <section
         ref={sectionRef}
         id="reviews"
-        className="relative py-24 sm:py-28 lg:py-32 overflow-hidden"
+        className="relative py-16 sm:py-20 lg:py-24 overflow-hidden"
         style={{ background: "var(--bg-primary)" }}
       >
         <div className="absolute inset-0" style={{ background: "radial-gradient(circle_at_30%_20%, var(--accent-glow), transparent 60%), radial-gradient(circle_at_70%_80%, var(--accent-glow), transparent 60%)" }} />
@@ -163,10 +163,16 @@ export default function TestimonialsSection() {
           {/* ── Header ── */}
           <div
             ref={headerRef}
-            className="max-w-7xl mx-auto px-6 md:px-12 mb-16"
+            className="max-w-7xl mx-auto px-6 md:px-12 mb-12"
           >
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <h2 className="text-3xl md:text-5xl font-display tracking-tight leading-[1.1]" style={{ color: "var(--text-primary)" }}>
+            <p
+              className="uppercase tracking-[0.15em] text-caption mb-4 font-medium"
+              style={{ color: "var(--text-muted)" }}
+            >
+              What Clients Say
+            </p>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+              <h2 className="text-heading-1 font-display tracking-tight leading-tight" style={{ color: "var(--text-primary)" }}>
                 Trusted by teams
                 <br />
                 <span style={{ color: "var(--text-muted)" }}>who build the future.</span>
@@ -238,14 +244,14 @@ export default function TestimonialsSection() {
           </div>
 
           {/* ── CTA after social proof ── */}
-          <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 mt-12">
             <ScrollReveal direction="up">
-              <div className="flex flex-col items-center text-center py-12 px-6 rounded-[24px]" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
-                <h3 className="text-2xl md:text-4xl font-display tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
+              <div className="flex flex-col items-center text-center py-10 px-6 rounded-2xl" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
+                <h3 className="text-heading-2 font-display tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
                   Ready to build something{" "}
                   <span style={{ color: "var(--text-muted)" }}>great?</span>
                 </h3>
-                <p className="text-sm md:text-base max-w-md mb-8" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-body-sm max-w-md mb-6" style={{ color: "var(--text-secondary)" }}>
                   Book a free strategy call and let&apos;s discuss your project,
                   timeline, and how we can help.
                 </p>
@@ -260,7 +266,7 @@ export default function TestimonialsSection() {
                       },
                     );
                   }}
-                  className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-medium transition-all duration-300"
+                  className="inline-flex items-center justify-center rounded-full px-6 py-3 text-[13px] font-medium transition-all duration-300"
                   style={{ background: "var(--accent)", color: "var(--accent-text)" }}
                 >
                   Book a Free Strategy Call
@@ -270,10 +276,10 @@ export default function TestimonialsSection() {
           </div>
 
           {/* ── FAQ ── */}
-          <div className="max-w-7xl mx-auto px-6 md:px-12 mt-28">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 mt-20">
             <div className="max-w-4xl">
               <div ref={faqHeaderRef}>
-                <h2 className="text-2xl md:text-4xl font-display tracking-tight mb-10 max-w-2xl" style={{ color: "var(--text-primary)" }}>
+                <h2 className="text-heading-2 font-display tracking-tight mb-8 max-w-2xl" style={{ color: "var(--text-primary)" }}>
                   Common questions
                   <span style={{ color: "var(--text-muted)" }}> about working with us.</span>
                 </h2>

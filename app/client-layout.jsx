@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap-setup";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import Preloader from "@/components/layout/Preloader";
 import SmoothScroll from "@/components/ui/SmoothScroll";
-import MagneticCursor from "@/components/ui/MagneticCursor";
 import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const [preloaderDone, setPreloaderDone] = useState(false);
-  const contentRef = useRef(null);
-  const navbarRef = useRef(null);
 
   useEffect(() => {
     initGtag();
@@ -24,48 +17,6 @@ export default function ClientLayout({ children }) {
   useEffect(() => {
     trackPageView(pathname);
   }, [pathname]);
-
-  // Premium reveal: after preloader, sequence navbar + content entrance
-  useGSAP(() => {
-    if (!contentRef.current) return;
-
-    if (!preloaderDone) {
-      gsap.set(contentRef.current, { opacity: 0 });
-      return;
-    }
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (prefersReduced) {
-      gsap.set(contentRef.current, { opacity: 1 });
-      if (navbarRef.current) gsap.set(navbarRef.current, { opacity: 1 });
-      return;
-    }
-
-    const tl = gsap.timeline();
-    tl.to(contentRef.current, {
-      opacity: 1,
-      duration: 0.6,
-      ease: "power2.out",
-    });
-
-    if (navbarRef.current) {
-      tl.fromTo(
-        navbarRef.current,
-        { y: -20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.out",
-          clearProps: "transform",
-        },
-        0,
-      );
-    }
-  }, [preloaderDone, pathname]);
 
   const isAdmin =
     pathname.startsWith("/admin") ||
@@ -80,30 +31,16 @@ export default function ClientLayout({ children }) {
       >
         Skip to content
       </a>
-      <Preloader onDone={() => setPreloaderDone(true)} />
       {!isAdmin && <SmoothScroll />}
-      {!isAdmin && preloaderDone && (
-        <div
-          ref={navbarRef}
-          style={{ opacity: 0 }}
-          className={
-            pathname === "/"
-              ? "absolute top-0 left-0 right-0 z-50"
-              : "relative z-50"
-          }
-        >
-          <Navbar isHome={pathname === "/"} />
-        </div>
-      )}
-      {!isAdmin && preloaderDone && <MagneticCursor />}
+      {!isAdmin && <Navbar isHome={pathname === "/"} />}
       {isAdmin ? (
         children
       ) : (
-        <main ref={contentRef} id="main-content" style={{ background: "var(--bg-primary)" }}>
+        <main id="main-content" style={{ background: "var(--bg-primary)" }}>
           {children}
         </main>
       )}
-      {!isAdmin && preloaderDone && <Footer />}
+      {!isAdmin && <Footer />}
     </>
   );
 }

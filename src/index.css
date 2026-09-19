@@ -4,6 +4,19 @@
   --font-primary: var(--font-inter), "Inter", sans-serif;
   --font-secondary: var(--font-switzer), "Switzer", sans-serif;
   --font-tertiary: var(--font-inter), "Inter", sans-serif;
+
+  /* ── Typography (register as Tailwind text-* utilities) ── */
+  --text-hero: clamp(2.25rem, 5vw, 3.5rem);
+  --text-heading-1: clamp(2rem, 4vw, 3rem);
+  --text-heading-2: clamp(1.25rem, 2.5vw, 1.75rem);
+  --text-heading-3: clamp(1rem, 2vw, 1.25rem);
+  --text-body-lg: 1rem;
+  --text-body: 0.9375rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --leading-tight: 1.05;
+  --leading-snug: 1.15;
+  --leading-normal: 1.5;
 }
 
 /* ── Theme Tokens (Light default, Dark override) ── */
@@ -364,11 +377,6 @@ body::after {
   animation: grid-line-dash 1s linear infinite;
 }
 
-/* ── Cursor ── */
-.no-native-cursor,
-.no-native-cursor * {
-  cursor: none !important;
-}
 
 .gsap-work-img,
 .gsap-proj-img {

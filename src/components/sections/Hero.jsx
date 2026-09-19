@@ -82,7 +82,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden flex items-center"
+      className="relative min-h-[85vh] w-full overflow-hidden flex items-center"
       style={{ background: "var(--hero-bg)" }}
     >
       {/* Hero background image */}
@@ -98,18 +98,18 @@ function Hero() {
 
       <GridLines />
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 py-24 md:py-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 py-16 md:py-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-8 items-center">
           {/* Left: Text content */}
           <div ref={containerRef}>
             {/* Status badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl mb-6" style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(4px)", border: "1px solid var(--hero-border)" }}>
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full mb-5" style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(4px)", border: "1px solid var(--hero-border)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-medium" style={{ color: "var(--hero-text-muted)" }}>Currently accepting new projects</span>
+              <span className="text-[11px] font-medium" style={{ color: "var(--hero-text-muted)" }}>Currently accepting new projects</span>
             </div>
 
             <h1
-              className="font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight mb-8"
+              className="font-semibold text-hero leading-tight tracking-tight mb-6"
               style={{ color: "var(--hero-text)", letterSpacing: "-0.02em" }}
             >
               <span ref={mainTextRef} className="block">
@@ -122,7 +122,7 @@ function Hero() {
 
             <div
               ref={subtextRef}
-              className="max-w-md text-base md:text-lg leading-relaxed mb-8"
+              className="max-w-md text-body-sm md:text-body leading-normal mb-6"
               style={{ color: "var(--hero-text-secondary)" }}
             >
               A software development agency that partners with founders
@@ -132,7 +132,7 @@ function Hero() {
 
             <div
               ref={ctaRef}
-              className="flex flex-col sm:flex-row items-start gap-4"
+              className="flex flex-col sm:flex-row items-start gap-3"
             >
               <button
                 type="button"
@@ -140,16 +140,16 @@ function Hero() {
                   trackEvent("booking_click", { button_location: "/hero" });
                   openCal();
                 }}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
+                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium transition-all duration-300 hover:opacity-90"
                 style={{ background: "var(--hero-text)", color: "var(--hero-bg)" }}
               >
                 Book a Free Strategy Call
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </button>
 
               <Link
                 href="/#process"
-                className="group relative inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300"
+                className="group relative inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium transition-all duration-300"
                 style={{ background: "rgba(255,255,255,0.08)", color: "var(--hero-text)", backdropFilter: "blur(3px)" }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.14)"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}

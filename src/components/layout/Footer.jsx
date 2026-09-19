@@ -78,13 +78,13 @@ export default function Footer() {
           <h2
             ref={headingRef}
             className="text-3xl md:text-5xl font-display tracking-tight leading-[1.05] mb-4"
-            style={{ color: "var(--footer-text)" }}
+            style={{ color: "#ffffff" }}
           >
             Let&apos;s ship your next product
           </h2>
           <p
             className="text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto"
-            style={{ color: "var(--footer-muted)" }}
+            style={{ color: "var(--footer-text)" }}
           >
             Book a free strategy call to discuss your project, timeline, and how
             we can help.

@@ -91,8 +91,8 @@ export default function ProcessSection() {
       ease: "none",
       scrollTrigger: {
         trigger: timelineRef.current,
-        start: "top 10%",
-        end: "bottom 90%",
+        start: "top 80%",
+        end: "bottom 60%",
         scrub: 0.3,
       },
     });
@@ -130,26 +130,25 @@ export default function ProcessSection() {
     <section
         ref={sectionRef}
         id="process"
-        className="relative overflow-hidden scroll-mt-24 py-24 sm:py-28 lg:py-32"
+        className="relative overflow-hidden scroll-mt-24 py-16 sm:py-20 lg:py-24"
         style={{ background: "var(--bg-primary)" }}
       >
       <div className="absolute inset-0" style={{ background: "radial-gradient(circle_at_center, var(--accent-glow), transparent 70%)" }} />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
-        <div ref={headingRef} className="mb-20 max-w-4xl sm:mb-24 lg:mb-32">
-          <p className="uppercase tracking-[0.2em] text-xs mb-5" style={{ color: "var(--text-muted)" }}>
-            <span className="font-display not-italic mr-2" style={{ color: "var(--text-muted)" }}>03</span>
+        <div ref={headingRef} className="mb-12 max-w-4xl sm:mb-16 lg:mb-20">
+          <p className="uppercase tracking-[0.15em] text-caption mb-4 font-medium" style={{ color: "var(--text-muted)" }}>
             Our Process
           </p>
 
-          <h2 className="text-3xl font-semibold leading-[1.08] tracking-tight sm:text-4xl md:text-6xl" style={{ color: "var(--text-primary)" }}>
+          <h2 className="text-heading-1 font-semibold leading-tight tracking-tight" style={{ color: "var(--text-primary)" }}>
             A structured process built for <span className="font-secondary-italic" style={{ color: "var(--text-secondary)" }}>modern product development.</span>
           </h2>
 
-          <p className="mt-5 sm:mt-6 lg:mt-8 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: "var(--text-secondary)" }}>
+          <p className="mt-4 max-w-2xl text-body leading-normal" style={{ color: "var(--text-secondary)" }}>
             Every project moves through a clear workflow
           </p>
-          <p className="mt-3 sm:mt-3.5 max-w-2xl text-sm leading-relaxed sm:text-base" style={{ color: "var(--text-muted)" }}>
+          <p className="mt-2 max-w-2xl text-body-sm leading-normal" style={{ color: "var(--text-muted)" }}>
             <span className="mr-2 font-display not-italic" style={{ color: "var(--text-muted)" }}>—</span>
             from{" "}
             <span className="font-secondary-italic" style={{ color: "var(--text-secondary)" }}>strategy and design</span>
@@ -168,34 +167,34 @@ export default function ProcessSection() {
             />
           </div>
 
-          <div className="space-y-16 sm:space-y-24 lg:space-y-32">
+          <div className="space-y-10 sm:space-y-14 lg:space-y-16">
             {process.map((item) => (
               <div
                 key={item.id}
-                className="proc-step relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-5 sm:grid-cols-[40px_minmax(0,1fr)] sm:gap-x-6 md:grid-cols-[140px_minmax(0,1fr)] md:gap-x-24"
+                className="proc-step relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-5 sm:grid-cols-[40px_minmax(0,1fr)] sm:gap-x-6 md:grid-cols-[120px_minmax(0,1fr)] md:gap-x-16"
               >
                 <div className="relative flex items-start">
-                  <div className="proc-dot relative z-10 flex h-8 w-8 items-center justify-center rounded-full sm:h-10 sm:w-10" style={{ border: "1px solid var(--border-color)", background: "var(--bg-secondary)", boxShadow: "0 0 20px var(--accent-glow)" }}>
+                  <div className="proc-dot relative z-10 flex h-7 w-7 items-center justify-center rounded-full sm:h-8 sm:w-8" style={{ border: "1px solid var(--border-color)", background: "var(--bg-secondary)", boxShadow: "0 0 20px var(--accent-glow)" }}>
                     <div className="absolute inset-0 rounded-full" style={{ border: "1px solid var(--border-color)" }} />
-                    <div className="h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3" style={{ background: "var(--text-primary)", boxShadow: "0 0 12px var(--accent-glow)" }} />
+                    <div className="h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5" style={{ background: "var(--text-primary)", boxShadow: "0 0 12px var(--accent-glow)" }} />
                   </div>
-                  <span className="proc-num hidden md:block absolute left-20 top-0 text-5xl font-semibold tracking-tight" style={{ color: "var(--text-muted)" }}>
+                  <span className="proc-num hidden md:block absolute left-16 top-0 text-4xl font-semibold tracking-tight" style={{ color: "var(--text-muted)" }}>
                     {item.id}
                   </span>
                 </div>
 
-                <div className="min-w-0 pb-10 sm:pb-12 md:pb-16">
-                  <h3 className="proc-title mb-5 text-2xl font-semibold tracking-tight sm:text-3xl md:mb-8 md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
+                <div className="min-w-0 pb-8 sm:pb-10 md:pb-12">
+                  <h3 className="proc-title mb-3 text-xl font-medium tracking-tight sm:text-2xl md:mb-4 font-display" style={{ color: "var(--text-primary)" }}>
                     {item.title}
                   </h3>
-                  <p className="proc-desc mb-8 max-w-2xl text-base leading-relaxed sm:text-lg md:mb-10 md:text-xl" style={{ color: "var(--text-secondary)" }}>
+                  <p className="proc-desc mb-5 max-w-2xl text-body-sm leading-normal md:mb-6" style={{ color: "var(--text-secondary)" }}>
                     {item.description}
                   </p>
-                  <div className="proc-tags flex flex-wrap gap-3">
+                  <div className="proc-tags flex flex-wrap gap-2">
                     {item.tags.map((tag, i) => (
                       <div
                         key={i}
-                        className="rounded-full px-3 py-1.5 text-xs transition-colors duration-300 sm:px-4 sm:py-2 sm:text-sm"
+                        className="rounded-full px-3 py-1 text-[11px] transition-colors duration-300"
                         style={{ border: "1px solid var(--border-color)", background: "transparent", color: "var(--text-secondary)" }}
                       >
                         {tag}

@@ -123,7 +123,7 @@ export default function Preloader({ onDone }) {
     <div
       ref={overlayRef}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
-      style={{ cursor: "none", background: "var(--bg-primary)" }}
+      style={{ background: "var(--bg-primary)" }}
     >
       {/* ambient glow behind everything */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

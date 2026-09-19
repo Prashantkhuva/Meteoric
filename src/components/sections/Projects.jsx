@@ -146,14 +146,19 @@ function Projects() {
     >
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
-        <div ref={headingRef} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-display tracking-tight leading-[1.1]" style={{ color: "var(--text-primary)" }}>
+        <div ref={headingRef} className="mb-12">
+          <p
+            className="uppercase tracking-[0.15em] text-caption mb-4 font-medium"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Our Work
+          </p>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5">
+            <h2 className="text-heading-1 font-display tracking-tight leading-tight" style={{ color: "var(--text-primary)" }}>
               Selected Works
             </h2>
-          </div>
 
-          <div className="flex items-center gap-6 shrink-0">
+            <div className="flex items-center gap-6 shrink-0">
             <Link
               href="/work"
               className="group inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
@@ -171,6 +176,7 @@ function Projects() {
               <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
+        </div>
         </div>
 
         {/* Project Grid — 2 columns */}
