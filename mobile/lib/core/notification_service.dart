@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Local heads-up notifications for admin alerts (new lead, new booking,
@@ -37,8 +36,8 @@ class NotificationService {
         );
       }
       _ready = true;
-    } catch (err) {
-      debugPrint('NotificationService.init failed: $err');
+    } catch (_) {
+      // Init failed — notifications won't show
     }
   }
 
@@ -66,8 +65,8 @@ class NotificationService {
           iOS: DarwinNotificationDetails(),
         ),
       );
-    } catch (err) {
-      debugPrint('NotificationService.show failed: $err');
+    } catch (_) {
+      // Show failed — silently ignore
     }
   }
 }

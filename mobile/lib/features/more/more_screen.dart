@@ -41,7 +41,11 @@ class _MoreScreenState extends State<MoreScreen> {
     _Item('Projects', Icons.folder_outlined, ProjectsScreen()),
     _Item('Reviews', Icons.star_outline, ReviewsScreen()),
     _Item('Bookings', Icons.event_outlined, BookingsScreen()),
-    _Item('Bank Accounts', Icons.account_balance_outlined, BankAccountsScreen()),
+    _Item(
+      'Bank Accounts',
+      Icons.account_balance_outlined,
+      BankAccountsScreen(),
+    ),
     _Item('Email', Icons.mail_outline, EmailScreen()),
     _Item('Issues', Icons.bug_report_outlined, LinearIssuesScreen()),
   ];
@@ -50,7 +54,11 @@ class _MoreScreenState extends State<MoreScreen> {
   Widget build(BuildContext context) {
     final items = [
       ..._baseItems,
-      const _Item('Report Issue', Icons.bug_report_outlined, ReportIssueScreen()),
+      const _Item(
+        'Report Issue',
+        Icons.bug_report_outlined,
+        ReportIssueScreen(),
+      ),
       if (_canManageUsers)
         const _Item('Team', Icons.group_outlined, UsersScreen()),
       const _Item('Settings', Icons.settings_outlined, SettingsScreen()),
@@ -67,43 +75,47 @@ class _MoreScreenState extends State<MoreScreen> {
         separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (context, i) {
           final item = items[i];
-          return Material(
-            color: AppColors.card,
-            borderRadius: AppRadius.mdAll,
-            child: InkWell(
+          return Semantics(
+            button: true,
+            label: item.label,
+            child: Material(
+              color: AppColors.card,
               borderRadius: AppRadius.mdAll,
-              onTap: () {
-                Haptic.tap();
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => item.screen));
-              },
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.border),
-                  borderRadius: AppRadius.mdAll,
-                ),
-                child: Row(
-                  children: [
-                    Icon(item.icon, size: 18, color: AppColors.textMuted),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        item.label,
-                        style: const TextStyle(
-                          color: AppColors.text,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Inter',
+              child: InkWell(
+                borderRadius: AppRadius.mdAll,
+                onTap: () {
+                  Haptic.tap();
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => item.screen));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.border),
+                    borderRadius: AppRadius.mdAll,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(item.icon, size: 18, color: AppColors.textMuted),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          item.label,
+                          style: const TextStyle(
+                            color: AppColors.text,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.chevron_right,
-                      size: 18,
-                      color: AppColors.textFaint,
-                    ),
-                  ],
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: AppColors.textFaint,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

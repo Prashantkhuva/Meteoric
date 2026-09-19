@@ -66,7 +66,9 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   Future<void> _checkBiometricOnResume() async {
     if (!await BiometricService.isEnabled) return;
     if (!await BiometricService.isAvailable) return;
-    final ok = await BiometricService.authenticate(reason: 'Unlock Meteoric Admin');
+    final ok = await BiometricService.authenticate(
+      reason: 'Unlock Meteoric Admin',
+    );
     if (!ok && mounted) {
       setState(() => _biometricLocked = true);
     } else if (mounted) {
@@ -99,6 +101,20 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
         _updater.update != null) {
       _updater.downloadAndInstall();
     }
+  }
+
+  void _showRestartOverlay() {
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => _RestartCountdown(
+        onComplete: () {
+          Navigator.of(ctx).pop();
+          SystemNavigator.pop();
+        },
+      ),
+    );
   }
 
   @override
@@ -278,7 +294,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                           TextButton(
                             onPressed: () {
                               Navigator.of(ctx).pop();
-                              SystemNavigator.pop();
+                              _showRestartOverlay();
                             },
                             child: const Text('RESTART'),
                           ),
@@ -396,6 +412,86 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RestartCountdown extends StatefulWidget {
+  final VoidCallback onComplete;
+  const _RestartCountdown({required this.onComplete});
+
+  @override
+  State<_RestartCountdown> createState() => _RestartCountdownState();
+}
+
+class _RestartCountdownState extends State<_RestartCountdown> {
+  int _seconds = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    _tick();
+  }
+
+  void _tick() {
+    if (_seconds <= 0) {
+      widget.onComplete();
+      return;
+    }
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() => _seconds--);
+        _tick();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: Dialog(
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.border),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: AppColors.accent,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Restarting...',
+                style: TextStyle(
+                  color: AppColors.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'App will restart in $_seconds...',
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

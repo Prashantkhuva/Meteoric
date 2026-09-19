@@ -93,277 +93,307 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
-      backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          const _LoginBackground(),
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 380),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Column(
-                        children: [
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: AppColors.accent,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: Image.asset(
-                              'assets/m.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Meteoric',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 26,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.5,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Admin Dashboard',
-                            style: TextStyle(
-                               color: AppColors.textFaint,
-                               fontSize: 13,
-                               letterSpacing: 0.4,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 48),
-                      Container(
-                        padding: const EdgeInsets.all(28),
-                        decoration: BoxDecoration(
-                          color: AppColors.card.withValues(alpha: 0.9),
-                          borderRadius: AppRadius.xlAll,
-                          border: Border.all(color: AppColors.border),
-                           boxShadow: [
-                            BoxShadow(
-                              color: AppColors.accent.withValues(alpha: 0.03),
-                              blurRadius: 80,
-                              spreadRadius: 4,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return UnfocusOnTap(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: Stack(
+          children: [
+            const _LoginBackground(),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 380),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Column(
                           children: [
-                            _FieldLabel('Email'),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _email,
-                              keyboardType: TextInputType.emailAddress,
-                              autocorrect: false,
-                              enabled: !_loading,
-                              style: const TextStyle(
-                               color: AppColors.text,
-                               fontSize: 14,
-                               fontFamily: 'Inter',
-                             ),
-                             decoration: InputDecoration(
-                               hintText: 'you@example.com',
-                               hintStyle: const TextStyle(
-                                 color: AppColors.textFaint,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
+                            Semantics(
+                              label: 'Meteoric logo',
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: AppColors.accent,
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                filled: true,
-                                fillColor: AppColors.inputFillDark,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.lg,
-                                  vertical: AppSpacing.md2,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: AppRadius.lgAll,
-                                  borderSide: const BorderSide(
-                                    color: AppColors.border,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: AppRadius.lgAll,
-                                  borderSide: const BorderSide(
-                                    color: AppColors.accent,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: AppRadius.lgAll,
-                                  borderSide: const BorderSide(
-                                    color: AppColors.border,
-                                  ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Image.asset(
+                                  'assets/m.png',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                             const SizedBox(height: 20),
-                            _FieldLabel('Password'),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _password,
-                              obscureText: _obscure,
-                              enabled: !_loading,
-                              onSubmitted: (_) => _submit(),
-                              style: const TextStyle(
-                                color: AppColors.text,
-                                fontSize: 14,
+                            const Text(
+                              'Meteoric',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.5,
                                 fontFamily: 'Inter',
                               ),
-                              decoration: InputDecoration(
-                                hintText: 'Enter your password',
-                                hintStyle: const TextStyle(
-                                  color: AppColors.textFaint,
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'Admin Dashboard',
+                              style: TextStyle(
+                                color: AppColors.textFaint,
+                                fontSize: 13,
+                                letterSpacing: 0.4,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 48),
+                        Container(
+                          padding: const EdgeInsets.all(28),
+                          decoration: BoxDecoration(
+                            color: AppColors.card.withValues(alpha: 0.9),
+                            borderRadius: AppRadius.xlAll,
+                            border: Border.all(color: AppColors.border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.accent.withValues(alpha: 0.03),
+                                blurRadius: 80,
+                                spreadRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _FieldLabel('Email'),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: _email,
+                                keyboardType: TextInputType.emailAddress,
+                                autocorrect: false,
+                                enabled: !_loading,
+                                style: const TextStyle(
+                                  color: AppColors.text,
                                   fontSize: 14,
                                   fontFamily: 'Inter',
                                 ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _obscure
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    size: 18,
-                                    color: AppColors.textMuted,
-                                  ),
-                                  onPressed: () =>
-                                      setState(() => _obscure = !_obscure),
-                                ),
-                                filled: true,
-                                fillColor: AppColors.inputFillDark,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.lg,
-                                  vertical: AppSpacing.md2,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: AppRadius.lgAll,
-                                  borderSide: const BorderSide(
-                                    color: AppColors.border,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: AppRadius.lgAll,
-                                  borderSide: const BorderSide(
-                                    color: AppColors.accent,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: AppRadius.lgAll,
-                                  borderSide: const BorderSide(
-                                    color: AppColors.border,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (_error != null) ...[
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.red.withValues(alpha: 0.04),
-                                  borderRadius: AppRadius.lgAll,
-                                  border: Border.all(
-                                    color: AppColors.red.withValues(alpha: 0.1),
-                                  ),
-                                ),
-                                child: Text(
-                                  _error!,
-                                  style: const TextStyle(
-                                    color: AppColors.red,
-                                    fontSize: 13,
+                                decoration: InputDecoration(
+                                  hintText: 'you@example.com',
+                                  hintStyle: const TextStyle(
+                                    color: AppColors.textFaint,
+                                    fontSize: 14,
                                     fontFamily: 'Inter',
                                   ),
+                                  filled: true,
+                                  fillColor: AppColors.inputFillDark,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.lg,
+                                    vertical: AppSpacing.md2,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: AppRadius.lgAll,
+                                    borderSide: const BorderSide(
+                                      color: AppColors.border,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: AppRadius.lgAll,
+                                    borderSide: const BorderSide(
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: AppRadius.lgAll,
+                                    borderSide: const BorderSide(
+                                      color: AppColors.border,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ],
-                            const SizedBox(height: 24),
-                            SizedBox(
-                              height: 48,
-                              child: Material(
-                                color: _loading
-                                    ? AppColors.accent.withValues(alpha: 0.4)
-                                    : AppColors.accent,
-                                borderRadius: AppRadius.lgAll,
-                                child: InkWell(
-                                  borderRadius: AppRadius.lgAll,
-                                  onTap: _loading || _locked ? null : _submit,
-                                  child: Center(
-                                    child: _loading
-                                        ? const Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              SizedBox(
-                                                width: 16,
-                                                height: 16,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                       color: AppColors.onAccent,
+                              const SizedBox(height: 20),
+                              _FieldLabel('Password'),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: _password,
+                                obscureText: _obscure,
+                                enabled: !_loading,
+                                onSubmitted: (_) => _submit(),
+                                style: const TextStyle(
+                                  color: AppColors.text,
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Enter your password',
+                                  hintStyle: const TextStyle(
+                                    color: AppColors.textFaint,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter',
+                                  ),
+                                  suffixIcon: Semantics(
+                                    button: true,
+                                    label: _obscure
+                                        ? 'Show password'
+                                        : 'Hide password',
+                                    child: IconButton(
+                                      icon: Icon(
+                                        _obscure
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        size: 18,
+                                        color: AppColors.textMuted,
+                                      ),
+                                      onPressed: () =>
+                                          setState(() => _obscure = !_obscure),
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: AppColors.inputFillDark,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.lg,
+                                    vertical: AppSpacing.md2,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: AppRadius.lgAll,
+                                    borderSide: const BorderSide(
+                                      color: AppColors.border,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: AppRadius.lgAll,
+                                    borderSide: const BorderSide(
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: AppRadius.lgAll,
+                                    borderSide: const BorderSide(
+                                      color: AppColors.border,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (_error != null) ...[
+                                const SizedBox(height: 16),
+                                Semantics(
+                                  liveRegion: true,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.red.withValues(
+                                        alpha: 0.04,
+                                      ),
+                                      borderRadius: AppRadius.lgAll,
+                                      border: Border.all(
+                                        color: AppColors.red.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      _error!,
+                                      style: const TextStyle(
+                                        color: AppColors.red,
+                                        fontSize: 13,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                height: 48,
+                                child: Semantics(
+                                  button: true,
+                                  label: _locked
+                                      ? 'Locked, try again shortly'
+                                      : 'Sign in',
+                                  child: Material(
+                                    color: _loading
+                                        ? AppColors.accent.withValues(
+                                            alpha: 0.4,
+                                          )
+                                        : AppColors.accent,
+                                    borderRadius: AppRadius.lgAll,
+                                    child: InkWell(
+                                      borderRadius: AppRadius.lgAll,
+                                      onTap: _loading || _locked
+                                          ? null
+                                          : _submit,
+                                      child: Center(
+                                        child: _loading
+                                            ? const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 16,
+                                                    height: 16,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                          color: AppColors
+                                                              .onAccent,
+                                                        ),
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  Text(
+                                                    'Signing in...',
+                                                    style: TextStyle(
+                                                      color: AppColors.onAccent,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontFamily: 'Inter',
                                                     ),
-                                              ),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                'Signing in...',
-                                                style: TextStyle(
-                                                   color: AppColors.onAccent,
+                                                  ),
+                                                ],
+                                              )
+                                            : Text(
+                                                _locked
+                                                    ? 'Locked — try again shortly'
+                                                    : 'Sign in',
+                                                style: const TextStyle(
+                                                  color: AppColors.onAccent,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
-                                            ],
-                                          )
-                                        : Text(
-                                            _locked
-                                                ? 'Locked — try again shortly'
-                                                : 'Sign in',
-                                            style: const TextStyle(
-                                              color: AppColors.onAccent,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Inter',
-                                            ),
-                                          ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 32),
-                      const Text(
-                        'Protected area — authorized personnel only',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.textFaint,
-                          fontSize: 11,
-                          letterSpacing: 0.4,
-                          fontFamily: 'Inter',
+                        const SizedBox(height: 32),
+                        const Text(
+                          'Protected area — authorized personnel only',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.textFaint,
+                            fontSize: 11,
+                            letterSpacing: 0.4,
+                            fontFamily: 'Inter',
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ), );
+    );
   }
 }
 

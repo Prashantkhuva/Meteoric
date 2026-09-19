@@ -38,9 +38,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     final user = AuthService.user;
     _name = TextEditingController(
-      text: user?.userMetadata?['full_name'] ??
-          user?.userMetadata?['name'] ??
-          '',
+      text:
+          user?.userMetadata?['full_name'] ?? user?.userMetadata?['name'] ?? '',
     );
     _email = TextEditingController(text: user?.email ?? '');
     _originalEmail = user?.email ?? '';
@@ -480,18 +479,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           decoration: BoxDecoration(
             color: Color(0x08FF4242),
             borderRadius: AppRadius.lgAll,
-            border: Border.all(
-              color: AppColors.red.withValues(alpha: 0.2),
-            ),
+            border: Border.all(color: AppColors.red.withValues(alpha: 0.2)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.logout_rounded,
-                size: 16,
-                color: AppColors.red,
-              ),
+              Icon(Icons.logout_rounded, size: 16, color: AppColors.red),
               const SizedBox(width: 8),
               const Text(
                 'SIGN OUT',
@@ -569,10 +562,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           checking
                               ? 'Checking\u2026'
                               : update != null
-                                  ? (forced
-                                      ? 'Update Required'
-                                      : 'Update Available')
-                                  : 'Check for Updates',
+                              ? (forced
+                                    ? 'Update Required'
+                                    : 'Update Available')
+                              : 'Check for Updates',
                           style: TextStyle(
                             color: forced ? AppColors.red : AppColors.text,
                             fontSize: 14,
@@ -585,8 +578,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           checking
                               ? 'Looking for the latest version\u2026'
                               : update != null
-                                  ? 'Version ${update.version} is ready'
-                                  : 'Tap to check for a newer version',
+                              ? 'Version ${update.version} is ready'
+                              : 'Tap to check for a newer version',
                           style: TextStyle(
                             color: update != null
                                 ? (forced ? AppColors.red : AppColors.accent)
@@ -634,8 +627,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onPressed: state.downloadAndInstall,
                   style: TextButton.styleFrom(
                     backgroundColor: forced ? AppColors.red : AppColors.accent,
-                    foregroundColor:
-                        forced ? Colors.white : AppColors.onAccent,
+                    foregroundColor: forced ? Colors.white : AppColors.onAccent,
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     shape: RoundedRectangleBorder(
                       borderRadius: AppRadius.smAll,
@@ -772,63 +764,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: (value ? AppColors.accent : AppColors.textFaint)
-                  .withValues(alpha: 0.06),
-              borderRadius: AppRadius.smAll,
-              border: Border.all(
+    return Semantics(
+      toggled: value,
+      label: '$label: ${value ? "on" : "off"}',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
                 color: (value ? AppColors.accent : AppColors.textFaint)
-                    .withValues(alpha: 0.12),
+                    .withValues(alpha: 0.06),
+                borderRadius: AppRadius.smAll,
+                border: Border.all(
+                  color: (value ? AppColors.accent : AppColors.textFaint)
+                      .withValues(alpha: 0.12),
+                ),
+              ),
+              child: Icon(
+                icon,
+                size: 16,
+                color: value ? AppColors.accent : AppColors.textMuted,
               ),
             ),
-            child: Icon(
-              icon,
-              size: 16,
-              color: value ? AppColors.accent : AppColors.textMuted,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    color: AppColors.text,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      color: AppColors.text,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: AppColors.textFaint,
-                    fontSize: 11,
-                    fontFamily: 'Inter',
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 11,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeThumbColor: AppColors.onAccent,
-            activeTrackColor: AppColors.accent,
-            inactiveTrackColor: AppColors.border,
-          ),
-        ],
+            Switch(
+              value: value,
+              onChanged: onChanged,
+              activeThumbColor: AppColors.onAccent,
+              activeTrackColor: AppColors.accent,
+              inactiveTrackColor: AppColors.border,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -988,8 +984,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             decoration: _input(
               suffix: TextButton(
-                onPressed: () =>
-                    setState(() => _showPassword = !_showPassword),
+                onPressed: () => setState(() => _showPassword = !_showPassword),
                 child: Text(
                   _showPassword ? 'Hide' : 'Show',
                   style: const TextStyle(
@@ -1066,9 +1061,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: AppRadius.smAll,
-      borderSide: BorderSide(
-        color: AppColors.accent.withValues(alpha: 0.3),
-      ),
+      borderSide: BorderSide(color: AppColors.accent.withValues(alpha: 0.3)),
     ),
     disabledBorder: OutlineInputBorder(
       borderRadius: AppRadius.smAll,

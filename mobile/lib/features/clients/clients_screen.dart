@@ -190,168 +190,168 @@ class _ClientsScreenState extends State<ClientsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(
-        title: _selecting
-            ? Text('${_selected.length} selected')
-            : const Text('Clients'),
-        automaticallyImplyLeading: false,
-        leading: _selecting
-            ? IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  size: 20,
-                  color: AppColors.textMuted,
-                ),
-                onPressed: () => setState(() => _selected.clear()),
-              )
-            : null,
-        actions: _selecting
-            ? [
-                IconButton(
-                  icon: Icon(
-                    _selected.length == _clients.length
-                        ? Icons.check_box_outlined
-                        : Icons.check_box_outline_blank,
-                    size: 19,
-                    color: AppColors.accent,
-                  ),
-                  onPressed: () => setState(() {
-                    if (_selected.length == _clients.length) {
-                      _selected.clear();
-                    } else {
-                      _selected
-                        ..clear()
-                        ..addAll(_clients.map(_id));
-                    }
-                  }),
-                  tooltip: 'Select all',
-                ),
-              ]
-            : [
-                IconButton(
+    return UnfocusOnTap(
+      child: Scaffold(
+        appBar: AppBar(
+          title: _selecting
+              ? Text('${_selected.length} selected')
+              : const Text('Clients'),
+          automaticallyImplyLeading: false,
+          leading: _selecting
+              ? IconButton(
                   icon: const Icon(
-                    Icons.download_outlined,
-                    size: 19,
-                    color: AppColors.textMuted,
-                  ),
-                  onPressed: _exportCsv,
-                  tooltip: 'Export CSV',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.add,
+                    Icons.close,
                     size: 20,
-                    color: AppColors.accent,
-                  ),
-                  onPressed: () => _openForm(),
-                  tooltip: 'Add client',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.refresh,
-                    size: 18,
                     color: AppColors.textMuted,
                   ),
-                  onPressed: _load,
-                  tooltip: 'Refresh',
+                  onPressed: () => setState(() => _selected.clear()),
+                )
+              : null,
+          actions: _selecting
+              ? [
+                  IconButton(
+                    icon: Icon(
+                      _selected.length == _clients.length
+                          ? Icons.check_box_outlined
+                          : Icons.check_box_outline_blank,
+                      size: 19,
+                      color: AppColors.accent,
+                    ),
+                    onPressed: () => setState(() {
+                      if (_selected.length == _clients.length) {
+                        _selected.clear();
+                      } else {
+                        _selected
+                          ..clear()
+                          ..addAll(_clients.map(_id));
+                      }
+                    }),
+                    tooltip: 'Select all',
+                  ),
+                ]
+              : [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.download_outlined,
+                      size: 19,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _exportCsv,
+                    tooltip: 'Export CSV',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.add,
+                      size: 20,
+                      color: AppColors.accent,
+                    ),
+                    onPressed: () => _openForm(),
+                    tooltip: 'Add client',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _load,
+                    tooltip: 'Refresh',
+                  ),
+                ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+              child: TextField(
+                controller: _search,
+                onChanged: _onSearchChanged,
+                decoration: InputDecoration(
+                  hintText: 'Search name, email, company...',
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 18,
+                    color: AppColors.textFaint,
+                  ),
+                  suffixIcon: _search.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            size: 16,
+                            color: AppColors.textMuted,
+                          ),
+                          onPressed: _clearSearch,
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            FilterBar(
+              groups: [
+                FilterGroup(
+                  key: 'status',
+                  label: 'Status',
+                  options: _statusOptions,
+                ),
+                FilterGroup(
+                  key: 'sort',
+                  label: 'Sort',
+                  options: const [
+                    MapEntry('newest', 'Newest'),
+                    MapEntry('oldest', 'Oldest'),
+                    MapEntry('name', 'Name A–Z'),
+                  ],
                 ),
               ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-            child: TextField(
-              controller: _search,
-              onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                hintText: 'Search name, email, company...',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 18,
-                  color: AppColors.textFaint,
-                ),
-                suffixIcon: _search.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(
-                          Icons.close,
-                          size: 16,
-                          color: AppColors.textMuted,
-                        ),
-                        onPressed: _clearSearch,
-                      )
-                    : null,
-              ),
-            ),
-          ),
-          FilterBar(
-            groups: [
-              FilterGroup(
-                key: 'status',
-                label: 'Status',
-                options: _statusOptions,
-              ),
-              FilterGroup(
-                key: 'sort',
-                label: 'Sort',
-                options: const [
-                  MapEntry('newest', 'Newest'),
-                  MapEntry('oldest', 'Oldest'),
-                  MapEntry('name', 'Name A–Z'),
-                ],
-              ),
-            ],
-            values: {'status': _status, 'sort': _sort},
-            onChanged: (v) {
-              setState(() {
-                _status = v['status'] ?? 'all';
-                _sort = v['sort'] ?? 'newest';
-              });
-              _page = 1;
-              _load();
-            },
-          ),
-          const SizedBox(height: 4),
-          Expanded(child: _buildList()),
-        ],
-      ),
-      bottomNavigationBar: _selecting
-          ? BulkActionBar(
-              count: _selected.length,
-              busy: _busy,
-              onClear: () => setState(() => _selected.clear()),
-              onDelete: _bulkDelete,
-              statusOptions: _statusOptions,
-              onStatus: (s) =>
-                  _runBulk((id) => ApiClient.instance.clientStatus(id, s)),
-            )
-          : (_total > _pageSize
-                ? PaginationBar(
-                    page: _page,
-                    total: _total,
-                    pageSize: _pageSize,
-                    onPageChanged: (p) {
-                      setState(() => _page = p);
-                      _load();
-                    },
-                  )
-                : null),
-      floatingActionButton: _selecting
-          ? null
-          : FloatingActionButton(
-              onPressed: () {
-                Haptic.tap();
-                _openForm();
+              values: {'status': _status, 'sort': _sort},
+              onChanged: (v) {
+                setState(() {
+                  _status = v['status'] ?? 'all';
+                  _sort = v['sort'] ?? 'newest';
+                });
+                _page = 1;
+                _load();
               },
-              backgroundColor: AppColors.accent,
-               foregroundColor: AppColors.onAccent,
-              shape: RoundedRectangleBorder(
-                borderRadius: AppRadius.mdAll,
-              ),
-              child: const Icon(Icons.add),
             ),
-    ), );
+            const SizedBox(height: 4),
+            Expanded(child: _buildList()),
+          ],
+        ),
+        bottomNavigationBar: _selecting
+            ? BulkActionBar(
+                count: _selected.length,
+                busy: _busy,
+                onClear: () => setState(() => _selected.clear()),
+                onDelete: _bulkDelete,
+                statusOptions: _statusOptions,
+                onStatus: (s) =>
+                    _runBulk((id) => ApiClient.instance.clientStatus(id, s)),
+              )
+            : (_total > _pageSize
+                  ? PaginationBar(
+                      page: _page,
+                      total: _total,
+                      pageSize: _pageSize,
+                      onPageChanged: (p) {
+                        setState(() => _page = p);
+                        _load();
+                      },
+                    )
+                  : null),
+        floatingActionButton: _selecting
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  Haptic.tap();
+                  _openForm();
+                },
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.onAccent,
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+                child: const Icon(Icons.add),
+              ),
+      ),
+    );
   }
 
   Widget _buildList() {
@@ -437,107 +437,111 @@ class _ClientCard extends StatelessWidget {
     final company = client['company'];
     final email = client['email'];
 
-    return Material(
-      borderRadius: AppRadius.mdAll,
-      color: selected ? AppColors.cardRaised : AppColors.card,
-      child: InkWell(
+    return Semantics(
+      label: 'Client: $name',
+      button: true,
+      child: Material(
         borderRadius: AppRadius.mdAll,
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.mdAll,
-            border: Border.all(
-              color: selected
-                  ? AppColors.accent.withValues(alpha: 0.5)
-                  : AppColors.border,
+        color: selected ? AppColors.cardRaised : AppColors.card,
+        child: InkWell(
+          borderRadius: AppRadius.mdAll,
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: AppRadius.mdAll,
+              border: Border.all(
+                color: selected
+                    ? AppColors.accent.withValues(alpha: 0.5)
+                    : AppColors.border,
+              ),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            name,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              name,
+                              style: const TextStyle(
+                                color: AppColors.text,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                          StatusBadge(
+                            meta: Status.get(Status.clients, client['status']),
+                          ),
+                          const SizedBox(width: 8),
+                          if (onEdit != null)
+                            GestureDetector(
+                              onTap: onEdit,
+                              child: const Icon(
+                                Icons.edit_outlined,
+                                size: 15,
+                                color: AppColors.textFaint,
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        [
+                          if (company != null && '$company'.isNotEmpty)
+                            '$company',
+                          if (email != null && '$email'.isNotEmpty) '$email',
+                        ].join(' • '),
+                        style: const TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text(
+                            'Added ${Fmt.date(client['created_at'] as String?)}',
                             style: const TextStyle(
-                              color: AppColors.text,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                              color: AppColors.textFaint,
+                              fontSize: 10,
                               fontFamily: 'Inter',
                             ),
                           ),
-                        ),
-                        StatusBadge(
-                          meta: Status.get(Status.clients, client['status']),
-                        ),
-                        const SizedBox(width: 8),
-                        if (onEdit != null)
-                          GestureDetector(
-                            onTap: onEdit,
-                            child: const Icon(
-                              Icons.edit_outlined,
-                              size: 15,
+                          const Spacer(),
+                          Text(
+                            Fmt.timeAgo(client['created_at'] as String?),
+                            style: const TextStyle(
                               color: AppColors.textFaint,
+                              fontSize: 10,
+                              fontFamily: 'Inter',
                             ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      [
-                        if (company != null && '$company'.isNotEmpty)
-                          '$company',
-                        if (email != null && '$email'.isNotEmpty) '$email',
-                      ].join(' • '),
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text(
-                          'Added ${Fmt.date(client['created_at'] as String?)}',
-                          style: const TextStyle(
-                            color: AppColors.textFaint,
-                            fontSize: 10,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          Fmt.timeAgo(client['created_at'] as String?),
-                          style: const TextStyle(
-                            color: AppColors.textFaint,
-                            fontSize: 10,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              if (selecting) ...[
-                const SizedBox(width: 10),
-                Icon(
-                  selected ? Icons.check_box : Icons.check_box_outline_blank,
-                  size: 20,
-                  color: selected ? AppColors.accent : AppColors.textFaint,
-                ),
+                if (selecting) ...[
+                  const SizedBox(width: 10),
+                  Icon(
+                    selected ? Icons.check_box : Icons.check_box_outline_blank,
+                    size: 20,
+                    color: selected ? AppColors.accent : AppColors.textFaint,
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

@@ -390,6 +390,9 @@ body::after {
     object-position: center !important;
     filter: none !important;
   }
+  canvas[aria-hidden="true"] {
+    display: none !important;
+  }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

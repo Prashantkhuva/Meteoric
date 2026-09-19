@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Lightweight in-memory + SharedPreferences cache for API responses.
@@ -50,14 +49,12 @@ class DataCache {
     } catch (err) {
       // 3. Fall back to stale memory cache
       if (mem != null) {
-        debugPrint('DataCache: stale hit for $key');
         return (mem.data, true);
       }
 
       // 4. Fall back to disk cache
       final disk = _getDisk(key);
       if (disk != null) {
-        debugPrint('DataCache: disk hit for $key');
         return (disk, true);
       }
 

@@ -9,3 +9,20 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+
+linter:
+  rules:
+    avoid_print: true
+    avoid_web_libraries_in_flutter: true
+    cancel_subscriptions: true
+    close_sinks: true
+    prefer_final_locals: true
+    prefer_final_fields: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_single_quotes: true
+    sized_box_for_whitespace: true
+    sort_child_properties_last: true
+    unnecessary_lambdas: true
+    unnecessary_string_interpolations: true
+    unnecessary_string_escapes: true

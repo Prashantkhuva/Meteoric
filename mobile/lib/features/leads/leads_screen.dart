@@ -86,7 +86,8 @@ class _LeadsScreenState extends State<LeadsScreen> {
         'source': _source,
         'sort': _sort,
       };
-      final cacheKey = 'leads_${_page}_${_status}_${_score}_${_source}_${_sort}_${_search.text.trim()}';
+      final cacheKey =
+          'leads_${_page}_${_status}_${_score}_${_source}_${_sort}_${_search.text.trim()}';
 
       final (cached, isStale) = await DataCache.instance.getOrFetch(
         key: cacheKey,
@@ -284,205 +285,207 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(
-        title: _selecting
-            ? Text('${_selected.length} selected')
-            : const Text('Leads'),
-        automaticallyImplyLeading: false,
-        leading: _selecting
-            ? IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  size: 20,
-                  color: AppColors.textMuted,
-                ),
-                onPressed: () => setState(() => _selected.clear()),
-              )
-            : null,
-        actions: _selecting
-            ? [
-                IconButton(
-                  icon: Icon(
-                    _selected.length == _leads.length
-                        ? Icons.check_box_outlined
-                        : Icons.check_box_outline_blank,
-                    size: 19,
-                    color: AppColors.accent,
-                  ),
-                  onPressed: () => setState(() {
-                    if (_selected.length == _leads.length) {
-                      _selected.clear();
-                    } else {
-                      _selected
-                        ..clear()
-                        ..addAll(_leads.map(_id));
-                    }
-                  }),
-                  tooltip: 'Select all',
-                ),
-              ]
-            : [
-                IconButton(
+    return UnfocusOnTap(
+      child: Scaffold(
+        appBar: AppBar(
+          title: _selecting
+              ? Text('${_selected.length} selected')
+              : const Text('Leads'),
+          automaticallyImplyLeading: false,
+          leading: _selecting
+              ? IconButton(
                   icon: const Icon(
-                    Icons.upload_file_outlined,
-                    size: 18,
-                    color: AppColors.textMuted,
-                  ),
-                  onPressed: _importCsv,
-                  tooltip: 'Import CSV',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.download_outlined,
-                    size: 19,
-                    color: AppColors.textMuted,
-                  ),
-                  onPressed: _exportCsv,
-                  tooltip: 'Export CSV',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.add,
+                    Icons.close,
                     size: 20,
-                    color: AppColors.accent,
-                  ),
-                  onPressed: () => _openForm(),
-                  tooltip: 'Add lead',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.refresh,
-                    size: 18,
                     color: AppColors.textMuted,
                   ),
-                  onPressed: _load,
-                  tooltip: 'Refresh',
+                  onPressed: () => setState(() => _selected.clear()),
+                )
+              : null,
+          actions: _selecting
+              ? [
+                  IconButton(
+                    icon: Icon(
+                      _selected.length == _leads.length
+                          ? Icons.check_box_outlined
+                          : Icons.check_box_outline_blank,
+                      size: 19,
+                      color: AppColors.accent,
+                    ),
+                    onPressed: () => setState(() {
+                      if (_selected.length == _leads.length) {
+                        _selected.clear();
+                      } else {
+                        _selected
+                          ..clear()
+                          ..addAll(_leads.map(_id));
+                      }
+                    }),
+                    tooltip: 'Select all',
+                  ),
+                ]
+              : [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.upload_file_outlined,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _importCsv,
+                    tooltip: 'Import CSV',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.download_outlined,
+                      size: 19,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _exportCsv,
+                    tooltip: 'Export CSV',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.add,
+                      size: 20,
+                      color: AppColors.accent,
+                    ),
+                    onPressed: () => _openForm(),
+                    tooltip: 'Add lead',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _load,
+                    tooltip: 'Refresh',
+                  ),
+                ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+              child: TextField(
+                controller: _search,
+                focusNode: _searchFocus,
+                onChanged: _onSearchChanged,
+                decoration: InputDecoration(
+                  hintText: 'Search name, email, company...',
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 18,
+                    color: AppColors.textFaint,
+                  ),
+                  suffixIcon: _search.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            size: 16,
+                            color: AppColors.textMuted,
+                          ),
+                          onPressed: _clearSearch,
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            FilterBar(
+              groups: [
+                FilterGroup(
+                  key: 'status',
+                  label: 'Status',
+                  options: _statusOptions,
+                ),
+                FilterGroup(
+                  key: 'score',
+                  label: 'Score',
+                  options: const [
+                    MapEntry('hot', 'Hot'),
+                    MapEntry('warm', 'Warm'),
+                    MapEntry('cold', 'Cold'),
+                    MapEntry('scored', 'Scored'),
+                    MapEntry('unscored', 'Unscored'),
+                  ],
+                ),
+                FilterGroup(
+                  key: 'source',
+                  label: 'Source',
+                  options: const [
+                    MapEntry('website', 'Website'),
+                    MapEntry('cal.com', 'Cal.com'),
+                    MapEntry('manual', 'Manual'),
+                    MapEntry('csv_import', 'CSV'),
+                    MapEntry('whatsapp', 'WhatsApp'),
+                    MapEntry('other', 'Other'),
+                  ],
+                ),
+                FilterGroup(
+                  key: 'sort',
+                  label: 'Sort',
+                  options: const [
+                    MapEntry('newest', 'Newest'),
+                    MapEntry('oldest', 'Oldest'),
+                    MapEntry('name', 'Name A–Z'),
+                  ],
                 ),
               ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-            child: TextField(
-              controller: _search,
-              focusNode: _searchFocus,
-              onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                hintText: 'Search name, email, company...',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 18,
-                  color: AppColors.textFaint,
-                ),
-                suffixIcon: _search.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(
-                          Icons.close,
-                          size: 16,
-                          color: AppColors.textMuted,
-                        ),
-                        onPressed: _clearSearch,
-                      )
-                    : null,
-              ),
-            ),
-          ),
-          FilterBar(
-            groups: [
-              FilterGroup(
-                key: 'status',
-                label: 'Status',
-                options: _statusOptions,
-              ),
-              FilterGroup(
-                key: 'score',
-                label: 'Score',
-                options: const [
-                  MapEntry('hot', 'Hot'),
-                  MapEntry('warm', 'Warm'),
-                  MapEntry('cold', 'Cold'),
-                  MapEntry('scored', 'Scored'),
-                  MapEntry('unscored', 'Unscored'),
-                ],
-              ),
-              FilterGroup(
-                key: 'source',
-                label: 'Source',
-                options: const [
-                  MapEntry('website', 'Website'),
-                  MapEntry('cal.com', 'Cal.com'),
-                  MapEntry('manual', 'Manual'),
-                  MapEntry('csv_import', 'CSV'),
-                  MapEntry('whatsapp', 'WhatsApp'),
-                  MapEntry('other', 'Other'),
-                ],
-              ),
-              FilterGroup(
-                key: 'sort',
-                label: 'Sort',
-                options: const [
-                  MapEntry('newest', 'Newest'),
-                  MapEntry('oldest', 'Oldest'),
-                  MapEntry('name', 'Name A–Z'),
-                ],
-              ),
-            ],
-            values: {
-              'status': _status,
-              'score': _score,
-              'source': _source,
-              'sort': _sort,
-            },
-            onChanged: (v) {
-              setState(() {
-                _status = v['status'] ?? 'all';
-                _score = v['score'] ?? 'all';
-                _source = v['source'] ?? 'all';
-                _sort = v['sort'] ?? 'newest';
-              });
-              _page = 1;
-              _load();
-            },
-          ),
-          const SizedBox(height: 4),
-          Expanded(child: _buildList()),
-        ],
-      ),
-      bottomNavigationBar: _selecting
-          ? BulkActionBar(
-              count: _selected.length,
-              busy: _busy,
-              onClear: () => setState(() => _selected.clear()),
-              onDelete: _bulkDelete,
-              statusOptions: _statusOptions,
-              onStatus: _bulkStatus,
-            )
-          : (_total > _pageSize
-                ? PaginationBar(
-                    page: _page,
-                    total: _total,
-                    pageSize: _pageSize,
-                    onPageChanged: (p) {
-                      setState(() => _page = p);
-                      _load();
-                    },
-                  )
-                : null),
-      floatingActionButton: _selecting
-          ? null
-          : FloatingActionButton(
-              onPressed: () {
-                Haptic.tap();
-                _openForm();
+              values: {
+                'status': _status,
+                'score': _score,
+                'source': _source,
+                'sort': _sort,
               },
-              backgroundColor: AppColors.accent,
-               foregroundColor: AppColors.onAccent,
-              shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
-              child: const Icon(Icons.add),
+              onChanged: (v) {
+                setState(() {
+                  _status = v['status'] ?? 'all';
+                  _score = v['score'] ?? 'all';
+                  _source = v['source'] ?? 'all';
+                  _sort = v['sort'] ?? 'newest';
+                });
+                _page = 1;
+                _load();
+              },
             ),
-    ), );
+            const SizedBox(height: 4),
+            Expanded(child: _buildList()),
+          ],
+        ),
+        bottomNavigationBar: _selecting
+            ? BulkActionBar(
+                count: _selected.length,
+                busy: _busy,
+                onClear: () => setState(() => _selected.clear()),
+                onDelete: _bulkDelete,
+                statusOptions: _statusOptions,
+                onStatus: _bulkStatus,
+              )
+            : (_total > _pageSize
+                  ? PaginationBar(
+                      page: _page,
+                      total: _total,
+                      pageSize: _pageSize,
+                      onPageChanged: (p) {
+                        setState(() => _page = p);
+                        _load();
+                      },
+                    )
+                  : null),
+        floatingActionButton: _selecting
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  Haptic.tap();
+                  _openForm();
+                },
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.onAccent,
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+                child: const Icon(Icons.add),
+              ),
+      ),
+    );
   }
 
   Widget _buildList() {
@@ -576,126 +579,133 @@ class _LeadCard extends StatelessWidget {
       _ => AppColors.textFaint,
     };
 
-    return Material(
-      color: selected ? AppColors.cardRaised : AppColors.card,
-      borderRadius: AppRadius.mdAll,
-      child: InkWell(
+    return Semantics(
+      label: 'Lead: $name',
+      button: true,
+      child: Material(
+        color: selected ? AppColors.cardRaised : AppColors.card,
         borderRadius: AppRadius.mdAll,
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.mdAll,
-            border: Border.all(
-              color: selected
-                  ? AppColors.accent.withValues(alpha: 0.5)
-                  : AppColors.border,
+        child: InkWell(
+          borderRadius: AppRadius.mdAll,
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: AppRadius.mdAll,
+              border: Border.all(
+                color: selected
+                    ? AppColors.accent.withValues(alpha: 0.5)
+                    : AppColors.border,
+              ),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            name,
-                            style: const TextStyle(
-                              color: AppColors.text,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                        ),
-                        StatusBadge(
-                          meta: Status.get(Status.leads, lead['status']),
-                        ),
-                        const SizedBox(width: 8),
-                        if (onEdit != null)
-                          GestureDetector(
-                            onTap: onEdit,
-                            child: const Icon(
-                              Icons.edit_outlined,
-                              size: 15,
-                              color: AppColors.textFaint,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      [
-                        if (company != null && '$company'.isNotEmpty)
-                          '$company',
-                        if (email != null && '$email'.isNotEmpty) '$email',
-                      ].join(' • '),
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        if (score != null)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 7,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: scoreColor.withValues(alpha: 0.08),
-                              borderRadius: AppRadius.smAll,
-                              border: Border.all(
-                                color: scoreColor.withValues(alpha: 0.35),
-                              ),
-                            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
                             child: Text(
-                              '${score.toStringAsFixed(0)} ${category ?? ''}',
-                              style: TextStyle(
-                                color: scoreColor,
-                                fontSize: 10,
+                              name,
+                              style: const TextStyle(
+                                color: AppColors.text,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Inter',
                               ),
                             ),
                           ),
-                        if (score != null) const SizedBox(width: 8),
-                        StatusBadge(
-                          meta: Status.get(Status.leadSources, lead['source']),
-                        ),
-                        const Spacer(),
-                        Text(
-                          Fmt.timeAgo(lead['created_at'] as String?),
-                          style: const TextStyle(
-                            color: AppColors.textFaint,
-                            fontSize: 10,
-                            fontFamily: 'Inter',
+                          StatusBadge(
+                            meta: Status.get(Status.leads, lead['status']),
                           ),
+                          const SizedBox(width: 8),
+                          if (onEdit != null)
+                            GestureDetector(
+                              onTap: onEdit,
+                              child: const Icon(
+                                Icons.edit_outlined,
+                                size: 15,
+                                color: AppColors.textFaint,
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        [
+                          if (company != null && '$company'.isNotEmpty)
+                            '$company',
+                          if (email != null && '$email'.isNotEmpty) '$email',
+                        ].join(' • '),
+                        style: const TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
                         ),
-                      ],
-                    ),
-                  ],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          if (score != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 7,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: scoreColor.withValues(alpha: 0.08),
+                                borderRadius: AppRadius.smAll,
+                                border: Border.all(
+                                  color: scoreColor.withValues(alpha: 0.35),
+                                ),
+                              ),
+                              child: Text(
+                                '${score.toStringAsFixed(0)} ${category ?? ''}',
+                                style: TextStyle(
+                                  color: scoreColor,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ),
+                          if (score != null) const SizedBox(width: 8),
+                          StatusBadge(
+                            meta: Status.get(
+                              Status.leadSources,
+                              lead['source'],
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            Fmt.timeAgo(lead['created_at'] as String?),
+                            style: const TextStyle(
+                              color: AppColors.textFaint,
+                              fontSize: 10,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (selecting) ...[
-                const SizedBox(width: 10),
-                Icon(
-                  selected ? Icons.check_box : Icons.check_box_outline_blank,
-                  size: 20,
-                  color: selected ? AppColors.accent : AppColors.textFaint,
-                ),
+                if (selecting) ...[
+                  const SizedBox(width: 10),
+                  Icon(
+                    selected ? Icons.check_box : Icons.check_box_outline_blank,
+                    size: 20,
+                    color: selected ? AppColors.accent : AppColors.textFaint,
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
