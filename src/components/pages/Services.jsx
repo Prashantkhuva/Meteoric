@@ -164,7 +164,7 @@ export default function ServicesPage() {
           <div className="absolute right-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
           <div className="flex w-max whitespace-nowrap animate-marquee-left" style={{ "--sets": 6 }}>
             {[...Array(6)].flatMap(() => techStack).map((tech, i) => (
-              <span key={i} className="px-6 md:px-10 text-3xl md:text-5xl font-display transition-colors duration-500" style={{ color: "rgba(255,255,255,0.08)" }}>
+              <span key={i} className="px-6 md:px-10 text-3xl md:text-5xl font-display transition-colors duration-500" style={{ color: "var(--text-muted)", opacity: 0.12 }}>
                 {tech}
               </span>
             ))}

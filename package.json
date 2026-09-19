@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "packageManager": "pnpm@12.4.2",
   "scripts": {
     "dev": "next dev",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
