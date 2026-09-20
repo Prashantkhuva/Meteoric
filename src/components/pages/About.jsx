@@ -57,7 +57,7 @@ export default function AboutPage({ faqs = [] }) {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
             Prashant Khuva
           </h1>
-          <p className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]">
+          <p className="text-[15px] max-w-md leading-relaxed" style={{ color: "#171717" }}>
             Founder of Meteoric — web & product development studio for
             startups and SaaS.
           </p>

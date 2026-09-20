@@ -91,7 +91,7 @@ export default function ServicesPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] max-w-lg" style={{ color: "var(--text-primary)" }}>
             Web Development Services
           </h1>
-          <p className="text-sm max-w-md leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[15px] max-w-md leading-relaxed" style={{ color: "#171717" }}>
             Meteoric partners with founders to design, build, and launch modern
             web products. Every project ships with the same care as if it were
             our own.

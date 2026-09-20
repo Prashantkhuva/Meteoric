@@ -121,7 +121,7 @@ export default function BlogContent() {
               Blog
             </h1>
           </div>
-          <p className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]">
+          <p className="text-[15px] max-w-md leading-relaxed" style={{ color: "#171717" }}>
             Notes on building products that convert — written by the founder
             from real shipped work. No fluff, no filler.
           </p>

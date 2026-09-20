@@ -44,7 +44,8 @@ export default function ServiceLanding({ service, relatedServices = [] }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]"
+            className="text-[15px] max-w-md leading-relaxed"
+            style={{ color: "#171717" }}
           >
             {service.tagline}
           </motion.p>

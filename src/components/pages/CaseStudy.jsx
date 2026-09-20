@@ -123,25 +123,14 @@ export default function CaseStudy({ project }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <div className="flex items-center gap-3 mb-5">
-            <span className="text-[11px] font-mono tracking-widest uppercase text-[var(--text-muted)]">
-              {caseStudy.role.split(",")[0]}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
-            <span className="text-[11px] font-mono tracking-widest uppercase text-[var(--text-muted)]">
-              Case Study
-            </span>
-            <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
-            <span className="text-[11px] font-mono tracking-widest uppercase text-[var(--text-muted)]">
-              {caseStudy.timeline}
-            </span>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-5">
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1]">
+              {caseStudy.tagline}
+            </h1>
+            <p className="text-[15px] max-w-xs leading-relaxed md:text-right" style={{ color: "#171717" }}>
+              {caseStudy.problem}
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display leading-[1.1] tracking-tight mb-5 max-w-4xl">
-            {caseStudy.tagline}
-          </h1>
-          <p className="text-base md:text-lg max-w-2xl text-[var(--text-secondary)] leading-relaxed">
-            {caseStudy.problem}
-          </p>
         </motion.div>
       </section>
 
