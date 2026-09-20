@@ -379,7 +379,7 @@ export default function Navbar({ isHome = false }) {
         }}
       >
         <div
-          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium max-w-[calc(100vw-2rem)]"
+          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium w-[80rem]"
           style={{
             background: "var(--card-bg)",
             border: "1px solid var(--border-color)",
