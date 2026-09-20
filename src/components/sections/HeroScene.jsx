@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo, useEffect, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import {
   EffectComposer,
@@ -245,6 +245,14 @@ function OrbitalRings() {
 }
 
 function Scene({ mouse, isMobile }) {
+  const { invalidate } = useThree();
+
+  useEffect(() => {
+    const onMove = () => invalidate();
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [invalidate]);
+
   return (
     <>
       <color attach="background" args={["#010405"]} />
@@ -289,9 +297,10 @@ export default function HeroScene() {
     <div ref={containerRef} className="absolute inset-0">
       <Canvas
         dpr={[1, 2]}
-          camera={{ position: [0, 0, isMobile ? 8 : 6], fov: isMobile ? 50 : 55 }}
+        camera={{ position: [0, 0, isMobile ? 8 : 6], fov: isMobile ? 50 : 55 }}
         gl={{ alpha: true, antialias: true }}
         style={{ background: "transparent" }}
+        frameloop="demand"
       >
         <Scene mouse={mouseRef} isMobile={isMobile} />
       </Canvas>

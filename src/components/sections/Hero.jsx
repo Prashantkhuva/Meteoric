@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, Suspense, lazy } from "react";
+import { useCallback, useRef, Suspense, lazy } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import Link from "next/link";
@@ -27,7 +27,7 @@ function Hero() {
   const mutedTextRef = useRef(null);
   const subtextRef = useRef(null);
   const ctaRef = useRef(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const vignetteRef = useRef(null);
 
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
@@ -73,7 +73,9 @@ function Hero() {
           end: "bottom top",
           scrub: 0.5,
           onUpdate: (self) => {
-            setScrollProgress(self.progress);
+            if (vignetteRef.current) {
+              vignetteRef.current.style.opacity = 0.6 + self.progress * 0.4;
+            }
           },
         });
 
@@ -124,11 +126,12 @@ function Hero() {
 
       {/* Vignette */}
       <div
+        ref={vignetteRef}
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, #010405 100%)",
-          opacity: 0.6 + scrollProgress * 0.4,
+          opacity: 0.6,
         }}
       />
 
