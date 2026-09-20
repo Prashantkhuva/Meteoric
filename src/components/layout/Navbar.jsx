@@ -370,7 +370,7 @@ export default function Navbar({ isHome = false }) {
 
       {/* ═══════ Desktop pill — fixed, after scroll ═══════ */}
       <div
-        className="fixed top-4 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium"
+        className="fixed top-5 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium"
         style={{
           opacity: scrolled && !nearFooter ? 1 : 0,
           pointerEvents: scrolled && !nearFooter ? "auto" : "none",
@@ -379,7 +379,7 @@ export default function Navbar({ isHome = false }) {
         }}
       >
         <div
-          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium w-[80rem]"
+          className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium w-[50rem]"
           style={{
             background: "var(--card-bg)",
             border: "1px solid var(--border-color)",
