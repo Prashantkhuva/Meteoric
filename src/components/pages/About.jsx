@@ -51,7 +51,21 @@ export default function AboutPage({ faqs = [] }) {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-16 md:pb-24">
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-8 md:pb-12">
+        {/* Atomik-style heading: left title, right description */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
+            Prashant Khuva
+          </h1>
+          <p className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]">
+            Founder of Meteoric — web & product development studio for
+            startups and SaaS.
+          </p>
+        </div>
+      </section>
+
+      {/* Content */}
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pb-16 md:pb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           {/* Left — Photo */}
           <div className="relative">
@@ -75,11 +89,8 @@ export default function AboutPage({ faqs = [] }) {
           {/* Right — Content */}
           <div className="flex flex-col gap-8 md:pt-8">
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display tracking-tight mb-4" style={{ color: "var(--text-primary)" }}>
-                Prashant Khuva — Founder of Meteoric
-              </h1>
-              <p className="text-lg md:text-xl" style={{ color: "var(--text-secondary)" }}>
-                Web & Product Development Studio
+              <p className="text-sm font-medium tracking-wide mb-4" style={{ color: "var(--text-secondary)" }}>
+                Founder & Product Builder
               </p>
             </div>
 

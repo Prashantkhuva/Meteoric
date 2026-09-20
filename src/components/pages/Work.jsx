@@ -148,27 +148,14 @@ export default function WorkPage() {
         ref={sectionRef}
         className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24"
       >
-        {/* Header */}
-        <div ref={headingRef} className="mb-12">
-          <p className="text-[var(--text-secondary)] uppercase tracking-[0.2em] text-xs mb-5">
-            <span className="font-display text-[var(--text-muted)] not-italic mr-2">
-              01
-            </span>
-            Portfolio
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display leading-[1.05] tracking-tight max-w-4xl" style={{ color: "var(--text-primary)" }}>
-            Our Work — SaaS & Web Development Projects
+        {/* Header — Atomik style: left title, right description */}
+        <div ref={headingRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
+            Our Work
           </h1>
-          <p className="text-[var(--text-secondary)] text-base md:text-lg max-w-3xl mt-6" style={{ lineHeight: "1.4" }}>
-            Every project here went from concept to production — on time, on
-            budget, and built to convert.{" "}
-            <Link
-              href="/services"
-              className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-[var(--border-color)] hover:decoration-[var(--text-secondary)] transition-all duration-200"
-            >
-              Explore our services
-            </Link>
-            .
+          <p className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]">
+            Every project went from concept to production — on time, on
+            budget, and built to convert.
           </p>
         </div>
 

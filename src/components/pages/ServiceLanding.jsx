@@ -27,26 +27,28 @@ export default function ServiceLanding({ service, relatedServices = [] }) {
         </Link>
       </div>
 
-      {/* Hero */}
+      {/* Hero — Atomik style: left title, right description */}
       <section className="max-w-4xl mx-auto px-6 md:px-12 pt-12 pb-16 md:pb-20">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6"
-        >
-          {service.h1[0]}
-          <br />
-          {service.h1[1]}
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-[var(--text-muted)] text-lg md:text-xl max-w-2xl leading-relaxed"
-        >
-          {service.tagline}
-        </motion.p>
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1]"
+          >
+            {service.h1[0]}
+            <br />
+            {service.h1[1]}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]"
+          >
+            {service.tagline}
+          </motion.p>
+        </div>
       </section>
 
       {/* Content sections */}

@@ -114,16 +114,16 @@ export default function BlogContent() {
   return (
     <main className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       <div className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
-        {/* Header */}
+        {/* Header — Atomik style */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl md:text-6xl font-display tracking-tight leading-[1.05] text-[var(--text-primary)]">
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
               Blog
             </h1>
           </div>
-          <p className="text-sm max-w-md text-[var(--text-secondary)]">
+          <p className="text-sm max-w-md leading-relaxed text-[var(--text-secondary)]">
             Notes on building products that convert — written by the founder
-            from real shipped work. No fluff, no recycled content, no filler.
+            from real shipped work. No fluff, no filler.
           </p>
         </div>
 

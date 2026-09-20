@@ -86,14 +86,17 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-20 md:pb-28">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display tracking-tight leading-[1.05] max-w-4xl mb-6" style={{ color: "var(--text-primary)" }}>
-          Web Development Services for Startups & SaaS
-        </h1>
-        <p className="text-base md:text-lg max-w-2xl leading-relaxed mb-10" style={{ color: "var(--text-secondary)" }}>
-          Meteoric partners with founders to design, build, and launch modern web
-          products. Every project ships with the same care as if it were our own.
-        </p>
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-10 md:pb-12">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] max-w-lg" style={{ color: "var(--text-primary)" }}>
+            Web Development Services
+          </h1>
+          <p className="text-sm max-w-md leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            Meteoric partners with founders to design, build, and launch modern
+            web products. Every project ships with the same care as if it were
+            our own.
+          </p>
+        </div>
         <button
           onClick={() => {
             trackEvent("services_cta_click", { button_location: "/services" });
