@@ -149,8 +149,8 @@ export default function WorkPage() {
         className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24"
       >
         {/* Header — Atomik style: left title, right description */}
-        <div ref={headingRef} className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-12">
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-12">
+          <h1 ref={headingRef} className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
             Our Work
           </h1>
           <p className="text-[15px] max-w-[260px] leading-[1.4] md:text-right" style={{ color: "#171717" }}>
