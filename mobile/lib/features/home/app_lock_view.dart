@@ -15,9 +15,12 @@ import '../../core/theme.dart';
 ///  - Wrong PIN shakes the dots, clears, and counts a failed attempt.
 ///  - 5 failed attempts → 30s lockout countdown (no unlock possible).
 class AppLockView extends StatefulWidget {
-  const AppLockView({super.key, this.autoBiometric = true, this.onUnlocked});
+  const AppLockView({super.key, this.autoBiometric = false, this.onUnlocked});
 
   /// Fire the native biometric prompt once on mount (when available).
+  ///
+  /// Keep `false` when the host (e.g. home_shell on resume) already fires
+  /// biometrics — stacking two prompts can leave the scanner UI stuck.
   final bool autoBiometric;
 
   /// Called when any unlock method succeeds.

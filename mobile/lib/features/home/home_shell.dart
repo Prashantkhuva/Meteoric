@@ -157,7 +157,9 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
               ),
               if (_locked)
                 AppLockView(
-                  autoBiometric: true,
+                  // home_shell already fired the biometric prompt on resume —
+                  // auto-firing again here stacks two scanner UIs.
+                  autoBiometric: false,
                   onUnlocked: () {
                     _lastBiometricAuth = DateTime.now();
                     setState(() => _locked = false);
