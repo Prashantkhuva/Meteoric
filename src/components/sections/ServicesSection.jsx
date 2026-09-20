@@ -41,7 +41,7 @@ const services = [
 function ServiceCard({ service, index }) {
   return (
     <ScrollReveal direction="up" delay={index * 0.1}>
-      <Link href={service.href} className="block group">
+      <Link href={service.href} className="block group gsap-work-card">
         {/* Mobile: image card only, text below */}
         <div className="md:hidden">
           <div
@@ -193,6 +193,23 @@ export default function ServicesSection() {
           ScrollTrigger.refresh();
         });
       }
+
+      gsap.fromTo(
+        sectionRef.current?.querySelectorAll(".gsap-work-card"),
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.12,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
+          },
+        },
+      );
     },
     [],
   );

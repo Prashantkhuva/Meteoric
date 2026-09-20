@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import { gsap, ScrollTrigger } from "@/lib/gsap-setup";
 import { motion, AnimatePresence } from "framer-motion";
 import { blogPosts } from "@/data/blog-posts";
 
@@ -68,11 +70,12 @@ function BlogCard({ post, index }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10, scale: 0.98 }}
       transition={{ duration: 0.35, delay: index * 0.04, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="gsap-work-card"
     >
       <Link href={`/blog/${post.slug}`} className="group block">
         <div
-          className="rounded-2xl overflow-hidden mb-4 aspect-[16/10] relative transition-all duration-500"
-          style={{ background: "var(--card-bg)", border: "1px solid var(--border-color)" }}
+          className="rounded-2xl overflow-hidden mb-4 aspect-[16/10] relative transition-all duration-500 ring-1 ring-[var(--border-color)] group-hover:ring-[var(--border-hover)] group-hover:shadow-[0_8px_30px_var(--accent-glow)]"
+          style={{ background: "var(--card-bg)" }}
         >
           <img
             src={image}
@@ -108,6 +111,29 @@ function BlogCard({ post, index }) {
 
 export default function BlogContent() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const gridRef = useRef(null);
+
+  useGSAP(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    gsap.fromTo(
+      gridRef.current?.querySelectorAll(".gsap-work-card"),
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.12,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 85%",
+          toggleActions: "play none reverse none",
+          invalidateOnRefresh: true,
+        },
+      },
+    );
+  }, { scope: gridRef });
 
   const filteredPosts = blogPosts.filter((p) => categoryMap[activeCategory](p));
 
@@ -145,7 +171,7 @@ export default function BlogContent() {
         </div>
 
         {/* Card grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        <motion.div ref={gridRef} layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
           <AnimatePresence mode="popLayout">
             {filteredPosts.map((post, i) => (
               <BlogCard key={post.slug} post={post} index={i} />

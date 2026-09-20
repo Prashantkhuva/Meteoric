@@ -1,7 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
+import { useRef, useCallback } from "react";
 import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import { gsap, ScrollTrigger } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { serviceFaqs } from "@/data/faqs";
@@ -77,11 +79,35 @@ const services = [
 const techStack = ["Next.js", "React", "Supabase", "Node.js", "Tailwind CSS", "GSAP", "Stripe", "PostgreSQL"];
 
 export default function ServicesPage() {
+  const cardsRef = useRef(null);
+
   const openCal = useCallback(async () => {
     const { getCalApi } = await import("@calcom/embed-react");
     const cal = await getCalApi({ namespace: "let-s-build" });
     cal("modal", { calLink: "prashantkhuva/let-s-build" });
   }, []);
+
+  useGSAP(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    gsap.fromTo(
+      cardsRef.current?.querySelectorAll(".gsap-work-card"),
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.12,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: cardsRef.current,
+          start: "top 85%",
+          toggleActions: "play none reverse none",
+          invalidateOnRefresh: true,
+        },
+      },
+    );
+  }, { scope: cardsRef });
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
@@ -115,21 +141,22 @@ export default function ServicesPage() {
       {/* Service Cards */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {services.map((svc) => (
               <Link
                 key={svc.num}
                 href={`/services/${svc.slug}`}
-                className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:translate-y-[-4px]"
-                style={{ border: "1px solid var(--border-color)", background: "rgba(255,255,255,0.02)" }}
+                className="group block rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)] gsap-work-card"
+                style={{ background: "var(--card-bg)" }}
               >
-                <div className="aspect-[16/9] overflow-hidden">
+                <div className="aspect-[16/9] overflow-hidden relative">
                   <img
                     src={svc.image}
                     alt={svc.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                     loading="lazy"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
                 <div className="p-8">
                   <div className="flex items-center justify-between mb-3">
