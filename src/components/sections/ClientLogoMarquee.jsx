@@ -17,6 +17,7 @@ function LogoItem({ logo }) {
       <img
         src={logo.src}
         alt={logo.name}
+        loading="lazy"
         className="h-8 w-auto opacity-40 hover:opacity-70 transition-opacity"
       />
     );

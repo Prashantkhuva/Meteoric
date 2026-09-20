@@ -59,6 +59,7 @@ export default function AboutPage({ faqs = [] }) {
               <img
                 src="/prashant.png"
                 alt="Prashant Khuva"
+                loading="eager"
                 className="w-full h-full object-cover object-top"
               />
               <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-primary), transparent)" }} />
@@ -154,10 +155,13 @@ export default function AboutPage({ faqs = [] }) {
             <div>
               <button
                 onClick={openCal}
-                className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition-all duration-300"
-                style={{ border: "1px solid var(--border-color)", color: "var(--text-secondary)" }}
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
+                style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
               >
-                Book a Free Strategy Call
+                Book a call
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px">
+                  <path fill="currentColor" d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z" />
+                </svg>
               </button>
             </div>
           </div>

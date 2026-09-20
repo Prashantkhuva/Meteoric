@@ -64,6 +64,7 @@ export default function LeadCaptureSection() {
         <img
           src="/images/cta-bg.webp"
           alt=""
+          loading="lazy"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--hero-bg) 0%, transparent 20%, transparent 80%, var(--hero-bg) 100%)" }} />

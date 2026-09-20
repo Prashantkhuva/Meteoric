@@ -64,6 +64,7 @@ export default function StatsBar() {
         <img
           src="/images/stats-bg.webp"
           alt=""
+          loading="lazy"
           className="absolute inset-0 w-full h-full object-cover opacity-30"
         />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--hero-bg) 0%, transparent 20%, transparent 80%, var(--hero-bg) 100%)" }} />
