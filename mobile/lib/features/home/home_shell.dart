@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../core/biometric_service.dart';
 import '../../core/notification_state.dart';
+import '../../core/pin_lock_service.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
 import '../../shared/widgets/update_dialog.dart';
@@ -11,6 +12,7 @@ import '../leads/leads_screen.dart';
 import '../proposals/proposals_screen.dart';
 import '../invoices/invoices_screen.dart';
 import '../more/more_screen.dart';
+import 'app_lock_view.dart';
 import 'home_tab.dart';
 
 class HomeShell extends StatefulWidget {
@@ -24,7 +26,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   final _updater = UpdateState.instance;
   final _notif = NotificationState.instance;
   bool _apkDialogShown = false;
-  bool _biometricLocked = false;
+  bool _locked = false;
   DateTime? _lastBiometricAuth;
 
   static const _tabs = [
@@ -66,23 +68,30 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
 
   Future<void> _checkBiometricOnResume() async {
     try {
-      if (!await BiometricService.isEnabled) return;
-      if (!await BiometricService.isAvailable) return;
-      if (_lastBiometricAuth != null &&
-          DateTime.now().difference(_lastBiometricAuth!) <
-              const Duration(seconds: 3)) {
-        return;
+      // App lock is active when biometric OR PIN is configured. If neither
+      // exists, the app is never locked.
+      final biometricEnabled = await BiometricService.isEnabled;
+      final pinSet = await PinLockService.isSet();
+      if (!biometricEnabled && !pinSet) return;
+
+      bool ok = false;
+      // Biometric unlocks on its own when available; otherwise fall to PIN
+      // by locking the app. The lock view offers both routes when applicable.
+      if (biometricEnabled && await BiometricService.isAvailable) {
+        if (_lastBiometricAuth != null &&
+            DateTime.now().difference(_lastBiometricAuth!) <
+                const Duration(seconds: 3)) {
+          return;
+        }
+        ok = await BiometricService.authenticate(
+          reason: 'Unlock Meteoric Admin',
+        );
+        if (ok) {
+          _lastBiometricAuth = DateTime.now();
+        }
       }
-      final ok = await BiometricService.authenticate(
-        reason: 'Unlock Meteoric Admin',
-      );
-      if (ok) {
-        _lastBiometricAuth = DateTime.now();
-      }
-      if (!ok && mounted) {
-        setState(() => _biometricLocked = true);
-      } else if (mounted) {
-        setState(() => _biometricLocked = false);
+      if (mounted) {
+        setState(() => _locked = !ok);
       }
     } catch (e) {
       debugPrint('[HomeShell] _checkBiometricOnResume error: $e');
@@ -146,56 +155,13 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                   if (_updater.showShorebirdBanner) _buildShorebirdBanner(),
                 ],
               ),
-              if (_biometricLocked)
-                Container(
-                  color: AppColors.background,
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.lock_outline_rounded,
-                          size: 48,
-                          color: AppColors.accent,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'App Locked',
-                          style: TextStyle(
-                            color: AppColors.text,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Authenticate to continue',
-                          style: TextStyle(
-                            color: AppColors.textFaint,
-                            fontSize: 13,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        AccentButton(
-                          onPressed: () async {
-                            try {
-                              final ok = await BiometricService.authenticate(
-                                reason: 'Unlock Meteoric Admin',
-                              );
-                              if (ok && mounted) {
-                                setState(() => _biometricLocked = false);
-                              }
-                            } catch (e) {
-                              debugPrint('[HomeShell] UNLOCK error: $e');
-                            }
-                          },
-                          child: const Text('UNLOCK'),
-                        ),
-                      ],
-                    ),
-                  ),
+              if (_locked)
+                AppLockView(
+                  autoBiometric: true,
+                  onUnlocked: () {
+                    _lastBiometricAuth = DateTime.now();
+                    setState(() => _locked = false);
+                  },
                 ),
             ],
           ),

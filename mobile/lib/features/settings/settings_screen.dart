@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/app_version.dart';
 import '../../core/biometric_service.dart';
 import '../../core/device_info.dart';
+import '../../core/pin_lock_service.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -25,6 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _runtimePatch = AppVersion.patch;
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
+  bool _pinEnabled = false;
 
   late final TextEditingController _name;
   late final TextEditingController _email;
@@ -45,6 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _originalEmail = user?.email ?? '';
     _loadRole();
     _loadBiometric();
+    _loadPin();
     UpdateState.instance.addListener(_onUpdateState);
     _loadRuntimePatch();
   }
@@ -86,6 +89,72 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       debugPrint('[Settings] _loadBiometric error: $e');
     }
+  }
+
+  Future<void> _loadPin() async {
+    try {
+      final set = await PinLockService.isSet();
+      if (mounted) setState(() => _pinEnabled = set);
+    } catch (e) {
+      debugPrint('[Settings] _loadPin error: $e');
+    }
+  }
+
+  Future<void> _togglePin(bool value) async {
+    if (value) {
+      final ok = await _showPinSetup();
+      if (mounted) {
+        setState(() => _pinEnabled = ok);
+        if (!ok) _snack('PIN setup cancelled', error: true);
+      }
+      return;
+    }
+    Haptic.tap();
+    final ok = await _confirmClearPin();
+    if (ok && mounted) {
+      await PinLockService.clear();
+      setState(() => _pinEnabled = false);
+      _snack('PIN lock disabled');
+    }
+  }
+
+  /// 2-step modal: enter new PIN, then confirm. Returns true on success.
+  Future<bool> _showPinSetup() async {
+    Haptic.tap();
+    final result = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => const _PinSetupSheet(),
+    );
+    return result ?? false;
+  }
+
+  Future<bool> _confirmClearPin() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Disable PIN lock?'),
+        content: const Text(
+          'Your app can be opened without a PIN or biometrics again.',
+          style: TextStyle(color: AppColors.textMuted, fontFamily: 'Inter'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('CANCEL'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('DISABLE'),
+          ),
+        ],
+      ),
+    );
+    return ok ?? false;
   }
 
   Future<void> _toggleBiometric(bool value) async {
@@ -459,6 +528,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onChanged: _toggleBiometric,
             ),
           ],
+          _rowDivider(),
+          _toggleRow(
+            icon: Icons.pin_outlined,
+            label: 'PIN Lock',
+            subtitle: '4-digit PIN to open app',
+            value: _pinEnabled,
+            onChanged: _togglePin,
+          ),
         ],
       ),
     );
@@ -1123,6 +1200,237 @@ class _SignedOut extends StatelessWidget {
           width: 22,
           height: 22,
           child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      ),
+    );
+  }
+}
+
+/// Bottom-sheet PIN setup: enter 4 digits, then confirm. Pops `true` on
+/// success via `PinLockService.setPin`.
+class _PinSetupSheet extends StatefulWidget {
+  const _PinSetupSheet();
+
+  @override
+  State<_PinSetupSheet> createState() => _PinSetupSheetState();
+}
+
+class _PinSetupSheetState extends State<_PinSetupSheet> {
+  String _first = '';
+  String _second = '';
+  bool _stepConfirm = false;
+  bool _error = false;
+  bool _busy = false;
+
+  Future<void> _onDigit(String d) async {
+    if (_busy || _error) return;
+    Haptic.tap();
+    setState(() {
+      if (!_stepConfirm) {
+        _first += d;
+        if (_first.length > 4) _first = _first.substring(0, 4);
+      } else {
+        _second += d;
+        if (_second.length > 4) _second = _second.substring(0, 4);
+      }
+    });
+    if (_stepConfirm && _second.length == 4) {
+      if (_first == _second) {
+        setState(() => _busy = true);
+        await PinLockService.setPin(_first);
+        if (!mounted) return;
+        Haptic.success();
+        Navigator.of(context).pop(true);
+      } else {
+        setState(() {
+          _error = true;
+          _second = '';
+        });
+        if (mounted) Haptic.medium();
+        Future.delayed(const Duration(milliseconds: 400), () {
+          if (mounted) setState(() => _error = false);
+        });
+      }
+    } else if (!_stepConfirm && _first.length == 4) {
+      setState(() => _stepConfirm = true);
+    }
+  }
+
+  void _backspace() {
+    if (_busy || _error) return;
+    Haptic.tap();
+    setState(() {
+      if (!_stepConfirm) {
+        if (_first.isNotEmpty) _first = _first.substring(0, _first.length - 1);
+      } else {
+        if (_second.isNotEmpty) {
+          _second = _second.substring(0, _second.length - 1);
+        }
+      }
+    });
+  }
+
+  String get _current => _stepConfirm ? _second : _first;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 12),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: AppColors.border,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Meteoric Admin',
+            style: TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.8,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _stepConfirm ? 'Confirm your PIN' : 'Set 4-digit PIN',
+            style: const TextStyle(
+              color: AppColors.text,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 22),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              4,
+              (i) => AnimatedContainer(
+                duration: const Duration(milliseconds: 120),
+                width: 14,
+                height: 14,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: i < _current.length
+                      ? AppColors.accent
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: i < _current.length
+                        ? AppColors.accent
+                        : AppColors.borderSoft,
+                    width: 1.4,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (_error)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                'PINs do not match — try again',
+                style: TextStyle(
+                  color: AppColors.red,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            )
+          else
+            const SizedBox(height: 24),
+          if (_busy)
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.accent,
+                ),
+              ),
+            )
+          else
+            _keypad(),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
+
+  Widget _keypad() {
+    const rows = [
+      ['1', '2', '3'],
+      ['4', '5', '6'],
+      ['7', '8', '9'],
+      ['', '0', 'back'],
+    ];
+    return Column(
+      children: [
+        for (final row in rows)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [for (final label in row) _key(label)],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _key(String label) {
+    return SizedBox(
+      width: 76,
+      height: 56,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            if (label == 'back') {
+              _backspace();
+            } else if (label.isNotEmpty) {
+              _onDigit(label);
+            }
+          },
+          borderRadius: AppRadius.mdAll,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              color: AppColors.cardRaised.withValues(alpha: 0.6),
+              borderRadius: AppRadius.mdAll,
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Center(
+              child: label == 'back'
+                  ? const Icon(
+                      Icons.backspace_outlined,
+                      size: 22,
+                      color: AppColors.textMuted,
+                    )
+                  : Text(
+                      label,
+                      style: const TextStyle(
+                        color: AppColors.text,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+            ),
+          ),
         ),
       ),
     );
