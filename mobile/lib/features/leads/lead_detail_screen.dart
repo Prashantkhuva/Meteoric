@@ -54,10 +54,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
 
   Future<void> _changeStatus(String status) async {
     await _run('Status updated', () async {
-      await ApiClient.instance.leadStatus(
-        (_lead['id'] as num).toInt(),
-        status,
-      );
+      await ApiClient.instance.leadStatus((_lead['id'] as num).toInt(), status);
       setState(() => _lead = {..._lead, 'status': status});
       return {};
     });
@@ -93,9 +90,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (ok != true) return;
 
     await _run('Lead converted', () async {
-      await ApiClient.instance.leadConvert(
-        (_lead['id'] as num).toInt(),
-      );
+      await ApiClient.instance.leadConvert((_lead['id'] as num).toInt());
       setState(() => _lead = {..._lead, 'status': 'completed'});
       return {};
     });
@@ -132,9 +127,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     if (ok != true) return;
 
     await _run('Lead deleted', () async {
-      await ApiClient.instance.leadDelete(
-        (_lead['id'] as num).toInt(),
-      );
+      await ApiClient.instance.leadDelete((_lead['id'] as num).toInt());
       if (mounted) Navigator.of(context).pop(true);
       return {};
     });
@@ -184,7 +177,12 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                   DetailRow(label: 'Phone', value: _lead['phone'] ?? '—'),
                   DetailRow(label: 'Company', value: _lead['company'] ?? '—'),
                   DetailRow(label: 'Services', value: _lead['services'] ?? '—'),
-                  DetailRow(label: 'Budget', value: _lead['budget'] ?? '—'),
+                  DetailRow(
+                    label: 'Budget',
+                    value: _lead['budget'] != null
+                        ? '${_lead['currency'] ?? 'USD'} ${_lead['budget']}'
+                        : '—',
+                  ),
                   if (_lead['details'] != null &&
                       '${_lead['details']}'.isNotEmpty)
                     DetailRow(label: 'Details', value: '${_lead['details']}'),
