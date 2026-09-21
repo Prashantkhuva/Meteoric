@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -243,18 +244,7 @@ export default async function BlogPost({ params }) {
               <h2 className="text-[24px] font-semibold mb-8" style={{ color: "var(--text-primary)" }}>
                 Frequently Asked Questions
               </h2>
-              <div className="space-y-4">
-                {post.faqs.map((faq, i) => (
-                  <div key={i} className="p-6 rounded-2xl" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)" }}>
-                    <h3 className="text-base font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
-                      {faq.question}
-                    </h3>
-                    <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
-                      {faq.answer}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <FaqAccordion items={post.faqs} />
             </div>
           )}
 
