@@ -46,6 +46,7 @@ const CSV_COLUMNS = [
   { label: "Status", accessor: (l) => l.status || "" },
   { label: "Source", accessor: (l) => l.source || "" },
   { label: "Budget", accessor: (l) => l.budget || "" },
+  { label: "Currency", accessor: (l) => l.currency || "USD" },
   { label: "Created", accessor: (l) => formatDate(l.created_at) },
 ];
 
@@ -1150,7 +1151,7 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
                   { icon: Building2, label: "Company", value: lead.company },
                   { icon: Tag, label: "Source", value: lead.source ? (sourceList.find((s) => s.value === lead.source)?.label || lead.source) : null },
                   { icon: FileText, label: "Services", value: lead.services },
-                  { icon: DollarSign, label: "Budget", value: lead.budget },
+                  { icon: DollarSign, label: "Budget", value: lead.budget ? `${lead.currency || "USD"} ${lead.budget}` : null },
                 ].map((f) => {
                   if (!f.value) return null;
                   const Icon = f.icon;

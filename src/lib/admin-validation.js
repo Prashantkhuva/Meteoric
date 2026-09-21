@@ -107,6 +107,7 @@ export const leadSchema = z.object({
   company: companySchema,
   services: z.string().max(500).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   budget: z.string().max(200).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  currency: z.string().max(10).optional().or(z.literal("")).transform((v) => v?.trim() || "USD"),
   details: z.string().max(5000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   source: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });
