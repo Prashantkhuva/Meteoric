@@ -108,6 +108,9 @@ class _AppLockViewState extends State<AppLockView>
     } catch (e) {
       // Biometric failed or cancelled — leave locked, user can use PIN.
     } finally {
+      // Guaranteed dismiss: the native dialog must never linger over the
+      // keypad after a cancel/failure.
+      await BiometricService.stopPrompt();
       if (mounted) setState(() => _busy = false);
     }
   }

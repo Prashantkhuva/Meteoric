@@ -27,7 +27,6 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   final _notif = NotificationState.instance;
   bool _apkDialogShown = false;
   bool _locked = false;
-  DateTime? _lastBiometricAuth;
 
   static const _tabs = [
     DashboardScreen(),
@@ -72,26 +71,16 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       // exists, the app is never locked.
       final biometricEnabled = await BiometricService.isEnabled;
       final pinSet = await PinLockService.isSet();
-      if (!biometricEnabled && !pinSet) return;
-
-      bool ok = false;
-      // Biometric unlocks on its own when available; otherwise fall to PIN
-      // by locking the app. The lock view offers both routes when applicable.
-      if (biometricEnabled && await BiometricService.isAvailable) {
-        if (_lastBiometricAuth != null &&
-            DateTime.now().difference(_lastBiometricAuth!) <
-                const Duration(seconds: 3)) {
-          return;
-        }
-        ok = await BiometricService.authenticate(
-          reason: 'Unlock Meteoric Admin',
-        );
-        if (ok) {
-          _lastBiometricAuth = DateTime.now();
-        }
+      if (!biometricEnabled && !pinSet) {
+        if (mounted) setState(() => _locked = false);
+        return;
       }
+      // Do NOT auto-open the native fingerprint dialog here: on some OEM
+      // devices that prompt stays stuck and blocks the PIN keypad beneath.
+      // The lock screen offers PIN first with biometrics as an explicit
+      // tap ("USE BIOMETRICS"), so the dialog only opens on demand.
       if (mounted) {
-        setState(() => _locked = !ok);
+        setState(() => _locked = true);
       }
     } catch (e) {
       debugPrint('[HomeShell] _checkBiometricOnResume error: $e');
@@ -161,7 +150,6 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                   // auto-firing again here stacks two scanner UIs.
                   autoBiometric: false,
                   onUnlocked: () {
-                    _lastBiometricAuth = DateTime.now();
                     setState(() => _locked = false);
                   },
                 ),

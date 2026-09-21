@@ -75,16 +75,32 @@ class BiometricService {
       debugPrint('[Biometric] authenticate() showing prompt...');
       final result = await _auth.authenticate(
         localizedReason: reason ?? 'Verify your identity',
-        persistAcrossBackgrounding: true,
+        // False: with `true`, the prompt can stay stuck open when the app
+        // backgrounds mid-request and then force-closes on resume (seen on
+        // some OEM devices — the stuck modal blocks the PIN keypad beneath).
+        persistAcrossBackgrounding: false,
       );
       debugPrint('[Biometric] authenticate() result=$result');
       return result;
     } on PlatformException catch (e) {
-      debugPrint('[Biometric] authenticate() PlatformException: code=${e.code} message=${e.message}');
+      debugPrint(
+        '[Biometric] authenticate() PlatformException: code=${e.code} message=${e.message}',
+      );
       return false;
     } catch (e) {
       debugPrint('[Biometric] authenticate() unexpected error: $e');
       return false;
+    }
+  }
+
+  /// Force-dismiss the native fingerprint dialog. Android-only no-op when
+  /// nothing is showing. Call after a failed/cancelled authenticate so the
+  /// modal can never linger over the app UI.
+  static Future<void> stopPrompt() async {
+    try {
+      await _auth.stopAuthentication();
+    } catch (e) {
+      debugPrint('[Biometric] stopPrompt() error: $e');
     }
   }
 }
