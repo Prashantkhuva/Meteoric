@@ -97,10 +97,9 @@ class _AppLockViewState extends State<AppLockView>
       return;
     }
     setState(() => _busy = true);
+    bool ok = false;
     try {
-      final ok = await BiometricService.authenticate(
-        reason: 'Unlock Meteoric Admin',
-      );
+      ok = await BiometricService.authenticate(reason: 'Unlock Meteoric Admin');
       if (ok && mounted) {
         Haptic.success();
         widget.onUnlocked?.call();
@@ -108,9 +107,12 @@ class _AppLockViewState extends State<AppLockView>
     } catch (e) {
       // Biometric failed or cancelled — leave locked, user can use PIN.
     } finally {
-      // Guaranteed dismiss: the native dialog must never linger over the
-      // keypad after a cancel/failure.
-      await BiometricService.stopPrompt();
+      // Force-dismiss native dialog only on failure/cancel. On success
+      // the dialog already closed; calling stopAuthentication() then
+      // can trigger a spurious lifecycle event that re-locks the app.
+      if (!ok) {
+        await BiometricService.stopPrompt();
+      }
       if (mounted) setState(() => _busy = false);
     }
   }

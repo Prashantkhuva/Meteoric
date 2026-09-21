@@ -27,6 +27,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   final _notif = NotificationState.instance;
   bool _apkDialogShown = false;
   bool _locked = false;
+  DateTime? _lastUnlockTime;
 
   static const _tabs = [
     DashboardScreen(),
@@ -75,10 +76,16 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
         if (mounted) setState(() => _locked = false);
         return;
       }
-      // Do NOT auto-open the native fingerprint dialog here: on some OEM
-      // devices that prompt stays stuck and blocks the PIN keypad beneath.
-      // The lock screen offers PIN first with biometrics as an explicit
-      // tap ("USE BIOMETRICS"), so the dialog only opens on demand.
+
+      // Skip re-locking within 3s of a successful unlock — the native
+      // biometric dialog closing can trigger AppLifecycleState.resumed
+      // which would otherwise re-lock the app immediately after unlock.
+      if (_lastUnlockTime != null &&
+          DateTime.now().difference(_lastUnlockTime!) <
+              const Duration(seconds: 3)) {
+        return;
+      }
+
       if (mounted) {
         setState(() => _locked = true);
       }
@@ -150,40 +157,43 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                   // auto-firing again here stacks two scanner UIs.
                   autoBiometric: false,
                   onUnlocked: () {
+                    _lastUnlockTime = DateTime.now();
                     setState(() => _locked = false);
                   },
                 ),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: index,
-            onTap: (i) {
-              Haptic.tap();
-              homeTab.value = i;
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard_outlined, size: 22),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_search_outlined, size: 22),
-                label: 'Leads',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.description_outlined, size: 22),
-                label: 'Proposals',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long_outlined, size: 22),
-                label: 'Invoices',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.grid_view_outlined, size: 22),
-                label: 'More',
-              ),
-            ],
-          ),
+          bottomNavigationBar: _locked
+              ? null
+              : BottomNavigationBar(
+                  currentIndex: index,
+                  onTap: (i) {
+                    Haptic.tap();
+                    homeTab.value = i;
+                  },
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.dashboard_outlined, size: 22),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person_search_outlined, size: 22),
+                      label: 'Leads',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.description_outlined, size: 22),
+                      label: 'Proposals',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.receipt_long_outlined, size: 22),
+                      label: 'Invoices',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.grid_view_outlined, size: 22),
+                      label: 'More',
+                    ),
+                  ],
+                ),
         );
       },
     );
