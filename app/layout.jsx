@@ -80,6 +80,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${switzer.variable}`} suppressHydrationWarning>
       <head>
+        <link rel="preload" href="https://app.cal.com/embed/embed.js" as="script" crossOrigin="anonymous" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var w=window;function l(){if(w.Cal)return;var s=document.createElement("script");s.src="https://app.cal.com/embed/embed.js";s.async=1;document.head.appendChild(s);}if("requestIdleCallback" in w){w.requestIdleCallback(l,2000)}else{setTimeout(l,2000)}})();`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
