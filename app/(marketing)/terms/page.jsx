@@ -137,19 +137,19 @@ export default function Terms() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
       />
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
         <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           {/* Header */}
           <div className="mb-16">
-            <span className="text-[#EAEFFF]/30 uppercase tracking-[0.3em] text-xs font-bold block mb-6">
+            <span className="uppercase tracking-[0.3em] text-xs font-bold block mb-6" style={{ color: "var(--text-muted)" }}>
               Legal
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6" style={{ color: "var(--text-primary)" }}>
               Terms of Service
             </h1>
             <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-white/10" />
-              <span className="text-white/20 text-xs font-mono tracking-wider">
+              <span className="h-px w-8" style={{ background: "var(--border-color)" }} />
+              <span className="text-xs font-mono tracking-wider" style={{ color: "var(--text-muted)" }}>
                 Last updated — July 6, 2026
               </span>
             </div>
@@ -160,20 +160,21 @@ export default function Terms() {
             {sections.map((section) => (
               <section
                 key={section.num}
-                className="py-10 border-t border-white/[0.06]"
+                className="py-10"
+                style={{ borderTop: "1px solid var(--border-color)" }}
               >
                 <div className="flex gap-6 md:gap-10">
                   {/* Number */}
-                  <span className="text-4xl md:text-5xl font-secondary-italic text-[#EAEFFF]/[0.06] leading-none mt-1 shrink-0">
+                  <span className="text-4xl md:text-5xl font-secondary-italic leading-none mt-1 shrink-0" style={{ color: "var(--accent-dim)" }}>
                     {section.num}
                   </span>
 
                   {/* Content */}
                   <div>
-                    <h2 className="text-xl md:text-2xl font-secondary-italic font-normal text-white/80 mb-4">
+                    <h2 className="text-xl md:text-2xl font-secondary-italic font-normal mb-4" style={{ color: "var(--text-primary)" }}>
                       {section.title}
                     </h2>
-                    <p className="text-white/35 text-[15px] leading-[1.8]">
+                    <p className="text-[15px] leading-[1.8]" style={{ color: "var(--text-secondary)" }}>
                       {section.content}
                     </p>
                   </div>
