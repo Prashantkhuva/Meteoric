@@ -209,13 +209,11 @@ export default function AboutPage({ faqs = [] }) {
                 alt="Prashant Khuva"
                 loading="eager"
                 className="w-full h-full object-cover object-top"
+                style={{ objectPosition: "top center" }}
               />
               <div
-                className="absolute bottom-0 left-0 right-0 h-24"
-                style={{
-                  background:
-                    "linear-gradient(to top, var(--bg-primary), transparent)",
-                }}
+                className="absolute bottom-0 left-0 right-0 h-20"
+                style={{ background: "linear-gradient(to top, var(--text-primary) 10%, transparent 100%)", opacity: 0.06 }}
               />
             </div>
             <div
