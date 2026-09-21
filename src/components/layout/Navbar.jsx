@@ -14,7 +14,6 @@ import { gsap } from "@/lib/gsap-setup";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import { trackEvent } from "@/lib/analytics/gtag";
-import ThemeToggle from "./ThemeToggle";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
 
@@ -275,7 +274,6 @@ export default function Navbar({ isHome = false }) {
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <button
               data-no-magnetic
               onClick={() => {
@@ -409,7 +407,6 @@ export default function Navbar({ isHome = false }) {
           </div>
 
           <div className="flex items-center gap-1.5 pl-1">
-            <ThemeToggle />
             <button
               data-no-magnetic
               onClick={() => {
