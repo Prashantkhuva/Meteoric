@@ -120,7 +120,7 @@ async function updateIssue({ issueId, title, stateId, assigneeId, priority, comm
 
 async function getIssueStates() {
   const query = `
-    query TeamStates($teamId: String!) {
+    query TeamStates($teamId: ID!) {
       workflowStates(filter: { team: { id: { eq: $teamId } }, type: { eq: "unstarted" } }) {
         nodes { id name color }
       }
