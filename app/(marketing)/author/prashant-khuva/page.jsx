@@ -1,5 +1,5 @@
 import { blogPosts } from "@/data/blog-posts";
-import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import Link from "next/link";
 
 const authorData = {
@@ -31,6 +31,15 @@ export function generateMetadata() {
       description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
       url: `${SITE_URL}/author/prashant-khuva`,
       type: "profile",
+      images: [
+        {
+          url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+          secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+          width: 1200,
+          height: 630,
+          alt: `${authorData.name} — ${authorData.title}`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -38,6 +47,7 @@ export function generateMetadata() {
       creator: "@prashantkhuva_",
       title: `${authorData.name} — ${authorData.title}`,
       description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+      images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
     },
   };
 }
