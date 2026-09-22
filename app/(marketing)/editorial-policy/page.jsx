@@ -50,13 +50,13 @@ export default function EditorialPolicyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-black text-white">
-        <div className="fixed top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-[#EAEFFF]/[0.015] via-transparent to-transparent pointer-events-none" />
+      <div className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
         <div className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           <div className="mb-12">
             <Link
               href="/"
-              className="group inline-flex items-center gap-2 text-[11px] font-mono tracking-wider text-white/20 hover:text-white/50 transition-colors duration-200"
+              className="group inline-flex items-center gap-2 text-[11px] font-mono tracking-wider transition-colors duration-200"
+              style={{ color: "var(--text-muted)" }}
             >
               <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
                 ←
@@ -66,13 +66,13 @@ export default function EditorialPolicyPage() {
           </div>
 
           <header className="mb-16">
-            <span className="text-[#EAEFFF]/30 uppercase tracking-[0.25em] text-[11px] font-medium block mb-4">
+            <span className="uppercase tracking-[0.25em] text-[11px] font-medium block mb-4" style={{ color: "var(--text-muted)" }}>
               Editorial Policy
             </span>
-            <h1 className="text-3xl md:text-4xl font-secondary-italic text-white/80 mb-4">
+            <h1 className="text-3xl md:text-4xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
               How We Create Content
             </h1>
-            <p className="text-white/25 text-[15px] leading-[1.8] font-[350]">
+            <p className="text-[15px] leading-[1.8] font-[350]" style={{ color: "var(--text-secondary)" }}>
               Transparency about our content creation process, editorial
               standards, and commitment to accuracy.
             </p>
@@ -80,10 +80,10 @@ export default function EditorialPolicyPage() {
 
           <div className="space-y-14">
             <section>
-              <h2 className="text-xl md:text-2xl font-secondary-italic text-white/70 mb-4">
+              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Who Writes Our Content
               </h2>
-              <p className="text-white/30 text-[15px] leading-[1.85] font-[350]">
+              <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
                 All blog content on withmeteoric.com is written or reviewed by
                 Prashant Khuva, Founder &amp; Full-Stack Developer at Meteoric.
                 Every article reflects real project experience — we only write
@@ -94,15 +94,15 @@ export default function EditorialPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl md:text-2xl font-secondary-italic text-white/70 mb-4">
+              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Our Editorial Standards
               </h2>
               <div className="space-y-4">
-                <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
-                  <h3 className="text-sm font-medium text-white/60 mb-2">
+                <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
+                  <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
                     Accuracy First
                   </h3>
-                  <p className="text-white/25 text-[14px] leading-[1.7] font-[350]">
+                  <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
                     Every technical claim is verified against official
                     documentation. Code examples are tested. Statistics are
                     sourced from published research, official benchmarks, or our
@@ -110,11 +110,11 @@ export default function EditorialPolicyPage() {
                     come from real projects we have shipped.
                   </p>
                 </div>
-                <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
-                  <h3 className="text-sm font-medium text-white/60 mb-2">
+                <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
+                  <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
                     No Speculation
                   </h3>
-                  <p className="text-white/25 text-[14px] leading-[1.7] font-[350]">
+                  <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
                     We do not publish opinion pieces without evidence. If we
                     recommend a technology, we explain why based on production
                     experience — not marketing claims. If we compare tools, we
@@ -122,11 +122,11 @@ export default function EditorialPolicyPage() {
                     citing third-party benchmarks.
                   </p>
                 </div>
-                <div className="p-6 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
-                  <h3 className="text-sm font-medium text-white/60 mb-2">
+                <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
+                  <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
                     Regular Updates
                   </h3>
-                  <p className="text-white/25 text-[14px] leading-[1.7] font-[350]">
+                  <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
                     Every article shows its last modified date. We review
                     content quarterly for accuracy and freshness. When
                     technology versions change or new data becomes available, we
@@ -138,7 +138,7 @@ export default function EditorialPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl md:text-2xl font-secondary-italic text-white/70 mb-4">
+              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Content Review Process
               </h2>
               <ol className="space-y-3">
@@ -151,10 +151,10 @@ export default function EditorialPolicyPage() {
                   "Monitoring — track performance and update as needed.",
                 ].map((step, i) => (
                   <li key={i} className="flex items-start gap-4">
-                    <span className="text-[#EAEFFF]/20 text-sm font-mono shrink-0 mt-0.5 tabular-nums">
+                    <span className="text-sm font-mono shrink-0 mt-0.5 tabular-nums" style={{ color: "var(--text-muted)" }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-white/30 text-[15px] leading-[1.7] font-[350]">
+                    <span className="text-[15px] leading-[1.7] font-[350]" style={{ color: "var(--text-secondary)" }}>
                       {step}
                     </span>
                   </li>
@@ -163,15 +163,16 @@ export default function EditorialPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl md:text-2xl font-secondary-italic text-white/70 mb-4">
+              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Corrections
               </h2>
-              <p className="text-white/30 text-[15px] leading-[1.85] font-[350]">
+              <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
                 If you find an error in any of our articles, please contact us
                 at{" "}
                 <a
                   href="mailto:contact@withmeteoric.com"
-                  className="text-[#EAEFFF]/40 hover:text-[#EAEFFF]/60 transition-colors"
+                  className="hover:opacity-80 transition-opacity"
+                  style={{ color: "var(--accent)" }}
                 >
                   contact@withmeteoric.com
                 </a>
@@ -182,10 +183,10 @@ export default function EditorialPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl md:text-2xl font-secondary-italic text-white/70 mb-4">
+              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Conflicts of Interest
               </h2>
-              <p className="text-white/30 text-[15px] leading-[1.85] font-[350]">
+              <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
                 Some articles reference technologies we use in client projects
                 (Next.js, Supabase, Stripe, GSAP). We disclose when we have
                 direct commercial experience with a tool. Our recommendations
