@@ -5,9 +5,9 @@ import { buildHowToJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonLd";
 import { homeFaqs } from "@/data/faqs";
 
 const pageTitle =
-  "Meteoric — Web & Software Development Agency for Startups & SaaS";
+  "Meteoric | Software Development Agency for Startups & SaaS";
 const pageDesc =
-  "Meteoric is a founder-led software development studio for startups and SaaS. We design and ship high-performance websites, apps, and platforms that convert.";
+  "Meteoric is a founder-led software development studio building SaaS products, web applications, and high-performance websites for startups and growing businesses.";
 
 export const metadata = {
   title: pageTitle,
@@ -33,6 +33,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@prashantkhuva_",
     title: pageTitle,
     description: pageDesc,
     images: [`${SITE_URL}/og.jpg`],

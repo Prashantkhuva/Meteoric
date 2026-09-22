@@ -3,9 +3,9 @@ import ServicesPage from "@/components/pages/Services";
 import { buildFaqJsonLd, buildHowToJsonLd } from "@/lib/seo/jsonLd";
 import { serviceFaqs } from "@/data/faqs";
 
-const pageTitle = "Services — Web Development & SaaS for Startups | Meteoric";
+const pageTitle = "Software Development Services | SaaS, Web Apps & Next.js | Meteoric";
 const pageDesc =
-  "Landing pages, SaaS products, and full-stack applications — designed and built in-house, shipped with the founder on the line.";
+  "Explore Meteoric's software development services for startups and businesses, from SaaS development and Next.js applications to landing pages and full-stack web development.";
 
 export const metadata = {
   title: pageTitle,
@@ -21,8 +21,8 @@ export const metadata = {
       {
         url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
         secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1635,
-        height: 962,
+        width: 1200,
+        height: 630,
         alt: pageTitle,
       },
     ],
