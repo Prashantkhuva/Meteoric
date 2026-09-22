@@ -155,7 +155,7 @@ export const caseStudies = [
       },
       {
         metric: "Turnaround",
-        value: "3x faster",
+        value: "Faster",
         description: "article editing cycle",
       },
       {

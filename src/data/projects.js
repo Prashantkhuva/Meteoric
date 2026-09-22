@@ -4,8 +4,11 @@ export const projects = [
     slug: "lete-em-know",
     name: "Let'em Know",
     tagline: "Premium agency site with GSAP animations & smooth scroll.",
+    metaTitle: "Let'em Know | Premium Agency Website Case Study | Meteoric",
+    metaDescription:
+      "See how Meteoric designed and developed Let'em Know, a modern agency website focused on interaction design, animation, responsive UI, and performance.",
     description:
-      "A high-performance agency website built for Let'em Know, a Gurgaon-based marketing agency. Features a canvas particle hero, infinite-scroll testimonials, GSAP-powered animations, Lenis smooth scroll, and a Calendly-integrated contact flow — all shipped production-ready. Outcome: 40% faster load times vs previous site, seamless mobile experience across all breakpoints.",
+      "A high-performance agency website built for Let'em Know, a Gurgaon-based marketing agency. Features a canvas particle hero, infinite-scroll testimonials, GSAP-powered animations, Lenis smooth scroll, and a Calendly-integrated contact flow — all shipped production-ready. Outcome: Faster load times vs previous site, seamless mobile experience across all breakpoints.",
     link: "https://agency-v2-theta.vercel.app/",
     image: "/letem-know.png",
     category: "Web Design",
@@ -24,6 +27,9 @@ export const projects = [
     slug: "habit-flow",
     name: "Habit Flow",
     tagline: "Build habits. Track streaks. Stay consistent.",
+    metaTitle: "Habit Flow | Habit Tracker Web App Case Study | Meteoric",
+    metaDescription:
+      "Explore how Meteoric built Habit Flow, a full-stack habit tracking application with authentication, habit management, streaks, analytics, and a modern dashboard.",
     description:
       "A full-stack SaaS habit tracking application built for people who want to build better daily routines. Features include streak tracking, weekly analytics, reminder notifications, and a clean dashboard to visualize progress over time. Outcome: Shipped MVP in 3 weeks, validated concept with 200+ beta users.",
     link: "https://habitflow.indevs.in/",
@@ -48,7 +54,7 @@ export const projects = [
     metaDescription:
       "How Meteoric built MegaBlog: a full-stack blogging platform with React, Appwrite, and TinyMCE, from auth to editorial UX.",
     description:
-      "A premium blog platform built with React 19 and Appwrite backend. Features a rich TinyMCE editor, full CRUD for posts, Redux Toolkit state management, and a dark editorial aesthetic with Framer Motion animations throughout. Outcome: Content publishing workflow reduced from hours to minutes, editors report 3x faster article turnaround.",
+      "A premium blog platform built with React 19 and Appwrite backend. Features a rich TinyMCE editor, full CRUD for posts, Redux Toolkit state management, and a dark editorial aesthetic with Framer Motion animations throughout. Outcome: Streamlined content publishing workflow, faster article turnaround for editors.",
     link: "https://megablog.vercel.app/",
     image: "/megablog.png",
     category: "Web App",
@@ -67,6 +73,9 @@ export const projects = [
     slug: "mobile-preview-simulator",
     name: "Mobile Preview Simulator",
     tagline: "Preview responsive mobile screens directly inside VS Code.",
+    metaTitle: "Mobile Preview Simulator | VS Code Extension | Meteoric",
+    metaDescription:
+      "Explore Meteoric's Mobile Preview Simulator, a VS Code extension for previewing responsive web interfaces during development.",
     description:
       "A VS Code extension that helps developers preview responsive mobile layouts without leaving the editor. Built for frontend developers who want faster UI testing workflows with a clean in-editor mobile simulation experience. Outcome: 500+ installs on VS Code Marketplace, 4.5-star rating, active community with feature requests and contributions.",
     link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",

@@ -7,6 +7,7 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -30,7 +31,11 @@ export default function Navbar({ isHome = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [nearFooter, setNearFooter] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const overlayRef = useRef(null);
   const linksRef = useRef(null);
   const ctaRef = useRef(null);
@@ -44,10 +49,6 @@ export default function Navbar({ isHome = false }) {
 
   const trackBookingClick = useCallback((buttonLocation) => {
     trackEvent("booking_click", { button_location: buttonLocation });
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
   }, []);
 
   // Pill appears after scroll

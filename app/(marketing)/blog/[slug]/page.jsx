@@ -259,7 +259,7 @@ export default async function BlogPost({ params }) {
                   Written by Prashant Khuva
                 </h3>
                 <p className="text-[13px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
-                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups since 2020.
+                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups.
                 </p>
                 <div className="flex items-center gap-4 mt-3">
                   <a href="https://x.com/prashantkhuva_" target="_blank" rel="noopener noreferrer" className="text-[11px] transition-colors duration-200" style={{ color: "var(--text-muted)" }}>

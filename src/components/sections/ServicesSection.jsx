@@ -12,28 +12,24 @@ const services = [
     title: "Landing Page",
     desc: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
     image: "/images/service-web.webp",
-    metric: "3x faster launch",
     href: "/services/landing-pages",
   },
   {
     title: "SaaS Development",
     desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
     image: "/images/service-saas.webp",
-    metric: "10+ MVPs shipped",
     href: "/services/saas-development",
   },
   {
     title: "Web Apps",
     desc: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
     image: "/images/service-mobile.webp",
-    metric: "99.9% uptime",
     href: "/services/web-applications",
   },
   {
     title: "Full-Stack",
     desc: "Complete frontend and backend development — from APIs and databases to polished UI. Full stack, one team.",
     image: "/images/service-web.webp",
-    metric: "50+ projects delivered",
     href: "/services/nextjs-development",
   },
 ];
@@ -124,12 +120,6 @@ function ServiceCard({ service, index }) {
               {service.desc}
             </p>
             <div className="flex items-center justify-between">
-              <span
-                className="text-caption font-medium uppercase tracking-[0.1em]"
-                style={{ color: "var(--hero-text-muted)" }}
-              >
-                {service.metric}
-              </span>
               <span
                 className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider group-hover:gap-2.5 transition-all duration-300"
                 style={{ color: "var(--hero-text-muted)" }}

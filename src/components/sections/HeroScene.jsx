@@ -244,7 +244,7 @@ function OrbitalRings() {
   );
 }
 
-function Scene({ mouse, isMobile }) {
+function Scene({ mouse }) {
   const { invalidate } = useThree();
 
   useEffect(() => {

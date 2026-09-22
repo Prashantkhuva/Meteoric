@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { ArrowUpRight, ArrowDown } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap-setup";
 import { SplitText } from "gsap/SplitText";
-import { trackEvent } from "@/lib/analytics/gtag";
 import siteStats from "@/data/site-stats";
 
 gsap.registerPlugin(SplitText);

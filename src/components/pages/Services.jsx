@@ -3,7 +3,7 @@
 import { useRef, useCallback } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap-setup";
+import { gsap } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { serviceFaqs } from "@/data/faqs";
@@ -16,7 +16,7 @@ const services = [
     desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
     slug: "landing-pages",
     image: "/images/service-web.webp",
-    metric: "3x faster launch",
+    metric: "Ships in days",
     process: {
       intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
       steps: [
@@ -48,7 +48,7 @@ const services = [
     desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
     slug: "web-applications",
     image: "/images/service-mobile.webp",
-    metric: "99.9% uptime",
+    metric: "Built to perform",
     process: {
       intro: "Whether it's an internal dashboard or a customer-facing platform, we build web apps that are fast, reliable, and a pleasure to use.",
       steps: [

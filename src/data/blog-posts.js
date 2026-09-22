@@ -42,7 +42,7 @@ export const blogPosts = [
       },
       {
         heading: "Indexing Strategy",
-        body: "Create indexes on fields you query often. Use multi-field indexes for multi-field queries. A compound index on (tenant_id, created_at) speeds up billing searches. MongoDB uses B-tree indexes like PostgreSQL. But PostgreSQL has better indexes for range searches. We saw 80% faster queries with the right indexes.\n\nRef: [MongoDB Index Guide](https://www.mongodb.com/docs/manual/indexes/)",
+        body: "Create indexes on fields you query often. Use multi-field indexes for multi-field queries. A compound index on (tenant_id, created_at) speeds up billing searches. MongoDB uses B-tree indexes like PostgreSQL. But PostgreSQL has better indexes for range searches. Properly chosen indexes can dramatically improve query speed.\n\nRef: [MongoDB Index Guide](https://www.mongodb.com/docs/manual/indexes/)",
       },
       {
         heading: "Schema Evolution in Practice",
@@ -407,7 +407,7 @@ export const blogPosts = [
   },
   {
     slug: "gsap-vs-framer-motion-production-guide",
-    title: "GSAP vs Framer Motion: Production Animation Guide",
+    title: "GSAP vs Framer Motion in 2026: Which Should You Use?",
     description:
       "A production-focused comparison of GSAP and Framer Motion for React and Next.js applications. Performance, bundle size, scroll animations, and when to use each.",
     tagline:
@@ -449,7 +449,7 @@ export const blogPosts = [
       },
       {
         heading: "What We Use in Production",
-        body: "Every animation-heavy site we build uses the same pattern. Framer Motion handles UI interactions like modals and page transitions. GSAP with ScrollTrigger handles scroll-driven hero sections and parallax. The split works because each library handles what it does best. We shipped this on 15+ projects with smooth 60fps animations, small bundle overhead, and maintainable code.\n\n[UNIQUE INSIGHT] On our last 5 client projects, GSAP's timeline feature saved 40% of animation development time compared to Framer Motion's variant-based approach. The imperative API lets you sequence complex multi-element animations without prop drilling through React components.",
+        body: "Every animation-heavy site we build uses the same pattern. Framer Motion handles UI interactions like modals and page transitions. GSAP with ScrollTrigger handles scroll-driven hero sections and parallax. The split works because each library handles what it does best. We've used this approach across multiple projects with smooth animations, small bundle overhead, and maintainable code.\n\n[UNIQUE INSIGHT] On our recent projects, GSAP's timeline feature reduced animation development complexity compared to Framer Motion's variant-based approach. The imperative API lets you sequence complex multi-element animations without prop drilling through React components.",
       },
       {
         heading: "Bundle Size Deep Dive",
@@ -457,7 +457,7 @@ export const blogPosts = [
       },
       {
         heading: "Performance in Production",
-        body: "We benchmarked both on 15 production sites. GSAP delivered 60fps on scroll animations across Chrome, Safari, and Firefox. Framer Motion matched GSAP for simple transitions. But it dropped to 45fps on complex layouts with 20+ elements. The gap appears at scale. Fewer than 10 animated elements: either library works. Animation-heavy pages: GSAP's direct control API wins for frame budget.\n\nOur approach: we benchmarked both libraries on 15 production sites, measuring FPS, bundle size, and developer time across animation complexity levels.\n\nRef: [Stanford Computer Science](https://cs.stanford.edu/) research on JavaScript animation performance patterns.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+        body: "We benchmarked both across multiple projects. GSAP delivered smooth scroll animations across Chrome, Safari, and Firefox. Framer Motion matched GSAP for simple transitions. But it dropped to lower frame rates on complex layouts with 20+ elements. The gap appears at scale. Fewer than 10 animated elements: either library works. Animation-heavy pages: GSAP's direct control API wins for frame budget.\n\nOur approach: we benchmarked both libraries across multiple production sites, measuring performance, bundle size, and developer time across animation complexity levels.\n\nRef: [Stanford Computer Science](https://cs.stanford.edu/) research on JavaScript animation performance patterns.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
     ],
     faqs: [
@@ -751,7 +751,7 @@ export const blogPosts = [
   },
   {
     slug: "the-meteoric-guide-to-choosing-your-tech-stack",
-    title: "The Meteoric Guide to Choosing Your Tech Stack",
+    title: "How to Choose Your Tech Stack: A Founder's Guide",
     description:
       "A founder-focused guide to choosing a tech stack for your startup. React vs Vue, Next.js vs Remix, PostgreSQL vs MongoDB, and how to make technology decisions that won't lock you in.",
     tagline:
@@ -1037,7 +1037,7 @@ export const blogPosts = [
       },
       {
         heading: "1. Slow Page Load (Over 3 Seconds)",
-        body: "53% of mobile visitors abandon sites that take over 3 seconds to load. The fix: compress images to WebP format (60-80% smaller than PNG), build **lazy loading** — [deferring offscreen resources](https://web.dev/lazy-loading/) until users scroll to them — use a CDN for static assets, and minimize JavaScript bundles. For example, a 1-second delay in load time reduces conversions by 7%. Fix: compress images to WebP, lazy-load below-the-fold content, and use a CDN. We audited a client site last month and cut load time from 4.2s to 1.1s by compressing hero images and deferring non-critical scripts. Bounce rate dropped 23%.",
+        body: "53% of mobile visitors abandon sites that take over 3 seconds to load. The fix: compress images to WebP format (60-80% smaller than PNG), build **lazy loading** — [deferring offscreen resources](https://web.dev/lazy-loading/) until users scroll to them — use a CDN for static assets, and minimize JavaScript bundles. For example, a 1-second delay in load time reduces conversions by 7%. Fix: compress images to WebP, lazy-load below-the-fold content, and use a CDN. These are common optimizations that can significantly improve page speed and reduce bounce rates.",
       },
       {
         heading: "2. No Clear Value Proposition Above the Fold",
@@ -1398,7 +1398,7 @@ export const blogPosts = [
       },
       {
         heading: "Pattern 6: Above-the-Fold Clarity",
-        body: "Visitors decide in 3 seconds. Your hero must answer: What do you do? Who is it for? Why care? Put your value proposition in the first screen. Add one CTA. Remove clutter. Pages with clear heroes see 40% lower bounce rates.\n\nReference: [Nielsen Norman Group](https://www.nngroup.com/articles/)",
+        body: "Visitors decide in 3 seconds. Your hero must answer: What do you do? Who is it for? Why care? Put your value proposition in the first screen. Add one CTA. Remove clutter. Pages with clear heroes see measurably lower bounce rates.\n\nReference: [Nielsen Norman Group](https://www.nngroup.com/articles/)",
       },
       {
         heading: "Measuring Conversion Impact",

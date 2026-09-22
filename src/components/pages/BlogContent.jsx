@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap-setup";
+import { gsap } from "@/lib/gsap-setup";
 import { motion, AnimatePresence } from "framer-motion";
 import { blogPosts } from "@/data/blog-posts";
 
