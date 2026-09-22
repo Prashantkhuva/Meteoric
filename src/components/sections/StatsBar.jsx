@@ -77,7 +77,7 @@ export default function StatsBar() {
               key={stat.label}
               className="stat-item text-center opacity-0"
             >
-              <div className="text-heading-1 font-semibold tracking-tight mb-1.5" style={{ color: "#ffffff" }}>
+              <div className="text-[clamp(1.25rem,5vw,2.25rem)] font-semibold tracking-tight mb-1.5 whitespace-nowrap" style={{ color: "#ffffff" }}>
                 <AnimatedNumber target={stat.value} inView={inView} />
               </div>
               <p className="text-caption uppercase tracking-[0.12em] font-medium" style={{ color: "rgba(255,255,255,0.4)" }}>

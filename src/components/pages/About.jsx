@@ -279,7 +279,7 @@ export default function AboutPage({ faqs = [] }) {
 
             {/* Stats */}
             <div
-              className="bio-reveal grid grid-cols-3 gap-4 py-8"
+              className="bio-reveal grid grid-cols-2 gap-6 py-8"
               style={{
                 borderTop: "1px solid var(--border-color)",
                 borderBottom: "1px solid var(--border-color)",
@@ -288,13 +288,14 @@ export default function AboutPage({ faqs = [] }) {
               {siteStats.map((s, i) => (
                 <div
                   key={s.label}
-                  className={i !== 0 ? "pl-4" : ""}
-                  style={
-                    i !== 0 ? { borderLeft: "1px solid var(--border-color)" } : {}
+                  className={
+                    i % 2 !== 0
+                      ? "pl-4 border-l border-[color:var(--border-color)]"
+                      : ""
                   }
                 >
                   <p
-                    className="text-3xl md:text-4xl font-display mb-1"
+                    className="text-lg sm:text-xl md:text-3xl font-display mb-1 whitespace-nowrap"
                     style={{ color: "var(--text-primary)" }}
                   >
                     {s.value}
