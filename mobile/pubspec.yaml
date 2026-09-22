@@ -1,7 +1,7 @@
 name: meteoric_admin
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.18.3+13
+version: 0.19.0+14
 
 environment:
   sdk: ^3.13.0
