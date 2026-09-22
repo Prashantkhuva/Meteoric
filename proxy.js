@@ -49,14 +49,22 @@ export async function proxy(request) {
     return Response.redirect(url, 301);
   }
 
-  // 3. Strip ?q= search parameter (broken template variable)
+  // 3. Redirect ?q= search parameter to homepage (broken template variable)
   if (request.nextUrl.searchParams.has("q")) {
-    const url = request.nextUrl.clone();
-    url.searchParams.delete("q");
-    return Response.redirect(url.toString(), 301);
+    const url = new URL(`https://withmeteoric.com/`);
+    return Response.redirect(url, 301);
   }
 
-  // 4. Maintenance mode — redirect all public routes to /maintenance
+  // 4. Normalize double slashes in path (fixes GSC "Redirect error")
+  if (pn.includes("//")) {
+    const normalized = pn.replace(/\/+/g, "/");
+    const url = new URL(
+      `https://withmeteoric.com${normalized}${request.nextUrl.search}`,
+    );
+    return Response.redirect(url, 308);
+  }
+
+  // 5. Maintenance mode — redirect all public routes to /maintenance
   //    Admin, API, and static assets remain accessible so you can disable it
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true") {
     const isMaintenancePage = pn === "/maintenance";
