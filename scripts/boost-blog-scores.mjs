@@ -12,83 +12,63 @@ const FILE = new URL("../src/data/blog-posts.js", import.meta.url).pathname.repl
 
 const boosts = {
   "mongodb-schema-design-for-saas-billing": {
-    image: "/og/blog/mongodb-schema-design.png",
     tldr: "MongoDB's document model fits SaaS billing data naturally. Subscriptions, invoices, and credits embed well. Use integer cents for money. Never floating-point. Embed line items in invoices. Reference customers separately. Index (tenant_id, created_at) for fast billing queries.",
   },
   "how-to-build-a-saas-mvp-step-by-step-guide": {
-    image: "/og/blog/build-saas-mvp.png",
     tldr: "A SaaS MVP ships in 3-6 weeks with the right stack and scope. Start with auth, billing, and one core feature. Use Next.js plus Supabase plus Stripe for the fastest path. Launch to 10-50 beta users before building more.",
   },
   "mongodb-vs-postgresql-for-saas": {
-    image: "/og/blog/mongodb-vs-postgresql.png",
     tldr: "PostgreSQL wins for billing and transactional data because ACID compliance matters. MongoDB wins for flexible schemas and rapid iteration. Most SaaS apps use PostgreSQL as primary with Redis for caching. Choose based on your data model, not trends.",
   },
   "gsap-vs-framer-motion-production-guide": {
-    image: "/og/blog/gsap-vs-framer-motion.png",
     tldr: "GSAP is better for scroll-driven and complex timeline animations. Framer Motion is better for React UI micro-interactions. GSAP core is 27KB gzipped versus Framer Motion at 44KB. Use both together for production sites.",
   },
   "supabase-vs-firebase-2026-comparison": {
-    image: "/og/blog/supabase-vs-firebase.png",
     tldr: "Supabase uses PostgreSQL so you own your data with SQL access. Firebase uses Firestore which is Google-managed with proprietary queries. Supabase is better for startups that want data portability. Firebase is better for rapid prototyping.",
   },
   "nextjs-vs-remix-2026-comparison": {
-    image: "/og/blog/nextjs-vs-remix.png",
     tldr: "Next.js has a larger ecosystem and more deployment options. Remix excels at form handling and progressive enhancement. Next.js App Router supports React Server Components natively. Choose Remix for data-heavy forms.",
   },
   "what-is-a-web-development-agency": {
-    image: "/og/blog/what-is-web-development-agency.png",
     tldr: "A web development agency builds websites, web apps, and digital products for clients. Services range from design to deployment to ongoing maintenance. Look for agencies with portfolio evidence. Costs range from 5K for a landing page to 100K plus for a SaaS platform.",
   },
   "how-much-does-a-startup-website-cost": {
-    image: "/og/blog/startup-website-cost.png",
     tldr: "A startup website costs 5K to 50K depending on complexity. Landing pages cost 3K to 8K. Marketing sites cost 10K to 25K. SaaS MVPs cost 25K to 75K. Ongoing costs include hosting at 20 to 200 per month.",
   },
   "building-a-saas-prototype-in-3-weeks-a-case-study": {
-    image: "/og/blog/saas-prototype-case-study.png",
     tldr: "We built a SaaS prototype in 3 weeks using Next.js, Supabase, and Stripe. Week 1 covered auth, database, and core data model. Week 2 covered billing integration and dashboard UI. Week 3 covered deployment, testing, and beta launch.",
   },
   "the-meteoric-guide-to-choosing-your-tech-stack": {
-    image: "/og/blog/choose-tech-stack.png",
     tldr: "Pick a tech stack based on your team skills, not trends. Next.js plus Supabase covers 80 percent of SaaS use cases. Avoid over-engineering and start simple. Your stack should match your timeline and budget.",
   },
   "how-to-choose-a-web-development-agency": {
-    image: "/og/blog/choose-web-agency.png",
     tldr: "Check the agency portfolio for projects similar to yours. Ask for case studies with metrics, not just screenshots. Verify they use modern stacks like Next.js and React. Avoid agencies that will not share client references.",
   },
   "react-vs-nextjs-for-startup-websites": {
-    image: "/og/blog/react-vs-nextjs.png",
     tldr: "Next.js is React plus server rendering, routing, and optimization. Use plain React only for embedded widgets or existing SPAs. Next.js gives better SEO, performance, and developer experience. For startups, Next.js saves 30 to 40 percent development time.",
   },
   "how-to-implement-aeo-answer-engine-optimization-for-saas": {
-    image: "/og/blog/aeo-optimization.png",
     tldr: "AEO optimizes your content for AI chatbots like ChatGPT and Perplexity. Structure content with clear definitions, evidence, and citations. Add JSON-LD schema and FAQ sections for AI extraction. Focus on being the best answer.",
   },
   "why-visitors-leave-your-website-issues-and-solutions": {
-    image: "/og/blog/why-visitors-leave.png",
     tldr: "Slow loading causes 53 percent of visitors to leave within 3 seconds. Poor mobile experience loses 60 percent of traffic. Unclear value proposition bounces 70 percent of first-time visitors. Fix speed, mobile, and messaging first.",
   },
   "high-converting-landing-page-structure-for-saas": {
-    image: "/og/blog/saas-landing-page.png",
     tldr: "High-converting landing pages follow this order: headline, problem, solution, proof, CTA. Above-the-fold clarity converts 40 percent better than feature lists. Social proof increases trust. One page, one goal.",
   },
   "long-tail-seo-strategy-for-funded-startups": {
-    image: "/og/blog/long-tail-seo.png",
     tldr: "Long-tail keywords have lower volume but higher conversion intent. Target how-to and versus queries in your niche. Create comparison posts and guides. Build topical authority through 10 to 20 related posts per cluster.",
   },
   "ai-search-optimization-how-to-get-cited-by-chatgpt": {
-    image: "/og/blog/ai-search-optimization.png",
     tldr: "AI chatbots cite content that is structured, evidence-backed, and clearly sourced. Add JSON-LD schema, FAQ sections, and inline citations. Write definitive guides that answer questions completely.",
   },
   "conversion-focused-web-design-beyond-pretty-ui": {
-    image: "/og/blog/conversion-focused-design.png",
     tldr: "Pretty design without conversion focus wastes traffic. Every page needs one clear CTA and a path to reach it. A/B test headlines, CTAs, and layouts. Reduce friction with fewer form fields and clearer pricing.",
   },
   "startup-seo-on-a-budget-what-to-do-first": {
-    image: "/og/blog/startup-seo-budget.png",
     tldr: "Start with technical SEO by fixing crawl errors, speed, and mobile. Target 5 to 10 long-tail keywords with high intent. Create one pillar page per topic cluster. Build backlinks through guest posts and partnerships.",
   },
   "complete-website-audit-checklist-for-startups": {
-    image: "/og/blog/website-audit-checklist.png",
     tldr: "Run a technical audit first covering crawl errors, speed, and mobile. Check content quality for thin pages and duplicates. Review analytics for traffic trends and conversion rates. Prioritize fixes by impact.",
   },
 };
@@ -124,8 +104,6 @@ for (const post of blogPosts) {
   const b = boosts[post.slug];
   if (!b) { console.log("No boost data for:", post.slug); continue; }
 
-  // 1. Add image
-  post.image = b.image;
 
   // 2. Add TL;DR as first section
   const hasTldr = post.sections[0]?.heading === "TL;DR";

@@ -1,9 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SITE_URL, sitemapRoutes } from "../src/lib/seo/config.js";
-import { projects } from "../src/data/projects.js";
-import { blogPosts } from "../src/data/blog-posts.js";
+import { SITE_URL } from "../src/lib/seo/config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -15,63 +13,10 @@ const outDir =
     : "public";
 
 const outputDir = path.resolve(rootDir, outDir);
-function routeUrl(routePath) {
-  if (routePath === "/") return `${SITE_URL}/`;
-  return `${SITE_URL}${routePath}`;
-}
 
-const serviceSlugs = [
-  "saas-development",
-  "startup-web-development",
-  "nextjs-development",
-  "landing-pages",
-  "web-applications",
-];
-
-const serviceUrls = serviceSlugs.map((slug) => ({
-  path: `/services/${slug}`,
-  changefreq: "monthly",
-  priority: "0.8",
-}));
-
-const workUrls = projects.map((project) => ({
-  path: `/work/${project.slug}`,
-  changefreq: "monthly",
-  priority: "0.7",
-}));
-
-const blogUrls = blogPosts.map((post) => ({
-  path: `/blog/${post.slug}`,
-  changefreq: "weekly",
-  priority: "0.7",
-}));
-
-const lastmodIndex = {};
-sitemapRoutes.forEach((r) => {
-  lastmodIndex[r.path] = r.lastmod;
-});
-
-const allRoutes = [...sitemapRoutes, ...serviceUrls, ...workUrls, ...blogUrls];
-
-function routeLastmod(route) {
-  return lastmodIndex[route.path] || new Date().toISOString().split("T")[0];
-}
-
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${allRoutes
-  .map(
-    (route) => `  <url>
-    <loc>${routeUrl(route.path)}</loc>
-    <lastmod>${routeLastmod(route)}</lastmod>
-    <changefreq>${route.changefreq}</changefreq>
-    <priority>${route.priority}</priority>
-  </url>`,
-  )
-  .join("\n")}
-</urlset>
-`;
+// Sitemap is served by app/sitemap.js (Next metadata route).
+// Writing public/sitemap.xml would conflict with it (Next error E212).
+// This script only generates robots.txt.
 
 const robots = `# Meteoric — ${SITE_URL}
 User-agent: *
@@ -162,11 +107,8 @@ Sitemap: ${SITE_URL}/sitemap.xml
 `;
 
 await mkdir(outputDir, { recursive: true });
-await Promise.all([
-  writeFile(path.join(outputDir, "sitemap.xml"), sitemap, "utf8"),
-  writeFile(path.join(outputDir, "robots.txt"), robots, "utf8"),
-]);
+await writeFile(path.join(outputDir, "robots.txt"), robots, "utf8");
 
 console.log(
-  `Generated sitemap.xml and robots.txt in ${path.relative(rootDir, outputDir)}`,
+  `Generated robots.txt in ${path.relative(rootDir, outputDir)} (sitemap served by app/sitemap.js)`,
 );

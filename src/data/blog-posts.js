@@ -106,7 +106,6 @@ export const blogPosts = [
         title: "How to Build a SaaS MVP",
       },
     ],
-    image: "/og/blog/mongodb-schema-design.png",
   },
   {
     slug: "how-to-build-a-saas-mvp-step-by-step-guide",
@@ -277,7 +276,6 @@ export const blogPosts = [
         title: "Website Audit Checklist",
       },
     ],
-    image: "/og/blog/build-saas-mvp.png",
   },
   {
     slug: "mongodb-vs-postgresql-for-saas",
@@ -403,7 +401,6 @@ export const blogPosts = [
         title: "Supabase vs Firebase 2026",
       },
     ],
-    image: "/og/blog/mongodb-vs-postgresql.png",
   },
   {
     slug: "gsap-vs-framer-motion-production-guide",
@@ -534,7 +531,6 @@ export const blogPosts = [
         title: "Conversion-Focused Web Design",
       },
     ],
-    image: "/og/blog/gsap-vs-framer-motion.png",
   },
   {
     slug: "supabase-vs-firebase-2026-comparison",
@@ -651,7 +647,6 @@ export const blogPosts = [
         title: "How to Build a SaaS MVP",
       },
     ],
-    image: "/og/blog/supabase-vs-firebase.png",
   },
   {
     slug: "what-is-a-web-development-agency",
@@ -747,7 +742,6 @@ export const blogPosts = [
         title: "How Much Does a Startup Website Cost?",
       },
     ],
-    image: "/og/blog/web-development-agency.png",
   },
   {
     slug: "the-meteoric-guide-to-choosing-your-tech-stack",
@@ -864,7 +858,6 @@ export const blogPosts = [
         title: "Choosing Your Tech Stack",
       },
     ],
-    image: "/og/blog/react-vs-nextjs.png",
   },
   {
     slug: "how-to-implement-aeo-answer-engine-optimization-for-saas",
@@ -1012,7 +1005,6 @@ export const blogPosts = [
         title: "AI Search Optimization",
       },
     ],
-    image: "/og/blog/aeo-optimization.png",
   },
   {
     slug: "why-visitors-leave-your-website-issues-and-solutions",
@@ -1125,7 +1117,6 @@ export const blogPosts = [
         title: "How to Choose a Web Development Agency",
       },
     ],
-    image: "/og/blog/why-visitors-leave.png",
   },
   {
     slug: "high-converting-landing-page-structure-for-saas",
@@ -1243,7 +1234,6 @@ export const blogPosts = [
         title: "Conversion-Focused Web Design",
       },
     ],
-    image: "/og/blog/saas-landing-page.png",
   },
   {
     slug: "long-tail-seo-strategy-for-funded-startups",
@@ -1348,7 +1338,6 @@ export const blogPosts = [
         title: "How to Build a SaaS MVP",
       },
     ],
-    image: "/og/blog/long-tail-seo.png",
   },
   {
     slug: "ai-search-optimization-how-to-get-cited-by-chatgpt",
@@ -1471,7 +1460,6 @@ export const blogPosts = [
         title: "High-Converting Landing Page Structure",
       },
     ],
-    image: "/og/blog/conversion-focused-design.png",
   },
   {
     slug: "startup-seo-on-a-budget-what-to-do-first",
@@ -1600,7 +1588,6 @@ export const blogPosts = [
         title: "High-Converting Landing Page Structure",
       },
     ],
-    image: "/og/blog/website-audit-checklist.png",
   },
 ];
 
