@@ -3,7 +3,7 @@ import Logo from "@/components/sections/Logo";
 export default function Loading() {
   return (
     <div
-      className="fixed inset-0 z-[9990] flex flex-col items-center justify-center gap-8"
+      className="fixed inset-0 z-[9970] flex flex-col items-center justify-center gap-8"
       style={{ background: "#050505" }}
       aria-hidden="true"
     >
