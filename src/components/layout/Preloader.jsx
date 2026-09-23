@@ -5,21 +5,19 @@ import { gsap } from "@/lib/gsap-setup";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import Logo from "@/components/sections/Logo";
 
-const CHARS = "METEORIC".split("");
-const EASE_PREMIUM = "expo.out";
-const EASE_EXIT = "expo.inOut";
+const EASE_IN = "expo.out";
+const EASE_OUT = "power4.inOut";
 
 export default function Preloader({ onDone }) {
   const overlayRef = useRef(null);
   const glowRef = useRef(null);
-  const hairlineRef = useRef(null);
-  const charsRef = useRef([]);
-  const tagRef = useRef(null);
-  const logoRef = useRef(null);
-  const metaRef = useRef(null);
-  const barRef = useRef(null);
-  const barWrapRef = useRef(null);
-  const counterRef = useRef(null);
+  const logoMaskRef = useRef(null);
+  const logoInnerRef = useRef(null);
+  const trackRef = useRef(null);
+  const fillRef = useRef(null);
+  const numRef = useRef(null);
+  const statusRef = useRef(null);
+  const footerRef = useRef(null);
   const [done, setDone] = useState(false);
   const lockedRef = useRef(false);
 
@@ -52,18 +50,18 @@ export default function Preloader({ onDone }) {
     lockedRef.current = true;
 
     const overlay = overlayRef.current;
-    const chars = charsRef.current;
 
-    gsap.set(chars, { yPercent: 115 });
-    gsap.set([tagRef.current, logoRef.current, metaRef.current], {
+    gsap.set(logoInnerRef.current, { yPercent: 120 });
+    gsap.set(logoMaskRef.current, { opacity: 0 });
+    gsap.set(trackRef.current, { opacity: 0, scaleX: 0.4 });
+    gsap.set(fillRef.current, { scaleX: 0 });
+    gsap.set([numRef.current, statusRef.current, footerRef.current], {
       opacity: 0,
+      y: 8,
     });
-    gsap.set(barWrapRef.current, { opacity: 0 });
-    gsap.set(barRef.current, { scaleX: 0 });
-    gsap.set(hairlineRef.current, { scaleX: 0, opacity: 1 });
     gsap.set(glowRef.current, {
       opacity: 0,
-      scale: 0.7,
+      scale: 0.85,
       xPercent: -50,
       yPercent: -50,
     });
@@ -77,122 +75,90 @@ export default function Preloader({ onDone }) {
       },
     });
 
-    // ambient glow breathes in
-    tl.to(glowRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 1.1,
-      ease: "power2.out",
-    });
-
-    // hairline sweeps across center
+    // soft halo
     tl.to(
-      hairlineRef.current,
-      { scaleX: 1, duration: 0.85, ease: EASE_PREMIUM },
-      0.1,
+      glowRef.current,
+      { opacity: 1, scale: 1, duration: 1.4, ease: "power2.out" },
+      0,
     );
 
-    // logo + corner meta
+    // logo rises from mask
+    tl.to(logoMaskRef.current, { opacity: 1, duration: 0.6 }, 0.15);
     tl.to(
-      [logoRef.current, metaRef.current],
-      { opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.06 },
-      0.35,
+      logoInnerRef.current,
+      { yPercent: 0, duration: 1.15, ease: EASE_IN },
+      0.2,
     );
 
-    // wordmark rises from mask
+    // hairline track settles in
     tl.to(
-      chars,
-      {
-        yPercent: 0,
-        duration: 0.9,
-        stagger: 0.045,
-        ease: EASE_PREMIUM,
-      },
-      0.4,
+      trackRef.current,
+      { opacity: 1, scaleX: 1, duration: 1, ease: EASE_IN },
+      0.55,
     );
 
-    // tagline: tracking opens + fade
-    tl.fromTo(
-      tagRef.current,
-      { opacity: 0, y: 14, letterSpacing: "0.6em" },
-      {
-        opacity: 1,
-        y: 0,
-        letterSpacing: "0.35em",
-        duration: 0.7,
-        ease: EASE_PREMIUM,
-      },
+    // counter label fades up
+    tl.to(
+      [statusRef.current, numRef.current, footerRef.current],
+      { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.08 },
       0.85,
     );
 
-    // hairline shrinks to sit under wordmark
-    tl.to(
-      hairlineRef.current,
-      { scaleX: 0.35, opacity: 0.5, duration: 0.7, ease: EASE_PREMIUM },
-      1.0,
-    );
-
-    // progress bar + counter
-    tl.to(barWrapRef.current, { opacity: 1, duration: 0.3 }, 1.1);
-
+    // progress fill + count, slow and even
     tl.to(
       progress,
       {
         value: 100,
-        duration: 0.85,
-        ease: "power1.inOut",
+        duration: 1.35,
+        ease: "power2.inOut",
         onUpdate: () => {
-          const v = Math.round(progress.value);
-          if (counterRef.current) counterRef.current.textContent = String(v);
+          if (numRef.current) {
+            numRef.current.textContent = String(
+              Math.round(progress.value),
+            ).padStart(2, "0");
+          }
         },
       },
-      1.15,
+      0.95,
     );
 
     tl.to(
-      barRef.current,
-      { scaleX: 1, duration: 0.85, ease: "power1.inOut" },
-      1.15,
+      fillRef.current,
+      { scaleX: 1, duration: 1.35, ease: "power2.inOut" },
+      0.95,
     );
 
-    // hold a beat at 100
-    tl.to({}, { duration: 0.25 });
+    // quiet hold
+    tl.to({}, { duration: 0.35 });
 
-    // exit: content lifts out
+    // exit — content drifts up, soft fade
+    const exitAt = ">";
+
     tl.to(
-      chars,
-      {
-        yPercent: -115,
-        duration: 0.55,
-        stagger: 0.03,
-        ease: "power3.in",
-      },
-      "exit",
+      logoInnerRef.current,
+      { yPercent: -120, duration: 0.85, ease: "power3.inOut" },
+      exitAt,
     );
 
     tl.to(
-      [tagRef.current, logoRef.current, metaRef.current, barWrapRef.current],
-      { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", stagger: 0.03 },
-      "exit+=0.1",
+      [trackRef.current, fillRef.current],
+      { opacity: 0, duration: 0.55, ease: "power2.inOut" },
+      "<0.15",
     );
 
     tl.to(
-      hairlineRef.current,
-      { scaleX: 0, opacity: 0, duration: 0.4, ease: "power2.in" },
-      "exit+=0.15",
+      [numRef.current, statusRef.current, footerRef.current],
+      { opacity: 0, y: -10, duration: 0.5, ease: "power2.inOut" },
+      "<0.05",
     );
 
-    tl.to(glowRef.current, { opacity: 0, duration: 0.4 }, "exit+=0.15");
+    tl.to(glowRef.current, { opacity: 0, duration: 0.7 }, "<0.1");
 
-    // curtain wipes upward
+    // curtain wipes up — slow, luxurious
     tl.to(
       overlay,
-      {
-        clipPath: "inset(0% 0% 100% 0%)",
-        duration: 0.85,
-        ease: EASE_EXIT,
-      },
-      "exit+=0.35",
+      { clipPath: "inset(0% 0% 100% 0%)", duration: 1, ease: EASE_OUT },
+      "-=0.55",
     );
 
     return () => {
@@ -216,118 +182,82 @@ export default function Preloader({ onDone }) {
       }}
       aria-hidden="true"
     >
-      {/* ambient glow */}
+      {/* quiet halo */}
       <div
         ref={glowRef}
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[min(70vw,520px)] w-[min(70vw,520px)] rounded-full blur-[110px]"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[min(90vw,640px)] w-[min(90vw,640px)] rounded-full blur-[140px]"
         style={{
           opacity: 0,
-          transform: "translate(-50%, -50%) scale(0.7)",
+          transform: "translate(-50%, -50%) scale(0.85)",
           background:
-            "radial-gradient(circle, rgba(234,239,255,0.14) 0%, rgba(234,239,255,0.03) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(234,239,255,0.07) 0%, rgba(234,239,255,0.02) 40%, transparent 70%)",
         }}
       />
 
-      {/* soft vignette */}
+      {/* film grain */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
-          background:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 30%, rgba(0,0,0,0.55) 100%)",
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "180px",
         }}
       />
 
-      {/* top bar: logo + meta */}
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between px-6 py-6 md:px-10 md:py-8">
-        <div ref={logoRef} style={{ opacity: 0 }}>
-          <Logo light={false} className="h-5 w-auto md:h-6" />
+      {/* center lockup */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-7 px-6">
+        {/* logo, masked reveal */}
+        <div ref={logoMaskRef} className="overflow-hidden py-1">
+          <div ref={logoInnerRef} className="will-change-transform">
+            <Logo light={false} className="h-7 w-auto md:h-9" />
+          </div>
         </div>
-        <span
-          ref={metaRef}
-          className="text-[10px] uppercase tracking-[0.3em] text-white/35"
-          style={{ fontFamily: "var(--font-primary)", opacity: 0 }}
-        >
-          Digital Craftsmanship
-        </span>
-      </div>
 
-      {/* center hairline */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
+        {/* progress hairline */}
         <div
-          ref={hairlineRef}
-          className="mx-auto h-px w-[min(88vw,720px)] origin-center"
-          style={{
-            transform: "scaleX(0)",
-            background:
-              "linear-gradient(90deg, transparent, rgba(234,239,255,0.55) 20%, rgba(234,239,255,0.85) 50%, rgba(234,239,255,0.55) 80%, transparent)",
-          }}
-        />
-      </div>
-
-      {/* wordmark */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="flex overflow-hidden" aria-hidden="true">
-          {CHARS.map((char, i) => (
-            <span
-              key={i}
-              ref={(el) => {
-                charsRef.current[i] = el;
-              }}
-              className="inline-block text-[clamp(2.4rem,9vw,80px)] leading-none tracking-[-0.03em] text-white will-change-transform"
-              style={{
-                fontFamily: "var(--font-secondary)",
-                fontWeight: 500,
-                transform: "translateY(115%)",
-              }}
-            >
-              {char}
-            </span>
-          ))}
-        </div>
-
-        <span
-          ref={tagRef}
-          className="mt-4 text-[10px] uppercase text-white/40 md:text-[11px]"
-          style={{
-            fontFamily: "var(--font-primary)",
-            letterSpacing: "0.35em",
-            opacity: 0,
-          }}
-        >
-          Web · Software · SaaS
-        </span>
-      </div>
-
-      {/* bottom progress */}
-      <div className="absolute inset-x-0 bottom-0 px-6 pb-6 md:px-10 md:pb-8">
-        <div className="mb-3 flex items-end justify-between">
-          <span className="text-[10px] uppercase tracking-[0.28em] text-white/30">
-            Loading experience
-          </span>
-          <span
-            ref={counterRef}
-            className="text-sm tabular-nums tracking-[0.15em] text-white/70"
-            style={{ fontFamily: "var(--font-primary)" }}
-          >
-            0
-          </span>
-        </div>
-        <div
-          ref={barWrapRef}
-          className="h-px w-full origin-left bg-white/10"
+          ref={trackRef}
+          className="h-px w-[min(60vw,240px)] origin-center bg-white/10"
           style={{ opacity: 0 }}
         >
           <div
-            ref={barRef}
+            ref={fillRef}
             className="h-px w-full origin-left"
             style={{
               transform: "scaleX(0)",
               background:
-                "linear-gradient(90deg, rgba(234,239,255,0.3), #EAEFFF)",
-              boxShadow: "0 0 12px rgba(234,239,255,0.45)",
+                "linear-gradient(90deg, rgba(234,239,255,0.25), rgba(234,239,255,0.95))",
             }}
           />
         </div>
+
+        {/* counter */}
+        <div className="flex items-center gap-3">
+          <span
+            ref={statusRef}
+            className="text-[10px] uppercase tracking-[0.32em] text-white/30"
+            style={{ opacity: 0 }}
+          >
+            Initializing
+          </span>
+          <span
+            ref={numRef}
+            className="text-[11px] tabular-nums tracking-[0.2em] text-white/50"
+            style={{ opacity: 0 }}
+          >
+            00
+          </span>
+        </div>
+      </div>
+
+      {/* footer whisper */}
+      <div
+        ref={footerRef}
+        className="absolute inset-x-0 bottom-0 flex justify-center pb-8"
+        style={{ opacity: 0 }}
+      >
+        <span className="text-[9px] uppercase tracking-[0.4em] text-white/20">
+          Meteoric — Digital Craftsmanship
+        </span>
       </div>
     </div>
   );
