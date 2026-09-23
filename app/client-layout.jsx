@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Preloader from "@/components/layout/Preloader";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 
@@ -31,6 +32,7 @@ export default function ClientLayout({ children }) {
       >
         Skip to content
       </a>
+      {!isAdmin && <Preloader />}
       {!isAdmin && <SmoothScroll />}
       {!isAdmin && <Navbar isHome={pathname === "/"} />}
       {isAdmin ? (

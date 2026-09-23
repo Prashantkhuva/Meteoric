@@ -304,14 +304,15 @@ body::after {
   overflow: hidden;
 }
 
-/* ── Page transition ── */
-@keyframes page-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* ── Preloader / loading keyframes ── */
+@keyframes preload-glow {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.92); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-.page-enter {
-  animation: page-enter 0.35s ease both;
+@keyframes preload-sweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
 }
 
 /* ── Grid lines (Atomik Growth style) ── */
