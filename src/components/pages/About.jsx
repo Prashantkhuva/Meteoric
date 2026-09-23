@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap-setup";
 import { SplitText } from "gsap/SplitText";
@@ -203,10 +204,12 @@ export default function AboutPage({ faqs = [] }) {
               className="relative overflow-hidden rounded-2xl aspect-[4/5]"
               style={{ background: "var(--bg-surface)" }}
             >
-              <img
+              <Image
                 src="/prashant.png"
                 alt="Prashant Khuva"
-                loading="eager"
+                width={400}
+                height={400}
+                priority
                 className="w-full h-full object-cover object-top"
                 style={{ objectPosition: "top center" }}
               />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useCallback } from "react";
+import Image from "next/image";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 import StaggerLink from "./StaggerLink";
@@ -60,11 +61,12 @@ export default function Footer() {
       {/* ── CTA SECTION ── */}
       <div ref={ctaRef} className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <img
+          <Image
             src="/images/cta-bg.webp"
             alt=""
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
+            fill
+            sizes="100vw"
+            className="object-cover opacity-30"
           />
           <div
             className="absolute inset-0"

@@ -221,8 +221,8 @@ export default async function BlogPost({ params }) {
           </header>
 
           {/* Featured image */}
-          <div className="rounded-[24px] overflow-hidden mb-16" style={{ border: "1px solid var(--border-color)" }}>
-            <RevealImg src={image} alt={post.title} className="w-full h-auto" loading="lazy" />
+          <div className="relative rounded-[24px] overflow-hidden mb-16 aspect-[16/10]" style={{ border: "1px solid var(--border-color)" }}>
+            <RevealImg src={image} alt={post.title} fill priority sizes="(max-width: 768px) 100vw, 720px" className="object-cover" />
           </div>
 
           {/* Article body */}
@@ -285,8 +285,8 @@ export default async function BlogPost({ params }) {
                   const rpImage = slugToImage[rp.slug] || "/images/blog/blog-tech-stack.webp";
                   return (
                     <Link key={rp.slug} href={`/blog/${rp.slug}`} className="group block">
-                      <div className="rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
-                        <RevealImg src={rpImage} alt={rp.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" />
+                      <div className="relative rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
+                        <RevealImg src={rpImage} alt={rp.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
                       </div>
                       <h3 className="text-sm font-semibold mb-1 transition-opacity duration-300 group-hover:opacity-65" style={{ color: "var(--text-primary)" }}>
                         {rp.title}

@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { caseStudies } from "@/data/case-studies";
 import { trackEvent } from "@/lib/analytics/gtag";
@@ -52,11 +53,14 @@ export default function CaseStudiesPage() {
               {/* Image */}
               <ScrollReveal direction="up" delay={0.1} className="relative rounded-2xl overflow-hidden min-h-[16rem] sm:min-h-[20rem] mb-10 md:mb-14 group gsap-work-card">
                 <div className="flex items-center justify-center p-4 sm:p-8 h-full">
-                  <img
+                  <Image
                     src={cs.image}
                     alt={`${cs.name} — Meteoric`}
+                    width={1600}
+                    height={900}
+                    priority={idx === 0}
+                    sizes="(max-width: 768px) 100vw, 90vw"
                     className="object-contain w-full h-auto rounded-2xl transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                    loading={idx === 0 ? "eager" : "lazy"}
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -18,9 +19,12 @@ function ProjectCard({ project, index }) {
       className={`group block gsap-proj-card ${index % 2 === 1 ? "md:mt-12" : ""}`}
     >
       <div className="relative rounded-[24px] overflow-hidden mb-5" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}>
-        <img
+        <Image
           src={project.image}
           alt={`${project.name} — ${project.tagline} — Meteoric`}
+          width={1600}
+          height={900}
+          sizes="(max-width: 768px) 90vw, 45vw"
           className="w-full h-auto block max-w-[90%] mx-auto mt-6 rounded-[14px] transition-all duration-500 ease-out group-hover:scale-[1.02] gsap-proj-img shadow-[0_0_20px_rgba(0,0,0,0.2)]"
           loading="lazy"
         />

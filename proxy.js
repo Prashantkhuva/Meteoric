@@ -29,6 +29,12 @@ export async function proxy(request) {
   const host = request.headers.get("host") || "";
   const pn = request.nextUrl.pathname;
 
+  // Image optimizer internal fetches have no Host header — pass through
+  // without redirects so static assets return raw bytes, not HTML.
+  if (!host) {
+    return NextResponse.next();
+  }
+
   // 1. Redirect http → https (skip localhost/127.0.0.1 in dev)
   const isLocalhost = host.includes("localhost") || host.startsWith("127.") || host.startsWith("0.0.0.0");
   if (request.nextUrl.protocol === "http:" && !isLocalhost) {
@@ -148,6 +154,6 @@ export async function proxy(request) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.svg|og.jpg|apple-touch-icon.png|site.webmanifest|robots.txt|sitemap.xml|llms.txt|llms-full.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.svg|og.jpg|apple-touch-icon.png|site.webmanifest|robots.txt|sitemap.xml|llms.txt|llms-full.txt|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico|woff2?|ttf|otf|mp4|webm|pdf|txt|xml)$).*)",
   ],
 };

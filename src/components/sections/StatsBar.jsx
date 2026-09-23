@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
 import siteStats from "@/data/site-stats";
 
@@ -61,11 +62,12 @@ export default function StatsBar() {
     <section ref={ref} className="relative py-20 sm:py-28 overflow-hidden" style={{ background: "var(--hero-bg)" }}>
       {/* Earth background */}
       <div className="absolute inset-0 pointer-events-none">
-        <img
+        <Image
           src="/images/stats-bg.webp"
           alt=""
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          fill
+          sizes="100vw"
+          className="object-cover opacity-30"
         />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--hero-bg) 0%, transparent 20%, transparent 80%, var(--hero-bg) 100%)" }} />
       </div>

@@ -51,8 +51,9 @@ function ServiceCard({ service, index }) {
             <RevealImg
               src={service.image}
               alt={service.title}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
             />
           </div>
           <div className="pt-5 pb-2">
@@ -102,8 +103,9 @@ function ServiceCard({ service, index }) {
           <RevealImg
             src={service.image}
             alt={service.title}
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
 

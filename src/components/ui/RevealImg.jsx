@@ -1,10 +1,17 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 
-export default function RevealImg({ className = "", ...props }) {
+export default function RevealImg({
+  className = "",
+  fill = false,
+  sizes,
+  priority = false,
+  ...props
+}) {
   const ref = useRef(null);
 
   useSectionAnimations(ref, () => {
@@ -29,8 +36,11 @@ export default function RevealImg({ className = "", ...props }) {
   });
 
   return (
-    <img
+    <Image
       ref={ref}
+      fill={fill}
+      sizes={fill ? sizes : undefined}
+      priority={priority}
       className={`gsap-reveal-img ${className}`}
       {...props}
     />
