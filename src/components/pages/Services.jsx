@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { serviceFaqs } from "@/data/faqs";
 import { trackEvent } from "@/lib/analytics/gtag";
+import RevealImg from "@/components/ui/RevealImg";
 
 const services = [
   {
@@ -150,7 +151,7 @@ export default function ServicesPage() {
                 style={{ background: "var(--card-bg)" }}
               >
                 <div className="aspect-[16/9] overflow-hidden relative">
-                  <img
+                  <RevealImg
                     src={svc.image}
                     alt={svc.title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"

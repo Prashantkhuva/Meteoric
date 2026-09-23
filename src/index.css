@@ -369,6 +369,10 @@ body::after {
   object-position: 0px 80%;
 }
 
+.gsap-reveal-img {
+  clip-path: inset(100% 0 0 0);
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .marquee,
@@ -390,6 +394,9 @@ body::after {
     clip-path: none !important;
     object-position: center !important;
     filter: none !important;
+  }
+  .gsap-reveal-img {
+    clip-path: none !important;
   }
   canvas[aria-hidden="true"] {
     display: none !important;

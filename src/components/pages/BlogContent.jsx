@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap-setup";
 import { motion, AnimatePresence } from "framer-motion";
 import { blogPosts } from "@/data/blog-posts";
+import RevealImg from "@/components/ui/RevealImg";
 
 const slugToImage = {
   "mongodb-schema-design-for-saas-billing": "/images/blog/blog-mongodb-schema.webp",
@@ -77,7 +78,7 @@ function BlogCard({ post, index }) {
           className="rounded-2xl overflow-hidden mb-4 aspect-[16/10] relative transition-all duration-500 ring-1 ring-[var(--border-color)] group-hover:ring-[var(--border-hover)] group-hover:shadow-[0_8px_30px_var(--accent-glow)]"
           style={{ background: "var(--card-bg)" }}
         >
-          <img
+          <RevealImg
             src={image}
             alt={post.title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"

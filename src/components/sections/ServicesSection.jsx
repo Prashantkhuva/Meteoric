@@ -5,6 +5,7 @@ import Link from "next/link";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import GridLines from "@/components/ui/GridLines";
+import RevealImg from "@/components/ui/RevealImg";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 
 const services = [
@@ -47,7 +48,7 @@ function ServiceCard({ service, index }) {
               border: "1px solid var(--hero-border)",
             }}
           >
-            <img
+            <RevealImg
               src={service.image}
               alt={service.title}
               loading="lazy"
@@ -98,7 +99,7 @@ function ServiceCard({ service, index }) {
             border: "1px solid var(--hero-border)",
           }}
         >
-          <img
+          <RevealImg
             src={service.image}
             alt={service.title}
             loading="lazy"
