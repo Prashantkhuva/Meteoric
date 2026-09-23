@@ -7,6 +7,7 @@ let initialized = false;
  */
 export function initGtag() {
   if (initialized || typeof window === "undefined") return;
+  if (!GA_MEASUREMENT_ID) return;
   initialized = true;
 
   const load = () => {
