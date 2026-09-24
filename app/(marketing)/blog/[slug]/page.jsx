@@ -310,14 +310,6 @@ export default async function BlogPost({ params }) {
               From landing pages to full SaaS platforms — let&apos;s build something exceptional.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="/booking"
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
-                style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
-              >
-                Book a Free Call
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </Link>
               {relatedLinks.map((rs) => (
                 <Link key={rs.href} href={rs.href} className="text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
                   {rs.label} →

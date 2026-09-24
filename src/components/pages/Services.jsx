@@ -215,31 +215,6 @@ export default function ServicesPage() {
           <FaqAccordion items={serviceFaqs} />
         </div>
       </section>
-
-      {/* CTA */}
-      <section className="py-20 md:py-28" style={{ borderTop: "1px solid var(--border-color)" }}>
-        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <h2 className="text-3xl md:text-5xl font-display mb-6" style={{ color: "var(--text-primary)" }}>
-            Let&apos;s build something <span style={{ color: "var(--text-muted)" }}>together.</span>
-          </h2>
-          <p className="text-base md:text-lg max-w-xl mx-auto mb-10" style={{ color: "var(--text-secondary)" }}>
-            Book a free strategy call and we&apos;ll discuss your project, timeline, and how we can help.
-          </p>
-          <button
-            onClick={() => {
-              trackEvent("services_cta_click", { button_location: "/services" });
-              openCal();
-            }}
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
-            style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
-          >
-            Book a call
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px">
-              <path fill="currentColor" d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z" />
-            </svg>
-          </button>
-        </div>
-      </section>
     </div>
   );
 }

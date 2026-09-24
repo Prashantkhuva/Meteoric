@@ -1,20 +1,12 @@
 "use client";
 
-import { useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import FaqAccordion from "@/components/sections/FaqAccordion";
-import { trackEvent } from "@/lib/analytics/gtag";
 
 export default function ServiceLanding({ service, relatedServices = [] }) {
-  const openCal = useCallback(async () => {
-    const { getCalApi } = await import("@calcom/embed-react");
-    const cal = await getCalApi({ namespace: "let-s-build" });
-    cal("modal", { calLink: "prashantkhuva/let-s-build" });
-  }, []);
-
   return (
     <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
       {/* Back link */}
@@ -149,41 +141,6 @@ export default function ServiceLanding({ service, relatedServices = [] }) {
           </div>
         </section>
       )}
-
-      {/* CTA */}
-      <section className="border-t border-[var(--border-color)] py-20">
-        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <ScrollReveal direction="down" delay={0}>
-            <h2 className="text-3xl md:text-5xl font-secondary-italic mb-6">
-              Need {service.h1[0].toLowerCase()}?{" "}
-              <span className="text-[var(--text-muted)]">Let&apos;s talk.</span>
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal direction="down" delay={0.1}>
-            <p className="text-[var(--text-muted)] text-base md:text-lg max-w-xl mx-auto mb-10">
-              Book a free strategy call and Meteoric will discuss your project,
-              timeline, and how we can help.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal direction="up" delay={0.2}>
-            <button
-              onClick={() => {
-                trackEvent("services_cta_click", {
-                  button_location: `/services/${service.slug}`,
-                });
-                openCal();
-              }}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
-              style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
-            >
-              Book a call
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px">
-                <path fill="currentColor" d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z" />
-              </svg>
-            </button>
-          </ScrollReveal>
-        </div>
-      </section>
     </div>
   );
 }
