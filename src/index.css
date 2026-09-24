@@ -315,6 +315,16 @@ body::after {
   100% { transform: translateX(320%); }
 }
 
+/* ── RouteCurtain wait state (slow nav) ── */
+.curtain-sweep {
+  opacity: 0;
+}
+
+.is-waiting .curtain-sweep {
+  opacity: 1;
+  animation: preload-sweep 1.1s ease-in-out infinite;
+}
+
 /* ── Grid lines (Atomik Growth style) ── */
 @keyframes grid-line-dash {
   0% { stroke-dashoffset: 0; }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap-setup";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
+import { markCurtainNav } from "@/lib/curtain-nav";
 import Logo from "@/components/sections/Logo";
 
 const EASE_COVER = "power4.inOut";
@@ -48,6 +49,7 @@ export default function RouteCurtain() {
   const logoMaskRef = useRef(null);
   const logoInnerRef = useRef(null);
   const hairlineRef = useRef(null);
+  const streakRef = useRef(null);
   const busy = useRef(false);
   const expecting = useRef(null);
   const firstPath = useRef(true);
@@ -71,6 +73,7 @@ export default function RouteCurtain() {
     const overlay = overlayRef.current;
     if (!overlay) return Promise.resolve();
     covered.current = false;
+    overlay.classList.remove("is-waiting");
 
     if (prefersReduced()) {
       gsap.set(overlay, { clipPath: OPEN_CLIP, pointerEvents: "none" });
@@ -88,10 +91,30 @@ export default function RouteCurtain() {
           gsap.set(logoInnerRef.current, { yPercent: 130 });
           gsap.set(hairlineRef.current, { opacity: 1, scaleX: 1 });
           gsap.set(glowRef.current, { opacity: 0 });
+          gsap.set(streakRef.current, { opacity: 0 });
           unlockHere();
           resolve();
         },
       });
+
+      // meteor streak races with the opening edge (bottom → top)
+      tl.fromTo(
+        streakRef.current,
+        { opacity: 0, top: "100%" },
+        {
+          opacity: 1,
+          top: "0%",
+          duration: duration * 0.9,
+          ease: "power3.inOut",
+          overwrite: "auto",
+        },
+        0,
+      );
+      tl.to(
+        streakRef.current,
+        { opacity: 0, duration: duration * 0.3, ease: "power2.in" },
+        duration * 0.65,
+      );
 
       tl.to(
         logoInnerRef.current,
@@ -135,6 +158,7 @@ export default function RouteCurtain() {
     lockHere();
     covered.current = true;
     gsap.set(overlay, { pointerEvents: "auto", clipPath: OPEN_CLIP });
+    overlay.classList.add("is-waiting");
     gsap.set(logoInnerRef.current, { yPercent: 130, y: 0, force3D: true });
     gsap.set(hairlineRef.current, { opacity: 1, scaleX: 0.35 });
     gsap.set(glowRef.current, {
@@ -143,6 +167,7 @@ export default function RouteCurtain() {
       xPercent: -50,
       yPercent: -50,
     });
+    gsap.set(streakRef.current, { opacity: 0, top: "0%" });
 
     return new Promise((resolve) => {
       const tl = gsap.timeline({
@@ -155,6 +180,26 @@ export default function RouteCurtain() {
         { clipPath: COVERED_CLIP, duration: 0.48, ease: EASE_COVER, overwrite: "auto" },
         0,
       );
+
+      // meteor streak rides the closing edge (top → bottom)
+      tl.fromTo(
+        streakRef.current,
+        { opacity: 0, top: "0%" },
+        {
+          opacity: 1,
+          top: "100%",
+          duration: 0.48,
+          ease: EASE_COVER,
+          overwrite: "auto",
+        },
+        0,
+      );
+      tl.to(
+        streakRef.current,
+        { opacity: 0, duration: 0.18, ease: "power2.in" },
+        0.4,
+      );
+
       tl.to(
         glowRef.current,
         { opacity: 1, scale: 1, duration: 0.55, ease: "power2.out" },
@@ -181,6 +226,8 @@ export default function RouteCurtain() {
     gsap.set(overlay, { clipPath: OPEN_CLIP, pointerEvents: "none" });
     gsap.set(logoInnerRef.current, { yPercent: 130 });
     gsap.set(glowRef.current, { opacity: 0 });
+    gsap.set(streakRef.current, { opacity: 0 });
+    overlay.classList.remove("is-waiting");
   }, []);
 
   // Pathname change → open curtain if we were covering / waiting
@@ -237,6 +284,7 @@ export default function RouteCurtain() {
           });
           return;
         }
+        markCurtainNav();
         router.push(href, { scroll: true });
         // safety: if pathname never changes, open anyway
         setTimeout(() => {
@@ -320,14 +368,35 @@ export default function RouteCurtain() {
 
         <div
           ref={hairlineRef}
-          className="h-px w-[min(60vw,240px)] origin-center"
+          className="relative h-px w-[min(60vw,240px)] origin-center overflow-hidden"
           style={{
             opacity: 1,
             background:
               "linear-gradient(90deg, rgba(234,239,255,0.1), rgba(234,239,255,0.85), rgba(234,239,255,0.1))",
           }}
-        />
+        >
+          <div
+            className="curtain-sweep absolute inset-y-0 left-0 w-1/3"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, #EAEFFF, transparent)",
+            }}
+          />
+        </div>
       </div>
+
+      {/* meteor streak — rides the clip edge on cover/reveal */}
+      <div
+        ref={streakRef}
+        className="pointer-events-none absolute left-0 h-px w-full"
+        style={{
+          opacity: 0,
+          top: "0%",
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(234,239,255,0.2) 20%, rgba(234,239,255,0.95) 50%, rgba(234,239,255,0.2) 80%, transparent 100%)",
+          boxShadow: "0 0 14px rgba(234,239,255,0.5)",
+        }}
+      />
     </div>
   );
 }

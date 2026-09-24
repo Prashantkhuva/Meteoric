@@ -18,8 +18,10 @@ export default function Preloader({ onDone }) {
   const numRef = useRef(null);
   const statusRef = useRef(null);
   const footerRef = useRef(null);
+  const streakRef = useRef(null);
   const [done, setDone] = useState(false);
   const lockedRef = useRef(false);
+  const flashedRef = useRef(false);
 
   useEffect(() => {
     const finish = () => {
@@ -65,6 +67,7 @@ export default function Preloader({ onDone }) {
       xPercent: -50,
       yPercent: -50,
     });
+    gsap.set(streakRef.current, { opacity: 0, xPercent: -130 });
 
     const progress = { value: 0 };
 
@@ -113,9 +116,29 @@ export default function Preloader({ onDone }) {
         ease: "power2.inOut",
         onUpdate: () => {
           if (numRef.current) {
-            numRef.current.textContent = String(
-              Math.round(progress.value),
-            ).padStart(2, "0");
+            const n = Math.round(progress.value);
+            numRef.current.textContent = String(n).padStart(2, "0");
+            if (n >= 100 && !flashedRef.current) {
+              flashedRef.current = true;
+              gsap.fromTo(
+                numRef.current,
+                { color: "#EAEFFF" },
+                {
+                  color: "rgba(255,255,255,0.5)",
+                  duration: 0.65,
+                  ease: "power2.out",
+                },
+              );
+              gsap.fromTo(
+                fillRef.current,
+                { filter: "brightness(2)" },
+                {
+                  filter: "brightness(1)",
+                  duration: 0.55,
+                  ease: "power2.out",
+                },
+              );
+            }
           }
         },
       },
@@ -134,10 +157,28 @@ export default function Preloader({ onDone }) {
     // exit — content drifts up, soft fade
     const exitAt = ">";
 
+    // meteor streak races across just before the wipe
+    tl.fromTo(
+      streakRef.current,
+      { opacity: 0, xPercent: -130 },
+      {
+        opacity: 1,
+        xPercent: 130,
+        duration: 0.75,
+        ease: "power3.inOut",
+      },
+      exitAt,
+    );
+    tl.to(
+      streakRef.current,
+      { opacity: 0, duration: 0.25, ease: "power2.in" },
+      "-=0.25",
+    );
+
     tl.to(
       logoInnerRef.current,
       { yPercent: -120, duration: 0.85, ease: "power3.inOut" },
-      exitAt,
+      "<0.1",
     );
 
     tl.to(
@@ -182,6 +223,18 @@ export default function Preloader({ onDone }) {
       }}
       aria-hidden="true"
     >
+      {/* meteor streak — exits across the frame before the wipe */}
+      <div
+        ref={streakRef}
+        className="pointer-events-none absolute left-0 top-1/2 h-px w-[45vw] max-w-[520px] -translate-y-1/2 rotate-[-6deg]"
+        style={{
+          opacity: 0,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(234,239,255,0.15) 35%, rgba(234,239,255,0.95) 55%, rgba(234,239,255,0.2) 75%, transparent 100%)",
+          boxShadow: "0 0 12px rgba(234,239,255,0.45)",
+        }}
+      />
+
       {/* quiet halo */}
       <div
         ref={glowRef}
