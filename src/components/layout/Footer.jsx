@@ -97,7 +97,7 @@ export default function Footer() {
             onClick={openCal}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
             style={{
-              background: "var(--footer-text)",
+              background: "var(--text-primary)",
               color: "var(--footer-bg)",
             }}
           >
