@@ -2,6 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
+import { after } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { generateAutoPassword } from "@/lib/utils/generate-password";
@@ -16,6 +17,7 @@ import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import { sanitizeSearch } from "@/lib/search";
 import { assertCan } from "@/lib/admin-permissions";
 import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
+import { runDecisionForLead, runDecisionsForLeads } from "@/lib/decisions";
 import {
   idSchema,
   emailSchema,
@@ -134,20 +136,26 @@ export async function addLead(formData) {
     if (existing) return { error: "A lead with this email already exists" };
   }
 
-  const { error } = await supabase.from("leads").insert({
-    name: data.name,
-    email: data.email || null,
-    phone: data.phone,
-    company: data.company,
-    services: data.services,
-    budget: data.budget,
-    currency: data.currency || "USD",
-    details: data.details,
-    source: data.source || "manual",
-    status: "inquiry",
-  });
+  const { data: inserted, error } = await supabase
+    .from("leads")
+    .insert({
+      name: data.name,
+      email: data.email || null,
+      phone: data.phone,
+      company: data.company,
+      services: data.services,
+      budget: data.budget,
+      currency: data.currency || "USD",
+      details: data.details,
+      source: data.source || "manual",
+      status: "inquiry",
+    })
+    .select("id")
+    .single();
 
   if (error) return { error: error.message };
+
+  after(() => runDecisionForLead({ ...data, id: inserted?.id, status: "inquiry" }));
 
   let aiScore = null;
   let aiCategory = null;
@@ -263,15 +271,22 @@ export async function importLeads(rows) {
     }
 
     let imported = 0;
+    const decisionLeads = [];
     for (let i = 0; i < final.length; i += IMPORT_CHUNK_SIZE) {
       const chunk = final.slice(i, i + IMPORT_CHUNK_SIZE).map((item) => item.data);
-      const { error } = await supabase.from("leads").insert(chunk);
+      const { data: inserted, error } = await supabase
+        .from("leads")
+        .insert(chunk)
+        .select("id, name, email, company, services, budget, details, source, status");
       if (error) {
         errors.push({ row: 0, reason: `Batch insert failed: ${error.message}` });
         break;
       }
+      for (const row of inserted || []) decisionLeads.push(row);
       imported += chunk.length;
     }
+
+    if (decisionLeads.length) after(() => runDecisionsForLeads(decisionLeads));
 
     revalidateAdmin("/admin/leads");
     return { success: true, imported, skipped: errors.length, errors };

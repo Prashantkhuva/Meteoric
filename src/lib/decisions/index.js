@@ -29,3 +29,26 @@ export async function runDecisionForLead(lead) {
     return null;
   }
 }
+
+const DECISIONS_CONCURRENCY = 5;
+
+async function pool(items, limit, worker) {
+  let next = 0;
+  async function runner() {
+    while (next < items.length) {
+      const index = next++;
+      await worker(items[index]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, runner));
+}
+
+export async function runDecisionsForLeads(leads) {
+  if (!decisionsEnabled() || !Array.isArray(leads) || !leads.length) return 0;
+  let stored = 0;
+  await pool(leads, DECISIONS_CONCURRENCY, async (lead) => {
+    const result = await runDecisionForLead(lead);
+    if (result) stored++;
+  });
+  return stored;
+}

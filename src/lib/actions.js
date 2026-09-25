@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { sendNewLeadNotification, sendLeadAutoReply, sendHotLeadAlert } from "@/lib/email/email";
 import ReviewNotification from "@/emails/review-notification";
@@ -8,6 +9,7 @@ import { getSiteUrl } from "@/config/site-url";
 import { callAIJson } from "@/lib/ai/provider";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
+import { runDecisionForLead } from "@/lib/decisions";
 
 export async function createLead(data) {
   try {
@@ -39,6 +41,10 @@ export async function createLead(data) {
       console.error("Supabase insert error:", error)
       return { success: false, error: error.message }
     }
+
+    after(() =>
+      runDecisionForLead({ ...data, id: insertData?.id, status: "inquiry", source: data.source || "website" }),
+    );
 
     let aiCategory = null;
     let aiScore = null;
