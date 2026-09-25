@@ -19,6 +19,7 @@ import {
   X,
   ChevronRight,
   Star,
+  Brain,
 } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
@@ -38,6 +39,7 @@ const sections = [
     label: "CRM",
     items: [
       { href: "/admin/leads", label: "Leads", icon: Users },
+      { href: "/admin/decisions", label: "Decisions", icon: Brain },
       { href: "/admin/clients", label: "Clients", icon: Briefcase },
       { href: "/admin/reviews", label: "Reviews", icon: Star },
     ],

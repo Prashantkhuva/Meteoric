@@ -15,9 +15,14 @@ import { callAIJson } from "@/lib/ai/provider";
 import { getExchangeRate } from "@/lib/exchange-rate";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import { sanitizeSearch } from "@/lib/search";
-import { assertCan } from "@/lib/admin-permissions";
+import { assertCan, getCallerPermissions } from "@/lib/admin-permissions";
 import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
 import { runDecisionForLead, runDecisionsForLeads } from "@/lib/decisions";
+import {
+  getDecisionAccuracy,
+  getRecentDecisions,
+  recordDecisionReview,
+} from "@/lib/decisions/store";
 import {
   idSchema,
   emailSchema,
@@ -292,6 +297,40 @@ export async function importLeads(rows) {
     return { success: true, imported, skipped: errors.length, errors };
   } catch (err) {
     return { error: err.message || "Failed to import leads" };
+  }
+}
+
+export async function getDecisionsAccuracy() {
+  const denied = await assertCan("view");
+  if (denied) return denied;
+  try {
+    return { success: true, data: await getDecisionAccuracy() };
+  } catch (err) {
+    return { error: err.message || "Failed to load accuracy" };
+  }
+}
+
+export async function getDecisionsRecent() {
+  const denied = await assertCan("view");
+  if (denied) return denied;
+  try {
+    return { success: true, data: await getRecentDecisions(50) };
+  } catch (err) {
+    return { error: err.message || "Failed to load decisions" };
+  }
+}
+
+export async function reviewDecision(id, verdict) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
+  try {
+    const safeId = idSchema.parse(id);
+    if (verdict !== "agree" && verdict !== "disagree") return { error: "Invalid verdict" };
+    const caller = await getCallerPermissions();
+    await recordDecisionReview({ decisionId: safeId, verdict, reviewerId: caller?.userId || null });
+    return { success: true };
+  } catch (err) {
+    return { error: err.message || "Failed to record review" };
   }
 }
 
