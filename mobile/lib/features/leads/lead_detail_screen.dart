@@ -22,6 +22,8 @@ class LeadDetailScreen extends StatefulWidget {
 
 class _LeadDetailScreenState extends State<LeadDetailScreen> {
   late Map<String, dynamic> _lead;
+  Map<String, dynamic>? _decision;
+  bool _decisionLoading = true;
   bool _busy = false;
   bool _changed = false;
 
@@ -29,6 +31,36 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
   void initState() {
     super.initState();
     _lead = widget.lead;
+    _loadDecision();
+  }
+
+  Future<void> _loadDecision() async {
+    try {
+      final res = await ApiClient.instance.decisionLatestForLead(
+        (_lead['id'] as num).toInt(),
+      );
+      if (mounted) {
+        setState(() {
+          _decision = (res['data'] as Map?)?.cast<String, dynamic>();
+          _decisionLoading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _decisionLoading = false);
+    }
+  }
+
+  Future<void> _review(String verdict) async {
+    final decision = _decision;
+    if (decision == null || _busy) return;
+    await _run('Recorded', () async {
+      await ApiClient.instance.decisionReview(
+        (decision['id'] as num).toInt(),
+        verdict,
+      );
+      setState(() => _decision = {...decision, 'verdict': verdict});
+      return {};
+    });
   }
 
   Future<void> _run(
@@ -133,6 +165,114 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     });
   }
 
+  Widget _buildDecision() {
+    final decision = _decision!;
+    final result =
+        (decision['result'] as Map?)?.cast<String, dynamic>() ?? const {};
+    final quality = result['quality'] as String?;
+    final color = switch (quality) {
+      'hot' => AppColors.emerald,
+      'warm' => AppColors.amber,
+      'spam' => AppColors.red,
+      _ => AppColors.sky,
+    };
+    final confidence = (decision['confidence'] as num?)?.toDouble();
+    final verdict = decision['verdict'] as String?;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.10),
+                borderRadius: AppRadius.smAll,
+                border: Border.all(color: color.withValues(alpha: 0.40)),
+              ),
+              child: Text(
+                (quality ?? '—').toString().toUpperCase(),
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            if (confidence != null)
+              Text(
+                '${(confidence * 100).round()}% confidence',
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        DetailRow(
+          label: 'Next status',
+          value: (result['suggested_next_status'] ?? '—').toString(),
+        ),
+        DetailRow(
+          label: 'Category',
+          value: (result['service_category'] ?? '—').toString().toUpperCase(),
+        ),
+        const SizedBox(height: 12),
+        if (verdict == null)
+          Row(
+            children: [
+              Expanded(
+                child: GhostButton(
+                  height: 40,
+                  onPressed: _busy ? null : () => _review('agree'),
+                  child: const Text(
+                    'AGREE',
+                    style: TextStyle(fontSize: 12, letterSpacing: 0.5),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: GhostButton(
+                  height: 40,
+                  onPressed: _busy ? null : () => _review('disagree'),
+                  child: const Text(
+                    'DISAGREE',
+                    style: TextStyle(fontSize: 12, letterSpacing: 0.5),
+                  ),
+                ),
+              ),
+            ],
+          )
+        else
+          Text(
+            verdict == 'agree'
+                ? 'You agreed with this decision.'
+                : 'You disagreed with this decision.',
+            style: TextStyle(
+              color: verdict == 'agree' ? AppColors.emerald : AppColors.red,
+              fontSize: 12,
+              fontFamily: 'Inter',
+            ),
+          ),
+        const SizedBox(height: 8),
+        Text(
+          'Shadow mode — nothing changes automatically.',
+          style: const TextStyle(
+            color: AppColors.textFaint,
+            fontSize: 10,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final name = _lead['name'] ?? '—';
@@ -189,6 +329,10 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                 ],
               ),
             ),
+            if (!_decisionLoading && _decision != null) ...[
+              const SizedBox(height: 16),
+              SectionCard(title: 'AI Decision', child: _buildDecision()),
+            ],
             if (score != null) ...[
               const SizedBox(height: 16),
               SectionCard(

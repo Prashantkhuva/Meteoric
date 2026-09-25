@@ -180,6 +180,18 @@ class ApiClient {
   Future<Map<String, dynamic>> leadsImport(List<Map<String, dynamic>> rows) =>
       _post('/api/admin/leads', {'action': 'import', 'rows': rows});
 
+  // ── Decisions ─────────────────────────────────────────────────────────────
+  Future<Map<String, dynamic>> decisionsLatestForLeads(List<int> ids) =>
+      _post('/api/admin/decisions', {'action': 'latest_for_leads', 'ids': ids});
+
+  Future<Map<String, dynamic>> decisionLatestForLead(int id) =>
+      _post('/api/admin/decisions', {'action': 'latest_for_lead', 'id': id});
+
+  Future<Map<String, dynamic>> decisionReview(int id, String verdict) => _post(
+    '/api/admin/decisions',
+    {'action': 'review', 'id': id, 'verdict': verdict},
+  );
+
   // ── Clients ─────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> clientsList(Map<String, dynamic> params) =>
       _post('/api/admin/clients', {'action': 'list', ...params});
@@ -413,23 +425,21 @@ class ApiClient {
     required num amount,
     required String currency,
     required String receipt,
-  }) =>
-      _post('/api/razorpay/create-order', {
-        'amount': amount,
-        'currency': currency,
-        'receipt': receipt,
-      });
+  }) => _post('/api/razorpay/create-order', {
+    'amount': amount,
+    'currency': currency,
+    'receipt': receipt,
+  });
 
   Future<Map<String, dynamic>> razorpayVerifyPayment({
     required String orderId,
     required String paymentId,
     required String signature,
     int? invoiceId,
-  }) =>
-      _post('/api/razorpay/verify-payment', {
-        'razorpay_order_id': orderId,
-        'razorpay_payment_id': paymentId,
-        'razorpay_signature': signature,
-        'invoice_id': invoiceId,
-      });
+  }) => _post('/api/razorpay/verify-payment', {
+    'razorpay_order_id': orderId,
+    'razorpay_payment_id': paymentId,
+    'razorpay_signature': signature,
+    'invoice_id': invoiceId,
+  });
 }

@@ -42,6 +42,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
   final _searchFocus = FocusNode();
 
   List<Map<String, dynamic>> _leads = [];
+  Map<int, Map<String, dynamic>> _decisions = {};
   int _total = 0;
   int _page = 1;
   String _status = 'all';
@@ -104,6 +105,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
           _selected.clear();
           _loading = false;
         });
+        _loadDecisions();
       }
     } catch (err) {
       if (mounted) {
@@ -132,6 +134,25 @@ class _LeadsScreenState extends State<LeadsScreen> {
   Future<void> _refresh() async => _load();
 
   int _id(Map<String, dynamic> row) => (row['id'] as num).toInt();
+
+  Future<void> _loadDecisions() async {
+    final ids = _leads.map(_id).toList();
+    if (ids.isEmpty) return;
+    try {
+      final res = await ApiClient.instance.decisionsLatestForLeads(ids);
+      final data = (res['data'] as Map?) ?? const {};
+      final map = <int, Map<String, dynamic>>{};
+      data.forEach((key, value) {
+        final id = int.tryParse(key.toString());
+        if (id != null && value is Map) {
+          map[id] = value.cast<String, dynamic>();
+        }
+      });
+      if (mounted) setState(() => _decisions = map);
+    } catch (_) {
+      // Badge is optional; failures stay silent.
+    }
+  }
 
   Future<void> _bulkDelete() async {
     final ok = await confirmBulkDelete(context, count: _selected.length);
@@ -514,6 +535,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
           final isSelected = _selected.contains(id);
           return _LeadCard(
             lead: lead,
+            decision: _decisions[id],
             selected: isSelected,
             selecting: _selecting,
             onTap: () {
@@ -555,11 +577,13 @@ class _LeadCard extends StatelessWidget {
     required this.onTap,
     required this.onLongPress,
     required this.onEdit,
+    this.decision,
     this.selected = false,
     this.selecting = false,
   });
 
   final Map<String, dynamic> lead;
+  final Map<String, dynamic>? decision;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
   final VoidCallback? onEdit;
@@ -678,6 +702,13 @@ class _LeadCard extends StatelessWidget {
                               ),
                             ),
                           if (score != null) const SizedBox(width: 8),
+                          if (decision != null) ...[
+                            _AiQualityChip(
+                              quality:
+                                  decision!['result']?['quality'] as String?,
+                            ),
+                            const SizedBox(width: 8),
+                          ],
                           StatusBadge(
                             meta: Status.get(
                               Status.leadSources,
@@ -709,6 +740,41 @@ class _LeadCard extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AiQualityChip extends StatelessWidget {
+  const _AiQualityChip({this.quality});
+
+  final String? quality;
+
+  @override
+  Widget build(BuildContext context) {
+    final q = quality;
+    if (q == null || q.isEmpty) return const SizedBox.shrink();
+    final color = switch (q) {
+      'hot' => AppColors.emerald,
+      'warm' => AppColors.amber,
+      'spam' => AppColors.red,
+      _ => AppColors.sky,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: AppRadius.smAll,
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Text(
+        'AI $q',
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Inter',
         ),
       ),
     );
