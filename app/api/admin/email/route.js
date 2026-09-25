@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 import {
   getRecipients,
   sendCustomEmailAction,
@@ -18,6 +18,15 @@ export async function POST(request) {
   }
 
   const { action, ...payload } = body || {};
+
+  const ACTION_PERMS = {
+    recipients: "view",
+    sent: "view",
+    send: "send_email",
+    delete: "send_email",
+  };
+  const denied = await denyUnless(auth, ACTION_PERMS[action] || "send_email");
+  if (denied) return denied;
 
   try {
     switch (action) {

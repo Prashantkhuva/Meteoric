@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 import {
   getReviewsPaginated,
   updateReviewStatus,
@@ -18,6 +18,15 @@ export async function POST(request) {
   }
 
   const { action, ...payload } = body || {};
+
+  const ACTION_PERMS = {
+    list: "view",
+    status: "write",
+    verified: "write",
+    delete: "write",
+  };
+  const denied = await denyUnless(auth, ACTION_PERMS[action] || "write");
+  if (denied) return denied;
 
   try {
     switch (action) {

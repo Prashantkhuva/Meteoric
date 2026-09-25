@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { getPermissionsForAuth } from "@/lib/admin-permissions";
 
 export async function authGuard(request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -21,7 +22,21 @@ export async function authGuard(request) {
   const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) return null;
 
-  return { user: data.user, token };
+  return { user: data.user, token, supabase };
+}
+
+// Returns null when allowed, Response 401/403 when denied.
+export async function denyUnless(auth, permission) {
+  if (!auth) return fail("Unauthorized", 401);
+  let perms;
+  try {
+    perms = await getPermissionsForAuth(auth);
+  } catch {
+    perms = null;
+  }
+  if (!perms) return fail("Unauthorized", 401);
+  if (!perms[permission]) return fail("You don't have permission to do this", 403);
+  return null;
 }
 
 export function jsonToFormData(obj) {

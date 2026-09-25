@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 import { createServiceClient } from "@/lib/supabase/service";
 import { detectNewBookings } from "@/lib/notifications";
 
@@ -19,6 +19,9 @@ export async function POST(request) {
   }
 
   const { action, ...payload } = body || {};
+
+  const denied = await denyUnless(auth, "self_ops");
+  if (denied) return denied;
 
   try {
     switch (action) {

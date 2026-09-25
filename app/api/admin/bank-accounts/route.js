@@ -1,4 +1,4 @@
-import { authGuard, jsonToFormData, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, jsonToFormData, fail } from "../_lib/helpers";
 import {
   getBankAccounts,
   createBankAccount,
@@ -18,6 +18,15 @@ export async function POST(request) {
   }
 
   const { action, ...payload } = body || {};
+
+  const ACTION_PERMS = {
+    list: "view",
+    create: "write",
+    update: "write",
+    delete: "write",
+  };
+  const denied = await denyUnless(auth, ACTION_PERMS[action] || "write");
+  if (denied) return denied;
 
   try {
     switch (action) {

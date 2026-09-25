@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 import { updateBookingStatus, createLeadFromBooking } from "../../../admin/actions";
 import { jsonToFormData } from "../_lib/helpers";
 import { detectNewBookings } from "@/lib/notifications";
@@ -8,6 +8,8 @@ const CAL_API = "https://api.cal.com/v2";
 export async function GET(request) {
   const auth = await authGuard(request);
   if (!auth) return fail("Unauthorized", 401);
+  const denied = await denyUnless(auth, "view");
+  if (denied) return denied;
 
   const key = process.env.CALCOM_API_KEY;
   if (!key) return fail("CALCOM_API_KEY not set", 500);
@@ -49,6 +51,10 @@ export async function POST(request) {
   }
 
   const { action, ...payload } = body || {};
+
+  const ACTION_PERMS = { status: "write", "create-lead": "write" };
+  const deniedPost = await denyUnless(auth, ACTION_PERMS[action] || "write");
+  if (deniedPost) return deniedPost;
 
   try {
     switch (action) {

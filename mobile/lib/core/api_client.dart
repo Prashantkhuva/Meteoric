@@ -22,12 +22,14 @@ class ApiException implements Exception {
 
   bool get isOffline => status == 0;
   bool get isAuthError => status == 401;
+  bool get isForbidden => status == 403;
   bool get isServerError => status >= 500;
 
   /// Short, human-friendly headline for error views.
   String get title {
     if (isOffline) return "You're offline";
     if (isAuthError) return 'Session expired';
+    if (isForbidden) return 'Not permitted';
     if (isServerError) return 'Server unavailable';
     return 'Something went wrong';
   }

@@ -14,6 +14,7 @@ import { callAIJson } from "@/lib/ai/provider";
 import { getExchangeRate } from "@/lib/exchange-rate";
 import { scoreLeadPrompt } from "@/lib/ai/prompts";
 import { sanitizeSearch } from "@/lib/search";
+import { assertCan } from "@/lib/admin-permissions";
 import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
 import {
   idSchema,
@@ -92,6 +93,8 @@ export async function signOut() {
 
 export async function updateLeadStatus(id, status) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeStatus = statusSchema(VALID_LEAD_STATUSES).parse(status);
@@ -110,6 +113,8 @@ export async function updateLeadStatus(id, status) {
 }
 
 export async function addLead(formData) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
   const supabase = await getSupabase();
 
   let data;
@@ -184,6 +189,8 @@ const IMPORT_MAX_ROWS = 1000;
 
 export async function importLeads(rows) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     if (!Array.isArray(rows) || rows.length === 0) return { error: "No rows provided" };
     if (rows.length > IMPORT_MAX_ROWS) return { error: `Maximum ${IMPORT_MAX_ROWS} rows per import` };
@@ -274,6 +281,8 @@ export async function importLeads(rows) {
 }
 
 export async function updateLead(formData) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const raw = Object.fromEntries(formData.entries());
 
@@ -306,6 +315,8 @@ export async function updateLead(formData) {
 
 export async function convertLeadToClient(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -362,6 +373,8 @@ export async function convertLeadToClient(id) {
 
 export async function deleteLead(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -380,6 +393,8 @@ export async function deleteLead(id) {
 
 export async function updateClientStatus(id, status) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeStatus = statusSchema(VALID_CLIENT_STATUSES).parse(status);
@@ -399,6 +414,8 @@ export async function updateClientStatus(id, status) {
 
 export async function addClient(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = validateFormData(clientSchema, formData);
 
@@ -430,6 +447,8 @@ export async function addClient(formData) {
 
 export async function updateClient(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const raw = Object.fromEntries(formData.entries());
     raw.id = idSchema.parse(raw.id);
@@ -456,6 +475,8 @@ export async function updateClient(formData) {
 
 export async function deleteClient(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -476,6 +497,8 @@ export async function deleteClient(id) {
 }
 
 export async function updateBookingStatus(bookingId, status) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
   const key = process.env.CALCOM_API_KEY;
   if (!key) return { error: "CALCOM_API_KEY not set" };
 
@@ -521,6 +544,8 @@ export async function updateBookingStatus(bookingId, status) {
 
 export async function createLeadFromBooking(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = validateFormData(leadSchema, formData);
 
@@ -544,6 +569,8 @@ export async function createLeadFromBooking(formData) {
 }
 
 export async function getLeads() {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { data } = await supabase
     .from("leads")
@@ -554,6 +581,8 @@ export async function getLeads() {
 }
 
 export async function getClients() {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { data } = await supabase
     .from("clients")
@@ -564,6 +593,8 @@ export async function getClients() {
 }
 
 export async function generateProposalDraft(leadId) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const safeId = idSchema.parse(leadId);
 
@@ -602,6 +633,8 @@ export async function generateProposalDraft(leadId) {
 }
 
 export async function getProposalPricing(id) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const safeId = idSchema.parse(id);
 
@@ -617,6 +650,8 @@ export async function getProposalPricing(id) {
 
 export async function createProposal(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = validateFormData(proposalSchema, formData);
 
@@ -647,6 +682,8 @@ export async function createProposal(formData) {
 
 export async function updateProposal(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = validateFormData(proposalSchema, formData);
 
@@ -681,6 +718,8 @@ export async function updateProposal(formData) {
 
 export async function deleteProposal(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -699,6 +738,8 @@ export async function deleteProposal(id) {
 
 export async function sendProposal(id) {
   try {
+    const denied = await assertCan("send_email");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -738,6 +779,8 @@ export async function sendProposal(id) {
 
 export async function updateProposalStatus(id, status) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeStatus = statusSchema(VALID_PROPOSAL_STATUSES).parse(status);
@@ -769,6 +812,8 @@ function parseFormData(formData) {
 
 export async function createInvoice(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = invoiceSchema.parse(parseFormData(formData));
 
@@ -818,6 +863,8 @@ export async function createInvoice(formData) {
 
 export async function updateInvoice(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = invoiceSchema.parse(parseFormData(formData));
 
@@ -858,6 +905,8 @@ export async function updateInvoice(formData) {
 
 export async function deleteInvoice(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -931,6 +980,8 @@ export async function checkOverdueInvoices() {
 
 export async function sendInvoice(id) {
   try {
+    const denied = await assertCan("send_email");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -970,6 +1021,8 @@ export async function sendInvoice(id) {
 
 export async function markInvoiceAsPaid(id, paidAt) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeDate = z
@@ -1047,6 +1100,8 @@ export async function markInvoiceAsPaid(id, paidAt) {
 
 export async function sendPaymentConfirmationAction(id) {
   try {
+    const denied = await assertCan("send_email");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -1090,6 +1145,8 @@ export async function sendPaymentConfirmationAction(id) {
 
 export async function markInvoiceAsOverdue(ids) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const idList = Array.isArray(ids) ? ids : [ids];
     const safeIds = idList.map((id) => idSchema.parse(id));
@@ -1110,6 +1167,8 @@ export async function markInvoiceAsOverdue(ids) {
 
 export async function cancelInvoice(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -1128,6 +1187,8 @@ export async function cancelInvoice(id) {
 
 export async function updateInvoiceStatus(id, status) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeStatus = statusSchema(VALID_INVOICE_STATUSES).parse(status);
@@ -1168,6 +1229,8 @@ export async function updateInvoiceStatus(id, status) {
 
 export async function createProject(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = validateFormData(projectSchema, formData);
 
@@ -1194,6 +1257,8 @@ export async function createProject(formData) {
 
 export async function updateProject(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = validateFormData(projectSchema, formData);
 
@@ -1224,6 +1289,8 @@ export async function updateProject(formData) {
 
 export async function deleteProject(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -1242,6 +1309,8 @@ export async function deleteProject(id) {
 
 export async function updateProjectStatus(id, newStatus) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeStatus = statusSchema(VALID_PROJECT_STATUSES).parse(newStatus);
@@ -1279,6 +1348,8 @@ function resolveOrder(col, dir, sort) {
 }
 
 export async function getLeadsPaginated(params) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { page, pageSize, search, status, score: scoreFilter, source, col, dir, sort } = paginationSchema.parse(params);
 
@@ -1305,6 +1376,8 @@ export async function getLeadsPaginated(params) {
 }
 
 export async function getClientsPaginated(params) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { page, pageSize, search, status, col, dir, sort } = paginationSchema.parse(params);
 
@@ -1325,6 +1398,8 @@ export async function getClientsPaginated(params) {
 }
 
 export async function getProposalsPaginated(params) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { page, pageSize, search, status, col, dir, sort } = paginationSchema.parse(params);
 
@@ -1354,6 +1429,8 @@ export async function getProposalsPaginated(params) {
 }
 
 export async function getInvoicesPaginated(params) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { page, pageSize, search, status, col, dir, sort } = paginationSchema.parse(params);
 
@@ -1384,6 +1461,8 @@ export async function getInvoicesPaginated(params) {
 
 export async function getInvoiceById(id) {
   try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
     const safeId = idSchema.parse(id);
     const supabase = await getSupabase();
     const { data, error } = await supabase
@@ -1400,6 +1479,8 @@ export async function getInvoiceById(id) {
 
 export async function getProposalById(id) {
   try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
     const safeId = idSchema.parse(id);
     const supabase = await getSupabase();
     const { data, error } = await supabase
@@ -1415,6 +1496,8 @@ export async function getProposalById(id) {
 }
 
 export async function getProjectsPaginated(params) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
   const supabase = await getSupabase();
   const { page, pageSize, search, status, col, dir, sort } = paginationSchema.parse(params);
 
@@ -1445,6 +1528,8 @@ export async function getProjectsPaginated(params) {
 
 export async function ensureShareToken(type, id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
 
@@ -1479,6 +1564,8 @@ export async function ensureShareToken(type, id) {
 
 export async function getRecipients() {
   try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const [leads, clients] = await Promise.all([
       supabase.from("leads").select("id, name, email").not("email", "is", null).limit(200),
@@ -1498,6 +1585,8 @@ export async function getRecipients() {
 
 export async function sendCustomEmailAction(data) {
   try {
+    const denied = await assertCan("send_email");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const from = data.from;
     const subject = data.subject;
@@ -1612,6 +1701,8 @@ export async function sendCustomEmailAction(data) {
 
 export async function getSentEmails(page = 1, pageSize = 15) {
   try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const from = (page - 1) * pageSize;
 
@@ -1629,6 +1720,8 @@ export async function getSentEmails(page = 1, pageSize = 15) {
 
 export async function deleteSentEmail(id) {
   try {
+    const denied = await assertCan("send_email");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const { error } = await supabase.from("sent_emails").delete().eq("id", safeId);
@@ -1644,6 +1737,8 @@ export async function deleteSentEmail(id) {
 
 export async function getBankAccounts() {
   try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const { data, error } = await supabase
       .from("bank_accounts")
@@ -1659,6 +1754,8 @@ export async function getBankAccounts() {
 
 export async function createBankAccount(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = bankAccountSchema.parse(parseFormData(formData));
 
@@ -1690,6 +1787,8 @@ export async function createBankAccount(formData) {
 
 export async function updateBankAccount(formData) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const data = bankAccountSchema.parse(parseFormData(formData));
     if (!data.id) return { error: "Bank account ID is required" };
@@ -1725,6 +1824,8 @@ export async function updateBankAccount(formData) {
 
 export async function deleteBankAccount(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const { error } = await supabase.from("bank_accounts").delete().eq("id", safeId);
@@ -1738,6 +1839,8 @@ export async function deleteBankAccount(id) {
 
 export async function getReviewsPaginated({ page = 1, pageSize = 15, status, search, col = "created_at", dir = "desc" } = {}) {
   try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
     const supabase = await getSupabase();
     let query = supabase.from("reviews").select("*", { count: "exact" });
     if (status && status !== "all") query = query.eq("status", status);
@@ -1754,6 +1857,8 @@ export async function getReviewsPaginated({ page = 1, pageSize = 15, status, sea
 
 export async function updateReviewStatus(id, status) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeStatus = statusSchema(VALID_REVIEW_STATUSES).parse(status);
@@ -1768,6 +1873,8 @@ export async function updateReviewStatus(id, status) {
 
 export async function toggleReviewVerified(id, is_verified) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const safeVerified = z.union([z.boolean(), z.string().transform((v) => v === "true")]).parse(is_verified);
@@ -1782,6 +1889,8 @@ export async function toggleReviewVerified(id, is_verified) {
 
 export async function deleteReview(id) {
   try {
+    const denied = await assertCan("write");
+    if (denied) return denied;
     const supabase = await getSupabase();
     const safeId = idSchema.parse(id);
     const { error } = await supabase.from("reviews").delete().eq("id", safeId);
@@ -1795,6 +1904,8 @@ export async function deleteReview(id) {
 
 export async function addUserInvite(formData) {
   try {
+    const denied = await assertCan("manage_users");
+    if (denied) return denied;
     const supabase = getAdminClient();
     const name = formData.get("name")?.toString().trim();
     const email = formData.get("email")?.toString().trim().toLowerCase();
@@ -1864,6 +1975,8 @@ export async function addUserInvite(formData) {
 
 export async function resendInvitation(userId) {
   try {
+    const denied = await assertCan("manage_users");
+    if (denied) return denied;
     const supabase = getAdminClient();
     const { data: user, error: userError } = await supabase.auth.admin.getUserById(userId);
 
@@ -1908,6 +2021,8 @@ export async function resendInvitation(userId) {
 
 export async function updateUserRole(userId, newRole) {
   try {
+    const denied = await assertCan("manage_users");
+    if (denied) return denied;
     const sessionSupabase = await getSupabase();
 
     // Verify current user is superadmin (uses session client — RLS allows reading own row)
@@ -1980,6 +2095,8 @@ export async function onboardUserComplete(userId) {
 
 export async function getUserPermissions(userId) {
   try {
+    const denied = await assertCan("manage_users");
+    if (denied) return denied;
     const supabase = getAdminClient();
 
     const { data: roleData } = await supabase
@@ -2005,6 +2122,8 @@ export async function getUserPermissions(userId) {
 
 export async function getUsersWithRoles() {
   try {
+    const denied = await assertCan("manage_users");
+    if (denied) return denied;
     const supabase = getAdminClient();
 
     const { data: authUsers, error: listError } = await supabase.auth.admin.listUsers();
@@ -2048,6 +2167,8 @@ export async function getUsersWithRoles() {
 
 export async function deleteUser(userId) {
   try {
+    const denied = await assertCan("manage_users");
+    if (denied) return denied;
     const sessionSupabase = await getSupabase();
 
     // Verify current user is superadmin

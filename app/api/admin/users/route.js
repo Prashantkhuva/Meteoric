@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 import {
   addUserInvite,
   resendInvitation,
@@ -20,6 +20,17 @@ export async function POST(request) {
   }
 
   const { action, ...payload } = body || {};
+
+  const ACTION_PERMS = {
+    "list-with-roles": "manage_users",
+    invite: "manage_users",
+    "update-role": "manage_users",
+    "resend-invite": "manage_users",
+    delete: "manage_users",
+    "onboard-complete": "self_ops",
+  };
+  const denied = await denyUnless(auth, ACTION_PERMS[action] || "manage_users");
+  if (denied) return denied;
 
   try {
     switch (action) {

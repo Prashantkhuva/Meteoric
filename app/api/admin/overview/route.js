@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { backfillMissingRates } from "@/lib/exchange-rate";
 
@@ -183,6 +183,8 @@ async function getStats() {
 export async function GET(request) {
   const auth = await authGuard(request);
   if (!auth) return fail("Unauthorized", 401);
+  const denied = await denyUnless(auth, "view");
+  if (denied) return denied;
 
   const stats = await getStats();
   if (!stats) return fail("Supabase not configured", 500);

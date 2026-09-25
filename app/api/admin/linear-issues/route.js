@@ -1,4 +1,4 @@
-import { authGuard, fail } from "../_lib/helpers";
+import { authGuard, denyUnless, fail } from "../_lib/helpers";
 
 const LINEAR_API_KEY = process.env.LINEAR_API_KEY;
 const LINEAR_TEAM_ID = process.env.LINEAR_TEAM_ID;
@@ -135,6 +135,8 @@ export async function GET(request) {
 
   const auth = await authGuard(request);
   if (!auth) return fail("Unauthorized", 401);
+  const denied = await denyUnless(auth, "view");
+  if (denied) return denied;
 
   try {
     const url = new URL(request.url);
@@ -162,6 +164,8 @@ export async function PATCH(request) {
 
   const auth = await authGuard(request);
   if (!auth) return fail("Unauthorized", 401);
+  const denied = await denyUnless(auth, "write");
+  if (denied) return denied;
 
   let body;
   try {
