@@ -28,12 +28,13 @@ export async function authGuard(request) {
 // Returns null when allowed, Response 401/403 when denied.
 export async function denyUnless(auth, permission) {
   if (!auth) return fail("Unauthorized", 401);
-  let perms;
+  let ctx;
   try {
-    perms = await getPermissionsForAuth(auth);
+    ctx = await getPermissionsForAuth(auth);
   } catch {
-    perms = null;
+    ctx = null;
   }
+  const perms = ctx?.perms;
   if (!perms) return fail("Unauthorized", 401);
   if (!perms[permission]) return fail("You don't have permission to do this", 403);
   return null;

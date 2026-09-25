@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
+import { createServerClient } from "@supabase/ssr";
+import { headers } from "next/headers";
 
 const SUPERADMIN_EMAIL = "work.prashantkhuva@gmail.com";
 
@@ -71,6 +73,30 @@ export async function getPermissionsForAuth(auth) {
   return resolvePermissions(auth.user, await loadRoleRow(auth.supabase, auth.user.id));
 }
 
+// For API-route context: actions re-exported into routes run without cookies,
+// but request carries Bearer token (mobile + curl). Fall back to it.
+async function getBearerPermissions() {
+  try {
+    const h = await headers();
+    const auth = h.get("authorization") || "";
+    if (!auth.startsWith("Bearer ")) return null;
+    const token = auth.slice(7).trim();
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    if (!token || !url || !key) return null;
+    const supabase = createServerClient(url, key, {
+      cookies: { getAll: () => [], setAll: () => {} },
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) return null;
+    return resolvePermissions(data.user, await loadRoleRow(supabase, data.user.id));
+  } catch {
+    return null;
+  }
+}
+
 // Returns null when allowed, { error, status } when denied. Fails closed.
 export async function assertCan(permission) {
   let ctx;
@@ -79,6 +105,7 @@ export async function assertCan(permission) {
   } catch {
     ctx = null;
   }
+  if (!ctx) ctx = await getBearerPermissions();
   if (!ctx) return { error: "Not authenticated", status: 401 };
   if (!ctx.perms[permission]) return { error: "You don't have permission to do this", status: 403 };
   return null;
