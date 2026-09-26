@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useUserRole } from "@/lib/hooks/useUserRole";
 import { createClient } from "@/lib/supabase/client";
 import { onboardUserComplete } from "../actions";
-import { ShieldCheck, Lock, ChevronDown, Pencil, X } from "lucide-react";
+import { ShieldCheck, Lock, ChevronDown, Pencil, X, ListTodo, BookOpen, GitBranch, MessageSquare } from "lucide-react";
 import { useToast } from "../components/ToastContext";
 
 export default function PageContent() {
@@ -24,6 +24,7 @@ export default function PageContent() {
 
   const [editingProfile, setEditingProfile] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false);
+  const [linearTest, setLinearTest] = useState(null);
 
   const goToDashboard = useCallback(() => {
     router.replace("/admin");
@@ -84,9 +85,41 @@ export default function PageContent() {
     }
   }
 
+  async function testLinearConnection() {
+    setLinearTest({ testing: true });
+    try {
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not signed in");
+      const res = await fetch("/api/admin/linear-issues?limit=1", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setLinearTest({ ok: true });
+        toast("Linear connection OK", "success");
+      } else {
+        setLinearTest({ ok: false, msg: json.error || `HTTP ${res.status}` });
+        toast(json.error || "Linear connection failed", "error");
+      }
+    } catch (err) {
+      setLinearTest({ ok: false, msg: err.message || "Test failed" });
+      toast(err.message || "Linear connection failed", "error");
+    }
+  }
+
   const roleColor = role === "superadmin" ? "#EAEFFF" : role === "admin" ? "#34D399" : "rgba(255,255,255,0.4)";
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
   const initial = displayName[0]?.toUpperCase() || "?";
+  const linearDesc = linearTest?.testing
+    ? "Testing connection…"
+    : linearTest?.ok
+      ? "Connected — API reachable"
+      : linearTest
+        ? linearTest.msg
+        : "Issue tracking + mobile crash reports";
 
   /* ── Onboarding mode: forced password change, no sidebar/nav ── */
   if (isOnboarding && onboardingCompleted === false) {
@@ -360,6 +393,49 @@ export default function PageContent() {
         </div>
       </div>
 
+      {/* ── Integrations ────────────────────────────────────── */}
+      <SectionHeader label="INTEGRATIONS" />
+      <div className="border border-white/[0.06] bg-white/[0.02] divide-y divide-white/[0.06]">
+        <IntegrationRow
+          icon={ListTodo}
+          name="Linear"
+          desc={linearDesc}
+          right={
+            <>
+              {linearTest?.ok && <StatusPill text="Connected" color="#34D399" />}
+              {linearTest && !linearTest.ok && !linearTest.testing && (
+                <StatusPill text="Failed" color="#F87171" />
+              )}
+              <button
+                onClick={testLinearConnection}
+                disabled={linearTest?.testing}
+                className="shrink-0 border border-white/[0.08] px-3 py-1.5 text-[11px] font-semibold tracking-wide text-[#EAEFFF] transition-colors hover:bg-white/[0.04] disabled:opacity-50"
+              >
+                {linearTest?.testing ? "TESTING…" : "TEST CONNECTION"}
+              </button>
+            </>
+          }
+        />
+        <IntegrationRow
+          icon={BookOpen}
+          name="Notion"
+          desc="Docs & project wiki"
+          right={<NotConnectedPill />}
+        />
+        <IntegrationRow
+          icon={GitBranch}
+          name="GitHub"
+          desc="Repositories & deployments"
+          right={<NotConnectedPill />}
+        />
+        <IntegrationRow
+          icon={MessageSquare}
+          name="Slack"
+          desc="Team notifications"
+          right={<NotConnectedPill />}
+        />
+      </div>
+
       {/* ── App info ──────────────────────────────────────────── */}
       <SectionHeader label="APP" />
       <div className="border border-white/[0.06] bg-white/[0.02] divide-y divide-white/[0.06]">
@@ -391,5 +467,39 @@ function InfoRow({ label, value, valueColor }) {
         {value}
       </span>
     </div>
+  );
+}
+
+function IntegrationRow({ icon: Icon, name, desc, right }) {
+  return (
+    <div className="flex items-center gap-3.5 p-4">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/[0.08] bg-white/[0.03]">
+        <Icon size={15} className="text-white/40" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium text-white">{name}</p>
+        <p className="text-[11px] text-white/25 truncate">{desc}</p>
+      </div>
+      <div className="flex shrink-0 items-center gap-2.5">{right}</div>
+    </div>
+  );
+}
+
+function StatusPill({ text, color }) {
+  return (
+    <span
+      className="border px-2 py-1 text-[10px] font-semibold tracking-wider uppercase"
+      style={{ color, backgroundColor: `${color}10`, borderColor: `${color}30` }}
+    >
+      {text}
+    </span>
+  );
+}
+
+function NotConnectedPill() {
+  return (
+    <span className="border border-white/[0.08] px-2 py-1 text-[10px] font-semibold tracking-wider text-white/25 uppercase">
+      Not connected
+    </span>
   );
 }
