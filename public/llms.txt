@@ -89,6 +89,7 @@ End-to-end web application development including database design, server-side lo
 
 - [HabitFlow — habit tracker SaaS](https://habit-flow-fullstack.vercel.app/)
 - [MegaBlog — editorial blogging platform](https://megablog.vercel.app/)
+- [GitHub (Meteoric Agency)](https://github.com/Meteoric-Agency)
 - [GitHub (Prashant Khuva)](https://github.com/Prashantkhuva)
 - [LinkedIn (Meteoric)](https://www.linkedin.com/company/withmeteoric)
 

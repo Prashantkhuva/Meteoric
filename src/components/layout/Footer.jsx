@@ -342,7 +342,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <StaggerLink
-              href="https://github.com/Prashantkhuva"
+              href="https://github.com/Meteoric-Agency"
               hoverColor="var(--footer-text)"
               style={{ fontSize: 12, color: "var(--footer-muted)", padding: 0 }}
             >

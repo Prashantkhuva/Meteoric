@@ -113,7 +113,7 @@ export default function RootLayout({ children }) {
                 "Startup Web Development",
               ],
               sameAs: [
-                "https://github.com/Prashantkhuva",
+                "https://github.com/Meteoric-Agency",
                 "https://www.linkedin.com/company/withmeteoric",
                 "https://x.com/prashantkhuva_",
                 "https://www.wikidata.org/wiki/Q140453413",

@@ -99,6 +99,7 @@ All testimonials are sourced from verified client reviews. Contact Meteoric to l
 
 - [HabitFlow — habit tracker SaaS](https://habit-flow-fullstack.vercel.app/)
 - [MegaBlog — editorial blogging platform](https://megablog.vercel.app/)
+- [GitHub (Meteoric Agency)](https://github.com/Meteoric-Agency)
 - [GitHub (Prashant Khuva)](https://github.com/Prashantkhuva)
 - [LinkedIn (Meteoric)](https://www.linkedin.com/company/withmeteoric)
 
