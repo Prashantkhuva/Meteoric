@@ -1,8 +1,10 @@
-export function generateAutoPassword(length = 12) {
+import { randomInt } from "node:crypto";
+
+export function generateAutoPassword(length = 16) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
   let password = "";
   for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
+    password += chars.charAt(randomInt(chars.length));
   }
   return password;
 }

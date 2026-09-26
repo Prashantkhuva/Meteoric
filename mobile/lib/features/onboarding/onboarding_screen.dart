@@ -369,7 +369,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ── Step 2: Profile ─────────────────────────────────────────────
+  // ── Step 3: Profile ─────────────────────────────────────────────
 
   Widget _buildProfileStep() {
     return Padding(
@@ -447,7 +447,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ── Step 3: Done ────────────────────────────────────────────────
+  // ── Step 4: Done ────────────────────────────────────────────────
 
   Widget _buildDoneStep(String name) {
     return Padding(
