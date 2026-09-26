@@ -1,6 +1,33 @@
 import { createServiceClient } from "@/lib/supabase/service";
 
 /**
+ * Mirror a notification to an external channel (Slack/Discord incoming
+ * webhook, or Telegram sendMessage URL). Never throws — external channels
+ * must not break the primary flow.
+ *
+ * Requires NOTIFY_WEBHOOK_URL. Telegram URLs (api.telegram.org) also need
+ * NOTIFY_CHAT_ID. Slack/Discord both accept our dual text/content body.
+ */
+export async function externalNotify(text) {
+  try {
+    const url = process.env.NOTIFY_WEBHOOK_URL;
+    if (!url || !text) return;
+    const isTelegram = url.includes("api.telegram.org");
+    const body = isTelegram
+      ? { chat_id: process.env.NOTIFY_CHAT_ID, text }
+      : { text, content: text };
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(4000),
+    });
+  } catch (err) {
+    console.error("[notifications] external notify failed:", err?.message);
+  }
+}
+
+/**
  * Insert an admin notification. Never throws — notifications must not
  * break the primary flow that triggered them.
  *
@@ -29,9 +56,14 @@ export async function createNotification({
     });
 
     // unique-violation on dedupe_key means we already notified — fine.
-    if (error && error.code !== "23505") {
-      console.error("[notifications] insert failed:", error.message);
+    if (error) {
+      if (error.code !== "23505") {
+        console.error("[notifications] insert failed:", error.message);
+      }
+      return;
     }
+
+    await externalNotify(`[Meteoric] ${title}${body ? `\n${body}` : ""}`);
   } catch (err) {
     console.error("[notifications] unexpected error:", err?.message);
   }
@@ -88,7 +120,18 @@ export async function detectNewBookings(bookings) {
         dedupe_key: `booking:${b.uid}`,
       })),
     );
-    if (error) console.error("[notifications] booking insert:", error.message);
+    if (error) {
+      console.error("[notifications] booking insert:", error.message);
+      return;
+    }
+
+    await Promise.all(
+      fresh.map((b) =>
+        externalNotify(
+          `[Meteoric] New booking — ${b.attendee || "New booking"}${b.title ? `\n${b.title}` : ""}`,
+        ),
+      ),
+    );
   } catch (err) {
     console.error("[notifications] booking sync failed:", err?.message);
   }

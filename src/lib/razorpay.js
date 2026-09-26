@@ -44,3 +44,27 @@ export function verifyRazorpayPayment({ order_id, payment_id, signature }) {
     .digest("hex");
   return generated === signature;
 }
+
+export function verifyRazorpayWebhook(rawBody, signature) {
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  if (!secret || !signature || !rawBody) return false;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("hex");
+  try {
+    return crypto.timingSafeEqual(Buffer.from(expected, "utf8"), Buffer.from(signature, "utf8"));
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchRazorpayOrder(orderId) {
+  if (!isRazorpayConfigured() || !orderId) return null;
+  try {
+    return await getClient().orders.fetch(orderId);
+  } catch (err) {
+    console.error("[razorpay] order fetch failed:", err?.message);
+    return null;
+  }
+}
