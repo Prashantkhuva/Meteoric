@@ -1,8 +1,14 @@
 package com.meteoric.meteoric_admin
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -74,6 +80,10 @@ class MainActivity : FlutterFragmentActivity() {
                     } catch (e: Exception) {
                         result.error("INSTALL_ERROR", e.message, null)
                     }
+                }
+                "restartApp" -> {
+                    result.success(true)
+                    scheduleRestart()
                 }
                 else -> result.notImplemented()
             }
@@ -161,5 +171,29 @@ class MainActivity : FlutterFragmentActivity() {
                 else -> result.notImplemented()
             }
         }
+    }
+
+    private fun scheduleRestart() {
+        // Give the MethodChannel reply time to flush before the process dies.
+        Handler(Looper.getMainLooper()).postDelayed({
+            try {
+                val launch = packageManager.getLaunchIntentForPackage(packageName)
+                if (launch != null) {
+                    launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    val pending = PendingIntent.getActivity(
+                        this,
+                        0,
+                        launch,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                    alarm.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 250, pending)
+                }
+            } catch (_: Exception) {
+                // No relaunch — worst case user taps the icon.
+            }
+            finishAndRemoveTask()
+            Runtime.getRuntime().exit(0)
+        }, 150)
     }
 }

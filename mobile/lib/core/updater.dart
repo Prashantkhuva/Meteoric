@@ -215,4 +215,8 @@ class Updater {
     await _channel.invokeMethod<void>('installApk', path);
     return true;
   }
+
+  static Future<void> restartApp() async {
+    await _channel.invokeMethod<void>('restartApp');
+  }
 }

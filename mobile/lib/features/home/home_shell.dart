@@ -6,6 +6,7 @@ import '../../core/notification_state.dart';
 import '../../core/pin_lock_service.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
+import '../../core/updater.dart';
 import '../../shared/widgets/update_dialog.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../leads/leads_screen.dart';
@@ -129,10 +130,18 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       builder: (ctx) => _RestartCountdown(
         onComplete: () {
           Navigator.of(ctx).pop();
-          SystemNavigator.pop();
+          _nativeRestart();
         },
       ),
     );
+  }
+
+  Future<void> _nativeRestart() async {
+    try {
+      await Updater.restartApp();
+    } catch (_) {
+      SystemNavigator.pop();
+    }
   }
 
   @override
