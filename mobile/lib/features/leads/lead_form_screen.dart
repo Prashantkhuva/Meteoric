@@ -31,6 +31,11 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   late final _details = TextEditingController(
     text: widget.lead?['details'] ?? '',
   );
+  late final _notes = TextEditingController(text: widget.lead?['notes'] ?? '');
+  late final _followUpCtrl = TextEditingController(
+    text: widget.lead?['follow_up_at']?.toString() ?? '',
+  );
+  late String _followUp;
   late String _source;
   late String _currency;
   bool _saving = false;
@@ -45,6 +50,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     super.initState();
     _source = widget.lead?['source'] ?? 'manual';
     _currency = widget.lead?['currency'] ?? 'USD';
+    _followUp = widget.lead?['follow_up_at']?.toString() ?? '';
     for (final c in [
       _name,
       _email,
@@ -53,6 +59,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       _services,
       _budget,
       _details,
+      _notes,
     ]) {
       c.addListener(() {
         if (!_dirty) setState(() => _dirty = true);
@@ -69,6 +76,8 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     _services.dispose();
     _budget.dispose();
     _details.dispose();
+    _notes.dispose();
+    _followUpCtrl.dispose();
     super.dispose();
   }
 
@@ -86,6 +95,8 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       'budget': _budget.text.trim(),
       'currency': _currency,
       'details': _details.text.trim(),
+      'notes': _notes.text.trim(),
+      'follow_up_at': _followUp,
       'source': _isEdit ? null : _source,
     }..removeWhere((k, v) => v == null);
 
@@ -178,6 +189,15 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                   maxLines: 4,
                   textInputAction: TextInputAction.done,
                 ),
+                const SizedBox(height: 12),
+                _field(
+                  _notes,
+                  'Notes',
+                  maxLines: 4,
+                  textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(height: 12),
+                _followUpField(),
                 if (!_isEdit) ...[
                   const SizedBox(height: 16),
                   const Text(
@@ -277,5 +297,48 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
           : null,
       decoration: InputDecoration(labelText: label),
     );
+  }
+
+  Widget _followUpField() {
+    return TextFormField(
+      controller: _followUpCtrl,
+      readOnly: true,
+      onTap: _pickFollowUp,
+      decoration: InputDecoration(
+        labelText: 'Follow-up',
+        suffixIcon: _followUp.isEmpty
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.close, size: 16),
+                tooltip: 'Clear',
+                onPressed: () => _setFollowUp(''),
+              ),
+      ),
+    );
+  }
+
+  void _setFollowUp(String value) {
+    setState(() {
+      _followUp = value;
+      _followUpCtrl.text = value;
+      _dirty = true;
+    });
+  }
+
+  Future<void> _pickFollowUp() async {
+    final now = DateTime.now();
+    var initial = DateTime.tryParse(_followUp) ?? now;
+    if (initial.isBefore(DateTime(2024, 1, 1)) ||
+        initial.isAfter(DateTime(2030, 12, 31))) {
+      initial = now;
+    }
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(2024, 1, 1),
+      lastDate: DateTime(2030, 12, 31),
+    );
+    if (picked == null || !mounted) return;
+    _setFollowUp(picked.toIso8601String().split('T').first);
   }
 }

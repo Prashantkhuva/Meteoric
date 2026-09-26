@@ -10,7 +10,7 @@ import {
   FileText, DollarSign, Calendar, Download, ChevronUp, ChevronDown, Pencil,
   Upload, FileUp, AlertTriangle, CheckCircle2, XCircle, Loader2, Tag,
 } from "lucide-react";
-import { formatDate } from "@/lib/supabase/admin";
+import { formatDate, formatShort } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
 import { StatusBadge } from "../components/StatusBadge";
 import { StatusSelect } from "../components/StatusSelect";
@@ -1089,6 +1089,10 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
 
   if (!lead) return null;
 
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const followUpOverdue = lead.follow_up_at && lead.follow_up_at <= todayStr;
+
   return (
     <AnimatePresence>
       {lead && (
@@ -1177,6 +1181,25 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
                 <div className="border border-white/[0.06] bg-white/[0.015] p-4">
                   <p className="text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-2">Details</p>
                   <p className="text-sm text-white/50 leading-relaxed whitespace-pre-wrap">{lead.details}</p>
+                </div>
+              )}
+
+              {lead.notes && (
+                <div className="border border-white/[0.06] bg-white/[0.015] p-4">
+                  <p className="text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-2">Notes</p>
+                  <p className="text-sm text-white/50 leading-relaxed whitespace-pre-wrap">{lead.notes}</p>
+                </div>
+              )}
+
+              {lead.follow_up_at && (
+                <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
+                  <Calendar size={11} />
+                  <span>
+                    Follow-up{" "}
+                    <span className={followUpOverdue ? "font-semibold text-red-300/80" : undefined}>
+                      {formatShort(`${lead.follow_up_at}T00:00:00`)}
+                    </span>
+                  </span>
                 </div>
               )}
 

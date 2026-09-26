@@ -109,6 +109,14 @@ export const leadSchema = z.object({
   budget: z.string().max(200).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   currency: z.string().max(10).optional().or(z.literal("")).transform((v) => v?.trim() || "USD"),
   details: z.string().max(5000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  notes: z.string().max(2000).optional().or(z.literal("")).transform((v) => v?.trim() || null),
+  follow_up_at: z
+    .string()
+    .max(10)
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format")
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v || null),
   source: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });
 

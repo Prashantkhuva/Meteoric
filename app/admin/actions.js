@@ -152,6 +152,8 @@ export async function addLead(formData) {
       budget: data.budget,
       currency: data.currency || "USD",
       details: data.details,
+      notes: data.notes || null,
+      follow_up_at: data.follow_up_at || null,
       source: data.source || "manual",
       status: "inquiry",
     })
@@ -355,6 +357,8 @@ export async function updateLead(formData) {
         budget: data.budget,
         currency: data.currency || "USD",
         details: data.details,
+        notes: data.notes || null,
+        follow_up_at: data.follow_up_at || null,
         source: data.source || null,
         updated_at: new Date().toISOString(),
       })
@@ -628,7 +632,7 @@ export async function getLeads() {
   const supabase = await getSupabase();
   const { data } = await supabase
     .from("leads")
-    .select("id, name, email, company")
+    .select("id, name, email, company, notes, follow_up_at")
     .order("name", { ascending: true })
     .limit(200);
   return data || [];

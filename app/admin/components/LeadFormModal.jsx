@@ -100,6 +100,8 @@ export function LeadFormModal({ open, lead, onClose, onSubmit }) {
                 </div>
               </div>
               <FormField label="Details" name="details" type="textarea" rows={3} placeholder="Project details, requirements, notes..." defaultValue={lead?.details || ""} />
+              <FormField label="Notes" name="notes" type="textarea" rows={3} placeholder="What the client said..." defaultValue={lead?.notes || ""} />
+              <FormField label="Follow-up" name="follow_up_at" type="date" defaultValue={lead?.follow_up_at || ""} />
               <div>
                 <label htmlFor="field-source" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Source

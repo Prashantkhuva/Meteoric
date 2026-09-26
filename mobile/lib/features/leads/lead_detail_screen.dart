@@ -278,6 +278,11 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     final name = _lead['name'] ?? '—';
     final score = _lead['ai_score'];
     final summary = _lead['ai_summary'];
+    final notes = '${_lead['notes'] ?? ''}';
+    final followUp = '${_lead['follow_up_at'] ?? ''}';
+    final followUpDate = DateTime.tryParse(followUp);
+    final followUpOverdue =
+        followUpDate != null && !followUpDate.isAfter(DateTime.now());
 
     return PopScope(
       canPop: false,
@@ -326,6 +331,13 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                   if (_lead['details'] != null &&
                       '${_lead['details']}'.isNotEmpty)
                     DetailRow(label: 'Details', value: '${_lead['details']}'),
+                  if (notes.isNotEmpty) DetailRow(label: 'Notes', value: notes),
+                  if (followUp.isNotEmpty)
+                    DetailRow(
+                      label: 'Follow-up',
+                      value: Fmt.date(followUp),
+                      valueColor: followUpOverdue ? AppColors.red : null,
+                    ),
                 ],
               ),
             ),
