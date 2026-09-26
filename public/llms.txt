@@ -92,6 +92,7 @@ End-to-end web application development including database design, server-side lo
 - [GitHub (Meteoric Agency)](https://github.com/Meteoric-Agency)
 - [GitHub (Prashant Khuva)](https://github.com/Prashantkhuva)
 - [LinkedIn (Meteoric)](https://www.linkedin.com/company/withmeteoric)
+- [Instagram (Meteoric)](https://www.instagram.com/officialmeteoric/)
 
 ## Services
 

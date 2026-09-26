@@ -116,6 +116,7 @@ export default function RootLayout({ children }) {
                 "https://github.com/Meteoric-Agency",
                 "https://www.linkedin.com/company/withmeteoric",
                 "https://x.com/prashantkhuva_",
+                "https://www.instagram.com/officialmeteoric/",
                 "https://www.wikidata.org/wiki/Q140453413",
               ],
               contactPoint: {
