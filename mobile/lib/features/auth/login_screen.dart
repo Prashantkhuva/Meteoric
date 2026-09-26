@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
-import '../home/home_shell.dart';
+import '../../main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -499,7 +499,8 @@ class _DotGridPainter extends CustomPainter {
 }
 
 /// Shown after a successful sign-in so auth state settles before swapping to
-/// the home shell (session listeners update AuthService.isSignedIn).
+/// the auth gate (session listeners update AuthService.isSignedIn; the gate
+/// routes to onboarding vs home shell).
 class _AuthSuccess extends StatefulWidget {
   const _AuthSuccess();
 
@@ -514,7 +515,7 @@ class _AuthSuccessState extends State<_AuthSuccess> {
     Future<void>.delayed(const Duration(milliseconds: 400), () {
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomeShell()),
+          MaterialPageRoute(builder: (_) => const AuthGate()),
           (_) => false,
         );
       }

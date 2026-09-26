@@ -17,10 +17,14 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final _pageController = PageController();
   final _nameController = TextEditingController(
-    text: AuthService.user?.userMetadata?['full_name'] ??
+    text:
+        AuthService.user?.userMetadata?['full_name'] ??
         AuthService.user?.userMetadata?['name'] ??
         '',
   );
+  final _newPassword = TextEditingController();
+  final _confirmPassword = TextEditingController();
+  bool _obscurePassword = true;
   int _step = 0;
   bool _saving = false;
 
@@ -28,11 +32,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void dispose() {
     _pageController.dispose();
     _nameController.dispose();
+    _newPassword.dispose();
+    _confirmPassword.dispose();
     super.dispose();
   }
 
   void _next() {
-    if (_step < 2) {
+    if (_step < 3) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -60,6 +66,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       await AuthService.instance.auth.updateUser(
         UserAttributes(data: {'full_name': name}),
       );
+      _next();
+    } catch (err) {
+      if (mounted) Toast.error(context, err.toString());
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  Future<void> _savePassword() async {
+    final pw = _newPassword.text;
+    final confirm = _confirmPassword.text;
+    if (pw.length < 6) {
+      Toast.error(context, 'Password must be at least 6 characters');
+      return;
+    }
+    if (pw != confirm) {
+      Toast.error(context, 'Passwords do not match');
+      return;
+    }
+    setState(() => _saving = true);
+    try {
+      await AuthService.instance.auth.updateUser(UserAttributes(password: pw));
+      _newPassword.clear();
+      _confirmPassword.clear();
       _next();
     } catch (err) {
       if (mounted) Toast.error(context, err.toString());
@@ -105,15 +135,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
               child: Row(
-                children: List.generate(3, (i) {
+                children: List.generate(4, (i) {
                   final active = i <= _step;
                   return Expanded(
                     child: Container(
                       height: 3,
-                      margin: EdgeInsets.only(right: i < 2 ? 8 : 0),
-                      color: active
-                          ? AppColors.accent
-                          : AppColors.border,
+                      margin: EdgeInsets.only(right: i < 3 ? 8 : 0),
+                      color: active ? AppColors.accent : AppColors.border,
                     ),
                   );
                 }),
@@ -127,6 +155,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPageChanged: (i) => setState(() => _step = i),
                 children: [
                   _buildWelcomeStep(displayName),
+                  _buildPasswordStep(),
                   _buildProfileStep(),
                   _buildDoneStep(displayName),
                 ],
@@ -153,7 +182,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.accent.withValues(alpha: 0.08),
-              border: Border.all(color: AppColors.accent.withValues(alpha: 0.15)),
+              border: Border.all(
+                color: AppColors.accent.withValues(alpha: 0.15),
+              ),
             ),
             child: const Icon(
               Icons.waving_hand_rounded,
@@ -187,6 +218,150 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             height: 48,
             onPressed: _next,
             child: const Text('GET STARTED'),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPasswordStep() {
+    final mismatched =
+        _newPassword.text.isNotEmpty &&
+        _confirmPassword.text.isNotEmpty &&
+        _newPassword.text != _confirmPassword.text;
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Spacer(flex: 2),
+          const Text(
+            'This is your first login. Set a new password to secure your account.',
+            style: TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 14,
+              fontFamily: 'Inter',
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'New Password',
+            style: TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _newPassword,
+            obscureText: _obscurePassword,
+            onChanged: (_) => setState(() {}),
+            style: const TextStyle(
+              color: AppColors.text,
+              fontSize: 16,
+              fontFamily: 'Inter',
+            ),
+            decoration: InputDecoration(
+              hintText: 'Min. 6 characters',
+              hintStyle: const TextStyle(
+                color: AppColors.textFaint,
+                fontFamily: 'Inter',
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  size: 18,
+                  color: AppColors.textMuted,
+                ),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.border),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.border),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.accent.withValues(alpha: 0.3),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Confirm Password',
+            style: TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _confirmPassword,
+            obscureText: _obscurePassword,
+            onChanged: (_) => setState(() {}),
+            onSubmitted: (_) => _saving ? null : _savePassword(),
+            style: const TextStyle(
+              color: AppColors.text,
+              fontSize: 16,
+              fontFamily: 'Inter',
+            ),
+            decoration: InputDecoration(
+              hintText: 'Re-enter your password',
+              hintStyle: const TextStyle(
+                color: AppColors.textFaint,
+                fontFamily: 'Inter',
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.border),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.border),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.accent.withValues(alpha: 0.3),
+                ),
+              ),
+            ),
+          ),
+          if (mismatched) ...[
+            const SizedBox(height: 8),
+            const Text(
+              'Passwords do not match',
+              style: TextStyle(
+                color: AppColors.red,
+                fontSize: 12,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+          const Spacer(flex: 3),
+          Row(
+            children: [
+              GhostButton(
+                onPressed: _saving ? null : _prev,
+                child: const Text('BACK'),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: AccentButton(
+                  height: 48,
+                  onPressed: _saving ? null : _savePassword,
+                  child: Text(_saving ? 'SAVING...' : 'CONTINUE'),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
         ],
@@ -287,7 +462,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.emerald.withValues(alpha: 0.08),
-              border: Border.all(color: AppColors.emerald.withValues(alpha: 0.15)),
+              border: Border.all(
+                color: AppColors.emerald.withValues(alpha: 0.15),
+              ),
             ),
             child: const Icon(
               Icons.check_circle_outline_rounded,
