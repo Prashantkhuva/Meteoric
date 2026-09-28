@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { colors, fonts, fontSizes, spacing } from "./theme";
+import { getCurrencySymbol } from "@/lib/utils";
 
 const styles = StyleSheet.create({
   page: {
@@ -173,6 +174,70 @@ const styles = StyleSheet.create({
     marginBottom: spacing.element,
     lineHeight: 1.6,
   },
+  priceHeadRow: {
+    borderBottom: `1px solid ${colors.border}`,
+    paddingBottom: 6,
+    marginBottom: 2,
+  },
+  priceRow: {
+    flexDirection: "row",
+    paddingVertical: 5,
+  },
+  priceHead: {
+    fontSize: fontSizes.label,
+    fontFamily: fonts.bold,
+    textTransform: "uppercase",
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  priceDesc: {
+    flex: 1,
+    fontSize: fontSizes.small,
+    color: colors.textSecondary,
+    paddingRight: 6,
+  },
+  priceQty: {
+    width: 40,
+    fontSize: fontSizes.small,
+    color: colors.textSecondary,
+    textAlign: "right",
+    paddingRight: 6,
+  },
+  priceRate: {
+    width: 84,
+    fontSize: fontSizes.small,
+    color: colors.textSecondary,
+    textAlign: "right",
+    paddingRight: 6,
+  },
+  priceAmount: {
+    width: 92,
+    fontSize: fontSizes.small,
+    fontFamily: fonts.bold,
+    color: colors.text,
+    textAlign: "right",
+  },
+  priceTotalRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 16,
+    marginTop: 6,
+    paddingTop: 8,
+    borderTop: `2px solid ${colors.accent}`,
+  },
+  priceTotalLabel: {
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.textSecondary,
+  },
+  priceTotalValue: {
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.accent,
+    width: 110,
+    textAlign: "right",
+  },
   contactBar: {
     flexDirection: "row",
     justifyContent: "center",
@@ -317,6 +382,31 @@ function StatusBadge({ status }) {
 export default function ProposalPDF({ proposal, lead, logo }) {
   const content = proposal.content;
 
+  let pricingRows = proposal.pricing;
+  if (typeof pricingRows === "string") {
+    try {
+      pricingRows = JSON.parse(pricingRows);
+    } catch {
+      pricingRows = null;
+    }
+  }
+  const pricing = Array.isArray(pricingRows)
+    ? pricingRows.filter(
+        (r) => r && (r.description || Number(r.rate || r.amount) > 0),
+      )
+    : [];
+  const sym = getCurrencySymbol(proposal.currency);
+  const fmtMoney = (n) =>
+    Number(n || 0).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  const subtotal = pricing.reduce(
+    (s, r) =>
+      s + (Number(r.quantity) || 1) * (Number(r.rate || r.amount) || 0),
+    0,
+  );
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -369,6 +459,48 @@ export default function ProposalPDF({ proposal, lead, logo }) {
                 <Text style={styles.paragraph}>{esc(content)}</Text>
               )}
         </View>
+
+        {pricing.length > 0 && (
+          <View style={styles.footerSection}>
+            <Text style={styles.footerLabel}>Pricing</Text>
+            <View style={styles.footerAccent} />
+            <View style={[styles.priceRow, styles.priceHeadRow]}>
+              <Text style={[styles.priceDesc, styles.priceHead]}>
+                Description
+              </Text>
+              <Text style={[styles.priceQty, styles.priceHead]}>Qty</Text>
+              <Text style={[styles.priceRate, styles.priceHead]}>Rate</Text>
+              <Text style={[styles.priceAmount, styles.priceHead]}>
+                Amount
+              </Text>
+            </View>
+            {pricing.map((row, i) => {
+              const qty = Number(row.quantity) || 1;
+              const rate = Number(row.rate || row.amount) || 0;
+              return (
+                <View key={i} style={styles.priceRow}>
+                  <Text style={styles.priceDesc}>{esc(row.description)}</Text>
+                  <Text style={styles.priceQty}>{qty}</Text>
+                  <Text style={styles.priceRate}>
+                    {sym}
+                    {fmtMoney(rate)}
+                  </Text>
+                  <Text style={styles.priceAmount}>
+                    {sym}
+                    {fmtMoney(qty * rate)}
+                  </Text>
+                </View>
+              );
+            })}
+            <View style={styles.priceTotalRow}>
+              <Text style={styles.priceTotalLabel}>Total</Text>
+              <Text style={styles.priceTotalValue}>
+                {sym}
+                {fmtMoney(subtotal)}
+              </Text>
+            </View>
+          </View>
+        )}
 
         {proposal.timeline && (
           <View style={styles.footerSection}>
