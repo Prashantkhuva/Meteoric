@@ -38,6 +38,8 @@ class Fmt {
     'INR': '₹',
     'EUR': '€',
     'GBP': '£',
+    'AUD': 'A\$',
+    'AED': 'AED',
   };
 
   static String date(String? iso) {

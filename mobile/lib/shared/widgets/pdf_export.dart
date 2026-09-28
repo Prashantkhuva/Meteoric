@@ -25,7 +25,9 @@ class PdfExport {
     'USD': '\$',
     'EUR': '€',
     'GBP': '£',
+    'INR': '₹',
     'AUD': 'A\$',
+    'AED': 'AED',
   };
 
   static String currencySymbol(String? currency) {

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCurrencySymbol } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import fs from "fs";
@@ -70,6 +71,7 @@ export async function GET(request, { params }) {
   }
 
   const proposalContent = renderContent(proposal.content);
+  const sym = getCurrencySymbol(proposal.currency);
   const ogUrl = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
   let logoSrc = "";
   try {
@@ -190,7 +192,7 @@ body { background: #f5f5f5; padding: 40px 20px; font-family: 'Inter', -apple-sys
             const rate = Number(item?.rate) || 0;
             const lineTotal = qty * rate;
             subtotal += lineTotal;
-            return `<tr><td>${esc(item?.description || "")}</td><td style="text-align:center">${qty}</td><td style="text-align:right">$${rate.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td><td style="text-align:right;font-weight:600">$${lineTotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td></tr>`;
+            return `<tr><td>${esc(item?.description || "")}</td><td style="text-align:center">${qty}</td><td style="text-align:right">${sym}${rate.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td><td style="text-align:right;font-weight:600">${sym}${lineTotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td></tr>`;
           }).join("");
           return `
   <div class="footer">
@@ -210,7 +212,7 @@ body { background: #f5f5f5; padding: 40px 20px; font-family: 'Inter', -apple-sys
       <tfoot>
         <tr style="border-top:2px solid #111827">
           <td colspan="3" style="text-align:right;padding:8px 0;font-weight:700;color:#111827">Total</td>
-          <td style="text-align:right;padding:8px 0;font-weight:700;color:#111827;font-size:15px">$${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
+          <td style="text-align:right;padding:8px 0;font-weight:700;color:#111827;font-size:15px">${sym}${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
         </tr>
       </tfoot>
     </table>

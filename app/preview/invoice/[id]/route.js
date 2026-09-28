@@ -1,20 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { getCurrencySymbol } from "@/lib/utils";
 import fs from "fs";
 import path from "path";
-
-const CURRENCIES = {
-  USD: "$",
-  INR: "₹",
-  EUR: "€",
-  GBP: "£",
-  AUD: "A$",
-};
-
-function getCurrencySymbol(currency) {
-  return CURRENCIES[currency] || "$";
-}
 
 export async function GET(request, { params }) {
   const { id } = await params;

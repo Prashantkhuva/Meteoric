@@ -14,6 +14,7 @@ const CURRENCY_SYMBOLS = {
   AUD: "AU$",
   SGD: "S$",
   JPY: "\u00A5",
+  AED: "AED",
 };
 
 export function getCurrencySymbol(currency) {
