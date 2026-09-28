@@ -88,7 +88,11 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
         (_proposal['id'] as num).toInt(),
       );
       if (!mounted) return;
-      final token = res['token'];
+      final token = res['token'] as String?;
+      if (token == null || token.isEmpty) {
+        if (mounted) _snack('Could not create share link', isError: true);
+        return;
+      }
       final url = '${AppConfig.siteUrl}/share/proposal/$token';
       await showShareSheet(
         context,

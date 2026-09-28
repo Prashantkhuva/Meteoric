@@ -219,10 +219,15 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     try {
       final res = await ApiClient.instance.invoiceShareToken(_id(invoice));
       if (!mounted) return;
+      final token = res['token'] as String?;
+      if (token == null || token.isEmpty) {
+        if (mounted) Toast.error(context, 'Could not create share link');
+        return;
+      }
       await showShareSheet(
         context,
         title: invoice['invoice_number'] ?? 'Invoice',
-        url: '${AppConfig.siteUrl}/share/invoice/${res['token']}',
+        url: '${AppConfig.siteUrl}/share/invoice/$token',
       );
     } catch (err) {
       if (mounted) Toast.error(context, err.toString());

@@ -194,10 +194,15 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
     try {
       final res = await ApiClient.instance.proposalShareToken(_id(proposal));
       if (!mounted) return;
+      final token = res['token'] as String?;
+      if (token == null || token.isEmpty) {
+        if (mounted) Toast.error(context, 'Could not create share link');
+        return;
+      }
       await showShareSheet(
         context,
         title: proposal['title'] ?? 'Proposal',
-        url: '${AppConfig.siteUrl}/share/proposal/${res['token']}',
+        url: '${AppConfig.siteUrl}/share/proposal/$token',
       );
     } catch (err) {
       if (mounted) Toast.error(context, err.toString());

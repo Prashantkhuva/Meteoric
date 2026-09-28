@@ -13,7 +13,7 @@ export async function GET(request, { params }) {
   }
 
   const { data, error } = await supabase
-    .from("proposals")
+    .from("invoices")
     .select("id")
     .eq("share_token", token)
     .single();
@@ -23,7 +23,7 @@ export async function GET(request, { params }) {
   }
 
   return Response.redirect(
-    new URL(`/preview/proposal/${data.id}?token=${token}`, request.url),
+    new URL(`/preview/invoice/${data.id}?token=${token}`, request.url),
     302,
   );
 }
