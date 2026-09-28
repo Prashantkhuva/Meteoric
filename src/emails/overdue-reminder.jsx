@@ -1,13 +1,29 @@
 import { Html, Head, Preview, Body, Container, Text, Hr, Link } from "react-email";
 import EmailLogo from "./EmailLogo";
+const CURRENCY_SYMBOLS = {
+  USD: "$",
+  EUR: "\u20AC",
+  GBP: "\u00A3",
+  INR: "\u20B9",
+  CAD: "CA$",
+  AUD: "AU$",
+  SGD: "S$",
+  JPY: "\u00A5",
+  AED: "AED",
+};
+function getSymbol(c) {
+  return CURRENCY_SYMBOLS[c] || c || "$";
+}
 export default function OverdueReminder({
   name,
   invoiceNumber,
   total,
+  currency = "USD",
   dueDate,
   daysOverdue,
   previewUrl,
 }) {
+  const sym = getSymbol(currency);
   return (
     <Html>
       {" "}
@@ -25,7 +41,7 @@ export default function OverdueReminder({
             {" "}
             This is a reminder that invoice{" "}
             <strong style={strong}>{invoiceNumber}</strong> for{" "}
-            <strong style={strong}>${Number(total).toFixed(2)}</strong> is now{" "}
+            <strong style={strong}>{sym}{Number(total).toFixed(2)}</strong> is now{" "}
             <strong style={strongRed}>
               {daysOverdue} day{daysOverdue !== 1 ? "s" : ""} overdue
             </strong>
@@ -36,7 +52,7 @@ export default function OverdueReminder({
             <Text style={label}>Invoice Number</Text>{" "}
             <Text style={value}>{invoiceNumber}</Text> <div style={divider} />{" "}
             <Text style={label}>Total Amount</Text>{" "}
-            <Text style={amount}>${Number(total).toFixed(2)}</Text>{" "}
+            <Text style={amount}>{sym}{Number(total).toFixed(2)}</Text>{" "}
             {dueDate && (
               <>
                 {" "}

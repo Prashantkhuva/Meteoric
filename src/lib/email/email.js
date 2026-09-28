@@ -217,6 +217,7 @@ export async function sendOverdueReminder(invoice, client, previewUrl) {
         name: client.name,
         invoiceNumber: invoice.invoice_number,
         total: invoice.total,
+        currency: invoice.currency,
         dueDate,
         daysOverdue,
         previewUrl,
