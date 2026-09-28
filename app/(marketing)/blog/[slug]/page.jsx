@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
+import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import RevealImg from "@/components/ui/RevealImg";
 
@@ -45,29 +46,6 @@ export async function generateMetadata({ params }) {
     },
   };
 }
-
-const slugToImage = {
-  "mongodb-schema-design-for-saas-billing": "/images/blog/blog-mongodb-schema.webp",
-  "how-to-build-a-saas-mvp-step-by-step-guide": "/images/blog/blog-saas-mvp.webp",
-  "mongodb-vs-postgresql-for-saas": "/images/blog/blog-mongodb-vs-postgres.webp",
-  "gsap-vs-framer-motion-production-guide": "/images/blog/blog-gsap-vs-framer.webp",
-  "supabase-vs-firebase-2026-comparison": "/images/blog/blog-supabase-vs-firebase.webp",
-  "what-is-a-web-development-agency": "/images/blog/blog-web-agency.webp",
-  "the-meteoric-guide-to-choosing-your-tech-stack": "/images/blog/blog-tech-stack.webp",
-  "how-to-implement-aeo-answer-engine-optimization-for-saas": "/images/blog/blog-aeo.webp",
-  "why-visitors-leave-your-website-issues-and-solutions": "/images/blog/blog-website-issues.webp",
-  "high-converting-landing-page-structure-for-saas": "/images/blog/blog-landing-page.webp",
-  "long-tail-seo-strategy-for-funded-startups": "/images/blog/blog-long-tail-seo.webp",
-  "ai-search-optimization-how-to-get-cited-by-chatgpt": "/images/blog/blog-ai-search.webp",
-  "startup-seo-on-a-budget-what-to-do-first": "/images/blog/blog-startup-seo.webp",
-  "nextjs-vs-remix-2026-comparison": "/images/blog/blog-tech-stack.webp",
-  "react-vs-nextjs-for-startup-websites": "/images/blog/blog-tech-stack.webp",
-  "conversion-focused-web-design-beyond-pretty-ui": "/images/blog/blog-landing-page.webp",
-  "building-a-saas-prototype-in-3-weeks-a-case-study": "/images/blog/blog-saas-mvp.webp",
-  "how-much-does-a-startup-website-cost": "/images/blog/blog-startup-seo.webp",
-  "how-to-choose-a-web-development-agency": "/images/blog/blog-web-agency.webp",
-  "complete-website-audit-checklist-for-startups": "/images/blog/blog-website-issues.webp",
-};
 
 const postService = {
   "mongodb-schema-design-for-saas-billing": { href: "/services/saas-development", label: "SaaS Development" },
@@ -114,7 +92,7 @@ export default async function BlogPost({ params }) {
   if (!post) notFound();
 
   const readTime = readingTime(post.sections);
-  const image = slugToImage[slug] || "/images/blog/blog-tech-stack.webp";
+  const image = slugToImage[slug] || FALLBACK_BLOG_IMAGE;
   const relatedLinks = post.relatedLinks?.length
     ? post.relatedLinks
     : postService[post.slug]
@@ -282,7 +260,7 @@ export default async function BlogPost({ params }) {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((rp) => {
-                  const rpImage = slugToImage[rp.slug] || "/images/blog/blog-tech-stack.webp";
+                  const rpImage = slugToImage[rp.slug] || FALLBACK_BLOG_IMAGE;
                   return (
                     <Link key={rp.slug} href={`/blog/${rp.slug}`} className="group block">
                       <div className="relative rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
