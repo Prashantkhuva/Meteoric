@@ -1,114 +1,56 @@
 import { Html, Head, Preview, Body, Container, Text, Link } from "react-email";
 import EmailLogo from "./EmailLogo";
-export default function ProposalEmail({
-  name,
-  title,
-  timeline,
-  terms,
-  previewUrl,
-}) {
+import { page, container, eyebrow, greeting, paragraph, strong, primaryButton, closing, signoff, footer, link } from "./theme";
+
+const sectionEyebrow = { ...eyebrow, margin: "26px 0 10px 0" };
+
+export default function ProposalEmail({ title, timeline, terms, previewUrl, name }) {
   return (
     <Html>
-      {" "}
-      <Head /> <Preview>Proposal: {title}</Preview>{" "}
-      <Body style={main}>
-        {" "}
+      <Head />
+      <Preview>Proposal: {title}</Preview>
+      <Body style={page}>
         <Container style={container}>
-          {" "}
           <EmailLogo />
-          <Text style={greeting}>Hi {name || "there"},</Text>{" "}
+          <Text style={eyebrow}>Proposal</Text>
+          <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>
-            {" "}
             We're excited to share our proposal for{" "}
             <strong style={strong}>{title}</strong>. We've put together a
-            comprehensive plan tailored to your needs.{" "}
-          </Text>{" "}
+            comprehensive plan tailored to your needs.
+          </Text>
           <Text style={paragraph}>
-            {" "}
-            You can view the full proposal at the link below:{" "}
-          </Text>{" "}
-          <Link href={previewUrl} style={button}>
-            {" "}
-            View Your Proposal{" "}
-          </Link>{" "}
+            You can view the full proposal at the link below:
+          </Text>
+          <Text style={{ margin: "18px 0 8px" }}>
+            <Link href={previewUrl} style={primaryButton}>
+              View Your Proposal
+            </Link>
+          </Text>
           {timeline && (
             <>
-              {" "}
-              <Text style={sectionTitle}>Timeline</Text>{" "}
-              <Text style={paragraph}>{timeline}</Text>{" "}
+              <Text style={sectionEyebrow}>Timeline</Text>
+              <Text style={paragraph}>{timeline}</Text>
             </>
-          )}{" "}
+          )}
           {terms && (
             <>
-              {" "}
-              <Text style={sectionTitle}>Terms & Conditions</Text>{" "}
-              <Text style={paragraph}>{terms}</Text>{" "}
+              <Text style={sectionEyebrow}>Terms &amp; Conditions</Text>
+              <Text style={paragraph}>{terms}</Text>
             </>
-          )}{" "}
+          )}
           <Text style={closing}>
-            {" "}
-            We're looking forward to working with you.{" "}
-          </Text>{" "}
-          <Text style={signoff}>Prashant — Founder, Meteoric</Text>{" "}
-        </Container>{" "}
-      </Body>{" "}
+            We're looking forward to working with you.
+          </Text>
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
+          <Text style={footer}>
+            <Link href="https://withmeteoric.com" style={link}>
+              withmeteoric.com
+            </Link>{" "}
+            · Web development &amp; SaaS agency
+          </Text>
+        </Container>
+      </Body>
     </Html>
   );
 }
-const main = {
-  backgroundColor: "#000000",
-  fontFamily: "Arial, Helvetica, sans-serif",
-  padding: "40px 0",
-};
-const container = {
-  maxWidth: "520px",
-  margin: "0 auto",
-  padding: "32px",
-  backgroundColor: "#0a0a0a",
-  border: "1px solid rgba(234, 239, 255, 0.1)",
-};
-
-const strong = { color: "#ffffff" };
-const greeting = {
-  fontSize: "16px",
-  color: "#ffffff",
-  fontWeight: 500,
-  marginBottom: "12px",
-};
-const sectionTitle = {
-  fontSize: "13px",
-  color: "#EAEFFF",
-  fontWeight: 600,
-  marginTop: "24px",
-  marginBottom: "8px",
-};
-const paragraph = {
-  fontSize: "14px",
-  color: "rgba(255, 255, 255, 0.6)",
-  lineHeight: "1.6",
-  marginBottom: "12px",
-};
-const button = {
-  display: "inline-block",
-  padding: "12px 24px",
-  backgroundColor: "#EAEFFF",
-  color: "#121212",
-  fontSize: "14px",
-  fontWeight: 600,
-  textDecoration: "none",
-  margin: "16px 0",
-};
-const closing = {
-  fontSize: "14px",
-  color: "rgba(255, 255, 255, 0.4)",
-  lineHeight: "1.6",
-  marginTop: "24px",
-  marginBottom: "0",
-};
-const signoff = {
-  fontSize: "13px",
-  color: "rgba(255, 255, 255, 0.25)",
-  lineHeight: "1.6",
-  marginTop: "4px",
-  marginBottom: "0",
-};

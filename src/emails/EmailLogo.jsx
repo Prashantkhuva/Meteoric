@@ -5,7 +5,7 @@ const SITE_URL = "https://withmeteoric.com";
 export default function EmailLogo() {
   return (
     <Img
-      src={`${SITE_URL}/meteoric-email-logo.png`}
+      src={`${SITE_URL}/meteoric-email-logo-dark.png`}
       alt="Meteoric"
       width="132"
       height="30"

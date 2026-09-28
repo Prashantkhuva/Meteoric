@@ -1,5 +1,21 @@
 import { Html, Head, Preview, Body, Container, Text } from "react-email";
 import EmailLogo from "./EmailLogo";
+import {
+  page,
+  container,
+  eyebrow,
+  greeting,
+  paragraph,
+  label,
+  value,
+  amount,
+  divider,
+  inset,
+  signoff,
+  footer,
+  link,
+} from "./theme";
+
 const CURRENCY_SYMBOLS = {
   USD: "$",
   EUR: "\u20AC",
@@ -13,6 +29,12 @@ const CURRENCY_SYMBOLS = {
 function getSymbol(c) {
   return CURRENCY_SYMBOLS[c] || c || "$";
 }
+
+const box = { ...inset, margin: "20px 0" };
+const boxLabel = { ...label, margin: "0 0 4px 0" };
+const boxValue = { ...value, margin: "0 0 12px 0" };
+const strongPaid = { fontWeight: 700, color: "#15803d" };
+
 export default function PaymentConfirmation({
   name,
   invoiceNumber,
@@ -27,111 +49,50 @@ export default function PaymentConfirmation({
         day: "numeric",
       })
     : "today";
-  const formattedTotal = `${getSymbol(currency)}${Number(total).toFixed(2)}`;
+  const formattedTotal = `${getSymbol(currency)}${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return (
     <Html>
-      {" "}
-      <Head /> <Preview>
-        Payment Confirmed — Invoice {invoiceNumber}
-      </Preview>{" "}
-      <Body style={main}>
-        {" "}
+      <Head />
+      <Preview>Payment Confirmed — Invoice {invoiceNumber}</Preview>
+      <Body style={page}>
         <Container style={container}>
-          {" "}
           <EmailLogo />
-          <Text style={greeting}>Hi {name || "there"},</Text>{" "}
+          <Text style={eyebrow}>Payment received</Text>
+          <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>
-            {" "}
-            We&apos;ve received your payment. Thank you!{" "}
-          </Text>{" "}
+            We&apos;ve received your payment. Thank you!
+          </Text>
           <div style={box}>
-            {" "}
-            <Text style={label}>Invoice Number</Text>{" "}
-            <Text style={value}>{invoiceNumber}</Text> <div style={divider} />{" "}
-            <Text style={label}>Amount Paid</Text>{" "}
-            <Text style={amount}>{formattedTotal}</Text> <div style={divider} />{" "}
-            <Text style={label}>Payment Date</Text>{" "}
-            <Text style={value}>{formattedDate}</Text>{" "}
-          </div>{" "}
+            <Text style={boxLabel}>Invoice Number</Text>
+            <Text style={boxValue}>{invoiceNumber}</Text>
+            <div style={divider} />
+            <Text style={boxLabel}>Amount Paid</Text>
+            <Text style={amount}>{formattedTotal}</Text>
+            <div style={divider} />
+            <Text style={boxLabel}>Payment Date</Text>
+            <Text style={{ ...boxValue, marginBottom: 0 }}>
+              {formattedDate}
+            </Text>
+          </div>
           <Text style={paragraph}>
-            {" "}
             Your invoice has been marked as{" "}
-            <strong style={strongGreen}>paid</strong>. A paid-stamped receipt is
-            attached to this email for your records.{" "}
-          </Text>{" "}
+            <strong style={strongPaid}>paid</strong>. A paid-stamped receipt is
+            attached to this email for your records.
+          </Text>
           <Text style={paragraph}>
-            {" "}
             It was a pleasure working with you. If you ever need web
             development, SaaS, or landing page services in the future,
-            don&apos;t hesitate to reach out.{" "}
-          </Text>{" "}
-          <Text style={signoff}>Prashant — Founder, Meteoric</Text>{" "}
-        </Container>{" "}
-      </Body>{" "}
+            don&apos;t hesitate to reach out.
+          </Text>
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
+          <Text style={footer}>
+            <a href="https://withmeteoric.com" style={link}>
+              withmeteoric.com
+            </a>{" "}
+            · Web development &amp; SaaS agency
+          </Text>
+        </Container>
+      </Body>
     </Html>
   );
 }
-const main = {
-  backgroundColor: "#000000",
-  fontFamily: "Arial, Helvetica, sans-serif",
-  padding: "40px 0",
-};
-const container = {
-  maxWidth: "520px",
-  margin: "0 auto",
-  padding: "32px",
-  backgroundColor: "#0a0a0a",
-  border: "1px solid rgba(234, 239, 255, 0.1)",
-};
-
-const greeting = {
-  fontSize: "16px",
-  color: "#ffffff",
-  fontWeight: 500,
-  marginBottom: "12px",
-};
-const paragraph = {
-  fontSize: "14px",
-  color: "rgba(255, 255, 255, 0.6)",
-  lineHeight: "1.6",
-  marginBottom: "12px",
-};
-const strongGreen = { color: "#4ade80" };
-const box = {
-  backgroundColor: "rgba(255, 255, 255, 0.03)",
-  border: "1px solid rgba(234, 239, 255, 0.1)",
-  padding: "20px",
-  margin: "20px 0",
-};
-const label = {
-  fontSize: "11px",
-  color: "rgba(255, 255, 255, 0.35)",
-  fontWeight: 600,
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
-  margin: "0 0 4px 0",
-};
-const value = {
-  fontSize: "15px",
-  color: "#ffffff",
-  fontWeight: 500,
-  margin: "0 0 12px 0",
-};
-const amount = {
-  fontSize: "28px",
-  color: "#4ade80",
-  fontWeight: 700,
-  margin: "0 0 4px 0",
-};
-const divider = {
-  height: "1px",
-  backgroundColor: "rgba(234, 239, 255, 0.08)",
-  margin: "12px 0",
-};
-const signoff = {
-  fontSize: "13px",
-  color: "rgba(255, 255, 255, 0.25)",
-  lineHeight: "1.6",
-  marginTop: "4px",
-  marginBottom: "0",
-};

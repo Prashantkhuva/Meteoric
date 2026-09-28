@@ -1,65 +1,37 @@
 import { Html, Head, Preview, Body, Container, Text } from "react-email";
 import EmailLogo from "./EmailLogo";
+import { page, container, eyebrow, greeting, paragraph, signoff, footer, link } from "./theme";
+
 export default function ReviewThankYou({ name }) {
+  const baseUrl = "https://withmeteoric.com";
   return (
     <Html>
-      {" "}
-      <Head />{" "}
-      <Preview>Thank you for your review — it means a lot to us</Preview>{" "}
-      <Body style={main}>
-        {" "}
+      <Head />
+      <Preview>Thank you for your review — it means a lot to us</Preview>
+      <Body style={page}>
         <Container style={container}>
-          {" "}
           <EmailLogo />
-          <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>{" "}
+          <Text style={eyebrow}>Thank you</Text>
+          <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
           <Text style={paragraph}>
-            {" "}
             Thank you for taking the time to share your experience with
             Meteoric. Your feedback means a lot to us and helps us continue to
-            improve.{" "}
-          </Text>{" "}
+            improve.
+          </Text>
           <Text style={paragraph}>
-            {" "}
             We&apos;ll review your submission and it will appear on our site
             shortly. If you have any additional thoughts, feel free to reply to
-            this email.{" "}
-          </Text>{" "}
-          <Text style={signoff}>Prashant — Founder, Meteoric</Text>{" "}
-        </Container>{" "}
-      </Body>{" "}
+            this email.
+          </Text>
+          <Text style={signoff}>Prashant — Founder, Meteoric</Text>
+          <Text style={footer}>
+            <a href={baseUrl} style={link}>
+              withmeteoric.com
+            </a>{" "}
+            · Web development &amp; SaaS agency
+          </Text>
+        </Container>
+      </Body>
     </Html>
   );
 }
-const main = {
-  backgroundColor: "#000000",
-  fontFamily: "Arial, Helvetica, sans-serif",
-  padding: "40px 0",
-};
-const container = {
-  maxWidth: "520px",
-  margin: "0 auto",
-  padding: "32px",
-  backgroundColor: "#0a0a0a",
-  border: "1px solid rgba(234, 239, 255, 0.1)",
-  borderRadius: "16px",
-};
-
-const greeting = {
-  fontSize: "16px",
-  color: "#ffffff",
-  fontWeight: 500,
-  marginBottom: "12px",
-};
-const paragraph = {
-  fontSize: "14px",
-  color: "rgba(255, 255, 255, 0.6)",
-  lineHeight: "1.6",
-  marginBottom: "12px",
-};
-const signoff = {
-  fontSize: "13px",
-  color: "rgba(255, 255, 255, 0.25)",
-  lineHeight: "1.6",
-  marginTop: "4px",
-  marginBottom: "0",
-};
