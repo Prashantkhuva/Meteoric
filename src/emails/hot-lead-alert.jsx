@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
+import { Html, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import {
   page,
@@ -17,7 +18,7 @@ const badge = {
   display: "inline-block",
   fontSize: "11px",
   fontWeight: 700,
-  color: colors.amber,
+  color: `${colors.amber} !important`,
   textTransform: "uppercase",
   letterSpacing: "0.1em",
   margin: "0 0 6px 0",
@@ -27,7 +28,7 @@ const summaryText = {
   fontFamily: "Georgia, 'Times New Roman', serif",
   fontStyle: "italic",
   fontSize: "16px",
-  color: colors.inkText,
+  color: `${colors.inkText} !important`,
   lineHeight: "1.6",
   margin: "0 0 24px 0",
 };
@@ -38,12 +39,12 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>
         🔥 Hot lead ({score}): {lead.name || lead.email}
       </Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={badge}>Hot lead · {score}/100</Text>
           <Heading style={h1}>{lead.name || lead.email}</Heading>

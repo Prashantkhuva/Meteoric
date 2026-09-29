@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text, Link } from "react-email";
+import { Html, Preview, Body, Container, Text, Link } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import {
   page,
@@ -31,7 +32,7 @@ const passwordBox = {
 const passwordText = {
   fontSize: "17px",
   fontFamily: "SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace",
-  color: colors.inkText,
+  color: `${colors.inkText} !important`,
   letterSpacing: "2px",
   fontWeight: 600,
   margin: "0",
@@ -40,8 +41,9 @@ const passwordText = {
 };
 
 const noticeBox = {
-  backgroundColor: "rgba(180, 83, 9, 0.06)",
-  border: "1px solid rgba(180, 83, 9, 0.2)",
+  backgroundColor: "#faf6f6",
+  backgroundImage: "linear-gradient(#faf6f6, #faf6f6)",
+  border: "1px solid #f0ddce",
   borderRadius: "10px",
   padding: "14px 16px",
   margin: "4px 0 24px 0",
@@ -49,7 +51,7 @@ const noticeBox = {
 
 const noticeText = {
   fontSize: "13px",
-  color: colors.body,
+  color: `${colors.body} !important`,
   lineHeight: "1.6",
   margin: "0",
 };
@@ -66,10 +68,10 @@ export default function InvitationEmail({ name, role, email, password, loginUrl 
 
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>You&apos;re invited to Meteoric Admin</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Team invitation</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
@@ -83,14 +85,14 @@ export default function InvitationEmail({ name, role, email, password, loginUrl 
             password on your first login.
           </Text>
 
-          <div style={credentialBox}>
+          <div className="email-inset" bgcolor="#fafaf7" style={credentialBox}>
             <Text style={credentialLabel}>Email</Text>
             <Text style={credentialValue}>{email}</Text>
             <div style={{ ...divider, margin: "14px 0" }} />
             <Text style={{ ...credentialLabel, marginBottom: "8px" }}>
               Password
             </Text>
-            <div style={passwordBox}>
+            <div className="email-card" bgcolor="#ffffff" style={passwordBox}>
               <Text style={passwordText}>{password}</Text>
             </div>
           </div>
@@ -101,7 +103,7 @@ export default function InvitationEmail({ name, role, email, password, loginUrl 
             </Link>
           </Text>
 
-          <div style={noticeBox}>
+          <div className="email-banner" style={noticeBox}>
             <Text style={noticeText}>
               <strong style={strong}>Security note:</strong> For your safety,
               you&apos;ll be prompted to change this password immediately after
@@ -112,7 +114,7 @@ export default function InvitationEmail({ name, role, email, password, loginUrl 
           <Text style={closing}>
             Best regards,
             <br />
-            <span style={{ color: colors.muted, fontSize: "12px" }}>
+            <span style={{ color: `${colors.muted} !important`, fontSize: "12px" }}>
               Meteoric Team
             </span>
           </Text>

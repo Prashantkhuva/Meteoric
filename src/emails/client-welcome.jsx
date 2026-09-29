@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text } from "react-email";
+import { Html, Preview, Body, Container, Text } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import { page, container, eyebrow, greeting, paragraph, inset, closing, signoff, footer, link, colors } from "./theme";
 
@@ -6,7 +7,7 @@ const box = { ...inset, margin: "20px 0" };
 
 const step = {
   fontSize: "14px",
-  color: colors.body,
+  color: `${colors.body} !important`,
   lineHeight: "1.6",
   margin: "0 0 14px 0",
   paddingLeft: "32px",
@@ -31,10 +32,10 @@ const stepNum = {
 export default function ClientWelcome({ name }) {
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>Welcome to Meteoric — Let's Build Something Great</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Welcome aboard</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
@@ -45,7 +46,7 @@ export default function ClientWelcome({ name }) {
             Over the next few days, we'll be reaching out to learn more about
             your project goals, timeline, and vision. Here's what to expect:
           </Text>
-          <div style={box}>
+          <div className="email-inset" bgcolor="#fafaf7" style={box}>
             <Text style={step}>
               <span style={stepNum}>1</span> Onboarding call — we'll discuss
               your requirements in detail

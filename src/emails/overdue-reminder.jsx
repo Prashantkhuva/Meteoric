@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text, Hr, Link } from "react-email";
+import { Html, Preview, Body, Container, Text, Hr, Link } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import {
   page,
@@ -44,7 +45,7 @@ function formatAmount(n) {
 const box = { ...inset, margin: "20px 0" };
 const boxLabel = { ...label, margin: "0 0 4px 0" };
 const boxValue = { ...value, margin: "0 0 12px 0" };
-const strongRed = { fontWeight: 700, color: "#b91c1c" };
+const strongRed = { fontWeight: 700, color: "#b91c1c !important" };
 
 export default function OverdueReminder({
   name,
@@ -58,12 +59,12 @@ export default function OverdueReminder({
   const sym = getSymbol(currency);
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>
         Overdue Invoice {invoiceNumber} — Please Remit Payment
       </Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Payment reminder</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
@@ -80,7 +81,7 @@ export default function OverdueReminder({
             </strong>
             .
           </Text>
-          <div style={box}>
+          <div className="email-inset" bgcolor="#fafaf7" style={box}>
             <Text style={boxLabel}>Invoice Number</Text>
             <Text style={boxValue}>{invoiceNumber}</Text>
             <div style={divider} />

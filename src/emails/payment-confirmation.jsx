@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text } from "react-email";
+import { Html, Preview, Body, Container, Text } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import {
   page,
@@ -33,7 +34,7 @@ function getSymbol(c) {
 const box = { ...inset, margin: "20px 0" };
 const boxLabel = { ...label, margin: "0 0 4px 0" };
 const boxValue = { ...value, margin: "0 0 12px 0" };
-const strongPaid = { fontWeight: 700, color: "#15803d" };
+const strongPaid = { fontWeight: 700, color: "#15803d !important" };
 
 export default function PaymentConfirmation({
   name,
@@ -52,17 +53,17 @@ export default function PaymentConfirmation({
   const formattedTotal = `${getSymbol(currency)}${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>Payment Confirmed — Invoice {invoiceNumber}</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Payment received</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>
             We&apos;ve received your payment. Thank you!
           </Text>
-          <div style={box}>
+          <div className="email-inset" bgcolor="#fafaf7" style={box}>
             <Text style={boxLabel}>Invoice Number</Text>
             <Text style={boxValue}>{invoiceNumber}</Text>
             <div style={divider} />

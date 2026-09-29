@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text, Link } from "react-email";
+import { Html, Preview, Body, Container, Text, Link } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import { page, container, eyebrow, greeting, paragraph, strong, primaryButton, closing, signoff, footer, link } from "./theme";
 
@@ -7,10 +8,10 @@ const sectionEyebrow = { ...eyebrow, margin: "26px 0 10px 0" };
 export default function ProposalEmail({ title, timeline, terms, previewUrl, name }) {
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>Proposal: {title}</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Proposal</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>

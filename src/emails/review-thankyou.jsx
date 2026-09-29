@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text } from "react-email";
+import { Html, Preview, Body, Container, Text } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import { page, container, eyebrow, greeting, paragraph, signoff, footer, link } from "./theme";
 
@@ -6,10 +7,10 @@ export default function ReviewThankYou({ name }) {
   const baseUrl = "https://withmeteoric.com";
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>Thank you for your review — it means a lot to us</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Thank you</Text>
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>

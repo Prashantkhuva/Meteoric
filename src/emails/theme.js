@@ -3,15 +3,17 @@ export const colors = {
   card: "#ffffff",
   ink: "#1c1917",
   inkText: "#1c1917",
-  body: "rgba(28, 25, 23, 0.72)",
-  muted: "rgba(28, 25, 23, 0.55)",
-  faint: "rgba(28, 25, 23, 0.38)",
-  hairline: "rgba(28, 25, 23, 0.08)",
-  border: "rgba(28, 25, 23, 0.1)",
+  body: "#5c5958",
+  muted: "#82817f",
+  faint: "#a8a6a3",
+  hairline: "#edeeed",
+  border: "#e8e8e6",
   inset: "#fafaf7",
   onInk: "#fbfbf9",
   amber: "#b45309",
 };
+
+const t = (c) => `${c} !important`;
 
 const sans =
   "Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
@@ -19,6 +21,7 @@ const serif = "Georgia, 'Times New Roman', serif";
 
 export const page = {
   backgroundColor: colors.page,
+  backgroundImage: `linear-gradient(${colors.page}, ${colors.page})`,
   fontFamily: sans,
   padding: "48px 16px",
   margin: 0,
@@ -30,6 +33,7 @@ export const container = {
   margin: "0 auto",
   padding: "40px 36px 32px",
   backgroundColor: colors.card,
+  backgroundImage: `linear-gradient(${colors.card}, ${colors.card})`,
   border: `1px solid ${colors.border}`,
   borderRadius: "16px",
 };
@@ -43,7 +47,7 @@ export const logo = {
 export const eyebrow = {
   fontSize: "11px",
   fontWeight: 700,
-  color: colors.faint,
+  color: t(colors.faint),
   textTransform: "uppercase",
   letterSpacing: "0.14em",
   margin: "0 0 10px 0",
@@ -54,26 +58,26 @@ export const h1 = {
   lineHeight: "1.2",
   fontWeight: 700,
   letterSpacing: "-0.02em",
-  color: colors.inkText,
+  color: t(colors.inkText),
   margin: "0 0 8px 0",
 };
 
 export const greeting = {
   fontSize: "16px",
   fontWeight: 600,
-  color: colors.inkText,
+  color: t(colors.inkText),
   margin: "0 0 12px 0",
 };
 
 export const paragraph = {
   fontSize: "15px",
   lineHeight: "1.65",
-  color: colors.body,
+  color: t(colors.body),
   margin: "0 0 14px 0",
 };
 
 export const link = {
-  color: colors.inkText,
+  color: t(colors.inkText),
   textDecoration: "underline",
 };
 
@@ -103,6 +107,7 @@ export const secondaryButton = {
 
 export const inset = {
   backgroundColor: colors.inset,
+  backgroundImage: `linear-gradient(${colors.inset}, ${colors.inset})`,
   border: `1px solid ${colors.hairline}`,
   borderRadius: "12px",
   padding: "20px",
@@ -117,7 +122,7 @@ export const hr = {
 export const label = {
   fontSize: "11px",
   fontWeight: 700,
-  color: colors.faint,
+  color: t(colors.faint),
   textTransform: "uppercase",
   letterSpacing: "0.12em",
   margin: "16px 0 3px 0",
@@ -125,7 +130,7 @@ export const label = {
 
 export const value = {
   fontSize: "15px",
-  color: colors.inkText,
+  color: t(colors.inkText),
   margin: "0",
   lineHeight: "1.5",
 };
@@ -133,20 +138,20 @@ export const value = {
 export const bodyText = {
   fontSize: "15px",
   lineHeight: "1.65",
-  color: colors.body,
+  color: t(colors.body),
   margin: "0 0 16px 0",
 };
 
 export const strong = {
   fontWeight: 700,
-  color: colors.inkText,
+  color: t(colors.inkText),
 };
 
 export const amount = {
   fontSize: "30px",
   fontWeight: 700,
   letterSpacing: "-0.02em",
-  color: colors.inkText,
+  color: t(colors.inkText),
   margin: "0 0 4px 0",
 };
 
@@ -159,14 +164,14 @@ export const divider = {
 export const muted = {
   fontSize: "14px",
   lineHeight: "1.6",
-  color: colors.muted,
+  color: t(colors.muted),
   margin: "0 0 24px 0",
 };
 
 export const closing = {
   fontSize: "15px",
   lineHeight: "1.65",
-  color: colors.body,
+  color: t(colors.body),
   margin: "24px 0 0 0",
 };
 
@@ -174,7 +179,7 @@ export const signoff = {
   fontFamily: serif,
   fontStyle: "italic",
   fontSize: "14px",
-  color: colors.muted,
+  color: t(colors.muted),
   lineHeight: "1.6",
   margin: "6px 0 0 0",
 };
@@ -184,6 +189,6 @@ export const footer = {
   margin: "28px 0 0 0",
   padding: "20px 0 0 0",
   fontSize: "11px",
-  color: colors.faint,
+  color: t(colors.faint),
   lineHeight: "1.6",
 };

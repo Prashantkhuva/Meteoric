@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
+import { Html, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import {
   page,
@@ -13,11 +14,11 @@ import {
   colors,
 } from "./theme";
 
-const star = { color: colors.inkText };
+const star = { color: `${colors.inkText} !important` };
 
 const footerLink = {
   fontSize: "12px",
-  color: colors.faint,
+  color: `${colors.faint} !important`,
   textAlign: "center",
   margin: "0",
 };
@@ -26,7 +27,7 @@ const reviewQuote = {
   fontFamily: "Georgia, 'Times New Roman', serif",
   fontStyle: "italic",
   fontSize: "15px",
-  color: colors.inkText,
+  color: `${colors.inkText} !important`,
   lineHeight: "1.6",
   margin: "0",
 };
@@ -35,10 +36,10 @@ export default function ReviewNotification({ name, email, role, company, project
   const baseUrl = siteUrl || "https://withmeteoric.com";
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>New review from {name}</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Heading style={h1}>
             New Review <span style={star}>✦</span>

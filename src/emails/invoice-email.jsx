@@ -1,4 +1,5 @@
-import { Html, Head, Preview, Body, Container, Text, Link, Img } from "react-email";
+import { Html, Preview, Body, Container, Text, Link, Img } from "react-email";
+import EmailHead from "./EmailHead";
 import EmailLogo from "./EmailLogo";
 import {
   page,
@@ -53,18 +54,18 @@ const bankSection = {
 const bankTitle = {
   fontSize: "11px",
   fontWeight: 700,
-  color: colors.inkText,
+  color: `${colors.inkText} !important`,
   textTransform: "uppercase",
   letterSpacing: "0.12em",
   margin: "0 0 12px 0",
 };
 const bankLine = {
   fontSize: "13px",
-  color: colors.body,
+  color: `${colors.body} !important`,
   lineHeight: "1.9",
   margin: 0,
 };
-const bankLabel = { color: colors.inkText, fontWeight: 600 };
+const bankLabel = { color: `${colors.inkText} !important`, fontWeight: 600 };
 
 const wiseButton = {
   display: "inline-block",
@@ -112,17 +113,17 @@ export default function InvoiceEmail({
   const paypalUrl = `${PAYPAL_ME}/${formatAmount(total)}${curr}`;
   return (
     <Html>
-      <Head />
+      <EmailHead />
       <Preview>Invoice {invoiceNumber} from Meteoric</Preview>
-      <Body style={page}>
-        <Container style={container}>
+      <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <Container className="email-card" bgcolor="#ffffff" style={container}>
           <EmailLogo />
           <Text style={eyebrow}>Invoice {invoiceNumber}</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>
             An invoice has been issued for your recent project with us.
           </Text>
-          <div style={invoiceBox}>
+          <div className="email-inset" bgcolor="#fafaf7" style={invoiceBox}>
             <Text style={boxLabel}>Invoice Number</Text>
             <Text style={boxValue}>{invoiceNumber}</Text>
             <div style={divider} />
@@ -140,7 +141,7 @@ export default function InvoiceEmail({
             )}
           </div>
           {bankAccount && (
-            <div style={bankSection}>
+            <div className="email-inset" bgcolor="#fafaf7" style={bankSection}>
               <Text style={bankTitle}>Bank Transfer Details</Text>
               {bankAccount.bank_name && (
                 <Text style={bankLine}>
