@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import {
   page,
   container,
@@ -31,7 +31,7 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <Preview>New lead from {name || email}</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Heading style={h1}>
             New Lead <span style={star}>✦</span>
           </Heading>

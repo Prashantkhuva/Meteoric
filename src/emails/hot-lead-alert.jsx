@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Section, Text, Hr, Heading, Link } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import {
   page,
   container,
@@ -45,7 +45,7 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
       </Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={badge}>Hot lead · {score}/100</Text>
           <Heading style={h1}>{lead.name || lead.email}</Heading>
           {category && <Text style={{ ...value, margin: "0 0 8px 0" }}>Category: {category}</Text>}

@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Text } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import { page, container, eyebrow, greeting, paragraph, inset, closing, signoff, footer, link, colors } from "./theme";
 
 const box = { ...inset, margin: "20px 0" };
@@ -36,7 +36,7 @@ export default function ClientWelcome({ name }) {
       <Preview>Welcome to Meteoric — Let's Build Something Great</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={eyebrow}>Welcome aboard</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>

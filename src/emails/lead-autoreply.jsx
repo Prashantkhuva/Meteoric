@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Text } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import { page, container, eyebrow, greeting, paragraph, link, closing, signoff, footer } from "./theme";
 
 export default function LeadAutoReply({ name, siteUrl }) {
@@ -11,7 +11,7 @@ export default function LeadAutoReply({ name, siteUrl }) {
       <Preview>Thank you for reaching out — we'll be in touch</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={eyebrow}>Message received</Text>
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
           <Text style={paragraph}>

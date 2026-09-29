@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Text, Link, Img } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import {
   page,
   container,
@@ -117,7 +117,7 @@ export default function InvoiceEmail({
       <Preview>Invoice {invoiceNumber} from Meteoric</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={eyebrow}>Invoice {invoiceNumber}</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>

@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Text } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import {
   page,
   container,
@@ -57,7 +57,7 @@ export default function PaymentConfirmation({
       <Preview>Payment Confirmed — Invoice {invoiceNumber}</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={eyebrow}>Payment received</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>

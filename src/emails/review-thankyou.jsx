@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Text } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import { page, container, eyebrow, greeting, paragraph, signoff, footer, link } from "./theme";
 
 export default function ReviewThankYou({ name }) {
@@ -11,7 +11,7 @@ export default function ReviewThankYou({ name }) {
       <Preview>Thank you for your review — it means a lot to us</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={eyebrow}>Thank you</Text>
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>
           <Text style={paragraph}>

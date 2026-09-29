@@ -1,6 +1,6 @@
 import { Html, Preview, Body, Container, Text, Link } from "react-email";
 import EmailHead from "./EmailHead";
-import EmailLogo from "./EmailLogo";
+import EmailBanner from "./EmailBanner";
 import { page, container, eyebrow, greeting, paragraph, primaryButton, closing, colors } from "./theme";
 
 export default function PasswordChangeRequired({ name, loginUrl }) {
@@ -10,7 +10,7 @@ export default function PasswordChangeRequired({ name, loginUrl }) {
       <Preview>Password Change Required - Meteoric Admin</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailLogo />
+          <EmailBanner />
           <Text style={eyebrow}>Security</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>
