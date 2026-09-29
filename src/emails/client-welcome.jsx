@@ -15,11 +15,11 @@ const step = {
 };
 
 const stepNum = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
+  display: "inline-block",
   width: "22px",
   height: "22px",
+  lineHeight: "22px",
+  textAlign: "center",
   backgroundColor: colors.ink,
   color: colors.onInk,
   textIndent: 0,
