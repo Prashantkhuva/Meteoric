@@ -10,15 +10,15 @@ export default function EmailBanner() {
       width="448"
       height="149"
       style={{
-        margin: "0 0 28px 0",
+        margin: "-40px -36px 32px -36px",
         padding: 0,
         display: "block",
-        width: "100%",
-        maxWidth: "448px",
+        width: "calc(100% + 72px)",
+        maxWidth: "none",
         height: "auto",
         border: 0,
         outline: 0,
-        borderRadius: "12px",
+        borderRadius: "16px 16px 0 0",
       }}
     />
   );
