@@ -35,7 +35,8 @@ export const container = {
   backgroundColor: colors.card,
   backgroundImage: `linear-gradient(${colors.card}, ${colors.card})`,
   border: `1px solid ${colors.border}`,
-  borderRadius: "16px",
+  borderRadius: "0 0 16px 16px",
+  boxSizing: "border-box",
 };
 
 export const logo = {

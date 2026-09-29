@@ -39,8 +39,8 @@ export default function ReviewNotification({ name, email, role, company, project
       <EmailHead />
       <Preview>New review from {name}</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <EmailBanner />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailBanner />
           <Heading style={h1}>
             New Review <span style={star}>✦</span>
           </Heading>

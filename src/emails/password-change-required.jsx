@@ -9,8 +9,8 @@ export default function PasswordChangeRequired({ name, loginUrl }) {
       <EmailHead />
       <Preview>Password Change Required - Meteoric Admin</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <EmailBanner />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailBanner />
           <Text style={eyebrow}>Security</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
           <Text style={paragraph}>

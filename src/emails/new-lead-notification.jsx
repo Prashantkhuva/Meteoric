@@ -30,8 +30,8 @@ export default function NewLeadNotification({ name, email, phone, services, deta
       <EmailHead />
       <Preview>New lead from {name || email}</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <EmailBanner />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailBanner />
           <Heading style={h1}>
             New Lead <span style={star}>✦</span>
           </Heading>

@@ -10,11 +10,11 @@ export default function EmailBanner() {
       width="448"
       height="149"
       style={{
-        margin: "-40px -36px 32px -36px",
+        margin: "0 auto",
         padding: 0,
         display: "block",
-        width: "calc(100% + 72px)",
-        maxWidth: "none",
+        width: "100%",
+        maxWidth: "520px",
         height: "auto",
         border: 0,
         outline: 0,

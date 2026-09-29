@@ -44,8 +44,8 @@ export default function HotLeadAlert({ lead, score, category, summary, siteUrl }
         🔥 Hot lead ({score}): {lead.name || lead.email}
       </Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
+        <EmailBanner />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
-          <EmailBanner />
           <Text style={badge}>Hot lead · {score}/100</Text>
           <Heading style={h1}>{lead.name || lead.email}</Heading>
           {category && <Text style={{ ...value, margin: "0 0 8px 0" }}>Category: {category}</Text>}
