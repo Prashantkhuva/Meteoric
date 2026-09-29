@@ -14,6 +14,16 @@ export default function ClientLayout({ children }) {
 
   useEffect(() => {
     initGtag();
+    const warmCal = async () => {
+      try {
+        const { getCalApi } = await import("@calcom/embed-react");
+        await getCalApi({ namespace: "let-s-build" });
+      } catch {
+        return;
+      }
+    };
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 2000));
+    idle(warmCal, { timeout: 2000 });
   }, []);
 
   useEffect(() => {
