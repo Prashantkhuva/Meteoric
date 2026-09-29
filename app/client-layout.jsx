@@ -16,8 +16,11 @@ export default function ClientLayout({ children }) {
     initGtag();
     const warmCal = async () => {
       try {
+        const path = window.location.pathname;
+        if (/^\/(admin|login|editor)/.test(path)) return;
         const { getCalApi } = await import("@calcom/embed-react");
-        await getCalApi({ namespace: "let-s-build" });
+        const cal = await getCalApi({ namespace: "let-s-build" });
+        cal("preload", { calLink: "prashantkhuva/let-s-build", type: "modal" });
       } catch {
         return;
       }
