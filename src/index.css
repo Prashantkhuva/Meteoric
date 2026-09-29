@@ -383,6 +383,20 @@ body::after {
   clip-path: inset(100% 0 0 0);
 }
 
+/* ── Cal modal fade ── */
+cal-modal-box {
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.35s;
+}
+
+cal-modal-box[style*="visibility: visible"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .marquee,
