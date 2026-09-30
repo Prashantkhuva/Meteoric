@@ -116,7 +116,7 @@ export default function InvoiceEmail({
       <EmailHead />
       <Preview>Invoice {invoiceNumber} from Meteoric</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Invoice" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <Text style={eyebrow}>Invoice {invoiceNumber}</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>

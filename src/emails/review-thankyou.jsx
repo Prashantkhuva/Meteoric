@@ -10,7 +10,7 @@ export default function ReviewThankYou({ name }) {
       <EmailHead />
       <Preview>Thank you for your review — it means a lot to us</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Thank you" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <Text style={eyebrow}>Thank you</Text>
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>

@@ -71,7 +71,7 @@ export default function InvitationEmail({ name, role, email, password, loginUrl 
       <EmailHead />
       <Preview>You&apos;re invited to Meteoric Admin</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Invitation" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <Text style={eyebrow}>Team invitation</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>

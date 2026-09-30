@@ -8,7 +8,7 @@ export default function CustomEmail({ html }) {
     <Html>
       <EmailHead />
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Message" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <div style={bodyText} dangerouslySetInnerHTML={{ __html: html }} />
           <Text style={signoff}>Prashant — Founder, Meteoric</Text>

@@ -64,7 +64,7 @@ export default function OverdueReminder({
         Overdue Invoice {invoiceNumber} — Please Remit Payment
       </Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Overdue" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <Text style={eyebrow}>Payment reminder</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>

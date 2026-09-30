@@ -10,7 +10,7 @@ export default function LeadAutoReply({ name, siteUrl }) {
       <EmailHead />
       <Preview>Thank you for reaching out — we'll be in touch</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Auto-reply" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <Text style={eyebrow}>Message received</Text>
           <Text style={greeting}>Hi{name ? ` ${name}` : " there"},</Text>

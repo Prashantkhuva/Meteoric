@@ -56,7 +56,7 @@ export default function PaymentConfirmation({
       <EmailHead />
       <Preview>Payment Confirmed — Invoice {invoiceNumber}</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
-        <EmailBanner />
+        <EmailBanner label="Payment" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
           <Text style={eyebrow}>Payment received</Text>
           <Text style={greeting}>Hi {name || "there"},</Text>
