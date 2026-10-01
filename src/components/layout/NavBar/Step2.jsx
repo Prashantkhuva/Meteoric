@@ -60,7 +60,7 @@ function Step2({
       <StepIndicator step={step} />
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-name">
             Name <span className="text-red-400">*</span>
           </label>
           <input
@@ -68,11 +68,12 @@ function Step2({
             value={formData.name}
             onChange={handleChange}
             placeholder="Your name"
+            id="req-name"
             className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-email">
             Email <span className="text-red-400">*</span>
           </label>
           <input
@@ -81,6 +82,7 @@ function Step2({
             value={formData.email}
             onChange={handleChange}
             placeholder="you@example.com"
+            id="req-email"
             className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
           />
         </div>
@@ -110,6 +112,7 @@ function Step2({
                     <>
                       <div className="p-2 border-b border-[var(--accent)]/8">
                         <input
+                          aria-label="Search country or code"
                           placeholder="Search country or code..."
                           value={search}
                           onChange={(e) => setSearch(e.target.value)}
@@ -182,6 +185,7 @@ function Step2({
                       <div className="p-3">
                         <input
                           autoFocus
+                          aria-label="Country calling code"
                           placeholder="+123"
                           value={formData.countryCode}
                           onChange={(e) => {
@@ -210,7 +214,7 @@ function Step2({
             </div>
           </div>
           <div className="sm:col-span-3">
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-phone">
               Phone <span className="text-red-400">*</span>
             </label>
             <input
@@ -219,12 +223,13 @@ function Step2({
               value={formData.phone}
               onChange={handleChange}
               placeholder="1122334455"
+            id="req-phone"
               className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
             />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-details">
             Project Details <span className="text-red-400">*</span>
           </label>
           <textarea
@@ -232,6 +237,7 @@ function Step2({
             value={formData.details}
             onChange={handleChange}
             placeholder="Tell me about your project..."
+            id="req-details"
             rows={3}
             className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors resize-none text-sm"
           />

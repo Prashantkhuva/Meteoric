@@ -8,9 +8,12 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
+import { workTypeLabel } from "@/lib/work-type";
 import { trackEvent } from "@/lib/analytics/gtag";
 
-const categories = ["All", ...new Set(projects.map((p) => p.category))];
+const visibleProjects = projects.filter((p) => p.draft !== true);
+
+const categories = ["All", ...new Set(visibleProjects.map((p) => p.projectType))];
 
 function ProjectCard({ project, index }) {
   return (
@@ -22,7 +25,7 @@ function ProjectCard({ project, index }) {
       <div className="relative overflow-hidden aspect-[16/10]">
         <Image
           src={project.image}
-          alt={`${project.name} — ${project.tagline} — Meteoric`}
+          alt={project.imageAlt}
           fill
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] gsap-work-img"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -32,10 +35,15 @@ function ProjectCard({ project, index }) {
       </div>
 
       <div className="flex flex-col flex-1 p-5 sm:p-6">
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
           <span className="text-[11px] font-mono tracking-widest uppercase text-[var(--text-muted)]">
-            {project.category}
+            {project.projectType}
           </span>
+          {workTypeLabel(project.workType) && (
+            <span className="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full ring-1 ring-[var(--border-color)] text-[var(--text-muted)]">
+              {workTypeLabel(project.workType)}
+            </span>
+          )}
         </div>
 
         <h2 className="text-xl sm:text-2xl font-display text-[var(--text-primary)] mb-2 tracking-tight leading-snug">
@@ -47,7 +55,9 @@ function ProjectCard({ project, index }) {
         </p>
 
         <div className="mt-auto flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-          <StaggerText>View Case Study</StaggerText>
+          <StaggerText>
+            {project.caseStudySlug ? "View Case Study" : "View Project"}
+          </StaggerText>
           <ArrowUpRight
             size={14}
             className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -70,8 +80,8 @@ export default function WorkPage() {
 
   const filteredProjects =
     activeCategory === "All"
-      ? projects
-      : projects.filter((p) => p.category === activeCategory);
+      ? visibleProjects
+      : visibleProjects.filter((p) => p.projectType === activeCategory);
 
   useGSAP(
     () => {
@@ -86,6 +96,7 @@ export default function WorkPage() {
       const split = new SplitText(headingRef.current, {
         type: "lines",
         linesClass: "split-line",
+        aria: "manual",
       });
       gsap.fromTo(
         split.lines,

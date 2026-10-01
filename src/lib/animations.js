@@ -2,7 +2,7 @@ import { gsap, SplitText } from "./gsap-setup";
 
 export function textReveal(el, options = {}) {
   if (!el) return null;
-  const split = new SplitText(el, { type: "lines", linesClass: "split-line" });
+  const split = new SplitText(el, { type: "lines", linesClass: "split-line", aria: "manual" });
   gsap.fromTo(
     split.lines,
     { y: options.y ?? 30, opacity: 0 },
@@ -23,7 +23,7 @@ export function textReveal(el, options = {}) {
 
 export function blurTextReveal(el, options = {}) {
   if (!el) return null;
-  const split = new SplitText(el, { type: "lines", linesClass: "split-line" });
+  const split = new SplitText(el, { type: "lines", linesClass: "split-line", aria: "manual" });
   gsap.fromTo(
     split.lines,
     { filter: "blur(8px)", opacity: 0.1 },

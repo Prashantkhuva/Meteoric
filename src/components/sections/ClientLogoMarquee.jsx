@@ -11,12 +11,13 @@ const defaultLogos = [
   { name: "Tailwind" },
 ];
 
-function LogoItem({ logo }) {
+function LogoItem({ logo, hidden = false }) {
   if (logo.src) {
     return (
       <img
         src={logo.src}
         alt={logo.name}
+        aria-hidden={hidden || undefined}
         loading="lazy"
         className="h-8 w-auto opacity-40 hover:opacity-70 transition-opacity"
       />
@@ -24,6 +25,7 @@ function LogoItem({ logo }) {
   }
   return (
     <span
+      aria-hidden={hidden || undefined}
       className="text-sm font-medium tracking-wide whitespace-nowrap px-6"
       style={{ color: "var(--text-muted)", fontFamily: "var(--font-secondary)" }}
     >
@@ -32,17 +34,20 @@ function LogoItem({ logo }) {
   );
 }
 
-function MarqueeRow({ logos, reverse = false }) {
+function MarqueeRow({ logos, reverse = false, duplicate = false }) {
   const doubled = [...logos, ...logos];
   return (
     <div
-      className="flex w-max"
-      style={{
-        animation: `marquee-${reverse ? "right" : "left"} 30s linear infinite`,
-      }}
+      aria-hidden={duplicate || undefined}
+      className={`flex w-max ${reverse ? "animate-marquee-right" : "animate-marquee-left"}`}
+      style={{ "--duration-per-set": "15s", "--sets": 2 }}
     >
       {doubled.map((logo, i) => (
-        <LogoItem key={`${logo.name}-${i}`} logo={logo} />
+        <LogoItem
+          key={`${logo.name}-${i}`}
+          logo={logo}
+          hidden={i >= logos.length}
+        />
       ))}
     </div>
   );
@@ -74,7 +79,7 @@ export default function ClientLogoMarquee({ logos = defaultLogos }) {
       >
         <div className="flex flex-col gap-4">
           <MarqueeRow logos={logos} />
-          <MarqueeRow logos={logos} reverse />
+          <MarqueeRow logos={logos} reverse duplicate />
         </div>
       </div>
     </section>

@@ -13,7 +13,7 @@ const projects = allProjects.slice(0, 2);
 function ProjectCard({ project, index }) {
   return (
     <a
-      href={project.link}
+      href={project.liveUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={`group block gsap-proj-card ${index % 2 === 1 ? "md:mt-12" : ""}`}
@@ -21,7 +21,7 @@ function ProjectCard({ project, index }) {
       <div className="relative rounded-[24px] overflow-hidden mb-5" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}>
         <Image
           src={project.image}
-          alt={`${project.name} — ${project.tagline} — Meteoric`}
+          alt={project.imageAlt}
           width={1600}
           height={900}
           sizes="(max-width: 768px) 90vw, 45vw"
@@ -71,7 +71,7 @@ function Projects() {
         return;
       }
 
-    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line" });
+    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line", aria: "manual" });
     gsap.fromTo(split.lines,
       { y: 40, opacity: 0 },
       {
@@ -165,7 +165,7 @@ function Projects() {
             <div className="flex items-center gap-6 shrink-0">
             <Link
               href="/work"
-              className="group inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
+              className="group inline-flex items-center gap-1.5 min-h-6 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
               style={{ color: "var(--text-secondary)" }}
             >
               Explore All Work
@@ -173,7 +173,7 @@ function Projects() {
             </Link>
             <Link
               href="/case-studies"
-              className="group inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
+              className="group inline-flex items-center gap-1.5 min-h-6 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
               style={{ color: "var(--text-muted)" }}
             >
               Case Studies

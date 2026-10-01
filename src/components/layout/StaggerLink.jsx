@@ -5,7 +5,7 @@ import Link from "next/link";
 import StaggerText from "./StaggerText";
 
 const StaggerLink = forwardRef(function StaggerLink(
-  { href, children, className, style, onClick, hoverColor, onMouseEnter, onMouseLeave },
+  { href, children, className, style, onClick, hoverColor, onMouseEnter, onMouseLeave, ...rest },
   ref
 ) {
   return (
@@ -15,8 +15,9 @@ const StaggerLink = forwardRef(function StaggerLink(
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      {...rest}
       data-no-magnetic
-      className="group relative rounded-full transition-all duration-200"
+      className="group relative inline-flex items-center min-h-6 rounded-full transition-all duration-200"
       style={{ textDecoration: "none" }}
     >
       <StaggerText

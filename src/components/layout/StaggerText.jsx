@@ -38,6 +38,7 @@ export default function StaggerText({ text, children, hoverColor, hovered: exter
                     {char}
                   </span>
                   <span
+                    aria-hidden="true"
                     className={`st-char-enter ${hovered ? "enter" : ""}`}
                     style={enterStyle}
                   >
