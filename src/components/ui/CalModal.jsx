@@ -12,6 +12,9 @@ const Cal = lazy(() => import("@calcom/embed-react"));
 const CAL_LINK = "prashantkhuva/let-s-build";
 const CAL_NAMESPACE = "let-s-build";
 
+const isNarrow = () =>
+  typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+
 export default function CalModal() {
   const [isOpen, setIsOpen] = useState(false);
   const isMounted = useSyncExternalStore(
@@ -31,7 +34,7 @@ export default function CalModal() {
         if (!cancelled)
           cal("ui", {
             hideEventTypeDetails: true,
-            layout: "column_view",
+            ...(isNarrow() ? {} : { layout: "column_view" }),
             theme: "dark",
           });
       } catch {
@@ -82,7 +85,7 @@ export default function CalModal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.97 }}
             transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex h-auto max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-[#151515] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] md:h-[80vh]"
+            className="cal-modal-shell flex h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-[#151515] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] md:h-[80vh]"
           >
             <div className="flex h-[88px] shrink-0 items-center justify-between bg-white px-6">
               <span className="text-xl font-bold tracking-tight text-black">
@@ -98,15 +101,15 @@ export default function CalModal() {
               </button>
             </div>
             <div className="relative flex min-h-0 max-h-full flex-1 flex-col items-stretch overflow-y-auto">
+              <style>{`.cal-modal-shell .cal-inline-container iframe{height:100% !important;}`}</style>
               <Suspense fallback={null}>
                 <Cal
                   namespace={CAL_NAMESPACE}
                   calLink={CAL_LINK}
                   style={{ width: "100%", height: "100%", overflow: "hidden" }}
                   config={{
-                    layout: "column_view",
                     theme: "dark",
-                    useSlotsViewOnSmallScreen: "true",
+                    ...(isNarrow() ? {} : { layout: "column_view" }),
                   }}
                 />
               </Suspense>
