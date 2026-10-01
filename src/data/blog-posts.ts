@@ -1,4 +1,6 @@
-export const blogPosts = [
+import type { Article } from "./types";
+
+export const blogPosts: Article[] = [
   {
     slug: "mongodb-schema-design-for-saas-billing",
     title: "MongoDB Schema Design for SaaS Billing",
@@ -1591,12 +1593,14 @@ export const blogPosts = [
   },
 ];
 
-export const blogTags = [...new Set(blogPosts.flatMap((p) => p.tags))];
+export const blogTags: string[] = [
+  ...new Set(blogPosts.flatMap((p) => p.tags)),
+];
 
-export function getBlogPost(slug) {
+export function getBlogPost(slug: string): Article | null {
   return blogPosts.find((p) => p.slug === slug) || null;
 }
 
-export function getBlogPostsByTag(tag) {
+export function getBlogPostsByTag(tag: string): Article[] {
   return blogPosts.filter((p) => p.tags.includes(tag));
 }
