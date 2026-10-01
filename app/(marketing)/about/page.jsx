@@ -1,82 +1,33 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { pageMetadata } from "@/lib/seo/config";
+import JsonLd from "@/components/seo/JsonLd";
+import {
+  buildBreadcrumbJsonLd,
+  buildPersonJsonLd,
+  buildFaqJsonLd,
+} from "@/lib/seo/jsonLd";
 import AboutPage from "@/components/pages/About";
 
-const pageTitle = "About Meteoric — Full-Stack Web Dev Agency";
+const pageTitle = "About Meteoric — Founder-Led Web Development Studio";
 const pageDesc =
-  "Meteoric is a web development agency for founders who want a real engineer, not a template. MERN, Next.js, and production-grade builds.";
+  "Meteoric is a founder-led web development studio for startups and SaaS. Founded in 2026 by Prashant Khuva, full-stack developer based in India.";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: pageTitle,
   description: pageDesc,
-  alternates: {
-    canonical: `${SITE_URL}/about`,
-  },
-  openGraph: {
-    title: pageTitle,
-    description: pageDesc,
-    url: `${SITE_URL}/about`,
-    images: [
-      {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1635,
-        height: 962,
-        alt: pageTitle,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@prashantkhuva_",
-    creator: "@prashantkhuva_",
-    title: pageTitle,
-    description: pageDesc,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
-  },
-};
+  path: "/about",
+});
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "About", item: `${SITE_URL}/about` },
-  ],
-};
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "" },
+  { name: "About", path: "/about" },
+]);
 
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": `${SITE_URL}/about#person`,
-  name: "Prashant Khuva",
-  url: `${SITE_URL}/about`,
-  image: `${SITE_URL}/prashant.png`,
-  jobTitle: "Founder & Full-Stack Developer",
-  sameAs: [
-    "https://github.com/Prashantkhuva",
-    "https://www.linkedin.com/company/withmeteoric",
-    "https://x.com/prashantkhuva_",
-    "https://www.instagram.com/officialmeteoric/",
-  ],
-  knowsAbout: [
-    "React",
-    "Next.js",
-    "Node.js",
-    "MERN Stack",
-    "SaaS Development",
-    "Web Development",
-    "Full-Stack Development",
-    "Product Design",
-  ],
-  description:
-    "Founder of Meteoric, a product development studio. Full-stack developer with expertise in React, Next.js, Node.js, and the MERN stack. Previously built FullStack Craft.",
-  affiliation: { "@id": `${SITE_URL}/#organization` },
-};
+const personJsonLd = buildPersonJsonLd();
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "About Meteoric | Web & Product Development Studio for Founders",
+  name: "About Meteoric — Founder-Led Web Development Studio",
   speakable: {
     "@type": "SpeakableSpecification",
     cssSelector: [".sr-only", "h1"],
@@ -86,7 +37,7 @@ const speakableJsonLd = {
 const aboutFaqs = [
   {
     question: "Who is behind Meteoric?",
-    answer: "Meteoric was founded in 2026 by Prashant Khuva, a full-stack developer and product builder based in India. Previously built FullStack Craft. Every project at Meteoric is built directly by the founder — no account managers, no agency layers.",
+    answer: "Meteoric was founded in 2026 by Prashant Khuva, a full-stack developer based in India who previously built FullStack Craft. Every project at Meteoric is built directly by the founder — no account managers, no agency layers.",
   },
   {
     question: "What kind of projects does Meteoric take on?",
@@ -102,35 +53,15 @@ const aboutFaqs = [
   },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: aboutFaqs.map((q) => ({
-    "@type": "Question",
-    name: q.question,
-    acceptedAnswer: { "@type": "Answer", text: q.answer },
-  })),
-};
+const faqSchema = buildFaqJsonLd(aboutFaqs);
 
 export default function About() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={personJsonLd} />
+      <JsonLd data={speakableJsonLd} />
+      <JsonLd data={faqSchema} />
       <AboutPage faqs={aboutFaqs} />
     </>
   );

@@ -5,7 +5,20 @@ import ClientLayout from "./client-layout";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import ErrorBoundary from "@/components/sections/ErrorBoundary";
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import JsonLd from "@/components/seo/JsonLd";
+import {
+  buildOrganizationJsonLd,
+  buildWebSiteJsonLd,
+} from "@/lib/seo/jsonLd";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_TITLE,
+  TITLE_TEMPLATE,
+  DEFAULT_DESCRIPTION,
+  GOOGLE_SITE_VERIFICATION,
+  ogImage,
+} from "@/lib/seo/config";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,55 +37,43 @@ const switzer = localFont({
   variable: "--font-switzer",
 });
 
-const metaTitle =
-  "Meteoric — Web & Software Development Agency for Startups & SaaS";
-const metaDesc =
-  "Meteoric is a founder-led software development studio building high-performance websites, SaaS platforms, and full-stack applications for startups and founders.";
-const metaDescOg =
-  "Meteoric is a founder-led web development agency building high-performance websites, SaaS platforms, and full-stack applications that actually convert. No account managers — just shipped products.";
-
+// No root-level canonical here: every indexable page declares its own
+// self-referencing canonical. A root canonical would leak to /login,
+// /editor, and /not-found.
 export const metadata = {
-  title: metaTitle,
-  description: metaDesc,
   metadataBase: new URL(SITE_URL),
-  alternates: {
-    canonical: `${SITE_URL}/`,
-  },
+  title: { default: SITE_TITLE, template: TITLE_TEMPLATE },
+  description: DEFAULT_DESCRIPTION,
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
   robots: "index, follow",
+  ...(GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: GOOGLE_SITE_VERIFICATION } }
+    : {}),
   openGraph: {
     siteName: SITE_NAME,
     locale: "en_US",
     type: "website",
-    title: metaTitle,
-    description: metaDescOg,
+    title: SITE_TITLE,
+    description: DEFAULT_DESCRIPTION,
     url: `${SITE_URL}/`,
-    images: [
-      {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1200,
-        height: 630,
-        alt: metaTitle,
-      },
-    ],
+    images: ogImage(SITE_TITLE),
   },
   twitter: {
     card: "summary_large_image",
     site: "@prashantkhuva_",
     creator: "@prashantkhuva_",
-    title: metaTitle,
-    description: metaDescOg,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
+    title: SITE_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [`${SITE_URL}/og.jpg`],
   },
   other: {
     "theme-color": "#050505",
     referrer: "origin-when-cross-origin",
-    "og:image:secure_url": `${SITE_URL}${DEFAULT_OG_IMAGE}`,
+    "og:image:secure_url": `${SITE_URL}/og.jpg`,
   },
 };
 
@@ -80,48 +81,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${switzer.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="preload" href="https://app.cal.com/embed/embed.js" as="script" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": `${SITE_URL}/#organization`,
-              name: SITE_NAME,
-              url: SITE_URL,
-              logo: `${SITE_URL}/m.png`,
-              image: `${SITE_URL}/og.jpg`,
-              description:
-                "Meteoric is a software development studio that builds high-performance websites, SaaS platforms, and full-stack applications for startups and founders.",
-              founder: { "@type": "Person", name: "Prashant Khuva" },
-              foundingDate: "2026",
-              areaServed: "Worldwide",
-              knowsAbout: [
-                "Web Development",
-                "SaaS Development",
-                "React Development",
-                "Next.js Development",
-                "Node.js Development",
-                "Full-Stack Development",
-                "Landing Page Design",
-                "Startup Web Development",
-              ],
-              sameAs: [
-                "https://github.com/Meteoric-Agency",
-                "https://www.linkedin.com/company/withmeteoric",
-                "https://x.com/prashantkhuva_",
-                "https://www.instagram.com/officialmeteoric/",
-                "https://www.wikidata.org/wiki/Q140453413",
-              ],
-              contactPoint: {
-                "@type": "ContactPoint",
-                contactType: "customer service",
-                email: "contact@withmeteoric.com",
-              },
-            }),
-          }}
-        />
+        <JsonLd data={buildOrganizationJsonLd()} />
+        <JsonLd data={buildWebSiteJsonLd()} />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link
           rel="preconnect"
@@ -132,8 +93,6 @@ export default function RootLayout({ children }) {
           }
         />
         <link rel="dns-prefetch" href="https://cal.com" />
-        <link rel="alternate" hrefLang="en" href={SITE_URL} />
-        <link rel="alternate" hrefLang="x-default" href={SITE_URL} />
         <link
           rel="alternate"
           href="/llms.txt"
