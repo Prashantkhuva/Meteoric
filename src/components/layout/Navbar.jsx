@@ -15,16 +15,10 @@ import { gsap } from "@/lib/gsap-setup";
 import Logo from "@/components/sections/Logo";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import { trackEvent } from "@/lib/analytics/gtag";
+import { headerNavLinks as navItems } from "@/data/navigation";
+import { openCalModal } from "@/components/ui/cal-modal-store";
 
 const RequestModal = lazy(() => import("./NavBar/RequestModal"));
-
-const navItems = [
-  { label: "Work", to: "/work" },
-  { label: "Services", to: "/services" },
-  { label: "About", to: "/about" },
-  { label: "Blog", to: "/blog" },
-  { label: "Case Studies", to: "/case-studies" },
-];
 
 export default function Navbar({ isHome = false }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,11 +35,7 @@ export default function Navbar({ isHome = false }) {
   const ctaRef = useRef(null);
   const isAnimating = useRef(false);
 
-  const openCal = useCallback(async () => {
-    const { getCalApi } = await import("@calcom/embed-react");
-    const cal = await getCalApi({ namespace: "let-s-build" });
-    cal("modal", { calLink: "prashantkhuva/let-s-build" });
-  }, []);
+  const openCal = useCallback(() => openCalModal(), []);
 
   const trackBookingClick = useCallback((buttonLocation) => {
     trackEvent("booking_click", { button_location: buttonLocation });
@@ -76,6 +66,13 @@ export default function Navbar({ isHome = false }) {
     isAnimating.current = true;
     const overlay = overlayRef.current;
     if (!overlay) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(overlay, { display: "none" });
+      isAnimating.current = false;
+      setIsMenuOpen(false);
+      return;
+    }
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -146,6 +143,19 @@ export default function Navbar({ isHome = false }) {
 
       overlay.focus({ preventScroll: true });
 
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        gsap.set(overlay, { display: "flex", clipPath: "none" });
+        gsap.set(linksRef.current?.children || [], { y: 0, opacity: 1 });
+        gsap.set(ctaRef.current, { y: 0, opacity: 1 });
+        isAnimating.current = false;
+        return () => {
+          overlay.removeEventListener("keydown", onKey);
+          overlay.removeEventListener("click", onOverlayClick);
+          unlockScroll();
+          if (prev && typeof prev.focus === "function") prev.focus();
+        };
+      }
+
       const tl = gsap.timeline({
         onComplete: () => {
           isAnimating.current = false;
@@ -204,6 +214,7 @@ export default function Navbar({ isHome = false }) {
         style={{
           background: navBg,
           opacity: scrolled ? 0 : 1,
+          visibility: scrolled ? "hidden" : "visible",
           pointerEvents: scrolled ? "none" : "auto",
           transition: "opacity 0.2s ease",
         }}
@@ -213,7 +224,7 @@ export default function Navbar({ isHome = false }) {
           <Link
             href="/"
             data-no-magnetic
-            className="flex shrink-0 items-center gap-2.5"
+            className="flex shrink-0 items-center gap-2.5 min-h-6"
           >
             <Logo light={!isHome} />
           </Link>
@@ -256,7 +267,7 @@ export default function Navbar({ isHome = false }) {
           <Link
             href="/"
             data-no-magnetic
-            className="flex shrink-0 items-center gap-2.5"
+            className="flex shrink-0 items-center gap-2.5 min-h-6"
           >
             <Logo light={!isHome} />
           </Link>
@@ -315,6 +326,7 @@ export default function Navbar({ isHome = false }) {
         className="fixed top-4 left-0 right-0 z-[60] lg:hidden px-4"
         style={{
           opacity: scrolled && !nearFooter ? 1 : 0,
+          visibility: scrolled && !nearFooter ? "visible" : "hidden",
           pointerEvents: scrolled && !nearFooter ? "auto" : "none",
           transform: `translateY(${scrolled && !nearFooter ? "0" : "-12px"})`,
           transition: "opacity 0.3s ease, transform 0.3s ease",
@@ -332,7 +344,7 @@ export default function Navbar({ isHome = false }) {
           <Link
             href="/"
             data-no-magnetic
-            className="flex shrink-0 items-center gap-2"
+            className="flex shrink-0 items-center gap-2 min-h-6"
           >
             <Logo light />
           </Link>
@@ -372,6 +384,7 @@ export default function Navbar({ isHome = false }) {
         className="fixed top-5 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium"
         style={{
           opacity: scrolled && !nearFooter ? 1 : 0,
+          visibility: scrolled && !nearFooter ? "visible" : "hidden",
           pointerEvents: scrolled && !nearFooter ? "auto" : "none",
           transform: `translateY(${scrolled && !nearFooter ? "0" : "-12px"})`,
           transition: "opacity 0.3s ease, transform 0.3s ease",
@@ -389,7 +402,7 @@ export default function Navbar({ isHome = false }) {
           <Link
             href="/"
             data-no-magnetic
-            className="flex shrink-0 items-center pl-3"
+            className="flex shrink-0 items-center pl-3 min-h-6"
           >
             <Logo light />
           </Link>

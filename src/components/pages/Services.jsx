@@ -7,86 +7,15 @@ import { gsap } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { serviceFaqs } from "@/data/faqs";
+import { servicesIndex, techStack } from "@/data/services";
 import { trackEvent } from "@/lib/analytics/gtag";
 import RevealImg from "@/components/ui/RevealImg";
-
-const services = [
-  {
-    num: "01",
-    title: "Landing Pages",
-    desc: "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
-    slug: "landing-pages",
-    image: "/images/service-web.webp",
-    metric: "Ships in days",
-    process: {
-      intro: "Every landing page starts with understanding your audience and ends with a page that converts. No templates — every pixel is intentional.",
-      steps: [
-        { title: "Strategy & Wireframe", desc: "We map your audience, message, and conversion flow before a single pixel is designed." },
-        { title: "Design & Animate", desc: "Visual identity meets motion design. Scroll-triggered animations and micro-interactions." },
-        { title: "Build & Optimize", desc: "Next.js, Tailwind CSS, GSAP. Blazing fast load times and SEO foundations baked in." },
-      ],
-    },
-  },
-  {
-    num: "02",
-    title: "SaaS Development",
-    desc: "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
-    slug: "saas-development",
-    image: "/images/service-saas.webp",
-    metric: "3-6 week MVP",
-    process: {
-      intro: "We build SaaS like a product studio, not an agency. Founder-level involvement and a technical stack built to scale.",
-      steps: [
-        { title: "Scope & Architect", desc: "Core 20% features that deliver 80% of value. Database schema, API design, auth flows mapped." },
-        { title: "Build & Ship MVP", desc: "Full-stack with Next.js, Supabase, and Stripe. Production-ready in 3-6 weeks." },
-        { title: "Scale & Iterate", desc: "Post-launch support, feature additions, and performance optimization." },
-      ],
-    },
-  },
-  {
-    num: "03",
-    title: "Web Applications",
-    desc: "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
-    slug: "web-applications",
-    image: "/images/service-mobile.webp",
-    metric: "Built to perform",
-    process: {
-      intro: "Whether it's an internal dashboard or a customer-facing platform, we build web apps that are fast, reliable, and a pleasure to use.",
-      steps: [
-        { title: "Discover & Map", desc: "User research, competitor analysis, and journey mapping." },
-        { title: "Design & Prototype", desc: "Wireframes to high-fidelity design to interactive prototype." },
-        { title: "Develop & Deploy", desc: "Clean code with Next.js, Node.js, and Supabase. Real-time features and API integrations." },
-      ],
-    },
-  },
-  {
-    num: "04",
-    title: "Full-Stack Development",
-    desc: "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
-    slug: "startup-web-development",
-    image: "/images/service-web.webp",
-    metric: "One team, full stack",
-    process: {
-      intro: "No coordinating multiple vendors. We handle the entire stack — from database schema to pixel-perfect UI.",
-      steps: [
-        { title: "Architecture & Planning", desc: "Technical stack selection, system architecture, and database design." },
-        { title: "Build & Integrate", desc: "Frontend, backend, APIs, third-party integrations. Everything built to work together." },
-        { title: "Launch & Optimize", desc: "Performance optimization, SEO foundations, accessibility checks, and speed audits." },
-      ],
-    },
-  },
-];
-
-const techStack = ["Next.js", "React", "Supabase", "Node.js", "Tailwind CSS", "GSAP", "Stripe", "PostgreSQL"];
+import { openCalModal } from "@/components/ui/cal-modal-store";
 
 export default function ServicesPage() {
   const cardsRef = useRef(null);
 
-  const openCal = useCallback(async () => {
-    const { getCalApi } = await import("@calcom/embed-react");
-    const cal = await getCalApi({ namespace: "let-s-build" });
-    cal("modal", { calLink: "prashantkhuva/let-s-build" });
-  }, []);
+  const openCal = useCallback(() => openCalModal(), []);
 
   useGSAP(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -143,7 +72,7 @@ export default function ServicesPage() {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {services.map((svc) => (
+            {servicesIndex.map((svc) => (
               <Link
                 key={svc.num}
                 href={`/services/${svc.slug}`}
@@ -173,7 +102,7 @@ export default function ServicesPage() {
                     {svc.title}
                   </h2>
                   <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>
-                    {svc.desc}
+                    {svc.shortDescription}
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-300" style={{ color: "rgba(255,255,255,0.6)" }}>
                     Learn more
@@ -182,6 +111,62 @@ export default function ServicesPage() {
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Intent-based landing links */}
+      <section className="pb-16">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          <div
+            className="rounded-2xl ring-1 ring-[var(--border-color)] p-8 md:p-10"
+            style={{ background: "var(--card-bg)" }}
+          >
+            <h2 className="text-xl md:text-2xl font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+              Know what you are looking for?
+            </h2>
+            <p className="text-sm leading-relaxed mb-6 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
+              Start with the outcome you need — these pages answer the same
+              questions our team hears on every first call.
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+              <li>
+                <Link
+                  href="/saas-mvp-development"
+                  className="text-sm inline-flex items-center min-h-6 hover:text-[var(--accent)] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Validate a SaaS idea with a buildable MVP →
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/nextjs-development-agency"
+                  className="text-sm inline-flex items-center min-h-6 hover:text-[var(--accent)] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Hire a Next.js agency for your site or product →
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/startup-landing-page-design"
+                  className="text-sm inline-flex items-center min-h-6 hover:text-[var(--accent)] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Design a launch page for your startup →
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/web-app-development"
+                  className="text-sm inline-flex items-center min-h-6 hover:text-[var(--accent)] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Build a custom web app, dashboard, or portal →
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -197,8 +182,15 @@ export default function ServicesPage() {
           <div className="absolute left-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--bg-primary), transparent)" }} />
           <div className="absolute right-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
           <div className="flex w-max whitespace-nowrap animate-marquee-left" style={{ "--sets": 6 }}>
-            {[...Array(6)].flatMap(() => techStack).map((tech, i) => (
-              <span key={i} className="px-6 md:px-10 text-3xl md:text-5xl font-display transition-colors duration-500" style={{ color: "var(--text-primary)", opacity: 0.08 }}>
+            {[...Array(6)].flatMap((_, setIndex) =>
+              techStack.map((tech, i) => ({ setIndex, tech, i })),
+            ).map(({ setIndex, tech, i }) => (
+              <span
+                key={`${setIndex}-${i}`}
+                aria-hidden={setIndex > 0 || undefined}
+                className="px-6 md:px-10 text-3xl md:text-5xl font-display transition-colors duration-500"
+                style={{ color: "var(--text-primary)", opacity: 0.08 }}
+              >
                 {tech}
               </span>
             ))}

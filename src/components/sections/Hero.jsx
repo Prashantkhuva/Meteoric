@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useRef, Suspense, lazy } from "react";
+import { useCallback, useEffect, useRef, useState, Suspense, lazy } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import Link from "next/link";
 import GridLines from "@/components/ui/GridLines";
 import { trackEvent } from "@/lib/analytics/gtag";
+import { openCalModal } from "@/components/ui/cal-modal-store";
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
@@ -28,12 +29,20 @@ function Hero() {
   const subtextRef = useRef(null);
   const ctaRef = useRef(null);
   const vignetteRef = useRef(null);
+  const [sceneReady, setSceneReady] = useState(false);
 
-  const openCal = useCallback(async () => {
-    const { getCalApi } = await import("@calcom/embed-react");
-    const cal = await getCalApi({ namespace: "let-s-build" });
-    cal("modal", { calLink: "prashantkhuva/let-s-build" });
+  useEffect(() => {
+    const idle =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback(() => setSceneReady(true), { timeout: 3500 })
+        : setTimeout(() => setSceneReady(true), 3500);
+    return () => {
+      if (typeof cancelIdleCallback !== "undefined") cancelIdleCallback(idle);
+      else clearTimeout(idle);
+    };
   }, []);
+
+  const openCal = useCallback(() => openCalModal(), []);
 
   useGSAP(
     () => {
@@ -51,10 +60,12 @@ function Hero() {
         const mainSplit = new SplitText(mainTextRef.current, {
           type: "lines",
           linesClass: "split-line",
+          aria: "manual",
         });
         const mutedSplit = new SplitText(mutedTextRef.current, {
           type: "lines",
           linesClass: "split-line",
+          aria: "manual",
         });
         const allLines = [...mainSplit.lines, ...mutedSplit.lines];
 
@@ -93,11 +104,7 @@ function Hero() {
 
       };
 
-      if (typeof requestIdleCallback !== "undefined") {
-        requestIdleCallback(run, { timeout: 1200 });
-      } else {
-        setTimeout(run, 100);
-      }
+      run();
     },
     { scope: containerRef },
   );
@@ -111,7 +118,7 @@ function Hero() {
       {/* 3D scene canvas */}
       <div className="absolute inset-0" aria-hidden="true">
         <Suspense fallback={<HeroFallback />}>
-          <HeroScene />
+          {sceneReady ? <HeroScene /> : <HeroFallback />}
         </Suspense>
       </div>
 

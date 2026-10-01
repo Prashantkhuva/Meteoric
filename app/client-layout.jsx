@@ -2,11 +2,13 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/layout/Preloader";
 import RouteCurtain from "@/components/layout/RouteCurtain";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import CalModal from "@/components/ui/CalModal";
 import { initGtag, trackPageView } from "@/lib/analytics/gtag";
 
 export default function ClientLayout({ children }) {
@@ -14,19 +16,6 @@ export default function ClientLayout({ children }) {
 
   useEffect(() => {
     initGtag();
-    const warmCal = async () => {
-      try {
-        const path = window.location.pathname;
-        if (/^\/(admin|login|editor)/.test(path)) return;
-        const { getCalApi } = await import("@calcom/embed-react");
-        const cal = await getCalApi({ namespace: "let-s-build" });
-        cal("preload", { calLink: "prashantkhuva/let-s-build", type: "modal" });
-      } catch {
-        return;
-      }
-    };
-    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 2000));
-    idle(warmCal, { timeout: 2000 });
   }, []);
 
   useEffect(() => {
@@ -36,7 +25,8 @@ export default function ClientLayout({ children }) {
   const isAdmin =
     pathname.startsWith("/admin") ||
     pathname.startsWith("/login") ||
-    pathname.startsWith("/editor");
+    pathname === "/editor" ||
+    pathname.startsWith("/editor/");
 
   return (
     <>
@@ -54,10 +44,11 @@ export default function ClientLayout({ children }) {
         children
       ) : (
         <main id="main-content" style={{ background: "var(--bg-primary)" }}>
-          {children}
+          <MotionConfig reducedMotion="user">{children}</MotionConfig>
         </main>
       )}
       {!isAdmin && <Footer />}
+      {!isAdmin && <CalModal />}
     </>
   );
 }
