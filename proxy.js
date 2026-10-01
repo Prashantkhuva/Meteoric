@@ -35,6 +35,21 @@ export async function proxy(request) {
     return NextResponse.next();
   }
 
+  // 0. Case normalization → lowercase 301. Destination is fully canonical
+  //    (https + withmeteoric.com), so http/uppercase/WWW variants collapse
+  //    into a single hop with no loops. Token routes stay untouched.
+  const skipCaseNormalize =
+    pn.startsWith("/share/") ||
+    pn.startsWith("/preview/") ||
+    pn.startsWith("/_next/") ||
+    pn.startsWith("/api/");
+  if (!skipCaseNormalize && pn !== pn.toLowerCase()) {
+    const url = new URL(
+      `https://withmeteoric.com${pn.toLowerCase()}${request.nextUrl.search}`,
+    );
+    return Response.redirect(url, 301);
+  }
+
   // 1. Redirect http → https (skip localhost/127.0.0.1 in dev)
   const isLocalhost = host.includes("localhost") || host.startsWith("127.") || host.startsWith("0.0.0.0");
   if (request.nextUrl.protocol === "http:" && !isLocalhost) {

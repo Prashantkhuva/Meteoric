@@ -168,7 +168,7 @@ export default function Footer() {
 
         {/* ── LINK COLUMNS ── */}
         <div
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 py-10 sm:py-12 border-t"
+          className="grid grid-cols-2 md:grid-cols-5 gap-8 py-10 sm:py-12 border-t"
           style={{ borderColor: "var(--footer-border)" }}
         >
           {/* Brand column */}

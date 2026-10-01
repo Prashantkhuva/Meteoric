@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 
 const pageTitle = "Software Development Services — SaaS & Web Apps";
 const pageDesc =
-  "Explore Meteoric's software development services for startups and businesses, from SaaS development and Next.js applications to landing pages and full-stack web development.";
+  "Explore Meteoric's software development services for startups — SaaS development, Next.js applications, landing pages, and full-stack web development.";
 
 export const metadata = pageMetadata({
   title: pageTitle,

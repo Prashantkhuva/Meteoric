@@ -26,6 +26,15 @@ export const footerColumns: FooterLinkColumn[] = [
     ],
   },
   {
+    heading: "Popular Services",
+    links: [
+      { label: "SaaS MVP Development", to: "/saas-mvp-development" },
+      { label: "Next.js Development Agency", to: "/nextjs-development-agency" },
+      { label: "Startup Landing Page Design", to: "/startup-landing-page-design" },
+      { label: "Web App Development", to: "/web-app-development" },
+    ],
+  },
+  {
     heading: "Company",
     links: [
       { label: "Work", to: "/work" },

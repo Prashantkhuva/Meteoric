@@ -1,5 +1,6 @@
 import HomePage from "@/components/pages/Home";
 import HomeHashScroll from "./HomeHashScroll";
+import Link from "next/link";
 import { SITE_URL, pageMetadata } from "@/lib/seo/config";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildHowToJsonLd, buildFaqJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
@@ -80,6 +81,60 @@ const navigationSchema = {
   ],
 };
 
+const popularServices = [
+  { label: "SaaS MVP Development", to: "/saas-mvp-development" },
+  { label: "Next.js Development Agency", to: "/nextjs-development-agency" },
+  { label: "Startup Landing Page Design", to: "/startup-landing-page-design" },
+  { label: "Web App Development", to: "/web-app-development" },
+];
+
+function PopularServices() {
+  return (
+    <section
+      aria-labelledby="popular-services-heading"
+      className="border-t"
+      style={{ borderColor: "var(--border-color)" }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-12 sm:py-16">
+        <h2
+          id="popular-services-heading"
+          className="text-xs font-semibold uppercase tracking-wider mb-6"
+          style={{ color: "var(--text-muted)" }}
+        >
+          Popular services
+        </h2>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {popularServices.map((service) => (
+            <li key={service.to}>
+              <Link
+                href={service.to}
+                className="block h-full rounded-xl border p-5 transition-colors hover:border-[var(--border-hover)]"
+                style={{
+                  borderColor: "var(--border-color)",
+                  background: "var(--card-bg)",
+                }}
+              >
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: "var(--text-body)" }}
+                >
+                  {service.label}
+                </span>
+                <span
+                  className="mt-1 block text-xs"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  View service
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export default async function Home() {
   return (
     <>
@@ -89,6 +144,7 @@ export default async function Home() {
       <JsonLd data={howToSchema} />
       <JsonLd data={faqSchema} />
       <HomePage />
+      <PopularServices />
       <HomeHashScroll />
     </>
   );

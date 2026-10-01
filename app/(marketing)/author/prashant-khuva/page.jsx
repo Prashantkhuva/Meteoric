@@ -11,7 +11,7 @@ const authorData = {
   name: "Prashant Khuva",
   title: "Founder & Full-Stack Developer",
   company: SITE_NAME,
-  bio: "Founder of Meteoric. Full-stack developer specializing in React, Next.js, Node.js, and Supabase. Direct founder involvement — no account managers.",
+  bio: "Full-stack developer specializing in React, Next.js, Node.js & Supabase. No account managers.",
   longBio:
     "Founder of Meteoric. Full-stack developer specializing in React, Next.js, Node.js, and Supabase. Direct founder involvement — no account managers. He writes here about the work behind those products — SaaS architecture, database design, performance, animation, and the SEO that makes them findable — based on projects actually shipped for startups, not tutorials. Every article is reviewed and verified by hand before it goes live.",
   credentials: [
@@ -63,13 +63,13 @@ function formatDate(dateStr) {
 export function generateMetadata() {
   return {
     title: `${authorData.name} — ${authorData.title}`,
-    description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+    description: `${authorData.name} — ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
     alternates: {
       canonical: `${SITE_URL}/author/prashant-khuva`,
     },
     openGraph: {
       title: `${authorData.name} — ${authorData.title}`,
-      description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+      description: `${authorData.name} — ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
       url: `${SITE_URL}/author/prashant-khuva`,
       type: "profile",
       images: [
@@ -87,7 +87,7 @@ export function generateMetadata() {
       site: "@prashantkhuva_",
       creator: "@prashantkhuva_",
       title: `${authorData.name} — ${authorData.title}`,
-      description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+      description: `${authorData.name} — ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
       images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
     },
   };
