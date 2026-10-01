@@ -1,50 +1,23 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { pageMetadata } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
-import { buildFaqJsonLd, buildHowToJsonLd } from "@/lib/seo/jsonLd";
+import { buildFaqJsonLd, buildHowToJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 import { serviceFaqs } from "@/data/faqs";
+import JsonLd from "@/components/seo/JsonLd";
 
-const pageTitle = "Software Development Services | SaaS, Web Apps & Next.js | Meteoric";
+const pageTitle = "Software Development Services — SaaS & Web Apps";
 const pageDesc =
   "Explore Meteoric's software development services for startups and businesses, from SaaS development and Next.js applications to landing pages and full-stack web development.";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: pageTitle,
   description: pageDesc,
-  alternates: {
-    canonical: `${SITE_URL}/services`,
-  },
-  openGraph: {
-    title: pageTitle,
-    description: pageDesc,
-    url: `${SITE_URL}/services`,
-    images: [
-      {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1200,
-        height: 630,
-        alt: pageTitle,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@prashantkhuva_",
-    creator: "@prashantkhuva_",
-    title: pageTitle,
-    description: pageDesc,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
-  },
-};
+  path: "/services",
+});
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` },
-  ],
-};
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "" },
+  { name: "Services", path: "/services" }
+]);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -80,22 +53,10 @@ const howToSchema = buildHowToJsonLd([
 export default function Services() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={speakableJsonLd} />
+      <JsonLd data={howToSchema} />
+      <JsonLd data={faqJsonLd} />
       <ServicesPage />
     </>
   );

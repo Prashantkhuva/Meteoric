@@ -1,36 +1,24 @@
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME, pageMetadata } from "@/lib/seo/config";
 import Link from "next/link";
+import JsonLd from "@/components/seo/JsonLd";
+import { ORG_ID, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = `Editorial Policy | ${SITE_NAME}`;
+const pageTitle = "Editorial Policy";
 const pageDesc =
   "How Meteoric creates, reviews, and maintains blog content. Our editorial standards ensure accuracy, expertise, and usefulness for every article.";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: pageTitle,
   description: pageDesc,
-  alternates: {
-    canonical: `${SITE_URL}/editorial-policy`,
-  },
-  openGraph: {
-    title: pageTitle,
-    description: pageDesc,
-    url: `${SITE_URL}/editorial-policy`,
-    siteName: SITE_NAME,
-    type: "website",
-    locale: "en_US",
-    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@prashantkhuva_",
-    creator: "@prashantkhuva_",
-    title: pageTitle,
-    description: pageDesc,
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/editorial-policy",
+});
 
 export default function EditorialPolicyPage() {
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "" },
+    { name: "Editorial Policy", path: "/editorial-policy" },
+  ]);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -39,6 +27,7 @@ export default function EditorialPolicyPage() {
     url: `${SITE_URL}/editorial-policy`,
     publisher: {
       "@type": "Organization",
+      "@id": ORG_ID,
       name: SITE_NAME,
       url: SITE_URL,
     },
@@ -46,10 +35,8 @@ export default function EditorialPolicyPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={jsonLd} />
       <div className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
         <div className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           <div className="mb-12">
@@ -84,8 +71,15 @@ export default function EditorialPolicyPage() {
                 Who Writes Our Content
               </h2>
               <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
-                All blog content on withmeteoric.com is written or reviewed by
-                Prashant Khuva, Founder &amp; Full-Stack Developer at Meteoric.
+                All blog content on withmeteoric.com is written or reviewed by{" "}
+                <Link
+                  href="/author/prashant-khuva"
+                  className="underline-offset-4 hover:underline transition-all duration-200 hover:opacity-70"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Prashant Khuva
+                </Link>
+                , Founder &amp; Full-Stack Developer at Meteoric.
                 Every article reflects real project experience — we only write
                 about technologies and approaches we have shipped in production
                 for clients. We do not publish AI-generated content without

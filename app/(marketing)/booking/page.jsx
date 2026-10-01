@@ -1,48 +1,22 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { pageMetadata } from "@/lib/seo/config";
 import CalBooking from "@/components/pages/CalBooking";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Book a Call with Meteoric — Free Consult";
+const pageTitle = "Book a Free Strategy Call — Start a Project";
 const pageDesc =
   "Talk through your project with Meteoric before you commit. 20-minute call, no pressure, straight answers on scope and stack.";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: pageTitle,
   description: pageDesc,
-  alternates: {
-    canonical: `${SITE_URL}/booking`,
-  },
-  openGraph: {
-    title: pageTitle,
-    description: pageDesc,
-    url: `${SITE_URL}/booking`,
-    images: [
-      {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1635,
-        height: 962,
-        alt: pageTitle,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@prashantkhuva_",
-    creator: "@prashantkhuva_",
-    title: pageTitle,
-    description: pageDesc,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
-  },
-};
+  path: "/booking",
+});
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "Book a Call", item: `${SITE_URL}/booking` },
-  ],
-};
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "" },
+  { name: "Book a Call", path: "/booking" }
+]);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -57,14 +31,8 @@ const speakableJsonLd = {
 export default function BookingPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={speakableJsonLd} />
       <CalBooking />
     </>
   );

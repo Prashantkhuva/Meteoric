@@ -1,49 +1,23 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME, pageMetadata } from "@/lib/seo/config";
 import WorkPage from "@/components/pages/Work";
 import { projects } from "@/data/projects";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildBreadcrumbJsonLd, ORG_ID } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Our Work — Web Dev Case Studies | Meteoric";
+const pageTitle = "Our Work — Web Design & Development Projects";
 const pageDesc =
   "See how Meteoric builds SaaS MVPs, dashboards, and full-stack products for startups. Real projects, real code, real outcomes.";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: pageTitle,
   description: pageDesc,
-  alternates: {
-    canonical: `${SITE_URL}/work`,
-  },
-  openGraph: {
-    title: pageTitle,
-    description: pageDesc,
-    url: `${SITE_URL}/work`,
-    images: [
-      {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        secureUrl: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1635,
-        height: 962,
-        alt: pageTitle,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@prashantkhuva_",
-    creator: "@prashantkhuva_",
-    title: pageTitle,
-    description: pageDesc,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
-  },
-};
+  path: "/work",
+});
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
-  ],
-};
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "" },
+  { name: "Work", path: "/work" }
+]);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -57,37 +31,31 @@ const speakableJsonLd = {
 
 const creativeWorkSchema = {
   "@context": "https://schema.org",
-  "@graph": projects.map((p) => ({
-    "@type": "CreativeWork",
-    name: p.name,
-    description: p.description,
-    url: `${SITE_URL}/work/${p.slug}`,
-    image: `${SITE_URL}${p.image}`,
-    keywords: p.tags.join(", "),
-    author: {
-      "@type": "Organization",
-      name: "Meteoric",
-      url: SITE_URL,
-    },
-    inLanguage: "en-US",
-  })),
+  "@graph": projects
+    .filter((p) => p.slug && p.draft !== true)
+    .map((p) => ({
+      "@type": "CreativeWork",
+      name: p.name,
+      description: p.description,
+      url: `${SITE_URL}/work/${p.slug}`,
+      image: `${SITE_URL}${p.image}`,
+      keywords: p.technology.join(", "),
+      author: {
+        "@type": "Organization",
+        "@id": ORG_ID,
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      inLanguage: "en-US",
+    })),
 };
 
 export default function Work() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={speakableJsonLd} />
+      <JsonLd data={creativeWorkSchema} />
       <WorkPage />
     </>
   );

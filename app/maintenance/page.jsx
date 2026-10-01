@@ -1,7 +1,7 @@
 import { Wrench } from "lucide-react";
 
 export const metadata = {
-  title: "We'll Be Right Back | Meteoric",
+  title: "We'll Be Right Back",
   description:
     "Meteoric is currently undergoing scheduled maintenance. We'll be back soon.",
   robots: "noindex, nofollow",
