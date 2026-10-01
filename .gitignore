@@ -50,3 +50,14 @@ nul
 claude-blog/
 blog-export/
 opencode.json
+
+# TypeScript
+*.tsbuildinfo
+
+# Local QA/audit artifacts (disposable — regenerate any time)
+lh-*.json
+lighthouse-report*.json
+shift-before*.jpeg
+shift-after*.jpeg
+shot-cal.mjs
+probe*.mjs

@@ -262,15 +262,16 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 ## GEO (Generative Engine Optimization)
 - Goal: Get cited by ChatGPT, Claude, Perplexity, Gemini for queries about "web development agency", "SaaS development", etc.
 - `robots.txt` allows GPTBot, ClaudeBot, PerplexityBot (only blocks /admin and /login)
-- `public/llms.txt` — curated AI crawler index with all pages, projects, stats, and citation guidelines
+- `public/llms.txt` + `public/llms-full.txt` — curated AI crawler index (static files, the established architecture). **Update process:** whenever blog posts are added/removed/renamed (`src/data/blog-posts.ts`), a project live URL changes (`src/data/projects.ts`), or a public route is added/removed, sync both files in the same change: blog count and blog list in `llms.txt` must match published posts exactly (newest first, exact titles/slugs), portfolio/outbound project URLs must use the `liveUrl` field (canonical Habit Flow URL: `https://habitflow.indevs.in/`), and internal links must point at real routes (never anchors for pages that now exist, e.g. `/contact`). Never list drafts, previews, admin, or unpublished content. Then run `npm run build` and verify every `withmeteoric.com` URL in both files returns 200.
 - **Schema markups deployed:**
   - `Organization` with `sameAs` (GitHub, LinkedIn, X, Instagram) — `app/layout.jsx`
   - `Person` for Prashant Khuva with `sameAs`, `knowsAbout`, `jobTitle` — `app/(marketing)/about/page.jsx`
   - `BreadcrumbList` on Home, Work, About pages
-  - `Review` (star ratings) + `FAQPage` (5 Q&A) — `src/components/sections/TestimonialsSection.jsx`
+  - `FAQPage` (5 Q&A) — `src/components/sections/TestimonialsSection.jsx`
   - `HowTo` (4-step process) — `src/components/sections/ProcessSection.jsx`
   - `CreativeWork` (portfolio projects) — `app/(marketing)/work/page.jsx`
   - `ProfessionalService` + `WebSite` with `SearchAction` — `app/layout.jsx`
+  - **No `AggregateRating` or `Review` schema is currently emitted anywhere.** This is intentional: it stays that way unless (a) independently verifiable review data exists and (b) Google eligibility requirements for the rich result are established. Structured data must always match visible page content — rule encoded in `src/lib/seo/jsonLd.js`.
 - Projects: 4 portfolio items with outcome metrics in descriptions
 - To run AI citation check: `node scripts/check-ai-citations.mjs`
 - To submit to IndexNow (Bing/ChatGPT index): `node scripts/submit-indexnow.mjs`
@@ -293,7 +294,7 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 - [x] Dedicated case studies section (`/case-studies`) with metrics-heavy template
 - [x] Core Web Vitals audit — SpeedInsights installed & collecting RUM data on Vercel
 - [x] GEO: `llms.txt` + `llms-full.txt` with answer capsules and cite-worthy content
-- [x] GEO: Speakable schema for voice search, AggregateRating on Organization
+- [x] GEO: Speakable schema for voice search (no `AggregateRating`/`Review` schema — intentional, see GEO note above)
 - [x] AEO: Services page FAQ section with FAQPage JSON-LD schema
 - [x] SEO: Security headers (CSP, HSTS, X-Frame-Options, Permissions-Policy)
 - [x] SEO: robots.txt allows all AI crawlers (GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, anthropic-ai, PerplexityBot, Google-Extended)
@@ -324,6 +325,11 @@ CALCOM_API_KEY
 NEXT_PUBLIC_SITE_URL
 CLOUDFLARE_API_TOKEN
 ```
+
+**`NEXT_PUBLIC_SITE_URL` — local vs production:**
+- `.env.local` (gitignored) sets `http://localhost:3000` for local dev; `.env` (gitignored, Vercel env in prod) sets `https://withmeteoric.com`. Both currently define it — harmless but keep them consistent so share links can't diverge.
+- SEO output (canonical, `og:url`, sitemap) does **not** read this variable — it uses hardcoded `SITE_URL` in `src/lib/seo/config.js` (production domain only, never deployment domains).
+- `getSiteUrl()` (`src/config/site-url.js`): browser → `window.location.origin`; server → `NEXT_PUBLIC_SITE_URL` with `http://localhost:3000` fallback. Used for preview/invoice/proposal share links, transactional emails, WhatsApp share links. Never hardcode a URL into production code for these — set the env var per environment.
 
 ## Google Indexing API (Bulk Reindexing)
 - **Service account key:** `C:\Users\PRASHANT\Downloads\gcp-mcp-503913-1a46f0314665.json`
