@@ -1,17 +1,31 @@
-export const caseStudies = [
+import type { CaseStudy } from "./types";
+
+// Content rules (verified 2026-09-29):
+// - liveUrlVerified: all four URLs fetched HTTP 200 with matching titles
+//   ("Live site" button renders only when this flag is true).
+// - resultsVerified: set ONLY for metrics checked against a public source.
+//   Results section stays hidden until each metric is verified.
+// - workType set where evidence is clear (lete-em-know=client,
+//   mobile-preview-simulator=internal). habit-flow + megablog:
+//   TODO(content): classify (client | internal | concept | open-source).
+
+export const caseStudies: CaseStudy[] = [
   {
     slug: "letem-know",
     name: "Let'em Know",
     tagline: "Premium agency site with GSAP animations & smooth scroll.",
+    projectType: "Web Design",
+    industry: "Marketing",
+    workType: "client",
     client: "Let'em Know — Gurgaon-based marketing agency",
     timeline: "4 weeks",
     role: "Full-stack development, animation engineering",
-    metaTitle: "Let'em Know — Premium Agency Website Case Study | Meteoric",
+    metaTitle: "Let'em Know — Premium Agency Website Case Study",
     metaDescription:
       "How Meteoric built a high-performance marketing agency website with canvas particle hero, GSAP scroll animations, Lenis smooth scroll, and Calendly booking flow.",
-    problem:
+    challenge:
       "The project focused on building a modern, responsive marketing website with richer visual interactions and a clearer path from browsing to booking a call.",
-    approach:
+    solution:
       "Built a modern agency site with a focus on motion, scroll-driven storytelling, and a booking flow integrated directly into the page.",
     whatWasBuilt:
       "A single-page agency website with a canvas particle system hero animation, GSAP-powered scroll sequences, Lenis smooth scroll integration, infinite-scroll testimonial columns, and a Calendly popup contact flow. The entire site is built with React and Tailwind CSS.",
@@ -49,11 +63,14 @@ export const caseStudies = [
         description: "GSAP-powered scroll",
       },
     ],
-    link: "https://agency-v2-theta.vercel.app/",
+    liveUrl: "https://agency-v2-theta.vercel.app/",
+    liveUrlVerified: true,
     image: "/letem-know.webp",
+    imageAlt:
+      "Let'em Know agency website preview with the interactive particle hero section",
     gradient: "from-white/[0.04] to-white/[0.01]",
     accent: "#1c1917",
-    tags: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
+    technology: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
     serviceLink: { label: "Landing Page Design", href: "/services/landing-pages" },
     relatedProjects: ["habit-flow", "megablog"],
   },
@@ -61,15 +78,17 @@ export const caseStudies = [
     slug: "habit-flow",
     name: "Habit Flow",
     tagline: "Build habits. Track streaks. Stay consistent.",
+    projectType: "SaaS",
+    // TODO(content): classify — evidence unclear (client | internal | concept).
     client: "SaaS habit-tracking application",
     timeline: "3 weeks (MVP)",
     role: "Full-stack development, product strategy",
-    metaTitle: "Habit Flow — Full-Stack SaaS MVP Case Study | Meteoric",
+    metaTitle: "Habit Flow — Full-Stack SaaS MVP Case Study",
     metaDescription:
       "How Meteoric shipped a full-stack habit tracking SaaS MVP in 3 weeks with streak tracking, analytics, reminders, and 200+ beta users.",
-    problem:
+    challenge:
       "The project required a production-ready MVP with authentication, persistent data, analytics, and a clean dashboard — shipped quickly enough to test with real users and validate the concept.",
-    approach:
+    solution:
       "Shipped the core loop first — create habit, check in, track streak — then layered analytics, reminders, and polish on top.",
     whatWasBuilt:
       "A full-stack SaaS application with user authentication, habit CRUD, daily check-in flow, streak tracking engine, weekly analytics dashboard, and reminder notifications. The backend is a Node.js/Express API with MongoDB persistence. The frontend is a React single-page application with a responsive dashboard.",
@@ -103,11 +122,13 @@ export const caseStudies = [
         description: "validated with real users",
       },
     ],
-    link: "https://habitflow.indevs.in/",
+    liveUrl: "https://habitflow.indevs.in/",
+    liveUrlVerified: true,
     image: "/habit-flow.webp",
+    imageAlt: "Preview of the Habit Flow habit-tracking web app",
     gradient: "from-white/[0.04] to-white/[0.01]",
     accent: "#1c1917",
-    tags: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
+    technology: ["React", "Node.js", "MongoDB", "Express", "JWT Auth"],
     serviceLink: {
       label: "SaaS Development",
       href: "/services/saas-development",
@@ -118,15 +139,17 @@ export const caseStudies = [
     slug: "megablog",
     name: "MegaBlog",
     tagline: "A dark editorial blogging platform.",
+    projectType: "Web App",
+    // TODO(content): classify — evidence unclear (client | internal | concept).
     client: "Blog / editorial platform",
     timeline: "5 weeks",
     role: "Full-stack development, UI/UX design",
-    metaTitle: "MegaBlog — Editorial Blog Platform Case Study | Meteoric",
+    metaTitle: "MegaBlog — Editorial Blog Platform Case Study",
     metaDescription:
       "How Meteoric built MegaBlog: a React 19 + Appwrite editorial platform with TinyMCE rich text editing, full CRUD, and dark editorial design.",
-    problem:
+    challenge:
       "The project required a fast, minimal editorial platform where writers could publish posts quickly — with a rich text editor, image support, and a clean writing environment.",
-    approach:
+    solution:
       "Built a purpose-fit editorial platform: rich text editing with TinyMCE, Appwrite backend for auth and storage, Redux Toolkit for state management. The focus was on making the publish flow as fast as possible.",
     whatWasBuilt:
       "A full-stack blog platform with a dark editorial aesthetic. Writers get a rich TinyMCE editor with formatting controls, image upload, and draft management. Posts are stored in Appwrite with file storage for images. The platform supports full CRUD operations — create, edit, delete, and publish posts. A Redux Toolkit store manages global state across the editorial workflow.",
@@ -164,11 +187,13 @@ export const caseStudies = [
         description: "modern, maintainable codebase",
       },
     ],
-    link: "https://megablog.vercel.app/",
+    liveUrl: "https://megablog.vercel.app/",
+    liveUrlVerified: true,
     image: "/megablog.webp",
+    imageAlt: "Preview of the MegaBlog editorial publishing platform",
     gradient: "from-white/[0.04] to-white/[0.01]",
     accent: "#1c1917",
-    tags: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
+    technology: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
     serviceLink: {
       label: "Web Application Development",
       href: "/services/web-applications",
@@ -179,16 +204,18 @@ export const caseStudies = [
     slug: "mobile-preview-simulator",
     name: "Mobile Preview Simulator",
     tagline: "Preview responsive mobile screens directly inside VS Code.",
+    projectType: "Developer Tools",
+    workType: "internal",
     client: "Developer tool — VS Code Marketplace",
     timeline: "1 week",
     role: "VS Code extension development",
     metaTitle:
-      "Mobile Preview Simulator — VS Code Extension Case Study | Meteoric",
+      "Mobile Preview Simulator — VS Code Extension Case Study",
     metaDescription:
-      "How Meteoric built a VS Code extension for previewing responsive mobile layouts directly in the editor — 500+ installs, 4.5-star rating.",
-    problem:
+      "How Meteoric built a VS Code extension for previewing responsive mobile layouts directly in the editor — 1,000+ installs on the VS Code Marketplace.",
+    challenge:
       "Frontend developers switch between editor and browser to test responsive layouts. This project aimed to bring mobile preview directly into the editor to reduce that context switching.",
-    approach:
+    solution:
       "Built a VS Code extension using the Webview API — embed a mobile-sized viewport directly in the editor sidebar. Keep it lightweight and require no configuration.",
     whatWasBuilt:
       "A VS Code extension that renders a mobile device frame inside the editor sidebar. Developers configure viewport dimensions, and the extension displays a live preview of their web content at mobile sizes. The extension uses VS Code's Webview API to create an isolated browser context within the editor.",
@@ -210,23 +237,17 @@ export const caseStudies = [
       "One-click install from VS Code Marketplace",
     ],
     results: [
-      { metric: "Installs", value: "500+", description: "VS Code Marketplace" },
-      {
-        metric: "Rating",
-        value: "4.5 stars",
-        description: "user satisfaction",
-      },
-      {
-        metric: "Community",
-        value: "Active",
-        description: "feature requests & contributions",
-      },
+      { metric: "Installs", value: "1,000+", description: "VS Code Marketplace" },
     ],
-    link: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
+    resultsVerified: true,
+    liveUrl: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
+    liveUrlVerified: true,
     image: "/mobile-simulator.webp",
+    imageAlt:
+      "Mobile Preview Simulator extension showing a phone frame preview inside VS Code",
     gradient: "from-white/[0.04] to-white/[0.01]",
     accent: "#1c1917",
-    tags: [
+    technology: [
       "VS Code Extension",
       "JavaScript",
       "Webview API",

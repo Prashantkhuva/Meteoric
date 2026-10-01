@@ -1,10 +1,16 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
+import { SITE_URL } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
 import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import RevealImg from "@/components/ui/RevealImg";
+import JsonLd from "@/components/seo/JsonLd";
+import {
+  buildBreadcrumbJsonLd,
+  buildArticleJsonLd,
+  buildFaqJsonLd,
+} from "@/lib/seo/jsonLd";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -99,45 +105,24 @@ export default async function BlogPost({ params }) {
       ? [postService[post.slug]]
       : [{ href: "/services", label: "Explore Services" }];
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
-      { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${slug}` },
-    ],
-  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "" },
+    { name: "Blog", path: "/blog" },
+    { name: post.title, path: `/blog/${slug}` }
+  ]);
 
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
+  const articleJsonLd = buildArticleJsonLd({
     headline: post.title,
     description: post.description,
     image: `${SITE_URL}${image}`,
     datePublished: post.published,
     dateModified: post.dateModified || post.published,
-    author: {
-      "@type": "Person",
-      name: post.author?.name || "Prashant Khuva",
-      url: post.author?.url || `${SITE_URL}/about`,
-      jobTitle: "Founder & Full-Stack Developer",
-      sameAs: ["https://x.com/prashantkhuva_", "https://linkedin.com/in/prashantkhuva"],
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.svg` },
-    },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
-    keywords: post.tags.join(", "),
-    inLanguage: "en-US",
-  };
+    path: `/blog/${slug}`,
+    keywords: post.tags,
+  });
 
-  const faqSchema = post.faqs.length > 0
-    ? { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: post.faqs.map((q) => ({ "@type": "Question", name: q.question, acceptedAnswer: { "@type": "Answer", text: q.answer } })) }
-    : null;
+  const faqSchema =
+    post.faqs.length > 0 ? buildFaqJsonLd(post.faqs) : null;
 
   const speakableJsonLd = { "@context": "https://schema.org", "@type": "WebPage", name: post.title, speakable: { "@type": "SpeakableSpecification", cssSelector: [".sr-only", "h1"] } };
 
@@ -147,16 +132,16 @@ export default async function BlogPost({ params }) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
-      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={articleJsonLd} />
+      <JsonLd data={speakableJsonLd} />
+      {faqSchema && <JsonLd data={faqSchema} />}
       <article className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
         <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-32 pb-24">
 
           {/* Back link */}
           <div className="mb-14">
-            <Link href="/blog" className="group inline-flex items-center gap-2 text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
+            <Link href="/blog" className="group inline-flex items-center gap-2 min-h-6 text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
               <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               Back to all articles
             </Link>
@@ -235,7 +220,13 @@ export default async function BlogPost({ params }) {
               </div>
               <div>
                 <h3 className="text-sm font-medium mb-1" style={{ color: "var(--text-primary)" }}>
-                  Written by Prashant Khuva
+                  Written by{" "}
+                  <Link
+                    href="/author/prashant-khuva"
+                    className="inline-block py-1 underline-offset-4 hover:underline transition-all duration-200 hover:opacity-70"
+                  >
+                    Prashant Khuva
+                  </Link>
                 </h3>
                 <p className="text-[13px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
                   Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups.
@@ -289,7 +280,7 @@ export default async function BlogPost({ params }) {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               {relatedLinks.map((rs) => (
-                <Link key={rs.href} href={rs.href} className="text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
+                <Link key={rs.href} href={rs.href} className="min-h-6 inline-flex items-center text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
                   {rs.label} →
                 </Link>
               ))}
@@ -298,7 +289,7 @@ export default async function BlogPost({ params }) {
 
           {/* Back link */}
           <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
-            <Link href="/blog" className="group inline-flex items-center gap-2 text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
+            <Link href="/blog" className="group inline-flex items-center gap-2 min-h-6 text-xs transition-colors duration-200" style={{ color: "var(--text-muted)" }}>
               <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               Back to all articles
             </Link>

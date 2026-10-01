@@ -1,36 +1,17 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { pageMetadata } from "@/lib/seo/config";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Privacy Policy — Meteoric";
+const pageTitle = "Privacy Policy";
 const pageDesc =
   "How Meteoric collects, uses, and protects your data — plain and simple.";
 
 export const metadata = {
-  title: pageTitle,
-  description: pageDesc,
-  alternates: {
-    canonical: `${SITE_URL}/privacy`,
-  },
-  openGraph: {
+  ...pageMetadata({
     title: pageTitle,
     description: pageDesc,
-    url: `${SITE_URL}/privacy`,
-    images: [
-      {
-        url: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
-        width: 1635,
-        height: 962,
-        alt: pageTitle,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@prashantkhuva_",
-    creator: "@prashantkhuva_",
-    title: pageTitle,
-    description: pageDesc,
-    images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
-  },
+    path: "/privacy",
+  }),
   robots: "index, follow",
 };
 
@@ -114,19 +95,10 @@ const sections = [
   },
 ];
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Privacy Policy",
-      item: `${SITE_URL}/privacy`,
-    },
-  ],
-};
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "" },
+  { name: "Privacy Policy", path: "/privacy" }
+]);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -141,14 +113,8 @@ const speakableJsonLd = {
 export default function Privacy() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={speakableJsonLd} />
       <div className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
         <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           {/* Header */}

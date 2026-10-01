@@ -8,7 +8,9 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { getApprovedReviews } from "@/lib/actions";
 import FaqAccordion from "./FaqAccordion";
 import { homeFaqs } from "@/data/faqs";
+import { fallbackTestimonials, mapReviewRow } from "@/data/testimonials";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import { openCalModal } from "@/components/ui/cal-modal-store";
 
 // Lazy — ReviewFormModal pulls framer-motion; only load it when the review
 // form is actually opened so the homepage initial bundle stays lean.
@@ -17,12 +19,14 @@ const ReviewFormModal = dynamic(() => import("./ReviewFormModal"), {
   loading: () => null,
 });
 
-const fallbackTestimonials = [];
-
-function ReviewCard({ t }) {
+function ReviewCard({ t, clone = false }) {
   return (
-    <div className="w-[320px] shrink-0 rounded-xl p-5 flex flex-col gap-4 mx-2" style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}>
-      <div className="flex items-center gap-1">
+    <article
+      aria-hidden={clone || undefined}
+      className="w-[320px] shrink-0 rounded-xl p-5 flex flex-col gap-4 mx-2"
+      style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}
+    >
+      <div className="flex items-center gap-1" aria-hidden="true">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
@@ -37,21 +41,24 @@ function ReviewCard({ t }) {
         ))}
       </div>
 
-      <p className="text-[14px] leading-[1.5] font-medium" style={{ color: "var(--text-primary)" }}>
-        &ldquo;{t.quote}&rdquo;
-      </p>
+      <blockquote
+        className="text-[14px] leading-[1.5] font-medium"
+        style={{ color: "var(--text-primary)" }}
+      >
+        <p>&ldquo;{t.quote}&rdquo;</p>
+      </blockquote>
 
-      <div className="flex items-center gap-3 mt-auto pt-1">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-[11px] font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+      <footer className="flex items-center gap-3 mt-auto pt-1">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center text-[11px] font-semibold shrink-0" style={{ border: "1px solid var(--border-color)", color: "var(--text-muted)" }} aria-hidden="true">
           {t.author.charAt(0)}
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-[13px] font-medium truncate" style={{ color: "var(--text-primary)" }}>
+            <cite className="text-[13px] font-medium truncate not-italic" style={{ color: "var(--text-primary)" }}>
               {t.author}
-            </p>
+            </cite>
             {t.isVerified && (
-              <BadgeCheck size={10} className="shrink-0" style={{ color: "var(--accent)" }} />
+              <BadgeCheck size={10} className="shrink-0" aria-hidden="true" style={{ color: "var(--accent)" }} />
             )}
           </div>
           <p className="text-[11px] truncate mt-0.5" style={{ color: "var(--text-muted)" }}>
@@ -60,13 +67,13 @@ function ReviewCard({ t }) {
             {t.company && <span style={{ color: "var(--text-muted)" }}>{t.company}</span>}
           </p>
         </div>
-      </div>
-    </div>
+      </footer>
+    </article>
   );
 }
 
-export default function TestimonialsSection() {
-  const [reviews, setReviews] = useState(null);
+export default function TestimonialsSection({ initialReviews = [] }) {
+  const [reviews, setReviews] = useState(initialReviews);
   const [showForm, setShowForm] = useState(false);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
@@ -80,17 +87,9 @@ export default function TestimonialsSection() {
     async function load() {
       const result = await getApprovedReviews();
       if (result.success && result.data.length > 0) {
-        setReviews(
-          result.data.map((r) => ({
-            quote: r.content,
-            author: r.name,
-            role: r.role,
-            project: r.project,
-            rating: r.rating,
-            company: r.company,
-            isVerified: r.is_verified,
-            createdAt: r.created_at,
-          })),
+        const next = result.data.map(mapReviewRow);
+        setReviews((prev) =>
+          prev && prev.length === next.length ? prev : next,
         );
       }
     }
@@ -105,6 +104,7 @@ export default function TestimonialsSection() {
       const split = new SplitText(headerHeading, {
         type: "lines",
         linesClass: "split-line",
+        aria: "manual",
       });
       gsap.fromTo(
         split.lines,
@@ -190,7 +190,11 @@ export default function TestimonialsSection() {
                 >
                   {[...Array(6)].map((_, setIndex) =>
                     displayReviews.map((t, i) => (
-                      <ReviewCard key={`r1-${setIndex}-${i}`} t={t} />
+                      <ReviewCard
+                        key={`r1-${setIndex}-${i}`}
+                        t={t}
+                        clone={setIndex > 0}
+                      />
                     )),
                   )}
                 </div>
@@ -200,9 +204,12 @@ export default function TestimonialsSection() {
             </div>
           </ScrollReveal>
 
-          {/* ── Marquee Row 2 — scrolls right ── */}
+          {/* ── Marquee Row 2 — scrolls right (visual duplicate of row 1, hidden from assistive tech) ── */}
           <ScrollReveal direction="right">
-            <div className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12">
+            <div
+              aria-hidden="true"
+              className="relative flex w-full flex-col items-center justify-center overflow-hidden mb-12"
+            >
               <div className="group flex overflow-hidden p-2">
                 <div
                   className="flex w-max shrink-0 animate-marquee-right flex-row group-hover:[animation-play-state:paused]"
@@ -256,16 +263,7 @@ export default function TestimonialsSection() {
                   timeline, and how we can help.
                 </p>
                 <button
-                  onClick={() => {
-                    import("@calcom/embed-react").then(
-                      async ({ getCalApi }) => {
-                        const cal = await getCalApi({
-                          namespace: "let-s-build",
-                        });
-                        cal("modal", { calLink: "prashantkhuva/let-s-build" });
-                      },
-                    );
-                  }}
+                  onClick={openCalModal}
                   className="inline-flex items-center justify-center rounded-full px-6 py-3 text-[13px] font-medium transition-all duration-300"
                   style={{ background: "var(--accent)", color: "var(--accent-text)" }}
                 >

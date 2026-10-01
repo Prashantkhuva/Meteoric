@@ -4,12 +4,16 @@ import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildBreadcrumbJsonLd, buildPersonJsonLd, PERSON_ID } from "@/lib/seo/jsonLd";
 
 const authorData = {
   name: "Prashant Khuva",
   title: "Founder & Full-Stack Developer",
   company: SITE_NAME,
   bio: "Founder of Meteoric. Full-stack developer specializing in React, Next.js, Node.js, and Supabase. Direct founder involvement — no account managers.",
+  longBio:
+    "Founder of Meteoric. Full-stack developer specializing in React, Next.js, Node.js, and Supabase. Direct founder involvement — no account managers. He writes here about the work behind those products — SaaS architecture, database design, performance, animation, and the SEO that makes them findable — based on projects actually shipped for startups, not tutorials. Every article is reviewed and verified by hand before it goes live.",
   credentials: [
     { value: "Founder-led studio", label: "Direct involvement on every project" },
     { value: "10-day sprint cycle", label: "Average brief-to-ship cadence" },
@@ -58,7 +62,7 @@ function formatDate(dateStr) {
 
 export function generateMetadata() {
   return {
-    title: `${authorData.name} — ${authorData.title} | ${SITE_NAME}`,
+    title: `${authorData.name} — ${authorData.title}`,
     description: `${authorData.name} is the ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
     alternates: {
       canonical: `${SITE_URL}/author/prashant-khuva`,
@@ -98,67 +102,34 @@ export default function AuthorPage() {
     )
     .sort((a, b) => new Date(b.published) - new Date(a.published));
 
-  const authorJsonLd = {
+  const authorJsonLd = buildPersonJsonLd();
+
+  const profilePageJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: authorData.name,
-    jobTitle: authorData.title,
-    worksFor: {
-      "@type": "Organization",
-      name: authorData.company,
-      url: SITE_URL,
-    },
+    "@type": "ProfilePage",
+    name: `${authorData.name} — ${authorData.title}`,
+    description: authorData.bio,
     url: `${SITE_URL}/author/prashant-khuva`,
-    sameAs: Object.values(authorData.social),
-    knowsAbout: [
-      "Web Development",
-      "SaaS Development",
-      "React",
-      "Next.js",
-      "Node.js",
-      "MongoDB",
-      "PostgreSQL",
-      "Supabase",
-    ],
-    mainEntityOfPage: authorPosts.map((post) => ({
-      "@type": "Article",
-      headline: post.title,
-      url: `${SITE_URL}/blog/${post.slug}`,
-      datePublished: post.published,
-    })),
+    mainEntity: { "@id": PERSON_ID },
   };
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: authorData.name,
-        item: `${SITE_URL}/author/prashant-khuva`,
-      },
-    ],
-  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "" },
+    { name: authorData.name, path: "/author/prashant-khuva" }
+  ]);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(authorJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <JsonLd data={authorJsonLd} />
+      <JsonLd data={profilePageJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <article className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
         <div className="relative max-w-5xl mx-auto px-5 sm:px-6 md:px-12 pt-28 md:pt-32 pb-24 md:pb-32">
           {/* Back link */}
           <div className="mb-10 md:mb-14">
             <Link
               href="/blog"
-              className="group inline-flex items-center gap-2 text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-200"
+              className="group inline-flex items-center gap-2 min-h-6 text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-200"
             >
               <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               Back to blog
@@ -205,7 +176,7 @@ export default function AuthorPage() {
                 </p>
 
                 <p className="text-[14px] sm:text-[15px] leading-[1.7] text-[var(--text-secondary)] max-w-xl mb-6">
-                  {authorData.bio}
+                  {authorData.longBio}
                 </p>
 
                 <div className="flex flex-wrap gap-2.5">
@@ -349,7 +320,7 @@ export default function AuthorPage() {
               href="https://cal.com/prashantkhuva/let-s-build"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-200"
+              className="group inline-flex items-center gap-2 min-h-6 text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-200"
             >
               Work with {authorData.name.split(" ")[0]}
               <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>

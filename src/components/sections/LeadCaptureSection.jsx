@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import { openCalModal } from "@/components/ui/cal-modal-store";
 
 export default function LeadCaptureSection() {
   const sectionRef = useRef(null);
@@ -17,7 +18,7 @@ export default function LeadCaptureSection() {
 
       const heading = headingRef.current;
       if (heading) {
-        const split = new SplitText(heading, { type: "lines", linesClass: "split-line" });
+        const split = new SplitText(heading, { type: "lines", linesClass: "split-line", aria: "manual" });
         gsap.fromTo(split.lines,
           { y: 40, opacity: 0 },
           {
@@ -85,16 +86,7 @@ export default function LeadCaptureSection() {
         </p>
 
         <button
-          onClick={() => {
-            import("@calcom/embed-react").then(
-              async ({ getCalApi }) => {
-                const cal = await getCalApi({
-                  namespace: "let-s-build",
-                });
-                cal("modal", { calLink: "prashantkhuva/let-s-build" });
-              },
-            );
-          }}
+          onClick={openCalModal}
           className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm font-medium transition-all duration-300 hover:opacity-90"
           style={{ background: "var(--accent)", color: "var(--accent-text)" }}
         >

@@ -24,31 +24,38 @@ export default function FaqAccordion({ items }) {
               transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            <button
-              onClick={() => toggle(i)}
-              aria-expanded={isOpen}
-              className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
-            >
-              <span
-                className="text-sm pr-4 leading-relaxed"
-                style={{ color: "var(--text-primary)" }}
+            <h3 className="m-0">
+              <button
+                onClick={() => toggle(i)}
+                aria-expanded={isOpen}
+                aria-controls={`faq-panel-${i}`}
+                id={`faq-btn-${i}`}
+                className="w-full flex items-center justify-between px-5 py-4 md:px-6 md:py-4 text-left"
               >
-                {faq.question}
-              </span>
-              <span
-                className="shrink-0 w-6 h-6 rounded-full border flex items-center justify-center"
-                style={{
-                  borderColor: isOpen ? "var(--accent-dim)" : "var(--border-color)",
-                  background: isOpen ? "var(--accent-glow)" : "transparent",
-                  color: isOpen ? "var(--accent)" : "var(--text-muted)",
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
-                }}
-              >
-                <Plus size={12} />
-              </span>
-            </button>
+                <span
+                  className="text-sm pr-4 leading-relaxed"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {faq.question}
+                </span>
+                <span
+                  className="shrink-0 w-6 h-6 rounded-full border flex items-center justify-center"
+                  style={{
+                    borderColor: isOpen ? "var(--border-hover)" : "var(--border-color)",
+                    background: isOpen ? "var(--accent-glow)" : "transparent",
+                    color: isOpen ? "var(--accent)" : "var(--text-muted)",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+                  }}
+                >
+                  <Plus size={12} />
+                </span>
+              </button>
+            </h3>
             <div
+              id={`faq-panel-${i}`}
+              role="region"
+              aria-labelledby={`faq-btn-${i}`}
               style={{
                 display: "grid",
                 gridTemplateRows: isOpen ? "1fr" : "0fr",

@@ -1,30 +1,41 @@
 import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
 import { caseStudies } from "@/data/case-studies";
-import { SITE_URL } from "@/lib/seo/config";
+import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import CaseStudy from "@/components/pages/CaseStudy";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildBreadcrumbJsonLd, ORG_ID } from "@/lib/seo/jsonLd";
 
 export function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+  return projects
+    .filter((p) => p.slug && p.draft !== true)
+    .map((p) => ({ slug: p.slug }));
+}
+
+function findProject(slug) {
+  const project = projects.find((p) => p.slug === slug);
+  if (!project || project.draft === true) return null;
+  return project;
+}
+
+function findCaseStudy(project) {
+  if (!project.caseStudySlug) return null;
+  const cs = caseStudies.find((c) => c.slug === project.caseStudySlug);
+  if (!cs || cs.draft === true) return null;
+  return cs;
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = findProject(slug);
   if (!project) return {};
 
-  const csSlug = {
-    "lete-em-know": "letem-know",
-    "habit-flow": "habit-flow",
-    megablog: "megablog",
-    "mobile-preview-simulator": "mobile-preview-simulator",
-  };
-  const cs = caseStudies.find((cs) => cs.slug === csSlug[slug]);
+  const cs = findCaseStudy(project);
 
   const title =
     cs?.metaTitle ??
     project.metaTitle ??
-    `${project.name} — Case Study | Meteoric`;
+    `${project.name} — Case Study`;
   const desc =
     cs?.metaDescription ??
     project.metaDescription ??
@@ -61,38 +72,18 @@ export async function generateMetadata({ params }) {
 
 export default async function CaseStudyPage({ params }) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = findProject(slug);
   if (!project) notFound();
 
-  const csSlug = {
-    "lete-em-know": "letem-know",
-    "habit-flow": "habit-flow",
-    megablog: "megablog",
-    "mobile-preview-simulator": "mobile-preview-simulator",
-  };
-  const cs = caseStudies.find((c) => c.slug === csSlug[slug]);
+  const cs = findCaseStudy(project);
 
-  const pageTitle = cs?.metaTitle ?? `${project.name} — Case Study | Meteoric`;
+  const pageTitle = cs?.metaTitle ?? `${project.name} — Case Study`;
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Work",
-        item: `${SITE_URL}/work`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: project.name,
-        item: `${SITE_URL}/work/${project.slug}`,
-      },
-    ],
-  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "" },
+    { name: "Work", path: "/work" },
+    { name: project.name, path: `/work/${slug}` },
+  ]);
 
   const speakableJsonLd = {
     "@context": "https://schema.org",
@@ -104,33 +95,32 @@ export default async function CaseStudyPage({ params }) {
     },
   };
 
+  // CreativeWork only carries facts visible on the page (name, tagline,
+  // tech stack, preview image, author). No AggregateRating/review/offer.
   const creativeWorkSchema = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     name: project.name,
-    description: cs?.metaDescription ?? project.description,
+    description: cs?.metaDescription ?? project.metaDescription ?? project.tagline,
     url: `${SITE_URL}/work/${project.slug}`,
-    keywords: project.tags?.join(", "),
-    author: { "@type": "Organization", name: "Meteoric", url: SITE_URL },
+    image: `${SITE_URL}${project.image}`,
+    keywords: project.technology?.join(", "),
+    author: {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
     about: project.tagline,
     inLanguage: "en-US",
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }}
-      />
-      <CaseStudy project={project} />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={speakableJsonLd} />
+      <JsonLd data={creativeWorkSchema} />
+      <CaseStudy project={project} caseStudy={cs} />
     </>
   );
 }

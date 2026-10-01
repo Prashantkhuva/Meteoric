@@ -1,32 +1,24 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo/config";
+import { SITE_URL, pageMetadata } from "@/lib/seo/config";
 import CaseStudiesPage from "@/components/pages/CaseStudies";
 import { caseStudies } from "@/data/case-studies";
+import { projects } from "@/data/projects";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Case Studies — Meteoric Web Development";
+const pageTitle = "Case Studies — SaaS MVP & Full-Stack Breakdowns";
 const pageDesc =
   "In-depth breakdowns of how Meteoric ships SaaS MVPs and full-stack apps for startups — architecture, stack choices, and results.";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: pageTitle,
   description: pageDesc,
-  alternates: { canonical: `${SITE_URL}/case-studies` },
-  openGraph: {
-    title: pageTitle,
-    description: pageDesc,
-    url: `${SITE_URL}/case-studies`,
-    images: [{ url: `${SITE_URL}${DEFAULT_OG_IMAGE}`, width: 1635, height: 962, alt: pageTitle }],
-  },
-  twitter: { card: "summary_large_image", site: "@prashantkhuva_", creator: "@prashantkhuva_", title: pageTitle, description: pageDesc, images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`] },
-};
+  path: "/case-studies",
+});
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: "Case Studies", item: `${SITE_URL}/case-studies` },
-  ],
-};
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "" },
+  { name: "Case Studies", path: "/case-studies" }
+]);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -44,20 +36,28 @@ const collectionJsonLd = {
   name: pageTitle,
   description: pageDesc,
   url: `${SITE_URL}/case-studies`,
-  hasPart: caseStudies.map((cs) => ({
-    "@type": "CreativeWork",
-    name: cs.name,
-    description: cs.tagline,
-    url: `${SITE_URL}/case-studies#${cs.slug}`,
-  })),
+  hasPart: caseStudies
+    .filter((cs) => {
+      if (cs.draft === true) return false;
+      return projects.some((p) => p.caseStudySlug === cs.slug && p.draft !== true);
+    })
+    .map((cs) => {
+      const project = projects.find((p) => p.caseStudySlug === cs.slug);
+      return {
+        "@type": "CreativeWork",
+        name: cs.name,
+        description: cs.tagline,
+        url: `${SITE_URL}/work/${project.slug}`,
+      };
+    }),
 };
 
 export default function CaseStudiesRoute() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }} />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={speakableJsonLd} />
+      <JsonLd data={collectionJsonLd} />
       <CaseStudiesPage />
     </>
   );

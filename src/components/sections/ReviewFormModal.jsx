@@ -152,7 +152,7 @@ export default function ReviewFormModal({ open, onClose }) {
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5" htmlFor="review-name">
                             Name <span className="text-red-400/50">*</span>
                           </label>
                           <input
@@ -161,12 +161,13 @@ export default function ReviewFormModal({ open, onClose }) {
                             value={form.name}
                             onChange={(e) => update("name", e.target.value)}
                             placeholder="Your name"
+                            id="review-name"
                             disabled={sending}
                             className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:border-[var(--accent)]/35 focus:bg-[var(--bg-primary)] focus:shadow-[0_0_0_3px_rgba(234,239,255,0.06)] transition-all duration-200 disabled:opacity-50"
                           />
                         </div>
                         <div>
-                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5" htmlFor="review-email">
                             Email <span className="text-red-400/50">*</span>
                           </label>
                           <input
@@ -175,6 +176,7 @@ export default function ReviewFormModal({ open, onClose }) {
                             value={form.email}
                             onChange={(e) => update("email", e.target.value)}
                             placeholder="your@email.com"
+                            id="review-email"
                             disabled={sending}
                             className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:border-[var(--accent)]/35 focus:bg-[var(--bg-primary)] focus:shadow-[0_0_0_3px_rgba(234,239,255,0.06)] transition-all duration-200 disabled:opacity-50"
                           />
@@ -183,7 +185,7 @@ export default function ReviewFormModal({ open, onClose }) {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5" htmlFor="review-role">
                             Role
                           </label>
                           <input
@@ -191,12 +193,13 @@ export default function ReviewFormModal({ open, onClose }) {
                             value={form.role}
                             onChange={(e) => update("role", e.target.value)}
                             placeholder="e.g. CEO"
+                            id="review-role"
                             disabled={sending}
                             className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:border-[var(--accent)]/35 focus:bg-[var(--bg-primary)] focus:shadow-[0_0_0_3px_rgba(234,239,255,0.06)] transition-all duration-200 disabled:opacity-50"
                           />
                         </div>
                         <div>
-                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
+                          <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5" htmlFor="review-company">
                             Company
                           </label>
                           <input
@@ -204,6 +207,7 @@ export default function ReviewFormModal({ open, onClose }) {
                             value={form.company}
                             onChange={(e) => update("company", e.target.value)}
                             placeholder="Your company"
+                            id="review-company"
                             disabled={sending}
                             className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:border-[var(--accent)]/35 focus:bg-[var(--bg-primary)] focus:shadow-[0_0_0_3px_rgba(234,239,255,0.06)] transition-all duration-200 disabled:opacity-50"
                           />
@@ -211,7 +215,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       </div>
 
                       <div>
-                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5" htmlFor="review-project">
                           Project
                         </label>
                         <input
@@ -219,6 +223,7 @@ export default function ReviewFormModal({ open, onClose }) {
                           value={form.project}
                           onChange={(e) => update("project", e.target.value)}
                           placeholder="What project did we work on?"
+                            id="review-project"
                           disabled={sending}
                           className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:border-[var(--accent)]/35 focus:bg-[var(--bg-primary)] focus:shadow-[0_0_0_3px_rgba(234,239,255,0.06)] transition-all duration-200 disabled:opacity-50"
                         />
@@ -262,7 +267,7 @@ export default function ReviewFormModal({ open, onClose }) {
                       </div>
 
                       <div>
-                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5">
+                        <label className="block text-[var(--text-muted)] text-[11px] uppercase tracking-wider mb-2.5" htmlFor="review-content">
                           Your Review <span className="text-red-400/50">*</span>
                         </label>
                         <textarea
@@ -270,6 +275,7 @@ export default function ReviewFormModal({ open, onClose }) {
                           value={form.content}
                           onChange={(e) => update("content", e.target.value)}
                           placeholder="Tell us about your experience working with Meteoric..."
+                            id="review-content"
                           rows={4}
                           disabled={sending}
                           className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:border-[var(--accent)]/35 focus:bg-[var(--bg-primary)] focus:shadow-[0_0_0_3px_rgba(234,239,255,0.06)] transition-all duration-200 disabled:opacity-50 resize-none"

@@ -1,4 +1,6 @@
-export const homeFaqs = [
+import type { Faq } from "./types";
+
+export const homeFaqs: Faq[] = [
   {
     question: "What's your typical development process?",
     answer:
@@ -24,9 +26,14 @@ export const homeFaqs = [
     answer:
       "Book a free strategy call using the button below. We'll discuss your project, give you a timeline and estimate, and if we're a good fit, we'll start within the week.",
   },
+  {
+    question: "What kinds of founders or businesses are a good fit?",
+    answer:
+      "Meteoric works best with founders and small teams who want direct access to the person building their product, a clearly scoped first version, and transparent 10-day sprint cycles. It's a poor fit for engagements that need large teams, formal account management, or enterprise procurement processes.",
+  },
 ];
 
-export const serviceFaqs = [
+export const serviceFaqs: Faq[] = [
   {
     question: "How much does it cost to build a website or SaaS with Meteoric?",
     answer:

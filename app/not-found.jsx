@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "404 — Page Not Found | Meteoric",
+  title: "404 — Page Not Found",
   robots: "noindex, nofollow",
 };
 

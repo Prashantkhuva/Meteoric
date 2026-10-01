@@ -175,7 +175,7 @@ export default function BlogContent() {
         >
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 text-xs text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--text-secondary)]"
+            className="group inline-flex items-center gap-2 min-h-6 text-xs text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--text-secondary)]"
           >
             <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
               ←
@@ -184,7 +184,7 @@ export default function BlogContent() {
           </Link>
           <Link
             href="/services"
-            className="group inline-flex items-center gap-2 text-xs text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--text-secondary)]"
+            className="group inline-flex items-center gap-2 min-h-6 text-xs text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--text-secondary)]"
           >
             Services
             <span className="group-hover:translate-x-0.5 transition-transform duration-200">

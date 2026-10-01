@@ -7,33 +7,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import GridLines from "@/components/ui/GridLines";
 import RevealImg from "@/components/ui/RevealImg";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
-
-const services = [
-  {
-    title: "Landing Page",
-    desc: "High-converting, fast-loading landing pages built to make a strong first impression and turn visitors into customers.",
-    image: "/images/service-web.webp",
-    href: "/services/landing-pages",
-  },
-  {
-    title: "SaaS Development",
-    desc: "End-to-end SaaS platforms and MVPs with authentication, dashboards, payments, and scalable architecture.",
-    image: "/images/service-saas.webp",
-    href: "/services/saas-development",
-  },
-  {
-    title: "Web Apps",
-    desc: "Full-stack web apps with clean UI, solid backend, and real-world functionality — built to actually ship.",
-    image: "/images/service-mobile.webp",
-    href: "/services/web-applications",
-  },
-  {
-    title: "Full-Stack",
-    desc: "Complete frontend and backend development — from APIs and databases to polished UI. Full stack, one team.",
-    image: "/images/service-web.webp",
-    href: "/services/nextjs-development",
-  },
-];
+import { homeServiceCards } from "@/data/services";
 
 function ServiceCard({ service, index }) {
   return (
@@ -163,6 +137,7 @@ export default function ServicesSection() {
       const split = new SplitText(headingRef.current, {
         type: "lines",
         linesClass: "split-line",
+        aria: "manual",
       });
       gsap.fromTo(
         split.lines,
@@ -245,7 +220,7 @@ export default function ServicesSection() {
 
         {/* Service cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5 lg:gap-5 pb-16 lg:pb-24">
-          {services.map((s, i) => (
+          {homeServiceCards.map((s, i) => (
             <ServiceCard key={s.title} service={s} index={i} />
           ))}
         </div>

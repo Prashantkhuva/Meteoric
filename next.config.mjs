@@ -32,10 +32,25 @@ const nextConfig = {
         },
         ],
       },
+      // Non-indexable surfaces: preview/share links, admin, auth, editor.
+      // Doubles up with robots.txt disallow as defense in depth.
+      ...["/preview/:path*", "/share/:path*", "/admin/:path*", "/login", "/editor"].map(
+        (source) => ({
+          source,
+          headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+        }),
+      ),
     ];
   },
   async redirects() {
     return [
+      // Legacy Vercel deployment domain -> canonical production domain.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "withmeteoric.vercel.app" }],
+        destination: "https://withmeteoric.com/:path*",
+        permanent: true,
+      },
       {
         source: "/:path*",
         has: [{ type: "query", key: "q" }],

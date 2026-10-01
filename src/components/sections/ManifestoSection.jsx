@@ -28,6 +28,7 @@ export default function ManifestoSection() {
       const split = new SplitText(headingRef.current, {
         type: "words",
         wordsClass: "split-word",
+        aria: "manual",
       });
       if (!split.words?.length) return;
 

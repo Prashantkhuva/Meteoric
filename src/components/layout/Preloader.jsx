@@ -81,30 +81,30 @@ export default function Preloader({ onDone }) {
     // soft halo
     tl.to(
       glowRef.current,
-      { opacity: 1, scale: 1, duration: 1.4, ease: "power2.out" },
+      { opacity: 1, scale: 1, duration: 1, ease: "power2.out" },
       0,
     );
 
     // logo rises from mask
-    tl.to(logoMaskRef.current, { opacity: 1, duration: 0.6 }, 0.15);
+    tl.to(logoMaskRef.current, { opacity: 1, duration: 0.45 }, 0.1);
     tl.to(
       logoInnerRef.current,
-      { yPercent: 0, duration: 1.15, ease: EASE_IN },
-      0.2,
+      { yPercent: 0, duration: 0.8, ease: EASE_IN },
+      0.15,
     );
 
     // hairline track settles in
     tl.to(
       trackRef.current,
-      { opacity: 1, scaleX: 1, duration: 1, ease: EASE_IN },
-      0.55,
+      { opacity: 1, scaleX: 1, duration: 0.7, ease: EASE_IN },
+      0.4,
     );
 
     // counter label fades up
     tl.to(
       [statusRef.current, numRef.current, footerRef.current],
-      { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.08 },
-      0.85,
+      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.06 },
+      0.6,
     );
 
     // progress fill + count, slow and even
@@ -112,7 +112,7 @@ export default function Preloader({ onDone }) {
       progress,
       {
         value: 100,
-        duration: 1.35,
+        duration: 0.95,
         ease: "power2.inOut",
         onUpdate: () => {
           if (numRef.current) {
@@ -147,12 +147,12 @@ export default function Preloader({ onDone }) {
 
     tl.to(
       fillRef.current,
-      { scaleX: 1, duration: 1.35, ease: "power2.inOut" },
-      0.95,
+      { scaleX: 1, duration: 0.95, ease: "power2.inOut" },
+      0.6,
     );
 
     // quiet hold
-    tl.to({}, { duration: 0.35 });
+    tl.to({}, { duration: 0.2 });
 
     // exit — content drifts up, soft fade
     const exitAt = ">";
@@ -164,42 +164,42 @@ export default function Preloader({ onDone }) {
       {
         opacity: 1,
         xPercent: 130,
-        duration: 0.75,
+        duration: 0.55,
         ease: "power3.inOut",
       },
       exitAt,
     );
     tl.to(
       streakRef.current,
-      { opacity: 0, duration: 0.25, ease: "power2.in" },
-      "-=0.25",
+      { opacity: 0, duration: 0.2, ease: "power2.in" },
+      "-=0.2",
     );
 
     tl.to(
       logoInnerRef.current,
-      { yPercent: -120, duration: 0.85, ease: "power3.inOut" },
+      { yPercent: -120, duration: 0.6, ease: "power3.inOut" },
       "<0.1",
     );
 
     tl.to(
       [trackRef.current, fillRef.current],
-      { opacity: 0, duration: 0.55, ease: "power2.inOut" },
+      { opacity: 0, duration: 0.4, ease: "power2.inOut" },
       "<0.15",
     );
 
     tl.to(
       [numRef.current, statusRef.current, footerRef.current],
-      { opacity: 0, y: -10, duration: 0.5, ease: "power2.inOut" },
+      { opacity: 0, y: -10, duration: 0.35, ease: "power2.inOut" },
       "<0.05",
     );
 
-    tl.to(glowRef.current, { opacity: 0, duration: 0.7 }, "<0.1");
+    tl.to(glowRef.current, { opacity: 0, duration: 0.5 }, "<0.1");
 
     // curtain wipes up — slow, luxurious
     tl.to(
       overlay,
-      { clipPath: "inset(0% 0% 100% 0%)", duration: 1, ease: EASE_OUT },
-      "-=0.55",
+      { clipPath: "inset(0% 0% 100% 0%)", duration: 0.75, ease: EASE_OUT },
+      "-=0.45",
     );
 
     return () => {

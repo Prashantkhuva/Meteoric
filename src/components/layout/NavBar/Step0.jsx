@@ -1,20 +1,9 @@
 import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
-import { getCalApi } from "@calcom/embed-react";
-import { useEffect, useCallback } from "react";
+import { openCalModal } from "@/components/ui/cal-modal-store";
 
 function Step0({ setStep }) {
-  useEffect(() => {
-    (async function () {
-      const cal = await getCalApi({ namespace: "let-s-build" });
-      cal("ui", { hideEventTypeDetails: true, layout: "month_view" });
-    })();
-  }, []);
-
-  const openCal = useCallback(async () => {
-    const cal = await getCalApi({ namespace: "let-s-build" });
-    cal("modal", { calLink: "prashantkhuva/let-s-build" });
-  }, []);
+  const openCal = openCalModal;
 
   return (
     <motion.div
