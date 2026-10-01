@@ -71,7 +71,10 @@ function Projects() {
         return;
       }
 
-    const split = new SplitText(headingRef.current, { type: "lines", linesClass: "split-line", aria: "manual" });
+    const heading = headingRef.current?.querySelector("h2");
+    if (!heading) return;
+
+    const split = new SplitText(heading, { type: "lines", linesClass: "split-line", aria: "manual" });
     gsap.fromTo(split.lines,
       { y: 40, opacity: 0 },
       {
@@ -162,10 +165,10 @@ function Projects() {
               Selected Works
             </h2>
 
-            <div className="flex items-center gap-6 shrink-0">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-3 md:gap-x-6 md:gap-y-0 shrink-0">
             <Link
               href="/work"
-              className="group inline-flex items-center gap-1.5 min-h-6 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
+              className="group inline-flex items-center gap-1.5 min-h-6 text-xs uppercase tracking-[0.15em] font-medium whitespace-nowrap transition-colors duration-300"
               style={{ color: "var(--text-secondary)" }}
             >
               Explore All Work
@@ -173,7 +176,7 @@ function Projects() {
             </Link>
             <Link
               href="/case-studies"
-              className="group inline-flex items-center gap-1.5 min-h-6 text-xs uppercase tracking-[0.15em] font-medium transition-colors duration-300"
+              className="group inline-flex items-center gap-1.5 min-h-6 text-xs uppercase tracking-[0.15em] font-medium whitespace-nowrap transition-colors duration-300"
               style={{ color: "var(--text-muted)" }}
             >
               Case Studies
