@@ -49,9 +49,10 @@ export default function Navbar({ isHome = false }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Hide pill near footer
+  // Hide pill near footer (testimonials also use <footer> — target site footer, last one)
   useEffect(() => {
-    const footer = document.querySelector("footer");
+    const footers = document.querySelectorAll("footer");
+    const footer = footers[footers.length - 1];
     if (!footer) return;
     const observer = new IntersectionObserver(
       ([entry]) => setNearFooter(entry.isIntersecting),
@@ -205,6 +206,7 @@ export default function Navbar({ isHome = false }) {
   // Home = dark bg, white text. Other pages = light bg, dark text.
   const textColor = isHome ? "var(--hero-text)" : "var(--text-primary)";
   const navBg = isHome ? "var(--hero-bg)" : "var(--bg-primary)";
+  const pillVisible = scrolled && !nearFooter;
 
   return (
     <>
@@ -323,14 +325,7 @@ export default function Navbar({ isHome = false }) {
 
       {/* ═══════ Mobile pill — fixed, after scroll ═══════ */}
       <div
-        className="fixed top-4 left-0 right-0 z-[60] lg:hidden px-4"
-        style={{
-          opacity: scrolled && !nearFooter ? 1 : 0,
-          visibility: scrolled && !nearFooter ? "visible" : "hidden",
-          pointerEvents: scrolled && !nearFooter ? "auto" : "none",
-          transform: `translateY(${scrolled && !nearFooter ? "0" : "-12px"})`,
-          transition: "opacity 0.3s ease, transform 0.3s ease",
-        }}
+        className={`fixed top-4 left-0 right-0 z-[60] lg:hidden px-4 pill-nav${pillVisible ? " is-visible" : ""}`}
       >
         <div
           className="flex w-full items-center justify-between gap-4 rounded-full pl-4 pr-1.5 py-1.5"
@@ -381,14 +376,7 @@ export default function Navbar({ isHome = false }) {
 
       {/* ═══════ Desktop pill — fixed, after scroll ═══════ */}
       <div
-        className="fixed top-5 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium"
-        style={{
-          opacity: scrolled && !nearFooter ? 1 : 0,
-          visibility: scrolled && !nearFooter ? "visible" : "hidden",
-          pointerEvents: scrolled && !nearFooter ? "auto" : "none",
-          transform: `translateY(${scrolled && !nearFooter ? "0" : "-12px"})`,
-          transition: "opacity 0.3s ease, transform 0.3s ease",
-        }}
+        className={`fixed top-5 left-0 right-0 z-50 hidden lg:flex justify-center text-[13px] font-medium pill-nav${pillVisible ? " is-visible" : ""}`}
       >
         <div
           className="flex items-center justify-between gap-6 rounded-full px-5 py-1.5 text-[13px] font-medium w-[50rem]"

@@ -396,8 +396,34 @@ cal-modal-box[style*="visibility: visible"] {
   pointer-events: auto;
 }
 
+/* ── Scroll pill navbar enter/leave ── */
+.pill-nav {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-14px) scale(0.96);
+  transition:
+    opacity 0.25s ease-in,
+    transform 0.25s ease-in,
+    visibility 0s linear 0.25s;
+}
+.pill-nav.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
+  .pill-nav,
+  .pill-nav.is-visible {
+    transition: none;
+  }
   .marquee,
   .animate-marquee-left,
   .animate-marquee-right {
