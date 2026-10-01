@@ -193,6 +193,10 @@ export async function createReview(data) {
   }
 }
 
+// TODO(testimonials): Approved reviews are stored in Supabase and cannot be
+// verified from repository data. Before every production launch, confirm
+// written client permission for each displayed testimonial and verify that
+// name, role, and company attribution are accurate.
 export async function getApprovedReviews() {
   try {
     const supabase = await createClient()
