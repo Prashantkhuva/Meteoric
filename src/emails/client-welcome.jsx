@@ -5,13 +5,22 @@ import { page, container, eyebrow, greeting, paragraph, inset, closing, signoff,
 
 const box = { ...inset, margin: "20px 0" };
 
-const step = {
+const stepTable = {
+  width: "100%",
+  borderCollapse: "collapse",
+};
+
+const stepNumCell = {
+  width: "34px",
+  verticalAlign: "top",
+  padding: "0 12px 14px 0",
+};
+
+const stepTextCell = {
   fontSize: "14px",
-  color: `${colors.body} !important`,
   lineHeight: "1.6",
-  margin: "0 0 14px 0",
-  paddingLeft: "32px",
-  textIndent: "-32px",
+  color: `${colors.body} !important`,
+  padding: "0 0 14px 0",
 };
 
 const stepNum = {
@@ -20,13 +29,12 @@ const stepNum = {
   height: "22px",
   lineHeight: "22px",
   textAlign: "center",
+  verticalAlign: "middle",
   backgroundColor: colors.ink,
   color: colors.onInk,
-  textIndent: 0,
   fontSize: "12px",
   fontWeight: 700,
   borderRadius: "50%",
-  marginRight: "10px",
 };
 
 export default function ClientWelcome({ name }) {
@@ -47,18 +55,35 @@ export default function ClientWelcome({ name }) {
             your project goals, timeline, and vision. Here's what to expect:
           </Text>
           <div className="email-inset" bgcolor="#fafaf7" style={box}>
-            <Text style={step}>
-              <span style={stepNum}>1</span> Onboarding call — we'll discuss
-              your requirements in detail
-            </Text>
-            <Text style={step}>
-              <span style={stepNum}>2</span> Project kickoff — we'll define
-              scope, milestones, and timelines
-            </Text>
-            <Text style={step}>
-              <span style={stepNum}>3</span> Design &amp; development — we'll
-              keep you updated every step
-            </Text>
+            <table role="presentation" width="100%" cellPadding="0" cellSpacing="0" border="0" style={stepTable}>
+              <tbody>
+                <tr>
+                  <td style={stepNumCell}>
+                    <span style={stepNum}>1</span>
+                  </td>
+                  <td style={stepTextCell}>
+                    Onboarding call — we'll discuss your requirements in detail
+                  </td>
+                </tr>
+                <tr>
+                  <td style={stepNumCell}>
+                    <span style={stepNum}>2</span>
+                  </td>
+                  <td style={stepTextCell}>
+                    Project kickoff — we'll define scope, milestones, and
+                    timelines
+                  </td>
+                </tr>
+                <tr>
+                  <td style={stepNumCell}>
+                    <span style={stepNum}>3</span>
+                  </td>
+                  <td style={stepTextCell}>
+                    Design &amp; development — we'll keep you updated every step
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <Text style={closing}>
             In the meantime, feel free to browse our portfolio or reach out if
