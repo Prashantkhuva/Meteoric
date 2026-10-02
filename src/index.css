@@ -418,6 +418,27 @@ cal-modal-box[style*="visibility: visible"] {
     visibility 0s linear 0s;
 }
 
+/* ── Home hero navbar: dark in BOTH themes, even before hydration.
+   Vercel's prerender of "/" can emit non-home (light) navbar styles when
+   usePathname() misreports during build. CSS sees the #home hero marker
+   in the prerendered HTML itself, so first paint is always dark. ── */
+body:has(#home) header {
+  background: var(--hero-bg) !important;
+}
+body:has(#home) header nav a {
+  color: var(--hero-text) !important;
+}
+body:has(#home) header button > span > span {
+  background-color: var(--hero-text) !important;
+}
+body:has(#home) header button.group {
+  background: var(--hero-text) !important;
+  color: var(--hero-bg) !important;
+}
+body:has(#home) header img[src$="-black.svg"] {
+  filter: invert(1);
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .pill-nav,
