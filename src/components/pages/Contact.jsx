@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { socialProfiles } from "@/data/social";
+import { socialIcons } from "@/components/ui/social-icons";
 import { openCalModal } from "@/components/ui/cal-modal-store";
 
 const nextPaths = [
@@ -55,7 +56,10 @@ export default function Contact() {
           <button
             onClick={openCal}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-11 gap-2 border-0 px-6 text-sm font-medium shadow-none hover:opacity-85 active:scale-[0.98]"
-            style={{ background: "#ffffff", color: "var(--bg-primary)" }}
+            style={{
+              background: "var(--text-primary)",
+              color: "var(--bg-primary)",
+            }}
           >
             Book a Free Strategy Call
           </button>
@@ -98,18 +102,21 @@ export default function Contact() {
           >
             Elsewhere
           </p>
-          <div className="flex flex-wrap gap-x-8 gap-y-4">
+          <div className="flex flex-wrap gap-x-6 gap-y-4">
             {socialProfiles.map((profile) => (
               <a
                 key={profile.id}
                 href={profile.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm inline-flex items-center gap-1.5 min-h-6 transition-colors hover:text-[var(--accent)]"
+                aria-label={profile.label}
+                data-no-magnetic
+                className="text-sm inline-flex items-center justify-center gap-1.5 min-h-6 min-w-6 transition-colors hover:text-[var(--accent)]"
                 style={{ color: "var(--text-secondary)" }}
               >
-                {profile.label}
-                <ArrowUpRight size={13} aria-hidden="true" />
+                {socialIcons[profile.id] || (
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                )}
               </a>
             ))}
           </div>
