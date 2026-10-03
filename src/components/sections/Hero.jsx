@@ -75,8 +75,8 @@ function Hero() {
           defaults: { ease: "power3.out", duration: 0.55 },
         });
         tl.fromTo(allLines, { y: 60 }, { y: 0, stagger: 0.1 })
-          .from(ctaRef.current, { y: 30 }, "-=0.25")
-          .from(subtextRef.current, { y: 30 }, "-=0.15");
+          .from(subtextRef.current, { y: 30 }, "-=0.25")
+          .from(ctaRef.current, { y: 30 }, "-=0.15");
 
         ScrollTrigger.create({
           trigger: containerRef.current.parentElement,
@@ -153,9 +153,9 @@ function Hero() {
 
       <GridLines />
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 flex flex-col justify-center min-h-screen py-16 md:py-20">
-        <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-[1fr_0.55fr] gap-8 md:gap-12 items-start">
-          {/* Left: Headline + Buttons */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 flex flex-col justify-start min-h-screen pt-28 pb-16 md:justify-center md:py-20">
+        <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-[1fr_0.55fr] gap-x-8 gap-y-2 md:gap-x-12 md:gap-y-0 items-start">
+          {/* Headline */}
           <div className="max-w-md">
             <h1
               className="font-semibold leading-[1.1] tracking-[-0.02em] mb-2"
@@ -181,11 +181,30 @@ function Hero() {
                 Ship Meteoric.
               </span>
             </h1>
+          </div>
 
-            <div
-              ref={ctaRef}
-              className="flex flex-row items-center gap-3"
+          {/* Description — mobile: under headline; desktop: right column */}
+          <div
+            ref={subtextRef}
+            className="max-w-[260px] md:pt-2 md:ml-20"
+          >
+            <p
+              className="leading-relaxed"
+              style={{
+                color: "#ffffff",
+                fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
+              }}
             >
+              SaaS products, web apps, and startup MVPs — from first deploy to
+              scale.
+            </p>
+          </div>
+
+          {/* CTAs */}
+          <div
+            ref={ctaRef}
+            className="max-w-md flex flex-row items-center gap-3 mt-4 md:mt-0"
+          >
               <button
                 type="button"
                 onClick={() => {
@@ -221,24 +240,6 @@ function Hero() {
               >
                 See How We Build
               </Link>
-            </div>
-          </div>
-
-          {/* Right: Description */}
-          <div
-            ref={subtextRef}
-            className="md:pt-2 max-w-[260px] md:ml-20"
-          >
-            <p
-              className="leading-relaxed"
-              style={{
-                color: "#ffffff",
-                fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
-              }}
-            >
-              SaaS products, web apps, and startup MVPs — from first deploy to
-              scale.
-            </p>
           </div>
         </div>
       </div>

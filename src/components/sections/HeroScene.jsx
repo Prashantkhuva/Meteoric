@@ -494,18 +494,18 @@ function Meteors() {
   );
 }
 
-function CameraParallax({ mouse, reduced }) {
+function CameraParallax({ mouse, reduced, baseY }) {
   useFrame((state) => {
     if (reduced) return;
     const next = state.camera.position;
     next.x += (mouse.current.x * 0.4 - next.x) * 0.04;
-    next.y += (mouse.current.y * 0.25 - next.y) * 0.04;
+    next.y += (baseY + mouse.current.y * 0.25 - next.y) * 0.04;
   });
 
   return null;
 }
 
-function Scene({ mouse, reduced }) {
+function Scene({ mouse, reduced, baseY }) {
   return (
     <>
       <color attach="background" args={["#010405"]} />
@@ -523,7 +523,7 @@ function Scene({ mouse, reduced }) {
       <Planet reduced={reduced} />
       <OrbitalRings reduced={reduced} />
       {!reduced && <Meteors />}
-      <CameraParallax mouse={mouse} reduced={reduced} />
+      <CameraParallax mouse={mouse} reduced={reduced} baseY={baseY} />
       <EffectComposer>
         <Bloom
           intensity={0.5}
@@ -562,16 +562,22 @@ export default function HeroScene() {
     return () => window.removeEventListener("mousemove", handleMouse);
   }, []);
 
+  const baseY = isMobile ? 2.75 : 0;
+
   return (
     <div className="absolute inset-0">
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 0, isMobile ? 8 : 6], fov: isMobile ? 50 : 55 }}
+        camera={{
+          position: [0, baseY, isMobile ? 12 : 6],
+          rotation: [0, 0, 0],
+          fov: isMobile ? 50 : 55,
+        }}
         gl={{ alpha: true, antialias: true }}
         style={{ background: "transparent" }}
         frameloop={reduced ? "demand" : "always"}
       >
-        <Scene mouse={mouseRef} reduced={reduced} />
+        <Scene mouse={mouseRef} reduced={reduced} baseY={baseY} />
       </Canvas>
     </div>
   );
