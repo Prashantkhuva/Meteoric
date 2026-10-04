@@ -63,24 +63,35 @@ export default function StatsBar({ strip = false }) {
       <section
         ref={ref}
         className="relative border-t"
-        style={{ borderColor: "rgba(255,255,255,0.08)", background: "transparent" }}
+        style={{
+          borderColor: "rgba(255,255,255,0.1)",
+          background:
+            "linear-gradient(to top, rgba(1,4,5,0.92) 0%, rgba(1,4,5,0.5) 100%)",
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+        }}
       >
-        <div className="mx-auto max-w-7xl px-5 sm:px-6 md:px-12 py-3">
-          <ul className="flex items-start justify-between gap-2">
-            {siteStats.map((stat) => (
+        <div className="mx-auto max-w-7xl px-4 py-3.5">
+          <ul className="grid grid-cols-4">
+            {siteStats.map((stat, i) => (
               <li
                 key={stat.label}
-                className="stat-item flex flex-col items-center text-center opacity-0 min-w-0"
+                className="stat-item flex flex-col items-center text-center opacity-0 px-1 min-w-0"
+                style={
+                  i > 0
+                    ? { borderLeft: "1px solid rgba(255,255,255,0.1)" }
+                    : undefined
+                }
               >
                 <span
-                  className="text-[13px] font-semibold tracking-tight whitespace-nowrap leading-tight"
+                  className="text-[15px] font-semibold tracking-tight whitespace-nowrap leading-none"
                   style={{ color: "#ffffff" }}
                 >
                   <AnimatedNumber target={stat.value} inView={inView} />
                 </span>
                 <span
-                  className="text-[9px] uppercase tracking-[0.1em] font-medium leading-tight mt-0.5"
-                  style={{ color: "rgba(255,255,255,0.4)" }}
+                  className="mt-1 text-[8px] uppercase tracking-[0.06em] font-medium leading-[1.2]"
+                  style={{ color: "rgba(255,255,255,0.45)" }}
                 >
                   {stat.label}
                 </span>
