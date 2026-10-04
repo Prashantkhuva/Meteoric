@@ -562,7 +562,7 @@ export default function HeroScene() {
     return () => window.removeEventListener("mousemove", handleMouse);
   }, []);
 
-  const baseY = isMobile ? 2.75 : 0;
+  const baseY = isMobile ? 2.1 : 0;
 
   return (
     <div className="absolute inset-0">

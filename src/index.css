@@ -439,6 +439,14 @@ body:has(#home) header img[src$="-black.svg"] {
   filter: invert(1);
 }
 
+/* ── Mobile: pull hero under the sticky navbar (72px) so the full 100vh
+   scene, bottom fade, and stats strip all fit above the fold. ── */
+@media (max-width: 767.98px) {
+  #home {
+    margin-top: -72px;
+  }
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .pill-nav,

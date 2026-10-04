@@ -7,6 +7,7 @@ import Link from "next/link";
 import GridLines from "@/components/ui/GridLines";
 import { trackEvent } from "@/lib/analytics/gtag";
 import { openCalModal } from "@/components/ui/cal-modal-store";
+import StatsBar from "@/components/sections/StatsBar";
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
@@ -153,7 +154,7 @@ function Hero() {
 
       <GridLines />
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 flex flex-col justify-start min-h-screen pt-28 pb-16 md:justify-center md:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 flex flex-col justify-start min-h-screen pt-32 pb-16 md:justify-center md:py-20">
         <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-[1fr_0.55fr] gap-x-8 gap-y-2 md:gap-x-12 md:gap-y-0 items-start">
           {/* Headline */}
           <div className="max-w-md">
@@ -244,6 +245,10 @@ function Hero() {
         </div>
       </div>
 
+      {/* Stats strip — mobile only, inside hero (atomik-style bottom strip) */}
+      <div className="md:hidden absolute inset-x-0 bottom-0 z-10">
+        <StatsBar strip />
+      </div>
     </section>
   );
 }

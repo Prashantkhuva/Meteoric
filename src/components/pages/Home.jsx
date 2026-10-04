@@ -37,7 +37,9 @@ export default async function Home() {
   return (
     <div>
       <Hero />
-      <StatsBar />
+      <div className="hidden md:block">
+        <StatsBar />
+      </div>
       {/* <ManifestoSection /> */}
       <ServicesSection />
       <Projects />

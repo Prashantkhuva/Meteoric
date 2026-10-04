@@ -29,7 +29,7 @@ function AnimatedNumber({ target, inView }) {
   return <span>{display}</span>;
 }
 
-export default function StatsBar() {
+export default function StatsBar({ strip = false }) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
@@ -57,6 +57,40 @@ export default function StatsBar() {
       { y: 0, opacity: 1, stagger: 0.1, duration: 0.6, ease: "power2.out" },
     );
   }, [inView]);
+
+  if (strip) {
+    return (
+      <section
+        ref={ref}
+        className="relative border-t"
+        style={{ borderColor: "rgba(255,255,255,0.08)", background: "transparent" }}
+      >
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 md:px-12 py-3">
+          <ul className="flex items-start justify-between gap-2">
+            {siteStats.map((stat) => (
+              <li
+                key={stat.label}
+                className="stat-item flex flex-col items-center text-center opacity-0 min-w-0"
+              >
+                <span
+                  className="text-[13px] font-semibold tracking-tight whitespace-nowrap leading-tight"
+                  style={{ color: "#ffffff" }}
+                >
+                  <AnimatedNumber target={stat.value} inView={inView} />
+                </span>
+                <span
+                  className="text-[9px] uppercase tracking-[0.1em] font-medium leading-tight mt-0.5"
+                  style={{ color: "rgba(255,255,255,0.4)" }}
+                >
+                  {stat.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={ref} className="relative py-20 sm:py-28 overflow-hidden" style={{ background: "var(--hero-bg)" }}>
