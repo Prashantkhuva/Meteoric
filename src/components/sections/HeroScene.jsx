@@ -569,7 +569,7 @@ export default function HeroScene() {
       <Canvas
         dpr={[1, 2]}
         camera={{
-          position: [0, baseY, isMobile ? 12 : 6],
+          position: [0, baseY, isMobile ? 14 : 6],
           rotation: [0, 0, 0],
           fov: isMobile ? 50 : 55,
         }}
