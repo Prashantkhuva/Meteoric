@@ -32,12 +32,21 @@ function Hero() {
   const vignetteRef = useRef(null);
   const [sceneReady, setSceneReady] = useState(false);
 
+  // 3D scene is decorative (aria-hidden) — load it only after the full page
+  // load event + an idle slot, so three.js (~1MB, 3s eval) never contends
+  // with hydration, hero text, or LCP work.
   useEffect(() => {
-    const idle =
-      typeof requestIdleCallback !== "undefined"
-        ? requestIdleCallback(() => setSceneReady(true), { timeout: 3500 })
-        : setTimeout(() => setSceneReady(true), 3500);
+    let idle;
+    const start = () => {
+      idle =
+        typeof requestIdleCallback !== "undefined"
+          ? requestIdleCallback(() => setSceneReady(true), { timeout: 5000 })
+          : setTimeout(() => setSceneReady(true), 3000);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
     return () => {
+      window.removeEventListener("load", start);
       if (typeof cancelIdleCallback !== "undefined") cancelIdleCallback(idle);
       else clearTimeout(idle);
     };
