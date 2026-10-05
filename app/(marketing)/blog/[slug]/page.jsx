@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { SITE_URL } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
 import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
 import FaqAccordion from "@/components/sections/FaqAccordion";
-import RevealImg from "@/components/ui/RevealImg";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   buildBreadcrumbJsonLd,
@@ -185,7 +185,7 @@ export default async function BlogPost({ params }) {
 
           {/* Featured image */}
           <div className="relative rounded-[24px] overflow-hidden mb-16 aspect-[16/10]" style={{ border: "1px solid var(--border-color)" }}>
-            <RevealImg src={image} alt={post.title} fill priority sizes="(max-width: 768px) 100vw, 720px" className="object-cover" />
+            <Image src={image} alt={post.title} fill priority fetchPriority="high" sizes="(max-width: 768px) 100vw, 720px" className="object-cover" />
           </div>
 
           {/* Article body */}
@@ -255,7 +255,7 @@ export default async function BlogPost({ params }) {
                   return (
                     <Link key={rp.slug} href={`/blog/${rp.slug}`} className="group block">
                       <div className="relative rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
-                        <RevealImg src={rpImage} alt={rp.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <Image src={rpImage} alt={rp.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
                       </div>
                       <h3 className="text-sm font-semibold mb-1 transition-opacity duration-300 group-hover:opacity-65" style={{ color: "var(--text-primary)" }}>
                         {rp.title}

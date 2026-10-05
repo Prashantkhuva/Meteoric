@@ -1,13 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap-setup";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { blogPosts } from "@/data/blog-posts";
 import { postImage } from "@/data/blog-images";
-import RevealImg from "@/components/ui/RevealImg";
 
 function readingTime(sections) {
   const words = sections.reduce((acc, s) => acc + s.body.split(/\s+/).length, 0);
@@ -48,20 +46,19 @@ function BlogCard({ post, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10, scale: 0.98 }}
-      transition={{ duration: 0.35, delay: index * 0.04, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="gsap-work-card"
+      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <Link href={`/blog/${post.slug}`} className="group block">
         <div
           className="rounded-2xl overflow-hidden mb-4 aspect-[16/10] relative transition-all duration-500 ring-1 ring-[var(--border-color)] group-hover:ring-[var(--border-hover)] group-hover:shadow-[0_8px_30px_var(--accent-glow)]"
           style={{ background: "var(--card-bg)" }}
         >
-          <RevealImg
+          <Image
             src={image}
             alt={post.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            priority={index === 0}
+            priority={index < 3}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -92,29 +89,6 @@ function BlogCard({ post, index }) {
 
 export default function BlogContent() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const gridRef = useRef(null);
-
-  useGSAP(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return;
-
-    gsap.fromTo(
-      gridRef.current?.querySelectorAll(".gsap-work-card"),
-      { y: 50, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        stagger: 0.12,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: "top 85%",
-          toggleActions: "play none reverse none",
-          invalidateOnRefresh: true,
-        },
-      },
-    );
-  }, { scope: gridRef });
 
   const filteredPosts = blogPosts.filter((p) => categoryMap[activeCategory](p));
 
@@ -152,7 +126,7 @@ export default function BlogContent() {
         </div>
 
         {/* Card grid */}
-        <motion.div ref={gridRef} layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
           <AnimatePresence mode="popLayout">
             {filteredPosts.map((post, i) => (
               <BlogCard key={post.slug} post={post} index={i} />
