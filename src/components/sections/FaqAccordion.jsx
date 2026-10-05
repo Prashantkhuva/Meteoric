@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function FaqAccordion({ items }) {
   const [openIndex, setOpenIndex] = useState(null);
@@ -12,18 +13,18 @@ export default function FaqAccordion({ items }) {
       {items.map((faq, i) => {
         const isOpen = openIndex === i;
         return (
-          <div
-            key={i}
-            className={`group rounded-xl border transition-all duration-400 ${
-              isOpen
-                ? "bg-[var(--bg-elevated)]"
-                : "bg-transparent"
-            }`}
-            style={{
-              borderColor: isOpen ? "var(--border-hover)" : "var(--border-color)",
-              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
+          <ScrollReveal key={i} direction="up" delay={0.06 * i}>
+            <div
+              className={`group rounded-xl border transition-all duration-400 ${
+                isOpen
+                  ? "bg-[var(--bg-elevated)]"
+                  : "bg-transparent"
+              }`}
+              style={{
+                borderColor: isOpen ? "var(--border-hover)" : "var(--border-color)",
+                transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
             <h3 className="m-0">
               <button
                 onClick={() => toggle(i)}
@@ -75,7 +76,8 @@ export default function FaqAccordion({ items }) {
                 </p>
               </div>
             </div>
-          </div>
+            </div>
+          </ScrollReveal>
         );
       })}
     </div>

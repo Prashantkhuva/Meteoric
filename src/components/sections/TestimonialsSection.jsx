@@ -83,7 +83,6 @@ export default function TestimonialsSection({ initialReviews = [] }) {
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const faqHeaderRef = useRef(null);
-  const faqListRef = useRef(null);
 
   const displayReviews =
     reviews && reviews.length > 0 ? reviews : fallbackTestimonials;
@@ -150,9 +149,8 @@ export default function TestimonialsSection({ initialReviews = [] }) {
         },
       );
 
-    // Heading wipes in from the left; list rises from below.
+    // Heading wipes in from the left; FAQ items wipe individually.
     wipeIn(faqHeaderRef.current, faqHeaderRef.current, "right");
-    wipeIn(faqListRef.current, faqListRef.current, "up");
   }, []);
 
   return (
@@ -289,7 +287,7 @@ export default function TestimonialsSection({ initialReviews = [] }) {
                 </h2>
               </div>
 
-              <div ref={faqListRef}>
+              <div>
                 <FaqAccordion items={homeFaqs} />
               </div>
             </div>

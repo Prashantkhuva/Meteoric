@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import FaqAccordion from "@/components/sections/FaqAccordion";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { serviceFaqs } from "@/data/faqs";
 import { servicesIndex, techStack } from "@/data/services";
 import { trackEvent } from "@/lib/analytics/gtag";
@@ -47,12 +48,12 @@ export default function ServicesPage() {
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {servicesIndex.map((svc, i) => (
-              <Link
-                key={svc.num}
-                href={`/services/${svc.slug}`}
-                className="group block rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)]"
-                style={{ background: "var(--card-bg)" }}
-              >
+              <ScrollReveal key={svc.num} direction="up" delay={0.1 * i}>
+                <Link
+                  href={`/services/${svc.slug}`}
+                  className="group block rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)]"
+                  style={{ background: "var(--card-bg)" }}
+                >
                 <div className="aspect-[16/9] overflow-hidden relative">
                   <Image
                     src={svc.image}
@@ -85,6 +86,7 @@ export default function ServicesPage() {
                   </span>
                 </div>
               </Link>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -93,7 +95,8 @@ export default function ServicesPage() {
       {/* Intent-based landing links */}
       <section className="pb-16">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
-          <div
+          <ScrollReveal
+            direction="up"
             className="rounded-2xl ring-1 ring-[var(--border-color)] p-8 md:p-10"
             style={{ background: "var(--card-bg)" }}
           >
@@ -142,18 +145,20 @@ export default function ServicesPage() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Tech Stack Marquee */}
       <section className="py-20 md:py-28 overflow-hidden" style={{ borderTop: "1px solid var(--border-color)" }}>
         <div className="max-w-6xl mx-auto px-6 md:px-12 mb-12 text-center">
-          <h2 className="text-3xl md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
-            Technologies We Master
-          </h2>
+          <ScrollReveal direction="up">
+            <h2 className="text-3xl md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
+              Technologies We Master
+            </h2>
+          </ScrollReveal>
         </div>
-        <div className="relative w-full overflow-hidden py-6 flex items-center">
+        <ScrollReveal direction="left" className="relative w-full overflow-hidden py-6 flex items-center">
           <div className="absolute left-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--bg-primary), transparent)" }} />
           <div className="absolute right-0 top-0 w-24 md:w-48 h-full z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
           <div className="flex w-max whitespace-nowrap animate-marquee-left" style={{ "--sets": 6 }}>
@@ -170,15 +175,17 @@ export default function ServicesPage() {
               </span>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* FAQ */}
       <section className="py-20 md:py-28" style={{ borderTop: "1px solid var(--border-color)" }}>
         <div className="max-w-4xl mx-auto px-6 md:px-12">
-          <h2 className="text-3xl md:text-5xl font-display mb-14" style={{ color: "var(--text-primary)" }}>
-            Common questions about our services.
-          </h2>
+          <ScrollReveal direction="right" className="mb-14">
+            <h2 className="text-3xl md:text-5xl font-display" style={{ color: "var(--text-primary)" }}>
+              Common questions about our services.
+            </h2>
+          </ScrollReveal>
           <FaqAccordion items={serviceFaqs} />
         </div>
       </section>

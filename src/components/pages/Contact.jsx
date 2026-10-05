@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { socialProfiles } from "@/data/social";
 import { socialIcons } from "@/components/ui/social-icons";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { openCalModal } from "@/components/ui/cal-modal-store";
 
 const nextPaths = [
@@ -95,7 +96,10 @@ export default function Contact() {
 
       {/* Social */}
       <section className="border-t border-[var(--border-color)]">
-        <div className="max-w-5xl mx-auto px-6 md:px-12 py-14 md:py-16">
+        <ScrollReveal
+          direction="up"
+          className="max-w-5xl mx-auto px-6 md:px-12 py-14 md:py-16"
+        >
           <p
             className="uppercase tracking-[0.2em] text-xs font-bold mb-6"
             style={{ color: "var(--text-muted)" }}
@@ -120,7 +124,7 @@ export default function Contact() {
               </a>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Next paths */}
@@ -133,25 +137,26 @@ export default function Contact() {
             Explore first
           </p>
           <div className="grid md:grid-cols-3 gap-4">
-            {nextPaths.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300"
-              >
-                <h2 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2 leading-[1.3]">
-                  {item.title}
-                </h2>
-                <p
-                  className="text-sm leading-relaxed mb-3"
-                  style={{ color: "var(--text-muted)" }}
+            {nextPaths.map((item, i) => (
+              <ScrollReveal key={item.href} direction="up" delay={0.08 * i}>
+                <Link
+                  href={item.href}
+                  className="group block p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300"
                 >
-                  {item.desc}
-                </p>
-                <span className="text-xs font-mono" style={{ color: "var(--text-muted)" }}>
-                  Read more →
-                </span>
-              </Link>
+                  <h2 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2 leading-[1.3]">
+                    {item.title}
+                  </h2>
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    {item.desc}
+                  </p>
+                  <span className="text-xs font-mono" style={{ color: "var(--text-muted)" }}>
+                    Read more →
+                  </span>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
         </div>

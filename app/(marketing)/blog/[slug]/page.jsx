@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
 import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
 import FaqAccordion from "@/components/sections/FaqAccordion";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   buildBreadcrumbJsonLd,
@@ -184,36 +185,38 @@ export default async function BlogPost({ params }) {
           </header>
 
           {/* Featured image */}
-          <div className="relative rounded-[24px] overflow-hidden mb-16 aspect-[16/10]" style={{ border: "1px solid var(--border-color)" }}>
+          <ScrollReveal direction="up" className="relative rounded-[24px] overflow-hidden mb-16 aspect-[16/10]" style={{ border: "1px solid var(--border-color)" }}>
             <Image src={image} alt={post.title} fill priority fetchPriority="high" sizes="(max-width: 768px) 100vw, 720px" className="object-cover" />
-          </div>
+          </ScrollReveal>
 
           {/* Article body */}
           <div className="max-w-[720px] mx-auto">
             {post.sections.map((section, i) => (
-              <section key={i} className="mb-12 last:mb-0">
+              <ScrollReveal key={i} direction="up" className="mb-12 last:mb-0">
                 <h2 className="text-[24px] font-semibold mb-4 leading-[1.3]" style={{ color: "var(--text-primary)" }}>
                   {section.heading}
                 </h2>
                 <p className="text-[15px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
                   {renderRichBody(section.body)}
                 </p>
-              </section>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* FAQ */}
           {post.faqs.length > 0 && (
             <div className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
-              <h2 className="text-[24px] font-semibold mb-8" style={{ color: "var(--text-primary)" }}>
-                Frequently Asked Questions
-              </h2>
+              <ScrollReveal direction="right" className="mb-8">
+                <h2 className="text-[24px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                  Frequently Asked Questions
+                </h2>
+              </ScrollReveal>
               <FaqAccordion items={post.faqs} />
             </div>
           )}
 
           {/* Author bio */}
-          <div className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
+          <ScrollReveal direction="up" className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold shrink-0" style={{ background: "var(--accent-dim)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
                 PK
@@ -241,29 +244,33 @@ export default async function BlogPost({ params }) {
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Related posts */}
           {relatedPosts.length > 0 && (
             <div className="mt-20 pt-12" style={{ borderTop: "1px solid var(--border-color)" }}>
-              <h2 className="text-[24px] font-semibold mb-8" style={{ color: "var(--text-primary)" }}>
-                Continue Reading
-              </h2>
+              <ScrollReveal direction="right" className="mb-8">
+                <h2 className="text-[24px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                  Continue Reading
+                </h2>
+              </ScrollReveal>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedPosts.map((rp) => {
+                {relatedPosts.map((rp, i) => {
                   const rpImage = slugToImage[rp.slug] || FALLBACK_BLOG_IMAGE;
                   return (
-                    <Link key={rp.slug} href={`/blog/${rp.slug}`} className="group block">
-                      <div className="relative rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
-                        <Image src={rpImage} alt={rp.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
-                      </div>
-                      <h3 className="text-sm font-semibold mb-1 transition-opacity duration-300 group-hover:opacity-65" style={{ color: "var(--text-primary)" }}>
-                        {rp.title}
-                      </h3>
-                      <p className="text-[11px] line-clamp-2" style={{ color: "var(--text-muted)" }}>
-                        {rp.tagline}
-                      </p>
-                    </Link>
+                    <ScrollReveal key={rp.slug} direction="up" delay={0.08 * i}>
+                      <Link href={`/blog/${rp.slug}`} className="group block">
+                        <div className="relative rounded-[14px] overflow-hidden mb-3 aspect-[373/234]" style={{ border: "1px solid var(--border-color)" }}>
+                          <Image src={rpImage} alt={rp.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                        </div>
+                        <h3 className="text-sm font-semibold mb-1 transition-opacity duration-300 group-hover:opacity-65" style={{ color: "var(--text-primary)" }}>
+                          {rp.title}
+                        </h3>
+                        <p className="text-[11px] line-clamp-2" style={{ color: "var(--text-muted)" }}>
+                          {rp.tagline}
+                        </p>
+                      </Link>
+                    </ScrollReveal>
                   );
                 })}
               </div>
@@ -271,7 +278,7 @@ export default async function BlogPost({ params }) {
           )}
 
           {/* CTA */}
-          <div className="mt-20 p-8 md:p-12 rounded-[24px] text-center" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)" }}>
+          <ScrollReveal direction="up" className="mt-20 p-8 md:p-12 rounded-[24px] text-center" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)" }}>
             <h3 className="text-2xl md:text-3xl font-display tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
               Have a project in mind?
             </h3>
@@ -285,7 +292,7 @@ export default async function BlogPost({ params }) {
                 </Link>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Back link */}
           <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>

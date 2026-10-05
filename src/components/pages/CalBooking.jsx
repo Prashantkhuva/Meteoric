@@ -5,6 +5,7 @@ import Cal, { getCalApi } from "@calcom/embed-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Video, Target, ShieldCheck, ArrowRight } from "lucide-react";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -66,53 +67,61 @@ export default function CalBooking() {
 
       {/* Cal Embed */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
-        <div className="relative rounded-2xl ring-1 ring-white/[0.06] overflow-hidden shadow-[0_0_60px_-20px_rgba(234,239,255,0.08)]" style={{ height: "750px" }}>
-          <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_50%_0%,rgba(234,239,255,0.03),transparent_70%)] pointer-events-none" />
-          <Cal
-            namespace="let-s-build"
-            calLink="prashantkhuva/let-s-build"
-            style={{ width: "100%", height: "100%", overflow: "scroll" }}
-            config={{ layout: "month_view", useSlotsViewOnSmallScreen: "true" }}
-          />
-        </div>
+        <ScrollReveal direction="up">
+          <div className="relative rounded-2xl ring-1 ring-white/[0.06] overflow-hidden shadow-[0_0_60px_-20px_rgba(234,239,255,0.08)]" style={{ height: "750px" }}>
+            <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_50%_0%,rgba(234,239,255,0.03),transparent_70%)] pointer-events-none" />
+            <Cal
+              namespace="let-s-build"
+              calLink="prashantkhuva/let-s-build"
+              style={{ width: "100%", height: "100%", overflow: "scroll" }}
+              config={{ layout: "month_view", useSlotsViewOnSmallScreen: "true" }}
+            />
+          </div>
+        </ScrollReveal>
       </section>
 
       {/* Bottom notes */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
-            <div className="w-10 h-10 rounded-full bg-[var(--accent)]/5 flex items-center justify-center shrink-0">
-              <Video size={16} className="text-[var(--accent)]/50" />
+          <ScrollReveal direction="up">
+            <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
+              <div className="w-10 h-10 rounded-full bg-[var(--accent)]/5 flex items-center justify-center shrink-0">
+                <Video size={16} className="text-[var(--accent)]/50" />
+              </div>
+              <div>
+                <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">Free consultation</p>
+                <p className="text-[var(--text-muted)] text-xs leading-relaxed">30-minute video call, completely free</p>
+              </div>
             </div>
-            <div>
-              <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">Free consultation</p>
-              <p className="text-[var(--text-muted)] text-xs leading-relaxed">30-minute video call, completely free</p>
+          </ScrollReveal>
+          <ScrollReveal direction="up" delay={0.08}>
+            <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
+              <div className="w-10 h-10 rounded-full bg-[var(--accent)]/5 flex items-center justify-center shrink-0">
+                <Target size={16} className="text-[var(--accent)]/50" />
+              </div>
+              <div>
+                <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">No pressure</p>
+                <p className="text-[var(--text-muted)] text-xs leading-relaxed">Discuss your goals, timeline, and budget</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
-            <div className="w-10 h-10 rounded-full bg-[var(--accent)]/5 flex items-center justify-center shrink-0">
-              <Target size={16} className="text-[var(--accent)]/50" />
+          </ScrollReveal>
+          <ScrollReveal direction="up" delay={0.16}>
+            <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
+              <div className="w-10 h-10 rounded-full bg-[var(--accent)]/5 flex items-center justify-center shrink-0">
+                <ShieldCheck size={16} className="text-[var(--accent)]/50" />
+              </div>
+              <div>
+                <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">Zero commitment</p>
+                <p className="text-[var(--text-muted)] text-xs leading-relaxed">No obligation — ever</p>
+              </div>
             </div>
-            <div>
-              <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">No pressure</p>
-              <p className="text-[var(--text-muted)] text-xs leading-relaxed">Discuss your goals, timeline, and budget</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.04]">
-            <div className="w-10 h-10 rounded-full bg-[var(--accent)]/5 flex items-center justify-center shrink-0">
-              <ShieldCheck size={16} className="text-[var(--accent)]/50" />
-            </div>
-            <div>
-              <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">Zero commitment</p>
-              <p className="text-[var(--text-muted)] text-xs leading-relaxed">No obligation — ever</p>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Contextual internal links */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 pb-24">
-        <div className="border-t border-white/[0.06] pt-10">
+        <ScrollReveal direction="right" className="border-t border-white/[0.06] pt-10">
           <p className="text-[var(--text-muted)] text-xs uppercase tracking-[0.15em] mb-4">Explore more</p>
           <div className="flex flex-wrap gap-x-8 gap-y-3">
             <Link href="/services" className="inline-flex items-center gap-1.5 text-sm text-[var(--accent)]/60 hover:text-[var(--text-primary)] transition-colors">
@@ -128,7 +137,7 @@ export default function CalBooking() {
               About <ArrowRight size={12} />
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
     </div>
   );

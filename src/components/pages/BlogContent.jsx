@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { blogPosts } from "@/data/blog-posts";
 import { postImage } from "@/data/blog-images";
 
@@ -43,11 +44,10 @@ function BlogCard({ post, index }) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10, scale: 0.98 }}
       transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
+      <ScrollReveal direction="up" delay={0.05 * (index % 3)}>
       <Link href={`/blog/${post.slug}`} className="group block">
         <div
           className="rounded-2xl overflow-hidden mb-4 aspect-[16/10] relative transition-all duration-500 ring-1 ring-[var(--border-color)] group-hover:ring-[var(--border-hover)] group-hover:shadow-[0_8px_30px_var(--accent-glow)]"
@@ -83,6 +83,7 @@ function BlogCard({ post, index }) {
           {post.description}
         </p>
       </Link>
+      </ScrollReveal>
     </motion.div>
   );
 }
