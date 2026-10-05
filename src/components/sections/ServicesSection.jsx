@@ -2,57 +2,108 @@
 
 import { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 import GridLines from "@/components/ui/GridLines";
-import RevealImg from "@/components/ui/RevealImg";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 import { homeServiceCards } from "@/data/services";
 
 function ServiceCard({ service, index }) {
   return (
-    <ScrollReveal direction="up" delay={index * 0.1}>
-      <Link href={service.href} className="block group gsap-work-card">
-        {/* Mobile: image card only, text below */}
-        <div className="md:hidden">
-          <div
-            className="relative rounded-2xl overflow-hidden aspect-[4/3]"
+    <Link href={service.href} className="block group">
+      {/* Mobile: image card only, text below */}
+      <div className="md:hidden">
+        <div
+          className="relative rounded-2xl overflow-hidden aspect-[4/3]"
+          style={{
+            background: "var(--hero-bg)",
+            border: "1px solid var(--hero-border)",
+          }}
+        >
+          <Image
+            src={service.image}
+            alt={service.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={index < 2}
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+        </div>
+        <div className="pt-5 pb-2">
+          <h3
+            className="text-xl font-medium mb-2"
+            style={{ color: "var(--text-primary)" }}
+          >
+            {service.title}
+          </h3>
+          <p
+            className="text-sm leading-relaxed mb-5 max-w-[95%]"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            {service.desc}
+          </p>
+          <span
+            className="inline-flex items-center gap-2 text-[13px] font-medium px-5 py-2.5 rounded-full transition-all duration-300 group-hover:gap-3"
             style={{
-              background: "var(--hero-bg)",
-              border: "1px solid var(--hero-border)",
+              color: "var(--text-primary)",
+              border: "1px solid var(--border-color)",
             }}
           >
-            <RevealImg
-              src={service.image}
-              alt={service.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-          </div>
-          <div className="pt-5 pb-2">
-            <h3
-              className="text-xl font-medium mb-2"
-              style={{ color: "var(--text-primary)" }}
+            Learn more
+            <svg
+              className="w-3.5 h-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              {service.title}
-            </h3>
-            <p
-              className="text-sm leading-relaxed mb-5 max-w-[95%]"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              {service.desc}
-            </p>
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      {/* Desktop: old overlay design */}
+      <div
+        className="hidden md:block relative rounded-2xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1 aspect-[4/3]"
+        style={{
+          background: "var(--hero-bg)",
+          border: "1px solid var(--hero-border)",
+        }}
+      >
+        <Image
+          src={service.image}
+          alt={service.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          priority={index < 2}
+          className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+
+        <div className="absolute inset-0 flex flex-col justify-end p-7">
+          <h3
+            className="text-2xl font-medium mb-2"
+            style={{ color: "var(--hero-text)" }}
+          >
+            {service.title}
+          </h3>
+          <p
+            className="text-body-sm leading-normal mb-4 max-w-[90%]"
+            style={{ color: "var(--hero-text-secondary)" }}
+          >
+            {service.desc}
+          </p>
+          <div className="flex items-center justify-between">
             <span
-              className="inline-flex items-center gap-2 text-[13px] font-medium px-5 py-2.5 rounded-full transition-all duration-300 group-hover:gap-3"
-              style={{
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-color)",
-              }}
+              className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider group-hover:gap-2.5 transition-all duration-300"
+              style={{ color: "var(--hero-text-muted)" }}
             >
               Learn more
               <svg
-                className="w-3.5 h-3.5"
+                className="w-3 h-3"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -65,60 +116,8 @@ function ServiceCard({ service, index }) {
             </span>
           </div>
         </div>
-
-        {/* Desktop: old overlay design */}
-        <div
-          className="hidden md:block relative rounded-2xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1 aspect-[4/3]"
-          style={{
-            background: "var(--hero-bg)",
-            border: "1px solid var(--hero-border)",
-          }}
-        >
-          <RevealImg
-            src={service.image}
-            alt={service.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
-
-          <div className="absolute inset-0 flex flex-col justify-end p-7">
-            <h3
-              className="text-2xl font-medium mb-2"
-              style={{ color: "var(--hero-text)" }}
-            >
-              {service.title}
-            </h3>
-            <p
-              className="text-body-sm leading-normal mb-4 max-w-[90%]"
-              style={{ color: "var(--hero-text-secondary)" }}
-            >
-              {service.desc}
-            </p>
-            <div className="flex items-center justify-between">
-              <span
-                className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider group-hover:gap-2.5 transition-all duration-300"
-                style={{ color: "var(--hero-text-muted)" }}
-              >
-                Learn more
-                <svg
-                  className="w-3 h-3"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </span>
-            </div>
-          </div>
-        </div>
-      </Link>
-    </ScrollReveal>
+      </div>
+    </Link>
   );
 }
 
@@ -161,23 +160,6 @@ export default function ServicesSection() {
           ScrollTrigger.refresh();
         });
       }
-
-      gsap.fromTo(
-        sectionRef.current?.querySelectorAll(".gsap-work-card"),
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.12,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 85%",
-            toggleActions: "play none reverse none",
-            invalidateOnRefresh: true,
-          },
-        },
-      );
     },
     [],
   );
