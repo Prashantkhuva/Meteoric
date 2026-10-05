@@ -3,14 +3,13 @@
 import { useRef } from "react";
 import { gsap } from "@/lib/gsap-setup";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
-
-const offset = { up: { y: 32 }, down: { y: -32 }, left: { x: 32 }, right: { x: -32 } };
+import { revealFrom, revealTo, clearRevealClip } from "@/lib/scroll-reveal";
 
 export default function ScrollReveal({
   children,
   direction = "up",
   delay = 0,
-  duration = 0.5,
+  duration = 0.7,
   className = "",
   ...props
 }) {
@@ -18,16 +17,22 @@ export default function ScrollReveal({
 
   useSectionAnimations(ref, () => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.fromTo(ref.current,
-      { ...offset[direction], opacity: 0 },
+    gsap.fromTo(
+      ref.current,
+      revealFrom(direction),
       {
-        ...(direction === "left" || direction === "right" ? { x: 0 } : { y: 0 }),
-        opacity: 1,
+        ...revealTo,
         duration,
         delay,
-        ease: "power2.out",
+        ease: "power3.out",
         immediateRender: true,
-        scrollTrigger: { trigger: ref.current, start: "top 90%", toggleActions: "play none reverse none", invalidateOnRefresh: true },
+        onComplete: () => clearRevealClip(ref.current),
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top 90%",
+          toggleActions: "play none reverse none",
+          invalidateOnRefresh: true,
+        },
       },
     );
   });

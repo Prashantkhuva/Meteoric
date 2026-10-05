@@ -6,11 +6,16 @@ import Image from "next/image";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import GridLines from "@/components/ui/GridLines";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import {
+  revealFrom,
+  revealTo,
+  clearRevealClip,
+} from "@/lib/scroll-reveal";
 import { homeServiceCards } from "@/data/services";
 
 function ServiceCard({ service, index }) {
   return (
-    <Link href={service.href} className="block group">
+    <Link href={service.href} className="block group service-card">
       {/* Mobile: image card only, text below */}
       <div className="md:hidden">
         <div
@@ -140,12 +145,13 @@ export default function ServicesSection() {
       });
       gsap.fromTo(
         split.lines,
-        { y: 40, opacity: 0 },
+        revealFrom("right"),
         {
-          y: 0,
-          opacity: 1,
+          ...revealTo,
           stagger: 0.1,
-          ease: "power2.out",
+          ease: "power3.out",
+          immediateRender: true,
+          onComplete: () => clearRevealClip(split.lines),
           scrollTrigger: {
             trigger: headingRef.current,
             start: "top bottom",
@@ -159,6 +165,28 @@ export default function ServicesSection() {
         document.fonts.ready.then(() => {
           ScrollTrigger.refresh();
         });
+      }
+
+      const cards = sectionRef.current?.querySelectorAll(".service-card");
+      if (cards?.length) {
+        gsap.fromTo(
+          cards,
+          revealFrom("up"),
+          {
+            ...revealTo,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            immediateRender: true,
+            onComplete: () => clearRevealClip(cards),
+            scrollTrigger: {
+              trigger: cards[0],
+              start: "top 88%",
+              toggleActions: "play none reverse none",
+              invalidateOnRefresh: true,
+            },
+          },
+        );
       }
     },
     [],

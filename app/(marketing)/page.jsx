@@ -1,6 +1,7 @@
 import HomePage from "@/components/pages/Home";
 import HomeHashScroll from "./HomeHashScroll";
 import Link from "next/link";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { SITE_URL, pageMetadata } from "@/lib/seo/config";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildHowToJsonLd, buildFaqJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
@@ -104,29 +105,35 @@ function PopularServices() {
           Popular services
         </h2>
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {popularServices.map((service) => (
+          {popularServices.map((service, i) => (
             <li key={service.to}>
-              <Link
-                href={service.to}
-                className="block h-full rounded-xl border p-5 transition-colors hover:border-[var(--border-hover)]"
-                style={{
-                  borderColor: "var(--border-color)",
-                  background: "var(--card-bg)",
-                }}
+              <ScrollReveal
+                direction="up"
+                delay={0.08 * i}
+                className="h-full"
               >
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: "var(--text-body)" }}
+                <Link
+                  href={service.to}
+                  className="block h-full rounded-xl border p-5 transition-colors hover:border-[var(--border-hover)]"
+                  style={{
+                    borderColor: "var(--border-color)",
+                    background: "var(--card-bg)",
+                  }}
                 >
-                  {service.label}
-                </span>
-                <span
-                  className="mt-1 block text-xs"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  View service
-                </span>
-              </Link>
+                  <span
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-body)" }}
+                  >
+                    {service.label}
+                  </span>
+                  <span
+                    className="mt-1 block text-xs"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    View service
+                  </span>
+                </Link>
+              </ScrollReveal>
             </li>
           ))}
         </ul>

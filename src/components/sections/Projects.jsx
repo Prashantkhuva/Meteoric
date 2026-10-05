@@ -6,6 +6,11 @@ import { gsap, SplitText } from "@/lib/gsap-setup";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import {
+  revealFrom,
+  revealTo,
+  clearRevealClip,
+} from "@/lib/scroll-reveal";
 import { projects as allProjects } from "@/data/projects";
 
 const projects = allProjects.slice(0, 2);
@@ -91,22 +96,29 @@ function Projects() {
       },
     );
 
-    gsap.fromTo(
-      sectionRef.current?.querySelectorAll(".gsap-proj-card"),
-      { y: 30, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        stagger: 0.15,
-        ease: "power2.out",
+    const cards = sectionRef.current?.querySelectorAll(".gsap-proj-card");
+    cards?.forEach((card, i) => {
+      // Alternate edges: card 0 enters from the left, card 1 from the right.
+      const dir = i % 2 === 0 ? "right" : "left";
+      gsap.fromTo(
+        card,
+        revealFrom(dir),
+        {
+          ...revealTo,
+          duration: 0.8,
+          delay: i * 0.15,
+          ease: "power3.out",
+          immediateRender: true,
+          onComplete: () => clearRevealClip(card),
           scrollTrigger: {
-            trigger: sectionRef.current?.querySelector(".gsap-proj-card"),
+            trigger: cards[0],
             start: "top 88%",
             toggleActions: "play none reverse none",
             invalidateOnRefresh: true,
           },
-      },
-    );
+        },
+      );
+    });
 
     const imgs = sectionRef.current?.querySelectorAll(".gsap-proj-img");
     imgs?.forEach((img) => {

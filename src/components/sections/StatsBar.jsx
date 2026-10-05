@@ -3,6 +3,11 @@
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
+import {
+  revealFrom,
+  revealTo,
+  clearRevealClip,
+} from "@/lib/scroll-reveal";
 import siteStats from "@/data/site-stats";
 
 function AnimatedNumber({ target, inView }) {
@@ -51,10 +56,17 @@ export default function StatsBar({ strip = false }) {
 
   useEffect(() => {
     if (!inView || !ref.current) return;
+    const items = ref.current.querySelectorAll(".stat-item");
     gsap.fromTo(
-      ref.current.querySelectorAll(".stat-item"),
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, stagger: 0.1, duration: 0.6, ease: "power2.out" },
+      items,
+      revealFrom("up"),
+      {
+        ...revealTo,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: "power3.out",
+        onComplete: () => clearRevealClip(items),
+      },
     );
   }, [inView]);
 

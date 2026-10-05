@@ -4,6 +4,7 @@ import { useRef, useCallback } from "react";
 import Image from "next/image";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import StaggerLink from "./StaggerLink";
 import GridLines from "@/components/ui/GridLines";
 import { footerColumns } from "@/data/navigation";
@@ -158,17 +159,20 @@ export default function Footer() {
           style={{ borderColor: "var(--footer-border)" }}
         >
           {/* Brand column */}
-          <div className="col-span-2 md:col-span-1">
+          <ScrollReveal
+            direction="up"
+            className="col-span-2 md:col-span-1"
+          >
             <p
               className="text-xs leading-relaxed"
               style={{ color: "var(--footer-muted)" }}
             >
               Web &amp; Software Development Agency
             </p>
-          </div>
+          </ScrollReveal>
 
-          {footerColumns.map((col) => (
-            <div key={col.heading}>
+          {footerColumns.map((col, i) => (
+            <ScrollReveal key={col.heading} direction="up" delay={0.08 * (i + 1)}>
               <h3
                 className="text-xs font-semibold uppercase tracking-wider mb-4"
                 style={{ color: "var(--footer-text)" }}
@@ -188,7 +192,7 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </ScrollReveal>
           ))}
 
         </div>

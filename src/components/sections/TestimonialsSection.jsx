@@ -5,6 +5,11 @@ import dynamic from "next/dynamic";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import { Star, BadgeCheck, Sparkles } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import {
+  revealFrom,
+  revealTo,
+  clearRevealClip,
+} from "@/lib/scroll-reveal";
 import { getApprovedReviews } from "@/lib/actions";
 import FaqAccordion from "./FaqAccordion";
 import { homeFaqs } from "@/data/faqs";
@@ -126,27 +131,28 @@ export default function TestimonialsSection({ initialReviews = [] }) {
       );
     }
 
-    const fadeUp = (target, trigger, opts = {}) =>
+    const wipeIn = (target, trigger, dir) =>
       gsap.fromTo(
         target,
-        { y: 20, opacity: 0 },
+        revealFrom(dir),
         {
-          y: 0,
-          opacity: 1,
-          ease: "power2.out",
-          duration: 0.35,
+          ...revealTo,
+          ease: "power3.out",
+          duration: 0.7,
+          immediateRender: true,
+          onComplete: () => clearRevealClip(target),
           scrollTrigger: {
             trigger,
             start: "top 88%",
             toggleActions: "play none reverse none",
             invalidateOnRefresh: true,
-            ...opts,
           },
         },
       );
 
-    fadeUp(faqHeaderRef.current, faqHeaderRef.current);
-    fadeUp(faqListRef.current, faqListRef.current);
+    // Heading wipes in from the left; list rises from below.
+    wipeIn(faqHeaderRef.current, faqHeaderRef.current, "right");
+    wipeIn(faqListRef.current, faqListRef.current, "up");
   }, []);
 
   return (

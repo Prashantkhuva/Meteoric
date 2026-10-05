@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap, SplitText } from "@/lib/gsap-setup";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
+import { revealFrom, revealTo } from "@/lib/scroll-reveal";
 import { processSteps } from "@/data/process-steps";
 
 export default function ProcessSection() {
@@ -57,7 +58,7 @@ export default function ProcessSection() {
       const steps = timelineRef.current?.querySelectorAll(".proc-step");
       if (steps?.length) {
         // Hide all steps immediately via GSAP (not React inline style)
-        gsap.set(steps, { opacity: 0, y: 40 });
+        gsap.set(steps, revealFrom("right"));
 
         steps.forEach((step) => {
           const dot = step.querySelector(".proc-dot");
@@ -74,8 +75,17 @@ export default function ProcessSection() {
             },
           });
 
-          // Step container fades in + slides up
-          tl.to(step, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0);
+          // Step container wipes in from the left + settles
+          tl.to(
+            step,
+            {
+              ...revealTo,
+              duration: 0.6,
+              ease: "power3.out",
+              onComplete: () => gsap.set(step, { clipPath: "none" }),
+            },
+            0,
+          );
 
           // Dot pops in
           tl.fromTo(
