@@ -7,15 +7,7 @@ import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { caseStudies } from "@/data/case-studies";
 import { projects } from "@/data/projects";
 import { workTypeLabel, workTypeDisclosure } from "@/lib/work-type";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 function StrategyStep({ number, title, description }) {
   return (
@@ -178,12 +170,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
         aria-labelledby="overview-heading"
         className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16"
       >
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <ScrollReveal direction="up">
           <SectionHeading id="overview">Overview</SectionHeading>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pb-10 mb-8 border-b border-[var(--border-color)]">
             {metaCells.map((cell) => (
@@ -229,7 +216,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
               </ul>
             </>
           )}
-        </motion.div>
+        </ScrollReveal>
       </section>
 
       {/* Challenge */}
@@ -239,17 +226,12 @@ export default function CaseStudy({ project, caseStudy: cs }) {
           aria-labelledby="challenge-heading"
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16"
         >
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up">
             <SectionHeading id="challenge">The challenge</SectionHeading>
             <p className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
               {cs.challenge}
             </p>
-          </motion.div>
+          </ScrollReveal>
         </section>
       )}
 
@@ -260,12 +242,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
           aria-labelledby="solution-heading"
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16"
         >
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up">
             <SectionHeading id="solution">The solution</SectionHeading>
             <p className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
               {solutionBody}
@@ -286,7 +263,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                 ))}
               </div>
             )}
-          </motion.div>
+          </ScrollReveal>
         </section>
       )}
 
@@ -297,12 +274,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
           aria-labelledby="process-heading"
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
         >
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up">
             <SectionHeading id="process">How we built it</SectionHeading>
             <div className="space-y-8">
               {cs.productDecisions.slice(0, 4).map((item, i) => {
@@ -317,7 +289,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                 );
               })}
             </div>
-          </motion.div>
+          </ScrollReveal>
         </section>
       )}
 
@@ -328,12 +300,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
           aria-labelledby="results-heading"
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
         >
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up">
             <SectionHeading id="results">Results</SectionHeading>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
               {cs.results.map((r, ri) => (
@@ -348,7 +315,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </ScrollReveal>
         </section>
       )}
 
@@ -358,23 +325,21 @@ export default function CaseStudy({ project, caseStudy: cs }) {
           aria-label="Client testimonial"
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
         >
-          <motion.figure
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="p-6 md:p-8 rounded-2xl ring-1 ring-[var(--border-color)]"
-            style={{ background: "var(--bg-surface)" }}
-          >
-            <blockquote className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
-              &ldquo;{cs.testimonial.quote}&rdquo;
-            </blockquote>
-            <figcaption className="mt-4 text-sm text-[var(--text-muted)]">
-              {cs.testimonial.author}
-              {cs.testimonial.role ? `, ${cs.testimonial.role}` : ""}
-              {cs.testimonial.company ? ` — ${cs.testimonial.company}` : ""}
-            </figcaption>
-          </motion.figure>
+          <ScrollReveal direction="up">
+            <figure
+              className="p-6 md:p-8 rounded-2xl ring-1 ring-[var(--border-color)]"
+              style={{ background: "var(--bg-surface)" }}
+            >
+              <blockquote className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
+                &ldquo;{cs.testimonial.quote}&rdquo;
+              </blockquote>
+              <figcaption className="mt-4 text-sm text-[var(--text-muted)]">
+                {cs.testimonial.author}
+                {cs.testimonial.role ? `, ${cs.testimonial.role}` : ""}
+                {cs.testimonial.company ? ` — ${cs.testimonial.company}` : ""}
+              </figcaption>
+            </figure>
+          </ScrollReveal>
         </section>
       )}
 
@@ -384,12 +349,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
         aria-labelledby="technology-heading"
         className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
       >
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <ScrollReveal direction="up">
           <SectionHeading id="technology">Technology</SectionHeading>
           <div className="flex flex-wrap gap-2">
             {project.technology.map((tag) => (
@@ -401,17 +361,14 @@ export default function CaseStudy({ project, caseStudy: cs }) {
               </span>
             ))}
           </div>
-        </motion.div>
+        </ScrollReveal>
       </section>
 
       {/* Related services */}
       {cs?.serviceLink && (
         <section className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+          <ScrollReveal
+            direction="up"
             className="p-6 md:p-8 rounded-2xl ring-1 ring-[var(--border-color)]"
             style={{ background: "var(--bg-surface)" }}
           >
@@ -428,19 +385,14 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                 className="transition-transform duration-300 group-hover/serv:translate-x-1"
               />
             </Link>
-          </motion.div>
+          </ScrollReveal>
         </section>
       )}
 
       {/* Related projects */}
       {relatedItems.length > 0 && (
         <section className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <ScrollReveal direction="up">
             <h2 className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-8 font-medium">
               Continue exploring
             </h2>
@@ -475,7 +427,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                 </Link>
               ))}
             </div>
-          </motion.div>
+          </ScrollReveal>
         </section>
       )}
 
@@ -485,13 +437,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
         aria-labelledby="next-step-heading"
         className="relative max-w-4xl mx-auto px-6 md:px-12 pb-24"
       >
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="pt-12 border-t border-[var(--border-color)]"
-        >
+        <ScrollReveal direction="up" className="pt-12 border-t border-[var(--border-color)]">
           <h2
             id="next-step-heading"
             className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-6 font-medium"
@@ -518,7 +464,7 @@ export default function CaseStudy({ project, caseStudy: cs }) {
               </a>
             )}
           </div>
-        </motion.div>
+        </ScrollReveal>
       </section>
     </div>
   );

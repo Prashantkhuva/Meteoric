@@ -9,6 +9,7 @@ import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
 import { workTypeLabel } from "@/lib/work-type";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { trackEvent } from "@/lib/analytics/gtag";
 
 const visibleProjects = projects.filter((p) => p.draft !== true);
@@ -17,9 +18,10 @@ const categories = ["All", ...new Set(visibleProjects.map((p) => p.projectType))
 
 function ProjectCard({ project, index }) {
   return (
+    <ScrollReveal direction="up" delay={0.06 * (index % 2)}>
     <Link
       href={`/work/${project.slug}`}
-      className="group relative flex flex-col rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)] gsap-work-card"
+      className="group relative flex flex-col h-full rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)]"
       style={{ background: "var(--card-bg)" }}
     >
       <div className="relative overflow-hidden aspect-[16/10]">
@@ -27,9 +29,9 @@ function ProjectCard({ project, index }) {
           src={project.image}
           alt={project.imageAlt}
           fill
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] gsap-work-img"
+          priority={index < 2}
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          loading={index === 0 ? "eager" : "lazy"}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
@@ -65,6 +67,7 @@ function ProjectCard({ project, index }) {
         </div>
       </div>
     </Link>
+    </ScrollReveal>
   );
 }
 
@@ -76,7 +79,6 @@ export default function WorkPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
-  const cardsRef = useRef(null);
 
   const filteredProjects =
     activeCategory === "All"
@@ -113,39 +115,6 @@ export default function WorkPage() {
           },
         },
       );
-
-      gsap.fromTo(
-        cardsRef.current?.querySelectorAll(".gsap-work-card"),
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.12,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: "top 85%",
-            toggleActions: "play none reverse none",
-            invalidateOnRefresh: true,
-          },
-        },
-      );
-
-      const imgs = cardsRef.current?.querySelectorAll(".gsap-work-img");
-      imgs?.forEach((img) => {
-        gsap.set(img, { clipPath: "inset(100% 0 0 0)" });
-        gsap.to(img, {
-          clipPath: "inset(0% 0 0 0)",
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: img,
-            start: "top 85%",
-            toggleActions: "play none reverse none",
-            invalidateOnRefresh: true,
-          },
-        });
-      });
     },
     { scope: sectionRef },
   );
@@ -187,10 +156,7 @@ export default function WorkPage() {
         </div>
 
         {/* Project Grid */}
-        <div
-          ref={cardsRef}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {filteredProjects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}

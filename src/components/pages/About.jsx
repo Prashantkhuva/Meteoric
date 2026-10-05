@@ -9,6 +9,7 @@ import { gsap } from "@/lib/gsap-setup";
 import { SplitText } from "gsap/SplitText";
 import { founderProfiles } from "@/data/organization";
 import { socialIcons } from "@/components/ui/social-icons";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { openCalModal } from "@/components/ui/cal-modal-store";
 
 gsap.registerPlugin(SplitText);
@@ -69,8 +70,6 @@ const glance = [
 export default function AboutPage({ faqs = [] }) {
   const [openFaq, setOpenFaq] = useState(null);
   const headingRef = useRef(null);
-  const bioRef = useRef(null);
-  const valuesRef = useRef(null);
 
   const openCal = useCallback(() => openCalModal(), []);
 
@@ -110,56 +109,6 @@ export default function AboutPage({ faqs = [] }) {
     { scope: headingRef },
   );
 
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      const items = bioRef.current?.querySelectorAll(".bio-reveal");
-      if (!items) return;
-      gsap.fromTo(
-        items,
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.12,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: bioRef.current,
-            start: "top 80%",
-            toggleActions: "play reset play reset",
-          },
-        },
-      );
-    },
-    { scope: bioRef },
-  );
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      const cards = valuesRef.current?.querySelectorAll(".value-card");
-      if (!cards) return;
-      gsap.fromTo(
-        cards,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.15,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: valuesRef.current,
-            start: "top 80%",
-            toggleActions: "play reset play reset",
-          },
-        },
-      );
-    },
-    { scope: valuesRef },
-  );
-
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Hero — Atomik heading */}
@@ -186,12 +135,11 @@ export default function AboutPage({ faqs = [] }) {
 
       {/* Bio + Photo */}
       <section
-        ref={bioRef}
         className="relative max-w-6xl mx-auto px-6 md:px-12 pb-16 md:pb-24"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           {/* Photo */}
-          <div className="bio-reveal relative">
+          <ScrollReveal direction="left" className="relative">
             <div
               className="relative overflow-hidden rounded-2xl aspect-[4/5]"
               style={{ background: "var(--bg-surface)" }}
@@ -229,7 +177,7 @@ export default function AboutPage({ faqs = [] }) {
                 Founder &amp; Full-Stack Developer
               </span>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Content */}
           <div className="flex flex-col gap-8 md:pt-8">
@@ -239,7 +187,7 @@ export default function AboutPage({ faqs = [] }) {
             >
               What Meteoric does
             </h2>
-            <div className="bio-reveal space-y-4 text-[15px] leading-[1.8]" style={{ color: "var(--text-secondary)" }}>
+            <ScrollReveal direction="up" className="space-y-4 text-[15px] leading-[1.8]" style={{ color: "var(--text-secondary)" }}>
               <p>
                 Meteoric is a{" "}
                 <Link
@@ -329,11 +277,12 @@ export default function AboutPage({ faqs = [] }) {
                 </Link>
                 .
               </p>
-            </div>
+            </ScrollReveal>
 
             {/* At a glance */}
-            <div
-              className="bio-reveal py-8"
+            <ScrollReveal
+              direction="up"
+              className="py-8"
               style={{
                 borderTop: "1px solid var(--border-color)",
                 borderBottom: "1px solid var(--border-color)",
@@ -363,10 +312,10 @@ export default function AboutPage({ faqs = [] }) {
                   </div>
                 ))}
               </dl>
-            </div>
+            </ScrollReveal>
 
             {/* Contact + Social */}
-            <div className="bio-reveal flex flex-col gap-6">
+            <ScrollReveal direction="up" className="flex flex-col gap-6">
               <div className="flex flex-col gap-2">
                 <a
                   href="mailto:contact@withmeteoric.com"
@@ -424,11 +373,11 @@ export default function AboutPage({ faqs = [] }) {
                 >
                   <path
                     fill="currentColor"
-                    d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z"
-                  />
-                </svg>
-              </button>
-            </div>
+                  d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z"
+                />
+              </svg>
+            </button>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -438,7 +387,7 @@ export default function AboutPage({ faqs = [] }) {
         className="relative max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-28"
         style={{ borderTop: "1px solid var(--border-color)" }}
       >
-        <div ref={valuesRef}>
+        <div>
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-14">
             <h2
               className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1]"
@@ -455,43 +404,44 @@ export default function AboutPage({ faqs = [] }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {values.map((item) => (
-              <div
-                key={item.num}
-                className="value-card group relative p-6 rounded-2xl transition-all duration-500 hover:-translate-y-1"
-                style={{
-                  background: "var(--bg-surface)",
-                  border: "1px solid var(--border-color)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--border-hover)";
-                  e.currentTarget.style.boxShadow =
-                    "0 8px 30px var(--accent-glow)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--border-color)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              >
-                <span
-                  className="text-[11px] font-mono tracking-wider block mb-4"
-                  style={{ color: "var(--text-muted)" }}
+            {values.map((item, i) => (
+              <ScrollReveal key={item.num} direction="up" delay={0.1 * i}>
+                <div
+                  className="group relative h-full p-6 rounded-2xl transition-all duration-500 hover:-translate-y-1"
+                  style={{
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border-hover)";
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 30px var(--accent-glow)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border-color)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
                 >
-                  {item.num}
-                </span>
-                <h3
-                  className="text-lg font-medium mb-3"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {item.title}
-                </h3>
-                <p
-                  className="text-[15px] leading-[1.7]"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {item.description}
-                </p>
-              </div>
+                  <span
+                    className="text-[11px] font-mono tracking-wider block mb-4"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    {item.num}
+                  </span>
+                  <h3
+                    className="text-lg font-medium mb-3"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    className="text-[15px] leading-[1.7]"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {item.description}
+                  </p>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
