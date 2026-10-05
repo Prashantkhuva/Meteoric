@@ -73,14 +73,10 @@ export default function StatsBar({ strip = false }) {
       >
         <div className="mx-auto max-w-7xl px-4 py-3.5">
           <ul className="grid grid-cols-2">
-            {siteStats.map((stat, i) => (
+            {siteStats.map((stat) => (
               <li
                 key={stat.label}
                 className="stat-item flex flex-col items-center text-center opacity-0 px-2 py-2.5 min-w-0"
-                style={{
-                  borderLeft: i % 2 === 1 ? "1px solid rgba(255,255,255,0.1)" : undefined,
-                  borderTop: i >= 2 ? "1px solid rgba(255,255,255,0.1)" : undefined,
-                }}
               >
                 <span
                   className="text-[16px] font-semibold tracking-tight whitespace-nowrap leading-none"
