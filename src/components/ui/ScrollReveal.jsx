@@ -3,10 +3,11 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Directional masked-wipe reveal via IntersectionObserver + CSS transitions.
+ * Directional masked-wipe reveal via passive-scroll rect check + CSS transitions.
  *
- * No GSAP/ScrollTrigger per element — one cheap IO per node, clip-path animates
- * on the compositor-friendly CSS path. `direction` = travel direction:
+ * No GSAP/ScrollTrigger per element — one cheap rect check per node on rAF,
+ * clip-path animates on the compositor-friendly CSS path. `direction` = travel
+ * direction:
  * - up:    enters from below, rises
  * - down:  enters from above, drops
  * - left:  enters from the right, slides leftward
@@ -53,20 +54,40 @@ export default function ScrollReveal({
       el.classList.remove("rv-in");
     };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        io.disconnect();
+    // Rect check on passive scroll instead of IntersectionObserver: Chromium
+    // reports isIntersecting=false when the pre-state combines clip-path with
+    // translate3d (clip alone and translate alone both fire, combined does
+    // not) — so the observer never fires and the wipe stays stuck at FROM.
+    // getBoundingClientRect() measures layout, which clip-path cannot hide.
+    // Same trigger as old ScrollTrigger "top 90%" / IO rootMargin -10%.
+    let done = false;
+    let raf = 0;
+
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+
+    function check() {
+      raf = 0;
+      if (done) return;
+      const r = el.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < window.innerHeight * 0.9) {
+        done = true;
         el.addEventListener("transitionend", onEnd);
         el.classList.add("rv-in");
-      },
-      // Same trigger point as the old ScrollTrigger: "top 90%"
-      { rootMargin: "0px 0px -10% 0px", threshold: 0 },
-    );
-    io.observe(el);
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    check();
 
     return () => {
-      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
       el.removeEventListener("transitionend", onEnd);
     };
   }, []);
