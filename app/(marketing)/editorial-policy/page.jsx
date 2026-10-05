@@ -1,6 +1,7 @@
 import { SITE_URL, SITE_NAME, pageMetadata } from "@/lib/seo/config";
 import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { ORG_ID, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
 const pageTitle = "Editorial Policy";
@@ -66,7 +67,7 @@ export default function EditorialPolicyPage() {
           </header>
 
           <div className="space-y-14">
-            <section>
+            <ScrollReveal direction="up">
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Who Writes Our Content
               </h2>
@@ -85,53 +86,59 @@ export default function EditorialPolicyPage() {
                 for clients. We do not publish AI-generated content without
                 human review and hands-on verification.
               </p>
-            </section>
+            </ScrollReveal>
 
-            <section>
+            <ScrollReveal direction="up">
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Our Editorial Standards
               </h2>
               <div className="space-y-4">
-                <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
-                  <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
-                    Accuracy First
-                  </h3>
-                  <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
-                    Every technical claim is verified against official
-                    documentation. Code examples are tested. Statistics are
-                    sourced from published research, official benchmarks, or our
-                    own project data. When we reference metrics, those numbers
-                    come from real projects we have shipped.
-                  </p>
-                </div>
-                <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
-                  <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
-                    No Speculation
-                  </h3>
-                  <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
-                    We do not publish opinion pieces without evidence. If we
-                    recommend a technology, we explain why based on production
-                    experience — not marketing claims. If we compare tools, we
-                    disclose when we have direct experience versus when we are
-                    citing third-party benchmarks.
-                  </p>
-                </div>
-                <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
-                  <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
-                    Regular Updates
-                  </h3>
-                  <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
-                    Every article shows its last modified date. We review
-                    content quarterly for accuracy and freshness. When
-                    technology versions change or new data becomes available, we
-                    update the article and note the changes. Outdated content is
-                    either updated or archived.
-                  </p>
-                </div>
+                <ScrollReveal direction="up">
+                  <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
+                    <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
+                      Accuracy First
+                    </h3>
+                    <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
+                      Every technical claim is verified against official
+                      documentation. Code examples are tested. Statistics are
+                      sourced from published research, official benchmarks, or our
+                      own project data. When we reference metrics, those numbers
+                      come from real projects we have shipped.
+                    </p>
+                  </div>
+                </ScrollReveal>
+                <ScrollReveal direction="up" delay={0.08}>
+                  <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
+                    <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
+                      No Speculation
+                    </h3>
+                    <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
+                      We do not publish opinion pieces without evidence. If we
+                      recommend a technology, we explain why based on production
+                      experience — not marketing claims. If we compare tools, we
+                      disclose when we have direct experience versus when we are
+                      citing third-party benchmarks.
+                    </p>
+                  </div>
+                </ScrollReveal>
+                <ScrollReveal direction="up" delay={0.16}>
+                  <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
+                    <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
+                      Regular Updates
+                    </h3>
+                    <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
+                      Every article shows its last modified date. We review
+                      content quarterly for accuracy and freshness. When
+                      technology versions change or new data becomes available, we
+                      update the article and note the changes. Outdated content is
+                      either updated or archived.
+                    </p>
+                  </div>
+                </ScrollReveal>
               </div>
-            </section>
+            </ScrollReveal>
 
-            <section>
+            <ScrollReveal direction="up">
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Content Review Process
               </h2>
@@ -154,9 +161,9 @@ export default function EditorialPolicyPage() {
                   </li>
                 ))}
               </ol>
-            </section>
+            </ScrollReveal>
 
-            <section>
+            <ScrollReveal direction="up">
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Corrections
               </h2>
@@ -174,9 +181,9 @@ export default function EditorialPolicyPage() {
                 note the correction. Accuracy matters more than being right — if
                 we made a mistake, we fix it.
               </p>
-            </section>
+            </ScrollReveal>
 
-            <section>
+            <ScrollReveal direction="up">
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Conflicts of Interest
               </h2>
@@ -188,7 +195,7 @@ export default function EditorialPolicyPage() {
                 affiliate relationships or sponsorship. We do not accept paid
                 placements in editorial content.
               </p>
-            </section>
+            </ScrollReveal>
           </div>
         </div>
       </div>

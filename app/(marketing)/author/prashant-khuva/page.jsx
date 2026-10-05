@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { buildBreadcrumbJsonLd, buildPersonJsonLd, PERSON_ID } from "@/lib/seo/jsonLd";
 
 const authorData = {
@@ -249,10 +250,10 @@ export default function AuthorPage() {
               </div>
             ) : (
               <div className="space-y-3 sm:space-y-4">
-                {authorPosts.map((post) => (
-                  <Link
-                    key={post.slug}
-                    href={`/blog/${post.slug}`}
+                {authorPosts.map((post, i) => (
+                  <ScrollReveal key={post.slug} direction="left" delay={0.05 * i}>
+                    <Link
+                      href={`/blog/${post.slug}`}
                     className="group flex flex-col sm:flex-row gap-4 sm:gap-5 p-3 sm:p-4 rounded-2xl ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] hover:shadow-[0_8px_30px_var(--accent-glow)] transition-all duration-500"
                     style={{ background: "var(--bg-surface)" }}
                   >
@@ -302,7 +303,8 @@ export default function AuthorPage() {
                         ))}
                       </div>
                     </div>
-                  </Link>
+                    </Link>
+                  </ScrollReveal>
                 ))}
               </div>
             )}

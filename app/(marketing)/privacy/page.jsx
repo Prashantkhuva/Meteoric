@@ -1,5 +1,6 @@
 import { pageMetadata } from "@/lib/seo/config";
 import JsonLd from "@/components/seo/JsonLd";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
 const pageTitle = "Privacy Policy";
@@ -136,8 +137,9 @@ export default function Privacy() {
           {/* Sections */}
           <div className="space-y-0">
             {sections.map((section) => (
-              <section
+              <ScrollReveal
                 key={section.num}
+                direction="up"
                 className="py-10"
                 style={{ borderTop: "1px solid var(--border-color)" }}
               >
@@ -174,7 +176,7 @@ export default function Privacy() {
                     )}
                   </div>
                 </div>
-              </section>
+              </ScrollReveal>
             ))}
           </div>
         </main>
