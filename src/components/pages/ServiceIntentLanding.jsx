@@ -77,12 +77,15 @@ export default function ServiceIntentLanding({
               Built for founders at a specific stage
             </h2>
             <ul className="grid sm:grid-cols-2 gap-4">
-              {page.whoFor.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-5 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                >
-                  {item}
+              {page.whoFor.map((item, i) => (
+                <li key={item}>
+                  <ScrollReveal
+                    direction="up"
+                    delay={0.07 * i}
+                    className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-5 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                  >
+                    {item}
+                  </ScrollReveal>
                 </li>
               ))}
             </ul>
@@ -97,17 +100,20 @@ export default function ServiceIntentLanding({
               What ships with the engagement
             </h2>
             <ul className="space-y-3.5">
-              {page.deliverables.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                >
-                  <Check
-                    size={16}
-                    className="text-[var(--accent)] mt-1 shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>{item}</span>
+              {page.deliverables.map((item, i) => (
+                <li key={item}>
+                  <ScrollReveal
+                    direction="up"
+                    delay={0.05 * i}
+                    className="flex items-start gap-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                  >
+                    <Check
+                      size={16}
+                      className="text-[var(--accent)] mt-1 shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span>{item}</span>
+                  </ScrollReveal>
                 </li>
               ))}
             </ul>
@@ -163,15 +169,18 @@ export default function ServiceIntentLanding({
               Tools chosen for this kind of build
             </h2>
             <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {page.technologies.map((tech) => (
-                <li
-                  key={tech.name}
-                  className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-5"
-                >
-                  <p className="text-[15px] font-semibold mb-1">{tech.name}</p>
-                  <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">
-                    {tech.use}
-                  </p>
+              {page.technologies.map((tech, i) => (
+                <li key={tech.name}>
+                  <ScrollReveal
+                    direction="up"
+                    delay={0.07 * i}
+                    className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-5"
+                  >
+                    <p className="text-[15px] font-semibold mb-1">{tech.name}</p>
+                    <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">
+                      {tech.use}
+                    </p>
+                  </ScrollReveal>
                 </li>
               ))}
             </ul>
@@ -204,46 +213,50 @@ export default function ServiceIntentLanding({
             .
           </p>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--accent)] mb-4">
-                Good fit
-              </h3>
-              <ul className="space-y-3">
-                {page.fits.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                  >
-                    <Check
-                      size={15}
-                      className="text-[var(--accent)] mt-1 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4">
-                Probably not
-              </h3>
-              <ul className="space-y-3">
-                {page.notFits.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[var(--text-muted)]"
-                  >
-                    <X
-                      size={15}
-                      className="mt-1 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ScrollReveal direction="up">
+              <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-6 h-full">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--accent)] mb-4">
+                  Good fit
+                </h3>
+                <ul className="space-y-3">
+                  {page.fits.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                    >
+                      <Check
+                        size={15}
+                        className="text-[var(--accent)] mt-1 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={0.1}>
+              <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-6 h-full">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4">
+                  Probably not
+                </h3>
+                <ul className="space-y-3">
+                  {page.notFits.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[var(--text-muted)]"
+                    >
+                      <X
+                        size={15}
+                        className="mt-1 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -273,31 +286,32 @@ export default function ServiceIntentLanding({
               — browse all case studies there.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
-              {pageProjects.map((project) => (
-                <Link
-                  key={project.slug}
-                  href={`/work/${project.slug}`}
-                  className="group rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] overflow-hidden hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                >
-                  <div className="p-6">
-                    <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[var(--text-muted)] block mb-3">
-                      {project.projectType}
-                    </span>
-                    <h3 className="text-lg font-secondary-italic mb-2 group-hover:text-[var(--accent)] transition-colors duration-300">
-                      {project.name}
-                    </h3>
-                    <p className="text-[14px] text-[var(--text-muted)] leading-relaxed mb-4">
-                      {project.tagline}
-                    </p>
-                    <span className="text-xs font-mono text-[var(--text-muted)]">
-                      {project.technology.join(" · ")}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-xs font-mono text-[var(--accent)] mt-4 group-hover:translate-x-0.5 transition-transform duration-300">
-                      View case study
-                      <ArrowUpRight size={12} aria-hidden="true" />
-                    </span>
-                  </div>
-                </Link>
+              {pageProjects.map((project, i) => (
+                <ScrollReveal key={project.slug} direction="up" delay={0.08 * i}>
+                  <Link
+                    href={`/work/${project.slug}`}
+                    className="group block h-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] overflow-hidden hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  >
+                    <div className="p-6">
+                      <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[var(--text-muted)] block mb-3">
+                        {project.projectType}
+                      </span>
+                      <h3 className="text-lg font-secondary-italic mb-2 group-hover:text-[var(--accent)] transition-colors duration-300">
+                        {project.name}
+                      </h3>
+                      <p className="text-[14px] text-[var(--text-muted)] leading-relaxed mb-4">
+                        {project.tagline}
+                      </p>
+                      <span className="text-xs font-mono text-[var(--text-muted)]">
+                        {project.technology.join(" · ")}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-xs font-mono text-[var(--accent)] mt-4 group-hover:translate-x-0.5 transition-transform duration-300">
+                        View case study
+                        <ArrowUpRight size={12} aria-hidden="true" />
+                      </span>
+                    </div>
+                  </Link>
+                </ScrollReveal>
               ))}
             </div>
           </div>
@@ -336,19 +350,20 @@ export default function ServiceIntentLanding({
               Read before you decide
             </h2>
             <div className="grid md:grid-cols-3 gap-4">
-              {insights.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                >
-                  <h3 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2 leading-[1.3]">
-                    {post.title}
-                  </h3>
-                  <span className="text-[var(--text-muted)] text-xs font-mono">
-                    Read more →
-                  </span>
-                </Link>
+              {insights.map((post, i) => (
+                <ScrollReveal key={post.slug} direction="up" delay={0.08 * i}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group block h-full p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  >
+                    <h3 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2 leading-[1.3]">
+                      {post.title}
+                    </h3>
+                    <span className="text-[var(--text-muted)] text-xs font-mono">
+                      Read more →
+                    </span>
+                  </Link>
+                </ScrollReveal>
               ))}
             </div>
             {relatedService && (

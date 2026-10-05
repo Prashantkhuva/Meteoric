@@ -96,35 +96,39 @@ export default function Contact() {
 
       {/* Social */}
       <section className="border-t border-[var(--border-color)]">
-        <ScrollReveal
-          direction="up"
-          className="max-w-5xl mx-auto px-6 md:px-12 py-14 md:py-16"
-        >
-          <p
-            className="uppercase tracking-[0.2em] text-xs font-bold mb-6"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Elsewhere
-          </p>
+        <div className="max-w-5xl mx-auto px-6 md:px-12 py-14 md:py-16">
+          <ScrollReveal direction="up">
+            <p
+              className="uppercase tracking-[0.2em] text-xs font-bold mb-6"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Elsewhere
+            </p>
+          </ScrollReveal>
           <div className="flex flex-wrap gap-x-6 gap-y-4">
-            {socialProfiles.map((profile) => (
-              <a
+            {socialProfiles.map((profile, i) => (
+              <ScrollReveal
                 key={profile.id}
-                href={profile.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={profile.label}
-                data-no-magnetic
-                className="text-sm inline-flex items-center justify-center gap-1.5 min-h-6 min-w-6 transition-colors hover:text-[var(--accent)]"
-                style={{ color: "var(--text-secondary)" }}
+                direction="up"
+                delay={0.05 * i}
               >
-                {socialIcons[profile.id] || (
-                  <ArrowUpRight size={16} aria-hidden="true" />
-                )}
-              </a>
+                <a
+                  href={profile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={profile.label}
+                  data-no-magnetic
+                  className="text-sm inline-flex items-center justify-center gap-1.5 min-h-6 min-w-6 transition-colors hover:text-[var(--accent)]"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {socialIcons[profile.id] || (
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  )}
+                </a>
+              </ScrollReveal>
             ))}
           </div>
-        </ScrollReveal>
+        </div>
       </section>
 
       {/* Next paths */}

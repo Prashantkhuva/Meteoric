@@ -177,46 +177,49 @@ export default function CaseStudy({ project, caseStudy: cs }) {
               <MetaCell key={cell.label} label={cell.label} value={cell.value} />
             ))}
           </div>
+        </ScrollReveal>
+
+        <ScrollReveal direction="up" delay={0.05}>
           <p className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8] mb-8">
             {lead}
           </p>
-
-          {project.features?.length > 0 && (
-            <>
-              <h3 className="text-sm font-medium mb-4 text-[var(--text-secondary)]">
-                What we built
-              </h3>
-              <ul className="space-y-3">
-                {project.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-[var(--text-muted)]" />
-                    <span className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                      {f}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {cs?.deliverables?.length > 0 && (
-            <>
-              <h3 className="text-sm font-medium mb-4 mt-8 text-[var(--text-secondary)]">
-                Deliverables
-              </h3>
-              <ul className="space-y-3">
-                {cs.deliverables.map((d, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-[var(--text-muted)]" />
-                    <span className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                      {d}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
         </ScrollReveal>
+
+        {project.features?.length > 0 && (
+          <ScrollReveal direction="up" delay={0.08}>
+            <h3 className="text-sm font-medium mb-4 text-[var(--text-secondary)]">
+              What we built
+            </h3>
+            <ul className="space-y-3">
+              {project.features.map((f, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-[var(--text-muted)]" />
+                  <span className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                    {f}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </ScrollReveal>
+        )}
+
+        {cs?.deliverables?.length > 0 && (
+          <ScrollReveal direction="up" delay={0.08}>
+            <h3 className="text-sm font-medium mb-4 mt-8 text-[var(--text-secondary)]">
+              Deliverables
+            </h3>
+            <ul className="space-y-3">
+              {cs.deliverables.map((d, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-[var(--text-muted)]" />
+                  <span className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                    {d}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </ScrollReveal>
+        )}
       </section>
 
       {/* Challenge */}
@@ -247,12 +250,13 @@ export default function CaseStudy({ project, caseStudy: cs }) {
             <p className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
               {solutionBody}
             </p>
+          </ScrollReveal>
 
-            {cs?.screenshots?.length > 0 && (
-              <div className="grid sm:grid-cols-2 gap-4 mt-8">
-                {cs.screenshots.map((shot, i) => (
+          {cs?.screenshots?.length > 0 && (
+            <div className="grid sm:grid-cols-2 gap-4 mt-8">
+              {cs.screenshots.map((shot, i) => (
+                <ScrollReveal key={i} direction="up" delay={0.06 * i}>
                   <Image
-                    key={i}
                     src={shot.src}
                     alt={shot.alt}
                     width={800}
@@ -260,10 +264,10 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                     className="rounded-xl ring-1 ring-[var(--border-color)] w-full h-auto"
                     loading="lazy"
                   />
-                ))}
-              </div>
-            )}
-          </ScrollReveal>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
@@ -276,20 +280,21 @@ export default function CaseStudy({ project, caseStudy: cs }) {
         >
           <ScrollReveal direction="up">
             <SectionHeading id="process">How we built it</SectionHeading>
-            <div className="space-y-8">
-              {cs.productDecisions.slice(0, 4).map((item, i) => {
-                const boldMatch = item.match(/^([^.—–-]+?)\s*[—–-]\s*(.+)$/s);
-                return (
+          </ScrollReveal>
+          <div className="space-y-8">
+            {cs.productDecisions.slice(0, 4).map((item, i) => {
+              const boldMatch = item.match(/^([^.—–-]+?)\s*[—–-]\s*(.+)$/s);
+              return (
+                <ScrollReveal key={i} direction="up" delay={0.08 * i}>
                   <StrategyStep
-                    key={i}
                     number={String(i + 1).padStart(2, "0")}
                     title={boldMatch ? boldMatch[1].trim() : `Step ${i + 1}`}
                     description={boldMatch ? boldMatch[2].trim() : item}
                   />
-                );
-              })}
-            </div>
-          </ScrollReveal>
+                </ScrollReveal>
+              );
+            })}
+          </div>
         </section>
       )}
 
@@ -302,20 +307,20 @@ export default function CaseStudy({ project, caseStudy: cs }) {
         >
           <ScrollReveal direction="up">
             <SectionHeading id="results">Results</SectionHeading>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-              {cs.results.map((r, ri) => (
-                <div key={ri}>
-                  <p className="text-3xl md:text-4xl font-display text-[var(--text-primary)] mb-1 tracking-tight">
-                    {r.value}
-                  </p>
-                  <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-1">
-                    {r.metric}
-                  </p>
-                  <p className="text-xs text-[var(--text-muted)]">{r.description}</p>
-                </div>
-              ))}
-            </div>
           </ScrollReveal>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {cs.results.map((r, ri) => (
+              <ScrollReveal key={ri} direction="up" delay={0.08 * ri}>
+                <p className="text-3xl md:text-4xl font-display text-[var(--text-primary)] mb-1 tracking-tight">
+                  {r.value}
+                </p>
+                <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-1">
+                  {r.metric}
+                </p>
+                <p className="text-xs text-[var(--text-muted)]">{r.description}</p>
+              </ScrollReveal>
+            ))}
+          </div>
         </section>
       )}
 
@@ -351,6 +356,8 @@ export default function CaseStudy({ project, caseStudy: cs }) {
       >
         <ScrollReveal direction="up">
           <SectionHeading id="technology">Technology</SectionHeading>
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.06}>
           <div className="flex flex-wrap gap-2">
             {project.technology.map((tag) => (
               <span
@@ -396,10 +403,11 @@ export default function CaseStudy({ project, caseStudy: cs }) {
             <h2 className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-8 font-medium">
               Continue exploring
             </h2>
-            <div className="grid sm:grid-cols-2 gap-5">
-              {relatedItems.map((rel) => (
+          </ScrollReveal>
+          <div className="grid sm:grid-cols-2 gap-5">
+            {relatedItems.map((rel, i) => (
+              <ScrollReveal key={rel.slug} direction="up" delay={0.08 * i}>
                 <Link
-                  key={rel.slug}
                   href={`/work/${rel.projSlug}`}
                   className="group block rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-300 hover:-translate-y-1"
                   style={{ background: "var(--card-bg)" }}
@@ -425,9 +433,9 @@ export default function CaseStudy({ project, caseStudy: cs }) {
                     </p>
                   </div>
                 </Link>
-              ))}
-            </div>
-          </ScrollReveal>
+              </ScrollReveal>
+            ))}
+          </div>
         </section>
       )}
 

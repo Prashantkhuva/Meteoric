@@ -146,19 +146,20 @@ export default function ServiceLanding({ service, relatedServices = [] }) {
               </span>
             </ScrollReveal>
             <div className="grid md:grid-cols-3 gap-4">
-              {relatedPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300"
-                >
-                  <h3 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2 leading-[1.3]">
-                    {post.title}
-                  </h3>
-                  <span className="text-[var(--text-muted)] text-xs font-mono group-hover:text-[var(--text-muted)] transition-colors duration-300">
-                    Read more →
-                  </span>
-                </Link>
+              {relatedPosts.map((post, i) => (
+                <ScrollReveal key={post.slug} direction="up" delay={0.08 * i}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group block h-full p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300"
+                  >
+                    <h3 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2 leading-[1.3]">
+                      {post.title}
+                    </h3>
+                    <span className="text-[var(--text-muted)] text-xs font-mono group-hover:text-[var(--text-muted)] transition-colors duration-300">
+                      Read more →
+                    </span>
+                  </Link>
+                </ScrollReveal>
               ))}
             </div>
           </div>
@@ -195,19 +196,20 @@ export default function ServiceLanding({ service, relatedServices = [] }) {
               </p>
             </ScrollReveal>
             <div className="grid sm:grid-cols-2 gap-4">
-              {relatedServices.map((rs) => (
-                <Link
-                  key={rs.slug}
-                  href={`/services/${rs.slug}`}
-                  className="group p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--accent)]/[0.12] transition-all duration-300"
-                >
-                  <h3 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2">
-                    {rs.name}
-                  </h3>
-                  <span className="text-[var(--text-muted)] text-xs font-mono group-hover:text-[var(--text-muted)] transition-colors duration-300">
-                    View service →
-                  </span>
-                </Link>
+              {relatedServices.map((rs, i) => (
+                <ScrollReveal key={rs.slug} direction="up" delay={0.08 * i}>
+                  <Link
+                    href={`/services/${rs.slug}`}
+                    className="group block h-full p-6 rounded-xl bg-[var(--bg-secondary, #0a0a0a)] border border-[var(--border-color)] hover:border-[var(--accent)]/[0.12] transition-all duration-300"
+                  >
+                    <h3 className="text-sm font-secondary-italic text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors duration-300 mb-2">
+                      {rs.name}
+                    </h3>
+                    <span className="text-[var(--text-muted)] text-xs font-mono group-hover:text-[var(--text-muted)] transition-colors duration-300">
+                      View service →
+                    </span>
+                  </Link>
+                </ScrollReveal>
               ))}
             </div>
           </div>

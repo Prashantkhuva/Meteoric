@@ -92,8 +92,9 @@ export default function EditorialPolicyPage() {
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
                 Our Editorial Standards
               </h2>
-              <div className="space-y-4">
-                <ScrollReveal direction="up">
+            </ScrollReveal>
+            <div className="space-y-4">
+              <ScrollReveal direction="up">
                   <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
                     <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
                       Accuracy First
@@ -136,7 +137,6 @@ export default function EditorialPolicyPage() {
                   </div>
                 </ScrollReveal>
               </div>
-            </ScrollReveal>
 
             <ScrollReveal direction="up">
               <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
