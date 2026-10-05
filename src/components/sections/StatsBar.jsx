@@ -72,26 +72,25 @@ export default function StatsBar({ strip = false }) {
         }}
       >
         <div className="mx-auto max-w-7xl px-4 py-3.5">
-          <ul className="grid grid-cols-4">
+          <ul className="grid grid-cols-2">
             {siteStats.map((stat, i) => (
               <li
                 key={stat.label}
-                className="stat-item flex flex-col items-center text-center opacity-0 px-1 min-w-0"
-                style={
-                  i > 0
-                    ? { borderLeft: "1px solid rgba(255,255,255,0.1)" }
-                    : undefined
-                }
+                className="stat-item flex flex-col items-center text-center opacity-0 px-2 py-2.5 min-w-0"
+                style={{
+                  borderLeft: i % 2 === 1 ? "1px solid rgba(255,255,255,0.1)" : undefined,
+                  borderTop: i >= 2 ? "1px solid rgba(255,255,255,0.1)" : undefined,
+                }}
               >
                 <span
-                  className="text-[15px] font-semibold tracking-tight whitespace-nowrap leading-none"
+                  className="text-[16px] font-semibold tracking-tight whitespace-nowrap leading-none"
                   style={{ color: "#ffffff" }}
                 >
                   <AnimatedNumber target={stat.value} inView={inView} />
                 </span>
                 <span
-                  className="mt-1 text-[8px] uppercase tracking-[0.06em] font-medium leading-[1.2]"
-                  style={{ color: "rgba(255,255,255,0.45)" }}
+                  className="mt-1.5 text-[10px] uppercase tracking-[0.1em] font-medium leading-[1.2]"
+                  style={{ color: "rgba(255,255,255,0.4)" }}
                 >
                   {stat.label}
                 </span>
