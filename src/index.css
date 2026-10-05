@@ -488,6 +488,26 @@ body:has(#home) header img[src$="-black.svg"] {
   }
 }
 
+/* ── Scroll reveal (IO + CSS, replaces per-element GSAP ScrollTriggers) ── */
+html[data-reveal] [data-reveal] {
+  clip-path: var(--rv-clip, none);
+  transform: var(--rv-t, none);
+  opacity: 0;
+}
+
+html[data-reveal] [data-reveal].rv-in {
+  clip-path: inset(0% 0% 0% 0%);
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition:
+    clip-path var(--rv-dur, 0.7s) cubic-bezier(0.215, 0.61, 0.355, 1)
+      var(--rv-delay, 0s),
+    transform var(--rv-dur, 0.7s) cubic-bezier(0.215, 0.61, 0.355, 1)
+      var(--rv-delay, 0s),
+    opacity var(--rv-dur, 0.7s) cubic-bezier(0.215, 0.61, 0.355, 1)
+      var(--rv-delay, 0s);
+}
+
 /* ── Autofill ── */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

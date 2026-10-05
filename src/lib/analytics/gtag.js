@@ -25,10 +25,19 @@ export function initGtag() {
     document.head.appendChild(script);
   };
 
-  if (typeof requestIdleCallback !== "undefined") {
-    requestIdleCallback(load, { timeout: 5000 });
+  // Off the critical path: wait for full page load, then an idle slot.
+  // Keeps gtag's 78KB parse/execute away from hydration + first scroll.
+  const start = () => {
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(load, { timeout: 5000 });
+    } else {
+      setTimeout(load, 2000);
+    }
+  };
+  if (document.readyState === "complete") {
+    start();
   } else {
-    setTimeout(load, 3500);
+    window.addEventListener("load", start, { once: true });
   }
 }
 
