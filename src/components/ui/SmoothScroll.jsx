@@ -16,6 +16,7 @@ export default function SmoothScroll() {
     // ponytail: dynamic import avoids SSR crash — gsap + ScrollTrigger only exist in browser
     let cleanupScrollTrigger = () => {};
     let pinObserver = null;
+    let styleObserver = null;
     let tickerFn = null;
 
     const init = () => {
@@ -39,6 +40,15 @@ export default function SmoothScroll() {
         // so Lenis caches a stale limit near the bottom. Fix: force resize when pin-spacer appears.
         pinObserver = new MutationObserver(() => lenis.resize());
         pinObserver.observe(document.body, { childList: true });
+        // lockScroll sets body overflow:hidden, which collapses documentElement.scrollHeight
+        // to the viewport. A resize during the lock caches limit:0 and wheel scroll dies
+        // (target clamps to 0). The unlock clears the body style attribute — not a childList
+        // mutation — so re-measure on every body style change (lock and unlock).
+        styleObserver = new MutationObserver(() => lenis.resize());
+        styleObserver.observe(document.body, {
+          attributes: true,
+          attributeFilter: ["style"],
+        });
         tickerFn = (time) => {
           lenis.raf(time * 1000);
         };
@@ -66,6 +76,7 @@ export default function SmoothScroll() {
         cleanupScrollTrigger = () => {
           document.removeEventListener("click", handleAnchorClick);
           pinObserver?.disconnect();
+          styleObserver?.disconnect();
           if (tickerFn) gsap.ticker.remove(tickerFn);
           lenis.destroy();
           lenisRef.current = null;
@@ -94,6 +105,8 @@ export default function SmoothScroll() {
 
     const attempt = () => {
       if (lenisRef.current) {
+        // Re-measure: a lock/unlock during the transition can leave limit:0 cached.
+        lenisRef.current.resize();
         lenisRef.current.scrollTo(scrollTarget || 0, {
           immediate: !hash,
         });
