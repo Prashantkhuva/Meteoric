@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap-setup";
 import GridLines from "@/components/ui/GridLines";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import useSectionAnimations from "@/hooks/useSectionAnimations";
 import {
   revealFrom,
@@ -166,28 +167,8 @@ export default function ServicesSection() {
           ScrollTrigger.refresh();
         });
       }
-
-      const cards = sectionRef.current?.querySelectorAll(".service-card");
-      if (cards?.length) {
-        gsap.fromTo(
-          cards,
-          revealFrom("up"),
-          {
-            ...revealTo,
-            duration: 0.8,
-            stagger: 0.12,
-            ease: "power3.out",
-            immediateRender: true,
-            onComplete: () => clearRevealClip(cards),
-            scrollTrigger: {
-              trigger: cards[0],
-              start: "top 88%",
-              toggleActions: "play none reverse none",
-              invalidateOnRefresh: true,
-            },
-          },
-        );
-      }
+      // Cards use <ScrollReveal> (same clip wipe as FAQ/testimonials) — no
+      // per-card GSAP tween here.
     },
     [],
   );
@@ -231,7 +212,9 @@ export default function ServicesSection() {
         {/* Service cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5 lg:gap-5 pb-16 lg:pb-24">
           {homeServiceCards.map((s, i) => (
-            <ServiceCard key={s.title} service={s} index={i} />
+            <ScrollReveal key={s.title} direction="up" delay={0.12 * i}>
+              <ServiceCard service={s} index={i} />
+            </ScrollReveal>
           ))}
         </div>
       </div>
