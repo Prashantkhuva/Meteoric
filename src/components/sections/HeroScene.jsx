@@ -197,7 +197,7 @@ function SpaceDust({ mouse }) {
   );
 }
 
-function Planet({ reduced }) {
+function Planet({ reduced, isMobile }) {
   const groupRef = useRef();
   const atmosphereRef = useRef();
   const earthTex = useMemo(() => createEarthTexture(), []);
@@ -234,7 +234,7 @@ function Planet({ reduced }) {
             map={earthTex}
             emissiveMap={earthTex}
             emissive="#ffffff"
-            emissiveIntensity={0.2}
+            emissiveIntensity={isMobile ? 0.55 : 0.2}
             roughness={0.9}
             metalness={0}
           />
@@ -243,7 +243,7 @@ function Planet({ reduced }) {
           <meshBasicMaterial
             color="#4466aa"
             transparent
-            opacity={0.25}
+            opacity={isMobile ? 0.16 : 0.25}
             side={THREE.DoubleSide}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
@@ -256,7 +256,7 @@ function Planet({ reduced }) {
           <meshBasicMaterial
             color="#3366cc"
             transparent
-            opacity={0.06}
+            opacity={isMobile ? 0.14 : 0.06}
             side={THREE.BackSide}
             blending={THREE.AdditiveBlending}
           />
@@ -533,8 +533,16 @@ function Scene({ mouse, reduced, baseY, isMobile }) {
       />
       <StarField />
       <SpaceDust mouse={mouse} />
-      <Planet reduced={reduced} />
-      <OrbitalRings reduced={reduced} />
+      {/* Mobile: shrink + drop the body below the CTA row — camera y=2.1
+          alone leaves the planet top edge colliding with the copy, and full
+          size overflows the hero fold. Rings scale/move with it. */}
+      <group
+        position={isMobile ? [0, -1.1, 0] : [0, 0, 0]}
+        scale={isMobile ? 0.6 : 1}
+      >
+        <Planet reduced={reduced} isMobile={isMobile} />
+        <OrbitalRings reduced={reduced} />
+      </group>
       {!reduced && <Meteors />}
       <CameraParallax mouse={mouse} reduced={reduced} baseY={baseY} />
       <FrameCap fps={30} enabled={isMobile && !reduced} />
