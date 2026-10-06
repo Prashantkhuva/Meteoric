@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo, useEffect, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import {
   EffectComposer,
@@ -505,7 +505,20 @@ function CameraParallax({ mouse, reduced, baseY }) {
   return null;
 }
 
-function Scene({ mouse, reduced, baseY }) {
+// Mobile: frameloop="demand" + interval invalidate caps render at 30fps.
+// Full-quality always-on loop saturates phones during scroll (4.4fps at 4x
+// CPU throttle); capping + dropping postprocessing restores ~50fps.
+function FrameCap({ fps, enabled }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    if (!enabled) return;
+    const id = setInterval(() => invalidate(), Math.round(1000 / fps));
+    return () => clearInterval(id);
+  }, [enabled, fps, invalidate]);
+  return null;
+}
+
+function Scene({ mouse, reduced, baseY, isMobile }) {
   return (
     <>
       <color attach="background" args={["#010405"]} />
@@ -524,22 +537,27 @@ function Scene({ mouse, reduced, baseY }) {
       <OrbitalRings reduced={reduced} />
       {!reduced && <Meteors />}
       <CameraParallax mouse={mouse} reduced={reduced} baseY={baseY} />
-      <EffectComposer>
-        <Bloom
-          intensity={0.5}
-          luminanceThreshold={0.15}
-          luminanceSmoothing={0.9}
-          mipmapBlur
-        />
-        <Vignette eskil={false} offset={0.15} darkness={0.85} />
-      </EffectComposer>
+      <FrameCap fps={30} enabled={isMobile && !reduced} />
+      {!isMobile && (
+        <EffectComposer>
+          <Bloom
+            intensity={0.5}
+            luminanceThreshold={0.15}
+            luminanceSmoothing={0.9}
+            mipmapBlur
+          />
+          <Vignette eskil={false} offset={0.15} darkness={0.85} />
+        </EffectComposer>
+      )}
     </>
   );
 }
 
 export default function HeroScene() {
   const mouseRef = useRef({ x: 0, y: 0 });
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768,
+  );
   const [reduced] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -567,17 +585,17 @@ export default function HeroScene() {
   return (
     <div className="absolute inset-0">
       <Canvas
-        dpr={[1, 2]}
+        dpr={isMobile ? 1 : [1, 2]}
         camera={{
           position: [0, baseY, isMobile ? 16 : 6],
           rotation: [0, 0, 0],
           fov: isMobile ? 50 : 55,
         }}
-        gl={{ alpha: true, antialias: true }}
+        gl={{ alpha: true, antialias: !isMobile }}
         style={{ background: "transparent" }}
-        frameloop={reduced ? "demand" : "always"}
+        frameloop={reduced || isMobile ? "demand" : "always"}
       >
-        <Scene mouse={mouseRef} reduced={reduced} baseY={baseY} />
+        <Scene mouse={mouseRef} reduced={reduced} baseY={baseY} isMobile={isMobile} />
       </Canvas>
     </div>
   );
