@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
   const post = getBlogPost(slug);
   if (!post) return {};
   return {
-    title: post.title,
+    title: post.seoTitle || post.title,
     description: post.description,
     alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     openGraph: {
@@ -75,20 +75,137 @@ function readingTime(sections) {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-function renderRichBody(text) {
+function renderBold(text, key) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  return parts.map((part, j) => {
+    const match = part.match(/^\*\*([^*]+)\*\*$/);
+    if (!match) return part;
+    return (
+      <strong
+        key={`${key}-b${j}`}
+        className="font-semibold"
+        style={{ color: "var(--text-primary)" }}
+      >
+        {match[1]}
+      </strong>
+    );
+  });
+}
+
+function renderInline(text, key) {
   const parts = text.split(/(\[[^\]]+\]\([^)\s]+\))/g).filter(Boolean);
   return parts.map((part, i) => {
     const match = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
-    if (!match) return part;
+    if (match) {
+      return (
+        <Link
+          key={`${key}-a${i}`}
+          href={match[2]}
+          className="underline underline-offset-4 transition-all duration-200 hover:text-[var(--text-primary)]"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          {match[1]}
+        </Link>
+      );
+    }
+    return renderBold(part, `${key}-p${i}`);
+  });
+}
+
+const PARA_CLASS = "text-[15px] leading-[1.7]";
+const LIST_CLASS =
+  "text-[15px] leading-[1.7] list-disc pl-5 space-y-2 marker:text-[var(--text-muted)]";
+const LIST_ITEM_CLASS = "pl-1";
+
+function renderBlocks(text, keyPrefix) {
+  const blocks = text
+    .split(/\n{2,}/)
+    .map((b) => b.trim())
+    .filter(Boolean);
+
+  return blocks.map((block, i) => {
+    const key = `${keyPrefix}-${i}`;
+    const lines = block.split("\n").map((l) => l.trim());
+
+    if (lines[0].startsWith(">")) {
+      const quoteLines = lines.map((l) => l.replace(/^>\s?/, ""));
+      const items = quoteLines
+        .slice(1)
+        .filter((l) => l.startsWith("- "))
+        .map((l) => l.slice(2));
+      const paras = quoteLines
+        .slice(1)
+        .filter((l) => !l.startsWith("- ") && l.length > 0);
+      return (
+        <blockquote
+          key={key}
+          className="rounded-[14px] px-5 py-4 my-2"
+          style={{
+            border: "1px solid var(--border-color)",
+            background: "var(--accent-dim)",
+          }}
+        >
+          <p className={`${PARA_CLASS} mb-2`} style={{ color: "var(--text-primary)" }}>
+            {renderInline(quoteLines[0], `${key}-q`)}
+          </p>
+          {items.length > 0 && (
+            <ul className={LIST_CLASS} style={{ color: "var(--text-secondary)" }}>
+              {items.map((item, j) => (
+                <li key={`${key}-qi${j}`} className={LIST_ITEM_CLASS}>
+                  {renderInline(item, `${key}-qi${j}`)}
+                </li>
+              ))}
+            </ul>
+          )}
+          {paras.map((p, j) => (
+            <p
+              key={`${key}-qp${j}`}
+              className={`${PARA_CLASS} mt-2`}
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {renderInline(p, `${key}-qp${j}`)}
+            </p>
+          ))}
+        </blockquote>
+      );
+    }
+
+    if (lines.some((l) => l.startsWith("- ")) && lines.every((l) => l.startsWith("- ") || l.length === 0)) {
+      return (
+        <ul key={key} className={LIST_CLASS} style={{ color: "var(--text-secondary)" }}>
+          {lines
+            .filter((l) => l.startsWith("- "))
+            .map((l, j) => (
+              <li key={`${key}-li${j}`} className={LIST_ITEM_CLASS}>
+                {renderInline(l.slice(2), `${key}-li${j}`)}
+              </li>
+            ))}
+        </ul>
+      );
+    }
+
+    if (lines.some((l) => /^\d+\.\s/.test(l)) && lines.every((l) => /^\d+\.\s/.test(l) || l.length === 0)) {
+      return (
+        <ol
+          key={key}
+          className={LIST_CLASS.replace("list-disc", "list-decimal")}
+          style={{ color: "var(--text-secondary)" }}
+        >
+          {lines
+            .filter((l) => /^\d+\.\s/.test(l))
+            .map((l, j) => (
+              <li key={`${key}-oi${j}`} className={LIST_ITEM_CLASS}>
+                {renderInline(l.replace(/^\d+\.\s/, ""), `${key}-oi${j}`)}
+              </li>
+            ))}
+        </ol>
+      );
+    }
+
     return (
-      <Link
-        key={i}
-        href={match[2]}
-        className="underline underline-offset-4 transition-all duration-200 hover:text-[var(--text-primary)]"
-        style={{ color: "var(--text-secondary)" }}
-      >
-        {match[1]}
-      </Link>
+      <p key={key} className={PARA_CLASS} style={{ color: "var(--text-secondary)" }}>
+        {renderInline(block, key)}
+      </p>
     );
   });
 }
@@ -123,7 +240,7 @@ export default async function BlogPost({ params }) {
   });
 
   const faqSchema =
-    post.faqs.length > 0 ? buildFaqJsonLd(post.faqs) : null;
+    post.faqs?.length > 0 ? buildFaqJsonLd(post.faqs) : null;
 
   const speakableJsonLd = { "@context": "https://schema.org", "@type": "WebPage", name: post.title, speakable: { "@type": "SpeakableSpecification", cssSelector: [".sr-only", "h1"] } };
 
@@ -191,20 +308,27 @@ export default async function BlogPost({ params }) {
 
           {/* Article body */}
           <div className="max-w-[720px] mx-auto">
+            {post.intro && (
+              <ScrollReveal direction="up" className="mb-12">
+                <div className="space-y-4">
+                  {renderBlocks(post.intro, "intro")}
+                </div>
+              </ScrollReveal>
+            )}
             {post.sections.map((section, i) => (
               <ScrollReveal key={i} direction="up" className="mb-12 last:mb-0">
                 <h2 className="text-[24px] font-semibold mb-4 leading-[1.3]" style={{ color: "var(--text-primary)" }}>
                   {section.heading}
                 </h2>
-                <p className="text-[15px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
-                  {renderRichBody(section.body)}
-                </p>
+                <div className="space-y-4">
+                  {renderBlocks(section.body, `s${i}`)}
+                </div>
               </ScrollReveal>
             ))}
           </div>
 
           {/* FAQ */}
-          {post.faqs.length > 0 && (
+          {post.faqs?.length > 0 && (
             <div className="mt-20 pt-12 max-w-[720px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
               <ScrollReveal direction="right" className="mb-8">
                 <h2 className="text-[24px] font-semibold" style={{ color: "var(--text-primary)" }}>

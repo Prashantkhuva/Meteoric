@@ -62,8 +62,9 @@ End-to-end web application development including database design, server-side lo
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (13 posts, sorted newest first)
+## Blog (14 posts, sorted newest first)
 
+- [How to Choose a Cafe or Restaurant Website Designer in Gujarat (2026 Guide)](https://withmeteoric.com/blog/cafe-restaurant-website-design-gujarat) — 2026-10-06
 - [Startup SEO on a Budget: What to Do First When You Can't Afford an Agency](https://withmeteoric.com/blog/startup-seo-on-a-budget-what-to-do-first) — 2026-09-10
 - [AI Search Optimization: How to Get Your Brand Cited by ChatGPT and Perplexity](https://withmeteoric.com/blog/ai-search-optimization-how-to-get-cited-by-chatgpt) — 2026-09-04
 - [Long-Tail SEO Strategy: How Funded Startups Can Outrank Giants](https://withmeteoric.com/blog/long-tail-seo-strategy-for-funded-startups) — 2026-09-01

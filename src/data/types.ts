@@ -294,8 +294,12 @@ export interface ArticleHowTo {
 export interface Article {
   slug: string;
   title: string;
+  /** Optional shorter title for the <title> tag; falls back to `title`. */
+  seoTitle?: string;
   description: string;
   tagline: string;
+  /** Optional lead paragraphs rendered before the first section (no H2). */
+  intro?: string;
   /** Publish date (YYYY-MM-DD). Drives sitemap lastModified. */
   published: string;
   dateModified?: string;

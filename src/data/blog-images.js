@@ -19,6 +19,7 @@ export const slugToImage = {
   "how-much-does-a-startup-website-cost": "/images/blog/blog-startup-seo.webp",
   "how-to-choose-a-web-development-agency": "/images/blog/blog-web-agency.webp",
   "complete-website-audit-checklist-for-startups": "/images/blog/blog-website-issues.webp",
+  "cafe-restaurant-website-design-gujarat": "/images/blog/blog-cafe-restaurant-gujarat.webp",
 };
 
 export const FALLBACK_BLOG_IMAGE = "/images/blog/blog-tech-stack.webp";
