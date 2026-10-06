@@ -279,7 +279,7 @@ function createCircleGeometry(radius, axis, angle) {
   return new THREE.BufferGeometry().setFromPoints(pts);
 }
 
-function OrbitalRings({ reduced }) {
+function OrbitalRings({ reduced, isMobile }) {
   const ring1Ref = useRef();
   const ring2Ref = useRef();
 
@@ -313,7 +313,7 @@ function OrbitalRings({ reduced }) {
         <lineBasicMaterial
           color="#6688cc"
           transparent
-          opacity={0.35}
+          opacity={isMobile ? 0.2 : 0.35}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -322,7 +322,7 @@ function OrbitalRings({ reduced }) {
         <lineBasicMaterial
           color="#7799dd"
           transparent
-          opacity={0.22}
+          opacity={isMobile ? 0.12 : 0.22}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -533,15 +533,15 @@ function Scene({ mouse, reduced, baseY, isMobile }) {
       />
       <StarField />
       <SpaceDust mouse={mouse} />
-      {/* Mobile: shrink + drop the body below the CTA row — camera y=2.1
-          alone leaves the planet top edge colliding with the copy, and full
-          size overflows the hero fold. Rings scale/move with it. */}
+      {/* Mobile: drop + slightly shrink the body so its top clears the CTA
+          row while the bottom crops on the hero fold (rising-planet look).
+          Rings scale/move with it. */}
       <group
-        position={isMobile ? [0, -1.1, 0] : [0, 0, 0]}
-        scale={isMobile ? 0.6 : 1}
+        position={isMobile ? [0, -1.5, 0] : [0, 0, 0]}
+        scale={isMobile ? 0.9 : 1}
       >
         <Planet reduced={reduced} isMobile={isMobile} />
-        <OrbitalRings reduced={reduced} />
+        <OrbitalRings reduced={reduced} isMobile={isMobile} />
       </group>
       {!reduced && <Meteors />}
       <CameraParallax mouse={mouse} reduced={reduced} baseY={baseY} />
