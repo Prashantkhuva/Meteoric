@@ -6,6 +6,7 @@ import { blogPosts, getBlogPost } from "@/data/blog-posts";
 import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { socialIcons } from "@/components/ui/social-icons";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   buildBreadcrumbJsonLd,
@@ -366,13 +367,26 @@ export default async function BlogPost({ params }) {
                 <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
                   Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups.
                 </p>
-                <div className="flex items-center gap-5 mt-4">
-                  <a href="https://x.com/prashantkhuva_" target="_blank" rel="noopener noreferrer" className="text-[11px] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-[var(--text-primary)]" style={{ color: "var(--text-muted)" }}>
-                    X / Twitter
-                  </a>
-                  <a href="https://linkedin.com/in/prashantkhuva" target="_blank" rel="noopener noreferrer" className="text-[11px] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-[var(--text-primary)]" style={{ color: "var(--text-muted)" }}>
-                    LinkedIn
-                  </a>
+                <div className="flex items-center gap-2.5 mt-4">
+                  {[
+                    { id: "twitter", href: "https://x.com/prashantkhuva_", label: "X" },
+                    { id: "linkedin", href: "https://linkedin.com/in/prashantkhuva", label: "LinkedIn" },
+                    { id: "github", href: "https://github.com/Prashantkhuva", label: "GitHub" },
+                    { id: "instagram", href: "https://www.instagram.com/officialmeteoric/", label: "Instagram" },
+                  ].map((s) => (
+                    <a
+                      key={s.id}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.label}
+                      title={s.label}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-200 hover:text-[var(--text-primary)] hover:bg-[var(--accent-dim)]"
+                      style={{ color: "var(--text-muted)", border: "1px solid var(--border-color)" }}
+                    >
+                      {socialIcons[s.id]}
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
