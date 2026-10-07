@@ -69,7 +69,13 @@ Generate each at **800x500px**, dark theme, save as `.webp` to `public/images/bl
 
 > Minimalist dark scene of a small seedling growing from a laptop keyboard, surrounded by floating SEO metric cards and growth arrows, organic tech growth metaphor, white and green-tint on black, no text
 
+## 14. blog-restaurant-local-seo.webp
+**Post:** Local SEO for Restaurants and Cafes: How Your Website, Photos, and Google Profile Work Together
+**Size: 1200x630 (full detailed prompt version — dark glass UI series style)**
+
+> Dark abstract map surface with glowing location pins connected by search rays to floating restaurant profile cards, photo frames, and star review icons, white wireframe on deep black background, representing local search visibility for restaurants, no text
+
 ---
 
-**Total: 13 blog images**
+**Total: 14 blog images**
 **Homepage images already exist:** hero-bg.webp, service-web.webp, service-saas.webp, service-mobile.webp, stats-bg.webp, cta-bg.webp

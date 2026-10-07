@@ -20,6 +20,7 @@ export const slugToImage = {
   "how-to-choose-a-web-development-agency": "/images/blog/blog-web-agency.webp",
   "complete-website-audit-checklist-for-startups": "/images/blog/blog-website-issues.webp",
   "cafe-restaurant-website-design-gujarat": "/images/blog/blog-cafe-restaurant-gujarat.webp",
+  "restaurant-local-seo-photography-guide": "/images/blog/blog-restaurant-local-seo.webp",
 };
 
 export const FALLBACK_BLOG_IMAGE = "/images/blog/blog-tech-stack.webp";
