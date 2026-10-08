@@ -1,0 +1,57 @@
+import { gsap, SplitText } from "./gsap-setup";
+
+export function textReveal(
+  el: gsap.DOMTarget | null | undefined,
+  options: {
+    y?: number;
+    ease?: string;
+    stagger?: number;
+    start?: string;
+    toggleActions?: string;
+  } = {},
+) {
+  if (!el) return null;
+  const split = new SplitText(el, { type: "lines", linesClass: "split-line", aria: "manual" as "auto" });
+  gsap.fromTo(
+    split.lines,
+    { y: options.y ?? 30, opacity: 0 },
+    {
+      y: 0,
+      opacity: 1,
+      ease: options.ease ?? "power2.out",
+      stagger: options.stagger ?? 0.1,
+      scrollTrigger: {
+        trigger: el,
+        start: options.start ?? "top bottom",
+        toggleActions: options.toggleActions ?? "play reset play reset",
+      },
+    },
+  );
+  return split;
+}
+
+export function blurTextReveal(
+  el: gsap.DOMTarget | null | undefined,
+  options: { start?: string; end?: string; scrub?: number | boolean } = {},
+) {
+  if (!el) return null;
+  const split = new SplitText(el, { type: "lines", linesClass: "split-line", aria: "manual" as "auto" });
+  gsap.fromTo(
+    split.lines,
+    { filter: "blur(8px)", opacity: 0.1 },
+    {
+      filter: "blur(0px)",
+      opacity: 1,
+      stagger: { each: 1 / split.lines.length, ease: "none" },
+      ease: "none",
+      scrollTrigger: {
+        trigger: el,
+        start: options.start ?? "top 80%",
+        end: options.end ?? "bottom 60%",
+        scrub: options.scrub ?? 0.5,
+        invalidateOnRefresh: true,
+      },
+    },
+  );
+  return split;
+}

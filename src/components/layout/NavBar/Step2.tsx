@@ -1,0 +1,280 @@
+import { motion } from "framer-motion";
+import { ChevronDown, Plus, ArrowLeft } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import StepIndicator from "./StepIndicator";
+import type { LeadFormData } from "./StepContent";
+
+const COUNTRY_CODES = [
+  { code: "+91", label: "India", flag: "🇮🇳" },
+  { code: "+1", label: "United States", flag: "🇺🇸" },
+  { code: "+44", label: "United Kingdom", flag: "🇬🇧" },
+  { code: "+61", label: "Australia", flag: "🇦🇺" },
+  { code: "+971", label: "UAE", flag: "🇦🇪" },
+  { code: "+49", label: "Germany", flag: "🇩🇪" },
+];
+
+export interface Step2Props {
+  step: number;
+  setStep: Dispatch<SetStateAction<number>>;
+  formData: LeadFormData;
+  setFormData: Dispatch<SetStateAction<LeadFormData>>;
+  countryOpen: boolean;
+  setCountryOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+function Step2({
+  step,
+  setStep,
+  formData,
+  setFormData,
+  countryOpen,
+  setCountryOpen,
+}: Step2Props) {
+  const [search, setSearch] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const step2Valid =
+    formData.name && formData.email && formData.phone && formData.details;
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const filteredCountries = COUNTRY_CODES.filter((c) =>
+    `${c.label} ${c.code}`.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const selectedCountry = COUNTRY_CODES.find(
+    (c) => c.code === formData.countryCode,
+  );
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setCountryOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [setCountryOpen]);
+
+  return (
+    <motion.div
+      key="step2"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.2 }}
+    >
+      <StepIndicator step={step} />
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-name">
+            Name <span className="text-red-400">*</span>
+          </label>
+          <input
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Your name"
+            id="req-name"
+            className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-email">
+            Email <span className="text-red-400">*</span>
+          </label>
+          <input
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="you@example.com"
+            id="req-email"
+            className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+              Country Code
+            </label>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setCountryOpen(!countryOpen)}
+                className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] text-left flex items-center justify-between hover:border-[var(--accent)]/25 transition-colors text-sm"
+              >
+                <span className="flex items-center gap-2">
+                  <span>{selectedCountry?.flag || ""}</span>
+                  <span>{formData.countryCode || "+91"}</span>
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`text-[var(--text-muted)] transition-transform duration-200 ${countryOpen ? "rotate-180" : ""}`}
+                />{" "}
+              </button>
+              {countryOpen && (
+                <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-elevated)] border border-[var(--accent)]/10 rounded-xl z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+                  {!formData.isCustomCode ? (
+                    <>
+                      <div className="p-2 border-b border-[var(--accent)]/8">
+                        <input
+                          aria-label="Search country or code"
+                          placeholder="Search country or code..."
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                          className="w-full px-3 py-2 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-lg text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/60 focus:outline-none focus:border-[var(--accent)]/30"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData((p) => ({
+                            ...p,
+                            isCustomCode: true,
+                            countryCode: "",
+                          }))
+                        }
+                        className="w-full px-4 py-3 flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm border-b border-[var(--accent)]/8"
+                      >
+                        <Plus size={16} className="text-[var(--text-secondary)]" />
+                        <div className="flex flex-col items-start">
+                          <span className="font-medium">
+                            Custom Country Code
+                          </span>
+                          <span className="text-xs text-[var(--text-muted)]">
+                            Enter your own code
+                          </span>
+                        </div>
+                      </button>
+                      <div className="max-h-48 overflow-y-auto">
+                        {filteredCountries.map((c) => (
+                          <button
+                            key={c.code}
+                            type="button"
+                            onClick={() => {
+                              setFormData((p) => ({
+                                ...p,
+                                countryCode: c.code,
+                                isCustomCode: false,
+                              }));
+                              setCountryOpen(false);
+                              setSearch("");
+                            }}
+                            className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm"
+                          >
+                            <span>{c.flag}</span>
+                            <span className="font-medium">{c.code}</span>
+                            <span className="text-[var(--text-muted)] text-xs">
+                              {c.label}
+                            </span>
+                          </button>
+                        ))}
+                        {filteredCountries.length === 0 && (
+                          <div className="px-4 py-3 text-[var(--text-muted)] text-sm">
+                            No results found
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData((p) => ({ ...p, isCustomCode: false }))
+                        }
+                        className="w-full px-4 py-3 flex items-center gap-2 hover:bg-[var(--text-primary)]/5 text-[var(--text-primary)] text-sm border-b border-[var(--accent)]/8"
+                      >
+                        <ArrowLeft size={16} className="text-[var(--text-secondary)]" />
+                        Back to countries
+                      </button>
+                      <div className="p-3">
+                        <input
+                          autoFocus
+                          aria-label="Country calling code"
+                          placeholder="+123"
+                          value={formData.countryCode}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/[^\d]/g, "");
+                            setFormData((p) => ({
+                              ...p,
+                              countryCode: value ? `+${value}` : "",
+                            }));
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              setCountryOpen(false);
+                            }
+                          }}
+                          className="w-full px-3 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/20 rounded-lg text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)]/60 focus:outline-none focus:border-[var(--accent)]/40"
+                        />
+                        <p className="text-xs text-[var(--text-muted)] mt-2">
+                          Press Enter to confirm
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="sm:col-span-3">
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-phone">
+              Phone <span className="text-red-400">*</span>
+            </label>
+            <input
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="1122334455"
+            id="req-phone"
+              className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors text-sm"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2" htmlFor="req-details">
+            Project Details <span className="text-red-400">*</span>
+          </label>
+          <textarea
+            name="details"
+            value={formData.details}
+            onChange={handleChange}
+            placeholder="Tell me about your project..."
+            id="req-details"
+            rows={3}
+            className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--accent)]/10 rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[var(--accent)]/30 transition-colors resize-none text-sm"
+          />
+        </div>
+      </div>
+      <div className="flex justify-between mt-8">
+        <button
+          onClick={() => setStep(1)}
+          className="px-6 py-2 border border-[var(--accent)]/10 rounded-full hover:border-[var(--accent)]/30 transition-colors text-sm"
+        >
+          Back
+        </button>
+        <button
+          onClick={() => step2Valid && setStep(3)}
+          disabled={!step2Valid}
+          className={`px-6 py-2 rounded-full transition-colors text-sm ${
+            step2Valid
+              ? "bg-[var(--text-primary)] text-[var(--accent-text)] hover:bg-[var(--text-primary)]/90"
+              : "bg-[var(--accent)]/10 text-[var(--accent)]/40 cursor-not-allowed"
+          }`}
+        >
+          Next
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+export default Step2;

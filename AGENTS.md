@@ -1,7 +1,7 @@
 # Meteoric — Web Development Agency
 
 ## Stack
-- **Framework:** Next.js 16 + React 19 (JavaScript/JSX, no TypeScript)
+- **Framework:** Next.js 16 + React 19 (TypeScript/TSX, strict mode)
 - **Styling:** Tailwind CSS v4 (CSS-first, `@theme` directive in `src/index.css`)
 - **UI:** shadcn/ui + Radix primitives + lucide-react icons
 - **Animations:** GSAP (hero/scroll), Framer Motion (UI), Lenis (smooth scroll)

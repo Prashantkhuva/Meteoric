@@ -1,0 +1,1038 @@
+"use client";
+
+import { useEffect, useState, useMemo, useRef } from "react";
+import { createClient } from "@/lib/supabase/client";
+import {
+  createProject, updateProject, deleteProject, updateProjectStatus, getClients, getProjectsPaginated,
+} from "../actions";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  X, Plus, Trash2, Calendar, Pencil, FolderKanban,
+  DollarSign, Clock, Target, CheckCircle, Download,
+  ChevronUp, ChevronDown, Play, Pause, XCircle,
+} from "lucide-react";
+import { formatDate } from "@/lib/supabase/admin";
+import { useToast } from "../components/ToastContext";
+import { getCurrencySymbol } from "@/lib/utils";
+import { ConfirmDialog } from "../components/ConfirmDialog";
+import { Pagination } from "../components/Pagination";
+import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../components/Toolbar";
+import { BulkActionBar } from "../components/BulkActionBar";
+import { StatusSelect } from "../components/StatusSelect";
+import { IconButton } from "../components/IconButton";
+
+function displayServices(val: any) {
+  if (!val) return "";
+  if (typeof val === "string" && val.startsWith("[")) {
+    try { return JSON.parse(val).join(", "); } catch { return val; }
+  }
+  if (Array.isArray(val)) return val.join(", ");
+  return val;
+}
+import { FormField } from "../components/FormField";
+import { useFilters } from "@/hooks/useFilters";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useShortcuts } from "@/hooks/useShortcuts";
+import { downloadCSV } from "@/lib/csv-export";
+import { sanitizeSearch } from "@/lib/search";
+import Checkbox from "../components/Checkbox";
+
+const PAGE_SIZE = 15;
+
+interface ProjectRow {
+  id: number;
+  name: string;
+  status: string;
+  client_id: number | null;
+  description: string | null;
+  budget: number | string | null;
+  currency: string | null;
+  deadline: string | null;
+  start_date: string | null;
+  services: any;
+  notes: string | null;
+  created_at: string;
+  client?: { name: string; company?: string | null; email?: string | null } | null;
+}
+
+interface ClientRow {
+  id: number;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  company?: string | null;
+}
+
+const projectStatuses = [
+  { value: "planning", label: "Planning" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "review", label: "Review" },
+  { value: "completed", label: "Completed" },
+  { value: "on_hold", label: "On Hold" },
+  { value: "cancelled", label: "Cancelled" },
+];
+
+function statusColor(status: string) {
+  const map: Record<string, string> = {
+    planning: "text-white/30 bg-white/[0.04] border-white/[0.06]",
+    in_progress: "text-blue-300/80 bg-blue-500/[0.06] border-blue-400/15",
+    review: "text-yellow-300/80 bg-yellow-500/[0.06] border-yellow-400/15",
+    completed: "text-emerald-300/80 bg-emerald-500/[0.06] border-emerald-400/15",
+    on_hold: "text-orange-300/80 bg-orange-500/[0.06] border-orange-400/15",
+    cancelled: "text-white/25 bg-white/[0.02] border-white/[0.04]",
+  };
+  return map[status] || "text-white/30 bg-white/[0.04] border-white/[0.06]";
+}
+
+const CSV_COLUMNS = [
+  { label: "Name", accessor: (p: ProjectRow) => p.name || "" },
+  { label: "Client", accessor: (p: ProjectRow) => p.client?.name || "" },
+  { label: "Status", accessor: (p: ProjectRow) => p.status || "" },
+  { label: "Budget", accessor: (p: ProjectRow) => p.budget || "" },
+  { label: "Deadline", accessor: (p: ProjectRow) => p.deadline || "" },
+  { label: "Created", accessor: (p: ProjectRow) => formatDate(p.created_at) },
+];
+
+export default function ProjectsPage() {
+  const [projects, setProjects] = useState<ProjectRow[]>([]);
+  const [total, setTotal] = useState(0);
+  const [clients, setClients] = useState<ClientRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { filters, setFilters, toggleColSort } = useFilters();
+  const { search, status: statusFilter, sort, page, col, dir } = filters;
+  const [viewProject, setViewProject] = useState<ProjectRow | null>(null);
+  const [editingProject, setEditingProject] = useState<ProjectRow | null>(null);
+  const [showNew, setShowNew] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [bulkConfirm, setBulkConfirm] = useState<string | null>(null);
+  const [editingStatus, setEditingStatus] = useState<number | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [bulkUpdating, setBulkUpdating] = useState(false);
+  const [selected, setSelected] = useState(new Set<number>());
+  const addToast = useToast();
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  const fetchIdRef = useRef(0);
+
+  useEffect(() => {
+    fetchData();
+  }, [search, statusFilter, sort, page, col, dir]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useShortcuts(
+    useMemo(() => ({
+      "n": () => setShowNew(true),
+      "/": () => searchRef.current?.focus(),
+      "Escape": () => { if (viewProject) setViewProject(null); if (showNew) setShowNew(false); },
+    }), [viewProject, showNew])
+  );
+
+  async function fetchData() {
+    const fetchId = ++fetchIdRef.current;
+    setSelected(new Set());
+    setLoading(true);
+    const [result, clientsRes] = (await Promise.all([
+      getProjectsPaginated({ page, pageSize: PAGE_SIZE, search, status: statusFilter, col, dir, sort }),
+      getClients().catch(() => []),
+    ])) as unknown as [{ error?: string; data: ProjectRow[]; total: number }, ClientRow[]];
+    if (fetchId !== fetchIdRef.current) return;
+    if (result.error) { setError(result.error); }
+    else { setProjects(result.data); setTotal(result.total); }
+    setClients(clientsRes);
+    setHasLoaded(true);
+    setLoading(false);
+  }
+
+  function toggleSelect(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === projects.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(projects.map((p) => p.id)));
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = [...selected];
+    setIsDeleting(true);
+    const results = await Promise.all(ids.map((id) => deleteProject(id)));
+    const errors = results.filter((r) => r?.error);
+    if (errors.length > 0) {
+      addToast(errors[0].error!, "error");
+      setBulkConfirm(null);
+      setIsDeleting(false);
+      return;
+    }
+    setProjects((prev) => prev.filter((p) => !ids.includes(p.id)));
+    setTotal((prev) => Math.max(0, prev - ids.length));
+    if (viewProject && ids.includes(viewProject.id)) setViewProject(null);
+    addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} deleted`, "success");
+    setSelected(new Set());
+    setBulkConfirm(null);
+    setIsDeleting(false);
+  }
+
+  async function handleBulkStatusChange(newStatus: string) {
+    setBulkUpdating(true);
+    const ids = [...selected];
+    const results = await Promise.all(ids.map((id) => updateProjectStatus(id, newStatus)));
+    const errors = results.filter((r) => r?.error);
+    if (errors.length > 0) {
+      addToast(errors[0].error!, "error");
+      setBulkUpdating(false);
+      return;
+    }
+    setProjects((prev) => prev.map((p) => ids.includes(p.id) ? { ...p, status: newStatus } : p));
+    addToast(`${ids.length} project${ids.length > 1 ? "s" : ""} updated`, "success");
+    setSelected(new Set());
+    setBulkUpdating(false);
+  }
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      let query = supabase.from("projects").select("*, client:clients(name, email, company)");
+      if (search) { query = query.or(`name.ilike.%${sanitizeSearch(search)}%,client.name.ilike.%${sanitizeSearch(search)}%`); }
+      if (statusFilter !== "all") { query = query.eq("status", statusFilter); }
+      const { data } = await query;
+      downloadCSV(data || [], CSV_COLUMNS, `projects-${new Date().toISOString().slice(0, 10)}.csv`);
+      addToast("CSV exported", "success");
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  async function handleCreate(formData: FormData) {
+    const result = await createProject(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
+    }
+    setShowNew(false);
+    addToast("Project created", "success");
+    fetchData();
+  }
+
+  async function handleUpdate(formData: FormData) {
+    const result = await updateProject(formData);
+    if (result?.error) {
+      addToast(result.error, "error");
+      return;
+    }
+    setEditingProject(null);
+    addToast("Project updated", "success");
+    fetchData();
+  }
+
+  async function handleDelete(id: number) {
+    setIsDeleting(true);
+    const result = await deleteProject(id);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setDeleteTarget(null);
+      setIsDeleting(false);
+      return;
+    }
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+    setTotal((prev) => Math.max(0, prev - 1));
+    if (viewProject?.id === id) setViewProject(null);
+    addToast("Project deleted", "success");
+    setDeleteTarget(null);
+    setIsDeleting(false);
+  }
+
+  async function handleStatusChange(id: number, newStatus: string) {
+    setEditingStatus(id);
+    const result = await updateProjectStatus(id, newStatus);
+    if (result?.error) {
+      addToast(result.error, "error");
+      setEditingStatus(null);
+      return;
+    }
+    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
+    if (viewProject?.id === id) {
+      setViewProject((prev) => prev ? { ...prev, status: newStatus } : null);
+    }
+    addToast("Status updated", "success");
+    setEditingStatus(null);
+  }
+
+  if (loading && !hasLoaded) {
+    return (
+      <div className="flex items-center justify-center h-64 p-6 lg:p-8">
+        <div className="flex items-center gap-3 text-white/40">
+          <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" />
+          <span className="text-sm">Loading projects...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 lg:p-8">
+        <div className="border border-red-500/10 bg-red-500/5 p-6 text-center">
+          <p className="text-sm text-red-400/80">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const hasFilters = search || statusFilter !== "all";
+
+  return (
+    <div className="p-5 lg:p-8 space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-[30px] font-semibold tracking-tight text-white leading-tight">Projects</h1>
+          <p className="mt-1 text-sm text-white/35 tabular-nums">{total} project{total !== 1 ? "s" : ""}</p>
+        </div>
+        <button
+          onClick={() => setShowNew(true)}
+          className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+        >
+          <Plus size={15} />
+          New Project
+        </button>
+      </div>
+
+      <Toolbar search={search} onSearchChange={(v) => setFilters({ search: v, page: 1 })} resultCount={total} searchRef={searchRef}>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting}
+          className="rounded-full border border-white/[0.06] bg-transparent px-3 py-1 text-xs text-white/40 hover:text-white/60 transition-colors disabled:opacity-40 disabled:pointer-events-none"
+          aria-label="Export CSV"
+        >
+          {exporting ? (
+            <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60 inline mr-1" />
+          ) : (
+            <Download size={12} className="inline mr-1" />
+          )}
+          {exporting ? "Exporting..." : "CSV"}
+        </button>
+        <ClearFiltersButton onClick={() => setFilters({ search: "", status: "all", page: 1 })} visible={hasFilters} />
+        <FilterChip active={statusFilter === "all"} onClick={() => setFilters({ status: "all", page: 1 })}>All</FilterChip>
+        {projectStatuses.map((s) => (
+          <FilterChip key={s.value} active={statusFilter === s.value} onClick={() => setFilters({ status: s.value, page: 1 })}>
+            {s.label}
+          </FilterChip>
+        ))}
+        <SortDropdown
+          value={sort}
+          onChange={(v) => setFilters({ sort: v, page: 1 })}
+          label="Sort projects"
+          options={[
+            { value: "newest", label: "Newest" },
+            { value: "oldest", label: "Oldest" },
+            { value: "name", label: "Name" },
+            { value: "deadline", label: "Deadline" },
+          ]}
+        />
+      </Toolbar>
+
+      {projects.length === 0 && !loading ? (
+        <div className="border border-white/[0.06] bg-[#0a0a0a] p-12 text-center">
+          <FolderKanban size={40} className="mx-auto text-white/10 mb-4" />
+          <p className="text-sm text-white/25">
+            {hasFilters ? "No projects match your filters" : "No projects yet \u2014 create your first project to get started"}
+          </p>
+          {!hasFilters && (
+            <button
+              onClick={() => setShowNew(true)}
+              className="mt-4 inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+            >
+              <Plus size={15} />
+              New Project
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          {projects.length > 0 && (
+            <div className={`relative transition-opacity duration-200 ${loading ? "opacity-40 pointer-events-none select-none" : ""}`}>
+              <DesktopTable
+                items={projects}
+                onView={setViewProject}
+                onEdit={setEditingProject}
+                onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+                onToggleSelectAll={toggleSelectAll}
+                col={col}
+                dir={dir}
+                onColSort={toggleColSort}
+              />
+              <MobileCards
+                items={projects}
+                onView={setViewProject}
+                onEdit={setEditingProject}
+                onDelete={setDeleteTarget}
+                onStatusChange={handleStatusChange}
+                editingStatus={editingStatus}
+                selected={selected}
+                onToggleSelect={toggleSelect}
+              />
+            </div>
+          )}
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={(p) => setFilters({ page: p })} />
+        </>
+      )}
+
+      <BulkActionBar
+        selectedCount={selected.size}
+        onClear={() => setSelected(new Set())}
+        onDelete={selected.size > 0 ? () => setBulkConfirm("delete") : undefined}
+        onStatusChange={handleBulkStatusChange}
+        statusOptions={projectStatuses}
+        loading={bulkUpdating}
+      />
+
+      <ProjectFormModal
+        key={formResetKey}
+        open={showNew}
+        onClose={() => { setShowNew(false); setFormResetKey(k => k + 1); }}
+        onSubmit={handleCreate}
+        clients={clients}
+        title="New Project"
+      />
+
+      {editingProject && (
+        <ProjectFormModal
+          open={!!editingProject}
+          onClose={() => setEditingProject(null)}
+          onSubmit={handleUpdate}
+          clients={clients}
+          project={editingProject}
+          title="Edit Project"
+        />
+      )}
+
+      <ProjectDetailDrawer
+        project={viewProject}
+        onClose={() => setViewProject(null)}
+        onEdit={setEditingProject}
+        onDelete={setDeleteTarget}
+        onStatusChange={handleStatusChange}
+      />
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete project"
+        message="Are you sure you want to delete this project? This action cannot be undone."
+        confirmLabel="Delete"
+        destructive
+        loading={isDeleting}
+        onConfirm={() => handleDelete(deleteTarget!)}
+        onCancel={() => { if (!isDeleting) setDeleteTarget(null) }}
+      />
+      <ConfirmDialog
+        open={bulkConfirm === "delete"}
+        title="Delete projects"
+        message={`Are you sure you want to delete ${selected.size} project${selected.size !== 1 ? "s" : ""}? This action cannot be undone.`}
+        confirmLabel="Delete All"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => { if (!isDeleting) setBulkConfirm(null) }}
+      />
+    </div>
+  );
+}
+
+function SortIcon({ column, col, dir }: { column: string; col: string; dir: string }) {
+  if (col !== column) return null;
+  return dir === "asc" ? (
+    <ChevronUp size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  ) : (
+    <ChevronDown size={11} className="inline ml-0.5 text-[#EAEFFF]" />
+  );
+}
+
+function DesktopTable({ items, onView, onEdit, onDelete, onStatusChange, editingStatus, selected, onToggleSelect, onToggleSelectAll, col, dir, onColSort }: {
+  items: ProjectRow[];
+  onView: (p: ProjectRow) => void;
+  onEdit: (p: ProjectRow) => void;
+  onDelete: (id: number) => void;
+  onStatusChange: (id: number, status: string) => void;
+  editingStatus: number | null;
+  selected: Set<number>;
+  onToggleSelect: (id: number) => void;
+  onToggleSelectAll: () => void;
+  col: string;
+  dir: string;
+  onColSort: (column: string) => void;
+}) {
+  const allSelected = items.length > 0 && selected.size === items.length;
+
+  return (
+    <div className="hidden sm:block border border-white/[0.06] bg-[#0a0a0a] overflow-x-auto">
+      <table className="w-full text-left text-sm min-w-max">
+        <thead>
+          <tr className="border-b border-white/[0.06]">
+            <th className="px-5 py-3.5 w-10">
+              <Checkbox
+                checked={allSelected}
+                onChange={onToggleSelectAll}
+                label="Select all"
+              />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("name")}>
+              Project<SortIcon column="name" col={col} dir={dir} />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase">Client</th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("status")}>
+              Status<SortIcon column="status" col={col} dir={dir} />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("budget")}>
+              Budget<SortIcon column="budget" col={col} dir={dir} />
+            </th>
+            <th className="px-5 py-3.5 text-[10px] font-semibold tracking-wider text-white/30 uppercase cursor-pointer select-none hover:text-white/50 transition-colors" onClick={() => onColSort("deadline")}>
+              Deadline<SortIcon column="deadline" col={col} dir={dir} />
+            </th>
+            <th className="px-5 py-3.5 text-right text-[10px] font-semibold tracking-wider text-white/30 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((p) => (
+            <tr key={p.id} className="border-b border-white/[0.02] transition-colors hover:bg-white/[0.015] last:border-0">
+              <td className="px-5 py-3.5">
+                <Checkbox
+                  checked={selected.has(p.id)}
+                  onChange={() => onToggleSelect(p.id)}
+                  label={`Select ${p.name || "project"}`}
+                />
+              </td>
+              <td className="px-5 py-3.5">
+                <button
+                  onClick={() => onView(p)}
+                  className="text-left text-sm text-white/80 font-medium transition-colors hover:text-[#EAEFFF]"
+                >
+                  {p.name}
+                </button>
+                {p.services?.length > 0 && (
+                  <span className="block text-xs text-white/25 mt-0.5">{displayServices(p.services)}</span>
+                )}
+              </td>
+              <td className="px-5 py-3.5">
+                {p.client ? (
+                  <span className="text-sm text-white/60">{p.client.name}</span>
+                ) : (
+                  <span className="text-sm text-white/25">—</span>
+                )}
+              </td>
+              <td className="px-5 py-3.5">
+                <StatusSelect
+                  value={p.status}
+                  onChange={(val) => onStatusChange(p.id, val)}
+                  disabled={editingStatus === p.id}
+                  options={projectStatuses}
+                />
+              </td>
+              <td className="px-5 py-3.5 text-sm text-white/60 tabular-nums">
+                {p.budget ? `${getCurrencySymbol(p.currency)}${Number(p.budget).toLocaleString()}` : "—"}
+              </td>
+              <td className="px-5 py-3.5 text-xs text-white/30 tabular-nums">
+                {p.deadline ? (
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={11} className="text-white/30" />
+                    {new Date(p.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </span>
+                ) : "—"}
+              </td>
+              <td className="px-5 py-3.5 text-right">
+                <div className="flex items-center justify-end gap-0.5">
+                  <IconButton onClick={() => onView(p)} icon={FolderKanban} label="View details" />
+                  <IconButton onClick={() => onEdit(p)} icon={Pencil} label="Edit project" className="text-white/30 hover:text-white/50" />
+                  <IconButton onClick={() => onDelete(p.id)} icon={Trash2} label="Delete project" className="text-red-400/20 hover:text-red-400/50 hover:bg-red-500/[0.04]" />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function MobileCards({ items, onView, onEdit, onDelete, onStatusChange, editingStatus, selected, onToggleSelect }: {
+  items: ProjectRow[];
+  onView: (p: ProjectRow) => void;
+  onEdit: (p: ProjectRow) => void;
+  onDelete: (id: number) => void;
+  onStatusChange: (id: number, status: string) => void;
+  editingStatus: number | null;
+  selected: Set<number>;
+  onToggleSelect: (id: number) => void;
+}) {
+  return (
+    <div className="sm:hidden space-y-3">
+      {items.map((p) => (
+        <div key={p.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <Checkbox
+                checked={selected.has(p.id)}
+                onChange={() => onToggleSelect(p.id)}
+                label={`Select ${p.name || "project"}`}
+              />
+              <div className="min-w-0">
+                <button
+                  onClick={() => onView(p)}
+                  className="text-sm font-medium text-white/80 hover:text-[#EAEFFF] transition-colors text-left"
+                >
+                  {p.name}
+                </button>
+                {p.client && (
+                  <p className="text-xs text-white/35 mt-0.5">{p.client.name}</p>
+                )}
+              </div>
+            </div>
+            <StatusSelect
+              value={p.status}
+              onChange={(val) => onStatusChange(p.id, val)}
+              disabled={editingStatus === p.id}
+              options={projectStatuses}
+            />
+          </div>
+          <div className="flex items-center justify-between mt-3">
+            <div className="flex items-center gap-3 text-xs text-white/30">
+              {p.budget && <span className="tabular-nums">{getCurrencySymbol(p.currency)}{Number(p.budget).toLocaleString()}</span>}
+              {p.deadline && (
+                <span className="tabular-nums">{new Date(p.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+              )}
+            </div>
+            <div className="flex items-center gap-1">
+              <IconButton onClick={() => onView(p)} icon={FolderKanban} label="View details" />
+              <IconButton onClick={() => onEdit(p)} icon={Pencil} label="Edit project" />
+              <IconButton onClick={() => onDelete(p.id)} icon={Trash2} label="Delete project" className="text-red-400/20 hover:text-red-400/50" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProjectFormModal({ open, onClose, onSubmit, clients, project, title }: {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (formData: FormData) => Promise<void>;
+  clients: ClientRow[];
+  project?: ProjectRow;
+  title: string;
+}) {
+  const [submitting, setSubmitting] = useState(false);
+  const trapRef = useFocusTrap(open);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [open, onClose]);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    const fd = new FormData(e.target as HTMLFormElement);
+    if (project) fd.set("id", String(project.id));
+    await onSubmit(fd);
+    setSubmitting(false);
+  }
+
+  if (!open) return null;
+
+  const servicesStr = displayServices(project?.services) || "";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="project-form-title">
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div ref={trapRef} className="relative w-full max-w-2xl max-h-full overflow-y-auto border border-white/[0.08] bg-[#0c0c0c] shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/[0.06] bg-[#0c0c0c] px-6 py-4">
+          <h2 id="project-form-title" className="text-lg font-semibold tracking-tight text-white/90">{title}</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-white/30 hover:text-white/50 transition-colors hover:bg-white/[0.04]"
+            aria-label="Close dialog"
+          >
+            <X size={16} />
+          </button>
+        </div>
+        <div className="px-6 py-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField label="Project Name" name="name" placeholder="Website Redesign" defaultValue={project?.name || ""} required />
+              <div>
+                <label htmlFor="field-client_id" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Client
+                </label>
+                <select
+                  id="field-client_id"
+                  name="client_id"
+                  defaultValue={project?.client_id || ""}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  style={{ colorScheme: "dark" }}
+                >
+                  <option value="">No client</option>
+                  {clients.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}{c.company ? ` (${c.company})` : ""}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="field-description" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                Description
+              </label>
+              <textarea
+                id="field-description"
+                name="description"
+                rows={3}
+                placeholder="Project scope and objectives..."
+                defaultValue={project?.description || ""}
+                className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label htmlFor="field-status" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Status
+                </label>
+                <select
+                  id="field-status"
+                  name="status"
+                  defaultValue={project?.status || "planning"}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  style={{ colorScheme: "dark" }}
+                >
+                  {projectStatuses.map((s) => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
+              <FormField label="Start Date" name="start_date" type="date" defaultValue={project?.start_date || ""} />
+              <FormField label="Deadline" name="deadline" type="date" defaultValue={project?.deadline || ""} />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField label="Budget" name="budget" type="number" placeholder="5000" defaultValue={project?.budget || ""} />
+              <div>
+                <label htmlFor="field-currency" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Currency
+                </label>
+                <select
+                  id="field-currency"
+                  name="currency"
+                  defaultValue={project?.currency || "INR"}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white/80 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                >
+                  {["INR", "USD", "EUR", "GBP", "AUD"].map((c) => (
+                    <option key={c} value={c}>{c} ({getCurrencySymbol(c)})</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="field-services" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Services (comma-separated)
+                </label>
+                <input
+                  id="field-services"
+                  name="services"
+                  defaultValue={servicesStr}
+                  placeholder="Web Dev, Design, SEO"
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="field-notes" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                Notes
+              </label>
+              <textarea
+                id="field-notes"
+                name="notes"
+                rows={2}
+                placeholder="Internal notes..."
+                defaultValue={project?.notes || ""}
+                className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 border border-white/[0.08] px-4 py-2.5 text-xs font-medium text-white/45 transition-all hover:bg-white/[0.04] hover:text-white/70"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="flex-1 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97] disabled:opacity-50"
+              >
+                {submitting ? "Saving..." : project ? "Save Changes" : "Create Project"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProjectDetailDrawer({ project, onClose, onEdit, onDelete, onStatusChange }: {
+  project: ProjectRow | null;
+  onClose: () => void;
+  onEdit: (p: ProjectRow) => void;
+  onDelete: (id: number) => void;
+  onStatusChange: (id: number, status: string) => void;
+}) {
+  const [statusLoading, setStatusLoading] = useState(false);
+  const trapRef = useFocusTrap(!!project);
+
+  useEffect(() => {
+    if (!project) return;
+    function handleKey(e: KeyboardEvent) { if (e.key === "Escape") onClose(); }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [project, onClose]);
+
+  if (!project) return null;
+
+  const statusInfo = projectStatuses.find((s) => s.value === project.status);
+
+  return (
+    <AnimatePresence>
+      {project && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/60"
+            onClick={onClose}
+          />
+          <motion.div
+            ref={trapRef}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed right-0 top-0 z-50 h-full w-full max-w-2xl border-l border-white/[0.06] bg-[#0a0a0a] shadow-2xl overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-detail-title"
+          >
+            <div className="sticky top-0 flex items-center justify-between border-b border-white/[0.06] bg-[#0a0a0a] px-6 py-4 z-10">
+              <h2 id="project-detail-title" className="text-base font-semibold tracking-tight text-white/90">
+                {project.name}
+              </h2>
+              <button
+                onClick={onClose}
+                className="p-1.5 text-white/30 hover:text-white/60 transition-colors hover:bg-white/[0.04]"
+                aria-label="Close panel"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <span className={`inline-flex items-center px-3 py-1 text-xs font-semibold border ${statusColor(project.status)}`}>
+                  {statusInfo?.label || project.status}
+                </span>
+              </div>
+
+              {project.client && (
+                <div className="flex items-center gap-3 pb-4 border-b border-white/[0.06]">
+                  <div className="flex h-10 w-10 items-center justify-center text-sm font-bold border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 text-[#EAEFFF]/70">
+                    {project.client.name?.charAt(0)?.toUpperCase() || "?"}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/80">{project.client.name}</p>
+                    {project.client.company && (
+                      <span className="block text-xs text-white/25">{project.client.company}</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {project.description && (
+                <div className="border border-white/[0.06] bg-white/[0.015] p-4">
+                  <p className="text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">Description</p>
+                  <p className="text-sm text-white/50 whitespace-pre-wrap">{project.description}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                {project.budget && (
+                  <div className="border border-white/[0.06] p-4">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">
+                      <DollarSign size={12} />
+                      Budget
+                    </div>
+                    <p className="text-lg font-semibold text-white/80 tabular-nums">{getCurrencySymbol(project.currency)}{Number(project.budget).toLocaleString()}</p>
+                  </div>
+                )}
+                {project.deadline && (
+                  <div className="border border-white/[0.06] p-4">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">
+                      <Clock size={12} />
+                      Deadline
+                    </div>
+                    <p className="text-lg font-semibold text-white/80 tabular-nums">
+                      {new Date(project.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </p>
+                  </div>
+                )}
+                {project.start_date && (
+                  <div className="border border-white/[0.06] p-4">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">
+                      <Target size={12} />
+                      Started
+                    </div>
+                    <p className="text-lg font-semibold text-white/80 tabular-nums">
+                      {new Date(project.start_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </p>
+                  </div>
+                )}
+                {project.services?.length > 0 && (
+                  <div className="border border-white/[0.06] p-4">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">
+                      <CheckCircle size={12} />
+                      Services
+                    </div>
+                    <p className="text-sm text-white/60">{displayServices(project.services)}</p>
+                  </div>
+                )}
+              </div>
+
+              {project.notes && (
+                <div className="border border-white/[0.06] bg-white/[0.015] p-4">
+                  <p className="text-[10px] font-semibold tracking-wider text-white/25 uppercase mb-1">Notes</p>
+                  <p className="text-sm text-white/50 whitespace-pre-wrap">{project.notes}</p>
+                </div>
+              )}
+
+              <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
+                <Calendar size={11} />
+                Created {formatDate(project.created_at)}
+              </div>
+
+              <div className="flex flex-wrap gap-2 border-t border-white/[0.06] pt-4">
+                {project.status === "planning" && (
+                  <button
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project!.id, "in_progress"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <Play size={13} />}
+                    {statusLoading ? "Updating..." : "Start Project"}
+                  </button>
+                )}
+                {project.status === "in_progress" && (
+                  <button
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project!.id, "review"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-cyan-400/20 px-4 py-2.5 text-xs font-semibold text-cyan-400/70 transition-all hover:bg-cyan-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <CheckCircle size={13} />}
+                    {statusLoading ? "Updating..." : "Mark for Review"}
+                  </button>
+                )}
+                {project.status === "review" && (
+                  <button
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project!.id, "completed"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-400/20 px-4 py-2.5 text-xs font-semibold text-emerald-400/80 transition-all hover:bg-emerald-500/20 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <CheckCircle size={13} />}
+                    {statusLoading ? "Updating..." : "Complete"}
+                  </button>
+                )}
+                {["planning", "in_progress", "review"].includes(project.status) && (
+                  <button
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project!.id, "on_hold"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-amber-400/20 px-4 py-2.5 text-xs font-semibold text-amber-400/70 transition-all hover:bg-amber-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <Pause size={13} />}
+                    {statusLoading ? "Updating..." : "Put on Hold"}
+                  </button>
+                )}
+                {project.status === "on_hold" && (
+                  <button
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project!.id, "in_progress"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-blue-400/20 px-4 py-2.5 text-xs font-semibold text-blue-400/70 transition-all hover:bg-blue-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <Play size={13} />}
+                    {statusLoading ? "Updating..." : "Resume"}
+                  </button>
+                )}
+                {!["completed", "cancelled"].includes(project.status) && (
+                  <button
+                    onClick={async () => {
+                      setStatusLoading(true);
+                      try { await onStatusChange(project!.id, "cancelled"); } finally { setStatusLoading(false); }
+                    }}
+                    disabled={statusLoading}
+                    className="inline-flex items-center gap-2 border border-red-400/20 px-4 py-2.5 text-xs font-semibold text-red-400/70 transition-all hover:bg-red-500/[0.06] disabled:opacity-40 disabled:pointer-events-none"
+                  >
+                    {statusLoading ? <div className="h-4 w-4 animate-spin rounded-full border border-white/20 border-t-[#EAEFFF]/60" /> : <XCircle size={13} />}
+                    {statusLoading ? "Updating..." : "Cancel Project"}
+                  </button>
+                )}
+                <button
+                  onClick={() => onEdit(project!)}
+                  className="inline-flex items-center gap-2 bg-[#EAEFFF] px-4 py-2.5 text-xs font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 active:scale-[0.97]"
+                >
+                  <Pencil size={13} />
+                  Edit
+                </button>
+                <button
+                  onClick={() => { onDelete(project!.id); onClose(); }}
+                  className="ml-auto inline-flex items-center gap-2 border border-red-500/10 bg-red-500/5 px-4 py-2.5 text-xs font-medium text-red-400/60 transition-all hover:bg-red-500/10 hover:text-red-400"
+                >
+                  <Trash2 size={13} />
+                  Delete
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}

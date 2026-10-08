@@ -1,0 +1,131 @@
+import { useState, useEffect, useRef, useCallback } from "react";
+import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { createLead } from "@/lib/actions";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import StepContent from "./StepContent";
+import type { LeadFormData } from "./StepContent";
+
+export interface RequestModalProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+export default function RequestModal({ isOpen, setIsOpen }: RequestModalProps) {
+  const [step, setStep] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [countryOpen, setCountryOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
+
+  const [formData, setFormData] = useState<LeadFormData>({
+    services: [],
+    name: "",
+    email: "",
+    countryCode: "+91",
+    phone: "",
+    details: "",
+    currency: "USD",
+    budget: "",
+  });
+
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    setSending(true);
+    setError(null);
+
+    const result = await createLead({
+      name: formData.name,
+      email: formData.email,
+      phone: `${formData.countryCode} ${formData.phone}`,
+      services: formData.services.join(", "),
+      details: formData.details,
+      budget: `${formData.currency} ${formData.budget}`,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+      setSending(false);
+      return;
+    }
+
+    if (result?.emailError) {
+      console.warn("Email warning:", result.emailError);
+    }
+
+    setSubmitted(true);
+    setSending(false);
+  };
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setTimeout(() => {
+      setStep(0);
+      setSubmitted(false);
+    }, 300);
+  }, [setIsOpen]);
+
+  const trapRef = useFocusTrap(isOpen);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") handleClose();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, handleClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      >
+        <div
+          onClick={handleClose}
+          className="absolute inset-0 bg-[var(--bg-primary)]/70 backdrop-blur-md"
+        />
+
+        <div
+          className={`relative bg-[var(--bg-primary)] rounded-2xl w-full overflow-hidden text-[var(--text-primary)] border border-[var(--accent)]/10 z-10 transition-all duration-300 shadow-[0_0_80px_rgba(234,239,255,0.06)]
+  ${step === 0 ? "max-w-md" : "max-w-2xl"}`}
+        >
+          <div className="flex justify-between items-center p-6 border-b border-[var(--accent)]/8">
+            <h3 id="modal-title" className="text-xl font-bold">
+              {step === 0 ? "Get Started" : "Request Services"}
+            </h3>
+            <button ref={closeBtnRef} onClick={handleClose} aria-label="Close dialog">
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="p-6 ">
+            <StepContent
+              step={step}
+              setStep={setStep}
+              formData={formData}
+              setFormData={setFormData}
+              handleSubmit={handleSubmit}
+              submitted={submitted}
+              countryOpen={countryOpen}
+              setCountryOpen={setCountryOpen}
+              currencyOpen={currencyOpen}
+              setCurrencyOpen={setCurrencyOpen}
+              sending={sending}
+              error={error}
+              handleClose={handleClose}
+            />
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
