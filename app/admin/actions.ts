@@ -369,6 +369,7 @@ export async function updateLead(formData: FormData) {
 
     if (error) return { error: error.message };
     revalidateAdmin("/admin/leads");
+    return { success: true };
   } catch (err) {
     return { error: (err as Error).message || "Failed to update lead" };
   }

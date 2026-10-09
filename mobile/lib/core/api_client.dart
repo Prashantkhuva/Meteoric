@@ -133,6 +133,22 @@ class ApiClient {
     return _decode(res);
   }
 
+  Future<Map<String, dynamic>> _patch(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
+    final res = await _send(
+      () => http
+          .patch(
+            Uri.parse('$_base$path'),
+            headers: _headers(),
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 30)),
+    );
+    return _decode(res);
+  }
+
   Map<String, dynamic> _decode(http.Response res) {
     Map<String, dynamic> body;
     try {
@@ -448,7 +464,7 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> linearIssueUpdate(Map<String, dynamic> data) =>
-      _post('/api/admin/linear-issues', data);
+      _patch('/api/admin/linear-issues', data);
 
   // ── Onboarding ─────────────────────────────────────────────────
   Future<Map<String, dynamic>> onboardComplete() =>
