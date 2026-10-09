@@ -364,7 +364,6 @@ export async function updateLead(formData: FormData) {
         follow_up_time: data.follow_up_time || null,
         follow_up_note: data.follow_up_note || null,
         source: data.source || null,
-        updated_at: new Date().toISOString(),
       })
       .eq("id", raw.id);
 
