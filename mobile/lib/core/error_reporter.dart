@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'app_logs.dart';
 import 'app_version.dart';
 import 'config.dart';
 import 'supabase.dart';
@@ -17,6 +18,7 @@ class ErrorRouteObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     currentScreen = _routeName(route);
+    AppLogs.log('nav', 'push $currentScreen');
   }
 
   @override
@@ -24,11 +26,15 @@ class ErrorRouteObserver extends NavigatorObserver {
     if (previousRoute != null) {
       currentScreen = _routeName(previousRoute);
     }
+    AppLogs.log('nav', 'pop → $currentScreen');
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    if (newRoute != null) currentScreen = _routeName(newRoute);
+    if (newRoute != null) {
+      currentScreen = _routeName(newRoute);
+      AppLogs.log('nav', 'replace $currentScreen');
+    }
   }
 
   String _routeName(Route<dynamic> route) {
@@ -75,12 +81,18 @@ class ErrorReporter {
   }
 
   /// Report a caught exception manually from try/catch blocks.
-  static void report(dynamic error, StackTrace stack, {String? screen}) {
+  static void report(
+    dynamic error,
+    StackTrace stack, {
+    String? screen,
+    String? endpoint,
+  }) {
     if (kReleaseMode) {
       _report(
         error: error.toString(),
         stack: stack.toString(),
         screen: screen ?? ErrorRouteObserver.currentScreen,
+        endpoint: endpoint,
         fatal: false,
       );
     }
@@ -90,6 +102,7 @@ class ErrorReporter {
     required String error,
     required String stack,
     required String screen,
+    String? endpoint,
     bool fatal = false,
   }) async {
     // Dedup: skip if same error within 30s
@@ -100,6 +113,8 @@ class ErrorReporter {
 
     // Keep only first 20 lines of stack trace
     final shortStack = stack.split('\n').take(20).join('\n');
+
+    AppLogs.log('error', error);
 
     try {
       final token = AuthService.accessToken;
@@ -115,6 +130,8 @@ class ErrorReporter {
           'error': error,
           'stack': shortStack,
           'screen': screen,
+          'endpoint': endpoint,
+          'logs': AppLogs.dump(),
           'version': AppVersion.version,
           'patch': AppVersion.patch,
           'platform': Platform.operatingSystem,

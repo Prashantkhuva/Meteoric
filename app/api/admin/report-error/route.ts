@@ -105,7 +105,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     return fail("Invalid JSON body");
   }
 
-  const { error, stack, screen, version, patch, platform, osVersion, fatal } =
+  const { error, stack, screen, endpoint, logs, version, patch, platform, osVersion, fatal } =
     body || {};
 
   if (!error) return fail("Missing error field");
@@ -116,23 +116,31 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const description = [
       "## Error",
+      "```",
       error,
+      "```",
       "",
-      "## Screen",
-      screen || "unknown",
+      "## Where",
+      `- Screen: ${screen || "unknown"}`,
+      `- Endpoint: ${endpoint || "n/a"}`,
+      `- App: v${version || "?"} (patch ${patch ?? 0})`,
+      `- Fatal: ${fatal ? "yes" : "no"}`,
       "",
-      "## Stack Trace",
+      "## Stack trace",
       "```",
       stack || "no stack trace",
+      "```",
+      "",
+      "## App logs (last 2 min)",
+      "```",
+      typeof logs === "string" && logs.trim() ? logs : "(no logs captured)",
       "```",
       "",
       "## Device",
       `- Platform: ${platform || "unknown"}`,
       `- OS: ${osVersion || "unknown"}`,
-      `- App: v${version || "?"} (patch ${patch ?? 0})`,
-      `- Fatal: ${fatal ? "yes" : "no"}`,
       "",
-      ` Reported by ${auth.user.email} at ${new Date().toISOString()}`,
+      `Reported by ${auth.user.email} at ${new Date().toISOString()}`,
     ].join("\n");
 
     // Find or create the "mobile" label

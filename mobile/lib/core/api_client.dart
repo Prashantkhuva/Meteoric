@@ -4,6 +4,7 @@ import 'dart:io' show SocketException;
 
 import 'package:http/http.dart' as http;
 
+import 'app_logs.dart';
 import 'error_reporter.dart';
 import 'supabase.dart';
 import 'config.dart';
@@ -43,6 +44,10 @@ class ApiClient {
   static final ApiClient instance = ApiClient._();
 
   ApiClient._();
+
+  /// Endpoint of the in-flight request — attached to error reports so the
+  /// Linear issue says which call failed, not just which screen.
+  String? _lastEndpoint;
 
   String get _base => AppConfig.apiBaseUrl;
 
@@ -111,6 +116,8 @@ class ApiClient {
     String path,
     Map<String, dynamic> body,
   ) async {
+    _lastEndpoint = 'POST $path';
+    AppLogs.log('api', '→ POST $path');
     final res = await _send(
       () => http
           .post(
@@ -120,16 +127,19 @@ class ApiClient {
           )
           .timeout(const Duration(seconds: 30)),
     );
-
+    AppLogs.log('api', '← ${res.statusCode} POST $path');
     return _decode(res);
   }
 
   Future<Map<String, dynamic>> _get(String path) async {
+    _lastEndpoint = 'GET $path';
+    AppLogs.log('api', '→ GET $path');
     final res = await _send(
       () => http
           .get(Uri.parse('$_base$path'), headers: _headers())
           .timeout(const Duration(seconds: 30)),
     );
+    AppLogs.log('api', '← ${res.statusCode} GET $path');
     return _decode(res);
   }
 
@@ -137,6 +147,8 @@ class ApiClient {
     String path,
     Map<String, dynamic> body,
   ) async {
+    _lastEndpoint = 'PATCH $path';
+    AppLogs.log('api', '→ PATCH $path');
     final res = await _send(
       () => http
           .patch(
@@ -146,6 +158,7 @@ class ApiClient {
           )
           .timeout(const Duration(seconds: 30)),
     );
+    AppLogs.log('api', '← ${res.statusCode} PATCH $path');
     return _decode(res);
   }
 
@@ -162,6 +175,7 @@ class ApiClient {
           'API $message',
           StackTrace.current,
           screen: ErrorRouteObserver.currentScreen,
+          endpoint: _lastEndpoint,
         );
       }
       throw ApiException(message, status: res.statusCode);
@@ -176,6 +190,7 @@ class ApiClient {
           'API $message',
           StackTrace.current,
           screen: ErrorRouteObserver.currentScreen,
+          endpoint: _lastEndpoint,
         );
       }
       throw ApiException(message, status: res.statusCode);
