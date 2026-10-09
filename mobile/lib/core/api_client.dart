@@ -4,6 +4,7 @@ import 'dart:io' show SocketException;
 
 import 'package:http/http.dart' as http;
 
+import 'error_reporter.dart';
 import 'supabase.dart';
 import 'config.dart';
 
@@ -137,20 +138,53 @@ class ApiClient {
     try {
       body = jsonDecode(res.body) as Map<String, dynamic>;
     } catch (_) {
-      throw ApiException(
-        res.statusCode >= 500
-            ? 'The server is having trouble right now. Please try again shortly.'
-            : 'Unexpected server response (${res.statusCode})',
-        status: res.statusCode,
-      );
+      final message = res.statusCode >= 500
+          ? 'The server is having trouble right now. Please try again shortly.'
+          : 'Unexpected server response (${res.statusCode})';
+      if (res.statusCode != 401 && res.statusCode != 403) {
+        ErrorReporter.report(
+          'API $message',
+          StackTrace.current,
+          screen: ErrorRouteObserver.currentScreen,
+        );
+      }
+      throw ApiException(message, status: res.statusCode);
     }
     if (res.statusCode == 401) {
       throw ApiException(body['error'] ?? 'Session expired', status: 401);
     }
     if (body.containsKey('error')) {
-      throw ApiException(body['error'] as String, status: res.statusCode);
+      final message = body['error'] as String;
+      if (_isServerFault(res.statusCode, message)) {
+        ErrorReporter.report(
+          'API $message',
+          StackTrace.current,
+          screen: ErrorRouteObserver.currentScreen,
+        );
+      }
+      throw ApiException(message, status: res.statusCode);
     }
     return body;
+  }
+
+  /// True when an API error looks like a server-side bug worth a Linear
+  /// issue — as opposed to auth, offline, or expected validation failures.
+  static bool _isServerFault(int status, String message) {
+    if (status == 401 || status == 403 || status >= 500) return status >= 500;
+    final m = message.toLowerCase();
+    const serverSignals = [
+      'column',
+      'schema',
+      'constraint',
+      'relation',
+      'violat',
+      'duplicate key',
+      'pgrst',
+      'internal',
+      'unexpected server response',
+      'having trouble',
+    ];
+    return serverSignals.any(m.contains);
   }
 
   // ── Leads ────────────────────────────────────────────────────────────────
