@@ -84,6 +84,27 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
   void _snack(String msg, {bool isError = false}) =>
       isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
+  /// Follow-up deadline as local DateTime. Date-only follow-ups (no time)
+  /// count as due end of that day.
+  DateTime? _followUpTarget(String date, String time) {
+    final d = DateTime.tryParse(date);
+    if (d == null) return null;
+    final parts = time.split(':');
+    final h = int.tryParse(parts.isNotEmpty ? parts[0] : '');
+    final m = parts.length > 1 ? int.tryParse(parts[1]) : null;
+    if (h == null) return DateTime(d.year, d.month, d.day, 23, 59);
+    return DateTime(d.year, d.month, d.day, h, m ?? 0);
+  }
+
+  String _formatTime(String hhmm) {
+    final parts = hhmm.split(':');
+    final h = int.tryParse(parts[0]) ?? 0;
+    final m = parts.length > 1 ? parts[1] : '00';
+    final ampm = h >= 12 ? 'PM' : 'AM';
+    final h12 = h % 12 == 0 ? 12 : h % 12;
+    return '$h12:$m $ampm';
+  }
+
   Future<void> _changeStatus(String status) async {
     await _run('Status updated', () async {
       await ApiClient.instance.leadStatus((_lead['id'] as num).toInt(), status);
@@ -280,9 +301,16 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     final summary = _lead['ai_summary'];
     final notes = '${_lead['notes'] ?? ''}';
     final followUp = '${_lead['follow_up_at'] ?? ''}';
-    final followUpDate = DateTime.tryParse(followUp);
+    final followUpTime = '${_lead['follow_up_time'] ?? ''}';
+    final followUpNote = '${_lead['follow_up_note'] ?? ''}';
+    final followUpTarget = _followUpTarget(followUp, followUpTime);
     final followUpOverdue =
-        followUpDate != null && !followUpDate.isAfter(DateTime.now());
+        followUpTarget != null && !followUpTarget.isAfter(DateTime.now());
+    final followUpLabel = followUp.isEmpty
+        ? ''
+        : followUpTime.isEmpty
+        ? Fmt.date(followUp)
+        : '${Fmt.date(followUp)} · ${_formatTime(followUpTime)}';
 
     return PopScope(
       canPop: false,
@@ -322,22 +350,18 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                   DetailRow(label: 'Phone', value: _lead['phone'] ?? '—'),
                   DetailRow(label: 'Company', value: _lead['company'] ?? '—'),
                   DetailRow(label: 'Services', value: _lead['services'] ?? '—'),
-                  DetailRow(
-                    label: 'Budget',
-                    value: _lead['budget'] != null
-                        ? '${_lead['currency'] ?? 'USD'} ${_lead['budget']}'
-                        : '—',
-                  ),
                   if (_lead['details'] != null &&
                       '${_lead['details']}'.isNotEmpty)
                     DetailRow(label: 'Details', value: '${_lead['details']}'),
                   if (notes.isNotEmpty) DetailRow(label: 'Notes', value: notes),
-                  if (followUp.isNotEmpty)
+                  if (followUpLabel.isNotEmpty)
                     DetailRow(
                       label: 'Follow-up',
-                      value: Fmt.date(followUp),
+                      value: followUpLabel,
                       valueColor: followUpOverdue ? AppColors.red : null,
                     ),
+                  if (followUpNote.isNotEmpty)
+                    DetailRow(label: 'Follow-up note', value: followUpNote),
                 ],
               ),
             ),
@@ -426,14 +450,15 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                     onPressed: _busy
                         ? null
                         : () async {
-                            final changed = await Navigator.of(context)
-                                .push<bool>(
+                            final updated = await Navigator.of(context)
+                                .push<Map<String, dynamic>>(
                                   MaterialPageRoute(
                                     builder: (_) => LeadFormScreen(lead: _lead),
                                   ),
                                 );
-                            if (changed == true && mounted) {
-                              setState(() {});
+                            if (updated != null && mounted) {
+                              setState(() => _lead = {..._lead, ...updated});
+                              _changed = true;
                             }
                           },
                     child: const Text('EDIT'),

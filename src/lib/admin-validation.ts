@@ -117,6 +117,19 @@ export const leadSchema = z.object({
     .optional()
     .or(z.literal(""))
     .transform((v) => v || null),
+  follow_up_time: z
+    .string()
+    .max(5)
+    .regex(/^\d{2}:\d{2}$/, "Invalid time format")
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v || null),
+  follow_up_note: z
+    .string()
+    .max(280)
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v?.trim() || null),
   source: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });
 

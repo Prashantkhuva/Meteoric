@@ -131,7 +131,20 @@ class _LeadsScreenState extends State<LeadsScreen> {
     _load();
   }
 
-  Future<void> _refresh() async => _load();
+  void _invalidateLeads() {
+    DataCache.instance.invalidatePrefix('leads');
+    DataCache.instance.invalidate('overview');
+  }
+
+  Future<void> _refresh() async {
+    _invalidateLeads();
+    await _load();
+  }
+
+  Future<void> _reload() async {
+    _invalidateLeads();
+    await _load();
+  }
 
   int _id(Map<String, dynamic> row) => (row['id'] as num).toInt();
 
@@ -176,7 +189,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     } else {
       Toast.error(context, 'Deleted with $failed failures');
     }
-    _load();
+    _reload();
   }
 
   Future<void> _bulkStatus(String status) async {
@@ -199,7 +212,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     } else {
       Toast.error(context, '$failed failed');
     }
-    _load();
+    _reload();
   }
 
   Future<List<Map<String, dynamic>>> _fetchAll() async {
@@ -300,7 +313,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
       } else {
         Toast.info(context, 'Imported $imported · ${errors.length} skipped');
       }
-      _load();
+      _reload();
     } catch (err) {
       if (mounted) Toast.error(context, err.toString());
     }
@@ -381,7 +394,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
                       size: 18,
                       color: AppColors.textMuted,
                     ),
-                    onPressed: _load,
+                    onPressed: _reload,
                     tooltip: 'Refresh',
                   ),
                 ],
@@ -559,15 +572,15 @@ class _LeadsScreenState extends State<LeadsScreen> {
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => LeadDetailScreen(lead: lead)));
     if (!mounted) return;
-    _load();
+    _reload();
   }
 
   Future<void> _openForm({Map<String, dynamic>? lead}) async {
-    final changed = await Navigator.of(
-      context,
-    ).push<bool>(MaterialPageRoute(builder: (_) => LeadFormScreen(lead: lead)));
+    final changed = await Navigator.of(context).push<Map<String, dynamic>?>(
+      MaterialPageRoute(builder: (_) => LeadFormScreen(lead: lead)),
+    );
     if (!mounted) return;
-    if (changed == true) _load();
+    if (changed != null) _reload();
   }
 }
 

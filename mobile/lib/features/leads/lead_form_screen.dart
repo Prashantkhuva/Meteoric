@@ -25,9 +25,6 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   late final _services = TextEditingController(
     text: widget.lead?['services'] ?? '',
   );
-  late final _budget = TextEditingController(
-    text: widget.lead?['budget'] ?? '',
-  );
   late final _details = TextEditingController(
     text: widget.lead?['details'] ?? '',
   );
@@ -35,13 +32,17 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   late final _followUpCtrl = TextEditingController(
     text: widget.lead?['follow_up_at']?.toString() ?? '',
   );
+  late final _followUpTimeCtrl = TextEditingController(
+    text: widget.lead?['follow_up_time']?.toString() ?? '',
+  );
+  late final _followUpNoteCtrl = TextEditingController(
+    text: widget.lead?['follow_up_note']?.toString() ?? '',
+  );
   late String _followUp;
+  late String _followUpTime;
   late String _source;
-  late String _currency;
   bool _saving = false;
   bool _dirty = false;
-
-  static const _currencies = ['USD', 'INR', 'EUR', 'GBP', 'AUD'];
 
   bool get _isEdit => widget.lead != null;
 
@@ -49,17 +50,20 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   void initState() {
     super.initState();
     _source = widget.lead?['source'] ?? 'manual';
-    _currency = widget.lead?['currency'] ?? 'USD';
     _followUp = widget.lead?['follow_up_at']?.toString() ?? '';
+    _followUpTime = widget.lead?['follow_up_time']?.toString() ?? '';
+    if (_followUpTime.isNotEmpty) {
+      _followUpTimeCtrl.text = _formatTime(_followUpTime);
+    }
     for (final c in [
       _name,
       _email,
       _phone,
       _company,
       _services,
-      _budget,
       _details,
       _notes,
+      _followUpNoteCtrl,
     ]) {
       c.addListener(() {
         if (!_dirty) setState(() => _dirty = true);
@@ -74,10 +78,11 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     _phone.dispose();
     _company.dispose();
     _services.dispose();
-    _budget.dispose();
     _details.dispose();
     _notes.dispose();
     _followUpCtrl.dispose();
+    _followUpTimeCtrl.dispose();
+    _followUpNoteCtrl.dispose();
     super.dispose();
   }
 
@@ -92,11 +97,13 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       'phone': _phone.text.trim(),
       'company': _company.text.trim(),
       'services': _services.text.trim(),
-      'budget': _budget.text.trim(),
-      'currency': _currency,
       'details': _details.text.trim(),
       'notes': _notes.text.trim(),
-      'follow_up_at': _followUp,
+      if (_isEdit) ...{
+        'follow_up_at': _followUp,
+        'follow_up_time': _followUpTime,
+        'follow_up_note': _followUpNoteCtrl.text.trim(),
+      },
       'source': _isEdit ? null : _source,
     }..removeWhere((k, v) => v == null);
 
@@ -108,7 +115,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       }
       if (!mounted) return;
       _snack(_isEdit ? 'Lead updated' : 'Lead added');
-      Navigator.of(context).pop(true);
+      Navigator.of(context).pop(payload);
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
     } finally {
@@ -172,17 +179,6 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                 const SizedBox(height: 12),
                 _field(_services, 'Services'),
                 const SizedBox(height: 12),
-                _field(_budget, 'Budget'),
-                const SizedBox(height: 12),
-                DropdownButtonFormField<String>(
-                  value: _currency,
-                  items: _currencies
-                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                      .toList(),
-                  onChanged: (v) => setState(() => _currency = v ?? 'USD'),
-                  decoration: const InputDecoration(labelText: 'Currency'),
-                ),
-                const SizedBox(height: 12),
                 _field(
                   _details,
                   'Details',
@@ -197,7 +193,13 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                   textInputAction: TextInputAction.done,
                 ),
                 const SizedBox(height: 12),
-                _followUpField(),
+                if (_isEdit) ...[
+                  _followUpField(),
+                  const SizedBox(height: 12),
+                  _followUpTimeField(),
+                  const SizedBox(height: 12),
+                  _followUpNoteField(),
+                ],
                 if (!_isEdit) ...[
                   const SizedBox(height: 16),
                   const Text(
@@ -340,5 +342,77 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     );
     if (picked == null || !mounted) return;
     _setFollowUp(picked.toIso8601String().split('T').first);
+  }
+
+  Widget _followUpTimeField() {
+    return TextFormField(
+      controller: _followUpTimeCtrl,
+      readOnly: true,
+      onTap: _pickFollowUpTime,
+      decoration: InputDecoration(
+        labelText: 'Follow-up time (IST)',
+        suffixIcon: _followUpTime.isEmpty
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.close, size: 16),
+                tooltip: 'Clear',
+                onPressed: () {
+                  setState(() {
+                    _followUpTime = '';
+                    _followUpTimeCtrl.text = '';
+                    _dirty = true;
+                  });
+                },
+              ),
+      ),
+    );
+  }
+
+  Future<void> _pickFollowUpTime() async {
+    final parts = _followUpTime.split(':');
+    final initial = TimeOfDay(
+      hour: int.tryParse(parts.isNotEmpty ? parts[0] : '') ?? 10,
+      minute: int.tryParse(parts.length > 1 ? parts[1] : '') ?? 0,
+    );
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: initial,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: child!,
+        );
+      },
+    );
+    if (picked == null || !mounted) return;
+    setState(() {
+      _followUpTime =
+          '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+      _followUpTimeCtrl.text = _formatTime(_followUpTime);
+      _dirty = true;
+    });
+  }
+
+  String _formatTime(String hhmm) {
+    final parts = hhmm.split(':');
+    final h = int.tryParse(parts[0]) ?? 0;
+    final m = parts.length > 1 ? parts[1] : '00';
+    final ampm = h >= 12 ? 'PM' : 'AM';
+    final h12 = h % 12 == 0 ? 12 : h % 12;
+    return '$h12:$m $ampm';
+  }
+
+  Widget _followUpNoteField() {
+    return TextFormField(
+      controller: _followUpNoteCtrl,
+      maxLength: 280,
+      maxLines: 3,
+      textInputAction: TextInputAction.done,
+      decoration: const InputDecoration(
+        labelText: 'Follow-up note',
+        hintText: 'Short message for future reference...',
+        counterStyle: TextStyle(fontSize: 10, color: AppColors.textFaint),
+      ),
+    );
   }
 }

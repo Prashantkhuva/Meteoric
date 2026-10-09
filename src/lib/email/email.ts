@@ -5,6 +5,7 @@ import LeadAutoReply from "@/emails/lead-autoreply";
 import ProposalEmail from "@/emails/proposal-email";
 import InvoiceEmail from "@/emails/invoice-email";
 import OverdueReminder from "@/emails/overdue-reminder";
+import FollowUpReminder from "@/emails/follow-up-reminder";
 import ClientWelcome from "@/emails/client-welcome";
 import PaymentConfirmation from "@/emails/payment-confirmation";
 import ReviewThankYou from "@/emails/review-thankyou";
@@ -242,6 +243,34 @@ export async function sendOverdueReminder(invoice: Invoice, client: Client | nul
   }
   if (result?.error) throw new Error(result.error.message || "Failed to send overdue reminder");
   return result;
+}
+
+export async function sendFollowUpReminder(
+  lead: { name?: string | null; company?: string | null },
+  when: string,
+  minutes: number,
+  note?: string | null
+) {
+  if (!ADMIN) return;
+  try {
+    const result = await resend.emails.send({
+      from: ADMIN_FROM,
+      to: [ADMIN],
+      subject: `Follow-up in ${minutes} min: ${lead.name || "lead"}`,
+      react: FollowUpReminder({
+        leadName: lead.name,
+        company: lead.company,
+        when,
+        minutes,
+        note,
+      }),
+    });
+    if (result?.error) console.error("[resend] follow-up reminder failed:", result.error);
+    return result;
+  } catch (raw) {
+    console.error("[resend] follow-up reminder threw:", raw);
+    return null;
+  }
 }
 
 export async function sendCustomEmail({

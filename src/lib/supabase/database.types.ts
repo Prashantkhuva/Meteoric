@@ -311,6 +311,8 @@ export type Database = {
           details: string | null;
           email: string | null;
           follow_up_at: string | null;
+          follow_up_note: string | null;
+          follow_up_time: string | null;
           id: number;
           name: string | null;
           notes: string | null;
@@ -331,6 +333,8 @@ export type Database = {
           details?: string | null;
           email?: string | null;
           follow_up_at?: string | null;
+          follow_up_note?: string | null;
+          follow_up_time?: string | null;
           id?: never;
           name?: string | null;
           notes?: string | null;
@@ -351,6 +355,8 @@ export type Database = {
           details?: string | null;
           email?: string | null;
           follow_up_at?: string | null;
+          follow_up_note?: string | null;
+          follow_up_time?: string | null;
           id?: never;
           name?: string | null;
           notes?: string | null;

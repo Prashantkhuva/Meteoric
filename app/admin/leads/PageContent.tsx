@@ -7,7 +7,7 @@ import { updateLeadStatus, convertLeadToClient, addLead, updateLead, deleteLead,
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
-  FileText, DollarSign, Calendar, Download, ChevronUp, ChevronDown, Pencil,
+  FileText, Calendar, Download, ChevronUp, ChevronDown, Pencil,
   Upload, FileUp, AlertTriangle, CheckCircle2, XCircle, Loader2, Tag,
 } from "lucide-react";
 import { formatDate, formatShort } from "@/lib/supabase/admin";
@@ -50,6 +50,8 @@ interface LeadRow {
   details?: string | null;
   notes?: string | null;
   follow_up_at?: string | null;
+  follow_up_time?: string | null;
+  follow_up_note?: string | null;
   source?: string | null;
   status: string;
   ai_score?: number | null;
@@ -1185,9 +1187,23 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
 
   if (!lead) return null;
 
-  const now = new Date();
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const followUpOverdue = lead.follow_up_at && lead.follow_up_at <= todayStr;
+  const followUpOverdue = (() => {
+    if (!lead.follow_up_at) return false;
+    const [y, mo, d] = lead.follow_up_at.split("-").map(Number);
+    const [h, m] = (lead.follow_up_time || "").split(":").map(Number);
+    const target = Number.isFinite(h)
+      ? new Date(y, mo - 1, d, h, Number.isFinite(m) ? m : 0)
+      : new Date(y, mo - 1, d, 23, 59);
+    return target.getTime() <= Date.now();
+  })();
+  const followUpTimeLabel = (() => {
+    if (!lead.follow_up_time) return "";
+    const [h, m] = lead.follow_up_time.split(":").map(Number);
+    if (!Number.isFinite(h)) return "";
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return ` · ${h12}:${String(m).padStart(2, "0")} ${ampm} IST`;
+  })();
 
   return (
     <AnimatePresence>
@@ -1251,7 +1267,6 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
                   { icon: Building2, label: "Company", value: lead.company },
                   { icon: Tag, label: "Source", value: lead.source ? (sourceList.find((s) => s.value === lead.source)?.label || lead.source) : null },
                   { icon: FileText, label: "Services", value: lead.services },
-                  { icon: DollarSign, label: "Budget", value: lead.budget ? `${lead.currency || "USD"} ${lead.budget}` : null },
                 ].map((f) => {
                   if (!f.value) return null;
                   const Icon = f.icon;
@@ -1288,13 +1303,18 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
               )}
 
               {lead.follow_up_at && (
-                <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
-                  <Calendar size={11} />
+                <div className="flex items-start gap-1.5 text-[10px] text-white/30 tabular-nums">
+                  <Calendar size={11} className="mt-0.5 shrink-0" />
                   <span>
                     Follow-up{" "}
                     <span className={followUpOverdue ? "font-semibold text-red-300/80" : undefined}>
-                      {formatShort(`${lead.follow_up_at}T00:00:00`)}
+                      {formatShort(`${lead.follow_up_at}T00:00:00`)}{followUpTimeLabel}
                     </span>
+                    {lead.follow_up_note && (
+                      <span className="block mt-1 text-white/40 normal-case tabular-nums">
+                        {lead.follow_up_note}
+                      </span>
+                    )}
                   </span>
                 </div>
               )}

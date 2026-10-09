@@ -154,6 +154,8 @@ export async function addLead(formData: FormData) {
       details: data.details,
       notes: data.notes || null,
       follow_up_at: data.follow_up_at || null,
+      follow_up_time: data.follow_up_time || null,
+      follow_up_note: data.follow_up_note || null,
       source: data.source || "manual",
       status: "inquiry",
     })
@@ -359,6 +361,8 @@ export async function updateLead(formData: FormData) {
         details: data.details,
         notes: data.notes || null,
         follow_up_at: data.follow_up_at || null,
+        follow_up_time: data.follow_up_time || null,
+        follow_up_note: data.follow_up_note || null,
         source: data.source || null,
         updated_at: new Date().toISOString(),
       })

@@ -16,14 +16,6 @@ const sourceList = [
   { value: "other", label: "Other" },
 ];
 
-const CURRENCIES = [
-  { value: "USD", symbol: "$" },
-  { value: "INR", symbol: "₹" },
-  { value: "EUR", symbol: "€" },
-  { value: "GBP", symbol: "£" },
-  { value: "AUD", symbol: "A$" },
-];
-
 interface LeadFormData {
   id?: number | string;
   name?: string | null;
@@ -31,11 +23,11 @@ interface LeadFormData {
   phone?: string | null;
   company?: string | null;
   services?: string | null;
-  budget?: string | null;
-  currency?: string | null;
   details?: string | null;
   notes?: string | null;
   follow_up_at?: string | null;
+  follow_up_time?: string | null;
+  follow_up_note?: string | null;
   source?: string | null;
 }
 
@@ -102,29 +94,24 @@ export function LeadFormModal({ open, lead, onClose, onSubmit }: LeadFormModalPr
               <FormField label="Phone" name="phone" placeholder="+1 234 567 890" defaultValue={lead?.phone || ""} />
               <FormField label="Company" name="company" placeholder="Acme Inc." defaultValue={lead?.company || ""} />
               <FormField label="Services" name="services" placeholder="Web Development, SEO, Design" defaultValue={lead?.services || ""} />
-              <div className="grid grid-cols-3 gap-3">
-                <div className="col-span-2">
-                  <FormField label="Budget" name="budget" placeholder="5,000 - 10,000" defaultValue={lead?.budget || ""} />
-                </div>
-                <div>
-                  <label htmlFor="field-currency" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
-                    Currency
-                  </label>
-                  <select
-                    id="field-currency"
-                    name="currency"
-                    defaultValue={lead?.currency || "USD"}
-                    className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white transition-all focus:border-[#EAEFFF]/20 outline-none"
-                  >
-                    {CURRENCIES.map((c) => (
-                      <option key={c.value} value={c.value}>{c.value} ({c.symbol})</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
               <FormField label="Details" name="details" type="textarea" rows={3} placeholder="Project details, requirements, notes..." defaultValue={lead?.details || ""} />
               <FormField label="Notes" name="notes" type="textarea" rows={3} placeholder="What the client said..." defaultValue={lead?.notes || ""} />
-              <FormField label="Follow-up" name="follow_up_at" type="date" defaultValue={lead?.follow_up_at || ""} />
+              {isEdit && (
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField label="Follow-up" name="follow_up_at" type="date" defaultValue={lead?.follow_up_at || ""} />
+                  <FormField label="Follow-up time (IST)" name="follow_up_time" type="time" defaultValue={lead?.follow_up_time || ""} />
+                </div>
+              )}
+              {isEdit && (
+                <FormField
+                  label="Follow-up note"
+                  name="follow_up_note"
+                  type="textarea"
+                  rows={2}
+                  placeholder="Short message for future reference..."
+                  defaultValue={lead?.follow_up_note || ""}
+                />
+              )}
               <div>
                 <label htmlFor="field-source" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Source

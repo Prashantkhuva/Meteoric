@@ -48,10 +48,10 @@ export async function createNotification({
   entityType?: string | null;
   entityId?: string | number | null;
   dedupeKey?: string | null;
-}) {
+}): Promise<boolean> {
   try {
     const supabase = createServiceClient();
-    if (!supabase) return;
+    if (!supabase) return false;
 
     const { error } = await supabase.from("notifications").insert({
       type,
@@ -67,12 +67,14 @@ export async function createNotification({
       if (error.code !== "23505") {
         console.error("[notifications] insert failed:", error.message);
       }
-      return;
+      return false;
     }
 
     await externalNotify(`[Meteoric] ${title}${body ? `\n${body}` : ""}`);
+    return true;
   } catch (err) {
     console.error("[notifications] unexpected error:", (err as Error)?.message);
+    return false;
   }
 }
 
@@ -81,6 +83,7 @@ export const NOTIFICATION_TYPES = {
   NEW_BOOKING: "new_booking",
   PAYMENT_RECEIVED: "payment_received",
   INVOICE_OVERDUE: "invoice_overdue",
+  LEAD_FOLLOW_UP: "lead_follow_up",
 };
 
 /**

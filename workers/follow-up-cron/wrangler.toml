@@ -1,0 +1,10 @@
+name = "follow-up-cron"
+main = "index.js"
+compatibility_date = "2026-09-14"
+workers_dev = true
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Secrets (set with: wrangler secret put <NAME>)
+#   CRON_SECRET  — must match the CRON_SECRET env var in Vercel
