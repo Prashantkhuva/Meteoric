@@ -31,13 +31,16 @@ const args = process.argv.slice(2);
 const minBuildIdx = args.indexOf("--min-build");
 const minBuild =
   minBuildIdx !== -1 ? Number(args[minBuildIdx + 1]) || undefined : undefined;
+
 const positional = args.filter(
-  (_, i) => minBuildIdx === -1 || (i !== minBuildIdx && i !== minBuildIdx + 1)
+  (_, i) => minBuildIdx === -1 || (i !== minBuildIdx && i !== minBuildIdx + 1),
 );
+
 const [apkPath, version, build, notes = ""] = positional;
+
 if (!apkPath || !version || !build) {
   console.error(
-    "Usage: node scripts/upload-app-release.mjs <apk> <version> <build> [notes] [--min-build N]"
+    "Usage: node scripts/upload-app-release.mjs <apk> <version> <build> [notes] [--min-build N]",
   );
   process.exit(1);
 }
@@ -49,13 +52,13 @@ const apkUrl = `https://github.com/${REPO}/releases/download/v${version}/app-rel
 try {
   execSync(
     `gh release create v${version} "${apkPath}#Meteoric Admin ${version}" --repo ${REPO} --title "v${version}" --notes "${notes}" --draft=false`,
-    { stdio: "inherit" }
+    { stdio: "inherit" },
   );
 } catch {
   console.log(`Release v${version} already exists — uploading asset instead`);
   execSync(
     `gh release upload v${version} "${apkPath}#Meteoric Admin ${version}" --repo ${REPO} --clobber && gh release edit v${version} --repo ${REPO} --draft=false`,
-    { stdio: "inherit" }
+    { stdio: "inherit" },
   );
 }
 console.log(`GitHub release v${version} created`);
@@ -65,7 +68,7 @@ console.log(`GitHub release v${version} created`);
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,
-  { auth: { persistSession: false } }
+  { auth: { persistSession: false } },
 );
 let highestBuild = Number(build);
 try {
@@ -74,7 +77,10 @@ try {
     .download("latest.json");
   if (data) {
     const prev = JSON.parse(await data.text());
-    highestBuild = Math.max(highestBuild, prev.highest_build || prev.build || 0);
+    highestBuild = Math.max(
+      highestBuild,
+      prev.highest_build || prev.build || 0,
+    );
   }
 } catch {}
 const manifest = {
@@ -93,4 +99,6 @@ const { error } = await supabase.storage
   });
 if (error) throw error;
 console.log(`Manifest updated → build ${build} (highest: ${highestBuild})`);
-console.log(`Verify: curl ${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/app-releases/latest.json`);
+console.log(
+  `Verify: curl ${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/app-releases/latest.json`,
+);

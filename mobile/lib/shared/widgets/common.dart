@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/theme.dart';
 
@@ -65,95 +66,94 @@ class KpiCard extends StatelessWidget {
       label: '$label: $value${sub != null ? ', $sub' : ''}',
       button: onTap != null,
       child: Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: AppRadius.mdAll,
-        border: Border.all(color: AppColors.border),
-        boxShadow: AppShadows.subtle,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  label.toUpperCase(),
-                  style: const TextStyle(
-                    color: AppColors.textFaint,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-              if (icon != null)
-                Container(
-                  width: 26,
-                  height: 26,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: accentColor.withValues(alpha: 0.07),
-                    border: Border.all(
-                      color: accentColor.withValues(alpha: 0.22),
-                    ),
-                    borderRadius: AppRadius.smAll,
-                  ),
-                  child: Icon(icon, size: 13, color: accentColor),
-                ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.text,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
-              fontFamily: 'Inter',
-              height: 1.1,
-            ),
-          ),
-          if (sub != null) ...[
-            const SizedBox(height: 8),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: AppRadius.mdAll,
+          border: Border.all(color: AppColors.border),
+          boxShadow: AppShadows.subtle,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
               children: [
-                Container(
-                  width: 5,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: subColor ?? AppColors.textMuted,
-                  ),
-                ),
-                const SizedBox(width: 6),
                 Expanded(
                   child: Text(
-                    sub!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: subColor ?? AppColors.textMuted,
-                      fontSize: 11,
+                    label.toUpperCase(),
+                    style: const TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.2,
                       fontFamily: 'Inter',
                     ),
                   ),
                 ),
+                if (icon != null)
+                  Container(
+                    width: 26,
+                    height: 26,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: accentColor.withValues(alpha: 0.07),
+                      border: Border.all(
+                        color: accentColor.withValues(alpha: 0.22),
+                      ),
+                      borderRadius: AppRadius.smAll,
+                    ),
+                    child: Icon(icon, size: 13, color: accentColor),
+                  ),
               ],
             ),
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: AppText.tabular(
+                const TextStyle(
+                  color: AppColors.text,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                  fontFamily: 'Inter',
+                  height: 1.1,
+                ),
+              ),
+            ),
+            if (sub != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Container(
+                    width: 5,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: subColor ?? AppColors.textMuted,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      sub!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: subColor ?? AppColors.textMuted,
+                        fontSize: 11,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
-      ),
+        ),
       ),
     );
     if (onTap != null) {
-      card = Material(
-        color: Colors.transparent,
-        child: InkWell(onTap: onTap, child: card),
-      );
+      card = Pressable(onPressed: onTap, child: card);
     }
     return card;
   }
@@ -237,7 +237,18 @@ class EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, color: AppColors.textFaint, size: 48),
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.08),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.accent.withValues(alpha: 0.15),
+                  ),
+                ),
+                child: Icon(icon, color: AppColors.textMuted, size: 28),
+              ),
               const SizedBox(height: 16),
             ],
             if (title != null) ...[
@@ -418,4 +429,184 @@ class LoadingView extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Unified status chip: tinted pill + optional leading dot.
+class StatusPill extends StatelessWidget {
+  const StatusPill({
+    super.key,
+    required this.label,
+    required this.color,
+    this.dot = true,
+    this.dense = false,
+  });
+
+  final String label;
+  final Color color;
+  final bool dot;
+  final bool dense;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: dense ? 7 : 9,
+        vertical: dense ? 3 : 4,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: AppRadius.pillAll,
+        border: Border.all(color: color.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (dot) ...[
+            Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: 5),
+          ],
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              color: color,
+              fontSize: dense ? 9 : 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.4,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Staggered entrance for list items: fade + 4px rise, 30ms stagger, cap 8.
+/// Wrap each item on first load only.
+class EntranceFade extends StatelessWidget {
+  const EntranceFade({super.key, required this.index, required this.child});
+
+  final int index;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final delay = (index.clamp(0, 8) * 30);
+    return child
+        .animate(delay: Duration(milliseconds: delay))
+        .fadeIn(duration: AppMotion.base, curve: AppMotion.enter)
+        .slideY(
+          begin: 0.04,
+          end: 0,
+          duration: AppMotion.base,
+          curve: AppMotion.enter,
+        );
+  }
+}
+
+/// Accent FAB: glow, hairline border, scale-in entrance. Snappy, no bounce.
+class AppFab extends StatelessWidget {
+  const AppFab({
+    super.key,
+    required this.onPressed,
+    this.icon = Icons.add,
+    this.tooltip,
+  });
+
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String? tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    final fab = FloatingActionButton(
+      tooltip: tooltip,
+      elevation: 0,
+      highlightElevation: 0,
+      onPressed: () {
+        Haptic.tap();
+        onPressed();
+      },
+      backgroundColor: AppColors.accent,
+      foregroundColor: AppColors.onAccent,
+      shape: RoundedRectangleBorder(
+        borderRadius: AppRadius.lgAll,
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.25)),
+      ),
+      child: Icon(icon, size: 24),
+    );
+    return fab
+        .animate()
+        .scale(
+          delay: AppMotion.slow,
+          duration: AppMotion.base,
+          curve: AppMotion.enter,
+          begin: const Offset(0.85, 0.85),
+          end: const Offset(1, 1),
+        )
+        .fadeIn(
+          delay: AppMotion.slow,
+          duration: AppMotion.base,
+          curve: AppMotion.enter,
+        );
+  }
+}
+
+/// Premium dialog: 200ms scale-in (0.96→1) + fade. Drop-in for showDialog.
+Future<T?> showAppDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool barrierDismissible = true,
+}) {
+  return showGeneralDialog<T>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+    barrierColor: AppColors.overlayScrim,
+    transitionDuration: AppMotion.slow,
+    pageBuilder: (ctx, _, _) => builder(ctx),
+    transitionBuilder: (ctx, animation, _, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: AppMotion.enter,
+        reverseCurve: AppMotion.exit,
+      );
+      return FadeTransition(
+        opacity: curved,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.96, end: 1).animate(curved),
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
+/// Bottom sheet with smooth 200ms slide (theme supplies raised surface).
+Future<T?> showAppSheet<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool isScrollControlled = false,
+}) {
+  return showModalBottomSheet<T>(
+    context: context,
+    isScrollControlled: isScrollControlled,
+    backgroundColor: Colors.transparent,
+    builder: (ctx) => Container(
+      decoration: const BoxDecoration(
+        color: AppColors.cardRaised,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+        border: Border(
+          top: BorderSide(color: AppColors.highlight),
+          left: BorderSide(color: AppColors.borderFaint),
+          right: BorderSide(color: AppColors.borderFaint),
+        ),
+      ),
+      child: builder(ctx),
+    ),
+  );
 }

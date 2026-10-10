@@ -165,10 +165,8 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     }
     if (items == null || items.isEmpty) return 0;
     final subtotal = items.fold<double>(0, (sum, item) {
-      final qty =
-          (item['quantity'] as num?)?.toDouble() ?? 1;
-      final rate =
-          (item['rate'] as num?)?.toDouble() ?? 0;
+      final qty = (item['quantity'] as num?)?.toDouble() ?? 1;
+      final rate = (item['rate'] as num?)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
     return subtotal + tax;
@@ -236,170 +234,161 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(
-        title: _selecting
-            ? Text('${_selected.length} selected')
-            : const Text('Invoices'),
-        automaticallyImplyLeading: false,
-        leading: _selecting
-            ? IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  size: 20,
-                  color: AppColors.textMuted,
-                ),
-                onPressed: () => setState(() => _selected.clear()),
-              )
-            : null,
-        actions: _selecting
-            ? [
-                IconButton(
-                  icon: Icon(
-                    _selected.length == _invoices.length
-                        ? Icons.check_box_outlined
-                        : Icons.check_box_outline_blank,
-                    size: 19,
-                    color: AppColors.accent,
-                  ),
-                  onPressed: () => setState(() {
-                    if (_selected.length == _invoices.length) {
-                      _selected.clear();
-                    } else {
-                      _selected
-                        ..clear()
-                        ..addAll(_invoices.map(_id));
-                    }
-                  }),
-                  tooltip: 'Select all',
-                ),
-              ]
-            : [
-                IconButton(
+    return UnfocusOnTap(
+      child: Scaffold(
+        appBar: AppBar(
+          title: _selecting
+              ? Text('${_selected.length} selected')
+              : const Text('Invoices'),
+          automaticallyImplyLeading: false,
+          leading: _selecting
+              ? IconButton(
                   icon: const Icon(
-                    Icons.download_outlined,
-                    size: 19,
-                    color: AppColors.textMuted,
-                  ),
-                  onPressed: _exportCsv,
-                  tooltip: 'Export CSV',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.add,
+                    Icons.close,
                     size: 20,
-                    color: AppColors.accent,
-                  ),
-                  onPressed: () => _openForm(),
-                  tooltip: 'New invoice',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.refresh,
-                    size: 18,
                     color: AppColors.textMuted,
                   ),
-                  onPressed: _load,
-                  tooltip: 'Refresh',
+                  onPressed: () => setState(() => _selected.clear()),
+                )
+              : null,
+          actions: _selecting
+              ? [
+                  IconButton(
+                    icon: Icon(
+                      _selected.length == _invoices.length
+                          ? Icons.check_box_outlined
+                          : Icons.check_box_outline_blank,
+                      size: 19,
+                      color: AppColors.accent,
+                    ),
+                    onPressed: () => setState(() {
+                      if (_selected.length == _invoices.length) {
+                        _selected.clear();
+                      } else {
+                        _selected
+                          ..clear()
+                          ..addAll(_invoices.map(_id));
+                      }
+                    }),
+                    tooltip: 'Select all',
+                  ),
+                ]
+              : [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.download_outlined,
+                      size: 19,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _exportCsv,
+                    tooltip: 'Export CSV',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.add,
+                      size: 20,
+                      color: AppColors.accent,
+                    ),
+                    onPressed: () => _openForm(),
+                    tooltip: 'New invoice',
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 18,
+                      color: AppColors.textMuted,
+                    ),
+                    onPressed: _load,
+                    tooltip: 'Refresh',
+                  ),
+                ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+              child: TextField(
+                controller: _search,
+                onChanged: _onSearchChanged,
+                decoration: InputDecoration(
+                  hintText: 'Search invoices...',
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 18,
+                    color: AppColors.textFaint,
+                  ),
+                  suffixIcon: _search.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            size: 16,
+                            color: AppColors.textMuted,
+                          ),
+                          onPressed: _clearSearch,
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            FilterBar(
+              groups: [
+                FilterGroup(
+                  key: 'status',
+                  label: 'Status',
+                  options: _statusOptions,
+                ),
+                FilterGroup(
+                  key: 'sort',
+                  label: 'Sort',
+                  options: const [
+                    MapEntry('newest', 'Newest'),
+                    MapEntry('oldest', 'Oldest'),
+                    MapEntry('number', 'Number'),
+                    MapEntry('amount', 'Amount high–low'),
+                    MapEntry('deadline', 'Due date'),
+                  ],
                 ),
               ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-            child: TextField(
-              controller: _search,
-              onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                hintText: 'Search invoices...',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 18,
-                  color: AppColors.textFaint,
-                ),
-                suffixIcon: _search.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(
-                          Icons.close,
-                          size: 16,
-                          color: AppColors.textMuted,
-                        ),
-                        onPressed: _clearSearch,
-                      )
-                    : null,
-              ),
-            ),
-          ),
-          FilterBar(
-            groups: [
-              FilterGroup(
-                key: 'status',
-                label: 'Status',
-                options: _statusOptions,
-              ),
-              FilterGroup(
-                key: 'sort',
-                label: 'Sort',
-                options: const [
-                  MapEntry('newest', 'Newest'),
-                  MapEntry('oldest', 'Oldest'),
-                  MapEntry('number', 'Number'),
-                  MapEntry('amount', 'Amount high–low'),
-                  MapEntry('deadline', 'Due date'),
-                ],
-              ),
-            ],
-            values: {'status': _status, 'sort': _sort},
-            onChanged: (v) {
-              setState(() {
-                _status = v['status'] ?? 'all';
-                _sort = v['sort'] ?? 'newest';
-              });
-              _page = 1;
-              _load();
-            },
-          ),
-          const SizedBox(height: 4),
-          Expanded(child: _buildList()),
-        ],
-      ),
-      bottomNavigationBar: _selecting
-          ? BulkActionBar(
-              count: _selected.length,
-              busy: _busy,
-              onClear: () => setState(() => _selected.clear()),
-              onDelete: _bulkDelete,
-              statusOptions: _statusOptions,
-              onStatus: (s) =>
-                  _runBulk((id) => ApiClient.instance.invoiceStatus(id, s)),
-            )
-          : (_total > _pageSize
-                ? PaginationBar(
-                    page: _page,
-                    total: _total,
-                    pageSize: _pageSize,
-                    onPageChanged: (p) {
-                      setState(() => _page = p);
-                      _load();
-                    },
-                  )
-                : null),
-      floatingActionButton: _selecting
-          ? null
-          : FloatingActionButton(
-              onPressed: () {
-                Haptic.tap();
-                _openForm();
+              values: {'status': _status, 'sort': _sort},
+              onChanged: (v) {
+                setState(() {
+                  _status = v['status'] ?? 'all';
+                  _sort = v['sort'] ?? 'newest';
+                });
+                _page = 1;
+                _load();
               },
-              backgroundColor: AppColors.accent,
-               foregroundColor: AppColors.onAccent,
-              shape: RoundedRectangleBorder(
-                borderRadius: AppRadius.mdAll,
-              ),
-              child: const Icon(Icons.add),
             ),
-    ), );
+            const SizedBox(height: 4),
+            Expanded(child: _buildList()),
+          ],
+        ),
+        bottomNavigationBar: _selecting
+            ? BulkActionBar(
+                count: _selected.length,
+                busy: _busy,
+                onClear: () => setState(() => _selected.clear()),
+                onDelete: _bulkDelete,
+                statusOptions: _statusOptions,
+                onStatus: (s) =>
+                    _runBulk((id) => ApiClient.instance.invoiceStatus(id, s)),
+              )
+            : (_total > _pageSize
+                  ? PaginationBar(
+                      page: _page,
+                      total: _total,
+                      pageSize: _pageSize,
+                      onPageChanged: (p) {
+                        setState(() => _page = p);
+                        _load();
+                      },
+                    )
+                  : null),
+        floatingActionButton: _selecting
+            ? null
+            : AppFab(onPressed: _openForm, tooltip: 'New invoice'),
+      ),
+    );
   }
 
   Widget _buildList() {
@@ -424,21 +413,24 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
           final invoice = _invoices[i];
           final id = _id(invoice);
           final isSelected = _selected.contains(id);
-          return _InvoiceCard(
-            invoice: invoice,
-            selected: isSelected,
-            selecting: _selecting,
-            onTap: () {
-              if (_selecting) {
-                setState(
-                  () => isSelected ? _selected.remove(id) : _selected.add(id),
-                );
-              } else {
-                _openDetail(invoice);
-              }
-            },
-            onLongPress: () => setState(() => _selected.add(id)),
-            onShare: _selecting ? null : () => _shareCard(invoice),
+          return EntranceFade(
+            index: i,
+            child: _InvoiceCard(
+              invoice: invoice,
+              selected: isSelected,
+              selecting: _selecting,
+              onTap: () {
+                if (_selecting) {
+                  setState(
+                    () => isSelected ? _selected.remove(id) : _selected.add(id),
+                  );
+                } else {
+                  _openDetail(invoice);
+                }
+              },
+              onLongPress: () => setState(() => _selected.add(id)),
+              onShare: _selecting ? null : () => _shareCard(invoice),
+            ),
           );
         },
       ),
@@ -484,10 +476,8 @@ class _InvoiceCard extends StatelessWidget {
     final tax = (invoice['tax'] as num?)?.toDouble() ?? 0;
     if (items.isEmpty) return 0;
     final subtotal = items.fold<double>(0, (sum, item) {
-      final qty =
-          (item['quantity'] as num?)?.toDouble() ?? 1;
-      final rate =
-          (item['rate'] as num?)?.toDouble() ?? 0;
+      final qty = (item['quantity'] as num?)?.toDouble() ?? 1;
+      final rate = (item['rate'] as num?)?.toDouble() ?? 0;
       return sum + qty * rate;
     });
     return subtotal + tax;

@@ -142,12 +142,9 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
         ],
       ),
       body: _buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openForm(),
-        backgroundColor: AppColors.accent,
-         foregroundColor: AppColors.onAccent,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
-        child: const Icon(Icons.add),
+      floatingActionButton: AppFab(
+        onPressed: _openForm,
+        tooltip: 'New bank account',
       ),
     );
   }
@@ -220,112 +217,117 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                     separatorBuilder: (_, _) => const SizedBox(height: 10),
                     itemBuilder: (context, i) {
                       final account = _filtered[i];
-          return Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              borderRadius: AppRadius.mdAll,
-              border: Border.all(color: AppColors.border),
-              color: AppColors.card,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        account['label'] ?? 'Bank account',
-                        style: const TextStyle(
-                          color: AppColors.text,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                    if (account['is_default'] == true)
-                      Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
-                          vertical: 3,
-                        ),
+                      return Container(
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: AppColors.accent.withValues(alpha: 0.1),
-                          border: Border.all(
-                            color: AppColors.accent.withValues(alpha: 0.4),
-                          ),
+                          borderRadius: AppRadius.mdAll,
+                          border: Border.all(color: AppColors.border),
+                          color: AppColors.card,
                         ),
-                        child: const Text(
-                          'DEFAULT',
-                          style: TextStyle(
-                            color: AppColors.accent,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1,
-                            fontFamily: 'Inter',
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    account['label'] ?? 'Bank account',
+                                    style: const TextStyle(
+                                      color: AppColors.text,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ),
+                                if (account['is_default'] == true)
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 7,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accent.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      border: Border.all(
+                                        color: AppColors.accent.withValues(
+                                          alpha: 0.4,
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'DEFAULT',
+                                      style: TextStyle(
+                                        color: AppColors.accent,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 1,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ),
+                                GestureDetector(
+                                  onTap: () => _openForm(account: account),
+                                  child: const Icon(
+                                    Icons.edit_outlined,
+                                    size: 15,
+                                    color: AppColors.textFaint,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                GestureDetector(
+                                  onTap: () => _delete(account),
+                                  child: const Icon(
+                                    Icons.delete_outline,
+                                    size: 15,
+                                    color: AppColors.textFaint,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              [account['bank_name'], account['account_holder']]
+                                  .where((v) => v != null && '$v'.isNotEmpty)
+                                  .join(' • '),
+                              style: const TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              [
+                                    if (account['currency'] != null &&
+                                        '${account['currency']}'.isNotEmpty)
+                                      '${account['currency']}',
+                                    account['account_number'],
+                                    account['iban'],
+                                    account['swift'],
+                                    account['routing_number'],
+                                    if (account['upi_id'] != null &&
+                                        '${account['upi_id']}'.isNotEmpty)
+                                      'UPI ${account['upi_id']}',
+                                  ]
+                                  .where((v) => v != null && '$v'.isNotEmpty)
+                                  .join(' • '),
+                              style: const TextStyle(
+                                color: AppColors.textFaint,
+                                fontSize: 11,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    GestureDetector(
-                      onTap: () => _openForm(account: account),
-                      child: const Icon(
-                        Icons.edit_outlined,
-                        size: 15,
-                        color: AppColors.textFaint,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: () => _delete(account),
-                      child: const Icon(
-                        Icons.delete_outline,
-                        size: 15,
-                        color: AppColors.textFaint,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  [
-                    account['bank_name'],
-                    account['account_holder'],
-                  ].where((v) => v != null && '$v'.isNotEmpty).join(' • '),
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  [
-                    if (account['currency'] != null &&
-                        '${account['currency']}'.isNotEmpty)
-                      '${account['currency']}',
-                    account['account_number'],
-                    account['iban'],
-                    account['swift'],
-                    account['routing_number'],
-                    if (account['upi_id'] != null &&
-                        '${account['upi_id']}'.isNotEmpty)
-                      'UPI ${account['upi_id']}',
-                  ].where((v) => v != null && '$v'.isNotEmpty).join(' • '),
-                  style: const TextStyle(
-                    color: AppColors.textFaint,
-                    fontSize: 11,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    ),
-    ),
-    ],
+        ),
+      ],
     );
   }
 }

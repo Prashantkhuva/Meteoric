@@ -340,16 +340,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                   : null),
         floatingActionButton: _selecting
             ? null
-            : FloatingActionButton(
-                onPressed: () {
-                  Haptic.tap();
-                  _openForm();
-                },
-                backgroundColor: AppColors.accent,
-                foregroundColor: AppColors.onAccent,
-                shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
-                child: const Icon(Icons.add),
-              ),
+            : AppFab(onPressed: _openForm, tooltip: 'New client'),
       ),
     );
   }
@@ -376,21 +367,24 @@ class _ClientsScreenState extends State<ClientsScreen> {
           final client = _clients[i];
           final id = _id(client);
           final isSelected = _selected.contains(id);
-          return _ClientCard(
-            client: client,
-            selected: isSelected,
-            selecting: _selecting,
-            onTap: () {
-              if (_selecting) {
-                setState(
-                  () => isSelected ? _selected.remove(id) : _selected.add(id),
-                );
-              } else {
-                _openDetail(client);
-              }
-            },
-            onLongPress: () => setState(() => _selected.add(id)),
-            onEdit: _selecting ? null : () => _openForm(client: client),
+          return EntranceFade(
+            index: i,
+            child: _ClientCard(
+              client: client,
+              selected: isSelected,
+              selecting: _selecting,
+              onTap: () {
+                if (_selecting) {
+                  setState(
+                    () => isSelected ? _selected.remove(id) : _selected.add(id),
+                  );
+                } else {
+                  _openDetail(client);
+                }
+              },
+              onLongPress: () => setState(() => _selected.add(id)),
+              onEdit: _selecting ? null : () => _openForm(client: client),
+            ),
           );
         },
       ),

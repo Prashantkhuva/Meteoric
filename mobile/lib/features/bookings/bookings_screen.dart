@@ -157,50 +157,52 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(
-        title: const Text('Bookings'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(
-              _calendarMode
-                  ? Icons.list_alt_outlined
-                  : Icons.calendar_month_outlined,
-              size: 20,
-              color: AppColors.textMuted,
+    return UnfocusOnTap(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Bookings'),
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(
+                _calendarMode
+                    ? Icons.list_alt_outlined
+                    : Icons.calendar_month_outlined,
+                size: 20,
+                color: AppColors.textMuted,
+              ),
+              onPressed: () => setState(() => _calendarMode = !_calendarMode),
+              tooltip: _calendarMode ? 'List view' : 'Calendar view',
             ),
-            onPressed: () => setState(() => _calendarMode = !_calendarMode),
-            tooltip: _calendarMode ? 'List view' : 'Calendar view',
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.download_outlined,
-              size: 19,
-              color: AppColors.textMuted,
+            IconButton(
+              icon: const Icon(
+                Icons.download_outlined,
+                size: 19,
+                color: AppColors.textMuted,
+              ),
+              onPressed: _exportCsv,
+              tooltip: 'Export CSV',
             ),
-            onPressed: _exportCsv,
-            tooltip: 'Export CSV',
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              size: 18,
-              color: AppColors.textMuted,
+            IconButton(
+              icon: const Icon(
+                Icons.refresh,
+                size: 18,
+                color: AppColors.textMuted,
+              ),
+              onPressed: () => _load(),
+              tooltip: 'Refresh',
             ),
-            onPressed: () => _load(),
-            tooltip: 'Refresh',
-          ),
-        ],
+          ],
+        ),
+        body: _loading
+            ? const SkeletonList()
+            : _error != null
+            ? ErrorStateView(error: _error, onRetry: () => _load())
+            : _calendarMode
+            ? _buildCalendarBody()
+            : _buildListBody(),
       ),
-      body: _loading
-          ? const SkeletonList()
-          : _error != null
-          ? ErrorStateView(error: _error, onRetry: () => _load())
-          : _calendarMode
-          ? _buildCalendarBody()
-          : _buildListBody(),
-    ), );
+    );
   }
 
   // ── Calendar mode ───────────────────────────────────────────────────────
@@ -345,8 +347,13 @@ class _BookingsScreenState extends State<BookingsScreen> {
         padding: const EdgeInsets.all(16),
         itemCount: rows.length,
         separatorBuilder: (_, _) => const SizedBox(height: 10),
-        itemBuilder: (context, i) =>
-            _BookingCard(booking: rows[i], onTap: () => _openDetail(rows[i])),
+        itemBuilder: (context, i) => EntranceFade(
+          index: i,
+          child: _BookingCard(
+            booking: rows[i],
+            onTap: () => _openDetail(rows[i]),
+          ),
+        ),
       ),
     );
   }
@@ -535,9 +542,7 @@ class _MonthCalendarState extends State<_MonthCalendar> {
                 child: Text(
                   '$dayNum',
                   style: TextStyle(
-                    color: isSelected
-                         ? AppColors.background
-                        : AppColors.text,
+                    color: isSelected ? AppColors.background : AppColors.text,
                     fontSize: 11.5,
                     fontWeight: isSelected || isToday
                         ? FontWeight.w700

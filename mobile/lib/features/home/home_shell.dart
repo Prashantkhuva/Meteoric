@@ -23,12 +23,21 @@ class HomeShell extends StatefulWidget {
   State<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
+class _HomeShellState extends State<HomeShell>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final _updater = UpdateState.instance;
   final _notif = NotificationState.instance;
   bool _apkDialogShown = false;
   bool _locked = false;
   DateTime? _lastUnlockTime;
+
+  // Tab switch: 120ms opacity fade. IndexedStack keeps tab state — only
+  // opacity animates, children never unmount.
+  late final AnimationController _tabFade = AnimationController(
+    vsync: this,
+    duration: AppMotion.fast,
+    value: 1,
+  );
 
   static const _tabs = [
     DashboardScreen(),
@@ -48,11 +57,18 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     _updater.checkAll();
     _updater.addListener(_onForceUpgrade);
     _checkBiometricOnResume();
+    homeTab.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    _tabFade.forward(from: 0);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    homeTab.removeListener(_onTabChanged);
+    _tabFade.dispose();
     _updater.removeListener(_onForceUpgrade);
     _notif.stopPolling();
     _notif.removeListener(_onUpdateState);
@@ -155,7 +171,10 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
               Column(
                 children: [
                   Expanded(
-                    child: IndexedStack(index: index, children: _tabs),
+                    child: FadeTransition(
+                      opacity: _tabFade,
+                      child: IndexedStack(index: index, children: _tabs),
+                    ),
                   ),
                   if (_updater.showShorebirdBanner) _buildShorebirdBanner(),
                 ],
@@ -174,34 +193,41 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
           ),
           bottomNavigationBar: _locked
               ? null
-              : BottomNavigationBar(
-                  currentIndex: index,
-                  onTap: (i) {
-                    Haptic.tap();
-                    homeTab.value = i;
-                  },
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.dashboard_outlined, size: 22),
-                      label: 'Home',
+              : DecoratedBox(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(color: AppColors.borderSoft),
                     ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.person_search_outlined, size: 22),
-                      label: 'Leads',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.description_outlined, size: 22),
-                      label: 'Proposals',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.receipt_long_outlined, size: 22),
-                      label: 'Invoices',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.grid_view_outlined, size: 22),
-                      label: 'More',
-                    ),
-                  ],
+                  ),
+                  child: BottomNavigationBar(
+                    currentIndex: index,
+                    onTap: (i) {
+                      Haptic.tap();
+                      homeTab.value = i;
+                    },
+                    items: const [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.dashboard_outlined, size: 22),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person_search_outlined, size: 22),
+                        label: 'Leads',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.description_outlined, size: 22),
+                        label: 'Proposals',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.receipt_long_outlined, size: 22),
+                        label: 'Invoices',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.grid_view_outlined, size: 22),
+                        label: 'More',
+                      ),
+                    ],
+                  ),
                 ),
         );
       },
