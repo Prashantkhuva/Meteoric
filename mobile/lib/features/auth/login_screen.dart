@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 6),
-                            const Text(
+                            Text(
                               'Admin Dashboard',
                               style: TextStyle(
                                 color: AppColors.textFaint,
@@ -174,14 +174,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 autocorrect: false,
                                 enabled: !_loading,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.text,
                                   fontSize: 14,
                                   fontFamily: 'Inter',
                                 ),
                                 decoration: InputDecoration(
                                   hintText: 'you@example.com',
-                                  hintStyle: const TextStyle(
+                                  hintStyle: TextStyle(
                                     color: AppColors.textFaint,
                                     fontSize: 14,
                                     fontFamily: 'Inter',
@@ -194,19 +194,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: AppRadius.lgAll,
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: AppColors.border,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: AppRadius.lgAll,
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: AppColors.accent,
                                     ),
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: AppRadius.lgAll,
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: AppColors.border,
                                     ),
                                   ),
@@ -220,14 +220,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 obscureText: _obscure,
                                 enabled: !_loading,
                                 onSubmitted: (_) => _submit(),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.text,
                                   fontSize: 14,
                                   fontFamily: 'Inter',
                                 ),
                                 decoration: InputDecoration(
                                   hintText: 'Enter your password',
-                                  hintStyle: const TextStyle(
+                                  hintStyle: TextStyle(
                                     color: AppColors.textFaint,
                                     fontSize: 14,
                                     fontFamily: 'Inter',
@@ -257,19 +257,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: AppRadius.lgAll,
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: AppColors.border,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: AppRadius.lgAll,
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: AppColors.accent,
                                     ),
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: AppRadius.lgAll,
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: AppColors.border,
                                     ),
                                   ),
@@ -297,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     child: Text(
                                       _error!,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.red,
                                         fontSize: 13,
                                         fontFamily: 'Inter',
@@ -328,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           : _submit,
                                       child: Center(
                                         child: _loading
-                                            ? const Row(
+                                            ? Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   SizedBox(
@@ -358,7 +358,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 _locked
                                                     ? 'Locked — try again shortly'
                                                     : 'Sign in',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   color: AppColors.onAccent,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
@@ -374,7 +374,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 32),
-                        const Text(
+                        Text(
                           'Protected area — authorized personnel only',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -406,7 +406,7 @@ class _FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.textFaint,
         fontSize: 11,
         fontWeight: FontWeight.w600,
@@ -524,7 +524,7 @@ class _AuthSuccessState extends State<_AuthSuccess> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
         child: SizedBox(

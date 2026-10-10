@@ -63,17 +63,17 @@ class _ErrorIconTile extends StatelessWidget {
 }
 
 class _Eyebrow extends StatelessWidget {
-  const _Eyebrow(this.text, {this.color = AppColors.textFaint});
+  const _Eyebrow(this.text, {this.color});
 
   final String text;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
       style: TextStyle(
-        color: color,
+        color: color ?? AppColors.textFaint,
         fontSize: 10,
         fontWeight: FontWeight.w600,
         letterSpacing: 2,
@@ -93,7 +93,7 @@ class _Headline extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.text,
         fontSize: 19,
         fontWeight: FontWeight.w700,
@@ -114,7 +114,7 @@ class _BodyText extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.textMuted,
         fontSize: 12.5,
         height: 1.55,
@@ -241,12 +241,9 @@ class _NoInternetViewState extends State<NoInternetView>
     return _ErrorPage(
       children: [
         _gap(24),
-        const _ErrorIconTile(
-          icon: Icons.wifi_off_rounded,
-          color: AppColors.red,
-        ),
+        _ErrorIconTile(icon: Icons.wifi_off_rounded, color: AppColors.red),
         _gap(18),
-        const _Eyebrow('No connection', color: AppColors.red),
+        _Eyebrow('No connection', color: AppColors.red),
         _gap(8),
         const _Headline("You're offline"),
         _gap(10),
@@ -270,7 +267,7 @@ class _NoInternetViewState extends State<NoInternetView>
         _gap(16),
         FadeTransition(
           opacity: _pulse,
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
@@ -323,7 +320,7 @@ class _AppErrorViewState extends State<AppErrorView> {
     return _ErrorPage(
       children: [
         _gap(24),
-        const _ErrorIconTile(
+        _ErrorIconTile(
           icon: Icons.error_outline_rounded,
           color: AppColors.amber,
         ),
@@ -359,14 +356,14 @@ class _AppErrorViewState extends State<AppErrorView> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-               color: AppColors.inputFill,
+              color: AppColors.inputFill,
               border: Border.all(color: AppColors.borderSoft),
             ),
             child: Text(
               message,
               maxLines: 6,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 10.5,
                 height: 1.5,
@@ -410,10 +407,7 @@ class SessionExpiredView extends StatelessWidget {
     return _ErrorPage(
       children: [
         _gap(24),
-        const _ErrorIconTile(
-          icon: Icons.lock_clock_rounded,
-          color: AppColors.sky,
-        ),
+        _ErrorIconTile(icon: Icons.lock_clock_rounded, color: AppColors.sky),
         _gap(18),
         const _Eyebrow('Security check'),
         _gap(8),

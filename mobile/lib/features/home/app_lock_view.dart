@@ -224,7 +224,7 @@ class _AppLockViewState extends State<AppLockView>
                           ? Text(
                               'Too many attempts — retry in $_lockoutRemaining s',
                               key: const ValueKey('lockout'),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.red,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
@@ -232,7 +232,7 @@ class _AppLockViewState extends State<AppLockView>
                               ),
                             )
                           : _error
-                          ? const Text(
+                          ? Text(
                               'Incorrect PIN',
                               key: ValueKey('error'),
                               style: TextStyle(
@@ -242,7 +242,7 @@ class _AppLockViewState extends State<AppLockView>
                                 fontFamily: 'Inter',
                               ),
                             )
-                          : const Text(
+                          : Text(
                               'Enter 4-digit PIN',
                               key: ValueKey('hint'),
                               style: TextStyle(
@@ -302,7 +302,7 @@ class _AppLockViewState extends State<AppLockView>
               end: const Offset(1, 1),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Meteoric Admin',
               style: TextStyle(
                 color: AppColors.text,
@@ -313,7 +313,7 @@ class _AppLockViewState extends State<AppLockView>
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'App Locked',
               style: TextStyle(
                 color: AppColors.textFaint,
@@ -381,14 +381,10 @@ class _AppLockViewState extends State<AppLockView>
 
   Widget _buildKey(String label) {
     final child = label == 'back'
-        ? const Icon(
-            Icons.backspace_outlined,
-            size: 22,
-            color: AppColors.textMuted,
-          )
+        ? Icon(Icons.backspace_outlined, size: 22, color: AppColors.textMuted)
         : Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 22,
               fontWeight: FontWeight.w500,
@@ -431,12 +427,8 @@ class _AppLockViewState extends State<AppLockView>
     }
     return TextButton.icon(
       onPressed: _busy || _isLockedOut ? null : _tryBiometric,
-      icon: const Icon(
-        Icons.fingerprint_rounded,
-        size: 20,
-        color: AppColors.accent,
-      ),
-      label: const Text(
+      icon: Icon(Icons.fingerprint_rounded, size: 20, color: AppColors.accent),
+      label: Text(
         'USE BIOMETRICS',
         style: TextStyle(
           color: AppColors.textMuted,

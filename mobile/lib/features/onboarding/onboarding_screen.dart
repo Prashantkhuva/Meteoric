@@ -186,7 +186,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: AppColors.accent.withValues(alpha: 0.15),
               ),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.waving_hand_rounded,
               size: 28,
               color: AppColors.accent,
@@ -195,7 +195,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 24),
           Text(
             'Welcome${name.isNotEmpty ? ', $name' : ''}',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 26,
               fontWeight: FontWeight.w700,
@@ -204,7 +204,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Let\'s get your account set up. This takes less than a minute.',
             style: TextStyle(
               color: AppColors.textMuted,
@@ -236,7 +236,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Spacer(flex: 2),
-          const Text(
+          Text(
             'This is your first login. Set a new password to secure your account.',
             style: TextStyle(
               color: AppColors.textMuted,
@@ -246,7 +246,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'New Password',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -261,14 +261,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             controller: _newPassword,
             obscureText: _obscurePassword,
             onChanged: (_) => setState(() {}),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 16,
               fontFamily: 'Inter',
             ),
             decoration: InputDecoration(
               hintText: 'Min. 6 characters',
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: AppColors.textFaint,
                 fontFamily: 'Inter',
               ),
@@ -295,7 +295,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Confirm Password',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -311,14 +311,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             obscureText: _obscurePassword,
             onChanged: (_) => setState(() {}),
             onSubmitted: (_) => _saving ? null : _savePassword(),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 16,
               fontFamily: 'Inter',
             ),
             decoration: InputDecoration(
               hintText: 'Re-enter your password',
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: AppColors.textFaint,
                 fontFamily: 'Inter',
               ),
@@ -337,7 +337,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           if (mismatched) ...[
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Passwords do not match',
               style: TextStyle(
                 color: AppColors.red,
@@ -378,7 +378,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Spacer(flex: 2),
-          const Text(
+          Text(
             'Your Name',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -391,14 +391,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 8),
           TextField(
             controller: _nameController,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 16,
               fontFamily: 'Inter',
             ),
             decoration: InputDecoration(
               hintText: 'Enter your full name',
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: AppColors.textFaint,
                 fontFamily: 'Inter',
               ),
@@ -466,14 +466,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: AppColors.emerald.withValues(alpha: 0.15),
               ),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.check_circle_outline_rounded,
               size: 28,
               color: AppColors.emerald,
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'You\'re all set!',
             style: TextStyle(
               color: AppColors.text,
@@ -484,7 +484,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Your account is ready. Welcome to the team!',
             style: TextStyle(
               color: AppColors.textMuted,

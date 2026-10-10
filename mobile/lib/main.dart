@@ -22,6 +22,7 @@ Future<void> main() async {
   await DeviceInfo.init();
   await DataCache.instance.init();
   await NotificationService.instance.init();
+  await ThemeController.load();
   runApp(const MeteoricAdminApp());
 }
 
@@ -30,20 +31,36 @@ class MeteoricAdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Meteoric Admin',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark,
-      navigatorKey: _navKey,
-      navigatorObservers: [_routeObserver],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        FlutterQuillLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en')],
-      home: const AuthGate(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeController.mode,
+      builder: (context, mode, _) {
+        // Keep palette live when the OS theme flips under system mode.
+        final platformDark =
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+        final dark =
+            mode == ThemeMode.dark ||
+            (mode == ThemeMode.system && platformDark);
+        if ((AppPalette.current == AppPalette.dark) != dark) {
+          AppPalette.current = dark ? AppPalette.dark : AppPalette.light;
+        }
+        return MaterialApp(
+          title: 'Meteoric Admin',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: mode,
+          navigatorKey: _navKey,
+          navigatorObservers: [_routeObserver],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            FlutterQuillLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('en')],
+          home: const AuthGate(),
+        );
+      },
     );
   }
 }
@@ -72,7 +89,7 @@ class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     if (!_ready) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
           child: SizedBox(
@@ -87,8 +104,7 @@ class _AuthGateState extends State<AuthGate> {
 
     final user = AuthService.user;
     final onboarded = user?.userMetadata?['onboarding_completed'] ?? true;
-    final isSuperadmin =
-        user?.email == 'work.prashantkhuva@gmail.com';
+    final isSuperadmin = user?.email == 'work.prashantkhuva@gmail.com';
 
     if (!onboarded && !isSuperadmin) return const OnboardingScreen();
     return const HomeShell();

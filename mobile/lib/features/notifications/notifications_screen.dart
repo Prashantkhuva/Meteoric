@@ -139,21 +139,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.done_all,
-              size: 18,
-              color: AppColors.textMuted,
-            ),
-            onPressed: () { Haptic.tap(); _markAllRead(); },
+            icon: Icon(Icons.done_all, size: 18, color: AppColors.textMuted),
+            onPressed: () {
+              Haptic.tap();
+              _markAllRead();
+            },
             tooltip: 'Mark all read',
           ),
           IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              size: 18,
-              color: AppColors.textMuted,
-            ),
-            onPressed: () { Haptic.tap(); _load(); },
+            icon: Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+            onPressed: () {
+              Haptic.tap();
+              _load();
+            },
             tooltip: 'Refresh',
           ),
         ],
@@ -161,7 +159,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       body: _loading
           ? const SkeletonList()
           : _error != null
-          ? ErrorStateView(error: _error, onRetry: () => _load())
+          ? ErrorStateView(error: _error, onRetry: _load)
           : RefreshIndicator(
               onRefresh: () => _load(silent: true),
               color: AppColors.accent,
@@ -216,7 +214,7 @@ class _Eyebrow extends StatelessWidget {
       padding: const EdgeInsets.only(top: 14, bottom: 6),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textFaint,
           fontSize: 9.5,
           fontWeight: FontWeight.w600,
@@ -288,7 +286,7 @@ class _NotificationRow extends StatelessWidget {
                             width: 5,
                             height: 5,
                             margin: const EdgeInsets.only(right: 6),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.accent,
                             ),
@@ -320,7 +318,7 @@ class _NotificationRow extends StatelessWidget {
                           '${item['body']}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
                             fontFamily: 'Inter',
@@ -333,7 +331,7 @@ class _NotificationRow extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 Fmt.timeAgo('${item['created_at']}'),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 10.5,
                   fontFeatures: [FontFeature.tabularFigures()],

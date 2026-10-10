@@ -111,16 +111,13 @@ class _InlineRichEditorState extends State<InlineRichEditor> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.card,
               border: Border(bottom: BorderSide(color: AppColors.border)),
             ),
             child: Theme(
               data: Theme.of(context).copyWith(
-                iconTheme: const IconThemeData(
-                  color: AppColors.textMuted,
-                  size: 17,
-                ),
+                iconTheme: IconThemeData(color: AppColors.textMuted, size: 17),
               ),
               child: QuillSimpleToolbar(
                 controller: _controller,
@@ -194,17 +191,17 @@ class _InlineRichEditorState extends State<InlineRichEditor> {
 /// Shared dark dialog theme for editor popups (e.g. link entry).
 QuillDialogTheme editorDialogTheme(BuildContext context) => QuillDialogTheme(
   dialogBackgroundColor: AppColors.cardRaised,
-  labelTextStyle: const TextStyle(
+  labelTextStyle: TextStyle(
     color: AppColors.textMuted,
     fontSize: 13,
     fontFamily: 'Inter',
   ),
-  inputTextStyle: const TextStyle(
+  inputTextStyle: TextStyle(
     color: AppColors.text,
     fontSize: 14,
     fontFamily: 'Inter',
   ),
-  buttonTextStyle: const TextStyle(
+  buttonTextStyle: TextStyle(
     color: AppColors.accent,
     fontSize: 13,
     fontWeight: FontWeight.w600,

@@ -139,12 +139,8 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
         automaticallyImplyLeading: false,
         leading: _selecting
             ? IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  size: 20,
-                  color: AppColors.textMuted,
-                ),
-                onPressed: () => setState(() => _selected.clear()),
+                icon: Icon(Icons.close, size: 20, color: AppColors.textMuted),
+                onPressed: () => setState(_selected.clear),
               )
             : null,
         actions: _selecting
@@ -176,7 +172,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
           ? BulkActionBar(
               count: _selected.length,
               busy: _busy,
-              onClear: () => setState(() => _selected.clear()),
+              onClear: () => setState(_selected.clear),
               onDelete: _bulkDelete,
             )
           : (_total > _pageSize
@@ -246,7 +242,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                             Expanded(
                               child: Text(
                                 email['subject'] ?? '—',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.text,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -257,7 +253,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                             if (!_selecting)
                               GestureDetector(
                                 onTap: () => _delete(id),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.delete_outline,
                                   size: 15,
                                   color: AppColors.textFaint,
@@ -268,7 +264,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                         const SizedBox(height: 6),
                         Text(
                           'To: ${email['recipients'] ?? '—'}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
                             fontFamily: 'Inter',
@@ -279,7 +275,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                         const SizedBox(height: 8),
                         Text(
                           Fmt.dateTime(email['created_at'] as String?),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textFaint,
                             fontSize: 10,
                             fontFamily: 'Inter',

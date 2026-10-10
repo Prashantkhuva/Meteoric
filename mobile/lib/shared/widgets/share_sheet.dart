@@ -25,7 +25,7 @@ Future<void> showShareSheet(
               alignment: Alignment.centerLeft,
               child: Text(
                 title.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 10,
                   letterSpacing: 1.2,
@@ -39,7 +39,7 @@ Future<void> showShareSheet(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SelectableText(
               url,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 12,
                 fontFamily: 'Inter',
@@ -107,7 +107,7 @@ class _ShareAction extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(top: BorderSide(color: AppColors.border)),
         ),
         child: Row(
@@ -116,7 +116,7 @@ class _ShareAction extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text,
                 fontSize: 13,
                 fontFamily: 'Inter',

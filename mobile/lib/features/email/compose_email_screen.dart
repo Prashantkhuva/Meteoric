@@ -191,295 +191,302 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: AppScaffold(
-      title: 'Compose email',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          DropdownButtonFormField<String>(
-            initialValue: _from,
-            decoration: const InputDecoration(labelText: 'From'),
-            items: [
-              for (final (value, label, email) in _senders)
-                DropdownMenuItem(value: value, child: Text('$label ($email)')),
-            ],
-            onChanged: (v) => setState(() => _from = v ?? 'contact'),
-          ),
-          const SizedBox(height: 12),
-          if (_recipientsError != null)
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Could not load recipients: $_recipientsError',
-                    style: const TextStyle(
-                      color: AppColors.red,
-                      fontSize: 11,
-                      fontFamily: 'Inter',
+    return UnfocusOnTap(
+      child: AppScaffold(
+        title: 'Compose email',
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            DropdownButtonFormField<String>(
+              initialValue: _from,
+              decoration: const InputDecoration(labelText: 'From'),
+              items: [
+                for (final (value, label, email) in _senders)
+                  DropdownMenuItem(
+                    value: value,
+                    child: Text('$label ($email)'),
+                  ),
+              ],
+              onChanged: (v) => setState(() => _from = v ?? 'contact'),
+            ),
+            const SizedBox(height: 12),
+            if (_recipientsError != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Could not load recipients: $_recipientsError',
+                      style: TextStyle(
+                        color: AppColors.red,
+                        fontSize: 11,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
+                  TextButton(
+                    onPressed: _loadRecipients,
+                    child: const Text('Retry'),
+                  ),
+                ],
+              )
+            else if (!_recipientsLoaded)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                TextButton(
-                  onPressed: _loadRecipients,
-                  child: const Text('Retry'),
-                ),
-              ],
-            )
-          else if (!_recipientsLoaded)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
-          else
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_to.isNotEmpty)
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [
-                      for (final email in _to)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: AppColors.accent.withValues(alpha: 0.4),
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_to.isNotEmpty)
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        for (final email in _to)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.accent.withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  email,
+                                  style: TextStyle(
+                                    color: AppColors.accent,
+                                    fontSize: 11,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                GestureDetector(
+                                  onTap: () =>
+                                      setState(() => _to.remove(email)),
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 12,
+                                    color: AppColors.accent,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                email,
-                                style: const TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 11,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              GestureDetector(
-                                onTap: () => setState(() => _to.remove(email)),
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 12,
-                                  color: AppColors.accent,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    initialValue: _searchFilter,
+                    decoration: const InputDecoration(
+                      labelText: 'Recipient type',
+                      isDense: true,
+                    ),
+                    items: const [
+                      DropdownMenuItem(value: 'all', child: Text('All')),
+                      DropdownMenuItem(value: 'client', child: Text('Clients')),
+                      DropdownMenuItem(value: 'lead', child: Text('Leads')),
+                      DropdownMenuItem(
+                        value: 'prospect',
+                        child: Text('Prospects'),
+                      ),
                     ],
+                    onChanged: (v) =>
+                        setState(() => _searchFilter = v ?? 'all'),
                   ),
-                const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  initialValue: _searchFilter,
-                  decoration: const InputDecoration(
-                    labelText: 'Recipient type',
-                    isDense: true,
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: 'all', child: Text('All')),
-                    DropdownMenuItem(value: 'client', child: Text('Clients')),
-                    DropdownMenuItem(value: 'lead', child: Text('Leads')),
-                    DropdownMenuItem(
-                      value: 'prospect',
-                      child: Text('Prospects'),
-                    ),
-                  ],
-                  onChanged: (v) => setState(() => _searchFilter = v ?? 'all'),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _search,
-                  onSubmitted: (_) => _addCustomEmail(),
-                  decoration: InputDecoration(
-                    labelText: 'Search or type email, press enter to add',
-                    isDense: true,
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      size: 16,
-                      color: AppColors.textFaint,
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _search,
+                    onSubmitted: (_) => _addCustomEmail(),
+                    decoration: InputDecoration(
+                      labelText: 'Search or type email, press enter to add',
+                      isDense: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 16,
+                        color: AppColors.textFaint,
+                      ),
                     ),
                   ),
-                ),
-                if (_filteredRecipients.isNotEmpty)
-                  Container(
-                    margin: const EdgeInsets.only(top: 6),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.border),
-                      color: AppColors.card,
-                    ),
-                    child: Column(
-                      children: [
-                        for (final r in _filteredRecipients.take(8))
-                          InkWell(
-                            onTap: () =>
-                                _addRecipient((r['email'] ?? '') as String),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 10,
-                              ),
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: AppColors.border),
+                  if (_filteredRecipients.isNotEmpty)
+                    Container(
+                      margin: const EdgeInsets.only(top: 6),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.border),
+                        color: AppColors.card,
+                      ),
+                      child: Column(
+                        children: [
+                          for (final r in _filteredRecipients.take(8))
+                            InkWell(
+                              onTap: () =>
+                                  _addRecipient((r['email'] ?? '') as String),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
                                 ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      r['name'] ?? (r['email'] ?? ''),
-                                      style: const TextStyle(
-                                        color: AppColors.text,
-                                        fontSize: 13,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(color: AppColors.border),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        r['name'] ?? (r['email'] ?? ''),
+                                        style: TextStyle(
+                                          color: AppColors.text,
+                                          fontSize: 13,
+                                          fontFamily: 'Inter',
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '${r['email']}',
+                                      style: TextStyle(
+                                        color: AppColors.textFaint,
+                                        fontSize: 11,
                                         fontFamily: 'Inter',
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    '${r['email']}',
-                                    style: const TextStyle(
-                                      color: AppColors.textFaint,
-                                      fontSize: 11,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _subject,
+              decoration: const InputDecoration(labelText: 'Subject'),
             ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _subject,
-            decoration: const InputDecoration(labelText: 'Subject'),
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
-            child: Text(
-              'BODY',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
+            const SizedBox(height: 16),
+            Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                'BODY',
+                style: TextStyle(
+                  color: AppColors.textFaint,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
-          ),
-          InlineRichEditor(
-            initialContent: _body,
-            onChanged: (value) => _body = value,
-            outputFormat: 'html',
-            placeholder: 'Write your email...',
-            autoGrow: true,
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
-            child: Text(
-              'ATTACHMENTS',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
+            InlineRichEditor(
+              initialContent: _body,
+              onChanged: (value) => _body = value,
+              outputFormat: 'html',
+              placeholder: 'Write your email...',
+              autoGrow: true,
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                'ATTACHMENTS',
+                style: TextStyle(
+                  color: AppColors.textFaint,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
-          ),
-          if (_files.isNotEmpty)
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: [
-                for (final f in _files)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.border),
-                      color: AppColors.card,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.attach_file,
-                          size: 12,
-                          color: AppColors.textMuted,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '${f.name} (${(f.size / 1024).toStringAsFixed(0)} KB)',
-                          style: const TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 11,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () => setState(() => _files.remove(f)),
-                          child: const Icon(
-                            Icons.close,
+            if (_files.isNotEmpty)
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final f in _files)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.border),
+                        color: AppColors.card,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.attach_file,
                             size: 12,
-                            color: AppColors.red,
+                            color: AppColors.textMuted,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 5),
+                          Text(
+                            '${f.name} (${(f.size / 1024).toStringAsFixed(0)} KB)',
+                            style: TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 11,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          GestureDetector(
+                            onTap: () => setState(() => _files.remove(f)),
+                            child: Icon(
+                              Icons.close,
+                              size: 12,
+                              color: AppColors.red,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
+            const SizedBox(height: 8),
+            GhostButton(
+              onPressed:
+                  (_sending ||
+                      _uploadingAttachments ||
+                      _files.length >= _maxFiles)
+                  ? null
+                  : _pickFiles,
+              child: Text(
+                _files.length >= _maxFiles
+                    ? 'MAX $_maxFiles FILES'
+                    : 'ADD ATTACHMENTS (UP TO 10MB)',
+              ),
             ),
-          const SizedBox(height: 8),
-          GhostButton(
-            onPressed:
-                (_sending ||
-                    _uploadingAttachments ||
-                    _files.length >= _maxFiles)
-                ? null
-                : _pickFiles,
-            child: Text(
-              _files.length >= _maxFiles
-                  ? 'MAX $_maxFiles FILES'
-                  : 'ADD ATTACHMENTS (UP TO 10MB)',
+            const SizedBox(height: 24),
+            AccentButton(
+              onPressed: _sending ? null : _send,
+              child: _sending
+                  ? SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.onAccent,
+                      ),
+                    )
+                  : const Text('SEND EMAIL'),
             ),
-          ),
-          const SizedBox(height: 24),
-          AccentButton(
-            onPressed: _sending ? null : _send,
-            child: _sending
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                       color: AppColors.onAccent,
-                    ),
-                  )
-                : const Text('SEND EMAIL'),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
-    ), );
+    );
   }
 }

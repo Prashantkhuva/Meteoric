@@ -137,8 +137,10 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Discard',
-                style: TextStyle(color: Color(0xFFEF4444))),
+            child: const Text(
+              'Discard',
+              style: TextStyle(color: Color(0xFFEF4444)),
+            ),
           ),
         ],
       ),
@@ -155,150 +157,158 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
         final shouldPop = await _onWillPop();
         if (shouldPop && context.mounted) Navigator.pop(context);
       },
-      child: UnfocusOnTap(child: AppScaffold(
-      title: _isEdit ? 'Edit bank account' : 'Add bank account',
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _label,
-              textInputAction: TextInputAction.next,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Label is required' : null,
-              decoration: const InputDecoration(
-                labelText: 'Label (e.g. Primary USD)',
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _accountHolder,
-              textInputAction: TextInputAction.next,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (v) => (v == null || v.trim().isEmpty)
-                  ? 'Account holder is required'
-                  : null,
-              decoration: const InputDecoration(labelText: 'Account holder'),
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: _currency,
-              decoration: const InputDecoration(labelText: 'Currency'),
-              dropdownColor: AppColors.cardRaised,
-              style: const TextStyle(
-                color: AppColors.text,
-                fontSize: 14,
-                fontFamily: 'Inter',
-              ),
-              items: [
-                for (final c in _currencies)
-                  DropdownMenuItem(value: c, child: Text(c)),
-              ],
-              onChanged: (v) => setState(() => _currency = v ?? 'USD'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _country,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Country'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _bankName,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Bank name'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _accountNumber,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Account number'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _iban,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'IBAN'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _swift,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'SWIFT / BIC'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _routingNumber,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Routing number'),
-            ),
-            if (_currency == 'INR') ...[
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _upiId,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(labelText: 'UPI ID'),
-              ),
-            ],
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: () => setState(() => _isDefault = !_isDefault),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 12,
+      child: UnfocusOnTap(
+        child: AppScaffold(
+          title: _isEdit ? 'Edit bank account' : 'Add bank account',
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                TextFormField(
+                  controller: _label,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Label is required'
+                      : null,
+                  decoration: const InputDecoration(
+                    labelText: 'Label (e.g. Primary USD)',
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.border),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _accountHolder,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Account holder is required'
+                      : null,
+                  decoration: const InputDecoration(
+                    labelText: 'Account holder',
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      _isDefault
-                          ? Icons.check_box
-                          : Icons.check_box_outline_blank,
-                      size: 20,
-                      color: _isDefault
-                          ? AppColors.accent
-                          : AppColors.textFaint,
-                    ),
-                    const SizedBox(width: 10),
-                    const Expanded(
-                      child: Text(
-                        'Set as default account',
-                        style: TextStyle(
-                          color: AppColors.text,
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  initialValue: _currency,
+                  decoration: const InputDecoration(labelText: 'Currency'),
+                  dropdownColor: AppColors.cardRaised,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                  ),
+                  items: [
+                    for (final c in _currencies)
+                      DropdownMenuItem(value: c, child: Text(c)),
                   ],
+                  onChanged: (v) => setState(() => _currency = v ?? 'USD'),
                 ),
-              ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _country,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Country'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _bankName,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Bank name'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _accountNumber,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Account number',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _iban,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'IBAN'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _swift,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'SWIFT / BIC'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _routingNumber,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Routing number',
+                  ),
+                ),
+                if (_currency == 'INR') ...[
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _upiId,
+                    textInputAction: TextInputAction.done,
+                    decoration: const InputDecoration(labelText: 'UPI ID'),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () => setState(() => _isDefault = !_isDefault),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          _isDefault
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
+                          size: 20,
+                          color: _isDefault
+                              ? AppColors.accent
+                              : AppColors.textFaint,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Set as default account',
+                            style: TextStyle(
+                              color: AppColors.text,
+                              fontSize: 13,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                AccentButton(
+                  onPressed: _saving ? null : _save,
+                  child: _saving
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.onAccent,
+                          ),
+                        )
+                      : Text(_isEdit ? 'SAVE CHANGES' : 'ADD ACCOUNT'),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 24),
-            AccentButton(
-              onPressed: _saving ? null : _save,
-              child: _saving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                         color: AppColors.onAccent,
-                      ),
-                    )
-                  : Text(_isEdit ? 'SAVE CHANGES' : 'ADD ACCOUNT'),
-            ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
-    ),
-    ),
     );
   }
 }

@@ -175,7 +175,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
               tooltip: _calendarMode ? 'List view' : 'Calendar view',
             ),
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.download_outlined,
                 size: 19,
                 color: AppColors.textMuted,
@@ -184,12 +184,8 @@ class _BookingsScreenState extends State<BookingsScreen> {
               tooltip: 'Export CSV',
             ),
             IconButton(
-              icon: const Icon(
-                Icons.refresh,
-                size: 18,
-                color: AppColors.textMuted,
-              ),
-              onPressed: () => _load(),
+              icon: Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+              onPressed: _load,
               tooltip: 'Refresh',
             ),
           ],
@@ -197,7 +193,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
         body: _loading
             ? const SkeletonList()
             : _error != null
-            ? ErrorStateView(error: _error, onRetry: () => _load())
+            ? ErrorStateView(error: _error, onRetry: _load)
             : _calendarMode
             ? _buildCalendarBody()
             : _buildListBody(),
@@ -255,14 +251,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: 'Search name, email...',
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.search,
                 size: 18,
                 color: AppColors.textFaint,
               ),
               suffixIcon: _search.text.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
                         size: 16,
                         color: AppColors.textMuted,
@@ -427,7 +423,7 @@ class _MonthCalendarState extends State<_MonthCalendar> {
             children: [
               IconButton(
                 visualDensity: VisualDensity.compact,
-                icon: const Icon(
+                icon: Icon(
                   Icons.chevron_left,
                   size: 18,
                   color: AppColors.textMuted,
@@ -438,7 +434,7 @@ class _MonthCalendarState extends State<_MonthCalendar> {
                 child: Text(
                   DateFormat('MMMM yyyy').format(_month),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.text,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -448,7 +444,7 @@ class _MonthCalendarState extends State<_MonthCalendar> {
               ),
               IconButton(
                 visualDensity: VisualDensity.compact,
-                icon: const Icon(
+                icon: Icon(
                   Icons.chevron_right,
                   size: 18,
                   color: AppColors.textMuted,
@@ -465,7 +461,7 @@ class _MonthCalendarState extends State<_MonthCalendar> {
                   child: Center(
                     child: Text(
                       w.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textFaint,
                         fontSize: 9,
                         fontWeight: FontWeight.w600,
@@ -599,7 +595,12 @@ class _BookingCard extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: AppRadius.mdAll,
-            border: Border.all(color: AppColors.border),
+            border: Border(
+              top: BorderSide(color: AppColors.highlight),
+              left: BorderSide(color: AppColors.borderSoft),
+              right: BorderSide(color: AppColors.border),
+              bottom: BorderSide(color: AppColors.border),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,18 +612,18 @@ class _BookingCard extends StatelessWidget {
                       '$name',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.text,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Space Grotesk',
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
                   _statusPill(status),
                   const SizedBox(width: 2),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right,
                     size: 15,
                     color: AppColors.textFaint,
@@ -634,7 +635,7 @@ class _BookingCard extends StatelessWidget {
                 '$email',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
                   fontFamily: 'Inter',
@@ -643,7 +644,7 @@ class _BookingCard extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.event_outlined,
                     size: 13,
                     color: AppColors.textFaint,
@@ -656,7 +657,7 @@ class _BookingCard extends StatelessWidget {
                           : duration != null
                           ? '$title · $duration min · ${Fmt.dateTime('$start')}'
                           : '$title · ${Fmt.dateTime('$start')}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 12,
                         fontFamily: 'Inter',
@@ -683,7 +684,7 @@ class _BookingCard extends StatelessWidget {
       ),
       child: Text(
         status.toUpperCase(),
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textMuted,
           fontSize: 9,
           fontWeight: FontWeight.w600,

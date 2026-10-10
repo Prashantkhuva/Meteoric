@@ -85,7 +85,7 @@ class StatusFlowSection extends StatelessWidget {
         title: Text('Mark as $label?'),
         content: Text(
           'This will change the status to "$label".',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
             fontFamily: 'Inter',
@@ -122,7 +122,7 @@ class StatusFlowSection extends StatelessWidget {
           if (hint != null) ...[
             Text(
               hint,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 10,
                 letterSpacing: 0.5,
@@ -132,7 +132,7 @@ class StatusFlowSection extends StatelessWidget {
             const SizedBox(height: 12),
           ],
           if (next.isEmpty)
-            const Text(
+            Text(
               'No further actions — this record is closed.',
               style: TextStyle(
                 color: AppColors.textFaint,

@@ -145,7 +145,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
       label: 'clients',
     );
     if (!ok) return;
-    await _runBulk((id) => ApiClient.instance.clientDelete(id));
+    await _runBulk(ApiClient.instance.clientDelete);
   }
 
   Future<void> _exportCsv() async {
@@ -199,12 +199,8 @@ class _ClientsScreenState extends State<ClientsScreen> {
           automaticallyImplyLeading: false,
           leading: _selecting
               ? IconButton(
-                  icon: const Icon(
-                    Icons.close,
-                    size: 20,
-                    color: AppColors.textMuted,
-                  ),
-                  onPressed: () => setState(() => _selected.clear()),
+                  icon: Icon(Icons.close, size: 20, color: AppColors.textMuted),
+                  onPressed: () => setState(_selected.clear),
                 )
               : null,
           actions: _selecting
@@ -231,7 +227,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 ]
               : [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.download_outlined,
                       size: 19,
                       color: AppColors.textMuted,
@@ -240,16 +236,12 @@ class _ClientsScreenState extends State<ClientsScreen> {
                     tooltip: 'Export CSV',
                   ),
                   IconButton(
-                    icon: const Icon(
-                      Icons.add,
-                      size: 20,
-                      color: AppColors.accent,
-                    ),
-                    onPressed: () => _openForm(),
+                    icon: Icon(Icons.add, size: 20, color: AppColors.accent),
+                    onPressed: _openForm,
                     tooltip: 'Add client',
                   ),
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.refresh,
                       size: 18,
                       color: AppColors.textMuted,
@@ -268,14 +260,14 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: 'Search name, email, company...',
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search,
                     size: 18,
                     color: AppColors.textFaint,
                   ),
                   suffixIcon: _search.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close,
                             size: 16,
                             color: AppColors.textMuted,
@@ -321,7 +313,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
             ? BulkActionBar(
                 count: _selected.length,
                 busy: _busy,
-                onClear: () => setState(() => _selected.clear()),
+                onClear: () => setState(_selected.clear),
                 onDelete: _bulkDelete,
                 statusOptions: _statusOptions,
                 onStatus: (s) =>
@@ -445,10 +437,27 @@ class _ClientCard extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               borderRadius: AppRadius.mdAll,
-              border: Border.all(
-                color: selected
-                    ? AppColors.accent.withValues(alpha: 0.5)
-                    : AppColors.border,
+              border: Border(
+                top: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.highlight,
+                ),
+                left: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.borderSoft,
+                ),
+                right: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.border,
+                ),
+                bottom: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.border,
+                ),
               ),
             ),
             child: Row(
@@ -463,11 +472,11 @@ class _ClientCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Space Grotesk',
                               ),
                             ),
                           ),
@@ -478,7 +487,7 @@ class _ClientCard extends StatelessWidget {
                           if (onEdit != null)
                             GestureDetector(
                               onTap: onEdit,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.edit_outlined,
                                 size: 15,
                                 color: AppColors.textFaint,
@@ -493,7 +502,7 @@ class _ClientCard extends StatelessWidget {
                             '$company',
                           if (email != null && '$email'.isNotEmpty) '$email',
                         ].join(' • '),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
                           fontFamily: 'Inter',
@@ -506,7 +515,7 @@ class _ClientCard extends StatelessWidget {
                         children: [
                           Text(
                             'Added ${Fmt.date(client['created_at'] as String?)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 10,
                               fontFamily: 'Inter',
@@ -515,7 +524,7 @@ class _ClientCard extends StatelessWidget {
                           const Spacer(),
                           Text(
                             Fmt.timeAgo(client['created_at'] as String?),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 10,
                               fontFamily: 'Inter',

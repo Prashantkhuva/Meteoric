@@ -112,7 +112,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                   ),
                   child: Text(
                     initial,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
@@ -129,7 +129,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                         name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.text,
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -142,7 +142,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                           email,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
                             fontFamily: 'Inter',
@@ -195,7 +195,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               title: 'LOCATION',
               child: SelectableText(
                 location,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text,
                   fontSize: 12.5,
                   height: 1.55,
@@ -210,7 +210,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               title: 'NOTES',
               child: SelectableText(
                 description,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text,
                   fontSize: 12.5,
                   height: 1.6,
@@ -238,7 +238,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
         ],
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.card,
           border: Border(top: BorderSide(color: AppColors.border)),
         ),
@@ -292,7 +292,7 @@ class _StatusTag extends StatelessWidget {
       ),
       child: Text(
         status.toUpperCase(),
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textMuted,
           fontSize: 9,
           fontWeight: FontWeight.w600,
@@ -332,7 +332,7 @@ class _KvRow extends StatelessWidget {
           width: 78,
           child: Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 9,
               fontWeight: FontWeight.w600,
@@ -344,7 +344,7 @@ class _KvRow extends StatelessWidget {
         Expanded(
           child: SelectableText(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 12.5,
               fontWeight: FontWeight.w500,
@@ -390,7 +390,7 @@ class _ActionChip extends StatelessWidget {
           label,
           style: TextStyle(
             color: _filled
-                 ? AppColors.background
+                ? AppColors.background
                 : AppColors.accent.withValues(alpha: enabled ? 1 : 0.35),
             fontSize: 11,
             fontWeight: FontWeight.w700,

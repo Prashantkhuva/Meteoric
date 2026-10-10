@@ -7,6 +7,7 @@ import '../../core/app_version.dart';
 import '../../core/config.dart';
 import '../../core/device_info.dart';
 import '../../core/supabase.dart';
+import '../../core/toast.dart';
 import '../../core/theme.dart';
 
 class ReportIssueScreen extends StatefulWidget {
@@ -80,12 +81,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
       final json = jsonDecode(res.body) as Map<String, dynamic>;
       if (res.statusCode == 200 && json['success'] == true) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Submitted! Thank you for your feedback.'),
-              backgroundColor: AppColors.emerald,
-            ),
-          );
+          Toast.success(context, 'Submitted! Thank you for your feedback.');
           Navigator.of(context).pop();
         }
       } else {
@@ -93,12 +89,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed: $e'),
-            backgroundColor: AppColors.red,
-          ),
-        );
+        Toast.error(context, 'Failed: $e');
       }
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -120,8 +111,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Discard',
-                style: TextStyle(color: Color(0xFFEF4444))),
+            child: const Text(
+              'Discard',
+              style: TextStyle(color: Color(0xFFEF4444)),
+            ),
           ),
         ],
       ),
@@ -138,183 +131,186 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         final shouldPop = await _onWillPop();
         if (shouldPop && context.mounted) Navigator.pop(context);
       },
-      child: UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(title: const Text('Report Issue')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Type selector
-            const Text(
-              'TYPE',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: _types.map((t) {
-                final selected = _type == t.$1;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Haptic.tap();
-                      setState(() => _type = t.$1);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? AppColors.accent.withValues(alpha: 0.12)
-                            : AppColors.card,
-                        border: Border.all(
-                          color: selected ? AppColors.accent : AppColors.border,
-                        ),
-                        borderRadius: AppRadius.mdAll,
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(
-                            t.$3,
-                            size: 20,
+      child: UnfocusOnTap(
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Report Issue')),
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                // Type selector
+                Text(
+                  'TYPE',
+                  style: TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: _types.map((t) {
+                    final selected = _type == t.$1;
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Haptic.tap();
+                          setState(() => _type = t.$1);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
                             color: selected
-                                ? AppColors.accent
-                                : AppColors.textMuted,
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            t.$2,
-                            style: TextStyle(
+                                ? AppColors.accent.withValues(alpha: 0.12)
+                                : AppColors.card,
+                            border: Border.all(
                               color: selected
                                   ? AppColors.accent
-                                  : AppColors.textMuted,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Inter',
+                                  : AppColors.border,
                             ),
+                            borderRadius: AppRadius.mdAll,
                           ),
-                        ],
+                          child: Column(
+                            children: [
+                              Icon(
+                                t.$3,
+                                size: 20,
+                                color: selected
+                                    ? AppColors.accent
+                                    : AppColors.textMuted,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                t.$2,
+                                style: TextStyle(
+                                  color: selected
+                                      ? AppColors.accent
+                                      : AppColors.textMuted,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 24),
+
+                // Title
+                Text(
+                  'TITLE',
+                  style: TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _titleCtrl,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Brief summary...',
+                    hintStyle: TextStyle(
+                      color: AppColors.textFaint,
+                      fontFamily: 'Inter',
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 24),
-
-            // Title
-            const Text(
-              'TITLE',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _titleCtrl,
-              textInputAction: TextInputAction.next,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              style: const TextStyle(
-                color: AppColors.text,
-                fontSize: 14,
-                fontFamily: 'Inter',
-              ),
-              decoration: const InputDecoration(
-                hintText: 'Brief summary...',
-                hintStyle: TextStyle(
-                  color: AppColors.textFaint,
-                  fontFamily: 'Inter',
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
-              ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
-            ),
-            const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-            // Description
-            const Text(
-              'DESCRIPTION',
-              style: TextStyle(
-                color: AppColors.textFaint,
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _descCtrl,
-              maxLines: 6,
-              textInputAction: TextInputAction.done,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              style: const TextStyle(
-                color: AppColors.text,
-                fontSize: 14,
-                fontFamily: 'Inter',
-                height: 1.5,
-              ),
-              decoration: const InputDecoration(
-                hintText: 'What happened? What did you expect?',
-                hintStyle: TextStyle(
-                  color: AppColors.textFaint,
-                  fontFamily: 'Inter',
+                // Description
+                Text(
+                  'DESCRIPTION',
+                  style: TextStyle(
+                    color: AppColors.textFaint,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-              ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
-            ),
-            const SizedBox(height: 12),
-
-            // Device info hint
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                borderRadius: AppRadius.smAll,
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Text(
-                'v${AppVersion.version} (patch ${AppVersion.patch}) — ${DeviceInfo.summary}',
-                style: const TextStyle(
-                  color: AppColors.textFaint,
-                  fontSize: 11,
-                  fontFamily: 'Inter',
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _descCtrl,
+                  maxLines: 6,
+                  textInputAction: TextInputAction.done,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    height: 1.5,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'What happened? What did you expect?',
+                    hintStyle: TextStyle(
+                      color: AppColors.textFaint,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
-              ),
-            ),
-            const SizedBox(height: 28),
+                const SizedBox(height: 12),
 
-            // Submit
-            AccentButton(
-              height: 48,
-              onPressed: _submitting ? null : _submit,
-              child: _submitting
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.background,
-                      ),
-                    )
-                  : const Text('SUBMIT'),
+                // Device info hint
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: AppRadius.smAll,
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Text(
+                    'v${AppVersion.version} (patch ${AppVersion.patch}) — ${DeviceInfo.summary}',
+                    style: TextStyle(
+                      color: AppColors.textFaint,
+                      fontSize: 11,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+
+                // Submit
+                AccentButton(
+                  height: 48,
+                  onPressed: _submitting ? null : _submit,
+                  child: _submitting
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.background,
+                          ),
+                        )
+                      : const Text('SUBMIT'),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-    ),
-    ),
     );
   }
 }

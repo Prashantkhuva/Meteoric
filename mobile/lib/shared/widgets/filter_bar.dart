@@ -61,7 +61,7 @@ class FilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 44,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.card,
         border: Border(bottom: BorderSide(color: AppColors.border)),
       ),
@@ -86,7 +86,7 @@ class FilterBar extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8),
               child: IconButton(
                 visualDensity: VisualDensity.compact,
-                icon: const Icon(
+                icon: Icon(
                   Icons.filter_alt_off_outlined,
                   size: 16,
                   color: AppColors.textMuted,
@@ -180,7 +180,7 @@ class _FilterSheet extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.fromLTRB(16, 14, 8, 12),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: AppColors.border)),
             ),
             child: Row(
@@ -188,7 +188,7 @@ class _FilterSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'FILTER BY ${group.label.toUpperCase()}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -199,11 +199,7 @@ class _FilterSheet extends StatelessWidget {
                 ),
                 IconButton(
                   visualDensity: VisualDensity.compact,
-                  icon: const Icon(
-                    Icons.close,
-                    size: 18,
-                    color: AppColors.textMuted,
-                  ),
+                  icon: Icon(Icons.close, size: 18, color: AppColors.textMuted),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -224,7 +220,7 @@ class _FilterSheet extends StatelessWidget {
                           horizontal: 16,
                           vertical: 13,
                         ),
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(color: AppColors.borderSoft),
                           ),
@@ -247,7 +243,7 @@ class _FilterSheet extends StatelessWidget {
                               ),
                             ),
                             if (option.key == current)
-                              const Icon(
+                              Icon(
                                 Icons.check_rounded,
                                 size: 18,
                                 color: AppColors.accent,

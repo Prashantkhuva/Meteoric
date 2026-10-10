@@ -41,7 +41,7 @@ class _EmailScreenState extends State<EmailScreen> {
                     borderRadius: AppRadius.mdAll,
                     border: Border.all(color: AppColors.border),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Icon(
                         Icons.edit_outlined,
@@ -87,7 +87,7 @@ class _EmailScreenState extends State<EmailScreen> {
                     borderRadius: AppRadius.mdAll,
                     border: Border.all(color: AppColors.border),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Icon(
                         Icons.outbox_outlined,

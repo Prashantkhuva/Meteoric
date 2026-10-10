@@ -51,7 +51,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
         title: const Text('Delete client'),
         content: Text(
           'Delete "${_client['name']}"? This cannot be undone.',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
             fontFamily: 'Inter',
@@ -76,9 +76,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      await ApiClient.instance.clientDelete(
-        (_client['id'] as num).toInt(),
-      );
+      await ApiClient.instance.clientDelete((_client['id'] as num).toInt());
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (err) {
@@ -104,7 +102,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
               const Spacer(),
               Text(
                 'Added ${Fmt.date(_client['created_at'] as String?)}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 10,
                   fontFamily: 'Inter',

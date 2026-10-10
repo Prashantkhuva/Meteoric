@@ -37,7 +37,7 @@ class BulkActionBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(16, 14, 16, 6),
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -58,7 +58,7 @@ class BulkActionBar extends StatelessWidget {
                 dense: true,
                 title: Text(
                   opt.value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.text,
                     fontSize: 13,
                     fontFamily: 'Inter',
@@ -77,7 +77,7 @@ class BulkActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.cardRaised,
         border: Border(top: BorderSide(color: AppColors.border)),
       ),
@@ -173,7 +173,7 @@ Future<bool> confirmBulkDelete(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       title: Text(
         'Delete $count $label?',
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.text,
           fontSize: 15,
           fontWeight: FontWeight.w600,
@@ -182,7 +182,7 @@ Future<bool> confirmBulkDelete(
       ),
       content: Text(
         'This permanently deletes the selected $label. This cannot be undone.',
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textMuted,
           fontSize: 13,
           height: 1.5,
@@ -192,7 +192,7 @@ Future<bool> confirmBulkDelete(
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(dialogContext, false),
-          child: const Text(
+          child: Text(
             'CANCEL',
             style: TextStyle(
               color: AppColors.textMuted,
@@ -204,7 +204,7 @@ Future<bool> confirmBulkDelete(
         ),
         TextButton(
           onPressed: () => Navigator.pop(dialogContext, true),
-          child: const Text(
+          child: Text(
             'DELETE',
             style: TextStyle(
               color: AppColors.red,

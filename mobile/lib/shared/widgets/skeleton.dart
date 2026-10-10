@@ -37,28 +37,28 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
   Widget build(BuildContext context) {
     return ExcludeSemantics(
       child: AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return ShaderMask(
-          shaderCallback: (bounds) {
-            final t = _controller.value;
-            return LinearGradient(
-              begin: Alignment(-1.0 + 2.0 * t, 0),
-              end: Alignment(-0.4 + 2.0 * t, 0),
-              colors: const [
-                AppColors.shimmerBase,
-                AppColors.shimmerHighlight,
-                AppColors.shimmerBase,
-              ],
-              stops: const [0.0, 0.5, 1.0],
-            ).createShader(bounds);
-          },
-          blendMode: BlendMode.srcATop,
-          child: child,
-        );
-      },
-      child: widget.child,
-    ),
+        animation: _controller,
+        builder: (context, child) {
+          return ShaderMask(
+            shaderCallback: (bounds) {
+              final t = _controller.value;
+              return LinearGradient(
+                begin: Alignment(-1.0 + 2.0 * t, 0),
+                end: Alignment(-0.4 + 2.0 * t, 0),
+                colors: [
+                  AppColors.shimmerBase,
+                  AppColors.shimmerHighlight,
+                  AppColors.shimmerBase,
+                ],
+                stops: const [0.0, 0.5, 1.0],
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.srcATop,
+            child: child,
+          );
+        },
+        child: widget.child,
+      ),
     );
   }
 }
@@ -329,7 +329,9 @@ class SkeletonDashboard extends StatelessWidget {
                 borderRadius: AppRadius.smAll,
               ),
               const SizedBox(width: 8),
-              Expanded(child: SkeletonBlock(width: double.infinity, height: 11)),
+              Expanded(
+                child: SkeletonBlock(width: double.infinity, height: 11),
+              ),
             ],
           ),
           const SizedBox(height: 20),

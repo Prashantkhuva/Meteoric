@@ -85,7 +85,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
         backgroundColor: AppColors.card,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.lgAll,
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: AppColors.border),
         ),
         insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
         child: ConstrainedBox(
@@ -113,7 +113,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(
+        SizedBox(
           width: 32,
           height: 32,
           child: CircularProgressIndicator(
@@ -122,7 +122,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           'Checking for updates...',
           style: TextStyle(
             color: AppColors.text,
@@ -151,7 +151,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 color: AppColors.accent.withValues(alpha: 0.1),
                 borderRadius: AppRadius.mdAll,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.system_update_outlined,
                 color: AppColors.accent,
                 size: 20,
@@ -162,7 +162,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'UPDATE AVAILABLE',
                     style: TextStyle(
                       color: AppColors.textFaint,
@@ -175,7 +175,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   const SizedBox(height: 2),
                   Text(
                     'v${update.version}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.text,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -201,7 +201,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             ),
             child: Text(
               update.notes!,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 12,
                 fontFamily: 'Inter',
@@ -230,7 +230,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             Expanded(
               child: AccentButton(
                 height: 40,
-                onPressed: () => _state.downloadAndInstall(),
+                onPressed: _state.downloadAndInstall,
                 child: const Text('DOWNLOAD'),
               ),
             ),
@@ -271,7 +271,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
       children: [
         Row(
           children: [
-            const SizedBox(
+            SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
@@ -285,7 +285,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 update != null
                     ? 'Downloading v${update.version}'
                     : 'Downloading update...',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -304,7 +304,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             value: progress > 0 ? progress : null,
             minHeight: 6,
             backgroundColor: AppColors.border,
-            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent),
           ),
         ),
         const SizedBox(height: 10),
@@ -315,7 +315,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           children: [
             Text(
               '$percent%',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -325,7 +325,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             if (eta.isNotEmpty)
               Text(
                 eta,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 11,
                   fontFamily: 'Inter',
@@ -341,7 +341,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           width: double.infinity,
           child: GhostButton(
             height: 40,
-            onPressed: () => _state.cancelDownload(),
+            onPressed: _state.cancelDownload,
             child: const Text('CANCEL'),
           ),
         ),
@@ -353,13 +353,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.shield_outlined,
-          size: 36,
-          color: AppColors.amber,
-        ),
+        Icon(Icons.shield_outlined, size: 36, color: AppColors.amber),
         const SizedBox(height: 14),
-        const Text(
+        Text(
           'Permission Required',
           style: TextStyle(
             color: AppColors.text,
@@ -369,7 +365,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Allow "Install unknown apps" for Meteoric Admin in Android settings, then come back and tap INSTALL.',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -384,7 +380,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           width: double.infinity,
           child: AccentButton(
             height: 40,
-            onPressed: () => _state.retryInstall(),
+            onPressed: _state.retryInstall,
             child: const Text('INSTALL'),
           ),
         ),
@@ -397,13 +393,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.warning_amber_rounded,
-          size: 36,
-          color: AppColors.red,
-        ),
+        Icon(Icons.warning_amber_rounded, size: 36, color: AppColors.red),
         const SizedBox(height: 14),
-        const Text(
+        Text(
           'UPDATE REQUIRED',
           style: TextStyle(
             color: AppColors.red,
@@ -414,7 +406,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'This version is no longer supported.\nPlease update to continue.',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -436,7 +428,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             ),
             child: Text(
               update.notes!,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 12,
                 fontFamily: 'Inter',
@@ -451,7 +443,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
           child: AccentButton(
             height: 40,
             backgroundColor: AppColors.red,
-            onPressed: () => _state.downloadAndInstall(),
+            onPressed: _state.downloadAndInstall,
             child: const Text(
               'UPDATE NOW',
               style: TextStyle(color: Colors.white),
@@ -466,13 +458,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.error_outline,
-          size: 36,
-          color: AppColors.red,
-        ),
+        Icon(Icons.error_outline, size: 36, color: AppColors.red),
         const SizedBox(height: 14),
-        const Text(
+        Text(
           'Update Failed',
           style: TextStyle(
             color: AppColors.text,
@@ -485,7 +473,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
         Text(
           _state.error!,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textMuted,
             fontSize: 12,
             fontFamily: 'Inter',
@@ -506,9 +494,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             Expanded(
               child: AccentButton(
                 height: 40,
-                onPressed: () {
-                  _state.downloadAndInstall();
-                },
+                onPressed: _state.downloadAndInstall,
                 child: const Text('RETRY'),
               ),
             ),
@@ -522,13 +508,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.check_circle_outline,
-          size: 36,
-          color: AppColors.emerald,
-        ),
+        Icon(Icons.check_circle_outline, size: 36, color: AppColors.emerald),
         const SizedBox(height: 14),
-        const Text(
+        Text(
           'You\'re up to date!',
           style: TextStyle(
             color: AppColors.text,
@@ -540,7 +522,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
         const SizedBox(height: 4),
         Text(
           'v${_state.update?.version ?? AppVersion.version}',
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textMuted,
             fontSize: 12,
             fontFamily: 'Inter',

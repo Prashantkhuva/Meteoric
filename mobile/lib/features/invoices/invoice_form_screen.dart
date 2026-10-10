@@ -113,7 +113,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
       if (_isEdit) 'id': (widget.invoice!['id'] as num).toInt(),
       'client_id': _clientId != null ? int.tryParse(_clientId!) : null,
       'proposal_id': _proposalId != null ? int.tryParse(_proposalId!) : null,
-      'bank_account_id': _bankAccountId != null ? int.tryParse(_bankAccountId!) : null,
+      'bank_account_id': _bankAccountId != null
+          ? int.tryParse(_bankAccountId!)
+          : null,
       'items': _items,
       'tax': num.tryParse(_tax) ?? 0,
       'currency': _currency,
@@ -177,8 +179,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Discard',
-                style: TextStyle(color: Color(0xFFEF4444))),
+            child: const Text(
+              'Discard',
+              style: TextStyle(color: Color(0xFFEF4444)),
+            ),
           ),
         ],
       ),
@@ -195,152 +199,156 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
         final shouldPop = await _onWillPop();
         if (shouldPop && context.mounted) Navigator.pop(context);
       },
-      child: UnfocusOnTap(child: AppScaffold(
-      title: _isEdit ? 'Edit invoice' : 'New invoice',
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _refsField(),
-            const SizedBox(height: 16),
-            SectionCard(
-              title: 'Line items',
-              child: Column(
-                children: [
-                  if (_items.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        'No line items yet.',
-                        style: TextStyle(
-                          color: AppColors.textFaint,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                  for (var i = 0; i < _items.length; i++)
-                    Padding(
-                      key: ValueKey('item_$i'),
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _itemRow(i),
-                    ),
-                  GhostButton(
-                    height: 40,
-                    onPressed: _addItem,
-                    child: const Text('ADD LINE ITEM'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
+      child: UnfocusOnTap(
+        child: AppScaffold(
+          title: _isEdit ? 'Edit invoice' : 'New invoice',
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
               children: [
-                Expanded(
-                  child: TextFormField(
-                    initialValue: _tax,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(labelText: 'Tax'),
-                    onChanged: (v) => _tax = v,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    initialValue: _currency,
-                    decoration: const InputDecoration(labelText: 'Currency'),
-                    items: const [
-                      DropdownMenuItem(value: 'USD', child: Text('USD')),
-                      DropdownMenuItem(value: 'EUR', child: Text('EUR')),
-                      DropdownMenuItem(value: 'GBP', child: Text('GBP')),
-                      DropdownMenuItem(value: 'INR', child: Text('INR')),
-                      DropdownMenuItem(value: 'AED', child: Text('AED')),
+                _refsField(),
+                const SizedBox(height: 16),
+                SectionCard(
+                  title: 'Line items',
+                  child: Column(
+                    children: [
+                      if (_items.isEmpty)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            'No line items yet.',
+                            style: TextStyle(
+                              color: AppColors.textFaint,
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ),
+                      for (var i = 0; i < _items.length; i++)
+                        Padding(
+                          key: ValueKey('item_$i'),
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _itemRow(i),
+                        ),
+                      GhostButton(
+                        height: 40,
+                        onPressed: _addItem,
+                        child: const Text('ADD LINE ITEM'),
+                      ),
                     ],
-                    onChanged: (v) => setState(() => _currency = v ?? 'USD'),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: _pickDueDate,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.border),
-                  color: AppColors.card,
-                ),
-                child: Row(
+                const SizedBox(height: 16),
+                Row(
                   children: [
-                    const Icon(
-                      Icons.calendar_today_outlined,
-                      size: 15,
-                      color: AppColors.textFaint,
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: _tax,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(labelText: 'Tax'),
+                        onChanged: (v) => _tax = v,
+                      ),
                     ),
                     const SizedBox(width: 10),
-                    Text(
-                      _dueDate == null ? 'Set due date' : 'Due: $_dueDate',
-                      style: TextStyle(
-                        color: _dueDate == null
-                            ? AppColors.textFaint
-                            : AppColors.text,
-                        fontSize: 13,
-                        fontFamily: 'Inter',
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        initialValue: _currency,
+                        decoration: const InputDecoration(
+                          labelText: 'Currency',
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 'USD', child: Text('USD')),
+                          DropdownMenuItem(value: 'EUR', child: Text('EUR')),
+                          DropdownMenuItem(value: 'GBP', child: Text('GBP')),
+                          DropdownMenuItem(value: 'INR', child: Text('INR')),
+                          DropdownMenuItem(value: 'AED', child: Text('AED')),
+                        ],
+                        onChanged: (v) =>
+                            setState(() => _currency = v ?? 'USD'),
                       ),
                     ),
-                    const Spacer(),
-                    if (_dueDate != null)
-                      GestureDetector(
-                        onTap: () => setState(() => _dueDate = null),
-                        child: const Icon(
-                          Icons.close,
+                  ],
+                ),
+                const SizedBox(height: 12),
+                GestureDetector(
+                  onTap: _pickDueDate,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.border),
+                      color: AppColors.card,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_outlined,
                           size: 15,
                           color: AppColors.textFaint,
                         ),
-                      ),
-                  ],
+                        const SizedBox(width: 10),
+                        Text(
+                          _dueDate == null ? 'Set due date' : 'Due: $_dueDate',
+                          style: TextStyle(
+                            color: _dueDate == null
+                                ? AppColors.textFaint
+                                : AppColors.text,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const Spacer(),
+                        if (_dueDate != null)
+                          GestureDetector(
+                            onTap: () => setState(() => _dueDate = null),
+                            child: Icon(
+                              Icons.close,
+                              size: 15,
+                              color: AppColors.textFaint,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _notes,
+                  maxLines: 3,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Notes'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _terms,
+                  maxLines: 3,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(labelText: 'Terms'),
+                ),
+                const SizedBox(height: 24),
+                AccentButton(
+                  onPressed: _saving ? null : _save,
+                  child: _saving
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.onAccent,
+                          ),
+                        )
+                      : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE INVOICE'),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _notes,
-              maxLines: 3,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Notes'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _terms,
-              maxLines: 3,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(labelText: 'Terms'),
-            ),
-            const SizedBox(height: 24),
-            AccentButton(
-              onPressed: _saving ? null : _save,
-              child: _saving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                         color: AppColors.onAccent,
-                      ),
-                    )
-                  : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE INVOICE'),
-            ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
-    ),
-    ),
     );
   }
 
@@ -351,7 +359,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
           Expanded(
             child: Text(
               'Could not load references: $_clientsError',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
                 fontFamily: 'Inter',
@@ -373,7 +381,10 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
       );
     }
 
-    final validClientValues = <String?>{'', ..._clients.map((c) => '${c['id']}')};
+    final validClientValues = <String?>{
+      '',
+      ..._clients.map((c) => '${c['id']}'),
+    };
     final validProposalValues = <String?>{
       '',
       ..._proposals.map((p) => '${p['id']}'),
@@ -383,7 +394,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     return Column(
       children: [
         DropdownButtonFormField<String>(
-          initialValue: validClientValues.contains(_clientId) ? _clientId : null,
+          initialValue: validClientValues.contains(_clientId)
+              ? _clientId
+              : null,
           decoration: const InputDecoration(labelText: 'Client'),
           items: [
             const DropdownMenuItem(value: '', child: Text('No client linked')),
@@ -401,7 +414,9 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          initialValue: validProposalValues.contains(_proposalId) ? _proposalId : null,
+          initialValue: validProposalValues.contains(_proposalId)
+              ? _proposalId
+              : null,
           decoration: const InputDecoration(labelText: 'Proposal (optional)'),
           items: [
             const DropdownMenuItem(
@@ -471,11 +486,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                 ),
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  size: 16,
-                  color: AppColors.textFaint,
-                ),
+                icon: Icon(Icons.close, size: 16, color: AppColors.textFaint),
                 onPressed: () => _removeItem(i),
               ),
             ],

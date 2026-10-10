@@ -12,11 +12,11 @@ class TipTapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    dynamic doc = content;
+    final dynamic doc = content;
     if (doc is String) {
       return Text(
         doc,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textMuted,
           fontSize: 13,
           height: 1.6,
@@ -98,7 +98,7 @@ class TipTapView extends StatelessWidget {
       case 'horizontalRule':
         return Padding(
           padding: EdgeInsets.only(bottom: 12, left: indent),
-          child: const Divider(color: AppColors.border),
+          child: Divider(color: AppColors.border),
         );
       default:
         return Padding(
@@ -117,7 +117,7 @@ class TipTapView extends StatelessWidget {
         children: [
           Text(
             '$marker ',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.accent,
               fontSize: 13,
               fontFamily: 'Inter',
@@ -154,7 +154,7 @@ class TipTapView extends StatelessWidget {
 
   Widget _inline(List<Map> nodes) {
     if (nodes.isEmpty) {
-      return const Text(
+      return Text(
         ' ',
         style: TextStyle(
           color: AppColors.textMuted,
@@ -175,7 +175,7 @@ class TipTapView extends StatelessWidget {
     final marks = (node['marks'] as List?)?.cast<Map>() ?? const <Map>[];
     final markTypes = marks.map((m) => m['type']).toSet();
 
-    var style = const TextStyle(
+    var style = TextStyle(
       color: AppColors.textMuted,
       fontSize: 13,
       height: 1.6,
@@ -203,7 +203,7 @@ class TipTapView extends StatelessWidget {
         onTap: () => _openLink(href),
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.accent,
             fontSize: 13,
             height: 1.6,

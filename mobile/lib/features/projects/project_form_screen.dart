@@ -164,8 +164,10 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Discard',
-                style: TextStyle(color: Color(0xFFEF4444))),
+            child: const Text(
+              'Discard',
+              style: TextStyle(color: Color(0xFFEF4444)),
+            ),
           ),
         ],
       ),
@@ -182,103 +184,105 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
         final shouldPop = await _onWillPop();
         if (shouldPop && context.mounted) Navigator.pop(context);
       },
-      child: UnfocusOnTap(child: AppScaffold(
-      title: _isEdit ? 'Edit project' : 'New project',
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _name,
-              textInputAction: TextInputAction.next,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            const SizedBox(height: 12),
-            _clientField(),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _description,
-              maxLines: 3,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _services,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Services'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _budget,
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Budget'),
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: _currency,
-              decoration: const InputDecoration(labelText: 'Currency'),
-              items: const [
-                DropdownMenuItem(value: 'INR', child: Text('INR (\u20B9)')),
-                DropdownMenuItem(value: 'USD', child: Text('USD (\$)')),
-                DropdownMenuItem(value: 'EUR', child: Text('EUR (\u20AC)')),
-                DropdownMenuItem(value: 'GBP', child: Text('GBP (\u00A3)')),
-                DropdownMenuItem(value: 'AUD', child: Text('AUD (A\$)')),
-              ],
-              onChanged: (v) => setState(() => _currency = v ?? 'INR'),
-            ),
-            const SizedBox(height: 12),
-            Row(
+      child: UnfocusOnTap(
+        child: AppScaffold(
+          title: _isEdit ? 'Edit project' : 'New project',
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
               children: [
-                Expanded(
-                  child: _dateTile(
-                    'Start date',
-                    _startDate,
-                    () => _pickDate('start'),
-                  ),
+                TextFormField(
+                  controller: _name,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Name is required'
+                      : null,
+                  decoration: const InputDecoration(labelText: 'Name'),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _dateTile(
-                    'Deadline',
-                    _deadline,
-                    () => _pickDate('deadline'),
-                  ),
+                const SizedBox(height: 12),
+                _clientField(),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _description,
+                  maxLines: 3,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Description'),
                 ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _services,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Services'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _budget,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Budget'),
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  initialValue: _currency,
+                  decoration: const InputDecoration(labelText: 'Currency'),
+                  items: const [
+                    DropdownMenuItem(value: 'INR', child: Text('INR (\u20B9)')),
+                    DropdownMenuItem(value: 'USD', child: Text('USD (\$)')),
+                    DropdownMenuItem(value: 'EUR', child: Text('EUR (\u20AC)')),
+                    DropdownMenuItem(value: 'GBP', child: Text('GBP (\u00A3)')),
+                    DropdownMenuItem(value: 'AUD', child: Text('AUD (A\$)')),
+                  ],
+                  onChanged: (v) => setState(() => _currency = v ?? 'INR'),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _dateTile(
+                        'Start date',
+                        _startDate,
+                        () => _pickDate('start'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _dateTile(
+                        'Deadline',
+                        _deadline,
+                        () => _pickDate('deadline'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _notes,
+                  maxLines: 3,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(labelText: 'Notes'),
+                ),
+                const SizedBox(height: 24),
+                AccentButton(
+                  onPressed: _saving ? null : _save,
+                  child: _saving
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.onAccent,
+                          ),
+                        )
+                      : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROJECT'),
+                ),
+                const SizedBox(height: 16),
               ],
             ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _notes,
-              maxLines: 3,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(labelText: 'Notes'),
-            ),
-            const SizedBox(height: 24),
-            AccentButton(
-              onPressed: _saving ? null : _save,
-              child: _saving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                         color: AppColors.onAccent,
-                      ),
-                    )
-                  : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROJECT'),
-            ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
-    ),
-    ),
     );
   }
 
@@ -289,7 +293,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           Expanded(
             child: Text(
               'Could not load clients: $_clientsError',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
                 fontFamily: 'Inter',
@@ -347,7 +351,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
           children: [
             Text(
               label.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 9,
                 fontWeight: FontWeight.w600,

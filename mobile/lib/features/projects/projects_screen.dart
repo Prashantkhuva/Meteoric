@@ -146,7 +146,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       label: 'projects',
     );
     if (!ok) return;
-    await _runBulk((id) => ApiClient.instance.projectDelete(id));
+    await _runBulk(ApiClient.instance.projectDelete);
   }
 
   Future<void> _exportCsv() async {
@@ -209,12 +209,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           automaticallyImplyLeading: false,
           leading: _selecting
               ? IconButton(
-                  icon: const Icon(
-                    Icons.close,
-                    size: 20,
-                    color: AppColors.textMuted,
-                  ),
-                  onPressed: () => setState(() => _selected.clear()),
+                  icon: Icon(Icons.close, size: 20, color: AppColors.textMuted),
+                  onPressed: () => setState(_selected.clear),
                 )
               : null,
           actions: _selecting
@@ -241,7 +237,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 ]
               : [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.download_outlined,
                       size: 19,
                       color: AppColors.textMuted,
@@ -250,16 +246,12 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     tooltip: 'Export CSV',
                   ),
                   IconButton(
-                    icon: const Icon(
-                      Icons.add,
-                      size: 20,
-                      color: AppColors.accent,
-                    ),
-                    onPressed: () => _openForm(),
+                    icon: Icon(Icons.add, size: 20, color: AppColors.accent),
+                    onPressed: _openForm,
                     tooltip: 'New project',
                   ),
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.refresh,
                       size: 18,
                       color: AppColors.textMuted,
@@ -278,14 +270,14 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: 'Search projects...',
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search,
                     size: 18,
                     color: AppColors.textFaint,
                   ),
                   suffixIcon: _search.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close,
                             size: 16,
                             color: AppColors.textMuted,
@@ -333,7 +325,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
             ? BulkActionBar(
                 count: _selected.length,
                 busy: _busy,
-                onClear: () => setState(() => _selected.clear()),
+                onClear: () => setState(_selected.clear),
                 onDelete: _bulkDelete,
                 statusOptions: _statusOptions,
                 onStatus: (s) =>
@@ -459,10 +451,27 @@ class _ProjectCard extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               borderRadius: AppRadius.mdAll,
-              border: Border.all(
-                color: selected
-                    ? AppColors.accent.withValues(alpha: 0.5)
-                    : AppColors.border,
+              border: Border(
+                top: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.highlight,
+                ),
+                left: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.borderSoft,
+                ),
+                right: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.border,
+                ),
+                bottom: BorderSide(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.5)
+                      : AppColors.border,
+                ),
               ),
             ),
             child: Row(
@@ -477,11 +486,11 @@ class _ProjectCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               project['name'] ?? 'Untitled project',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Space Grotesk',
                               ),
                             ),
                           ),
@@ -495,7 +504,7 @@ class _ProjectCard extends StatelessWidget {
                           if (onEdit != null)
                             GestureDetector(
                               onTap: onEdit,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.edit_outlined,
                                 size: 15,
                                 color: AppColors.textFaint,
@@ -506,7 +515,7 @@ class _ProjectCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Text(
                         clientName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
                           fontFamily: 'Inter',
@@ -520,15 +529,16 @@ class _ProjectCard extends StatelessWidget {
                           if (budget != null && budget > 0)
                             Text(
                               Fmt.money(budget, currency: currency),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.accent,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Space Grotesk',
+                                fontFeatures: [FontFeature.tabularFigures()],
                               ),
                             )
                           else
-                            const Text(
+                            Text(
                               'No budget set',
                               style: TextStyle(
                                 color: AppColors.textFaint,
@@ -539,7 +549,7 @@ class _ProjectCard extends StatelessWidget {
                           const Spacer(),
                           Text(
                             Fmt.timeAgo(project['created_at'] as String?),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 10,
                               fontFamily: 'Inter',

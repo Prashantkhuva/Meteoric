@@ -79,9 +79,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      await ApiClient.instance.projectDelete(
-        (_project['id'] as num).toInt(),
-      );
+      await ApiClient.instance.projectDelete((_project['id'] as num).toInt());
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (err) {
@@ -119,7 +117,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 const Spacer(),
                 Text(
                   Fmt.date(_project['created_at'] as String?),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
                     fontFamily: 'Inter',

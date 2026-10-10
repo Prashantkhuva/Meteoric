@@ -44,13 +44,13 @@ class _RichTextEditorScreenState extends State<RichTextEditorScreen> {
       appBar: AppBar(
         title: Text(widget.title),
         leading: IconButton(
-          icon: const Icon(Icons.close, size: 20, color: AppColors.textMuted),
+          icon: Icon(Icons.close, size: 20, color: AppColors.textMuted),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
           TextButton(
             onPressed: _save,
-            child: const Text(
+            child: Text(
               'SAVE',
               style: TextStyle(
                 color: AppColors.accent,

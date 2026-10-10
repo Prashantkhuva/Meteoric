@@ -81,7 +81,7 @@ class KpiCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     label.toUpperCase(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
@@ -110,7 +110,7 @@ class KpiCard extends StatelessWidget {
             Text(
               value,
               style: AppText.tabular(
-                const TextStyle(
+                TextStyle(
                   color: AppColors.text,
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -177,11 +177,7 @@ class SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: AppRadius.mdAll,
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppElevation.card,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -193,7 +189,7 @@ class SectionCard extends StatelessWidget {
                 children: [
                   Text(
                     title!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.text,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -255,7 +251,7 @@ class EmptyState extends StatelessWidget {
               Text(
                 title!,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -267,7 +263,7 @@ class EmptyState extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 13,
                 fontFamily: 'Inter',
@@ -309,7 +305,7 @@ class PaginationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.card,
         border: Border(top: BorderSide(color: AppColors.border)),
       ),
@@ -326,7 +322,7 @@ class PaginationBar extends StatelessWidget {
           ),
           Text(
             '$_pages pages',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 11,
               fontFamily: 'Inter',
@@ -372,7 +368,7 @@ class DetailRow extends StatelessWidget {
             width: 110,
             child: Text(
               label.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
@@ -419,7 +415,7 @@ class LoadingView extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 12,
               fontFamily: 'Inter',
@@ -597,7 +593,7 @@ Future<T?> showAppSheet<T>({
     isScrollControlled: isScrollControlled,
     backgroundColor: Colors.transparent,
     builder: (ctx) => Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.cardRaised,
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         border: Border(

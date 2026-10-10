@@ -202,7 +202,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                 ],
                 if (!_isEdit) ...[
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'SOURCE',
                     style: TextStyle(
                       color: AppColors.textFaint,
@@ -261,7 +261,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                 AccentButton(
                   onPressed: _saving ? null : _save,
                   child: _saving
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
@@ -408,7 +408,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       maxLength: 280,
       maxLines: 3,
       textInputAction: TextInputAction.done,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Follow-up note',
         hintText: 'Short message for future reference...',
         counterStyle: TextStyle(fontSize: 10, color: AppColors.textFaint),

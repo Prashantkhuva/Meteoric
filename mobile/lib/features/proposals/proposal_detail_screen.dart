@@ -39,7 +39,8 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
     return lead is Map ? lead.cast<String, dynamic>() : null;
   }
 
-  List<Map<String, dynamic>> get _pricingList => parseJsonList(_proposal['pricing']);
+  List<Map<String, dynamic>> get _pricingList =>
+      parseJsonList(_proposal['pricing']);
 
   String get _currency => (_proposal['currency'] as String?) ?? 'USD';
 
@@ -66,9 +67,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
   Future<void> _send() async {
     setState(() => _sending = true);
     try {
-      await ApiClient.instance.proposalSend(
-        (_proposal['id'] as num).toInt(),
-      );
+      await ApiClient.instance.proposalSend((_proposal['id'] as num).toInt());
       if (!mounted) return;
       setState(() {
         _proposal = {..._proposal, 'status': 'sent'};
@@ -129,9 +128,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      await ApiClient.instance.proposalDelete(
-        (_proposal['id'] as num).toInt(),
-      );
+      await ApiClient.instance.proposalDelete((_proposal['id'] as num).toInt());
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (err) {
@@ -183,7 +180,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                 const Spacer(),
                 Text(
                   Fmt.date(_proposal['created_at'] as String?),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
                     fontFamily: 'Inter',
@@ -224,7 +221,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                             Expanded(
                               child: Text(
                                 '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.textMuted,
                                   fontSize: 12,
                                   fontFamily: 'Inter',
@@ -238,7 +235,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                                         1),
                                 currency: _currency,
                               ),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -269,12 +266,12 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
               AccentButton(
                 onPressed: _sending ? null : _send,
                 child: _sending
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                           color: AppColors.onAccent,
+                          color: AppColors.onAccent,
                         ),
                       )
                     : const Text('SEND TO LEAD'),

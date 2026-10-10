@@ -138,7 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Disable PIN lock?'),
-        content: const Text(
+        content: Text(
           'Your app can be opened without a PIN or biometrics again.',
           style: TextStyle(color: AppColors.textMuted, fontFamily: 'Inter'),
         ),
@@ -343,6 +343,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 28),
 
+            // ── Appearance section ────────────────────────────────
+            _sectionLabel('APPEARANCE'),
+            const SizedBox(height: 10),
+            _buildAppearanceCard(),
+
+            const SizedBox(height: 28),
+
             // ── App section ─────────────────────────────────────────
             _sectionLabel('APP'),
             const SizedBox(height: 10),
@@ -404,7 +411,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 Text(
                   displayName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.text,
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -414,7 +421,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 3),
                 Text(
                   _originalEmail,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
                     fontFamily: 'Inter',
@@ -564,6 +571,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildAppearanceCard() {
+    final current = ThemeController.mode.value;
+    const options = [
+      (ThemeMode.system, 'System'),
+      (ThemeMode.dark, 'Dark'),
+      (ThemeMode.light, 'Light'),
+    ];
+    return _CardContainer(
+      child: Row(
+        children: [
+          for (var i = 0; i < options.length; i++)
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  i == 0 ? 0 : 5,
+                  0,
+                  i == options.length - 1 ? 0 : 5,
+                  0,
+                ),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    Haptic.tap();
+                    ThemeController.set(options[i].$1);
+                    if (mounted) setState(() {});
+                  },
+                  child: AnimatedContainer(
+                    duration: AppMotion.fast,
+                    curve: AppMotion.ease,
+                    height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: current == options[i].$1
+                          ? AppColors.accent
+                          : Colors.transparent,
+                      borderRadius: AppRadius.smAll,
+                      border: Border.all(
+                        color: current == options[i].$1
+                            ? AppColors.accent
+                            : AppColors.border,
+                      ),
+                    ),
+                    child: Text(
+                      options[i].$2,
+                      style: TextStyle(
+                        color: current == options[i].$1
+                            ? AppColors.onAccent
+                            : AppColors.textMuted,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   // ── Sign out button ─────────────────────────────────────────────
 
   Widget _buildSignOutButton() {
@@ -585,7 +654,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Icon(Icons.logout_rounded, size: 16, color: AppColors.red),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'SIGN OUT',
                 style: TextStyle(
                   color: AppColors.red,
@@ -636,7 +705,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     child: checking
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(
@@ -691,7 +760,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   if (!checking && !downloading && update == null)
-                    const Icon(
+                    Icon(
                       Icons.chevron_right_rounded,
                       size: 20,
                       color: AppColors.textFaint,
@@ -709,7 +778,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     update.notes!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
                       fontFamily: 'Inter',
@@ -754,7 +823,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Downloading update\u2026',
                           style: TextStyle(
@@ -766,7 +835,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       Text(
                         '${((state.progress ?? 0) * 100).toInt()}%',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.accent,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -782,7 +851,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       value: (state.progress ?? 0).clamp(0.0, 1.0),
                       minHeight: 3,
                       backgroundColor: AppColors.border,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
+                      valueColor: AlwaysStoppedAnimation<Color>(
                         AppColors.accent,
                       ),
                     ),
@@ -797,7 +866,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
               child: Text(
                 error,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.red,
                   fontSize: 12,
                   fontFamily: 'Inter',
@@ -815,7 +884,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _sectionLabel(String text) => Text(
     text,
-    style: const TextStyle(
+    style: TextStyle(
       color: AppColors.textFaint,
       fontSize: 10,
       fontWeight: FontWeight.w600,
@@ -831,7 +900,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 13,
               fontFamily: 'Inter',
@@ -851,7 +920,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
-  Widget _rowDivider() => const Padding(
+  Widget _rowDivider() => Padding(
     padding: EdgeInsets.symmetric(horizontal: 16),
     child: Divider(height: 1, color: AppColors.border),
   );
@@ -896,7 +965,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.text,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -906,7 +975,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 11,
                       fontFamily: 'Inter',
@@ -968,7 +1037,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     children: [
                       Text(
                         label,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -978,7 +1047,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 11,
                           fontFamily: 'Inter',
@@ -990,7 +1059,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 AnimatedRotation(
                   turns: expanded ? 0.5 : 0,
                   duration: const Duration(milliseconds: 200),
-                  child: const Icon(
+                  child: Icon(
                     Icons.keyboard_arrow_down_rounded,
                     size: 20,
                     color: AppColors.textFaint,
@@ -1022,7 +1091,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextField(
             controller: _name,
             enabled: !_busy,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
               fontFamily: 'Inter',
@@ -1035,7 +1104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             controller: _email,
             enabled: !_busy,
             keyboardType: TextInputType.emailAddress,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
               fontFamily: 'Inter',
@@ -1044,7 +1113,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           if (emailChanged) ...[
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'A confirmation link will be sent to the new email address.',
               style: TextStyle(
                 color: AppColors.amber,
@@ -1076,7 +1145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             controller: _password,
             enabled: !_busy,
             obscureText: !_showPassword,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
               fontFamily: 'Inter',
@@ -1086,7 +1155,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onPressed: () => setState(() => _showPassword = !_showPassword),
                 child: Text(
                   _showPassword ? 'Hide' : 'Show',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 11,
                     fontFamily: 'Inter',
@@ -1101,7 +1170,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             controller: _confirmPassword,
             enabled: !_busy,
             obscureText: !_showPassword,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
               fontFamily: 'Inter',
@@ -1112,7 +1181,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _confirmPassword.text.isNotEmpty &&
               _password.text != _confirmPassword.text) ...[
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Passwords do not match',
               style: TextStyle(
                 color: AppColors.red,
@@ -1136,7 +1205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     padding: const EdgeInsets.only(bottom: 6),
     child: Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.textFaint,
         fontSize: 10,
         fontWeight: FontWeight.w600,
@@ -1152,11 +1221,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
     border: OutlineInputBorder(
       borderRadius: AppRadius.smAll,
-      borderSide: const BorderSide(color: AppColors.border),
+      borderSide: BorderSide(color: AppColors.border),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: AppRadius.smAll,
-      borderSide: const BorderSide(color: AppColors.border),
+      borderSide: BorderSide(color: AppColors.border),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: AppRadius.smAll,
@@ -1164,7 +1233,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
     disabledBorder: OutlineInputBorder(
       borderRadius: AppRadius.smAll,
-      borderSide: const BorderSide(color: AppColors.border),
+      borderSide: BorderSide(color: AppColors.border),
     ),
   );
 }
@@ -1193,7 +1262,7 @@ class _SignedOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
         child: SizedBox(
@@ -1289,7 +1358,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'Meteoric Admin',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -1302,7 +1371,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
           const SizedBox(height: 8),
           Text(
             _stepConfirm ? 'Confirm your PIN' : 'Set 4-digit PIN',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -1336,7 +1405,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
           ),
           const SizedBox(height: 12),
           if (_error)
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(vertical: 4),
               child: Text(
                 'PINs do not match — try again',
@@ -1351,7 +1420,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
           else
             const SizedBox(height: 24),
           if (_busy)
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(12),
               child: SizedBox(
                 width: 20,
@@ -1415,14 +1484,14 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
             ),
             child: Center(
               child: label == 'back'
-                  ? const Icon(
+                  ? Icon(
                       Icons.backspace_outlined,
                       size: 22,
                       color: AppColors.textMuted,
                     )
                   : Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.text,
                         fontSize: 22,
                         fontWeight: FontWeight.w500,

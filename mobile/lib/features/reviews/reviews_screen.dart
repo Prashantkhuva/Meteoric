@@ -154,100 +154,98 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(
-        title: const Text('Reviews'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              size: 18,
-              color: AppColors.textMuted,
+    return UnfocusOnTap(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Reviews'),
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+              onPressed: _load,
+              tooltip: 'Refresh',
             ),
-            onPressed: _load,
-            tooltip: 'Refresh',
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-            child: TextField(
-              controller: _search,
-              onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                hintText: 'Search name, email, company...',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 18,
-                  color: AppColors.textFaint,
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+              child: TextField(
+                controller: _search,
+                onChanged: _onSearchChanged,
+                decoration: InputDecoration(
+                  hintText: 'Search name, email, company...',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: 18,
+                    color: AppColors.textFaint,
+                  ),
+                  suffixIcon: _search.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            size: 16,
+                            color: AppColors.textMuted,
+                          ),
+                          onPressed: () {
+                            _search.clear();
+                            _page = 1;
+                            _load();
+                          },
+                        )
+                      : null,
                 ),
-                suffixIcon: _search.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(
-                          Icons.close,
-                          size: 16,
-                          color: AppColors.textMuted,
-                        ),
-                        onPressed: () {
-                          _search.clear();
-                          _page = 1;
-                          _load();
-                        },
-                      )
-                    : null,
               ),
             ),
-          ),
-          FilterBar(
-            groups: [
-              FilterGroup(
-                key: 'status',
-                label: 'Status',
-                options: const [
-                  MapEntry('pending', 'Pending'),
-                  MapEntry('approved', 'Approved'),
-                  MapEntry('rejected', 'Rejected'),
-                ],
-              ),
-              FilterGroup(
-                key: 'sort',
-                label: 'Sort',
-                options: const [
-                  MapEntry('newest', 'Newest'),
-                  MapEntry('oldest', 'Oldest'),
-                  MapEntry('rating', 'Rating high–low'),
-                ],
-              ),
-            ],
-            values: {'status': _status, 'sort': _sort},
-            onChanged: (v) {
-              setState(() {
-                _status = v['status'] ?? 'all';
-                _sort = v['sort'] ?? 'newest';
-              });
-              _page = 1;
-              _load();
-            },
-          ),
-          const SizedBox(height: 4),
-          Expanded(child: _buildList()),
-        ],
-      ),
-      bottomNavigationBar: _total > _pageSize
-          ? PaginationBar(
-              page: _page,
-              total: _total,
-              pageSize: _pageSize,
-              onPageChanged: (p) {
-                setState(() => _page = p);
+            FilterBar(
+              groups: [
+                FilterGroup(
+                  key: 'status',
+                  label: 'Status',
+                  options: const [
+                    MapEntry('pending', 'Pending'),
+                    MapEntry('approved', 'Approved'),
+                    MapEntry('rejected', 'Rejected'),
+                  ],
+                ),
+                FilterGroup(
+                  key: 'sort',
+                  label: 'Sort',
+                  options: const [
+                    MapEntry('newest', 'Newest'),
+                    MapEntry('oldest', 'Oldest'),
+                    MapEntry('rating', 'Rating high–low'),
+                  ],
+                ),
+              ],
+              values: {'status': _status, 'sort': _sort},
+              onChanged: (v) {
+                setState(() {
+                  _status = v['status'] ?? 'all';
+                  _sort = v['sort'] ?? 'newest';
+                });
+                _page = 1;
                 _load();
               },
-            )
-          : null,
-    ), );
+            ),
+            const SizedBox(height: 4),
+            Expanded(child: _buildList()),
+          ],
+        ),
+        bottomNavigationBar: _total > _pageSize
+            ? PaginationBar(
+                page: _page,
+                total: _total,
+                pageSize: _pageSize,
+                onPageChanged: (p) {
+                  setState(() => _page = p);
+                  _load();
+                },
+              )
+            : null,
+      ),
+    );
   }
 
   Widget _buildList() {
@@ -318,7 +316,7 @@ class _ReviewCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.text,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -336,13 +334,11 @@ class _ReviewCard extends StatelessWidget {
                 Icon(
                   s <= rating ? Icons.star : Icons.star_border,
                   size: 15,
-                  color: s <= rating
-                       ? AppColors.starGold
-                      : AppColors.textFaint,
+                  color: s <= rating ? AppColors.starGold : AppColors.textFaint,
                 ),
               const Spacer(),
               if (isVerified)
-                const Row(
+                Row(
                   children: [
                     Icon(Icons.verified, size: 13, color: AppColors.accent),
                     SizedBox(width: 3),
@@ -363,7 +359,7 @@ class _ReviewCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             review['content'] ?? '',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,
               height: 1.5,
@@ -375,7 +371,7 @@ class _ReviewCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             Fmt.date(review['created_at'] as String?),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 10,
               fontFamily: 'Inter',
@@ -392,11 +388,7 @@ class _ReviewCard extends StatelessWidget {
                 () => onVerified(!isVerified),
               ),
               if (status != 'approved')
-                _chip(
-                  'APPROVE',
-                   AppColors.emerald,
-                  () => onStatus('approved'),
-                ),
+                _chip('APPROVE', AppColors.emerald, () => onStatus('approved')),
               if (status != 'rejected')
                 _chip('REJECT', AppColors.red, () => onStatus('rejected')),
               if (status != 'pending')

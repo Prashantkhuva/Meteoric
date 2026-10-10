@@ -127,7 +127,8 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
 
     final payload = {
       if (_isEdit) 'id': (widget.proposal!['id'] as num).toInt(),
-      if (_leadId != null && _leadId!.isNotEmpty) 'lead_id': int.tryParse(_leadId!),
+      if (_leadId != null && _leadId!.isNotEmpty)
+        'lead_id': int.tryParse(_leadId!),
       'title': _title.text.trim(),
       if (_content != null) 'content': _content,
       'pricing': _pricing,
@@ -178,8 +179,10 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Discard',
-                style: TextStyle(color: Color(0xFFEF4444))),
+            child: const Text(
+              'Discard',
+              style: TextStyle(color: Color(0xFFEF4444)),
+            ),
           ),
         ],
       ),
@@ -196,90 +199,94 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
         final shouldPop = await _onWillPop();
         if (shouldPop && context.mounted) Navigator.pop(context);
       },
-      child: UnfocusOnTap(child: AppScaffold(
-      title: _isEdit ? 'Edit proposal' : 'New proposal',
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _title,
-              textInputAction: TextInputAction.next,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Title is required' : null,
-              decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            const SizedBox(height: 12),
-            _leadField(),
-            const SizedBox(height: 16),
-            Row(
+      child: UnfocusOnTap(
+        child: AppScaffold(
+          title: _isEdit ? 'Edit proposal' : 'New proposal',
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
               children: [
-                Expanded(
-                  child: GhostButton(
-                    onPressed: _generating ? null : _generate,
-                    child: _generating
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('AI GENERATE'),
-                  ),
+                TextFormField(
+                  controller: _title,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Title is required'
+                      : null,
+                  decoration: const InputDecoration(labelText: 'Title'),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _contentSection(),
-            const SizedBox(height: 20),
-            _pricingSection(),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              initialValue: _currency,
-              decoration: const InputDecoration(labelText: 'Currency'),
-              items: const [
-                DropdownMenuItem(value: 'USD', child: Text('USD')),
-                DropdownMenuItem(value: 'EUR', child: Text('EUR')),
-                DropdownMenuItem(value: 'GBP', child: Text('GBP')),
-                DropdownMenuItem(value: 'INR', child: Text('INR')),
-                DropdownMenuItem(value: 'AED', child: Text('AED')),
-              ],
-              onChanged: (v) => setState(() => _currency = v ?? 'USD'),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _timeline,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Timeline'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _terms,
-              maxLines: 3,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(labelText: 'Terms'),
-            ),
-            const SizedBox(height: 24),
-            AccentButton(
-              onPressed: _saving ? null : _save,
-              child: _saving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                         color: AppColors.onAccent,
+                const SizedBox(height: 12),
+                _leadField(),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GhostButton(
+                        onPressed: _generating ? null : _generate,
+                        child: _generating
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text('AI GENERATE'),
                       ),
-                    )
-                  : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROPOSAL'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                _contentSection(),
+                const SizedBox(height: 20),
+                _pricingSection(),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  initialValue: _currency,
+                  decoration: const InputDecoration(labelText: 'Currency'),
+                  items: const [
+                    DropdownMenuItem(value: 'USD', child: Text('USD')),
+                    DropdownMenuItem(value: 'EUR', child: Text('EUR')),
+                    DropdownMenuItem(value: 'GBP', child: Text('GBP')),
+                    DropdownMenuItem(value: 'INR', child: Text('INR')),
+                    DropdownMenuItem(value: 'AED', child: Text('AED')),
+                  ],
+                  onChanged: (v) => setState(() => _currency = v ?? 'USD'),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _timeline,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: 'Timeline'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _terms,
+                  maxLines: 3,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(labelText: 'Terms'),
+                ),
+                const SizedBox(height: 24),
+                AccentButton(
+                  onPressed: _saving ? null : _save,
+                  child: _saving
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.onAccent,
+                          ),
+                        )
+                      : Text(_isEdit ? 'SAVE CHANGES' : 'CREATE PROPOSAL'),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
-    ),
-    ),
     );
   }
 
@@ -290,7 +297,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           Expanded(
             child: Text(
               'Could not load leads: $_leadsError',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
                 fontFamily: 'Inter',
@@ -346,7 +353,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(
                 _contentPreview(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
                   fontFamily: 'Inter',
@@ -358,7 +365,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
           AccentButton(
             height: 40,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onPressed: () => _openEditor(),
+            onPressed: _openEditor,
             child: Text(hasContent ? 'EDIT CONTENT' : 'ADD CONTENT'),
           ),
         ],
@@ -400,7 +407,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
       child: Column(
         children: [
           if (_pricing.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 12),
               child: Text(
                 'No line items yet.',
@@ -452,11 +459,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 ),
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  size: 16,
-                  color: AppColors.textFaint,
-                ),
+                icon: Icon(Icons.close, size: 16, color: AppColors.textFaint),
                 onPressed: () => _removePricingRow(i),
               ),
             ],

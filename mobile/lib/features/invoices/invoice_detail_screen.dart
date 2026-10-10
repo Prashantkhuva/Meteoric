@@ -85,9 +85,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   Future<void> _send() async {
     setState(() => _busy = true);
     try {
-      await ApiClient.instance.invoiceSend(
-        (_invoice['id'] as num).toInt(),
-      );
+      await ApiClient.instance.invoiceSend((_invoice['id'] as num).toInt());
       if (!mounted) return;
       setState(() {
         _invoice = {..._invoice, 'status': 'sent'};
@@ -226,9 +224,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     setState(() => _busy = true);
     try {
-      await ApiClient.instance.invoiceDelete(
-        (_invoice['id'] as num).toInt(),
-      );
+      await ApiClient.instance.invoiceDelete((_invoice['id'] as num).toInt());
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (err) {
@@ -277,7 +273,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 const Spacer(),
                 Text(
                   Fmt.date(_invoice['created_at'] as String?),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
                     fontFamily: 'Inter',
@@ -302,8 +298,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               title: 'Items',
               child: Column(
                 children: [
-                  for (final item
-                      in parseJsonList(_invoice['items']))
+                  for (final item in parseJsonList(_invoice['items']))
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Row(
@@ -311,7 +306,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                           Expanded(
                             child: Text(
                               '${item['description'] ?? '—'} × ${item['quantity'] ?? 1}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.textMuted,
                                 fontSize: 12,
                                 fontFamily: 'Inter',
@@ -323,7 +318,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                               ((item['rate'] as num?)?.toDouble() ?? 0) *
                                   ((item['quantity'] as num?)?.toDouble() ?? 1),
                             ),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.text,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -333,7 +328,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                         ],
                       ),
                     ),
-                  const Divider(color: AppColors.border),
+                  Divider(color: AppColors.border),
                   DetailRow(label: 'Subtotal', value: _money(_subtotal)),
                   if (((_invoice['tax'] as num?) ?? 0) > 0)
                     DetailRow(

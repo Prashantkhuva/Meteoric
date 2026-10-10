@@ -126,16 +126,12 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, size: 20, color: AppColors.accent),
-            onPressed: () => _openForm(),
+            icon: Icon(Icons.add, size: 20, color: AppColors.accent),
+            onPressed: _openForm,
             tooltip: 'Add bank account',
           ),
           IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              size: 18,
-              color: AppColors.textMuted,
-            ),
+            icon: Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
             onPressed: _load,
             tooltip: 'Refresh',
           ),
@@ -166,7 +162,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
           child: TextField(
             controller: _searchCtrl,
             onChanged: (v) => setState(() => _searchQuery = v),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 13,
               fontFamily: 'Inter',
@@ -194,7 +190,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: AppRadius.mdAll,
-                borderSide: const BorderSide(color: AppColors.accent),
+                borderSide: BorderSide(color: AppColors.accent),
               ),
               filled: true,
               fillColor: AppColors.card,
@@ -232,11 +228,11 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                 Expanded(
                                   child: Text(
                                     account['label'] ?? 'Bank account',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: AppColors.text,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Space Grotesk',
                                     ),
                                   ),
                                 ),
@@ -257,7 +253,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                         ),
                                       ),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'DEFAULT',
                                       style: TextStyle(
                                         color: AppColors.accent,
@@ -270,7 +266,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                   ),
                                 GestureDetector(
                                   onTap: () => _openForm(account: account),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.edit_outlined,
                                     size: 15,
                                     color: AppColors.textFaint,
@@ -279,7 +275,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                 const SizedBox(width: 12),
                                 GestureDetector(
                                   onTap: () => _delete(account),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.delete_outline,
                                     size: 15,
                                     color: AppColors.textFaint,
@@ -292,7 +288,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                               [account['bank_name'], account['account_holder']]
                                   .where((v) => v != null && '$v'.isNotEmpty)
                                   .join(' • '),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.textMuted,
                                 fontSize: 12,
                                 fontFamily: 'Inter',
@@ -314,7 +310,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                   ]
                                   .where((v) => v != null && '$v'.isNotEmpty)
                                   .join(' • '),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.textFaint,
                                 fontSize: 11,
                                 fontFamily: 'Inter',

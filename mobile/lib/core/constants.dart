@@ -11,7 +11,7 @@ class StatusMeta {
 
 /// Status maps mirroring `src/lib/admin-validation.js` on the web side.
 class Status {
-  static const Map<String, StatusMeta> leads = {
+  static Map<String, StatusMeta> get leads => {
     'inquiry': StatusMeta('Inquiry', AppColors.sky),
     'discovery': StatusMeta('Discovery', AppColors.violet),
     'proposal': StatusMeta('Proposal', AppColors.amber),
@@ -20,7 +20,7 @@ class Status {
     'lost': StatusMeta('Lost', AppColors.red),
   };
 
-  static const Map<String, StatusMeta> clients = {
+  static Map<String, StatusMeta> get clients => {
     'onboarding': StatusMeta('Onboarding', AppColors.sky),
     'active': StatusMeta('Active', AppColors.emerald),
     'at_risk': StatusMeta('At Risk', AppColors.amber),
@@ -28,7 +28,7 @@ class Status {
     'churned': StatusMeta('Churned', AppColors.red),
   };
 
-  static const Map<String, StatusMeta> proposals = {
+  static Map<String, StatusMeta> get proposals => {
     'draft': StatusMeta('Draft', AppColors.textMuted),
     'sent': StatusMeta('Sent', AppColors.sky),
     'viewed': StatusMeta('Viewed', AppColors.violet),
@@ -36,7 +36,7 @@ class Status {
     'rejected': StatusMeta('Rejected', AppColors.red),
   };
 
-  static const Map<String, StatusMeta> invoices = {
+  static Map<String, StatusMeta> get invoices => {
     'draft': StatusMeta('Draft', AppColors.textMuted),
     'sent': StatusMeta('Sent', AppColors.sky),
     'paid': StatusMeta('Paid', AppColors.emerald),
@@ -44,7 +44,7 @@ class Status {
     'cancelled': StatusMeta('Cancelled', AppColors.textFaint),
   };
 
-  static const Map<String, StatusMeta> projects = {
+  static Map<String, StatusMeta> get projects => {
     'planning': StatusMeta('Planning', AppColors.textMuted),
     'in_progress': StatusMeta('In Progress', AppColors.accent),
     'review': StatusMeta('Review', AppColors.violet),
@@ -53,13 +53,13 @@ class Status {
     'cancelled': StatusMeta('Cancelled', AppColors.red),
   };
 
-  static const Map<String, StatusMeta> reviews = {
+  static Map<String, StatusMeta> get reviews => {
     'pending': StatusMeta('Pending', AppColors.amber),
     'approved': StatusMeta('Approved', AppColors.emerald),
     'rejected': StatusMeta('Rejected', AppColors.red),
   };
 
-  static const Map<String, StatusMeta> bookings = {
+  static Map<String, StatusMeta> get bookings => {
     'accepted': StatusMeta('Accepted', AppColors.emerald),
     'pending': StatusMeta('Pending', AppColors.amber),
     'rejected': StatusMeta('Rejected', AppColors.red),
@@ -67,7 +67,7 @@ class Status {
     'awaiting': StatusMeta('Awaiting', AppColors.amber),
   };
 
-  static const Map<String, StatusMeta> leadSources = {
+  static Map<String, StatusMeta> get leadSources => {
     'website': StatusMeta('Website', AppColors.sky),
     'cal.com': StatusMeta('Cal.com', AppColors.violet),
     'manual': StatusMeta('Manual', AppColors.textMuted),
@@ -77,7 +77,7 @@ class Status {
   };
 
   static StatusMeta get(Map<String, StatusMeta> map, String? value) {
-    return map[value] ?? const StatusMeta('Unknown', AppColors.textMuted);
+    return map[value] ?? StatusMeta('Unknown', AppColors.textMuted);
   }
 }
 

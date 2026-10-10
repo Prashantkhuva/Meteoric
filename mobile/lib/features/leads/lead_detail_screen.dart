@@ -118,7 +118,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Convert to client'),
-        content: const Text(
+        content: Text(
           'This will create a client from this lead and mark the lead as completed. A welcome email is sent.',
           style: TextStyle(
             fontSize: 13,
@@ -156,7 +156,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
         title: const Text('Delete lead'),
         content: Text(
           'Delete "${_lead['name']}"? This cannot be undone.',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
             fontFamily: 'Inter',
@@ -226,7 +226,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
             if (confidence != null)
               Text(
                 '${(confidence * 100).round()}% confidence',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
                   fontFamily: 'Inter',
@@ -284,7 +284,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
         const SizedBox(height: 8),
         Text(
           'Shadow mode — nothing changes automatically.',
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textFaint,
             fontSize: 10,
             fontFamily: 'Inter',
@@ -333,7 +333,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                 const Spacer(),
                 Text(
                   'Created ${Fmt.date(_lead['created_at'] as String?)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
                     fontFamily: 'Inter',
@@ -395,7 +395,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                         const SizedBox(width: 10),
                         Text(
                           (_lead['ai_category'] ?? '').toString().toUpperCase(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
                             letterSpacing: 1,
@@ -408,7 +408,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                       const SizedBox(height: 10),
                       Text(
                         '$summary',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
                           height: 1.5,

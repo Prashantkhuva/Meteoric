@@ -104,9 +104,7 @@ class _UsersScreenState extends State<UsersScreen> {
   Future<void> _resendInvite(String userId) async {
     setState(() => _resendingFor = userId);
     try {
-      await ApiClient.instance.usersResendInvite({
-        'userId': userId,
-      });
+      await ApiClient.instance.usersResendInvite({'userId': userId});
       if (!mounted) return;
       Toast.success(context, 'Invitation resent');
     } catch (err) {
@@ -125,7 +123,7 @@ class _UsersScreenState extends State<UsersScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
         shape: const RoundedRectangleBorder(),
-        title: const Text(
+        title: Text(
           'Delete User',
           style: TextStyle(
             color: AppColors.text,
@@ -136,7 +134,7 @@ class _UsersScreenState extends State<UsersScreen> {
         ),
         content: Text(
           'Are you sure you want to permanently delete $email? This action cannot be undone.',
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textMuted,
             fontSize: 13,
             height: 1.5,
@@ -146,14 +144,14 @@ class _UsersScreenState extends State<UsersScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(
+            child: Text(
               'Cancel',
               style: TextStyle(color: AppColors.textMuted, fontFamily: 'Inter'),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(
+            child: Text(
               'Delete',
               style: TextStyle(
                 color: AppColors.red,
@@ -231,167 +229,170 @@ class _UsersScreenState extends State<UsersScreen> {
     final adminCount = _users.where((u) => u['role'] == 'admin').length;
     final speakerCount = _users.where((u) => u['role'] == 'speaker').length;
 
-    return UnfocusOnTap(child: Scaffold(
-      appBar: AppBar(
-        title: const Text('Team'),
-        automaticallyImplyLeading: true,
-        actions: [
-          if (_canManageUsers)
-            IconButton(
-              onPressed: _showInviteSheet,
-              icon: const Icon(Icons.person_add_outlined, size: 20),
-              tooltip: 'Invite user',
-            ),
-        ],
-      ),
-      body: _loading
-          ? const SkeletonList()
-          : _users.isEmpty
-          ? _buildEmptyState()
-          : Column(
-              children: [
-                // Summary bar
-                Container(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${_users.length} member${_users.length != 1 ? 's' : ''}',
-                        style: const TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
+    return UnfocusOnTap(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Team'),
+          automaticallyImplyLeading: true,
+          actions: [
+            if (_canManageUsers)
+              IconButton(
+                onPressed: _showInviteSheet,
+                icon: const Icon(Icons.person_add_outlined, size: 20),
+                tooltip: 'Invite user',
+              ),
+          ],
+        ),
+        body: _loading
+            ? const SkeletonList()
+            : _users.isEmpty
+            ? _buildEmptyState()
+            : Column(
+                children: [
+                  // Summary bar
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${_users.length} member${_users.length != 1 ? 's' : ''}',
+                          style: TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      if (superadminCount > 0)
-                        _SummaryDot(
-                          label: '$superadminCount superadmin',
-                          color: AppColors.accent,
-                        ),
-                      if (adminCount > 0) ...[
-                        const SizedBox(width: 6),
-                        _SummaryDot(
-                          label: '$adminCount admin',
-                          color: AppColors.emerald,
-                        ),
+                        const SizedBox(width: 8),
+                        if (superadminCount > 0)
+                          _SummaryDot(
+                            label: '$superadminCount superadmin',
+                            color: AppColors.accent,
+                          ),
+                        if (adminCount > 0) ...[
+                          const SizedBox(width: 6),
+                          _SummaryDot(
+                            label: '$adminCount admin',
+                            color: AppColors.emerald,
+                          ),
+                        ],
+                        if (speakerCount > 0) ...[
+                          const SizedBox(width: 6),
+                          _SummaryDot(
+                            label: '$speakerCount speaker',
+                            color: AppColors.textMuted,
+                          ),
+                        ],
                       ],
-                      if (speakerCount > 0) ...[
-                        const SizedBox(width: 6),
-                        _SummaryDot(
-                          label: '$speakerCount speaker',
-                          color: AppColors.textMuted,
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // Search
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: TextField(
-                    controller: _search,
-                    onChanged: (_) => setState(() {}),
-                    style: const TextStyle(
-                      color: AppColors.text,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
                     ),
-                    decoration: InputDecoration(
-                      hintText: 'Search name, email...',
-                      hintStyle: const TextStyle(
-                        color: AppColors.textFaint,
+                  ),
+                  const SizedBox(height: 10),
+                  // Search
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextField(
+                      controller: _search,
+                      onChanged: (_) => setState(() {}),
+                      style: TextStyle(
+                        color: AppColors.text,
                         fontSize: 14,
                         fontFamily: 'Inter',
                       ),
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        size: 18,
-                        color: AppColors.textFaint,
-                      ),
-                      suffixIcon: _search.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: AppColors.textMuted,
-                              ),
-                              onPressed: () {
-                                _search.clear();
-                                setState(() {});
-                              },
-                            )
-                          : null,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdAll,
-                        borderSide: BorderSide(color: AppColors.border),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: AppRadius.mdAll,
-                        borderSide: BorderSide(color: AppColors.border),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: AppRadius.mdAll,
-                        borderSide: BorderSide(
-                          color: AppColors.accent.withValues(alpha: 0.3),
+                      decoration: InputDecoration(
+                        hintText: 'Search name, email...',
+                        hintStyle: TextStyle(
+                          color: AppColors.textFaint,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
                         ),
-                      ),
-                      filled: true,
-                      fillColor: AppColors.card,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Role filter pills
-                FilterBar(
-                  groups: [
-                    FilterGroup(
-                      key: 'role',
-                      label: 'Role',
-                      options: _roleOptions,
-                    ),
-                  ],
-                  values: {'role': _roleFilter},
-                  onChanged: (v) =>
-                      setState(() => _roleFilter = v['role'] ?? 'all'),
-                ),
-                // User list
-                Expanded(
-                  child: filtered.isEmpty
-                      ? _buildNoResults()
-                      : RefreshIndicator(
-                          onRefresh: _loadUsers,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: filtered.length,
-                            separatorBuilder: (_, _) =>
-                                const SizedBox(height: 8),
-                            itemBuilder: (context, i) => _UserTile(
-                              user: filtered[i],
-                              canManage: _canManageUsers,
-                              isSuperadmin: _isSuperadmin,
-                              currentUserId: _currentUserId,
-                              changing: _changingRoleFor == filtered[i]['id'],
-                              resending: _resendingFor == filtered[i]['id'],
-                              deleting: _deletingFor == filtered[i]['id'],
-                              onRoleChanged: (role) =>
-                                  _changeRole(filtered[i]['id'], role),
-                              onResend: () => _resendInvite(filtered[i]['id']),
-                              onDelete: () => _deleteUser(filtered[i]),
-                              onTap: () => _openDetail(filtered[i]),
-                            ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          size: 18,
+                          color: AppColors.textFaint,
+                        ),
+                        suffixIcon: _search.text.isNotEmpty
+                            ? IconButton(
+                                icon: Icon(
+                                  Icons.close,
+                                  size: 16,
+                                  color: AppColors.textMuted,
+                                ),
+                                onPressed: () {
+                                  _search.clear();
+                                  setState(() {});
+                                },
+                              )
+                            : null,
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: AppRadius.mdAll,
+                          borderSide: BorderSide(color: AppColors.border),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: AppRadius.mdAll,
+                          borderSide: BorderSide(color: AppColors.border),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: AppRadius.mdAll,
+                          borderSide: BorderSide(
+                            color: AppColors.accent.withValues(alpha: 0.3),
                           ),
                         ),
-                ),
-              ],
-            ),
-    ));
+                        filled: true,
+                        fillColor: AppColors.card,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Role filter pills
+                  FilterBar(
+                    groups: [
+                      FilterGroup(
+                        key: 'role',
+                        label: 'Role',
+                        options: _roleOptions,
+                      ),
+                    ],
+                    values: {'role': _roleFilter},
+                    onChanged: (v) =>
+                        setState(() => _roleFilter = v['role'] ?? 'all'),
+                  ),
+                  // User list
+                  Expanded(
+                    child: filtered.isEmpty
+                        ? _buildNoResults()
+                        : RefreshIndicator(
+                            onRefresh: _loadUsers,
+                            child: ListView.separated(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: filtered.length,
+                              separatorBuilder: (_, _) =>
+                                  const SizedBox(height: 8),
+                              itemBuilder: (context, i) => _UserTile(
+                                user: filtered[i],
+                                canManage: _canManageUsers,
+                                isSuperadmin: _isSuperadmin,
+                                currentUserId: _currentUserId,
+                                changing: _changingRoleFor == filtered[i]['id'],
+                                resending: _resendingFor == filtered[i]['id'],
+                                deleting: _deletingFor == filtered[i]['id'],
+                                onRoleChanged: (role) =>
+                                    _changeRole(filtered[i]['id'], role),
+                                onResend: () =>
+                                    _resendInvite(filtered[i]['id']),
+                                onDelete: () => _deleteUser(filtered[i]),
+                                onTap: () => _openDetail(filtered[i]),
+                              ),
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+      ),
+    );
   }
 
   Widget _buildEmptyState() {
@@ -408,14 +409,14 @@ class _UsersScreenState extends State<UsersScreen> {
                 color: AppColors.card,
                 border: Border.all(color: AppColors.border),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.group_outlined,
                 size: 24,
                 color: AppColors.textFaint,
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'No team members yet',
               style: TextStyle(
                 color: AppColors.textMuted,
@@ -425,7 +426,7 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Invite your first team member to get started',
               style: TextStyle(
                 color: AppColors.textFaint,
@@ -437,7 +438,7 @@ class _UsersScreenState extends State<UsersScreen> {
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: _showInviteSheet,
-                child: const Text(
+                child: Text(
                   'INVITE TEAM MEMBER',
                   style: TextStyle(
                     color: AppColors.accent,
@@ -462,13 +463,13 @@ class _UsersScreenState extends State<UsersScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.search_off_outlined,
               size: 24,
               color: AppColors.textFaint,
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'No results found',
               style: TextStyle(
                 color: AppColors.textMuted,
@@ -478,7 +479,7 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Try adjusting your search or filters',
               style: TextStyle(
                 color: AppColors.textFaint,
@@ -492,7 +493,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 _search.clear();
                 setState(() => _roleFilter = 'all');
               },
-              child: const Text(
+              child: Text(
                 'CLEAR FILTERS',
                 style: TextStyle(
                   color: AppColors.accent,
@@ -526,7 +527,7 @@ class _SummaryDot extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textFaint,
             fontSize: 11,
             fontFamily: 'Inter',
@@ -566,7 +567,7 @@ class _UserTile extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onTap;
 
-  static const _roleColors = {
+  static final _roleColors = {
     'superadmin': AppColors.accent,
     'admin': AppColors.emerald,
     'speaker': AppColors.textMuted,
@@ -635,7 +636,7 @@ class _UserTile extends StatelessWidget {
                       children: [
                         Text(
                           name.isNotEmpty ? name : email,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.text,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -648,7 +649,7 @@ class _UserTile extends StatelessWidget {
                           const SizedBox(height: 2),
                           Text(
                             email,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 11,
                               fontFamily: 'Inter',
@@ -811,7 +812,7 @@ class _UserTile extends StatelessWidget {
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.only(top: 10),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(color: AppColors.borderSoft),
                     ),
@@ -829,7 +830,7 @@ class _UserTile extends StatelessWidget {
                               )
                             : GestureDetector(
                                 onTap: onResend,
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
@@ -853,7 +854,7 @@ class _UserTile extends StatelessWidget {
                       const Spacer(),
                       if (canDelete)
                         deleting
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 12,
                                 height: 12,
                                 child: CircularProgressIndicator(
@@ -863,7 +864,7 @@ class _UserTile extends StatelessWidget {
                               )
                             : GestureDetector(
                                 onTap: onDelete,
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
@@ -906,12 +907,12 @@ class _UserTile extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 8, 12),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: AppColors.border)),
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'CHANGE ROLE',
                       style: TextStyle(
@@ -925,7 +926,7 @@ class _UserTile extends StatelessWidget {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.close,
                       size: 18,
                       color: AppColors.textMuted,
@@ -946,7 +947,7 @@ class _UserTile extends StatelessWidget {
                     horizontal: 16,
                     vertical: 14,
                   ),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: AppColors.borderSoft),
                     ),
@@ -979,7 +980,7 @@ class _UserTile extends StatelessWidget {
                         ),
                       ),
                       if (entry.key == role)
-                        const Icon(
+                        Icon(
                           Icons.check_rounded,
                           size: 18,
                           color: AppColors.accent,
@@ -1017,7 +1018,7 @@ class _UserDetailScreen extends StatelessWidget {
   final VoidCallback onResend;
   final VoidCallback onDelete;
 
-  static const _roleColors = {
+  static final _roleColors = {
     'superadmin': AppColors.accent,
     'admin': AppColors.emerald,
     'speaker': AppColors.textMuted,
@@ -1105,11 +1106,7 @@ class _UserDetailScreen extends StatelessWidget {
           if (canDelete)
             IconButton(
               onPressed: onDelete,
-              icon: const Icon(
-                Icons.delete_outline,
-                size: 20,
-                color: AppColors.red,
-              ),
+              icon: Icon(Icons.delete_outline, size: 20, color: AppColors.red),
               tooltip: 'Delete user',
             ),
         ],
@@ -1147,7 +1144,7 @@ class _UserDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         name.isNotEmpty ? name : 'Unnamed',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.text,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -1159,7 +1156,7 @@ class _UserDetailScreen extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         email,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 13,
                           fontFamily: 'Inter',
@@ -1214,7 +1211,7 @@ class _UserDetailScreen extends StatelessWidget {
                   if (isSuperadmin)
                     GestureDetector(
                       onTap: () => _showRolePicker(context),
-                      child: const Text(
+                      child: Text(
                         'Change',
                         style: TextStyle(
                           color: AppColors.accent,
@@ -1255,7 +1252,7 @@ class _UserDetailScreen extends StatelessWidget {
                     onboarded
                         ? '— Account fully set up'
                         : '— Awaiting first login',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 12,
                       fontFamily: 'Inter',
@@ -1272,7 +1269,7 @@ class _UserDetailScreen extends StatelessWidget {
                 label: 'JOINED',
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.calendar_today_outlined,
                       size: 14,
                       color: AppColors.textFaint,
@@ -1280,7 +1277,7 @@ class _UserDetailScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       formattedDate,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 13,
                         fontFamily: 'Inter',
@@ -1305,14 +1302,14 @@ class _UserDetailScreen extends StatelessWidget {
                           Container(
                             width: 3,
                             height: 3,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: AppColors.textFaint,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             perm,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 13,
                               fontFamily: 'Inter',
@@ -1337,7 +1334,7 @@ class _UserDetailScreen extends StatelessWidget {
                   label: const Text('RESEND INVITATION'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.text,
-                    side: const BorderSide(color: AppColors.border),
+                    side: BorderSide(color: AppColors.border),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: const RoundedRectangleBorder(),
                     textStyle: const TextStyle(
@@ -1392,12 +1389,12 @@ class _UserDetailScreen extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 8, 12),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: AppColors.border)),
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'CHANGE ROLE',
                       style: TextStyle(
@@ -1411,7 +1408,7 @@ class _UserDetailScreen extends StatelessWidget {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.close,
                       size: 18,
                       color: AppColors.textMuted,
@@ -1432,7 +1429,7 @@ class _UserDetailScreen extends StatelessWidget {
                     horizontal: 16,
                     vertical: 14,
                   ),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: AppColors.borderSoft),
                     ),
@@ -1463,7 +1460,7 @@ class _UserDetailScreen extends StatelessWidget {
                         ),
                       ),
                       if (entry.key == role)
-                        const Icon(
+                        Icon(
                           Icons.check_rounded,
                           size: 18,
                           color: AppColors.accent,
@@ -1502,7 +1499,7 @@ class _InfoCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 9,
               fontWeight: FontWeight.w700,
@@ -1540,7 +1537,7 @@ class _InviteSheetState extends State<_InviteSheet> {
     'speaker': 'View-only. Can see all data but cannot edit or send emails.',
   };
 
-  static const _roleColors = {
+  static final _roleColors = {
     'superadmin': AppColors.accent,
     'admin': AppColors.emerald,
     'speaker': AppColors.textMuted,
@@ -1609,14 +1606,14 @@ class _InviteSheetState extends State<_InviteSheet> {
                       color: AppColors.accent.withValues(alpha: 0.2),
                     ),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.person_add_outlined,
                     size: 18,
                     color: AppColors.accent,
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1650,7 +1647,7 @@ class _InviteSheetState extends State<_InviteSheet> {
             TextField(
               controller: _name,
               enabled: !_busy,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
                 fontFamily: 'Inter',
@@ -1665,7 +1662,7 @@ class _InviteSheetState extends State<_InviteSheet> {
               controller: _email,
               enabled: !_busy,
               keyboardType: TextInputType.emailAddress,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
                 fontFamily: 'Inter',
@@ -1696,14 +1693,14 @@ class _InviteSheetState extends State<_InviteSheet> {
                     const SizedBox(width: 10),
                     Text(
                       _role[0].toUpperCase() + _role.substring(1),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.text,
                         fontSize: 14,
                         fontFamily: 'Inter',
                       ),
                     ),
                     const Spacer(),
-                    const Icon(
+                    Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 18,
                       color: AppColors.textMuted,
@@ -1715,7 +1712,7 @@ class _InviteSheetState extends State<_InviteSheet> {
             const SizedBox(height: 6),
             Text(
               _roleDescriptions[_role] ?? '',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 11,
                 fontFamily: 'Inter',
@@ -1739,7 +1736,7 @@ class _InviteSheetState extends State<_InviteSheet> {
               ),
             ),
             const SizedBox(height: 10),
-            const Center(
+            Center(
               child: Text(
                 'An auto-generated password will be emailed.',
                 style: TextStyle(
@@ -1766,12 +1763,12 @@ class _InviteSheetState extends State<_InviteSheet> {
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 8, 12),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: AppColors.border)),
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'SELECT ROLE',
                       style: TextStyle(
@@ -1785,7 +1782,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.close,
                       size: 18,
                       color: AppColors.textMuted,
@@ -1806,7 +1803,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                     horizontal: 16,
                     vertical: 14,
                   ),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: AppColors.borderSoft),
                     ),
@@ -1840,7 +1837,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                             const SizedBox(height: 2),
                             Text(
                               _roleDescriptions[entry.key] ?? '',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.textFaint,
                                 fontSize: 11,
                                 fontFamily: 'Inter',
@@ -1850,7 +1847,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                         ),
                       ),
                       if (entry.key == _role)
-                        const Icon(
+                        Icon(
                           Icons.check_rounded,
                           size: 18,
                           color: AppColors.accent,
@@ -1870,7 +1867,7 @@ class _InviteSheetState extends State<_InviteSheet> {
     padding: const EdgeInsets.only(bottom: 6),
     child: Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.textFaint,
         fontSize: 10,
         fontWeight: FontWeight.w600,

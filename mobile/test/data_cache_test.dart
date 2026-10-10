@@ -28,10 +28,10 @@ void main() {
 
     test('returns cached data on second call without re-fetching', () async {
       var fetchCount = 0;
-      final fetcher = () async {
+      Future<Map<String, String>> fetcher() async {
         fetchCount++;
         return {'name': 'Prashant'};
-      };
+      }
 
       await cache.getOrFetch(key: 'k', fetch: fetcher);
       await cache.getOrFetch(key: 'k', fetch: fetcher);

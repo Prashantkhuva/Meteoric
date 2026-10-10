@@ -81,9 +81,7 @@ class _LinearIssuesScreenState extends State<LinearIssuesScreen> {
 
   void _onSearchChanged(String _) {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 400), () {
-      _load();
-    });
+    _debounce = Timer(const Duration(milliseconds: 400), _load);
   }
 
   void _clearSearch() {
@@ -93,7 +91,9 @@ class _LinearIssuesScreenState extends State<LinearIssuesScreen> {
 
   Future<void> _updateIssue(Map<String, dynamic> issue) async {
     final result = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => _IssueDetailScreen(issue: issue, states: _states)),
+      MaterialPageRoute(
+        builder: (_) => _IssueDetailScreen(issue: issue, states: _states),
+      ),
     );
     if (result == true && mounted) _load();
   }
@@ -106,7 +106,11 @@ class _LinearIssuesScreenState extends State<LinearIssuesScreen> {
           title: const Text('Issues'),
           actions: [
             IconButton(
-              icon: const Icon(Icons.open_in_new, size: 18, color: AppColors.textMuted),
+              icon: Icon(
+                Icons.open_in_new,
+                size: 18,
+                color: AppColors.textMuted,
+              ),
               onPressed: () => launchUrl(
                 Uri.parse('https://linear.app/withmeteoric'),
                 mode: LaunchMode.externalApplication,
@@ -114,7 +118,7 @@ class _LinearIssuesScreenState extends State<LinearIssuesScreen> {
               tooltip: 'Open Linear',
             ),
             IconButton(
-              icon: const Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
+              icon: Icon(Icons.refresh, size: 18, color: AppColors.textMuted),
               onPressed: _load,
               tooltip: 'Refresh',
             ),
@@ -129,10 +133,18 @@ class _LinearIssuesScreenState extends State<LinearIssuesScreen> {
                 onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: 'Search issues...',
-                  prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textFaint),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: 18,
+                    color: AppColors.textFaint,
+                  ),
                   suffixIcon: _search.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.close, size: 16, color: AppColors.textMuted),
+                          icon: Icon(
+                            Icons.close,
+                            size: 16,
+                            color: AppColors.textMuted,
+                          ),
                           onPressed: _clearSearch,
                         )
                       : null,
@@ -291,7 +303,9 @@ class _IssueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final labels = (issue['labels'] as List?)?.cast<String>() ?? [];
     final stateColor = Color(
-      int.parse((issue['stateColor'] as String? ?? '#6B7280').replaceFirst('#', '0xFF')),
+      int.parse(
+        (issue['stateColor'] as String? ?? '#6B7280').replaceFirst('#', '0xFF'),
+      ),
     );
 
     return Material(
@@ -313,7 +327,7 @@ class _IssueCard extends StatelessWidget {
                 children: [
                   Text(
                     issue['identifier'] ?? '',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -322,10 +336,15 @@ class _IssueCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: stateColor.withValues(alpha: 0.12),
-                      border: Border.all(color: stateColor.withValues(alpha: 0.25)),
+                      border: Border.all(
+                        color: stateColor.withValues(alpha: 0.25),
+                      ),
                     ),
                     child: Text(
                       issue['state'] ?? '',
@@ -366,7 +385,7 @@ class _IssueCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 issue['title'] ?? '',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -379,11 +398,15 @@ class _IssueCard extends StatelessWidget {
               Row(
                 children: [
                   if (issue['assignee'] != null) ...[
-                    Icon(Icons.person_outline, size: 12, color: AppColors.textFaint),
+                    Icon(
+                      Icons.person_outline,
+                      size: 12,
+                      color: AppColors.textFaint,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       issue['assignee'],
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 11,
                         fontFamily: 'Inter',
@@ -392,12 +415,16 @@ class _IssueCard extends StatelessWidget {
                     const SizedBox(width: 12),
                   ],
                   if (labels.isNotEmpty) ...[
-                    Icon(Icons.label_outline, size: 12, color: AppColors.textFaint),
+                    Icon(
+                      Icons.label_outline,
+                      size: 12,
+                      color: AppColors.textFaint,
+                    ),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         labels.join(', '),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 11,
                           fontFamily: 'Inter',
@@ -410,7 +437,7 @@ class _IssueCard extends StatelessWidget {
                     const Spacer(),
                   Text(
                     _timeAgo(issue['updatedAt'] as String?),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 10,
                       fontFamily: 'Inter',
@@ -505,7 +532,7 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
         title: Text(issue['identifier'] ?? ''),
         actions: [
           IconButton(
-            icon: const Icon(Icons.open_in_new, size: 18, color: AppColors.textMuted),
+            icon: Icon(Icons.open_in_new, size: 18, color: AppColors.textMuted),
             onPressed: () => launchUrl(
               Uri.parse(issue['url'] ?? ''),
               mode: LaunchMode.externalApplication,
@@ -520,7 +547,7 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
           // Title
           Text(
             issue['title'] ?? '',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -531,7 +558,7 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
           const SizedBox(height: 16),
 
           // State picker
-          const Text(
+          Text(
             'STATE',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -553,39 +580,45 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
               isExpanded: true,
               dropdownColor: AppColors.card,
               underline: const SizedBox.shrink(),
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
                 fontFamily: 'Inter',
               ),
               items: widget.states
-                  .map((s) => DropdownMenuItem(
-                        value: s['name'] as String,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                color: Color(int.parse(
-                                    (s['color'] as String? ?? '#6B7280')
-                                        .replaceFirst('#', '0xFF'))),
-                                shape: BoxShape.circle,
+                  .map(
+                    (s) => DropdownMenuItem(
+                      value: s['name'] as String,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Color(
+                                int.parse(
+                                  (s['color'] as String? ?? '#6B7280')
+                                      .replaceFirst('#', '0xFF'),
+                                ),
                               ),
+                              shape: BoxShape.circle,
                             ),
-                            const SizedBox(width: 8),
-                            Text(s['name'] as String),
-                          ],
-                        ),
-                      ))
+                          ),
+                          const SizedBox(width: 8),
+                          Text(s['name'] as String),
+                        ],
+                      ),
+                    ),
+                  )
                   .toList(),
-              onChanged: (v) => setState(() => _selectedState = v ?? _selectedState),
+              onChanged: (v) =>
+                  setState(() => _selectedState = v ?? _selectedState),
             ),
           ),
           const SizedBox(height: 16),
 
           // Priority picker
-          const Text(
+          Text(
             'PRIORITY',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -611,7 +644,7 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
 
           // Assignee
           if (issue['assignee'] != null) ...[
-            const Text(
+            Text(
               'ASSIGNEE',
               style: TextStyle(
                 color: AppColors.textFaint,
@@ -624,7 +657,7 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
             const SizedBox(height: 8),
             Text(
               issue['assignee'],
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
                 fontFamily: 'Inter',
@@ -635,7 +668,7 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
 
           // Labels
           if ((issue['labels'] as List?)?.isNotEmpty == true) ...[
-            const Text(
+            Text(
               'LABELS',
               style: TextStyle(
                 color: AppColors.textFaint,
@@ -650,28 +683,33 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
               spacing: 6,
               runSpacing: 6,
               children: (issue['labels'] as List)
-                  .map((l) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.textFaint.withValues(alpha: 0.06),
-                          border: Border.all(color: AppColors.border),
+                  .map(
+                    (l) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.textFaint.withValues(alpha: 0.06),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Text(
+                        l.toString(),
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 11,
+                          fontFamily: 'Inter',
                         ),
-                        child: Text(
-                          l.toString(),
-                          style: const TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 11,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 16),
           ],
 
           // Add comment
-          const Text(
+          Text(
             'ADD COMMENT',
             style: TextStyle(
               color: AppColors.textFaint,
@@ -685,14 +723,14 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
           TextField(
             controller: _commentController,
             maxLines: 4,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
               fontFamily: 'Inter',
             ),
             decoration: InputDecoration(
               hintText: 'Optional comment...',
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: AppColors.textFaint,
                 fontFamily: 'Inter',
               ),

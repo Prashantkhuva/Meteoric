@@ -194,35 +194,35 @@ class _HomeShellState extends State<HomeShell>
           bottomNavigationBar: _locked
               ? null
               : DecoratedBox(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(color: AppColors.borderSoft),
                     ),
                   ),
-                  child: BottomNavigationBar(
-                    currentIndex: index,
-                    onTap: (i) {
+                  child: NavigationBar(
+                    selectedIndex: index,
+                    onDestinationSelected: (i) {
                       Haptic.tap();
                       homeTab.value = i;
                     },
-                    items: const [
-                      BottomNavigationBarItem(
+                    destinations: const [
+                      NavigationDestination(
                         icon: Icon(Icons.dashboard_outlined, size: 22),
                         label: 'Home',
                       ),
-                      BottomNavigationBarItem(
+                      NavigationDestination(
                         icon: Icon(Icons.person_search_outlined, size: 22),
                         label: 'Leads',
                       ),
-                      BottomNavigationBarItem(
+                      NavigationDestination(
                         icon: Icon(Icons.description_outlined, size: 22),
                         label: 'Proposals',
                       ),
-                      BottomNavigationBarItem(
+                      NavigationDestination(
                         icon: Icon(Icons.receipt_long_outlined, size: 22),
                         label: 'Invoices',
                       ),
-                      BottomNavigationBarItem(
+                      NavigationDestination(
                         icon: Icon(Icons.grid_view_outlined, size: 22),
                         label: 'More',
                       ),
@@ -241,7 +241,7 @@ class _HomeShellState extends State<HomeShell>
     final error = _updater.shorebirdError;
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.card,
         border: Border(top: BorderSide(color: AppColors.border)),
       ),
@@ -259,13 +259,13 @@ class _HomeShellState extends State<HomeShell>
             if (restartReady) ...[
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.check_circle_outline,
                     size: 16,
                     color: AppColors.emerald,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Update ready — restart to apply',
                       style: TextStyle(
@@ -278,7 +278,7 @@ class _HomeShellState extends State<HomeShell>
                   ),
                   GestureDetector(
                     onTap: _updater.dismissShorebird,
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
                       size: 16,
                       color: AppColors.textFaint,
@@ -297,7 +297,7 @@ class _HomeShellState extends State<HomeShell>
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Restart App'),
-                        content: const Text(
+                        content: Text(
                           'The app will restart to apply the update.',
                           style: TextStyle(
                             color: AppColors.textMuted,
@@ -326,7 +326,7 @@ class _HomeShellState extends State<HomeShell>
             ] else if (updating) ...[
               Row(
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: 16,
                     height: 16,
                     child: CircularProgressIndicator(
@@ -335,7 +335,7 @@ class _HomeShellState extends State<HomeShell>
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Applying update...',
                       style: TextStyle(
@@ -351,16 +351,12 @@ class _HomeShellState extends State<HomeShell>
             ] else if (error != null) ...[
               Row(
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 16,
-                    color: AppColors.red,
-                  ),
+                  Icon(Icons.error_outline, size: 16, color: AppColors.red),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       error,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 12,
                         fontFamily: 'Inter',
@@ -369,7 +365,7 @@ class _HomeShellState extends State<HomeShell>
                   ),
                   GestureDetector(
                     onTap: _updater.dismissShorebird,
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
                       size: 16,
                       color: AppColors.textFaint,
@@ -381,13 +377,13 @@ class _HomeShellState extends State<HomeShell>
               // Patch available — compact banner
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.system_update_outlined,
                     size: 16,
                     color: AppColors.accent,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Patch available',
                       style: TextStyle(
@@ -400,7 +396,7 @@ class _HomeShellState extends State<HomeShell>
                   ),
                   GestureDetector(
                     onTap: _updater.dismissShorebird,
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
                       size: 16,
                       color: AppColors.textFaint,
@@ -422,7 +418,7 @@ class _HomeShellState extends State<HomeShell>
                   Expanded(
                     child: AccentButton(
                       height: 36,
-                      onPressed: () => _updater.applyShorebirdPatch(),
+                      onPressed: _updater.applyShorebirdPatch,
                       child: const Text('APPLY'),
                     ),
                   ),
@@ -474,14 +470,14 @@ class _RestartCountdownState extends State<_RestartCountdown> {
         backgroundColor: AppColors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: AppColors.border),
         ),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
@@ -490,7 +486,7 @@ class _RestartCountdownState extends State<_RestartCountdown> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Restarting...',
                 style: TextStyle(
                   color: AppColors.text,
@@ -502,7 +498,7 @@ class _RestartCountdownState extends State<_RestartCountdown> {
               const SizedBox(height: 8),
               Text(
                 'App will restart in $_seconds...',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 13,
                   fontFamily: 'Inter',

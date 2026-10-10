@@ -101,7 +101,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       Expanded(
                         child: Text(
                           item.label,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.text,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -109,7 +109,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           ),
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
                         size: 18,
                         color: AppColors.textFaint,
