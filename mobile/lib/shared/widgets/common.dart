@@ -531,7 +531,7 @@ class AppFab extends StatelessWidget {
       foregroundColor: AppColors.onAccent,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.lgAll,
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.25)),
+        side: BorderSide(color: AppColors.border),
       ),
       child: Icon(icon, size: 24),
     );

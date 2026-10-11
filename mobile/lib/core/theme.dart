@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dual palette — dark (default) + monochrome light.
 /// [AppPalette.current] resolves per active theme mode; [AppColors] reads it.
@@ -96,20 +95,21 @@ class AppPalette {
     infoTint: Color(0x1AFFFFFF), // white @ 10%
   );
 
-  /// Monochrome light — black/white grayscale only, plus semantic status hues.
+  /// Light — warm off-white base, premium Meteoric blue accent.
+  /// No pure white glare; soft cards; one accent color used sparingly.
   static const AppPalette light = AppPalette(
-    background: Color(0xFFF4F4F5),
+    background: Color(0xFFF5F6F8), // warm off-white, not pure #FFF
     card: Color(0xFFFFFFFF),
     cardRaised: Color(0xFFFFFFFF),
-    overlay: Color(0xFFE9E9EB),
+    overlay: Color(0xFFEBEDF0), // pressed / elevated surface
     border: Color(0x14000000), // black @ 8%
-    borderSoft: Color(0x0D000000), // black @ 5%
-    borderFaint: Color(0x08000000), // black @ 3%
-    highlight: Color(0x0FFFFFFF), // white @ 6% — top edge lift
+    borderSoft: Color(0x0A000000), // black @ 4%
+    borderFaint: Color(0x05000000), // black @ 2%
+    highlight: Color(0xFFFFFFFF), // white top-edge lift on cards
     text: Color(0xE6000000), // black @ 90%
-    textMuted: Color(0x8C000000), // black @ 55%
-    textFaint: Color(0x59000000), // black @ 35%
-    accent: Color(0xFF0A0A0A), // pure black primary
+    textMuted: Color(0x8A000000), // black @ 54%
+    textFaint: Color(0x52000000), // black @ 32%
+    accent: Color(0xFF2F54EB), // Meteoric blue — primary CTA / links
     emerald: Color(0xFF059669),
     amber: Color(0xFFD97706),
     red: Color(0xFFDC2626),
@@ -121,14 +121,14 @@ class AppPalette {
     inputFillDark: Color(0x05000000),
     pressedFill: Color(0x0A000000),
     overlayScrim: Color(0x66000000),
-    shimmerBase: Color(0xFFEDEDEF),
-    shimmerHighlight: Color(0xFFF8F8F9),
+    shimmerBase: Color(0xFFEDEEF1),
+    shimmerHighlight: Color(0xFFF8F9FB),
     successTint: Color(0x1A059669),
     errorTint: Color(0x1ADC2626),
-    infoTint: Color(0x1A000000),
+    infoTint: Color(0x1A2F54EB), // accent @ 10%
   );
 
-  static AppPalette current = dark;
+  static AppPalette current = light;
 }
 
 /// Design tokens — mirror of the web admin, premium-tuned.
@@ -171,51 +171,27 @@ class AppColors {
   static Color get infoTint => AppPalette.current.infoTint;
 }
 
-/// Theme mode controller — system/dark/light, persisted to shared_preferences.
+/// Theme mode controller — locked to light. Kept for API compatibility.
 class ThemeController {
   ThemeController._();
 
-  static const String _key = 'theme_mode';
-  static final ValueNotifier<ThemeMode> mode = ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<ThemeMode> mode = ValueNotifier(ThemeMode.light);
 
   static Future<void> load() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final raw = prefs.getString(_key);
-      mode.value = switch (raw) {
-        'dark' => ThemeMode.dark,
-        'light' => ThemeMode.light,
-        _ => ThemeMode.system,
-      };
-    } catch (_) {
-      mode.value = ThemeMode.system;
-    }
+    mode.value = ThemeMode.light;
     _resolvePalette();
   }
 
   static Future<void> set(ThemeMode value) async {
-    mode.value = value;
+    // Light-only — ignore external requests to change.
+    mode.value = ThemeMode.light;
     _resolvePalette();
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_key, value.name);
-    } catch (_) {}
   }
 
-  static bool isDark(BuildContext context) {
-    final m = mode.value;
-    return m == ThemeMode.dark ||
-        (m == ThemeMode.system &&
-            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-  }
+  static bool isDark(BuildContext context) => false;
 
   static void _resolvePalette() {
-    final m = mode.value;
-    final platformDark =
-        WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-        Brightness.dark;
-    final dark = m == ThemeMode.dark || (m == ThemeMode.system && platformDark);
-    AppPalette.current = dark ? AppPalette.dark : AppPalette.light;
+    AppPalette.current = AppPalette.light;
   }
 }
 

@@ -31,36 +31,21 @@ class MeteoricAdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: ThemeController.mode,
-      builder: (context, mode, _) {
-        // Keep palette live when the OS theme flips under system mode.
-        final platformDark =
-            MediaQuery.platformBrightnessOf(context) == Brightness.dark;
-        final dark =
-            mode == ThemeMode.dark ||
-            (mode == ThemeMode.system && platformDark);
-        if ((AppPalette.current == AppPalette.dark) != dark) {
-          AppPalette.current = dark ? AppPalette.dark : AppPalette.light;
-        }
-        return MaterialApp(
-          title: 'Meteoric Admin',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: mode,
-          navigatorKey: _navKey,
-          navigatorObservers: [_routeObserver],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            FlutterQuillLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en')],
-          home: const AuthGate(),
-        );
-      },
+    return MaterialApp(
+      title: 'Meteoric Admin',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      themeMode: ThemeMode.light,
+      navigatorKey: _navKey,
+      navigatorObservers: [_routeObserver],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en')],
+      home: const AuthGate(),
     );
   }
 }

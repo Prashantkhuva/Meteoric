@@ -185,12 +185,12 @@ class _AppLockViewState extends State<AppLockView>
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF070707), Color(0xFF0A0A0A), Color(0xFF100F12)],
-            stops: [0, 0.55, 1],
+            colors: [AppColors.background, AppColors.card, AppColors.overlay],
+            stops: const [0, 0.55, 1],
           ),
         ),
         child: SafeArea(
@@ -279,10 +279,10 @@ class _AppLockViewState extends State<AppLockView>
               width: 84,
               height: 84,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0xFF181820), Color(0xFF0E0E12)],
+                  colors: [AppColors.cardRaised, AppColors.card],
                 ),
                 shape: BoxShape.circle,
                 border: Border.all(color: AppColors.border),

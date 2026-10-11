@@ -271,11 +271,11 @@ class _IssueCard extends StatelessWidget {
     final p = issue['priority'] as int? ?? 0;
     switch (p) {
       case 1:
-        return const Color(0xFFEF4444); // Urgent — red
+        return AppColors.red; // Urgent
       case 2:
-        return const Color(0xFFF59E0B); // High — amber
+        return AppColors.amber; // High
       case 3:
-        return const Color(0xFF3B82F6); // Medium — blue
+        return AppColors.sky; // Medium
       case 4:
         return AppColors.textFaint; // Low
       default:
@@ -631,11 +631,11 @@ class _IssueDetailScreenState extends State<_IssueDetailScreen> {
           const SizedBox(height: 8),
           Row(
             children: [
-              _priorityButton(1, 'Urgent', const Color(0xFFEF4444)),
+              _priorityButton(1, 'Urgent', AppColors.red),
               const SizedBox(width: 8),
-              _priorityButton(2, 'High', const Color(0xFFF59E0B)),
+              _priorityButton(2, 'High', AppColors.amber),
               const SizedBox(width: 8),
-              _priorityButton(3, 'Medium', const Color(0xFF3B82F6)),
+              _priorityButton(3, 'Medium', AppColors.sky),
               const SizedBox(width: 8),
               _priorityButton(4, 'Low', AppColors.textFaint),
             ],

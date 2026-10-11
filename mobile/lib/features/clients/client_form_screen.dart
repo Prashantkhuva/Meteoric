@@ -96,9 +96,9 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(
+            child: Text(
               'Discard',
-              style: TextStyle(color: Color(0xFFEF4444)),
+              style: TextStyle(color: AppColors.red),
             ),
           ),
         ],

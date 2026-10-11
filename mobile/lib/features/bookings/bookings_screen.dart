@@ -294,11 +294,11 @@ class _BookingsScreenState extends State<BookingsScreen> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: _status == entry.key
-                            ? Colors.white.withValues(alpha: 0.06)
+                            ? AppColors.inputFill
                             : Colors.transparent,
                         border: Border.all(
                           color: _status == entry.key
-                              ? Colors.white.withValues(alpha: 0.3)
+                              ? AppColors.accent
                               : AppColors.border,
                         ),
                       ),
@@ -525,13 +525,13 @@ class _MonthCalendarState extends State<_MonthCalendar> {
                   color: isSelected
                       ? AppColors.accent
                       : isToday
-                      ? Colors.white.withValues(alpha: 0.06)
+                      ? AppColors.inputFill
                       : Colors.transparent,
                   border: isSelected || isToday
                       ? Border.all(
                           color: isSelected
                               ? AppColors.accent
-                              : Colors.white.withValues(alpha: 0.22),
+                              : AppColors.border,
                         )
                       : null,
                 ),
@@ -679,7 +679,7 @@ class _BookingCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: AppColors.inputFillDark,
         border: Border.all(color: AppColors.borderSoft),
       ),
       child: Text(

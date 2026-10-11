@@ -343,13 +343,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 28),
 
-            // ── Appearance section ────────────────────────────────
-            _sectionLabel('APPEARANCE'),
-            const SizedBox(height: 10),
-            _buildAppearanceCard(),
-
-            const SizedBox(height: 28),
-
             // ── App section ─────────────────────────────────────────
             _sectionLabel('APP'),
             const SizedBox(height: 10),
@@ -571,68 +564,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildAppearanceCard() {
-    final current = ThemeController.mode.value;
-    const options = [
-      (ThemeMode.system, 'System'),
-      (ThemeMode.dark, 'Dark'),
-      (ThemeMode.light, 'Light'),
-    ];
-    return _CardContainer(
-      child: Row(
-        children: [
-          for (var i = 0; i < options.length; i++)
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  i == 0 ? 0 : 5,
-                  0,
-                  i == options.length - 1 ? 0 : 5,
-                  0,
-                ),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    Haptic.tap();
-                    ThemeController.set(options[i].$1);
-                    if (mounted) setState(() {});
-                  },
-                  child: AnimatedContainer(
-                    duration: AppMotion.fast,
-                    curve: AppMotion.ease,
-                    height: 38,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: current == options[i].$1
-                          ? AppColors.accent
-                          : Colors.transparent,
-                      borderRadius: AppRadius.smAll,
-                      border: Border.all(
-                        color: current == options[i].$1
-                            ? AppColors.accent
-                            : AppColors.border,
-                      ),
-                    ),
-                    child: Text(
-                      options[i].$2,
-                      style: TextStyle(
-                        color: current == options[i].$1
-                            ? AppColors.onAccent
-                            : AppColors.textMuted,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
   // ── Sign out button ─────────────────────────────────────────────
 
   Widget _buildSignOutButton() {
@@ -645,7 +576,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: Color(0x08FF4242),
+            color: AppColors.errorTint,
             borderRadius: AppRadius.lgAll,
             border: Border.all(color: AppColors.red.withValues(alpha: 0.2)),
           ),

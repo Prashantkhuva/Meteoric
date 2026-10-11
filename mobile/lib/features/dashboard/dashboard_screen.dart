@@ -321,7 +321,7 @@ class _TrendBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: AppColors.inputFillDark,
         border: Border.all(color: AppColors.borderSoft),
       ),
       child: Row(
@@ -948,8 +948,8 @@ class _OverdueBanner extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.04),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+            color: AppColors.inputFillDark,
+            border: Border.all(color: AppColors.border),
           ),
           child: Row(
             children: [

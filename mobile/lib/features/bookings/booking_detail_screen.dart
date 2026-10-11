@@ -287,7 +287,7 @@ class _StatusTag extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: AppColors.inputFillDark,
         border: Border.all(color: AppColors.borderSoft),
       ),
       child: Text(
