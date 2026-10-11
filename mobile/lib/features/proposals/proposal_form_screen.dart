@@ -6,6 +6,7 @@ import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
 import '../../shared/widgets/rich_text_editor_screen.dart';
+import '../../shared/widgets/skeleton.dart';
 
 class ProposalFormScreen extends StatefulWidget {
   const ProposalFormScreen({super.key, this.proposal});
@@ -49,7 +50,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
     _currency = widget.proposal?['currency']?.toString() ?? 'USD';
     _content = widget.proposal?['content'];
     final raw = widget.proposal?['pricing'];
-    _pricing = parseJsonList(raw);
+    _pricing = List.of(parseJsonList(raw));
     _loadLeads();
     for (final c in [_title, _timeline, _terms]) {
       c.addListener(() {
@@ -309,12 +310,17 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
       );
     }
     if (!_leadsLoaded) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: SizedBox(
-          width: 18,
-          height: 18,
-          child: CircularProgressIndicator(strokeWidth: 2),
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: SkeletonLoader(
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              color: AppColors.inputFillDark,
+              borderRadius: AppRadius.mdAll,
+              border: Border.all(color: AppColors.border),
+            ),
+          ),
         ),
       );
     }

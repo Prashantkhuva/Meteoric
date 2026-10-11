@@ -5,6 +5,7 @@ import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/common.dart';
+import '../../shared/widgets/skeleton.dart';
 
 class InvoiceFormScreen extends StatefulWidget {
   const InvoiceFormScreen({super.key, this.invoice});
@@ -54,7 +55,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
     _tax = '${widget.invoice?['tax'] ?? 0}';
     _dueDate = widget.invoice?['due_date']?.toString();
     final items = widget.invoice?['items'];
-    _items = parseJsonList(items);
+    _items = List.of(parseJsonList(items));
     _loadRefs();
     for (final c in [_notes, _terms]) {
       c.addListener(() {
@@ -371,12 +372,17 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
       );
     }
     if (!_clientsLoaded) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: SizedBox(
-          width: 18,
-          height: 18,
-          child: CircularProgressIndicator(strokeWidth: 2),
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: SkeletonLoader(
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              color: AppColors.inputFillDark,
+              borderRadius: AppRadius.mdAll,
+              border: Border.all(color: AppColors.border),
+            ),
+          ),
         ),
       );
     }

@@ -265,16 +265,11 @@ class AppMotion {
 
 /// Luminance-stacked surfaces — brighter = higher. No dark shadows.
 class AppElevation {
-  /// Flat card: fill + hairline + 1px top highlight (depth via luminance).
+  /// Flat card: fill + hairline (borderRadius requires uniform border color).
   static BoxDecoration get card => BoxDecoration(
     color: AppColors.card,
     borderRadius: AppRadius.mdAll,
-    border: Border(
-      top: BorderSide(color: AppColors.highlight),
-      left: BorderSide(color: AppColors.borderSoft),
-      right: BorderSide(color: AppColors.borderSoft),
-      bottom: BorderSide(color: AppColors.border),
-    ),
+    border: Border.all(color: AppColors.border),
   );
 
   /// Raised surface: brighter fill + slightly stronger border.

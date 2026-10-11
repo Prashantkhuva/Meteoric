@@ -122,12 +122,6 @@ class _ToastHostState extends State<_ToastHost>
     ToastType.info => AppColors.accent,
   };
 
-  Color get _tint => switch (widget.type) {
-    ToastType.success => AppColors.successTint,
-    ToastType.error => AppColors.errorTint,
-    ToastType.info => AppColors.infoTint,
-  };
-
   IconData get _icon => switch (widget.type) {
     ToastType.success => Icons.check_rounded,
     ToastType.error => Icons.close_rounded,
@@ -156,7 +150,6 @@ class _ToastHostState extends State<_ToastHost>
             child: _ToastCard(
               message: widget.message,
               tone: _tone,
-              tint: _tint,
               icon: _icon,
               progress: progress,
             ),
@@ -171,14 +164,12 @@ class _ToastCard extends StatelessWidget {
   const _ToastCard({
     required this.message,
     required this.tone,
-    required this.tint,
     required this.icon,
     required this.progress,
   });
 
   final String message;
   final Color tone;
-  final Color tint;
   final IconData icon;
   final Animation<double> progress;
 
@@ -186,52 +177,43 @@ class _ToastCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: tint, // tinted surface — palette already at ~10% alpha
-        borderRadius: AppRadius.mdAll,
-        border: Border.all(color: tone.withValues(alpha: 0.28)),
+        color: AppColors.cardRaised,
+        borderRadius: AppRadius.lgAll,
         boxShadow: [
           BoxShadow(
-            color: AppColors.overlayScrim,
-            blurRadius: 20,
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 24,
             offset: const Offset(0, 8),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
           ),
         ],
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: Container(width: 3, color: tone), // colored left rail
-          ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(13, 10, 14, 12),
+            padding: const EdgeInsets.fromLTRB(14, 12, 16, 13),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 26,
-                  height: 26,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: tone.withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: tone.withValues(alpha: 0.3)),
-                  ),
-                  child: Icon(icon, size: 15, color: tone),
-                ),
-                const SizedBox(width: 11),
+                Icon(icon, size: 18, color: tone),
+                const SizedBox(width: 10),
                 Flexible(
                   child: Text(
                     message,
                     style: TextStyle(
                       color: AppColors.text,
-                      fontSize: 13,
+                      fontSize: 13.5,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'Inter',
-                      height: 1.35,
+                      height: 1.3,
+                      letterSpacing: -0.1,
                     ),
                   ),
                 ),
@@ -239,7 +221,7 @@ class _ToastCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 3,
+            left: 0,
             right: 0,
             bottom: 0,
             height: 2,
@@ -248,7 +230,7 @@ class _ToastCard extends StatelessWidget {
               builder: (context, _) => FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: progress.value.clamp(0.0, 1.0),
-                child: Container(color: tone.withValues(alpha: 0.55)),
+                child: Container(color: tone.withValues(alpha: 0.45)),
               ),
             ),
           ),
