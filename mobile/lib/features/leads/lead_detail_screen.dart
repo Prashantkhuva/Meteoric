@@ -484,24 +484,24 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                           ? [
                               _followUpAction(
                                 'Done',
-                                Icons.check_circle_outline,
+                                Icons.check_rounded,
                                 () => _setFollowUp('completed'),
                               ),
                               _followUpAction(
                                 'Skip',
-                                Icons.cancel_outlined,
+                                Icons.close_rounded,
                                 () => _setFollowUp('skipped'),
                               ),
                               _followUpAction(
                                 'Reschedule',
-                                Icons.event_repeat_outlined,
+                                Icons.event_outlined,
                                 _reschedule,
                               ),
                             ]
                           : [
                               _followUpAction(
                                 'Reopen',
-                                Icons.refresh,
+                                Icons.event_outlined,
                                 () => _setFollowUp('pending'),
                               ),
                             ],
