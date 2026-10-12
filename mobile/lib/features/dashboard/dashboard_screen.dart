@@ -890,12 +890,13 @@ class _StatStrip extends StatelessWidget {
     ];
 
     return Container(
+      height: 112,
       decoration: AppElevation.card,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (var i = 0; i < items.length; i++) ...[
-            if (i > 0)
-              Container(width: 1, height: 52, color: AppColors.borderSoft),
+            if (i > 0) Container(width: 1, color: AppColors.borderSoft),
             Expanded(
               child: Material(
                 color: Colors.transparent,
@@ -906,11 +907,11 @@ class _StatStrip extends StatelessWidget {
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 12,
+                      vertical: 12,
+                      horizontal: 10,
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
@@ -923,7 +924,7 @@ class _StatStrip extends StatelessWidget {
                             fontFamily: 'Inter',
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 5),
                         Text(
                           items[i].value,
                           style: AppText.display(
@@ -935,18 +936,37 @@ class _StatStrip extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (items[i].spark.length >= 2) ...[
-                          const SizedBox(height: 6),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 18),
-                            child: Sparkline(
-                              values: items[i].spark,
-                              height: 22,
-                              strokeWidth: 1.4,
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
+                        SizedBox(
+                          height: 20,
+                          child: items[i].spark.length >= 2
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  child: Sparkline(
+                                    values: items[i].spark,
+                                    height: 20,
+                                    strokeWidth: 1.4,
+                                  ),
+                                )
+                              : Center(
+                                  child: Container(
+                                    height: 1.5,
+                                    width: double.infinity,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.overlay,
+                                      borderRadius: BorderRadius.circular(
+                                        AppRadius.pill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(height: 5),
                         Text(
                           items[i].sub,
                           maxLines: 1,
@@ -954,7 +974,7 @@ class _StatStrip extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColors.textFaint,
-                            fontSize: 9.5,
+                            fontSize: 9,
                             fontFamily: 'Inter',
                           ),
                         ),
