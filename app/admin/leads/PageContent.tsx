@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import Papa from "papaparse";
 import { createClient } from "@/lib/supabase/client";
-import { updateLeadStatus, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated, importLeads } from "../actions";
+import { updateLeadStatus, updateLeadFollowUp, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated, importLeads } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
@@ -52,6 +52,7 @@ interface LeadRow {
   follow_up_at?: string | null;
   follow_up_time?: string | null;
   follow_up_note?: string | null;
+  follow_up_status?: string | null;
   source?: string | null;
   status: string;
   ai_score?: number | null;
@@ -133,6 +134,7 @@ interface LeadDetailDrawerProps {
   onEdit: (lead: LeadRow) => void;
   onConvert: (lead: LeadRow) => void | Promise<void>;
   onDelete: (leadId: number) => void;
+  onFollowUp: (leadId: number, patch: { follow_up_status?: string; follow_up_at?: string }) => Promise<void>;
   converting?: number | null;
 }
 
@@ -142,6 +144,8 @@ const CSV_COLUMNS = [
   { label: "Phone", accessor: (l: LeadRow) => l.phone || "" },
   { label: "Company", accessor: (l: LeadRow) => l.company || "" },
   { label: "Status", accessor: (l: LeadRow) => l.status || "" },
+  { label: "Follow-up", accessor: (l: LeadRow) => l.follow_up_at || "" },
+  { label: "Follow-up Status", accessor: (l: LeadRow) => l.follow_up_status || "" },
   { label: "Source", accessor: (l: LeadRow) => l.source || "" },
   { label: "Budget", accessor: (l: LeadRow) => l.budget || "" },
   { label: "Currency", accessor: (l: LeadRow) => l.currency || "USD" },
@@ -317,6 +321,28 @@ export default function LeadsPage() {
       addToast((err as Error).message || "Failed to update status", "error");
     } finally {
       setEditingStatus(null);
+    }
+  }
+
+  async function handleFollowUpChange(
+    leadId: number,
+    patch: { follow_up_status?: string; follow_up_at?: string },
+  ) {
+    try {
+      const fd = new FormData();
+      fd.append("id", String(leadId));
+      if (patch.follow_up_status) fd.append("follow_up_status", patch.follow_up_status);
+      if (patch.follow_up_at !== undefined) fd.append("follow_up_at", patch.follow_up_at);
+      const result = await updateLeadFollowUp(fd);
+      if (result?.error) {
+        addToast(result.error, "error");
+        return;
+      }
+      setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, ...patch } : l)));
+      setViewLead((prev) => (prev && prev.id === leadId ? { ...prev, ...patch } : prev));
+      addToast("Follow-up updated", "success");
+    } catch (err) {
+      addToast((err as Error).message || "Failed to update follow-up", "error");
     }
   }
 
@@ -541,7 +567,7 @@ export default function LeadsPage() {
 
       <LeadFormModal key={formResetKey} open={showAddLead || !!editLead} lead={editLead} onClose={() => { setShowAddLead(false); setEditLead(null); setFormResetKey(k => k + 1); }} onSubmit={handleAddLead} />
       <LeadImportModal key={importKey} open={showImport} onClose={() => setShowImport(false)} onImported={() => { setShowImport(false); fetchLeads(); }} />
-      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onEdit={(lead) => { setViewLead(null); setEditLead(lead); }} onConvert={handleConvert} onDelete={promptDelete} converting={converting} />
+      <LeadDetailDrawer lead={viewLead} onClose={() => setViewLead(null)} onEdit={(lead) => { setViewLead(null); setEditLead(lead); }} onConvert={handleConvert} onDelete={promptDelete} onFollowUp={handleFollowUpChange} converting={converting} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Delete lead"
@@ -1175,8 +1201,27 @@ function AiScoreBadge({ score, category, size = "sm" }: AiScoreBadgeProps) {
   );
 }
 
-function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converting }: LeadDetailDrawerProps) {
+const FOLLOW_UP_STATUS_META: Record<string, { label: string; className: string }> = {
+  pending: { label: "Pending", className: "border-amber-400/20 bg-amber-400/5 text-amber-300/80" },
+  completed: { label: "Completed", className: "border-emerald-500/20 bg-emerald-500/5 text-emerald-300/80" },
+  rescheduled: { label: "Rescheduled", className: "border-sky-400/20 bg-sky-400/5 text-sky-300/80" },
+  skipped: { label: "Skipped", className: "border-white/[0.08] bg-white/[0.02] text-white/35" },
+};
+
+function FollowUpStatusBadge({ status }: { status: string }) {
+  const meta = FOLLOW_UP_STATUS_META[status] || FOLLOW_UP_STATUS_META.pending;
+  return (
+    <span className={`inline-flex items-center border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${meta.className}`}>
+      {meta.label}
+    </span>
+  );
+}
+
+function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollowUp, converting }: LeadDetailDrawerProps) {
   const trapRef = useFocusTrap(!!lead);
+  const [followUpBusy, setFollowUpBusy] = useState(false);
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [rescheduleDate, setRescheduleDate] = useState("");
 
   useEffect(() => {
     if (!lead) return;
@@ -1187,8 +1232,10 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
 
   if (!lead) return null;
 
+  const followUpStatus = lead.follow_up_status || "pending";
+  const followUpActive = followUpStatus === "pending" || followUpStatus === "rescheduled";
   const followUpOverdue = (() => {
-    if (!lead.follow_up_at) return false;
+    if (!lead.follow_up_at || !followUpActive) return false;
     const [y, mo, d] = lead.follow_up_at.split("-").map(Number);
     const [h, m] = (lead.follow_up_time || "").split(":").map(Number);
     const target = Number.isFinite(h)
@@ -1196,6 +1243,20 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
       : new Date(y, mo - 1, d, 23, 59);
     return target.getTime() <= Date.now();
   })();
+
+  async function setFollowUp(status: string, date?: string) {
+    setFollowUpBusy(true);
+    try {
+      await onFollowUp(lead!.id, {
+        follow_up_status: status,
+        ...(date !== undefined ? { follow_up_at: date } : {}),
+      });
+      setRescheduleOpen(false);
+    } finally {
+      setFollowUpBusy(false);
+    }
+  }
+
   const followUpTimeLabel = (() => {
     if (!lead.follow_up_time) return "";
     const [h, m] = lead.follow_up_time.split(":").map(Number);
@@ -1303,19 +1364,84 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, converti
               )}
 
               {lead.follow_up_at && (
-                <div className="flex items-start gap-1.5 text-[10px] text-white/30 tabular-nums">
-                  <Calendar size={11} className="mt-0.5 shrink-0" />
-                  <span>
-                    Follow-up{" "}
-                    <span className={followUpOverdue ? "font-semibold text-red-300/80" : undefined}>
-                      {formatShort(`${lead.follow_up_at}T00:00:00`)}{followUpTimeLabel}
+                <div className="border border-white/[0.06] bg-white/[0.015] p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Calendar size={11} className="text-white/30 shrink-0" />
+                    <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">
+                      Follow-up
                     </span>
-                    {lead.follow_up_note && (
-                      <span className="block mt-1 text-white/40 normal-case tabular-nums">
-                        {lead.follow_up_note}
+                    <FollowUpStatusBadge status={followUpStatus} />
+                  </div>
+                  <div className="flex items-start gap-1.5 text-[10px] text-white/30 tabular-nums">
+                    <span>
+                      <span className={followUpOverdue ? "font-semibold text-red-300/80" : undefined}>
+                        {formatShort(`${lead.follow_up_at}T00:00:00`)}{followUpTimeLabel}
                       </span>
+                      {followUpOverdue && <span className="ml-1.5 font-semibold text-red-300/80 uppercase">Overdue</span>}
+                    </span>
+                  </div>
+                  {lead.follow_up_note && (
+                    <p className="text-[11px] text-white/40 normal-case">{lead.follow_up_note}</p>
+                  )}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {followUpActive ? (
+                      <>
+                        <button
+                          onClick={() => setFollowUp("completed")}
+                          disabled={followUpBusy}
+                          className="inline-flex items-center gap-1.5 border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300/80 transition-all hover:bg-emerald-500/10 disabled:opacity-40"
+                        >
+                          <CheckCircle2 size={11} />
+                          Done
+                        </button>
+                        <button
+                          onClick={() => setFollowUp("skipped")}
+                          disabled={followUpBusy}
+                          className="inline-flex items-center gap-1.5 border border-white/[0.08] px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/40 transition-all hover:bg-white/[0.04] hover:text-white/60 disabled:opacity-40"
+                        >
+                          <XCircle size={11} />
+                          Skip
+                        </button>
+                        <button
+                          onClick={() => {
+                            setRescheduleDate(lead.follow_up_at || "");
+                            setRescheduleOpen((v) => !v);
+                          }}
+                          disabled={followUpBusy}
+                          className="inline-flex items-center gap-1.5 border border-white/[0.08] px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/40 transition-all hover:bg-white/[0.04] hover:text-white/60 disabled:opacity-40"
+                        >
+                          Reschedule
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setFollowUp("pending")}
+                        disabled={followUpBusy}
+                        className="inline-flex items-center gap-1.5 border border-white/[0.08] px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/40 transition-all hover:bg-white/[0.04] hover:text-white/60 disabled:opacity-40"
+                      >
+                        Reopen
+                      </button>
                     )}
-                  </span>
+                  </div>
+                  {rescheduleOpen && (
+                    <div className="flex items-center gap-2 border-t border-white/[0.06] pt-3">
+                      <input
+                        type="date"
+                        value={rescheduleDate}
+                        onChange={(e) => setRescheduleDate(e.target.value)}
+                        min="2024-01-01"
+                        max="2030-12-31"
+                        className="flex-1 border border-white/[0.06] bg-black/60 px-2.5 py-2 text-xs text-white outline-none focus:border-[#EAEFFF]/20 [color-scheme:dark]"
+                      />
+                      <button
+                        onClick={() => rescheduleDate && setFollowUp("rescheduled", rescheduleDate)}
+                        disabled={followUpBusy || !rescheduleDate}
+                        className="bg-[#EAEFFF] px-3 py-2 text-[10px] font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 disabled:opacity-40"
+                      >
+                        {followUpBusy ? "Saving..." : "Save"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

@@ -40,6 +40,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   );
   late String _followUp;
   late String _followUpTime;
+  late String _followUpStatus;
   late String _source;
   bool _saving = false;
   bool _dirty = false;
@@ -52,6 +53,8 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     _source = widget.lead?['source'] ?? 'manual';
     _followUp = widget.lead?['follow_up_at']?.toString() ?? '';
     _followUpTime = widget.lead?['follow_up_time']?.toString() ?? '';
+    _followUpStatus =
+        widget.lead?['follow_up_status']?.toString() ?? 'pending';
     if (_followUpTime.isNotEmpty) {
       _followUpTimeCtrl.text = _formatTime(_followUpTime);
     }
@@ -99,11 +102,10 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       'services': _services.text.trim(),
       'details': _details.text.trim(),
       'notes': _notes.text.trim(),
-      if (_isEdit) ...{
-        'follow_up_at': _followUp,
-        'follow_up_time': _followUpTime,
-        'follow_up_note': _followUpNoteCtrl.text.trim(),
-      },
+      'follow_up_at': _followUp,
+      'follow_up_time': _followUpTime,
+      'follow_up_note': _followUpNoteCtrl.text.trim(),
+      'follow_up_status': _followUp.isEmpty ? '' : _followUpStatus,
       'source': _isEdit ? null : _source,
     }..removeWhere((k, v) => v == null);
 
@@ -193,12 +195,14 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                   textInputAction: TextInputAction.done,
                 ),
                 const SizedBox(height: 12),
-                if (_isEdit) ...[
-                  _followUpField(),
+                _followUpField(),
+                const SizedBox(height: 12),
+                _followUpTimeField(),
+                const SizedBox(height: 12),
+                _followUpNoteField(),
+                if (_followUp.isNotEmpty) ...[
                   const SizedBox(height: 12),
-                  _followUpTimeField(),
-                  const SizedBox(height: 12),
-                  _followUpNoteField(),
+                  _followUpStatusField(),
                 ],
                 if (!_isEdit) ...[
                   const SizedBox(height: 16),
@@ -413,6 +417,26 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
         hintText: 'Short message for future reference...',
         counterStyle: TextStyle(fontSize: 10, color: AppColors.textFaint),
       ),
+    );
+  }
+
+  Widget _followUpStatusField() {
+    return DropdownButtonFormField<String>(
+      initialValue: _followUpStatus,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      decoration: const InputDecoration(labelText: 'Follow-up status'),
+      items: const [
+        DropdownMenuItem(value: 'pending', child: Text('Pending')),
+        DropdownMenuItem(value: 'completed', child: Text('Completed')),
+        DropdownMenuItem(value: 'rescheduled', child: Text('Rescheduled')),
+        DropdownMenuItem(value: 'skipped', child: Text('Skipped')),
+      ],
+      onChanged: (v) {
+        setState(() {
+          _followUpStatus = v ?? 'pending';
+          _dirty = true;
+        });
+      },
     );
   }
 }

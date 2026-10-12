@@ -41,7 +41,7 @@ export async function checkFollowUpReminders(): Promise<{
 
   const { data: leads, error } = await supabase
     .from("leads")
-    .select("id, name, company, follow_up_at, follow_up_time, follow_up_note, status")
+    .select("id, name, company, follow_up_at, follow_up_time, follow_up_note, follow_up_status, status")
     .eq("follow_up_at", todayIst)
     .not("follow_up_time", "is", null)
     .not("status", "in", `(${EXCLUDED_STATUSES.join(",")})`);
@@ -52,6 +52,9 @@ export async function checkFollowUpReminders(): Promise<{
 
   let sent = 0;
   for (const lead of leads || []) {
+    // completed/skipped follow-ups never remind; pending/rescheduled (or unset
+    // legacy rows) do.
+    if (lead.follow_up_status === "completed" || lead.follow_up_status === "skipped") continue;
     const time = lead.follow_up_time;
     if (!time) continue;
 

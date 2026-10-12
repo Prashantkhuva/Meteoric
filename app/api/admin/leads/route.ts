@@ -5,6 +5,7 @@ import {
   addLead,
   updateLead,
   updateLeadStatus,
+  updateLeadFollowUp,
   convertLeadToClient,
   deleteLead,
   importLeads,
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     add: "write",
     update: "write",
     status: "write",
+    followup: "write",
     convert: "write",
     delete: "write",
     import: "write",
@@ -49,6 +51,8 @@ export async function POST(request: NextRequest): Promise<Response> {
         return Response.json(await updateLead(jsonToFormData(payload)));
       case "status":
         return Response.json(await updateLeadStatus(payload.id, payload.status));
+      case "followup":
+        return Response.json(await updateLeadFollowUp(jsonToFormData(payload)));
       case "convert":
         return Response.json(await convertLeadToClient(payload.id));
       case "delete":

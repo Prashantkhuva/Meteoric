@@ -113,6 +113,38 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     });
   }
 
+  Future<void> _setFollowUp(String status, {String? date}) async {
+    await _run('Follow-up updated', () async {
+      await ApiClient.instance.leadFollowUp(
+        (_lead['id'] as num).toInt(),
+        status,
+        date: date,
+      );
+      setState(() => _lead = {
+        ..._lead,
+        'follow_up_status': status,
+        'follow_up_at': ?date,
+      });
+      return {};
+    });
+  }
+
+  Future<void> _reschedule() async {
+    final current =
+        DateTime.tryParse('${_lead['follow_up_at'] ?? ''}') ?? DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: (current.isBefore(DateTime(2024, 1, 1)) ||
+              current.isAfter(DateTime(2030, 12, 31)))
+          ? DateTime.now()
+          : current,
+      firstDate: DateTime(2024, 1, 1),
+      lastDate: DateTime(2030, 12, 31),
+    );
+    if (picked == null || !mounted) return;
+    await _setFollowUp('rescheduled', date: picked.toIso8601String().split('T').first);
+  }
+
   Future<void> _convert() async {
     final ok = await showDialog<bool>(
       context: context,
@@ -294,6 +326,63 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     );
   }
 
+  Widget _followUpStatusChip(String status) {
+    final (label, color) = switch (status) {
+      'completed' => ('COMPLETED', AppColors.emerald),
+      'rescheduled' => ('RESCHEDULED', AppColors.sky),
+      'skipped' => ('SKIPPED', AppColors.textFaint),
+      _ => ('PENDING', AppColors.amber),
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.10),
+        borderRadius: AppRadius.smAll,
+        border: Border.all(color: color.withValues(alpha: 0.40)),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.8,
+          fontFamily: 'Inter',
+        ),
+      ),
+    );
+  }
+
+  Widget _followUpAction(String label, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: _busy ? null : onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.border),
+          borderRadius: AppRadius.smAll,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 12, color: AppColors.textMuted),
+            const SizedBox(width: 5),
+            Text(
+              label.toUpperCase(),
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.8,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final name = _lead['name'] ?? '—';
@@ -304,8 +393,13 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     final followUpTime = '${_lead['follow_up_time'] ?? ''}';
     final followUpNote = '${_lead['follow_up_note'] ?? ''}';
     final followUpTarget = _followUpTarget(followUp, followUpTime);
+    final followUpStatus = '${_lead['follow_up_status'] ?? 'pending'}';
+    final followUpActive =
+        followUpStatus == 'pending' || followUpStatus == 'rescheduled';
     final followUpOverdue =
-        followUpTarget != null && !followUpTarget.isAfter(DateTime.now());
+        followUpActive &&
+        followUpTarget != null &&
+        !followUpTarget.isAfter(DateTime.now());
     final followUpLabel = followUp.isEmpty
         ? ''
         : followUpTime.isEmpty
@@ -362,6 +456,57 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                     ),
                   if (followUpNote.isNotEmpty)
                     DetailRow(label: 'Follow-up note', value: followUpNote),
+                  if (followUp.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        _followUpStatusChip(followUpStatus),
+                        if (followUpOverdue) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            'OVERDUE',
+                            style: TextStyle(
+                              color: AppColors.red,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.8,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: followUpActive
+                          ? [
+                              _followUpAction(
+                                'Done',
+                                Icons.check_circle_outline,
+                                () => _setFollowUp('completed'),
+                              ),
+                              _followUpAction(
+                                'Skip',
+                                Icons.cancel_outlined,
+                                () => _setFollowUp('skipped'),
+                              ),
+                              _followUpAction(
+                                'Reschedule',
+                                Icons.event_repeat_outlined,
+                                _reschedule,
+                              ),
+                            ]
+                          : [
+                              _followUpAction(
+                                'Reopen',
+                                Icons.refresh,
+                                () => _setFollowUp('pending'),
+                              ),
+                            ],
+                    ),
+                  ],
                 ],
               ),
             ),

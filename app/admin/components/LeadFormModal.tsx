@@ -28,6 +28,7 @@ interface LeadFormData {
   follow_up_at?: string | null;
   follow_up_time?: string | null;
   follow_up_note?: string | null;
+  follow_up_status?: string | null;
   source?: string | null;
 }
 
@@ -40,16 +41,18 @@ interface LeadFormModalProps {
 
 export function LeadFormModal({ open, lead, onClose, onSubmit }: LeadFormModalProps) {
   const [submitting, setSubmitting] = useState(false);
+  const [followUpAt, setFollowUpAt] = useState(lead?.follow_up_at || "");
   const trapRef = useFocusTrap(open);
   const isEdit = !!lead;
 
   useEffect(() => {
     if (open) {
+      setFollowUpAt(lead?.follow_up_at || "");
       const handleEscape = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
       document.addEventListener("keydown", handleEscape);
       return () => document.removeEventListener("keydown", handleEscape);
     }
-  }, [open, onClose]);
+  }, [open, onClose, lead]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,9 +100,33 @@ export function LeadFormModal({ open, lead, onClose, onSubmit }: LeadFormModalPr
               <FormField label="Details" name="details" type="textarea" rows={3} placeholder="Project details, requirements, notes..." defaultValue={lead?.details || ""} />
               <FormField label="Notes" name="notes" type="textarea" rows={3} placeholder="What the client said..." defaultValue={lead?.notes || ""} />
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Follow-up" name="follow_up_at" type="date" defaultValue={lead?.follow_up_at || ""} />
+                <FormField
+                  label="Follow-up"
+                  name="follow_up_at"
+                  type="date"
+                  value={followUpAt}
+                  onChange={(e) => setFollowUpAt(e.target.value)}
+                />
                 <FormField label="Follow-up time (IST)" name="follow_up_time" type="time" defaultValue={lead?.follow_up_time || ""} />
               </div>
+              {followUpAt && (
+                <div>
+                  <label htmlFor="field-follow_up_status" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                    Follow-up status
+                  </label>
+                  <select
+                    id="field-follow_up_status"
+                    name="follow_up_status"
+                    defaultValue={lead?.follow_up_status || "pending"}
+                    className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="rescheduled">Rescheduled</option>
+                    <option value="skipped">Skipped</option>
+                  </select>
+                </div>
+              )}
               <FormField
                 label="Follow-up note"
                 name="follow_up_note"

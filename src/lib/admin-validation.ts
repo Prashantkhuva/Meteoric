@@ -130,6 +130,11 @@ export const leadSchema = z.object({
     .optional()
     .or(z.literal(""))
     .transform((v) => v?.trim() || null),
+  follow_up_status: z
+    .enum(["pending", "completed", "rescheduled", "skipped"])
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v || null),
   source: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });
 

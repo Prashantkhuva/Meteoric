@@ -156,6 +156,7 @@ export async function addLead(formData: FormData) {
       follow_up_at: data.follow_up_at || null,
       follow_up_time: data.follow_up_time || null,
       follow_up_note: data.follow_up_note || null,
+      follow_up_status: data.follow_up_status || null,
       source: data.source || "manual",
       status: "inquiry",
     })
@@ -363,6 +364,7 @@ export async function updateLead(formData: FormData) {
         follow_up_at: data.follow_up_at || null,
         follow_up_time: data.follow_up_time || null,
         follow_up_note: data.follow_up_note || null,
+        follow_up_status: data.follow_up_status || null,
         source: data.source || null,
       })
       .eq("id", raw.id);
@@ -372,6 +374,35 @@ export async function updateLead(formData: FormData) {
     return { success: true };
   } catch (err) {
     return { error: (err as Error).message || "Failed to update lead" };
+  }
+}
+
+export async function updateLeadFollowUp(formData: FormData) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
+  const supabase = await getSupabase();
+  const raw: Record<string, unknown> = Object.fromEntries(formData.entries());
+
+  try {
+    raw.id = idSchema.parse(raw.id);
+    const status = z
+      .enum(["pending", "completed", "rescheduled", "skipped"])
+      .parse(raw.follow_up_status);
+
+    const patch: Record<string, unknown> = { follow_up_status: status };
+    if (typeof raw.follow_up_at === "string") {
+      patch.follow_up_at = leadSchema.shape.follow_up_at.parse(raw.follow_up_at);
+    }
+    if (typeof raw.follow_up_time === "string") {
+      patch.follow_up_time = leadSchema.shape.follow_up_time.parse(raw.follow_up_time);
+    }
+
+    const { error } = await supabase.from("leads").update(patch).eq("id", raw.id);
+    if (error) return { error: error.message };
+    revalidateAdmin("/admin/leads");
+    return { success: true };
+  } catch (err) {
+    return { error: (err as Error).message || "Failed to update follow-up" };
   }
 }
 

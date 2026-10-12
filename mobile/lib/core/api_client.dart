@@ -236,6 +236,17 @@ class ApiClient {
     {'action': 'status', 'id': id, 'status': status},
   );
 
+  Future<Map<String, dynamic>> leadFollowUp(
+    int id,
+    String status, {
+    String? date,
+  }) => _post('/api/admin/leads', {
+    'action': 'followup',
+    'id': id,
+    'follow_up_status': status,
+    'follow_up_at': ?date,
+  });
+
   Future<Map<String, dynamic>> leadConvert(int id) =>
       _post('/api/admin/leads', {'action': 'convert', 'id': id});
 
