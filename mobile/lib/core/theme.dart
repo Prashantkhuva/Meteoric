@@ -76,7 +76,7 @@ class AppPalette {
     text: Color(0xD9FFFFFF), // white @ 85%
     textMuted: Color(0x80FFFFFF), // white @ 50%
     textFaint: Color(0x4DFFFFFF), // white @ 30%
-    accent: Color(0xFFEAEFFF),
+    accent: Color(0xFFFFFFFF), // monochrome white
     emerald: Color(0xFF34D399),
     amber: Color(0xFFFBBF24),
     red: Color(0xFFF87171),
@@ -95,7 +95,7 @@ class AppPalette {
     infoTint: Color(0x1AFFFFFF), // white @ 10%
   );
 
-  /// Light — warm off-white base, premium Meteoric blue accent.
+  /// Light — warm off-white base, monochrome near-black accent.
   /// No pure white glare; soft cards; one accent color used sparingly.
   static const AppPalette light = AppPalette(
     background: Color(0xFFF5F6F8), // warm off-white, not pure #FFF
@@ -109,11 +109,11 @@ class AppPalette {
     text: Color(0xE6000000), // black @ 90%
     textMuted: Color(0x8A000000), // black @ 54%
     textFaint: Color(0x52000000), // black @ 32%
-    accent: Color(0xFF2F54EB), // Meteoric blue — primary CTA / links
+    accent: Color(0xFF121212), // near-black — monochrome CTA / links
     emerald: Color(0xFF059669),
     amber: Color(0xFFD97706),
     red: Color(0xFFDC2626),
-    sky: Color(0xFF0284C7),
+    sky: Color(0xFF6B7280), // neutral gray (was blue)
     violet: Color(0xFF7C3AED),
     starGold: Color(0xFFB45309),
     onAccent: Color(0xFFFFFFFF),
@@ -125,7 +125,7 @@ class AppPalette {
     shimmerHighlight: Color(0xFFF8F9FB),
     successTint: Color(0x1A059669),
     errorTint: Color(0x1ADC2626),
-    infoTint: Color(0x1A2F54EB), // accent @ 10%
+    infoTint: Color(0x1A121212), // accent @ 10%
   );
 
   static AppPalette current = light;

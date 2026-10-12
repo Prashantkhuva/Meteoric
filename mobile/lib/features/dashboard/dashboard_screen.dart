@@ -19,6 +19,8 @@ import '../invoices/invoice_detail_screen.dart';
 import '../leads/lead_detail_screen.dart';
 import '../notifications/notifications_screen.dart';
 import '../projects/projects_screen.dart';
+import 'widgets/half_gauge.dart';
+import 'widgets/sparkline.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -173,7 +175,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leadsMom: stats['leadsMomChange'],
             ),
           const SizedBox(height: 16),
-          _StatStrip(stats: stats),
+          _StatStrip(stats: stats, monthlyLeads: monthlyLeads),
+          if (stats.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            _HalfGaugeCard(stats: stats),
+          ],
           if (monthlyLeads.isNotEmpty) ...[
             const SizedBox(height: 16),
             _MonthlyLeadsCard(data: monthlyLeads),
@@ -273,7 +279,11 @@ class _ChartLegendDot extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: 8, height: 8, color: color),
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+        ),
         const SizedBox(width: 6),
         Text(
           label,
@@ -636,7 +646,10 @@ class _ModeSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: AppColors.border)),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.border),
+        borderRadius: AppRadius.pillAll,
+      ),
       padding: const EdgeInsets.all(2),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -655,9 +668,12 @@ class _ModeSwitch extends StatelessWidget {
                   horizontal: 10,
                   vertical: 4,
                 ),
-                color: value == s.toLowerCase()
-                    ? AppColors.accent
-                    : Colors.transparent,
+                decoration: BoxDecoration(
+                  color: value == s.toLowerCase()
+                      ? AppColors.accent
+                      : Colors.transparent,
+                  borderRadius: AppRadius.pillAll,
+                ),
                 child: Text(
                   s,
                   style: TextStyle(
@@ -680,7 +696,7 @@ class _ModeSwitch extends StatelessWidget {
 
 // ── Monthly leads bar chart ─────────────────────────────────────────────
 
-/// Grouped bar chart — monthly leads (accent) vs won (emerald).
+/// Grouped bar chart — monthly leads (accent) vs won (soft gray).
 class _MonthlyLeadsCard extends StatelessWidget {
   const _MonthlyLeadsCard({required this.data});
 
@@ -710,7 +726,7 @@ class _MonthlyLeadsCard extends StatelessWidget {
                 children: [
                   _ChartLegendDot(color: AppColors.accent, label: 'Leads'),
                   const SizedBox(width: 14),
-                  _ChartLegendDot(color: AppColors.emerald, label: 'Won'),
+                  _ChartLegendDot(color: AppColors.textFaint, label: 'Won'),
                 ],
               ),
             ],
@@ -739,7 +755,9 @@ class _MonthlyLeadsCard extends StatelessWidget {
                             ? '$month · ${rod.toY.toInt()} leads'
                             : '$month · ${rod.toY.toInt()} won',
                         TextStyle(
-                          color: ri == 0 ? AppColors.accent : AppColors.emerald,
+                          color: ri == 0
+                              ? AppColors.accent
+                              : AppColors.textMuted,
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Inter',
@@ -787,13 +805,33 @@ class _MonthlyLeadsCard extends StatelessWidget {
                       barRods: [
                         BarChartRodData(
                           toY: (data[i]['leads'] as num? ?? 0).toDouble(),
-                          color: AppColors.accent,
-                          width: 7,
+                          width: 8,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(4),
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.accent,
+                              AppColors.accent.withValues(alpha: 0.3),
+                            ],
+                          ),
                         ),
                         BarChartRodData(
                           toY: (data[i]['won'] as num? ?? 0).toDouble(),
-                          color: AppColors.emerald,
-                          width: 7,
+                          width: 8,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(4),
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.textMuted,
+                              AppColors.textMuted.withValues(alpha: 0.2),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -812,9 +850,10 @@ class _MonthlyLeadsCard extends StatelessWidget {
 /// One bordered container holding the three headline counts — replaces the
 /// old grid of six KPI cards.
 class _StatStrip extends StatelessWidget {
-  const _StatStrip({required this.stats});
+  const _StatStrip({required this.stats, this.monthlyLeads = const []});
 
   final Map<String, dynamic> stats;
+  final List<Map<String, dynamic>> monthlyLeads;
 
   @override
   Widget build(BuildContext context) {
@@ -826,12 +865,16 @@ class _StatStrip extends StatelessWidget {
         label: 'LEADS',
         value: '${stats['totalLeads'] ?? 0}',
         sub: _mom(leadsMom, 'leads'),
+        spark: [
+          for (final d in monthlyLeads) (d['leads'] as num? ?? 0).toDouble(),
+        ],
         onTap: () => homeTab.value = 1,
       ),
       (
         label: 'CLIENTS',
         value: '${stats['totalClients'] ?? 0}',
         sub: _mom(clientsMom.toDouble(), 'clients'),
+        spark: const <double>[],
         onTap: () =>
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const ClientsScreen())),
@@ -840,6 +883,7 @@ class _StatStrip extends StatelessWidget {
         label: 'PROJECTS',
         value: '${stats['totalProjects'] ?? 0}',
         sub: '${stats['activeProjects'] ?? 0} active',
+        spark: const <double>[],
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => const ProjectsScreen())),
       ),
@@ -891,6 +935,17 @@ class _StatStrip extends StatelessWidget {
                             ),
                           ),
                         ),
+                        if (items[i].spark.length >= 2) ...[
+                          const SizedBox(height: 6),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
+                            child: Sparkline(
+                              values: items[i].spark,
+                              height: 22,
+                              strokeWidth: 1.4,
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 4),
                         Text(
                           items[i].sub,
@@ -925,6 +980,84 @@ class _StatStrip extends StatelessWidget {
 }
 
 // ── Overdue banner ────────────────────────────────────────────────────────
+
+/// HabitFlow-style half-round gauge — pipeline completion %.
+class _HalfGaugeCard extends StatelessWidget {
+  const _HalfGaugeCard({required this.stats});
+
+  final Map<String, dynamic> stats;
+
+  @override
+  Widget build(BuildContext context) {
+    final completed = (stats['completedLeads'] as num?)?.toInt() ?? 0;
+    final total = (stats['totalLeads'] as num?)?.toInt() ?? 0;
+    final remaining = total - completed;
+    final pct = total == 0 ? 0.0 : completed / total;
+
+    return Container(
+      decoration: AppElevation.card,
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _Eyebrow('PIPELINE COMPLETION'),
+          const SizedBox(height: 14),
+          Center(
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                HalfGauge(value: pct, size: 168, strokeWidth: 15),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Column(
+                    children: [
+                      Text(
+                        '${(pct * 100).toStringAsFixed(0)}%',
+                        style: AppText.display(
+                          TextStyle(
+                            color: AppColors.text,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.6,
+                            height: 1,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'complete',
+                        style: TextStyle(
+                          color: AppColors.textFaint,
+                          fontSize: 10,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _ChartLegendDot(
+                color: AppColors.accent,
+                label: 'Completed ($completed)',
+              ),
+              const SizedBox(width: 16),
+              _ChartLegendDot(
+                color: AppColors.overlay,
+                label: 'Remaining ($remaining)',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _OverdueBanner extends StatelessWidget {
   const _OverdueBanner({required this.invoices, required this.onTap});
@@ -1052,9 +1185,12 @@ class _PipelineCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Container(
-              height: 4,
+              height: 6,
               width: double.infinity,
-              color: AppColors.cardRaised,
+              decoration: BoxDecoration(
+                color: AppColors.overlay,
+                borderRadius: BorderRadius.circular(AppRadius.pill),
+              ),
               alignment: Alignment.centerLeft,
               child: TweenAnimationBuilder<double>(
                 tween: Tween(end: values[i] / maxVal),
@@ -1064,7 +1200,15 @@ class _PipelineCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   widthFactor: t,
                   child: Container(
-                    color: AppColors.accent.withValues(alpha: _stageAlpha[i]),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.accent,
+                          AppColors.accent.withValues(alpha: _stageAlpha[i]),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
