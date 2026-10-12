@@ -92,6 +92,21 @@ const nextConfig = {
         destination: "/services",
         permanent: true,
       },
+      {
+        source: "/services/seo-content-strategy",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/services/performance-optimization",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/services/landing-page-design",
+        destination: "/services",
+        permanent: true,
+      },
     ];
   },
 };
