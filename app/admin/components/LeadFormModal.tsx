@@ -96,22 +96,18 @@ export function LeadFormModal({ open, lead, onClose, onSubmit }: LeadFormModalPr
               <FormField label="Services" name="services" placeholder="Web Development, SEO, Design" defaultValue={lead?.services || ""} />
               <FormField label="Details" name="details" type="textarea" rows={3} placeholder="Project details, requirements, notes..." defaultValue={lead?.details || ""} />
               <FormField label="Notes" name="notes" type="textarea" rows={3} placeholder="What the client said..." defaultValue={lead?.notes || ""} />
-              {isEdit && (
-                <div className="grid grid-cols-2 gap-3">
-                  <FormField label="Follow-up" name="follow_up_at" type="date" defaultValue={lead?.follow_up_at || ""} />
-                  <FormField label="Follow-up time (IST)" name="follow_up_time" type="time" defaultValue={lead?.follow_up_time || ""} />
-                </div>
-              )}
-              {isEdit && (
-                <FormField
-                  label="Follow-up note"
-                  name="follow_up_note"
-                  type="textarea"
-                  rows={2}
-                  placeholder="Short message for future reference..."
-                  defaultValue={lead?.follow_up_note || ""}
-                />
-              )}
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Follow-up" name="follow_up_at" type="date" defaultValue={lead?.follow_up_at || ""} />
+                <FormField label="Follow-up time (IST)" name="follow_up_time" type="time" defaultValue={lead?.follow_up_time || ""} />
+              </div>
+              <FormField
+                label="Follow-up note"
+                name="follow_up_note"
+                type="textarea"
+                rows={2}
+                placeholder="Short message for future reference..."
+                defaultValue={lead?.follow_up_note || ""}
+              />
               <div>
                 <label htmlFor="field-source" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Source
