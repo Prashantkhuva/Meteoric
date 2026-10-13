@@ -248,10 +248,7 @@ export const services: Service[] = [
         },
       ],
     },
-    // TODO(content backlog): planned articles not yet published — re-add as
-    // { slug, title } entries once they go live:
-    //   - react-vs-nextjs-for-startup-websites   ("React vs Next.js for Startup Websites")
-    // See QA report P0 #1 (memory/audits/2026-09-30-final-production-qa.md).
+    // react-vs-nextjs-for-startup-websites published 2026-10-12 (restored).
     relatedBlogPosts: [
       {
         slug: "how-much-does-a-startup-website-cost",
@@ -260,6 +257,10 @@ export const services: Service[] = [
       {
         slug: "how-to-choose-a-web-development-agency",
         title: "How to Choose a Web Development Agency",
+      },
+      {
+        slug: "react-vs-nextjs-for-startup-websites",
+        title: "React vs Next.js for Startup Websites",
       },
     ],
     sections: [

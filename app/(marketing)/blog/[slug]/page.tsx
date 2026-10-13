@@ -67,16 +67,23 @@ const postService: Record<string, { href: string; label: string }> = {
   "mongodb-vs-postgresql-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
   "gsap-vs-framer-motion-production-guide": { href: "/services/landing-pages", label: "Landing Pages" },
   "supabase-vs-firebase-2026-comparison": { href: "/services/saas-development", label: "SaaS Development" },
+  "nextjs-vs-remix-2026-comparison": { href: "/services/nextjs-development", label: "Next.js Development" },
   "what-is-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
   "how-much-does-a-startup-website-cost": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "building-a-saas-prototype-in-3-weeks-a-case-study": { href: "/services/saas-development", label: "SaaS Development" },
   "the-meteoric-guide-to-choosing-your-tech-stack": { href: "/services/saas-development", label: "SaaS Development" },
   "how-to-choose-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "react-vs-nextjs-for-startup-websites": { href: "/services/nextjs-development", label: "Next.js Development" },
   "how-to-implement-aeo-answer-engine-optimization-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
   "why-visitors-leave-your-website-issues-and-solutions": { href: "/services/landing-pages", label: "Landing Pages" },
   "high-converting-landing-page-structure-for-saas": { href: "/services/landing-pages", label: "Landing Pages" },
   "long-tail-seo-strategy-for-funded-startups": { href: "/services/startup-web-development", label: "Startup Web Development" },
   "ai-search-optimization-how-to-get-cited-by-chatgpt": { href: "/services/landing-pages", label: "Landing Pages" },
+  "conversion-focused-web-design-beyond-pretty-ui": { href: "/services/landing-pages", label: "Landing Pages" },
   "startup-seo-on-a-budget-what-to-do-first": { href: "/services/startup-web-development", label: "Startup Web Development" },
+  "complete-website-audit-checklist-for-startups": { href: "/services/web-applications", label: "Web Applications" },
+  "cafe-restaurant-website-design-gujarat": { href: "/services/landing-pages", label: "Landing Pages" },
+  "restaurant-local-seo-photography-guide": { href: "/services/landing-pages", label: "Landing Pages" },
 };
 
 function readingTime(sections: ArticleSection[]) {
