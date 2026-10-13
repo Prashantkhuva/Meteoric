@@ -85,7 +85,12 @@ Generate each at **800x500px**, dark theme, save as `.webp` to `public/images/bl
 
 > Dark abstract three-way path split in 3D space, three glowing wireframe routes diverging from a single startup node — one path a lone figure at a desk, one a small clustered team grid, one an org-hierarchy tree structure, thin light trails connecting all three to a shared product milestone beacon, white wireframe on deep black background, decision crossroads metaphor, no text, 4K cinematic
 
+## 17. blog-mvp-cost.webp
+**Post:** How Much Does a SaaS MVP Cost in 2026?
+
+> Dark abstract exploded-view of a minimal product assembly floating in layers — three stacked blueprint panes (wireframe flow, compact code block, single payment card slot) being lowered together by thin light guide-lines onto a glowing launch pad base, budget gauge arcs alongside, white wireframe on deep black background, lean-build metaphor, no text, 4K cinematic
+
 ---
 
-**Total: 16 blog images**
+**Total: 17 blog images**
 **Homepage images already exist:** hero-bg.webp, service-web.webp, service-saas.webp, service-mobile.webp, stats-bg.webp, cta-bg.webp

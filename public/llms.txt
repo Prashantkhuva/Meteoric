@@ -62,8 +62,9 @@ End-to-end web application development including database design, server-side lo
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (24 posts, sorted newest first)
+## Blog (25 posts, sorted newest first)
 
+- [How Much Does a SaaS MVP Cost in 2026?](https://withmeteoric.com/blog/saas-mvp-development-cost) — 2026-10-12
 - [Freelancer vs Agency vs In-House: Which Should Build Your Product?](https://withmeteoric.com/blog/freelance-vs-agency-vs-in-house) — 2026-10-12
 - [How Much Does It Cost to Build a Web App in 2026?](https://withmeteoric.com/blog/how-much-does-it-cost-to-build-a-web-app) — 2026-10-12
 - [Local SEO for Restaurants and Cafes: How Your Website, Photos, and Google Profile Work Together](https://withmeteoric.com/blog/restaurant-local-seo-photography-guide) — 2026-10-06

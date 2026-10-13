@@ -62,6 +62,7 @@ export async function generateMetadata({
 }
 
 const postService: Record<string, { href: string; label: string }> = {
+  "saas-mvp-development-cost": { href: "/services/saas-development", label: "SaaS Development" },
   "freelance-vs-agency-vs-in-house": { href: "/services/startup-web-development", label: "Startup Web Development" },
   "how-much-does-it-cost-to-build-a-web-app": { href: "/services/web-applications", label: "Web Applications" },
   "mongodb-schema-design-for-saas-billing": { href: "/services/saas-development", label: "SaaS Development" },
