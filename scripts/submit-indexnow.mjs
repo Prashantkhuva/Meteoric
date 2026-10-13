@@ -36,13 +36,17 @@ const URLS = [
   "https://withmeteoric.com/blog/gsap-vs-framer-motion-production-guide",
   "https://withmeteoric.com/blog/supabase-vs-firebase-2026-comparison",
   "https://withmeteoric.com/blog/what-is-a-web-development-agency",
+  "https://withmeteoric.com/blog/how-much-does-a-startup-website-cost",
   "https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack",
+  "https://withmeteoric.com/blog/how-to-choose-a-web-development-agency",
   "https://withmeteoric.com/blog/how-to-implement-aeo-answer-engine-optimization-for-saas",
   "https://withmeteoric.com/blog/why-visitors-leave-your-website-issues-and-solutions",
   "https://withmeteoric.com/blog/high-converting-landing-page-structure-for-saas",
   "https://withmeteoric.com/blog/long-tail-seo-strategy-for-funded-startups",
   "https://withmeteoric.com/blog/ai-search-optimization-how-to-get-cited-by-chatgpt",
   "https://withmeteoric.com/blog/startup-seo-on-a-budget-what-to-do-first",
+  "https://withmeteoric.com/blog/cafe-restaurant-website-design-gujarat",
+  "https://withmeteoric.com/blog/restaurant-local-seo-photography-guide",
 ];
 
 async function submit() {
