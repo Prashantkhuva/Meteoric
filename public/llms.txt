@@ -62,8 +62,9 @@ End-to-end web application development including database design, server-side lo
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (23 posts, sorted newest first)
+## Blog (24 posts, sorted newest first)
 
+- [Freelancer vs Agency vs In-House: Which Should Build Your Product?](https://withmeteoric.com/blog/freelance-vs-agency-vs-in-house) — 2026-10-12
 - [How Much Does It Cost to Build a Web App in 2026?](https://withmeteoric.com/blog/how-much-does-it-cost-to-build-a-web-app) — 2026-10-12
 - [Local SEO for Restaurants and Cafes: How Your Website, Photos, and Google Profile Work Together](https://withmeteoric.com/blog/restaurant-local-seo-photography-guide) — 2026-10-06
 - [How to Choose a Cafe or Restaurant Website Designer in Gujarat (2026 Guide)](https://withmeteoric.com/blog/cafe-restaurant-website-design-gujarat) — 2026-10-06

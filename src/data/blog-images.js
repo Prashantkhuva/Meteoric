@@ -1,4 +1,5 @@
 export const slugToImage = {
+  "freelance-vs-agency-vs-in-house": "/images/blog/blog-freelance-vs-agency.webp",
   "how-much-does-it-cost-to-build-a-web-app": "/images/blog/blog-webapp-cost.webp",
   "mongodb-schema-design-for-saas-billing": "/images/blog/blog-mongodb-schema.webp",
   "how-to-build-a-saas-mvp-step-by-step-guide": "/images/blog/blog-saas-mvp.webp",
