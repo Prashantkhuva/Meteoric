@@ -1,4 +1,5 @@
 export const slugToImage = {
+  "no-code-vs-custom-development": "/images/blog/blog-no-code-vs-custom.webp",
   "what-is-a-saas-development-agency": "/images/blog/blog-saas-agency.webp",
   "saas-mvp-development-cost": "/images/blog/blog-mvp-cost.webp",
   "freelance-vs-agency-vs-in-house": "/images/blog/blog-freelance-vs-agency.webp",

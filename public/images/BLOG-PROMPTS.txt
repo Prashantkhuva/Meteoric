@@ -95,7 +95,12 @@ Generate each at **800x500px**, dark theme, save as `.webp` to `public/images/bl
 
 > Dark abstract centerpiece of a subscription product machine — a glowing central engine block with modular wireframe panels plugging in around it (auth keyhole tile, billing card slot, dashboard grid, API node cluster), thin orbital rings suggesting recurring monthly cycles, white wireframe on deep black background, no text, 4K cinematic
 
+## 19. blog-no-code-vs-custom.webp
+**Post:** No-Code vs Custom Development for Startups
+
+> Dark abstract split-concept: left half shows stacked modular puzzle blocks snapping together (visual no-code assembly), right half shows a precision wireframe scaffolding structure with fine joinery details, a thin dividing light-line down the center where the two halves meet and partially interlock, white wireframe on deep black background, no text, 4K cinematic
+
 ---
 
-**Total: 18 blog images**
+**Total: 19 blog images**
 **Homepage images already exist:** hero-bg.webp, service-web.webp, service-saas.webp, service-mobile.webp, stats-bg.webp, cta-bg.webp

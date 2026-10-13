@@ -91,8 +91,9 @@ Meteoric's core technology stack:
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (26 posts, sorted newest first)
+## Blog (27 posts, sorted newest first)
 
+- [No-Code vs Custom Development for Startups: A 2026 Guide](https://withmeteoric.com/blog/no-code-vs-custom-development) — 2026-10-12 — Where no-code wins (validation, marketing sites, internal tools) vs where custom wins (billing, multi-tenancy, unique UX, scale), real 2026 cost comparison, the lock-in/migration trap, and a ten-minute decision checklist.
 - [What Is a SaaS Development Agency? Definition, Services, and Pricing](https://withmeteoric.com/blog/what-is-a-saas-development-agency) — 2026-10-12 — Working definition of a SaaS development agency, the services they deliver (auth, billing, dashboards, admin), how they differ from web agencies, studios, and freelancers, plus 2026 pricing and evaluation criteria.
 - [How Much Does a SaaS MVP Cost in 2026?](https://withmeteoric.com/blog/saas-mvp-development-cost) — 2026-10-12 — SaaS MVP cost ranges by type (prototype, functional MVP, full v1), cost by phase, location multipliers, hidden post-launch costs, and a validation sequence that protects the budget.
 - [Freelancer vs Agency vs In-House: Which Should Build Your Product?](https://withmeteoric.com/blog/freelance-vs-agency-vs-in-house) — 2026-10-12 — Cost, speed, and risk compared for the three build paths — plus hybrid setups, product-studio vs agency, and a one-page decision checklist for founders.
