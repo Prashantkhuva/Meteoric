@@ -91,7 +91,7 @@ Meteoric's core technology stack:
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (15 posts, sorted newest first)
+## Blog (17 posts, sorted newest first)
 
 - [Local SEO for Restaurants and Cafes: How Your Website, Photos, and Google Profile Work Together](https://withmeteoric.com/blog/restaurant-local-seo-photography-guide) — 2026-10-06 — How restaurants rank in local search: website structure, Google Business Profile, food photography, and reviews — with a 30-day action plan for cafes in Gujarat.
 - [How to Choose a Cafe or Restaurant Website Designer in Gujarat (2026 Guide)](https://withmeteoric.com/blog/cafe-restaurant-website-design-gujarat) — 2026-10-06 — What cafe and restaurant owners in Gujarat should demand from a web designer: menu UX, local SEO, photos, and online ordering.
@@ -101,6 +101,8 @@ Meteoric's core technology stack:
 - [High-Converting Landing Page Structure for SaaS: A Developer's Guide](https://withmeteoric.com/blog/high-converting-landing-page-structure-for-saas) — 2026-08-28 — Section-by-section anatomy of a SaaS landing page that converts: hero, social proof, pricing, FAQ, and technical performance.
 - [Why Visitors Leave Your Website in 2026: Issues & Solutions](https://withmeteoric.com/blog/why-visitors-leave-your-website-issues-and-solutions) — 2026-08-25 — Common reasons visitors bounce — slow loads, weak value props, broken trust, friction — with concrete fixes for each.
 - [How to Implement AEO (Answer Engine Optimization) for Your SaaS in 2026](https://withmeteoric.com/blog/how-to-implement-aeo-answer-engine-optimization-for-saas) — 2026-08-22 — Step-by-step AEO implementation: definitions, FAQ schema, llms.txt, authority signals, and monitoring AI citations.
+- [How to Choose a Web Development Agency](https://withmeteoric.com/blog/how-to-choose-a-web-development-agency) — 2026-07-08 — How to evaluate, shortlist, and compare agencies: portfolio review, pricing models, red flags, contract questions, and vendor-selection criteria.
+- [How Much Does a Startup Website Cost?](https://withmeteoric.com/blog/how-much-does-a-startup-website-cost) — 2026-06-28 — Realistic 2026 price ranges for landing pages, marketing sites, web apps, and SaaS MVPs — what drives cost, hidden costs, and how to budget without overpaying.
 - [Supabase vs Firebase 2026: Which Backend Platform Should You Choose?](https://withmeteoric.com/blog/supabase-vs-firebase-2026-comparison) — 2026-06-25 — Comparison of database, auth, storage, realtime, pricing, and vendor lock-in for SaaS teams picking a backend.
 - [MongoDB vs PostgreSQL for SaaS: Which Database Should You Choose?](https://withmeteoric.com/blog/mongodb-vs-postgresql-for-saas) — 2026-06-20 — Relational vs document databases for SaaS: schema flexibility, joins, billing data, scaling, and when to choose each.
 - [How to Build a SaaS MVP: Step-by-Step Guide](https://withmeteoric.com/blog/how-to-build-a-saas-mvp-step-by-step-guide) — 2026-06-15 — Scoped, time-boxed path from idea to launched MVP: scope cut, tech stack, build order, and post-launch priorities.

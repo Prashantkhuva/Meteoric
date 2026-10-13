@@ -250,11 +250,18 @@ export const services: Service[] = [
     },
     // TODO(content backlog): planned articles not yet published — re-add as
     // { slug, title } entries once they go live:
-    //   - how-much-does-a-startup-website-cost  ("How Much Does a Startup Website Cost?")
-    //   - how-to-choose-a-web-development-agency ("How to Choose a Web Development Agency")
     //   - react-vs-nextjs-for-startup-websites   ("React vs Next.js for Startup Websites")
     // See QA report P0 #1 (memory/audits/2026-09-30-final-production-qa.md).
-    relatedBlogPosts: [],
+    relatedBlogPosts: [
+      {
+        slug: "how-much-does-a-startup-website-cost",
+        title: "How Much Does a Startup Website Cost?",
+      },
+      {
+        slug: "how-to-choose-a-web-development-agency",
+        title: "How to Choose a Web Development Agency",
+      },
+    ],
     sections: [
       {
         heading: "What is a startup web development agency?",
