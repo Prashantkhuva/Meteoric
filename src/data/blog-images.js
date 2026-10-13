@@ -1,4 +1,5 @@
 export const slugToImage = {
+  "nextjs-seo-guide": "/images/blog/blog-nextjs-seo.webp",
   "no-code-vs-custom-development": "/images/blog/blog-no-code-vs-custom.webp",
   "what-is-a-saas-development-agency": "/images/blog/blog-saas-agency.webp",
   "saas-mvp-development-cost": "/images/blog/blog-mvp-cost.webp",

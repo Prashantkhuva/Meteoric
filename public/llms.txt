@@ -62,8 +62,9 @@ End-to-end web application development including database design, server-side lo
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (27 posts, sorted newest first)
+## Blog (28 posts, sorted newest first)
 
+- [Next.js SEO Guide: App Router Best Practices for 2026](https://withmeteoric.com/blog/nextjs-seo-guide) — 2026-10-12
 - [No-Code vs Custom Development for Startups: A 2026 Guide](https://withmeteoric.com/blog/no-code-vs-custom-development) — 2026-10-12
 - [What Is a SaaS Development Agency? Definition, Services, and Pricing](https://withmeteoric.com/blog/what-is-a-saas-development-agency) — 2026-10-12
 - [How Much Does a SaaS MVP Cost in 2026?](https://withmeteoric.com/blog/saas-mvp-development-cost) — 2026-10-12

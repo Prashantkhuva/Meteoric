@@ -2,6 +2,160 @@ import type { Article } from "./types";
 
 export const blogPosts: Article[] = [
   {
+    slug: "nextjs-seo-guide",
+    seoTitle: "Next.js SEO Guide: App Router Best Practices (2026)",
+    title: "Next.js SEO Guide: App Router Best Practices for 2026",
+    description:
+      "How Next.js App Router handles SEO in 2026 — metadata API, structured data, sitemaps, Core Web Vitals, and the common mistakes that kill organic traffic.",
+    tagline: "Server rendering, metadata, structured data, and the mistakes that kill rankings.",
+    published: "2026-10-12",
+    dateModified: "2026-10-12",
+    author: {
+      name: "Prashant Khuva",
+      url: "https://withmeteoric.com/about",
+    },
+    intro: `[PERSONAL EXPERIENCE] Next.js is one of the best SEO frameworks available when the App Router is used correctly — full server rendering, a first-party Metadata API, and built-in sitemap/robots generators. Used wrong, it ships client-only pages that crawlers struggle with, generic titles, and Core Web Vitals scores that bury rankings. Most "Next.js SEO problems" are configuration mistakes, not framework limitations.
+
+This guide covers what actually moves rankings on Next.js App Router sites in 2026: server rendering strategy, metadata patterns, structured data, crawl controls, and the performance details Google measures.
+
+> **Key Takeaways**
+> - Default to server components; client components for interactivity only. Crawlers index the HTML you ship, not your client-side data fetching.
+> - Use the Metadata API (generateMetadata) for titles, descriptions, canonical, Open Graph — no manual head-tag hacks.
+> - Ship structured data as JSON-LD from the server; keep it matching visible content.
+> - Built-in sitemap.ts and robots.ts remove whole categories of crawl errors.
+> - Core Web Vitals (LCP, INP, CLS) are ranking inputs: optimize images, fonts, and client JS payload first.`,
+    sections: [
+      {
+        heading: "TL;DR",
+        body: "Next.js App Router is excellent for SEO when pages are server-rendered by default, metadata is defined through `generateMetadata`, structured data ships as server-generated JSON-LD, sitemaps and robots use the built-in route handlers, and client JS is kept small so Core Web Vitals stay green. The framework gives you the primitives; most failures come from rendering everything as client components or skipping the metadata layer entirely.",
+      },
+      {
+        heading: "Why Next.js Is Strong for SEO",
+        body: "Three architectural strengths: **server rendering by default** — App Router components render on the server (RSC, React Server Components) so crawlers receive complete HTML without running your app; **route-level data control** — `generateStaticParams`, ISR (Incremental Static Regeneration), and dynamic rendering let you pre-render at scale; and the **Metadata API** — first-party control of every `<head>` element per route without third-party libraries.\n\nThe practical result: a Next.js site can ship the same solid HTML foundation Google wants from any modern site, with less custom infrastructure than wiring SSR by hand.",
+      },
+      {
+        heading: "Rendering Strategy: What Crawlers Actually Get",
+        body: "**Server Components** (default) render HTML on the server. Crawlers get full content on first response. **Client Components** (`'use client'`) render in the browser — if all your page content lives there, crawlers may receive a shell or empty state.\n\nRule: **data-fetching and content stay in server components; client components are for interaction** (forms, menus, widgets). If a page is mostly static content, prefer server rendering; if it needs heavy interactivity, still render the content server-side and hydrate only the interactive parts.\n\nDynamic rendering (`await` fetches without caching) still produces server HTML — just watch latency (TTFB), which hurts both UX and crawl efficiency.",
+      },
+      {
+        heading: "Metadata API Patterns",
+        body: "Export a `generateMetadata` function from each page (or layout) alongside the component:\n\n\`\`\`tsx\nexport async function generateMetadata({ params }) {\n  const post = await getPost(params.slug)\n  return {\n    title: post.seoTitle,\n    description: post.description,\n    alternates: { canonical: \`https://example.com/blog/\${params.slug}\` },\n    openGraph: { title: post.seoTitle, images: [post.ogImage] },\n  }\n}\n\`\`\`\n\nEvery page gets: unique title (<60 chars), meta description (~155 chars), canonical URL, Open Graph + Twitter card fields, and robots directives where needed. Root layout defines defaults; page-level metadata overrides. No third-party SEO libraries required — the Metadata API is the supported path (Ref: [Next.js generateMetadata docs](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)).",
+      },
+      {
+        heading: "Structured Data (JSON-LD)",
+        body: "Inject JSON-LD as a \`<script type=\"application/ld+json\">\` rendered from the server, using your typed data — not stringified from a client fetch. Types that matter for content and product sites: \`Article\`/\`BlogPosting\`, \`Organization\`, \`Person\`, \`BreadcrumbList\`, \`FAQPage\`, \`Product\`, \`SoftwareApplication\`, \`ProfessionalService\`.\n\nKeep schema matching visible page content — mismatched ratings, fake reviews, or invisible FAQ text violate Google guidelines and risk manual actions. Generate from the same data source as the UI (single source of truth) so they can't drift.",
+      },
+      {
+        heading: "Sitemaps, Robots, and Canonicals",
+        body: "**Sitemap**: App Router ships \`app/sitemap.ts\` — export a function returning URL entries with \`lastModified\` and \`priority\`. No plugin needed.\n\n**Robots**: \`app/robots.ts\` — rules per path, sitemap reference. Block only what must stay private (admin, login), never whole public sections.\n\n**Canonicals**: set via Metadata API \`alternates.canonical\` on every indexable page — parameterized URLs, pagination, and filtered views need a clear canonical strategy or they split ranking signals.\n\nThese three files prevent the most common crawl/indexing tickets: missing sitemap, robots accidentally blocking, duplicate parameter URLs.",
+      },
+      {
+        heading: "Core Web Vitals on Next.js",
+        body: "**LCP** (Largest Contentful Paint): server-render the hero text/image; use \`next/image\` with priority + correct sizes; preconnect critical origins; avoid client-side data fetches that replace the LCP element after paint.\n\n**INP** (Interaction to Next Push): keep client JS bundles small — code-split heavy widgets; avoid long tasks on interaction; move non-critical work out of the event handler path.\n\n**CLS** (Cumulative Layout Shift): size images and embeds explicitly; reserve ad/slot space; avoid injecting banners above existing content after load.\n\nRef: [web.dev Vitals](https://web.dev/articles/vitals) and [Google Search Central on JS SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/overview).",
+      },
+      {
+        heading: "Common Next.js SEO Mistakes",
+        body: "1. **Everything is a Client Component** — crawlers get empty shells; traffic never recovers because the content was never server-rendered.\n2. **No `generateMetadata`** — duplicate or missing titles/descriptions across routes.\n3. **Manual `<head>` tags** — bypasses the Metadata API; conflicts with framework-generated tags.\n4. **Sitemap/robots by hand or missing** — stale or blocking crawl rules.\n5. **Unoptimized images** — raw `<img>`, no dimensions, no responsive sizes; LCP dies.\n6. **Schema mismatch** — JSON-LD claims things the page doesn't show.\n7. **No canonical on paginated/filtered views** — duplicate content dilution.\n\nEach of these is a one-session fix when caught early — and a quarter of lost traffic when it ships to production unnoticed.",
+      },
+      {
+        heading: "How Meteoric Approaches Next.js SEO",
+        body: "Every Meteoric Next.js build ships: server-rendered content by default, Metadata API on every route, JSON-LD from typed data, \`sitemap.ts\`/\`robots.ts\`, canonical discipline, and image/font optimization for Core Web Vitals. It's part of [Next.js development](/services/nextjs-development) — not a post-launch SEO project. If your existing Next.js site has indexing or performance problems, the [technical audit checklist pattern](/blog/how-to-choose-a-web-development-agency) applies: measure first, then fix the highest-impact rendering issue.\n\nRef: [Clutch](https://clutch.co/agencies/web-developers) category data for Next.js-focused agency pricing benchmarks.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Services](/services) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Next.js good for SEO?",
+        answer:
+          "Yes — when pages are server-rendered (App Router default) and metadata/structured data are configured. Server components ship complete HTML to crawlers; the Metadata API handles titles, descriptions, canonicals, and social tags; built-in sitemap.ts and robots.ts cover crawl controls. Poor SEO on Next.js sites usually comes from client-only rendering or skipped metadata, not the framework.",
+      },
+      {
+        question: "Do I need a third-party SEO library for Next.js?",
+        answer:
+          "Usually no. The Metadata API covers titles, descriptions, canonicals, Open Graph, and robots. Built-in route handlers cover sitemaps and robots.txt. Add libraries only for features you actually need (e.g., advanced sitemap merging, i18n hreflang helpers).",
+      },
+      {
+        question: "Do client components hurt SEO in Next.js?",
+        answer:
+          "If all page content and data fetching live in client components, crawlers may receive incomplete HTML. Interactive widgets as client components are fine — keep content and primary data fetching in server components and hydrate only what needs interactivity.",
+      },
+      {
+        question: "How do I add structured data in Next.js App Router?",
+        answer:
+          "Render a <script type=\"application/ld+json\"> tag from a server component, serializing typed data (Article, Organization, FAQPage, Product, etc.) that matches visible page content. Avoid client-side injection after hydration — crawlers should see it in the initial server response.",
+      },
+      {
+        question: "What Core Web Vitals matter most on Next.js sites?",
+        answer:
+          "LCP (server-render the hero, next/image with priority), INP (small client JS, code-split interactive widgets), and CLS (explicit image/embed dimensions). next/image, next/font, and route-level code splitting address the three metrics directly.",
+      },
+    ],
+    tags: ["Next.js", "SEO", "Technical SEO", "Performance"],
+    metrics: [
+      {
+        label: "Vitals scored",
+        value: "LCP / INP / CLS",
+      },
+      {
+        label: "Metadata source",
+        value: "generateMetadata",
+      },
+      {
+        label: "Crawl files built-in",
+        value: "sitemap.ts + robots.ts",
+      },
+    ],
+    furtherReading: [
+      {
+        title: "Next.js generateMetadata documentation",
+        url: "https://nextjs.org/docs/app/api-reference/functions/generate-metadata",
+        source: "Next.js",
+      },
+      {
+        title: "web.dev Web Vitals",
+        url: "https://web.dev/articles/vitals",
+        source: "web.dev",
+      },
+      {
+        title: "Google Search Central: JavaScript SEO",
+        url: "https://developers.google.com/search/docs/crawling-indexing/javascript/overview",
+        source: "Google",
+      },
+      {
+        title: "Clutch Web Development Agencies",
+        url: "https://clutch.co/agencies/web-developers",
+        source: "Clutch",
+      },
+    ],
+    relatedLinks: [
+      {
+        href: "/services/nextjs-development",
+        label: "Next.js Development",
+      },
+      {
+        href: "/services/web-applications",
+        label: "Web Applications",
+      },
+      {
+        href: "/services/startup-web-development",
+        label: "Startup Web Development",
+      },
+    ],
+    relatedBlogPosts: [
+      {
+        slug: "react-vs-nextjs-for-startup-websites",
+        title: "React vs Next.js for Startup Websites",
+      },
+      {
+        slug: "nextjs-vs-remix-2026-comparison",
+        title: "Next.js vs Remix (2026)",
+      },
+      {
+        slug: "conversion-focused-web-design-beyond-pretty-ui",
+        title: "Conversion-Focused Web Design",
+      },
+    ],
+  },
+  {
     slug: "no-code-vs-custom-development",
     seoTitle: "No-Code vs Custom Development for Startups (2026)",
     title: "No-Code vs Custom Development for Startups: A 2026 Guide",

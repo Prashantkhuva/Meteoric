@@ -62,6 +62,7 @@ export async function generateMetadata({
 }
 
 const postService: Record<string, { href: string; label: string }> = {
+  "nextjs-seo-guide": { href: "/services/nextjs-development", label: "Next.js Development" },
   "no-code-vs-custom-development": { href: "/services/web-applications", label: "Web Applications" },
   "what-is-a-saas-development-agency": { href: "/services/saas-development", label: "SaaS Development" },
   "saas-mvp-development-cost": { href: "/services/saas-development", label: "SaaS Development" },

@@ -5,6 +5,7 @@
 const INDEXNOW_URL = "https://www.bing.com/indexnow";
 
 const URLS = [
+  "https://withmeteoric.com/blog/nextjs-seo-guide",
   "https://withmeteoric.com/blog/no-code-vs-custom-development",
   "https://withmeteoric.com/blog/what-is-a-saas-development-agency",
   "https://withmeteoric.com/blog/saas-mvp-development-cost",
