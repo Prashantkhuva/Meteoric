@@ -75,7 +75,12 @@ Generate each at **800x500px**, dark theme, save as `.webp` to `public/images/bl
 
 > Dark abstract map surface with glowing location pins connected by search rays to floating restaurant profile cards, photo frames, and star review icons, white wireframe on deep black background, representing local search visibility for restaurants, no text
 
+## 15. blog-webapp-cost.webp
+**Post:** How Much Does It Cost to Build a Web App in 2026?
+
+> Dark abstract visualization of three ascending translucent glass panels arranged like price tiers in 3D space, each panel a simplified wireframe app screen (dashboard, checkout, multi-tenant grid), glowing white edges, floating cost-bar and coin-stack indicators rising between tiers, deep black background, minimal fintech-tech aesthetic, no text, 4K cinematic
+
 ---
 
-**Total: 14 blog images**
+**Total: 15 blog images**
 **Homepage images already exist:** hero-bg.webp, service-web.webp, service-saas.webp, service-mobile.webp, stats-bg.webp, cta-bg.webp

@@ -2,6 +2,154 @@ import type { Article } from "./types";
 
 export const blogPosts: Article[] = [
   {
+    slug: "how-much-does-it-cost-to-build-a-web-app",
+    seoTitle: "Web App Development Cost in 2026 (Realistic Ranges)",
+    title: "How Much Does It Cost to Build a Web App in 2026?",
+    description:
+      "Realistic 2026 web app development costs — internal tools, marketplaces, and SaaS platforms. Price ranges, what drives cost, hidden fees, and how to budget without overpaying.",
+    tagline: "Honest price ranges for web apps in 2026 — and what actually moves the number.",
+    published: "2026-10-12",
+    dateModified: "2026-10-12",
+    author: {
+      name: "Prashant Khuva",
+      url: "https://withmeteoric.com/about",
+    },
+    intro: `[PERSONAL EXPERIENCE] A web app costs $5K to $150K+ in 2026 depending on complexity — a simple CRUD tool lands at $5K–$15K, a multi-feature product at $15K–$50K, and a multi-tenant SaaS with billing at $50K–$150K+. The number moves with auth depth, third-party integrations, and real-time features far more than with page count.
+
+This guide breaks down real 2026 price ranges by app type, the five variables that actually drive cost, how freelance/agency/in-house builds compare, and the hidden monthly costs teams forget to budget.
+
+> **Key Takeaways**
+> - Simple internal tools: $5K–$15K. Mid-complexity products: $15K–$50K. Multi-tenant SaaS: $50K–$150K+.
+> - Auth, integrations, and real-time features drive price more than design or page count.
+> - Budget $20–$200/month for hosting plus third-party APIs after launch — ongoing cost is real.
+> - A fixed-price, phased MVP build is the cheapest path that doesn't require a rebuild in six months.`,
+    sections: [
+      {
+        heading: "TL;DR",
+        body: "A web app costs $5K to $150K+ to build in 2026. A simple internal tool or CRUD dashboard costs $5K–$15K and ships in 2–4 weeks. A mid-complexity product with auth, payments, and admin flows costs $15K–$50K and ships in 4–8 weeks. A multi-tenant SaaS with billing, roles, and real-time features costs $50K–$150K+ and ships in 8–16 weeks. Ongoing costs run $20–$200 per month for hosting plus APIs. Fixed-price proposals beat hourly billing for defined scopes.",
+      },
+      {
+        heading: "Web App vs Website: Why the Price Differs",
+        body: "A **website** is mostly content: pages, forms, a CMS. A **web app** is software: user accounts, logic, persistent data, and often payments. That difference shows up in the price. Websites scale with page count. Web apps scale with feature complexity — every auth rule, integration, and real-time flow multiplies testing and edge cases.\n\n**CRUD** (Create, Read, Update, Delete) is the core of most web apps: users create records, view them, edit them, delete them. A pure CRUD app with one user role is the cheap end. Add roles, payments, and notifications, and you leave that range.\n\n**SaaS** is software delivered through a browser on a subscription. SaaS apps carry the highest build costs because they need billing, multi-tenancy, and admin tooling from day one.",
+      },
+      {
+        heading: "Cost by App Type (2026 Ranges)",
+        body: "**Internal tools and admin dashboards** ($5K–$15K, 2–4 weeks): CRUD over one or two data models, simple auth, maybe CSV export. The most predictable category. Examples: inventory trackers, booking dashboards, content managers.\n\n**Customer-facing products with auth and payments** ($15K–$50K, 4–8 weeks): user accounts, Stripe or Razorpay integration, email flows, an admin panel. Examples: booking platforms with payments, membership sites, lightweight marketplaces.\n\n**Multi-tenant SaaS platforms** ($50K–$150K+, 8–16 weeks): subscription billing, team/role management, usage metering, dashboards, and API access. The prototype-to-launch case study we ran shipped an MVP of this class in 3 weeks by cutting scope to one persona and one payment flow.\n\nThese are 2026 market ranges for founder-stage work — not enterprise digital-transformation budgets, which run higher for procurement and compliance reasons alone.",
+      },
+      {
+        heading: "The Five Variables That Actually Drive Price",
+        body: "1. **Auth and roles.** One login is cheap. Team invites, permissions, and admin overrides multiply test cases.\n2. **Third-party integrations.** Payment processors, email providers, maps, AI APIs — each integration adds setup, error handling, and edge cases. Budget lines for each.\n3. **Real-time features.** Live notifications, collaborative editing, or live dashboards require websocket infrastructure — a step change from request/response apps.\n4. **Data model complexity.** Two related tables are cheap. Nested subscriptions, credits, and usage events (like our [billing schema patterns](/blog/mongodb-schema-design-for-saas-billing)) are not.\n5. **Design complexity.** Unique interactive UI costs more than clean, standard layouts — but design rarely doubles the bill the way scope creep on features does.\n\nPage count barely matters for apps. A 4-screen app with billing costs more than a 12-page marketing site.",
+      },
+      {
+        heading: "Cost by Build Path: Freelance, Agency, In-House",
+        body: "**Freelancers** run roughly $25–$100/hour depending on region and seniority. Cheapest path for a defined scope with a proven operator. Risk: single point of failure, and quality varies widely.\n\n**Agencies** typically quote $75–$200/hour, but most founder-stage work is fixed-price per milestone. You pay more per hour for process: proposal, design, QA, and post-launch support. The right scope documentation is what keeps a fixed price honest — see [how to choose an agency](/blog/how-to-choose-a-web-development-agency) for the evaluation checklist.\n\n**In-house** engineers cost $80K–$150K+ salary in most markets — right for ongoing product work after product-market fit, wrong for a first build where you'd spend two months hiring before writing code.\n\nFor a first version, fixed-price agency or proven freelancer beats in-house almost every time on speed-to-launch.",
+      },
+      {
+        heading: "Hidden and Ongoing Costs",
+        body: "Build cost is not total cost. Budget monthly for: **hosting** ($20–$200/month on Vercel, Railway, or a small VM), **database** (often included; managed Postgres adds $15–$50/month), **email delivery** (Resend, Postmark — $0–$50/month at early volume), **payments** (Stripe takes a percentage per transaction, no fixed fee needed early), and **monitoring** (free tiers cover early traffic).\n\nDomain: ~$10–$15/year. SSL: free on Cloudflare and Vercel. The silent killer is third-party APIs — an AI feature or premium data feed can cost more per month than hosting. Know each API's pricing before committing the feature to scope.",
+      },
+      {
+        heading: "How to Cut Cost Without Triggering a Rebuild",
+        body: "The cheapest version that fails costs more than the cheapest version that works. These cuts are safe:\n\n**Cut scope, not quality.** One persona, one payment flow, one core loop. Defer roles and team features to version two. Our [3-week prototype case study](/blog/building-a-saas-prototype-in-3-weeks-a-case-study) used exactly this rule.\n\n**Use proven building blocks.** Auth providers, Stripe billing, and managed databases save weeks of custom code. Custom-build only what differentiates you.\n\n**Fix the scope in a written proposal.** Fixed price with documented scope beats hourly billing — you know the number before work starts, and change requests become visible decisions instead of silent invoice growth.\n\nUnsafe cuts: skipping QA, hiring the cheapest bid without references, or custom-building commodity features (auth, billing) from scratch.",
+      },
+      {
+        heading: "Timeline Correlates With Cost",
+        body: "Time is the other half of the budget. Realistic 2026 timelines: internal tools 2–4 weeks, customer-facing products 4–8 weeks, SaaS MVPs 8–16 weeks. Anything quoted at \"2 weeks\" for a SaaS with billing is either under-scoped or about to cut corners. Timeline compression costs money (parallel work, senior rates); timeline extension costs money too (longer burn before revenue). The [MVP step-by-step guide](/blog/how-to-build-a-saas-mvp-step-by-step-guide) covers how to time-box without shipping a broken product.",
+      },
+      {
+        heading: "How Meteoric Prices Web Apps",
+        body: "We publish the ranges we work in instead of hiding pricing behind sales calls: internal tools and MVPs from five figures, full SaaS platforms higher per the ranges above. Every project is quoted at a fixed price after a free strategy call, with scope documented in a proposal — no hourly surprises, no scope-creep invoices. You get founder-level involvement, weekly updates, and post-launch support included.\n\nIf you're budgeting a web app in 2026, hold any team to the same standard: a written number before kickoff, and a clear list of what that number includes.\n\nRef: [Clutch](https://clutch.co/agencies/web-developers) publishes agency rate data used across this range analysis.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Services](/services) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the cheapest way to build a web app?",
+        answer:
+          "A fixed-scope MVP built by a proven freelancer or small agency, using managed building blocks (auth provider, Stripe, hosted database). Realistic floor in 2026: $5K–$15K for a simple internal tool, $15K–$40K for a customer-facing product with payments. Cheaper quotes usually mean cut QA or unproven builders — both cost more later.",
+      },
+      {
+        question: "Why do web app quotes vary so much between teams?",
+        answer:
+          "Scope interpretation, team location, and risk buffer. Two quotes for the same idea can differ 3x because one includes design, QA, and post-launch support while the other is code-only. Compare proposals line by line — what's included matters more than the headline number.",
+      },
+      {
+        question: "Is fixed-price or hourly billing better for a web app?",
+        answer:
+          "Fixed price with a written scope, for anything with defined requirements. You know the cost before work starts. Hourly makes sense only for open-ended discovery or ongoing product work after launch, where scope genuinely can't be defined yet.",
+      },
+      {
+        question: "How long does it take to build a web app in 2026?",
+        answer:
+          "Internal tools: 2–4 weeks. Products with auth and payments: 4–8 weeks. Multi-tenant SaaS with billing: 8–16 weeks. Timelines compress with parallel work and senior builders; they stretch when scope is unclear at kickoff.",
+      },
+      {
+        question: "What does a web app cost to run after launch?",
+        answer:
+          "$20–$200/month covers hosting, database, and email at early-stage volume on modern platforms. Payment processors take a percentage per transaction. Third-party APIs (AI, maps, premium data) are the variable to watch — check each API's pricing before building the feature.",
+      },
+    ],
+    tags: ["Web Apps", "Cost", "Pricing", "Startups"],
+    metrics: [
+      {
+        label: "Simple internal tool range",
+        value: "$5K–$15K",
+      },
+      {
+        label: "Typical SaaS MVP range",
+        value: "$15K–$50K",
+      },
+      {
+        label: "Ongoing monthly costs",
+        value: "$20–$200",
+      },
+    ],
+    furtherReading: [
+      {
+        title: "Clutch Web Development Agencies",
+        url: "https://clutch.co/agencies/web-developers",
+        source: "Clutch",
+      },
+      {
+        title: "GoodFirms Web Development Resources",
+        url: "https://www.goodfirms.co/web-development",
+        source: "GoodFirms",
+      },
+      {
+        title: "Stripe Pricing",
+        url: "https://stripe.com/pricing",
+        source: "Stripe",
+      },
+    ],
+    relatedLinks: [
+      {
+        href: "/services/web-applications",
+        label: "Web Applications",
+      },
+      {
+        href: "/services/saas-development",
+        label: "SaaS Development",
+      },
+      {
+        href: "/services/startup-web-development",
+        label: "Startup Web Development",
+      },
+    ],
+    relatedBlogPosts: [
+      {
+        slug: "how-much-does-a-startup-website-cost",
+        title: "How Much Does a Startup Website Cost?",
+      },
+      {
+        slug: "how-to-build-a-saas-mvp-step-by-step-guide",
+        title: "How to Build a SaaS MVP",
+      },
+      {
+        slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
+        title: "Building a SaaS Prototype in 3 Weeks",
+      },
+    ],
+  },
+  {
     slug: "mongodb-schema-design-for-saas-billing",
     seoTitle: "MongoDB Schema Design for SaaS Billing (2026)",
     title: "MongoDB Schema Design for SaaS Billing",

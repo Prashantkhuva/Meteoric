@@ -1,4 +1,5 @@
 export const slugToImage = {
+  "how-much-does-it-cost-to-build-a-web-app": "/images/blog/blog-webapp-cost.webp",
   "mongodb-schema-design-for-saas-billing": "/images/blog/blog-mongodb-schema.webp",
   "how-to-build-a-saas-mvp-step-by-step-guide": "/images/blog/blog-saas-mvp.webp",
   "mongodb-vs-postgresql-for-saas": "/images/blog/blog-mongodb-vs-postgres.webp",

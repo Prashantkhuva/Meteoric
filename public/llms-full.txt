@@ -91,8 +91,9 @@ Meteoric's core technology stack:
 
 - [Case Studies](https://withmeteoric.com/case-studies) — Real client results with performance metrics, timelines, and outcomes.
 
-## Blog (22 posts, sorted newest first)
+## Blog (23 posts, sorted newest first)
 
+- [How Much Does It Cost to Build a Web App in 2026?](https://withmeteoric.com/blog/how-much-does-it-cost-to-build-a-web-app) — 2026-10-12 — Realistic 2026 price ranges for internal tools, customer-facing products, and multi-tenant SaaS — what drives cost, hidden monthly fees, and how to cut scope without triggering a rebuild.
 - [Local SEO for Restaurants and Cafes: How Your Website, Photos, and Google Profile Work Together](https://withmeteoric.com/blog/restaurant-local-seo-photography-guide) — 2026-10-06 — How restaurants rank in local search: website structure, Google Business Profile, food photography, and reviews — with a 30-day action plan for cafes in Gujarat.
 - [How to Choose a Cafe or Restaurant Website Designer in Gujarat (2026 Guide)](https://withmeteoric.com/blog/cafe-restaurant-website-design-gujarat) — 2026-10-06 — What cafe and restaurant owners in Gujarat should demand from a web designer: menu UX, local SEO, photos, and online ordering.
 - [Complete Website Audit Checklist for Startups: 50-Point Guide](https://withmeteoric.com/blog/complete-website-audit-checklist-for-startups) — 2026-09-13 — 50-point audit across technical SEO, performance, conversion, and content — the exact checklist Meteoric runs for every client, with fix priorities.
