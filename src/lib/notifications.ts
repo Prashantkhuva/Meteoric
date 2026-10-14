@@ -1,4 +1,151 @@
 import { createServiceClient } from "@/lib/supabase/service";
+import { createSign } from "node:crypto";
+
+// ── FCM push (HTTP v1) ──────────────────────────────────────────────────
+// Requires FCM_PROJECT_ID + FCM_SERVICE_ACCOUNT_KEY (service account JSON
+// as a single-line string) in env. When absent, push silently no-ops —
+// in-app notifications and externalNotify still work.
+
+type FcmCreds = { client_email: string; private_key: string; project_id?: string };
+
+let fcmCreds: FcmCreds | null | undefined;
+let fcmToken: { value: string; expiresAt: number } | null = null;
+
+function getFcmCreds(): FcmCreds | null {
+  if (fcmCreds !== undefined) return fcmCreds;
+  let value: FcmCreds | null = null;
+  try {
+    const raw = process.env.FCM_SERVICE_ACCOUNT_KEY;
+    value = raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    console.error("[notifications] FCM_SERVICE_ACCOUNT_KEY parse failed:", (err as Error).message);
+  }
+  fcmCreds = value;
+  return value;
+}
+
+function getFcmProjectId(): string | null {
+  const creds = getFcmCreds();
+  return process.env.FCM_PROJECT_ID || creds?.project_id || null;
+}
+
+async function getFcmAccessToken(): Promise<string | null> {
+  if (fcmToken && fcmToken.expiresAt > Date.now() + 60_000) return fcmToken.value;
+  const creds = getFcmCreds();
+  if (!creds) return null;
+
+  try {
+    const now = Math.floor(Date.now() / 1000);
+    const b64 = (o: object) => Buffer.from(JSON.stringify(o)).toString("base64url");
+    const unsigned = `${b64({ alg: "RS256", typ: "JWT" })}.${b64({
+      iss: creds.client_email,
+      scope: "https://www.googleapis.com/auth/firebase.messaging",
+      aud: "https://oauth2.googleapis.com/token",
+      iat: now,
+      exp: now + 3600,
+    })}`;
+    const signer = createSign("RSA-SHA256");
+    signer.update(unsigned);
+    const jwt = `${unsigned}.${signer.sign(creds.private_key).toString("base64url")}`;
+
+    const res = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${encodeURIComponent(jwt)}`,
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) {
+      console.error("[notifications] FCM token exchange failed:", res.status);
+      return null;
+    }
+    const data = (await res.json()) as { access_token: string; expires_in?: number };
+    fcmToken = { value: data.access_token, expiresAt: Date.now() + (data.expires_in ?? 3600) * 1000 };
+    return fcmToken.value;
+  } catch (err) {
+    console.error("[notifications] FCM token exchange error:", (err as Error).message);
+    return null;
+  }
+}
+
+async function pushToTokens(
+  tokens: string[],
+  payload: { title: string; body?: string | null; data?: Record<string, string> },
+): Promise<void> {
+  const projectId = getFcmProjectId();
+  if (!projectId || tokens.length === 0) return;
+  const accessToken = await getFcmAccessToken();
+  if (!accessToken) return;
+
+  const stale: string[] = [];
+  await Promise.all(
+    tokens.map(async (token) => {
+      try {
+        const res = await fetch(
+          `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: {
+                token,
+                notification: { title: payload.title, body: payload.body || undefined },
+                data: payload.data,
+                android: { priority: "high" },
+              },
+            }),
+            signal: AbortSignal.timeout(5000),
+          },
+        );
+        if (res.status === 404 || res.status === 400) {
+          const text = await res.text();
+          // UNREGISTERED / invalid token — prune so we stop targeting it.
+          if (text.includes("UNREGISTERED") || text.includes("NOT_FOUND") || text.includes("INVALID_ARGUMENT")) {
+            stale.push(token);
+          }
+        } else if (!res.ok) {
+          console.error("[notifications] FCM send failed:", res.status, await res.text());
+        }
+      } catch {
+        // Network blip — keep the token; next event retries.
+      }
+    }),
+  );
+
+  if (stale.length > 0) {
+    try {
+      const supabase = createServiceClient();
+      if (supabase) await supabase.from("fcm_tokens").delete().in("token", stale);
+    } catch {
+      // Prune failure is non-fatal.
+    }
+  }
+}
+
+/**
+ * Fan a notification out to every registered device token. Never throws.
+ * No-ops when FCM env vars are missing or no tokens exist.
+ */
+export async function pushToAllDevices(payload: {
+  title: string;
+  body?: string | null;
+  data?: Record<string, string>;
+}): Promise<void> {
+  try {
+    const supabase = createServiceClient();
+    if (!supabase || !getFcmCreds()) return;
+    const { data: rows, error } = await supabase.from("fcm_tokens").select("token");
+    if (error || !rows || rows.length === 0) return;
+    await pushToTokens(
+      rows.map((r) => r.token),
+      payload,
+    );
+  } catch (err) {
+    console.error("[notifications] push failed:", (err as Error).message);
+  }
+}
 
 /**
  * Mirror a notification to an external channel (Slack/Discord incoming
@@ -71,6 +218,15 @@ export async function createNotification({
     }
 
     await externalNotify(`[Meteoric] ${title}${body ? `\n${body}` : ""}`);
+    await pushToAllDevices({
+      title,
+      body,
+      data: {
+        type,
+        ...(entityType ? { entityType } : {}),
+        ...(entityId != null ? { entityId: String(entityId) } : {}),
+      },
+    });
     return true;
   } catch (err) {
     console.error("[notifications] unexpected error:", (err as Error)?.message);
@@ -153,6 +309,13 @@ export async function detectNewBookings(
         ),
       ),
     );
+    for (const b of fresh) {
+      await pushToAllDevices({
+        title: b.attendee || "New booking",
+        body: b.title,
+        data: { type: NOTIFICATION_TYPES.NEW_BOOKING, entityType: "booking" },
+      });
+    }
   } catch (err) {
     console.error("[notifications] booking sync failed:", (err as Error)?.message);
   }

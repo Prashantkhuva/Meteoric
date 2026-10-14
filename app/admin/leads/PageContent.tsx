@@ -134,7 +134,10 @@ interface LeadDetailDrawerProps {
   onEdit: (lead: LeadRow) => void;
   onConvert: (lead: LeadRow) => void | Promise<void>;
   onDelete: (leadId: number) => void;
-  onFollowUp: (leadId: number, patch: { follow_up_status?: string; follow_up_at?: string }) => Promise<void>;
+  onFollowUp: (
+    leadId: number,
+    patch: { follow_up_status?: string; follow_up_at?: string; follow_up_time?: string },
+  ) => Promise<void>;
   converting?: number | null;
 }
 
@@ -326,13 +329,14 @@ export default function LeadsPage() {
 
   async function handleFollowUpChange(
     leadId: number,
-    patch: { follow_up_status?: string; follow_up_at?: string },
+    patch: { follow_up_status?: string; follow_up_at?: string; follow_up_time?: string },
   ) {
     try {
       const fd = new FormData();
       fd.append("id", String(leadId));
       if (patch.follow_up_status) fd.append("follow_up_status", patch.follow_up_status);
       if (patch.follow_up_at !== undefined) fd.append("follow_up_at", patch.follow_up_at);
+      if (patch.follow_up_time !== undefined) fd.append("follow_up_time", patch.follow_up_time);
       const result = await updateLeadFollowUp(fd);
       if (result?.error) {
         addToast(result.error, "error");
@@ -1222,6 +1226,7 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
   const [followUpBusy, setFollowUpBusy] = useState(false);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleDate, setRescheduleDate] = useState("");
+  const [rescheduleTime, setRescheduleTime] = useState("");
 
   useEffect(() => {
     if (!lead) return;
@@ -1244,12 +1249,13 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
     return target.getTime() <= Date.now();
   })();
 
-  async function setFollowUp(status: string, date?: string) {
+  async function setFollowUp(status: string, date?: string, time?: string) {
     setFollowUpBusy(true);
     try {
       await onFollowUp(lead!.id, {
         follow_up_status: status,
         ...(date !== undefined ? { follow_up_at: date } : {}),
+        ...(time !== undefined ? { follow_up_time: time } : {}),
       });
       setRescheduleOpen(false);
     } finally {
@@ -1405,6 +1411,7 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
                         <button
                           onClick={() => {
                             setRescheduleDate(lead.follow_up_at || "");
+                            setRescheduleTime(lead.follow_up_time || "");
                             setRescheduleOpen((v) => !v);
                           }}
                           disabled={followUpBusy}
@@ -1431,10 +1438,20 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
                         onChange={(e) => setRescheduleDate(e.target.value)}
                         min="2024-01-01"
                         max="2030-12-31"
+                        aria-label="Reschedule date"
                         className="flex-1 border border-white/[0.06] bg-black/60 px-2.5 py-2 text-xs text-white outline-none focus:border-[#EAEFFF]/20 [color-scheme:dark]"
                       />
+                      <input
+                        type="time"
+                        value={rescheduleTime}
+                        onChange={(e) => setRescheduleTime(e.target.value)}
+                        aria-label="Reschedule time (IST)"
+                        className="w-24 border border-white/[0.06] bg-black/60 px-2.5 py-2 text-xs text-white outline-none focus:border-[#EAEFFF]/20 [color-scheme:dark]"
+                      />
                       <button
-                        onClick={() => rescheduleDate && setFollowUp("rescheduled", rescheduleDate)}
+                        onClick={() =>
+                          rescheduleDate && setFollowUp("rescheduled", rescheduleDate, rescheduleTime)
+                        }
                         disabled={followUpBusy || !rescheduleDate}
                         className="bg-[#EAEFFF] px-3 py-2 text-[10px] font-semibold text-[#121212] transition-all hover:bg-[#EAEFFF]/90 disabled:opacity-40"
                       >
