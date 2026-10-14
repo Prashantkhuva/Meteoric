@@ -117,6 +117,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
               children: [
                 DetailRow(label: 'Email', value: _client['email'] ?? '—'),
                 DetailRow(label: 'Phone', value: _client['phone'] ?? '—'),
+                ContactQuickActions(phone: '${_client['phone'] ?? ''}'),
                 DetailRow(label: 'Company', value: _client['company'] ?? '—'),
               ],
             ),

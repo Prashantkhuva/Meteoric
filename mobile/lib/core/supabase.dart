@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'config.dart';
+import 'fcm_service.dart';
 
 /// Thin auth wrapper around the Supabase SDK. `instance` exposes the raw
 /// SupabaseClient; static helpers cover sign in/out and session refresh.
@@ -52,6 +53,7 @@ class AuthService {
   }
 
   static Future<void> signOut() async {
+    await FcmService.instance.removeToken();
     await instance.auth.signOut();
   }
 

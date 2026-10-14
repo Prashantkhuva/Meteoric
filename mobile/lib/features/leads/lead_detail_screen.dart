@@ -442,6 +442,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                 children: [
                   DetailRow(label: 'Email', value: _lead['email'] ?? '—'),
                   DetailRow(label: 'Phone', value: _lead['phone'] ?? '—'),
+                  ContactQuickActions(phone: '${_lead['phone'] ?? ''}'),
                   DetailRow(label: 'Company', value: _lead['company'] ?? '—'),
                   DetailRow(label: 'Services', value: _lead['services'] ?? '—'),
                   if (_lead['details'] != null &&

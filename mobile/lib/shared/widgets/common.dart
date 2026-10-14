@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../core/native.dart';
 import '../../core/theme.dart';
 
 /// Standard screen scaffold: dark background, optional title, back button.
@@ -390,6 +391,93 @@ class DetailRow extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Compact Call / WhatsApp actions for a phone number.
+/// Renders nothing when the number is missing.
+class ContactQuickActions extends StatelessWidget {
+  const ContactQuickActions({super.key, required this.phone});
+
+  final String? phone;
+
+  static String? _digits(String raw, {bool keepPlus = false}) {
+    final cleaned = raw.replaceAll(RegExp(r'[^\d+]'), '');
+    if (cleaned.isEmpty || cleaned == '+') return null;
+    return keepPlus ? cleaned : cleaned.replaceAll('+', '');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final raw = (phone ?? '').trim();
+    if (raw.isEmpty || raw == '—') return const SizedBox.shrink();
+    final tel = _digits(raw, keepPlus: true);
+    final wa = _digits(raw);
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 6,
+        children: [
+          if (tel != null)
+            _ContactActionChip(
+              icon: Icons.call_rounded,
+              label: 'Call',
+              onTap: () => Native.openUrl('tel:$tel'),
+            ),
+          if (wa != null && wa.isNotEmpty)
+            _ContactActionChip(
+              icon: Icons.chat_bubble_rounded,
+              label: 'WhatsApp',
+              onTap: () => Native.openUrl('https://wa.me/$wa'),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContactActionChip extends StatelessWidget {
+  const _ContactActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: AppRadius.smAll,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.emerald.withValues(alpha: 0.06),
+          border: Border.all(color: AppColors.emerald.withValues(alpha: 0.30)),
+          borderRadius: AppRadius.smAll,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 12, color: AppColors.emerald),
+            const SizedBox(width: 5),
+            Text(
+              label,
+              style: TextStyle(
+                color: AppColors.emerald,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

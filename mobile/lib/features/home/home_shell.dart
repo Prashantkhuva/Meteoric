@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../core/biometric_service.dart';
+import '../../core/fcm_service.dart';
 import '../../core/notification_state.dart';
 import '../../core/pin_lock_service.dart';
 import '../../core/theme.dart';
@@ -58,6 +59,7 @@ class _HomeShellState extends State<HomeShell>
     _updater.addListener(_onForceUpgrade);
     _checkBiometricOnResume();
     homeTab.addListener(_onTabChanged);
+    FcmService.instance.init();
   }
 
   void _onTabChanged() {
