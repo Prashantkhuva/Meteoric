@@ -200,7 +200,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   }
 
   Future<void> _delete() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete invoice'),
@@ -276,7 +276,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],
@@ -309,7 +309,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                               style: TextStyle(
                                 color: AppColors.textMuted,
                                 fontSize: 12,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ),
@@ -322,7 +322,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                               color: AppColors.text,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ],

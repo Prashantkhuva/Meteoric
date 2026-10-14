@@ -79,7 +79,7 @@ class StatusFlowSection extends StatelessWidget {
       return;
     }
     final label = metaMap[next]?.label ?? next;
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Mark as $label?'),
@@ -88,7 +88,7 @@ class StatusFlowSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
         actions: [
@@ -126,7 +126,7 @@ class StatusFlowSection extends StatelessWidget {
                 color: AppColors.textFaint,
                 fontSize: 10,
                 letterSpacing: 0.5,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 12),
@@ -137,7 +137,7 @@ class StatusFlowSection extends StatelessWidget {
               style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 12,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             )
           else
@@ -168,7 +168,7 @@ class StatusFlowSection extends StatelessWidget {
             color: color,
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ),

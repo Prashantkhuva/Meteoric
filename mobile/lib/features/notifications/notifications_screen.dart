@@ -219,7 +219,7 @@ class _Eyebrow extends StatelessWidget {
           fontSize: 9.5,
           fontWeight: FontWeight.w600,
           letterSpacing: 1.2,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
     );
@@ -305,7 +305,7 @@ class _NotificationRow extends StatelessWidget {
                               fontWeight: unread
                                   ? FontWeight.w600
                                   : FontWeight.w500,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ),
@@ -321,7 +321,7 @@ class _NotificationRow extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ),
@@ -335,7 +335,7 @@ class _NotificationRow extends StatelessWidget {
                   color: AppColors.textFaint,
                   fontSize: 10.5,
                   fontFeatures: [FontFeature.tabularFigures()],
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],

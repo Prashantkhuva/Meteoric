@@ -57,7 +57,7 @@ class _RichTextEditorScreenState extends State<RichTextEditorScreen> {
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),

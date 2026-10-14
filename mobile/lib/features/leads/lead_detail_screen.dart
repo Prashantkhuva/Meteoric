@@ -146,7 +146,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
   }
 
   Future<void> _convert() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Convert to client'),
@@ -155,7 +155,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
           style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
         actions: [
@@ -182,7 +182,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
   }
 
   Future<void> _delete() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete lead'),
@@ -191,7 +191,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
           style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
         actions: [
@@ -250,7 +250,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                   color: color,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -261,7 +261,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                 style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
           ],
@@ -310,7 +310,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
             style: TextStyle(
               color: verdict == 'agree' ? AppColors.emerald : AppColors.red,
               fontSize: 12,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         const SizedBox(height: 8),
@@ -319,7 +319,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
           style: TextStyle(
             color: AppColors.textFaint,
             fontSize: 10,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ],
@@ -347,7 +347,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
           fontSize: 10,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.8,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
     );
@@ -374,7 +374,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.8,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -430,7 +430,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                   style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],
@@ -471,7 +471,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.8,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ],
@@ -535,7 +535,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                             },
                             fontSize: 34,
                             fontWeight: FontWeight.w700,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -545,7 +545,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                             color: AppColors.textMuted,
                             fontSize: 12,
                             letterSpacing: 1,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],
@@ -558,7 +558,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                           color: AppColors.textMuted,
                           fontSize: 12,
                           height: 1.5,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ],

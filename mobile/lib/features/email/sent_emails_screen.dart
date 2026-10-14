@@ -66,7 +66,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
   int _id(Map<String, dynamic> row) => (row['id'] as num).toInt();
 
   Future<void> _delete(int id) async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete email'),
@@ -246,7 +246,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                                   color: AppColors.text,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                               ),
                             ),
@@ -267,7 +267,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                           style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -278,7 +278,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                           style: TextStyle(
                             color: AppColors.textFaint,
                             fontSize: 10,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],

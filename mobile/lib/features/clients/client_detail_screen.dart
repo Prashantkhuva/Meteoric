@@ -45,7 +45,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
   }
 
   Future<void> _delete() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete client'),
@@ -54,7 +54,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
           style: TextStyle(
             fontSize: 13,
             color: AppColors.textMuted,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
         actions: [
@@ -105,7 +105,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                 style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 10,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],
@@ -155,7 +155,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                               : AppColors.textMuted,
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ),

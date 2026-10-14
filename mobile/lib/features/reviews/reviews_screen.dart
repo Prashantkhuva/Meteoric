@@ -118,7 +118,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   Future<void> _delete(int id) async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete review'),
@@ -320,7 +320,7 @@ class _ReviewCard extends StatelessWidget {
                     color: AppColors.text,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ),
@@ -349,7 +349,7 @@ class _ReviewCard extends StatelessWidget {
                         fontSize: 9,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ],
@@ -363,7 +363,7 @@ class _ReviewCard extends StatelessWidget {
               color: AppColors.textMuted,
               fontSize: 12,
               height: 1.5,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
@@ -374,7 +374,7 @@ class _ReviewCard extends StatelessWidget {
             style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 10,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 10),
@@ -419,7 +419,7 @@ class _ReviewCard extends StatelessWidget {
             color: color,
             fontSize: 10,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ),

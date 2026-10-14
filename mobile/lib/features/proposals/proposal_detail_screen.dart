@@ -104,7 +104,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
   }
 
   Future<void> _delete() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete proposal'),
@@ -183,7 +183,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                   style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],
@@ -224,7 +224,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                                 style: TextStyle(
                                   color: AppColors.textMuted,
                                   fontSize: 12,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                               ),
                             ),
@@ -239,7 +239,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                                 color: AppColors.text,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ],

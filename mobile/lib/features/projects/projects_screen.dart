@@ -490,7 +490,7 @@ class _ProjectCard extends StatelessWidget {
                                 color: AppColors.text,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Space Grotesk',
+                                fontFamily: 'Clash Display',
                               ),
                             ),
                           ),
@@ -518,7 +518,7 @@ class _ProjectCard extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -533,7 +533,7 @@ class _ProjectCard extends StatelessWidget {
                                 color: AppColors.accent,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Space Grotesk',
+                                fontFamily: 'Clash Display',
                                 fontFeatures: [FontFeature.tabularFigures()],
                               ),
                             )
@@ -543,7 +543,7 @@ class _ProjectCard extends StatelessWidget {
                               style: TextStyle(
                                 color: AppColors.textFaint,
                                 fontSize: 10,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           const Spacer(),
@@ -552,7 +552,7 @@ class _ProjectCard extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 10,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ],

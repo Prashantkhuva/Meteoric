@@ -8,6 +8,7 @@ import '../../core/pin_lock_service.dart';
 import '../../core/theme.dart';
 import '../../core/update_state.dart';
 import '../../core/updater.dart';
+import '../../shared/widgets/common.dart';
 import '../../shared/widgets/update_dialog.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../leads/leads_screen.dart';
@@ -32,11 +33,11 @@ class _HomeShellState extends State<HomeShell>
   bool _locked = false;
   DateTime? _lastUnlockTime;
 
-  // Tab switch: 120ms opacity fade. IndexedStack keeps tab state — only
-  // opacity animates, children never unmount.
+  // Tab switch: 160ms fade + 12px rise. IndexedStack keeps tab state — only
+  // opacity/offset animate, children never unmount.
   late final AnimationController _tabFade = AnimationController(
     vsync: this,
-    duration: AppMotion.fast,
+    duration: const Duration(milliseconds: 160),
     value: 1,
   );
 
@@ -142,7 +143,7 @@ class _HomeShellState extends State<HomeShell>
 
   void _showRestartOverlay() {
     if (!mounted) return;
-    showDialog(
+    showAppDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => _RestartCountdown(
@@ -173,9 +174,16 @@ class _HomeShellState extends State<HomeShell>
               Column(
                 children: [
                   Expanded(
-                    child: FadeTransition(
-                      opacity: _tabFade,
-                      child: IndexedStack(index: index, children: _tabs),
+                    child: AnimatedBuilder(
+                      animation: _tabFade,
+                      builder: (context, child) => Transform.translate(
+                        offset: Offset(0, 12 * (1 - _tabFade.value)),
+                        child: child,
+                      ),
+                      child: FadeTransition(
+                        opacity: _tabFade,
+                        child: IndexedStack(index: index, children: _tabs),
+                      ),
                     ),
                   ),
                   if (_updater.showShorebirdBanner) _buildShorebirdBanner(),
@@ -197,42 +205,103 @@ class _HomeShellState extends State<HomeShell>
               ? null
               : DecoratedBox(
                   decoration: BoxDecoration(
+                    color: AppColors.card,
                     border: Border(
                       top: BorderSide(color: AppColors.borderSoft),
                     ),
                   ),
-                  child: NavigationBar(
-                    selectedIndex: index,
-                    onDestinationSelected: (i) {
-                      Haptic.tap();
-                      homeTab.value = i;
-                    },
-                    destinations: const [
-                      NavigationDestination(
-                        icon: Icon(Icons.dashboard_outlined, size: 22),
-                        label: 'Home',
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                      child: Row(
+                        children: [
+                          _navTab(
+                            index,
+                            0,
+                            Phosphor.gauge,
+                            'Home',
+                          ),
+                          _navTab(
+                            index,
+                            1,
+                            Phosphor.userFocus,
+                            'Leads',
+                          ),
+                          _navTab(
+                            index,
+                            2,
+                            Phosphor.fileText,
+                            'Proposals',
+                          ),
+                          _navTab(
+                            index,
+                            3,
+                            Phosphor.receipt,
+                            'Invoices',
+                          ),
+                          _navTab(
+                            index,
+                            4,
+                            Phosphor.squaresFour,
+                            'More',
+                          ),
+                        ],
                       ),
-                      NavigationDestination(
-                        icon: Icon(Icons.person_search_outlined, size: 22),
-                        label: 'Leads',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.description_outlined, size: 22),
-                        label: 'Proposals',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.receipt_long_outlined, size: 22),
-                        label: 'Invoices',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.grid_view_outlined, size: 22),
-                        label: 'More',
-                      ),
-                    ],
+                    ),
                   ),
                 ),
         );
       },
+    );
+  }
+
+  /// One bottom-nav slot: solid navy capsule when active, bare muted when not.
+  Widget _navTab(int current, int i, IconData icon, String label) {
+    final selected = current == i;
+    return Expanded(
+      child: Pressable(
+        onPressed: () {
+          Haptic.tap();
+          homeTab.value = i;
+        },
+        borderRadius: AppRadius.pillAll,
+        child: AnimatedContainer(
+          duration: AppMotion.base,
+          curve: AppMotion.ease,
+          height: 46,
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.accent : Colors.transparent,
+            borderRadius: AppRadius.pillAll,
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 21,
+                  color: selected ? AppColors.onAccent : AppColors.textMuted,
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Satoshi',
+                    color: selected
+                        ? AppColors.onAccent
+                        : AppColors.textMuted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -274,7 +343,7 @@ class _HomeShellState extends State<HomeShell>
                         color: AppColors.text,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -295,7 +364,7 @@ class _HomeShellState extends State<HomeShell>
                   height: 38,
                   onPressed: () {
                     // Show restart confirmation dialog
-                    showDialog(
+                    showAppDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Restart App'),
@@ -303,7 +372,7 @@ class _HomeShellState extends State<HomeShell>
                           'The app will restart to apply the update.',
                           style: TextStyle(
                             color: AppColors.textMuted,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         actions: [
@@ -344,7 +413,7 @@ class _HomeShellState extends State<HomeShell>
                         color: AppColors.text,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -361,7 +430,7 @@ class _HomeShellState extends State<HomeShell>
                       style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 12,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -392,7 +461,7 @@ class _HomeShellState extends State<HomeShell>
                         color: AppColors.text,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -494,7 +563,7 @@ class _RestartCountdownState extends State<_RestartCountdown> {
                   color: AppColors.text,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
               const SizedBox(height: 8),
@@ -503,7 +572,7 @@ class _RestartCountdownState extends State<_RestartCountdown> {
                 style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 13,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],

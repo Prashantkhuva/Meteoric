@@ -71,7 +71,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
   }
 
   Future<void> _delete(Map<String, dynamic> account) async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete bank account'),
@@ -165,13 +165,13 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 13,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: InputDecoration(
               hintText: 'Search accounts...',
               hintStyle: TextStyle(
                 color: AppColors.text.withValues(alpha: 0.4),
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
               prefixIcon: const Icon(Icons.search, size: 18),
               prefixIconColor: AppColors.textMuted,
@@ -232,7 +232,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                       color: AppColors.text,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Space Grotesk',
+                                      fontFamily: 'Clash Display',
                                     ),
                                   ),
                                 ),
@@ -260,7 +260,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                                         fontSize: 9,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 1,
-                                        fontFamily: 'Inter',
+                                        fontFamily: 'Satoshi',
                                       ),
                                     ),
                                   ),
@@ -291,7 +291,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                               style: TextStyle(
                                 color: AppColors.textMuted,
                                 fontSize: 12,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -313,7 +313,7 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
                               style: TextStyle(
                                 color: AppColors.textFaint,
                                 fontSize: 11,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ],

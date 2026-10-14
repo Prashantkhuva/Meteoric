@@ -219,7 +219,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                       style: TextStyle(
                         color: AppColors.red,
                         fontSize: 11,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -266,7 +266,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                                   style: TextStyle(
                                     color: AppColors.accent,
                                     fontSize: 11,
-                                    fontFamily: 'Inter',
+                                    fontFamily: 'Satoshi',
                                   ),
                                 ),
                                 const SizedBox(width: 6),
@@ -348,7 +348,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                                         style: TextStyle(
                                           color: AppColors.text,
                                           fontSize: 13,
-                                          fontFamily: 'Inter',
+                                          fontFamily: 'Satoshi',
                                         ),
                                       ),
                                     ),
@@ -357,7 +357,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                                       style: TextStyle(
                                         color: AppColors.textFaint,
                                         fontSize: 11,
-                                        fontFamily: 'Inter',
+                                        fontFamily: 'Satoshi',
                                       ),
                                     ),
                                   ],
@@ -384,7 +384,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                   fontSize: 9,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -405,7 +405,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                   fontSize: 9,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -438,7 +438,7 @@ class _ComposeEmailScreenState extends State<ComposeEmailScreen> {
                             style: TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 11,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                           const SizedBox(width: 6),

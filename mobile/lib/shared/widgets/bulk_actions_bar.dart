@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
+import 'common.dart';
 
 /// Fixed bottom bar shown while rows are selected — mirrors the web
 /// admin's BulkActionBar: "N selected · Clear" + optional Delete and
@@ -27,12 +28,10 @@ class BulkActionBar extends StatelessWidget {
 
   Future<void> _pickStatus(BuildContext context) async {
     final options = statusOptions!;
-    final selected = await showModalBottomSheet<String>(
+    final selected = await showAppSheet<String>(
       context: context,
-      backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
-      ),
+      color: AppColors.card,
+      radius: const BorderRadius.vertical(top: Radius.circular(14)),
       builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -48,7 +47,7 @@ class BulkActionBar extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ),
@@ -61,7 +60,7 @@ class BulkActionBar extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.text,
                     fontSize: 13,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 onTap: () => Navigator.pop(sheetContext, opt.key),
@@ -99,7 +98,7 @@ class BulkActionBar extends StatelessWidget {
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.8,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -152,7 +151,7 @@ class _BulkButton extends StatelessWidget {
             fontSize: 11,
             fontWeight: FontWeight.w700,
             letterSpacing: 1,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ),
@@ -166,7 +165,7 @@ Future<bool> confirmBulkDelete(
   required int count,
   String label = 'items',
 }) async {
-  final result = await showDialog<bool>(
+  final result = await showAppDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
       backgroundColor: AppColors.cardRaised,
@@ -177,7 +176,7 @@ Future<bool> confirmBulkDelete(
           color: AppColors.text,
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
       content: Text(
@@ -186,7 +185,7 @@ Future<bool> confirmBulkDelete(
           color: AppColors.textMuted,
           fontSize: 13,
           height: 1.5,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
       actions: [
@@ -198,7 +197,7 @@ Future<bool> confirmBulkDelete(
               color: AppColors.textMuted,
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ),
@@ -210,7 +209,7 @@ Future<bool> confirmBulkDelete(
               color: AppColors.red,
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ),

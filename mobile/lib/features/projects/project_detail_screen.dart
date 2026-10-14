@@ -55,7 +55,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   Future<void> _delete() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete project'),
@@ -120,7 +120,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 10,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],

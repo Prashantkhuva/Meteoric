@@ -87,7 +87,7 @@ class KpiCard extends StatelessWidget {
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.2,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),
@@ -116,7 +116,7 @@ class KpiCard extends StatelessWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.5,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                   height: 1.1,
                 ),
               ),
@@ -142,7 +142,7 @@ class KpiCard extends StatelessWidget {
                       style: TextStyle(
                         color: subColor ?? AppColors.textMuted,
                         fontSize: 11,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -157,6 +157,35 @@ class KpiCard extends StatelessWidget {
       card = Pressable(onPressed: onTap, child: card);
     }
     return card;
+  }
+}
+
+/// Dark navy gradient hero card — exactly one primary metric per screen.
+class HeroCard extends StatelessWidget {
+  const HeroCard({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(16),
+  });
+
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF37477C), Color(0xFF2C3961)],
+        ),
+        borderRadius: AppRadius.xlAll,
+        boxShadow: AppShadows.soft,
+      ),
+      child: child,
+    );
   }
 }
 
@@ -194,7 +223,7 @@ class SectionCard extends StatelessWidget {
                       color: AppColors.text,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                   ?trailing,
@@ -256,7 +285,7 @@ class EmptyState extends StatelessWidget {
                   color: AppColors.text,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
               const SizedBox(height: 8),
@@ -267,7 +296,7 @@ class EmptyState extends StatelessWidget {
               style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 13,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             if (action != null && onAction != null) ...[
@@ -326,7 +355,7 @@ class PaginationBar extends StatelessWidget {
             style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 11,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           SizedBox(
@@ -374,7 +403,7 @@ class DetailRow extends StatelessWidget {
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -386,7 +415,7 @@ class DetailRow extends StatelessWidget {
                 fontSize: strong ? 14 : 13,
                 fontWeight: strong ? FontWeight.w700 : FontWeight.w400,
                 height: 1.4,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -423,13 +452,13 @@ class ContactQuickActions extends StatelessWidget {
         children: [
           if (tel != null)
             _ContactActionChip(
-              icon: Icons.call_rounded,
+              icon: Phosphor.phone,
               label: 'Call',
               onTap: () => Native.openUrl('tel:$tel'),
             ),
           if (wa != null && wa.isNotEmpty)
             _ContactActionChip(
-              icon: Icons.chat_bubble_rounded,
+              icon: Phosphor.whatsappLogo,
               label: 'WhatsApp',
               onTap: () => Native.openUrl('https://wa.me/$wa'),
             ),
@@ -454,26 +483,25 @@ class _ContactActionChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: AppRadius.smAll,
+      borderRadius: AppRadius.pillAll,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color: AppColors.emerald.withValues(alpha: 0.06),
-          border: Border.all(color: AppColors.emerald.withValues(alpha: 0.30)),
-          borderRadius: AppRadius.smAll,
+          color: AppColors.accentSoft,
+          borderRadius: AppRadius.pillAll,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 12, color: AppColors.emerald),
-            const SizedBox(width: 5),
+            Icon(icon, size: 13, color: AppColors.accent),
+            const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
-                color: AppColors.emerald,
-                fontSize: 11,
+                color: AppColors.accent,
+                fontSize: 11.5,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -506,7 +534,7 @@ class LoadingView extends StatelessWidget {
             style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 12,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ],
@@ -560,7 +588,7 @@ class StatusPill extends StatelessWidget {
               fontSize: dense ? 9 : 10,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.4,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ],
@@ -640,7 +668,7 @@ class AppFab extends StatelessWidget {
   }
 }
 
-/// Premium dialog: 200ms scale-in (0.96→1) + fade. Drop-in for showDialog.
+/// Premium dialog: 180ms scale-in (0.96→1) + fade. Drop-in for showDialog.
 Future<T?> showAppDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -651,7 +679,7 @@ Future<T?> showAppDialog<T>({
     barrierDismissible: barrierDismissible,
     barrierLabel: MaterialLocalizations.of(context).dialogLabel,
     barrierColor: AppColors.overlayScrim,
-    transitionDuration: AppMotion.slow,
+    transitionDuration: const Duration(milliseconds: 180),
     pageBuilder: (ctx, _, _) => builder(ctx),
     transitionBuilder: (ctx, animation, _, child) {
       final curved = CurvedAnimation(
@@ -670,27 +698,70 @@ Future<T?> showAppDialog<T>({
   );
 }
 
-/// Bottom sheet with smooth 200ms slide (theme supplies raised surface).
+/// Bottom sheet: 240ms rise (24px) + fade, no spring. Theme supplies surface.
 Future<T?> showAppSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   bool isScrollControlled = false,
+  Color? color,
+  BorderRadius? radius,
 }) {
-  return showModalBottomSheet<T>(
+  return showGeneralDialog<T>(
     context: context,
-    isScrollControlled: isScrollControlled,
-    backgroundColor: Colors.transparent,
-    builder: (ctx) => Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardRaised,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
-        border: Border(
-          top: BorderSide(color: AppColors.highlight),
-          left: BorderSide(color: AppColors.borderFaint),
-          right: BorderSide(color: AppColors.borderFaint),
+    barrierDismissible: true,
+    barrierLabel: MaterialLocalizations.of(context).closeButtonLabel,
+    barrierColor: AppColors.overlayScrim,
+    transitionDuration: const Duration(milliseconds: 240),
+    pageBuilder: (ctx, _, _) {
+      final mq = MediaQuery.of(ctx);
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: mq.viewInsets.bottom),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: mq.size.height * (isScrollControlled ? 1 : 0.92),
+            ),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color ?? AppColors.cardRaised,
+                  borderRadius:
+                      radius ??
+                      BorderRadius.vertical(
+                        top: Radius.circular(AppRadius.xl),
+                      ),
+                  border: Border(
+                    top: BorderSide(color: AppColors.highlight),
+                    left: BorderSide(color: AppColors.borderFaint),
+                    right: BorderSide(color: AppColors.borderFaint),
+                  ),
+                ),
+                child: builder(ctx),
+              ),
+            ),
+          ),
         ),
-      ),
-      child: builder(ctx),
-    ),
+      );
+    },
+    transitionBuilder: (ctx, animation, _, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: AppMotion.enter,
+        reverseCurve: AppMotion.exit,
+      );
+      return AnimatedBuilder(
+        animation: curved,
+        builder: (context, child) => Opacity(
+          opacity: curved.value,
+          child: Transform.translate(
+            offset: Offset(0, 24 * (1 - curved.value)),
+            child: child,
+          ),
+        ),
+        child: child,
+      );
+    },
   );
 }

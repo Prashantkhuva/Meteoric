@@ -17,6 +17,9 @@ class AppPalette {
     required this.textMuted,
     required this.textFaint,
     required this.accent,
+    required this.accentSoft,
+    required this.tint,
+    required this.navyDeep,
     required this.emerald,
     required this.amber,
     required this.red,
@@ -47,6 +50,9 @@ class AppPalette {
   final Color textMuted;
   final Color textFaint;
   final Color accent;
+  final Color accentSoft;
+  final Color tint;
+  final Color navyDeep;
   final Color emerald;
   final Color amber;
   final Color red;
@@ -77,6 +83,9 @@ class AppPalette {
     textMuted: Color(0x80FFFFFF), // white @ 50%
     textFaint: Color(0x4DFFFFFF), // white @ 30%
     accent: Color(0xFFFFFFFF), // monochrome white
+    accentSoft: Color(0x14FFFFFF), // white @ 8% — chips / indicators
+    tint: Color(0x14FFFFFF), // white @ 8% — stat tile fill
+    navyDeep: Color(0xFF2C3961), // gradient end
     emerald: Color(0xFF34D399),
     amber: Color(0xFFFBBF24),
     red: Color(0xFFF87171),
@@ -95,10 +104,9 @@ class AppPalette {
     infoTint: Color(0x1AFFFFFF), // white @ 10%
   );
 
-  /// Light — warm off-white base, monochrome near-black accent.
-  /// No pure white glare; soft cards; one accent color used sparingly.
+  /// Light — cool off-white base, navy accent, pale-blue tint.
   static const AppPalette light = AppPalette(
-    background: Color(0xFFF5F6F8), // warm off-white, not pure #FFF
+    background: Color(0xFFF6F7FA), // cool off-white
     card: Color(0xFFFFFFFF),
     cardRaised: Color(0xFFFFFFFF),
     overlay: Color(0xFFEBEDF0), // pressed / elevated surface
@@ -109,7 +117,10 @@ class AppPalette {
     text: Color(0xE6000000), // black @ 90%
     textMuted: Color(0x8A000000), // black @ 54%
     textFaint: Color(0x52000000), // black @ 32%
-    accent: Color(0xFF121212), // near-black — monochrome CTA / links
+    accent: Color(0xFF37477C), // navy — primary CTA / active states
+    accentSoft: Color(0x1437477C), // navy @ 8% — chips, indicators
+    tint: Color(0xFFEDF1F8), // pale blue — secondary stat tiles
+    navyDeep: Color(0xFF2C3961), // hero gradient end
     emerald: Color(0xFF059669),
     amber: Color(0xFFD97706),
     red: Color(0xFFDC2626),
@@ -125,7 +136,7 @@ class AppPalette {
     shimmerHighlight: Color(0xFFF8F9FB),
     successTint: Color(0x1A059669),
     errorTint: Color(0x1ADC2626),
-    infoTint: Color(0x1A121212), // accent @ 10%
+    infoTint: Color(0x1A37477C), // accent @ 10%
   );
 
   static AppPalette current = light;
@@ -146,6 +157,9 @@ class AppColors {
   static Color get textMuted => AppPalette.current.textMuted;
   static Color get textFaint => AppPalette.current.textFaint;
   static Color get accent => AppPalette.current.accent;
+  static Color get accentSoft => AppPalette.current.accentSoft;
+  static Color get tint => AppPalette.current.tint;
+  static Color get navyDeep => AppPalette.current.navyDeep;
 
   static Color get emerald => AppPalette.current.emerald;
   static Color get amber => AppPalette.current.amber;
@@ -224,7 +238,7 @@ class AppSpacing {
   static const double xxl = 32;
 }
 
-/// Motion tokens — snappy, 100–220ms, never bouncy.
+/// Motion tokens — snappy, 100–260ms, never bouncy.
 class AppMotion {
   static const Duration instant = Duration(milliseconds: 100);
   static const Duration fast = Duration(milliseconds: 120);
@@ -263,7 +277,94 @@ class AppMotion {
   }
 }
 
-/// Luminance-stacked surfaces — brighter = higher. No dark shadows.
+/// Phosphor icon set (MIT, phosphor-icons/core) — vendored Phosphor-Bold +
+/// Phosphor-Fill TTFs in assets/fonts. phosphor_flutter package is broken on
+/// Flutter 3.47 (IconData became a final class), so icons are plain consts.
+class Phosphor {
+  const Phosphor._();
+
+  static const gauge = IconData(
+    0xe628,
+    fontFamily: 'PhosphorBold',
+    matchTextDirection: true,
+  );
+  static const userFocus = IconData(
+    0xe6fc,
+    fontFamily: 'PhosphorBold',
+    matchTextDirection: true,
+  );
+  static const fileText = IconData(
+    0xe23a,
+    fontFamily: 'PhosphorBold',
+    matchTextDirection: true,
+  );
+  static const receipt = IconData(
+    0xe3ec,
+    fontFamily: 'PhosphorBold',
+    matchTextDirection: true,
+  );
+  static const squaresFour = IconData(
+    0xe464,
+    fontFamily: 'PhosphorBold',
+    matchTextDirection: true,
+  );
+  static const phone = IconData(
+    0xe3b8,
+    fontFamily: 'PhosphorBold',
+    matchTextDirection: true,
+  );
+  static const whatsappLogo = IconData(
+    0xe5d0,
+    fontFamily: 'PhosphorFill',
+    matchTextDirection: true,
+  );
+}
+
+/// Detail push: horizontal slide from right + fade, ease-in-out, no spring.
+/// Route default duration (300ms) drives it; curve set here.
+class SlideRightPageTransitionsBuilder extends PageTransitionsBuilder {
+  const SlideRightPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(1, 0),
+        end: Offset.zero,
+      ).animate(curved),
+      child: child,
+    );
+  }
+}
+
+/// Soft drop shadow for elevated hero/CTA cards (light theme).
+class AppShadows {
+  /// Elevated card — large blur, navy-black @ ~6%.
+  static List<BoxShadow> get soft => const [
+        BoxShadow(
+          color: Color(0x120B1533),
+          blurRadius: 24,
+          offset: Offset(0, 8),
+        ),
+      ];
+
+  /// Deprecated black shadows — kept as no-ops for compile compatibility.
+  static List<BoxShadow> get card => const [];
+  static List<BoxShadow> get subtle => const [];
+}
+
+/// Luminance-stacked surfaces — brighter = higher.
 class AppElevation {
   /// Flat card: fill + hairline (borderRadius requires uniform border color).
   static BoxDecoration get card => BoxDecoration(
@@ -296,29 +397,22 @@ class AppText {
   static TextStyle tabular(TextStyle style) =>
       style.copyWith(fontFeatures: [FontFeature.tabularFigures()]);
 
-  /// Space Grotesk display — headings, KPI values, money, nav labels.
+  /// Clash Display display — headings, KPI values, money, nav labels.
   static TextStyle display(TextStyle style, {bool tabular = true}) =>
       style.copyWith(
-        fontFamily: 'Space Grotesk',
+        fontFamily: 'Clash Display',
         fontFeatures: tabular ? [FontFeature.tabularFigures()] : null,
       );
 
   /// Weight 510 emphasis (between medium and semibold — Linear trick).
   static final TextStyle emphasis = TextStyle(
-    fontFamily: 'Inter',
+    fontFamily: 'Satoshi',
     color: AppColors.text,
     fontWeight: FontWeight.w500,
     fontFeatures: [
       FontFeature.stylisticSet(3), // single-storey a
     ],
   );
-}
-
-class AppShadows {
-  /// Deprecated black shadows — kept as no-ops for compile compatibility.
-  /// Luminance stacking replaces shadows (see AppElevation).
-  static List<BoxShadow> get card => const [];
-  static List<BoxShadow> get subtle => const [];
 }
 
 class AppTheme {
@@ -340,7 +434,7 @@ class AppTheme {
       double? spacing,
       List<FontFeature>? features,
     }) => TextStyle(
-      fontFamily: 'Inter',
+      fontFamily: 'Satoshi',
       fontSize: size,
       color: color ?? AppColors.text,
       fontWeight: weight,
@@ -356,7 +450,7 @@ class AppTheme {
       double? height,
       double? spacing,
     }) => TextStyle(
-      fontFamily: 'Space Grotesk',
+      fontFamily: 'Clash Display',
       fontSize: size,
       color: color ?? AppColors.text,
       fontWeight: weight,
@@ -382,12 +476,10 @@ class AppTheme {
               onSurface: AppColors.text,
               error: AppColors.red,
             ),
-      pageTransitionsTheme: const PageTransitionsTheme(
+      pageTransitionsTheme: PageTransitionsTheme(
         builders: {
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+          for (final platform in TargetPlatform.values)
+            platform: const SlideRightPageTransitionsBuilder(),
         },
       ),
       textTheme: base.textTheme.copyWith(
@@ -489,7 +581,7 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
           return TextStyle(
-            fontFamily: 'Space Grotesk',
+            fontFamily: 'Clash Display',
             fontSize: 10,
             fontWeight: FontWeight.w600,
             color: selected ? AppColors.accent : AppColors.textMuted,
@@ -572,7 +664,7 @@ class AccentButton extends StatelessWidget {
               color: AppColors.onAccent,
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             child: child,
           ),
@@ -619,7 +711,7 @@ class GhostButton extends StatelessWidget {
               color: textColor ?? AppColors.textMuted,
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             child: child,
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
+import 'common.dart';
 
 /// A single filter group (e.g. Status, Score, Source).
 class FilterGroup {
@@ -47,10 +48,10 @@ class FilterBar extends StatelessWidget {
   void _select(BuildContext context, String activeKey) async {
     final group = groups.firstWhere((g) => g.key == activeKey);
     final current = values[group.key] ?? group.allValue;
-    final selected = await showModalBottomSheet<String>(
+    final selected = await showAppSheet<String>(
       context: context,
-      backgroundColor: AppColors.card,
-      shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+      color: AppColors.card,
+      radius: AppRadius.mdAll,
       builder: (ctx) => _FilterSheet(group: group, current: current),
     );
     if (selected == null || selected == current) return;
@@ -139,7 +140,7 @@ class FilterBar extends StatelessWidget {
                   fontSize: 9,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
               const SizedBox(width: 6),
@@ -149,7 +150,7 @@ class FilterBar extends StatelessWidget {
                   color: isActive ? AppColors.accent : AppColors.textMuted,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
               const SizedBox(width: 4),
@@ -193,7 +194,7 @@ class _FilterSheet extends StatelessWidget {
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),
@@ -238,7 +239,7 @@ class _FilterSheet extends StatelessWidget {
                                   fontWeight: option.key == current
                                       ? FontWeight.w600
                                       : FontWeight.w400,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                               ),
                             ),

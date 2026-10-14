@@ -105,7 +105,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             color: AppColors.text,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ),

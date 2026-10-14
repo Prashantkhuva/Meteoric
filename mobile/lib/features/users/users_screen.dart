@@ -6,6 +6,7 @@ import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/filter_bar.dart';
+import '../../shared/widgets/common.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -118,7 +119,7 @@ class _UsersScreenState extends State<UsersScreen> {
     final userId = user['id'] as String?;
     if (userId == null) return false;
 
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -129,7 +130,7 @@ class _UsersScreenState extends State<UsersScreen> {
             color: AppColors.text,
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
         content: Text(
@@ -138,7 +139,7 @@ class _UsersScreenState extends State<UsersScreen> {
             color: AppColors.textMuted,
             fontSize: 13,
             height: 1.5,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
         actions: [
@@ -146,7 +147,7 @@ class _UsersScreenState extends State<UsersScreen> {
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.textMuted, fontFamily: 'Inter'),
+              style: TextStyle(color: AppColors.textMuted, fontFamily: 'Satoshi'),
             ),
           ),
           TextButton(
@@ -156,7 +157,7 @@ class _UsersScreenState extends State<UsersScreen> {
               style: TextStyle(
                 color: AppColors.red,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -181,11 +182,11 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   void _showInviteSheet() {
-    showModalBottomSheet(
+    showAppSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.cardRaised,
-      shape: const RoundedRectangleBorder(),
+      color: AppColors.cardRaised,
+      radius: BorderRadius.zero,
       builder: (_) => _InviteSheet(
         onInvited: () {
           Navigator.pop(context);
@@ -259,7 +260,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -295,14 +296,14 @@ class _UsersScreenState extends State<UsersScreen> {
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 14,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                       decoration: InputDecoration(
                         hintText: 'Search name, email...',
                         hintStyle: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 14,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                         prefixIcon: Icon(
                           Icons.search,
@@ -422,7 +423,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 color: AppColors.textMuted,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 4),
@@ -431,7 +432,7 @@ class _UsersScreenState extends State<UsersScreen> {
               style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 12,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             if (_canManageUsers) ...[
@@ -445,7 +446,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ),
@@ -475,7 +476,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 color: AppColors.textMuted,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 4),
@@ -484,7 +485,7 @@ class _UsersScreenState extends State<UsersScreen> {
               style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 12,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 12),
@@ -500,7 +501,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.8,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -530,7 +531,7 @@ class _SummaryDot extends StatelessWidget {
           style: TextStyle(
             color: AppColors.textFaint,
             fontSize: 11,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ],
@@ -623,7 +624,7 @@ class _UserTile extends StatelessWidget {
                         color: color,
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -640,7 +641,7 @@ class _UserTile extends StatelessWidget {
                             color: AppColors.text,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -652,7 +653,7 @@ class _UserTile extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 11,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -700,7 +701,7 @@ class _UserTile extends StatelessWidget {
                                       fontSize: 8,
                                       fontWeight: FontWeight.w700,
                                       letterSpacing: 0.8,
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Satoshi',
                                     ),
                                   ),
                                 ],
@@ -755,7 +756,7 @@ class _UserTile extends StatelessWidget {
                                           fontSize: 9,
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: 0.8,
-                                          fontFamily: 'Inter',
+                                          fontFamily: 'Satoshi',
                                         ),
                                       ),
                                       const SizedBox(width: 4),
@@ -796,7 +797,7 @@ class _UserTile extends StatelessWidget {
                                   fontSize: 9,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.8,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                               ),
                             ],
@@ -844,7 +845,7 @@ class _UserTile extends StatelessWidget {
                                       style: TextStyle(
                                         color: AppColors.accent,
                                         fontSize: 11,
-                                        fontFamily: 'Inter',
+                                        fontFamily: 'Satoshi',
                                       ),
                                     ),
                                   ],
@@ -878,7 +879,7 @@ class _UserTile extends StatelessWidget {
                                       style: TextStyle(
                                         color: AppColors.red,
                                         fontSize: 11,
-                                        fontFamily: 'Inter',
+                                        fontFamily: 'Satoshi',
                                       ),
                                     ),
                                   ],
@@ -897,10 +898,10 @@ class _UserTile extends StatelessWidget {
 
   void _showRolePicker(BuildContext context) {
     final role = (user['role'] as String?) ?? '';
-    showModalBottomSheet(
+    showAppSheet(
       context: context,
-      backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(),
+      color: AppColors.card,
+      radius: BorderRadius.zero,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -920,7 +921,7 @@ class _UserTile extends StatelessWidget {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 1.2,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -975,7 +976,7 @@ class _UserTile extends StatelessWidget {
                             fontWeight: entry.key == role
                                 ? FontWeight.w600
                                 : FontWeight.w400,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ),
@@ -1133,7 +1134,7 @@ class _UserDetailScreen extends StatelessWidget {
                       color: color,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),
@@ -1148,7 +1149,7 @@ class _UserDetailScreen extends StatelessWidget {
                           color: AppColors.text,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -1159,7 +1160,7 @@ class _UserDetailScreen extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 13,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -1201,7 +1202,7 @@ class _UserDetailScreen extends StatelessWidget {
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.6,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],
@@ -1216,7 +1217,7 @@ class _UserDetailScreen extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.accent,
                           fontSize: 12,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ),
@@ -1244,7 +1245,7 @@ class _UserDetailScreen extends StatelessWidget {
                       color: onboarded ? AppColors.emerald : AppColors.amber,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -1255,7 +1256,7 @@ class _UserDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 12,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ],
@@ -1280,7 +1281,7 @@ class _UserDetailScreen extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 13,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ],
@@ -1312,7 +1313,7 @@ class _UserDetailScreen extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 13,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ],
@@ -1341,7 +1342,7 @@ class _UserDetailScreen extends StatelessWidget {
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.8,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),
@@ -1366,7 +1367,7 @@ class _UserDetailScreen extends StatelessWidget {
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.8,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),
@@ -1379,10 +1380,10 @@ class _UserDetailScreen extends StatelessWidget {
 
   void _showRolePicker(BuildContext context) {
     final role = (user['role'] as String?) ?? '';
-    showModalBottomSheet(
+    showAppSheet(
       context: context,
-      backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(),
+      color: AppColors.card,
+      radius: BorderRadius.zero,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1402,7 +1403,7 @@ class _UserDetailScreen extends StatelessWidget {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 1.2,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -1455,7 +1456,7 @@ class _UserDetailScreen extends StatelessWidget {
                             fontWeight: entry.key == role
                                 ? FontWeight.w600
                                 : FontWeight.w400,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ),
@@ -1504,7 +1505,7 @@ class _InfoCard extends StatelessWidget {
               fontSize: 9,
               fontWeight: FontWeight.w700,
               letterSpacing: 1.2,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 8),
@@ -1623,7 +1624,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                           color: AppColors.text,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                       SizedBox(height: 2),
@@ -1632,7 +1633,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                         style: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 11,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ],
@@ -1650,7 +1651,7 @@ class _InviteSheetState extends State<_InviteSheet> {
               style: TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
               decoration: _input(),
             ),
@@ -1665,7 +1666,7 @@ class _InviteSheetState extends State<_InviteSheet> {
               style: TextStyle(
                 color: AppColors.text,
                 fontSize: 14,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
               decoration: _input(),
             ),
@@ -1696,7 +1697,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 14,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                     const Spacer(),
@@ -1715,7 +1716,7 @@ class _InviteSheetState extends State<_InviteSheet> {
               style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 11,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 20),
@@ -1742,7 +1743,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                 style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 11,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -1753,10 +1754,10 @@ class _InviteSheetState extends State<_InviteSheet> {
   }
 
   void _showRolePicker() {
-    showModalBottomSheet(
+    showAppSheet(
       context: context,
-      backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(),
+      color: AppColors.card,
+      radius: BorderRadius.zero,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1776,7 +1777,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 1.2,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                   ),
@@ -1831,7 +1832,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                                 fontWeight: entry.key == _role
                                     ? FontWeight.w600
                                     : FontWeight.w400,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -1840,7 +1841,7 @@ class _InviteSheetState extends State<_InviteSheet> {
                               style: TextStyle(
                                 color: AppColors.textFaint,
                                 fontSize: 11,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ],
@@ -1872,7 +1873,7 @@ class _InviteSheetState extends State<_InviteSheet> {
         fontSize: 10,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.2,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     ),
   );

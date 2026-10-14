@@ -9,6 +9,7 @@ import '../../core/device_info.dart';
 import '../../core/supabase.dart';
 import '../../core/toast.dart';
 import '../../core/theme.dart';
+import '../../shared/widgets/common.dart';
 
 class ReportIssueScreen extends StatefulWidget {
   const ReportIssueScreen({super.key});
@@ -98,7 +99,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -147,7 +148,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -192,7 +193,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                                       : AppColors.textMuted,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                               ),
                             ],
@@ -212,7 +213,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -223,13 +224,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   style: TextStyle(
                     color: AppColors.text,
                     fontSize: 14,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                   decoration: InputDecoration(
                     hintText: 'Brief summary...',
                     hintStyle: TextStyle(
                       color: AppColors.textFaint,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                   validator: (v) =>
@@ -245,7 +246,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -257,14 +258,14 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   style: TextStyle(
                     color: AppColors.text,
                     fontSize: 14,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                     height: 1.5,
                   ),
                   decoration: InputDecoration(
                     hintText: 'What happened? What did you expect?',
                     hintStyle: TextStyle(
                       color: AppColors.textFaint,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                   validator: (v) =>
@@ -285,7 +286,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 11,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),

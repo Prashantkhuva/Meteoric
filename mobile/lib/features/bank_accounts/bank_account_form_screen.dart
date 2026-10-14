@@ -124,7 +124,7 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -196,7 +196,7 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
                   style: TextStyle(
                     color: AppColors.text,
                     fontSize: 14,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                   items: [
                     for (final c in _currencies)
@@ -281,7 +281,7 @@ class _BankAccountFormScreenState extends State<BankAccountFormScreen> {
                             style: TextStyle(
                               color: AppColors.text,
                               fontSize: 13,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ),

@@ -83,7 +83,7 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,

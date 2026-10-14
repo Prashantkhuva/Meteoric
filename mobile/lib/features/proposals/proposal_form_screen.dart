@@ -167,7 +167,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -301,7 +301,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
               style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -362,7 +362,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -420,7 +420,7 @@ class _ProposalFormScreenState extends State<ProposalFormScreen> {
                 style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 12,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),

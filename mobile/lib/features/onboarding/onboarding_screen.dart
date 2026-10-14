@@ -199,7 +199,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: AppColors.text,
               fontSize: 26,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
               height: 1.2,
             ),
           ),
@@ -209,7 +209,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 15,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
               height: 1.5,
             ),
           ),
@@ -241,7 +241,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
               height: 1.5,
             ),
           ),
@@ -253,7 +253,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               fontSize: 10,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 8),
@@ -264,13 +264,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 16,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: InputDecoration(
               hintText: 'Min. 6 characters',
               hintStyle: TextStyle(
                 color: AppColors.textFaint,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
               suffixIcon: IconButton(
                 icon: Icon(
@@ -302,7 +302,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               fontSize: 10,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 8),
@@ -314,13 +314,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 16,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: InputDecoration(
               hintText: 'Re-enter your password',
               hintStyle: TextStyle(
                 color: AppColors.textFaint,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.border),
@@ -342,7 +342,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               style: TextStyle(
                 color: AppColors.red,
                 fontSize: 12,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -385,7 +385,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               fontSize: 10,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 8),
@@ -394,13 +394,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 16,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: InputDecoration(
               hintText: 'Enter your full name',
               hintStyle: TextStyle(
                 color: AppColors.textFaint,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.border),
@@ -421,7 +421,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.textFaint,
               fontSize: 12,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const Spacer(flex: 3),
@@ -479,7 +479,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: AppColors.text,
               fontSize: 26,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
               height: 1.2,
             ),
           ),
@@ -489,7 +489,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 15,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
               height: 1.5,
             ),
           ),

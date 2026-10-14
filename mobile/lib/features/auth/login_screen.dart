@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: 26,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.5,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppColors.textFaint,
                                 fontSize: 13,
                                 letterSpacing: 0.4,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ],
@@ -177,14 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   color: AppColors.text,
                                   fontSize: 14,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                                 decoration: InputDecoration(
                                   hintText: 'you@example.com',
                                   hintStyle: TextStyle(
                                     color: AppColors.textFaint,
                                     fontSize: 14,
-                                    fontFamily: 'Inter',
+                                    fontFamily: 'Satoshi',
                                   ),
                                   filled: true,
                                   fillColor: AppColors.inputFillDark,
@@ -223,14 +223,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   color: AppColors.text,
                                   fontSize: 14,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                 ),
                                 decoration: InputDecoration(
                                   hintText: 'Enter your password',
                                   hintStyle: TextStyle(
                                     color: AppColors.textFaint,
                                     fontSize: 14,
-                                    fontFamily: 'Inter',
+                                    fontFamily: 'Satoshi',
                                   ),
                                   suffixIcon: Semantics(
                                     button: true,
@@ -300,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: TextStyle(
                                         color: AppColors.red,
                                         fontSize: 13,
-                                        fontFamily: 'Inter',
+                                        fontFamily: 'Satoshi',
                                       ),
                                     ),
                                   ),
@@ -349,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      fontFamily: 'Inter',
+                                                      fontFamily: 'Satoshi',
                                                     ),
                                                   ),
                                                 ],
@@ -362,7 +362,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   color: AppColors.onAccent,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
+                                                  fontFamily: 'Satoshi',
                                                 ),
                                               ),
                                       ),
@@ -381,7 +381,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: AppColors.textFaint,
                             fontSize: 11,
                             letterSpacing: 0.4,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],
@@ -411,7 +411,7 @@ class _FieldLabel extends StatelessWidget {
         fontSize: 11,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.3,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     );
   }

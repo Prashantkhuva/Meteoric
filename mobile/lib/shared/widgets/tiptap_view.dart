@@ -20,7 +20,7 @@ class TipTapView extends StatelessWidget {
           color: AppColors.textMuted,
           fontSize: 13,
           height: 1.6,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       );
     }
@@ -58,7 +58,7 @@ class TipTapView extends StatelessWidget {
               color: AppColors.text,
               fontSize: sizes[level] ?? 14,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         );
@@ -120,7 +120,7 @@ class TipTapView extends StatelessWidget {
             style: TextStyle(
               color: AppColors.accent,
               fontSize: 13,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           Expanded(
@@ -160,7 +160,7 @@ class TipTapView extends StatelessWidget {
           color: AppColors.textMuted,
           fontSize: 13,
           height: 1.6,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       );
     }
@@ -179,7 +179,7 @@ class TipTapView extends StatelessWidget {
       color: AppColors.textMuted,
       fontSize: 13,
       height: 1.6,
-      fontFamily: 'Inter',
+      fontFamily: 'Satoshi',
     );
 
     if (markTypes.contains('bold')) {
@@ -208,7 +208,7 @@ class TipTapView extends StatelessWidget {
             fontSize: 13,
             height: 1.6,
             decoration: TextDecoration.underline,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       );

@@ -228,7 +228,7 @@ class _AppLockViewState extends State<AppLockView>
                                 color: AppColors.red,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             )
                           : _error
@@ -239,7 +239,7 @@ class _AppLockViewState extends State<AppLockView>
                                 color: AppColors.red,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             )
                           : Text(
@@ -248,7 +248,7 @@ class _AppLockViewState extends State<AppLockView>
                               style: TextStyle(
                                 color: AppColors.textFaint,
                                 fontSize: 13,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                     ),
@@ -309,7 +309,7 @@ class _AppLockViewState extends State<AppLockView>
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.2,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 4),
@@ -318,7 +318,7 @@ class _AppLockViewState extends State<AppLockView>
               style: TextStyle(
                 color: AppColors.textFaint,
                 fontSize: 13,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -388,7 +388,7 @@ class _AppLockViewState extends State<AppLockView>
               color: AppColors.text,
               fontSize: 22,
               fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           );
     return SizedBox(
@@ -435,7 +435,7 @@ class _AppLockViewState extends State<AppLockView>
           fontSize: 12,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.8,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
     ).animate().fadeIn(duration: 400.ms, delay: 200.ms);

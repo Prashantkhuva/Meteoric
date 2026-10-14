@@ -65,7 +65,7 @@ class InvoicePreviewScreen extends StatelessWidget {
             color: previewText,
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ),
@@ -104,7 +104,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                         color: previewText,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -144,7 +144,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             color: previewText,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         const Text(
@@ -153,7 +153,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             color: previewTextMuted,
                             fontSize: 11,
                             height: 1.5,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],
@@ -172,7 +172,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                             color: previewText,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         if (client?['company'] != null &&
@@ -183,7 +183,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                               color: previewTextMuted,
                               fontSize: 11,
                               height: 1.5,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         if (client?['email'] != null &&
@@ -194,7 +194,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                               color: previewTextMuted,
                               fontSize: 11,
                               height: 1.5,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                       ],
@@ -285,7 +285,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                                 color: previewText,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                             Text(
@@ -294,7 +294,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                                 color: previewText,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ],
@@ -377,7 +377,7 @@ class InvoicePreviewScreen extends StatelessWidget {
           style: const TextStyle(
             color: previewTextFaint,
             fontSize: 11,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
           children: [
             TextSpan(
@@ -386,7 +386,7 @@ class InvoicePreviewScreen extends StatelessWidget {
                 color: highlight ? previewGreen : previewTextFaint,
                 fontSize: 11,
                 fontWeight: highlight ? FontWeight.w600 : FontWeight.w400,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -410,7 +410,7 @@ class _Brand extends StatelessWidget {
               fontSize: 22,
               fontWeight: FontWeight.w600,
               color: previewText,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           TextSpan(
@@ -418,7 +418,7 @@ class _Brand extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               color: previewText,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ],
@@ -441,7 +441,7 @@ class _SectionLabel extends StatelessWidget {
         fontSize: 9,
         fontWeight: FontWeight.w700,
         letterSpacing: 1.2,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     );
   }
@@ -497,7 +497,7 @@ class StatusDot extends StatelessWidget {
               fontSize: 9,
               fontWeight: FontWeight.w700,
               letterSpacing: 1.2,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ],
@@ -536,7 +536,7 @@ class _ExportButton extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],
@@ -557,7 +557,7 @@ Widget _th(String text, {bool right = false}) => Padding(
       fontSize: 9,
       fontWeight: FontWeight.w700,
       letterSpacing: 1.2,
-      fontFamily: 'Inter',
+      fontFamily: 'Satoshi',
     ),
   ),
 );
@@ -571,7 +571,7 @@ Widget _td(Object? value, {bool right = false, bool emphasize = false}) =>
         style: TextStyle(
           color: emphasize ? previewText : previewTextMuted,
           fontSize: 11.5,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
     );
@@ -586,7 +586,7 @@ Widget _totalRow(String label, String amount) => Padding(
         style: const TextStyle(
           color: previewTextMuted,
           fontSize: 11.5,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
       Text(
@@ -594,7 +594,7 @@ Widget _totalRow(String label, String amount) => Padding(
         style: const TextStyle(
           color: previewTextMuted,
           fontSize: 11.5,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
     ],
@@ -607,6 +607,6 @@ Widget _preWrapText(String text) => Text(
     color: previewTextMuted,
     fontSize: 11.5,
     height: 1.55,
-    fontFamily: 'Inter',
+    fontFamily: 'Satoshi',
   ),
 );

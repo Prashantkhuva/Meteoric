@@ -167,7 +167,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -222,7 +222,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                             style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 12,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ),
@@ -299,7 +299,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
                                 ? AppColors.textFaint
                                 : AppColors.text,
                             fontSize: 13,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         const Spacer(),
@@ -363,7 +363,7 @@ class _InvoiceFormScreenState extends State<InvoiceFormScreen> {
               style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),

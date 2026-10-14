@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../core/native.dart';
 import '../../core/theme.dart';
+import 'common.dart';
 
 /// Bottom sheet mirroring the web admin's share actions:
 /// copy link, open preview, WhatsApp, system share.
@@ -11,10 +12,10 @@ Future<void> showShareSheet(
   required String title,
   required String url,
 }) {
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    backgroundColor: AppColors.card,
-    shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+    color: AppColors.card,
+    radius: AppRadius.mdAll,
     builder: (ctx) => SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -30,7 +31,7 @@ Future<void> showShareSheet(
                   fontSize: 10,
                   letterSpacing: 1.2,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -42,7 +43,7 @@ Future<void> showShareSheet(
               style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 12,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -119,7 +120,7 @@ class _ShareAction extends StatelessWidget {
               style: TextStyle(
                 color: AppColors.text,
                 fontSize: 13,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],

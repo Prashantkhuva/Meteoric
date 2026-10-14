@@ -77,7 +77,7 @@ class _Eyebrow extends StatelessWidget {
         fontSize: 10,
         fontWeight: FontWeight.w600,
         letterSpacing: 2,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     );
   }
@@ -98,7 +98,7 @@ class _Headline extends StatelessWidget {
         fontSize: 19,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.3,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     );
   }
@@ -118,7 +118,7 @@ class _BodyText extends StatelessWidget {
         color: AppColors.textMuted,
         fontSize: 12.5,
         height: 1.55,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     );
   }
@@ -286,7 +286,7 @@ class _NoInternetViewState extends State<NoInternetView>
                 style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 11,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],

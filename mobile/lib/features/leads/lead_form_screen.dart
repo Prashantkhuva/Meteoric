@@ -130,7 +130,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -213,7 +213,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.2,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -253,7 +253,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                                     : AppColors.textMuted,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Satoshi',
                               ),
                             ),
                           ),

@@ -121,26 +121,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// 2-step modal: enter new PIN, then confirm. Returns true on success.
   Future<bool> _showPinSetup() async {
     Haptic.tap();
-    final result = await showModalBottomSheet<bool>(
+    final result = await showAppSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      color: AppColors.card,
+      radius: const BorderRadius.vertical(top: Radius.circular(20)),
       builder: (_) => const _PinSetupSheet(),
     );
     return result ?? false;
   }
 
   Future<bool> _confirmClearPin() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Disable PIN lock?'),
         content: Text(
           'Your app can be opened without a PIN or biometrics again.',
-          style: TextStyle(color: AppColors.textMuted, fontFamily: 'Inter'),
+          style: TextStyle(color: AppColors.textMuted, fontFamily: 'Satoshi'),
         ),
         actions: [
           TextButton(
@@ -267,7 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _signOut() async {
-    final ok = await showDialog<bool>(
+    final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Sign out'),
@@ -392,7 +390,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: _roleColor,
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -408,7 +406,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: AppColors.text,
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 const SizedBox(height: 3),
@@ -417,7 +415,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 if (_role.isNotEmpty) ...[
@@ -437,7 +435,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         color: _roleColor,
                         fontSize: 9,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         letterSpacing: 1,
                       ),
                     ),
@@ -592,7 +590,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.8,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],
@@ -669,7 +667,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: forced ? AppColors.red : AppColors.text,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -684,7 +682,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ? (forced ? AppColors.red : AppColors.accent)
                                 : AppColors.textFaint,
                             fontSize: 11,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],
@@ -712,7 +710,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                       height: 1.4,
                     ),
                   ),
@@ -738,7 +736,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ),
@@ -760,7 +758,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           style: TextStyle(
                             color: AppColors.text,
                             fontSize: 13,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ),
@@ -770,7 +768,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           color: AppColors.accent,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ],
@@ -800,7 +798,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(
                   color: AppColors.red,
                   fontSize: 12,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                   height: 1.4,
                 ),
               ),
@@ -820,7 +818,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       fontSize: 10,
       fontWeight: FontWeight.w600,
       letterSpacing: 1.4,
-      fontFamily: 'Inter',
+      fontFamily: 'Satoshi',
     ),
   );
 
@@ -834,7 +832,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 13,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
         ),
@@ -844,7 +842,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             color: valueColor ?? AppColors.text,
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ],
@@ -900,7 +898,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: AppColors.text,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -909,7 +907,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(
                       color: AppColors.textFaint,
                       fontSize: 11,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                     ),
                   ),
                 ],
@@ -972,7 +970,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           color: AppColors.text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -981,7 +979,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         style: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 11,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ],
@@ -1025,7 +1023,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: _input(),
           ),
@@ -1038,7 +1036,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: _input(),
           ),
@@ -1049,7 +1047,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 color: AppColors.amber,
                 fontSize: 11,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -1079,7 +1077,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: _input(
               suffix: TextButton(
@@ -1089,7 +1087,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 11,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ),
@@ -1104,7 +1102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
               color: AppColors.text,
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
             decoration: _input(),
           ),
@@ -1117,7 +1115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
@@ -1141,7 +1139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         fontSize: 10,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.2,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     ),
   );
@@ -1296,7 +1294,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
               fontSize: 12,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.8,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 8),
@@ -1306,7 +1304,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
               color: AppColors.text,
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 22),
@@ -1344,7 +1342,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
                   color: AppColors.red,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             )
@@ -1426,7 +1424,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
                         color: AppColors.text,
                         fontSize: 22,
                         fontWeight: FontWeight.w500,
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                       ),
                     ),
             ),

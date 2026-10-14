@@ -476,7 +476,7 @@ class _ClientCard extends StatelessWidget {
                                 color: AppColors.text,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Space Grotesk',
+                                fontFamily: 'Clash Display',
                               ),
                             ),
                           ),
@@ -505,7 +505,7 @@ class _ClientCard extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -518,7 +518,7 @@ class _ClientCard extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 10,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                           const Spacer(),
@@ -527,7 +527,7 @@ class _ClientCard extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.textFaint,
                               fontSize: 10,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                             ),
                           ),
                         ],

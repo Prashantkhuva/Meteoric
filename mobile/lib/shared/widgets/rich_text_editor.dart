@@ -194,17 +194,17 @@ QuillDialogTheme editorDialogTheme(BuildContext context) => QuillDialogTheme(
   labelTextStyle: TextStyle(
     color: AppColors.textMuted,
     fontSize: 13,
-    fontFamily: 'Inter',
+    fontFamily: 'Satoshi',
   ),
   inputTextStyle: TextStyle(
     color: AppColors.text,
     fontSize: 14,
-    fontFamily: 'Inter',
+    fontFamily: 'Satoshi',
   ),
   buttonTextStyle: TextStyle(
     color: AppColors.accent,
     fontSize: 13,
     fontWeight: FontWeight.w600,
-    fontFamily: 'Inter',
+    fontFamily: 'Satoshi',
   ),
 );

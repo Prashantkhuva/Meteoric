@@ -150,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               color: AppColors.text,
               fontSize: 17,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Space Grotesk',
+              fontFamily: 'Clash Display',
             ),
           ),
           const SizedBox(height: 5),
@@ -159,7 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
             ),
           ),
           const SizedBox(height: 20),
@@ -263,16 +263,21 @@ Widget _monthLabel(double v, List<Map<String, dynamic>> data) => Padding(
     style: TextStyle(
       color: AppColors.textFaint,
       fontSize: 9,
-      fontFamily: 'Inter',
+      fontFamily: 'Satoshi',
     ),
   ),
 );
 
 class _ChartLegendDot extends StatelessWidget {
-  const _ChartLegendDot({required this.color, required this.label});
+  const _ChartLegendDot({
+    required this.color,
+    required this.label,
+    this.labelColor,
+  });
 
   final Color color;
   final String label;
+  final Color? labelColor;
 
   @override
   Widget build(BuildContext context) {
@@ -288,9 +293,9 @@ class _ChartLegendDot extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: AppColors.textFaint,
+            color: labelColor ?? AppColors.textFaint,
             fontSize: 10,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ],
@@ -299,20 +304,21 @@ class _ChartLegendDot extends StatelessWidget {
 }
 
 class _Eyebrow extends StatelessWidget {
-  const _Eyebrow(this.text);
+  const _Eyebrow(this.text, {this.color});
 
   final String text;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       style: TextStyle(
-        color: AppColors.textFaint,
+        color: color ?? AppColors.textFaint,
         fontSize: 9,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.2,
-        fontFamily: 'Inter',
+        fontFamily: 'Satoshi',
       ),
     );
   }
@@ -327,12 +333,11 @@ class _TrendBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (mom is! num) return const SizedBox.shrink();
     final up = mom >= 0;
-    final fg = AppColors.accent;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.inputFillDark,
-        border: Border.all(color: AppColors.borderSoft),
+        color: Colors.white.withValues(alpha: 0.14),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -340,17 +345,17 @@ class _TrendBadge extends StatelessWidget {
           Icon(
             up ? Icons.arrow_drop_up_rounded : Icons.arrow_drop_down_rounded,
             size: 14,
-            color: fg,
+            color: Colors.white,
           ),
           Transform.translate(
             offset: const Offset(-3, 0),
             child: Text(
               '${mom.abs().toStringAsFixed(0)}% MoM',
-              style: TextStyle(
-                color: fg,
+              style: const TextStyle(
+                color: Colors.white,
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -440,16 +445,17 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
     String axisLabel(double v) =>
         _leadsMode ? v.toStringAsFixed(v % 1 == 0 ? 0 : 1) : _axisMoney(v);
 
-    return Container(
-      decoration: AppElevation.card,
-      padding: const EdgeInsets.all(16),
+    return HeroCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const _Eyebrow('ANALYTICS'),
+              _Eyebrow(
+                'ANALYTICS',
+                color: Colors.white.withValues(alpha: 0.55),
+              ),
               _ModeSwitch(
                 value: _leadsMode ? 'leads' : 'revenue',
                 onChanged: (v) => setState(() => _leadsMode = v == 'leads'),
@@ -462,8 +468,8 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                 ? '${widget.totalLeads}'
                 : Fmt.money(widget.totalRevenue, currency: 'USD'),
             style: AppText.display(
-              TextStyle(
-                color: AppColors.accent,
+              const TextStyle(
+                color: Colors.white,
                 fontSize: 30,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.8,
@@ -484,9 +490,9 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: AppColors.textMuted,
+                    color: Colors.white.withValues(alpha: 0.62),
                     fontSize: 10.5,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ),
@@ -505,7 +511,10 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: step,
-                  getDrawingHorizontalLine: (_) => _gridLine(),
+                  getDrawingHorizontalLine: (_) => FlLine(
+                    color: Colors.white.withValues(alpha: 0.10),
+                    strokeWidth: 1,
+                  ),
                 ),
                 titlesData: FlTitlesData(
                   topTitles: const AxisTitles(
@@ -522,9 +531,9 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                       getTitlesWidget: (v, meta) => Text(
                         axisLabel(v),
                         style: TextStyle(
-                          color: AppColors.textFaint,
+                          color: Colors.white.withValues(alpha: 0.45),
                           fontSize: 8.5,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ),
@@ -552,15 +561,15 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                           show: true,
                           getDotPainter: (spot, _, _, _) => FlDotCirclePainter(
                             radius: 3.5,
-                            color: barData.color ?? AppColors.accent,
+                            color: barData.color ?? Colors.white,
                             strokeWidth: 2,
-                            strokeColor: AppColors.card,
+                            strokeColor: const Color(0xFF37477C),
                           ),
                         ),
                       ),
                   ],
                   touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (_) => AppColors.cardRaised,
+                    getTooltipColor: (_) => const Color(0xFF22305A),
                     getTooltipItems: (touchedSpots) => [
                       for (final s in touchedSpots)
                         LineTooltipItem(
@@ -569,11 +578,11 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                               : '${_month(s)} · ${s.barIndex == 0 ? 'Paid ${_axisMoney(s.y)}' : 'Due ${_axisMoney(s.y)}'}',
                           TextStyle(
                             color: s.barIndex == 0
-                                ? AppColors.accent
-                                : AppColors.textMuted,
+                                ? Colors.white
+                                : Colors.white.withValues(alpha: 0.6),
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                     ],
@@ -586,7 +595,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                     curveSmoothness: 0.32,
                     preventCurveOverShooting: true,
                     barWidth: 2,
-                    color: AppColors.accent,
+                    color: Colors.white.withValues(alpha: 0.92),
                     isStrokeCapRound: true,
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
@@ -595,8 +604,8 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          AppColors.accent.withValues(alpha: 0.18),
-                          AppColors.accent.withValues(alpha: 0),
+                          Colors.white.withValues(alpha: 0.20),
+                          Colors.white.withValues(alpha: 0),
                         ],
                       ),
                     ),
@@ -607,7 +616,7 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
                     curveSmoothness: 0.32,
                     preventCurveOverShooting: true,
                     barWidth: 1.5,
-                    color: AppColors.textMuted,
+                    color: Colors.white.withValues(alpha: 0.40),
                     dashArray: const [5, 4],
                     isStrokeCapRound: true,
                     dotData: const FlDotData(show: false),
@@ -620,13 +629,15 @@ class _RevenueHeroCardState extends State<_RevenueHeroCard> {
           Row(
             children: [
               _ChartLegendDot(
-                color: AppColors.accent,
+                color: Colors.white.withValues(alpha: 0.92),
                 label: _leadsMode ? 'Leads' : 'Collected',
+                labelColor: Colors.white.withValues(alpha: 0.55),
               ),
               const SizedBox(width: 14),
               _ChartLegendDot(
-                color: AppColors.textMuted,
+                color: Colors.white.withValues(alpha: 0.40),
                 label: _leadsMode ? 'Won' : 'Outstanding',
+                labelColor: Colors.white.withValues(alpha: 0.55),
               ),
             ],
           ),
@@ -647,7 +658,7 @@ class _ModeSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
         borderRadius: AppRadius.pillAll,
       ),
       padding: const EdgeInsets.all(2),
@@ -670,7 +681,7 @@ class _ModeSwitch extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: value == s.toLowerCase()
-                      ? AppColors.accent
+                      ? Colors.white
                       : Colors.transparent,
                   borderRadius: AppRadius.pillAll,
                 ),
@@ -680,10 +691,10 @@ class _ModeSwitch extends StatelessWidget {
                     fontSize: 9.5,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                     color: value == s.toLowerCase()
-                        ? AppColors.background
-                        : AppColors.textMuted,
+                        ? const Color(0xFF37477C)
+                        : Colors.white.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -760,7 +771,7 @@ class _MonthlyLeadsCard extends StatelessWidget {
                               : AppColors.textMuted,
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       );
                     },
@@ -783,7 +794,7 @@ class _MonthlyLeadsCard extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 8.5,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ),
@@ -891,12 +902,15 @@ class _StatStrip extends StatelessWidget {
 
     return Container(
       height: 112,
-      decoration: AppElevation.card,
+      decoration: BoxDecoration(
+        color: AppColors.tint,
+        borderRadius: AppRadius.mdAll,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (var i = 0; i < items.length; i++) ...[
-            if (i > 0) Container(width: 1, color: AppColors.borderSoft),
+            if (i > 0) Container(width: 1, color: AppColors.card),
             Expanded(
               child: Material(
                 color: Colors.transparent,
@@ -917,11 +931,11 @@ class _StatStrip extends StatelessWidget {
                         Text(
                           items[i].label,
                           style: TextStyle(
-                            color: AppColors.textFaint,
+                            color: AppColors.textMuted,
                             fontSize: 8.5,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1.2,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -958,7 +972,7 @@ class _StatStrip extends StatelessWidget {
                                       horizontal: 12,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppColors.overlay,
+                                      color: AppColors.card,
                                       borderRadius: BorderRadius.circular(
                                         AppRadius.pill,
                                       ),
@@ -973,9 +987,9 @@ class _StatStrip extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: AppColors.textFaint,
+                            color: AppColors.textMuted,
                             fontSize: 9,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                           ),
                         ),
                       ],
@@ -1049,7 +1063,7 @@ class _HalfGaugeCard extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textFaint,
                           fontSize: 10,
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                         ),
                       ),
                     ],
@@ -1119,7 +1133,7 @@ class _OverdueBanner extends StatelessWidget {
                     color: AppColors.text,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ),
@@ -1171,7 +1185,7 @@ class _PipelineCard extends StatelessWidget {
         style: TextStyle(
           color: AppColors.textFaint,
           fontSize: 10,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
       child: Column(
@@ -1188,7 +1202,7 @@ class _PipelineCard extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 11,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 Text(
@@ -1198,7 +1212,7 @@ class _PipelineCard extends StatelessWidget {
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                     fontFeatures: const [FontFeature.tabularFigures()],
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],
@@ -1243,7 +1257,7 @@ class _PipelineCard extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 10,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),
@@ -1334,7 +1348,7 @@ class _RecentSection extends StatelessWidget {
                 color: AppColors.textMuted,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -1351,7 +1365,7 @@ class _RecentSection extends StatelessWidget {
                     color: AppColors.text,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
                 const SizedBox(height: 3),
@@ -1362,7 +1376,7 @@ class _RecentSection extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.textFaint,
                     fontSize: 11,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],
@@ -1379,7 +1393,7 @@ class _RecentSection extends StatelessWidget {
                     color: AppColors.accent,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                   ),
                 )
               else
@@ -1390,7 +1404,7 @@ class _RecentSection extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.textFaint,
                   fontSize: 10.5,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ],
@@ -1441,7 +1455,7 @@ class _ViewAllButton extends StatelessWidget {
             fontSize: 9,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.2,
-            fontFamily: 'Inter',
+            fontFamily: 'Satoshi',
           ),
         ),
       ),
@@ -1485,7 +1499,7 @@ class _BellIcon extends StatelessWidget {
                   fontSize: 8,
                   fontWeight: FontWeight.w700,
                   fontFeatures: [FontFeature.tabularFigures()],
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                 ),
               ),
             ),

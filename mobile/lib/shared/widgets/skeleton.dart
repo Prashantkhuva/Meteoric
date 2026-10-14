@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
 
-// ── Shimmer base ─────────────────────────────────────────────────────────
+// ── Pulse base ───────────────────────────────────────────────────────────
 
-/// Shimmer skeleton placeholder — left-to-right gradient sweep.
+/// Skeleton placeholder — soft opacity pulse (0.45 → 0.85, 900ms).
 class SkeletonLoader extends StatefulWidget {
   const SkeletonLoader({super.key, required this.child});
 
@@ -23,8 +23,8 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat();
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
   }
 
   @override
@@ -39,21 +39,9 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          return ShaderMask(
-            shaderCallback: (bounds) {
-              final t = _controller.value;
-              return LinearGradient(
-                begin: Alignment(-1.0 + 2.0 * t, 0),
-                end: Alignment(-0.4 + 2.0 * t, 0),
-                colors: [
-                  AppColors.shimmerBase,
-                  AppColors.shimmerHighlight,
-                  AppColors.shimmerBase,
-                ],
-                stops: const [0.0, 0.5, 1.0],
-              ).createShader(bounds);
-            },
-            blendMode: BlendMode.srcATop,
+          final t = Curves.easeInOut.transform(_controller.value);
+          return Opacity(
+            opacity: 0.45 + 0.40 * t,
             child: child,
           );
         },
@@ -86,7 +74,7 @@ class SkeletonBlock extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: color ?? AppColors.cardRaised,
+        color: color ?? AppColors.tint,
         borderRadius: borderRadius ?? AppRadius.smAll,
       ),
     );

@@ -103,7 +103,7 @@ class StatusBadge extends StatelessWidget {
           fontSize: 9,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.6,
-          fontFamily: 'Inter',
+          fontFamily: 'Satoshi',
         ),
       ),
     );

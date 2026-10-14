@@ -151,7 +151,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
   Future<bool> _onWillPop() async {
     if (!_dirty) return true;
-    final discard = await showDialog<bool>(
+    final discard = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardRaised,
@@ -296,7 +296,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               style: TextStyle(
                 color: AppColors.red,
                 fontSize: 11,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ),
@@ -356,7 +356,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
             const SizedBox(height: 6),
@@ -365,7 +365,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               style: TextStyle(
                 color: value == null ? AppColors.textFaint : AppColors.text,
                 fontSize: 13,
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
               ),
             ),
           ],
