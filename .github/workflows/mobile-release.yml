@@ -177,6 +177,8 @@ jobs:
           set -euo pipefail
           curl --proto '=https' --tlsv1.2 -fsSL https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh | bash
           echo "$HOME/.shorebird/bin" >> "$GITHUB_PATH"
+          # GITHUB_PATH only affects later steps — export for this step too.
+          export PATH="$HOME/.shorebird/bin:$PATH"
           shorebird --version
 
       # ── Quality gate (both modes) ──────────────────────────────────────
