@@ -76,7 +76,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # ── Version truth ──────────────────────────────────────────────────
       # Single place that parses versions. Every later step reads these
@@ -124,7 +124,7 @@ jobs:
 
       # ── Toolchains ─────────────────────────────────────────────────────
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -175,7 +175,7 @@ jobs:
       - name: Install Shorebird CLI
         run: |
           set -euo pipefail
-          curl --proto '=https' --tlsv1.2 -fsSL https://shorebird.dev/install.sh | bash
+          curl --proto '=https' --tlsv1.2 -fsSL https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh | bash
           echo "$HOME/.shorebird/bin" >> "$GITHUB_PATH"
           shorebird --version
 
