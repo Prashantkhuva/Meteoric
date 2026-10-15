@@ -557,7 +557,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _rowDivider(),
             _infoRow('Device', DeviceInfo.model),
           ],
+          _rowDivider(),
+          _buildUpdateCheckRow(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateCheckRow() {
+    final state = UpdateState.instance;
+    final checking = state.checking || state.shorebirdChecking;
+    final updateAvailable =
+        state.shorebirdUpdateAvailable ||
+        state.shorebirdRestartReady ||
+        state.hasUpdate;
+    final failed = state.shorebirdError != null || state.error != null;
+
+    final Color statusColor;
+    final String status;
+    if (checking) {
+      status = 'Checking…';
+      statusColor = AppColors.textFaint;
+    } else if (updateAvailable) {
+      status = 'Update available';
+      statusColor = AppColors.accent;
+    } else if (failed) {
+      status = 'Check failed';
+      statusColor = AppColors.red;
+    } else {
+      status = 'Up to date';
+      statusColor = AppColors.textFaint;
+    }
+
+    return InkWell(
+      onTap: checking
+          ? null
+          : () async {
+              await UpdateState.instance.checkAll();
+              await _loadRuntimePatch();
+            },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Check for updates',
+                style: TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 13,
+                  fontFamily: 'Satoshi',
+                ),
+              ),
+            ),
+            if (checking) ...[
+              SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1.5,
+                  color: AppColors.accent,
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            Text(
+              status,
+              style: TextStyle(
+                color: statusColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Satoshi',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

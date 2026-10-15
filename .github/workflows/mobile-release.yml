@@ -1,27 +1,54 @@
 name: Mobile Release
 
-# Ship Meteoric Admin APK end-to-end:
-#   register Shorebird release -> build v2-signed APK -> verify gates ->
-#   upload to meteoric-app-releases + update Supabase latest.json.
+# Ship Meteoric Admin end-to-end, two modes:
 #
-# Local pre-flight (before dispatch):
+#   mode=release  register Shorebird release -> build v2-signed APK -> verify
+#                 gates -> upload to meteoric-app-releases + latest.json.
+#   mode=patch    OTA-only. Re-AOTs Dart against the EXISTING pubspec version
+#                 and promotes the patch to a Shorebird track. No APK,
+#                 no versionCode bump, no upload.
+#
+# Local pre-flight (release mode):
 #   1. node scripts/check-version.mjs     # bumps build above remote highest
 #   2. edit mobile/lib/core/app_version.dart (version, patch:0, real IST)
-#   3. flutter analyze && flutter test    # bar: zero issues, all green
-#   4. commit + push main
-#   5. Actions -> Mobile Release -> Run workflow (notes optional)
+#   3. commit + push main
+#   4. Actions -> Mobile Release -> Run workflow (mode=release)
+#
+# Local pre-flight (patch mode):
+#   1. base release MUST already be registered on Shorebird
+#   2. edit mobile/lib/core/app_version.dart (patch+1, real IST)
+#   3. commit + push main
+#   4. Actions -> Mobile Release -> Run workflow (mode=patch, dry_run first)
 
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: "release = new version + APK upload; patch = OTA only on existing version"
+        type: choice
+        options:
+          - release
+          - patch
+        default: release
       notes:
         description: Release notes shown in the in-app update banner
         required: false
         default: ""
       min_build:
-        description: "Optional forced-upgrade floor (min_supported_build). Leave empty to skip."
+        description: "Release mode only: forced-upgrade floor (min_supported_build). Empty = skip."
         required: false
         default: ""
+      track:
+        description: "Patch mode only: Shorebird channel"
+        type: choice
+        options:
+          - stable
+          - staging
+        default: stable
+      dry_run:
+        description: "Patch mode only: build and verify without publishing"
+        type: boolean
+        default: false
 
 concurrency:
   group: mobile-release
@@ -30,8 +57,13 @@ concurrency:
 permissions:
   contents: write
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  release:
+  ship:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -45,17 +77,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Read version from pubspec
+      # ── Version truth ──────────────────────────────────────────────────
+      # Single place that parses versions. Every later step reads these
+      # outputs — no step greps pubspec/app_version on its own.
+      - name: Read versions (pubspec + app_version.dart)
         id: ver
         run: |
+          set -euo pipefail
           FULL=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
           SEMVER="${FULL%%+*}"
           BUILD="${FULL##*+}"
-          echo "full=$FULL"   >> "$GITHUB_OUTPUT"
-          echo "semver=$SEMVER" >> "$GITHUB_OUTPUT"
-          echo "build=$BUILD"  >> "$GITHUB_OUTPUT"
-          echo "Releasing $SEMVER (versionCode $BUILD)"
+          DART_VERSION=$(grep -oE "version = '[^']+'" mobile/lib/core/app_version.dart | sed "s/version = '//;s/'//")
+          DART_PATCH=$(grep -oE 'patch = [0-9]+' mobile/lib/core/app_version.dart | grep -oE '[0-9]+')
+          {
+            echo "full=$FULL"
+            echo "semver=$SEMVER"
+            echo "build=$BUILD"
+            echo "dart_version=$DART_VERSION"
+            echo "dart_patch=$DART_PATCH"
+          } >> "$GITHUB_OUTPUT"
+          echo "pubspec=$FULL  app_version.dart=$DART_VERSION  patch=$DART_PATCH"
 
+      # Guard 1: version mismatch between pubspec and app_version.dart is
+      # the #1 cause of "updater parses wrong build" — fail before building.
+      - name: Guard — pubspec version matches app_version.dart
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.ver.outputs.full }}" != "${{ steps.ver.outputs.dart_version }}" ]; then
+            echo "::error::pubspec.yaml (${{ steps.ver.outputs.full }}) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Fix and re-run."
+            exit 1
+          fi
+          echo "versions match: ${{ steps.ver.outputs.full }}"
+
+      # Guard 2: patch mode requires a bumped patch field — forgetting it
+      # publishes an OTA nobody can see (display still says patch 0).
+      - name: Guard — patch mode requires patch field >= 1
+        if: inputs.mode == 'patch'
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.ver.outputs.dart_patch }}" -lt 1 ]; then
+            echo "::error::mode=patch but app_version.dart patch=${{ steps.ver.outputs.dart_patch }}. Bump patch field, commit, re-run."
+            exit 1
+          fi
+          echo "patch field ok: ${{ steps.ver.outputs.dart_patch }}"
+
+      # ── Toolchains ─────────────────────────────────────────────────────
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -65,29 +131,91 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Setup Flutter (quality gate only — shipping uses Shorebird's fork)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          cache-key: flutter-sdk-stable
+          pub-cache: true
+          pub-cache-key: pub-${{ hashFiles('mobile/pubspec.lock') }}
+
       - name: Decode signing + Firebase secrets
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEY_PROPS_B64: ${{ secrets.KEY_PROPERTIES_B64 }}
           GS_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
         run: |
+          set -euo pipefail
+          [ -n "$KEYSTORE_B64" ] || { echo "::error::ANDROID_KEYSTORE_BASE64 missing"; exit 1; }
+          [ -n "$KEY_PROPS_B64" ] || { echo "::error::KEY_PROPERTIES_B64 missing"; exit 1; }
+          [ -n "$GS_JSON_B64" ] || { echo "::error::GOOGLE_SERVICES_JSON_B64 missing"; exit 1; }
           echo "$KEYSTORE_B64"  | base64 -d > "$RUNNER_TEMP/meteoric-release.jks"
           echo "$KEY_PROPS_B64" | base64 -d > mobile/android/key.properties
           # Point storeFile at the decoded location (runner path differs from local).
           sed -i "s|^storeFile=.*|storeFile=$RUNNER_TEMP/meteoric-release.jks|" mobile/android/key.properties
           echo "$GS_JSON_B64"  | base64 -d > mobile/android/app/google-services.json
+          [ -s "$RUNNER_TEMP/meteoric-release.jks" ] || { echo "::error::keystore decode produced empty file"; exit 1; }
           grep -q 'com.meteoric.meteoric_admin' mobile/android/app/google-services.json \
-            || { echo "google-services.json package mismatch"; exit 1; }
+            || { echo "::error::google-services.json package mismatch"; exit 1; }
           grep -q '^storeFile=' mobile/android/key.properties \
-            || { echo "key.properties missing storeFile"; exit 1; }
+            || { echo "::error::key.properties missing storeFile"; exit 1; }
+          echo "secrets decoded + sanity-checked"
 
       - name: Install Shorebird CLI
         run: |
+          set -euo pipefail
           curl --proto '=https' --tlsv1.2 -fsSL https://shorebird.dev/install.sh | bash
           echo "$HOME/.shorebird/bin" >> "$GITHUB_PATH"
+          shorebird --version
 
-      - name: Register Shorebird release
+      # ── Quality gate (both modes) ──────────────────────────────────────
+      - name: Quality gate — analyze + test
         run: |
+          set -euo pipefail
+          cd mobile
+          flutter pub get
+          flutter analyze --no-pub
+          flutter test
+
+      # ── Patch mode ─────────────────────────────────────────────────────
+      - name: Guard — base release exists on Shorebird
+        if: inputs.mode == 'patch'
+        run: |
+          set -euo pipefail
+          FULL="${{ steps.ver.outputs.full }}"
+          shorebird --json releases list | grep -F "\"version\":\"$FULL\"" \
+            || { echo "::error::No Shorebird release $FULL — patches need a registered base. Ship a release first."; exit 1; }
+          echo "base release $FULL found"
+
+      - name: Patch (dry-run — verify only, nothing published)
+        if: inputs.mode == 'patch' && inputs.dry_run == true
+        run: |
+          set -euo pipefail
+          shorebird patch android \
+            --release-version "${{ steps.ver.outputs.full }}" \
+            --track "${{ inputs.track }}" \
+            --dry-run 2>&1 | tee patch.log
+          grep -q "No issues detected" patch.log \
+            || { echo "::error::dry-run reported issues — inspect patch.log"; exit 1; }
+          echo "dry-run clean. Re-run with dry_run=false to publish."
+
+      - name: Patch (publish)
+        if: inputs.mode == 'patch' && inputs.dry_run == false
+        run: |
+          set -euo pipefail
+          shorebird patch android \
+            --release-version "${{ steps.ver.outputs.full }}" \
+            --track "${{ inputs.track }}" 2>&1 | tee patch.log
+          grep -q "Published Patch" patch.log \
+            || { echo "::error::patch did not confirm publication — inspect patch.log"; exit 1; }
+          echo "patch published to ${{ inputs.track }} track"
+
+      # ── Release mode ───────────────────────────────────────────────────
+      - name: Register Shorebird release
+        if: inputs.mode == 'release'
+        run: |
+          set -euo pipefail
           set +e
           shorebird release android 2>&1 | tee shorebird-release.log
           STATUS=${PIPESTATUS[0]}
@@ -101,37 +229,43 @@ jobs:
           if grep -q "existing android release" shorebird-release.log; then
             echo "Release already exists — verifying server-side"
             shorebird --json releases list | grep -F "\"version\":\"${{ steps.ver.outputs.full }}\"" \
-              || { echo "Version not found in Shorebird releases"; exit 1; }
+              || { echo "::error::Version not found in Shorebird releases"; exit 1; }
             exit 0
           fi
           cat shorebird-release.log
           exit "$STATUS"
 
       - name: Build APK (forked Flutter = OTA engine embedded)
+        if: inputs.mode == 'release'
         run: |
+          set -euo pipefail
           # Shorebird's Flutter lives in its cache after `shorebird release`.
           # Same engine revision is mandatory — stock Flutter ships no engine.
           FLUTTER_BIN="$HOME/.shorebird/bin/cache/flutter/bin"
-          [ -x "$FLUTTER_BIN/flutter" ] || { echo "shorebird flutter missing at $FLUTTER_BIN"; exit 1; }
+          [ -x "$FLUTTER_BIN/flutter" ] || { echo "::error::shorebird flutter missing at $FLUTTER_BIN"; exit 1; }
           export PATH="$FLUTTER_BIN:$PATH"
           cd mobile
           flutter build apk --release --no-tree-shake-icons
           ls -la build/app/outputs/flutter-apk/app-release.apk
 
       - name: Verify signature (v2, never jarsigner)
+        if: inputs.mode == 'release'
         run: |
+          set -euo pipefail
           BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
           APK=mobile/build/app/outputs/flutter-apk/app-release.apk
           "$ANDROID_HOME/build-tools/$BT/apksigner" verify --verbose "$APK" | tee apksigner.txt
           grep -q "Verified using v2 scheme (APK Signature Scheme v2): true" apksigner.txt \
-            || { echo "v2 signature missing — refusing to ship"; exit 1; }
+            || { echo "::error::v2 signature missing — refusing to ship"; exit 1; }
           if grep -qi "jarsigner" apksigner.txt; then
-            echo "jarsigner present — refusing to ship"
+            echo "::error::jarsigner present — refusing to ship"
             exit 1
           fi
 
       - name: Verify versionCode beats published highest_build
+        if: inputs.mode == 'release'
         run: |
+          set -euo pipefail
           BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
           APK=mobile/build/app/outputs/flutter-apk/app-release.apk
           VC=$("$ANDROID_HOME/build-tools/$BT/aapt" dump badging "$APK" | grep -o "versionCode='[0-9]*'" | grep -o '[0-9]*')
@@ -139,33 +273,69 @@ jobs:
             | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('highest_build') or d.get('build') or 0)" 2>/dev/null || echo 0)
           echo "APK versionCode=$VC remote highest_build=$REMOTE"
           [ "$VC" -gt "$REMOTE" ] \
-            || { echo "versionCode $VC <= highest_build $REMOTE — would INSTALL_FAILED_VERSION_DOWNGRADE"; exit 1; }
+            || { echo "::error::versionCode $VC <= highest_build $REMOTE — would INSTALL_FAILED_VERSION_DOWNGRADE"; exit 1; }
 
       - name: Upload release (GitHub asset + Supabase latest.json)
+        if: inputs.mode == 'release'
         env:
           NOTES: ${{ inputs.notes }}
           MIN_BUILD: ${{ inputs.min_build }}
         run: |
+          set -euo pipefail
+          [ -n "$GH_TOKEN" ] || { echo "::error::RELEASE_REPO_TOKEN missing — cannot upload assets"; exit 1; }
           ARGS=(mobile/build/app/outputs/flutter-apk/app-release.apk "${{ steps.ver.outputs.semver }}" "${{ steps.ver.outputs.build }}" "$NOTES")
           if [ -n "$MIN_BUILD" ]; then ARGS+=(--min-build "$MIN_BUILD"); fi
           node scripts/upload-app-release.mjs "${ARGS[@]}"
 
       - name: Verify manifest + download page
+        if: inputs.mode == 'release'
         run: |
+          set -euo pipefail
           curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json" | python3 -m json.tool
           CODE=$(curl -sI -o /dev/null -w "%{http_code}" https://app.withmeteoric.com/download)
-          [ "$CODE" = "200" ] || { echo "download page returned $CODE"; exit 1; }
+          [ "$CODE" = "200" ] || { echo "::error::download page returned $CODE"; exit 1; }
           echo "download page OK"
 
       - name: Tag source
+        if: inputs.mode == 'release'
         run: |
+          set -euo pipefail
           TAG="v${{ steps.ver.outputs.semver }}"
           git tag "$TAG" 2>/dev/null || echo "tag $TAG already exists"
           git push origin "$TAG" 2>/dev/null || echo "tag $TAG already pushed"
 
       - name: Archive APK artifact
+        if: inputs.mode == 'release'
         uses: actions/upload-artifact@v4
         with:
           name: app-release-${{ steps.ver.outputs.full }}
           path: mobile/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
+
+      # ── Summary (both modes) ───────────────────────────────────────────
+      - name: Step summary
+        if: always()
+        run: |
+          {
+            if [ "${{ job.status }}" = "success" ]; then
+              if [ "${{ inputs.mode }}" = "patch" ]; then
+                if [ "${{ inputs.dry_run }}" = "true" ]; then
+                  echo "### 🧪 Patch dry-run — clean"
+                else
+                  echo "### ✅ Patch published — ${{ steps.ver.outputs.full }} → ${{ inputs.track }} track"
+                fi
+              else
+                echo "### 🚀 Release shipped — ${{ steps.ver.outputs.full }}"
+              fi
+            else
+              echo "### ❌ Mobile ${{ inputs.mode }} failed — see run logs"
+            fi
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Mode | \`${{ inputs.mode }}\` |"
+            echo "| Version | \`${{ steps.ver.outputs.full }}\` |"
+            echo "| Patch field | \`${{ steps.ver.outputs.dart_patch }}\` |"
+            echo "| Track | \`${{ inputs.track }}\` |"
+            echo "| Dry run | \`${{ inputs.dry_run }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
