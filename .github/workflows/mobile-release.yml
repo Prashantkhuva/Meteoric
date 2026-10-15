@@ -68,7 +68,8 @@ jobs:
     timeout-minutes: 60
     env:
       # Populated from repo secrets by the "Decode secrets" step.
-      SHOREBIRD_API_KEY: ${{ secrets.SHOREBIRD_API_KEY }}
+      # CLI reads the API key from SHOREBIRD_TOKEN (not SHOREBIRD_API_KEY).
+      SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
       GH_TOKEN: ${{ secrets.RELEASE_REPO_TOKEN }}
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
