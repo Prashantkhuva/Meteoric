@@ -607,6 +607,19 @@ export default function HeroScene() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
+  const [heroVisible, setHeroVisible] = useState(true);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0, rootMargin: "50px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -627,9 +640,9 @@ export default function HeroScene() {
   const baseY = isMobile ? 2.1 : 0;
 
   return (
-    <div className="absolute inset-0">
+    <div ref={wrapRef} className="absolute inset-0">
       <Canvas
-        dpr={isMobile ? 1 : [1, 2]}
+        dpr={isMobile ? 1 : [1, 1.5]}
         camera={{
           position: [0, baseY, isMobile ? 16 : 6],
           rotation: [0, 0, 0],
@@ -637,7 +650,13 @@ export default function HeroScene() {
         }}
         gl={{ alpha: true, antialias: !isMobile }}
         style={{ background: "transparent" }}
-        frameloop={reduced || isMobile ? "demand" : "always"}
+        frameloop={
+          !heroVisible
+            ? "never"
+            : reduced || isMobile
+              ? "demand"
+              : "always"
+        }
       >
         <Scene mouse={mouseRef} reduced={reduced} baseY={baseY} isMobile={isMobile} />
       </Canvas>

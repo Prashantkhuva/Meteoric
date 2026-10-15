@@ -15,7 +15,7 @@ import {
 import { homeServiceCards } from "@/data/services";
 import type { HomeServiceCard } from "@/data/types";
 
-function ServiceCard({ service, index }: { service: HomeServiceCard; index: number }) {
+function ServiceCard({ service }: { service: HomeServiceCard }) {
   return (
     <Link href={service.href} className="block group service-card">
       {/* Mobile: image card only, text below */}
@@ -32,7 +32,6 @@ function ServiceCard({ service, index }: { service: HomeServiceCard; index: numb
             alt={service.title}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            priority={index < 2}
             className="object-cover group-hover:scale-105 transition-transform duration-700"
           />
         </div>
@@ -83,10 +82,9 @@ function ServiceCard({ service, index }: { service: HomeServiceCard; index: numb
         <Image
           src={service.image}
           alt={service.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority={index < 2}
-          className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
 
@@ -214,7 +212,7 @@ export default function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5 lg:gap-5 pb-16 lg:pb-24">
           {homeServiceCards.map((s, i) => (
             <ScrollReveal key={s.title} direction="up" delay={0.12 * i}>
-              <ServiceCard service={s} index={i} />
+              <ServiceCard service={s} />
             </ScrollReveal>
           ))}
         </div>

@@ -129,7 +129,6 @@ function Projects() {
           clipPath: "inset(0% 0 0 0)",
           objectPosition: "0px 30%",
           scale: 1,
-          filter: "grayscale(0%) brightness(1)",
           duration: 0.7,
           ease: "power3.out",
           scrollTrigger: {
