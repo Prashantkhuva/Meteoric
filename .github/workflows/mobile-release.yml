@@ -1,0 +1,171 @@
+name: Mobile Release
+
+# Ship Meteoric Admin APK end-to-end:
+#   register Shorebird release -> build v2-signed APK -> verify gates ->
+#   upload to meteoric-app-releases + update Supabase latest.json.
+#
+# Local pre-flight (before dispatch):
+#   1. node scripts/check-version.mjs     # bumps build above remote highest
+#   2. edit mobile/lib/core/app_version.dart (version, patch:0, real IST)
+#   3. flutter analyze && flutter test    # bar: zero issues, all green
+#   4. commit + push main
+#   5. Actions -> Mobile Release -> Run workflow (notes optional)
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: Release notes shown in the in-app update banner
+        required: false
+        default: ""
+      min_build:
+        description: "Optional forced-upgrade floor (min_supported_build). Leave empty to skip."
+        required: false
+        default: ""
+
+concurrency:
+  group: mobile-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # Populated from repo secrets by the "Decode secrets" step.
+      SHOREBIRD_API_KEY: ${{ secrets.SHOREBIRD_API_KEY }}
+      GH_TOKEN: ${{ secrets.RELEASE_REPO_TOKEN }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read version from pubspec
+        id: ver
+        run: |
+          FULL=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
+          SEMVER="${FULL%%+*}"
+          BUILD="${FULL##*+}"
+          echo "full=$FULL"   >> "$GITHUB_OUTPUT"
+          echo "semver=$SEMVER" >> "$GITHUB_OUTPUT"
+          echo "build=$BUILD"  >> "$GITHUB_OUTPUT"
+          echo "Releasing $SEMVER (versionCode $BUILD)"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Decode signing + Firebase secrets
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEY_PROPS_B64: ${{ secrets.KEY_PROPERTIES_B64 }}
+          GS_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+        run: |
+          echo "$KEYSTORE_B64"  | base64 -d > "$RUNNER_TEMP/meteoric-release.jks"
+          echo "$KEY_PROPS_B64" | base64 -d > mobile/android/key.properties
+          # Point storeFile at the decoded location (runner path differs from local).
+          sed -i "s|^storeFile=.*|storeFile=$RUNNER_TEMP/meteoric-release.jks|" mobile/android/key.properties
+          echo "$GS_JSON_B64"  | base64 -d > mobile/android/app/google-services.json
+          grep -q 'com.meteoric.meteoric_admin' mobile/android/app/google-services.json \
+            || { echo "google-services.json package mismatch"; exit 1; }
+          grep -q '^storeFile=' mobile/android/key.properties \
+            || { echo "key.properties missing storeFile"; exit 1; }
+
+      - name: Install Shorebird CLI
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL https://shorebird.dev/install.sh | bash
+          echo "$HOME/.shorebird/bin" >> "$GITHUB_PATH"
+
+      - name: Register Shorebird release
+        run: |
+          set +e
+          shorebird release android 2>&1 | tee shorebird-release.log
+          STATUS=${PIPESTATUS[0]}
+          set -e
+          if [ "$STATUS" -eq 0 ]; then
+            echo "Release ${{ steps.ver.outputs.full }} registered"
+            exit 0
+          fi
+          # Idempotent re-run: version already registered (e.g. retry after
+          # upload failure) — accept only if it is active server-side.
+          if grep -q "existing android release" shorebird-release.log; then
+            echo "Release already exists — verifying server-side"
+            shorebird --json releases list | grep -F "\"version\":\"${{ steps.ver.outputs.full }}\"" \
+              || { echo "Version not found in Shorebird releases"; exit 1; }
+            exit 0
+          fi
+          cat shorebird-release.log
+          exit "$STATUS"
+
+      - name: Build APK (forked Flutter = OTA engine embedded)
+        run: |
+          # Shorebird's Flutter lives in its cache after `shorebird release`.
+          # Same engine revision is mandatory — stock Flutter ships no engine.
+          FLUTTER_BIN="$HOME/.shorebird/bin/cache/flutter/bin"
+          [ -x "$FLUTTER_BIN/flutter" ] || { echo "shorebird flutter missing at $FLUTTER_BIN"; exit 1; }
+          export PATH="$FLUTTER_BIN:$PATH"
+          cd mobile
+          flutter build apk --release --no-tree-shake-icons
+          ls -la build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Verify signature (v2, never jarsigner)
+        run: |
+          BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
+          APK=mobile/build/app/outputs/flutter-apk/app-release.apk
+          "$ANDROID_HOME/build-tools/$BT/apksigner" verify --verbose "$APK" | tee apksigner.txt
+          grep -q "Verified using v2 scheme (APK Signature Scheme v2): true" apksigner.txt \
+            || { echo "v2 signature missing — refusing to ship"; exit 1; }
+          if grep -qi "jarsigner" apksigner.txt; then
+            echo "jarsigner present — refusing to ship"
+            exit 1
+          fi
+
+      - name: Verify versionCode beats published highest_build
+        run: |
+          BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
+          APK=mobile/build/app/outputs/flutter-apk/app-release.apk
+          VC=$("$ANDROID_HOME/build-tools/$BT/aapt" dump badging "$APK" | grep -o "versionCode='[0-9]*'" | grep -o '[0-9]*')
+          REMOTE=$(curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json" \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('highest_build') or d.get('build') or 0)" 2>/dev/null || echo 0)
+          echo "APK versionCode=$VC remote highest_build=$REMOTE"
+          [ "$VC" -gt "$REMOTE" ] \
+            || { echo "versionCode $VC <= highest_build $REMOTE — would INSTALL_FAILED_VERSION_DOWNGRADE"; exit 1; }
+
+      - name: Upload release (GitHub asset + Supabase latest.json)
+        env:
+          NOTES: ${{ inputs.notes }}
+          MIN_BUILD: ${{ inputs.min_build }}
+        run: |
+          ARGS=(mobile/build/app/outputs/flutter-apk/app-release.apk "${{ steps.ver.outputs.semver }}" "${{ steps.ver.outputs.build }}" "$NOTES")
+          if [ -n "$MIN_BUILD" ]; then ARGS+=(--min-build "$MIN_BUILD"); fi
+          node scripts/upload-app-release.mjs "${ARGS[@]}"
+
+      - name: Verify manifest + download page
+        run: |
+          curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json" | python3 -m json.tool
+          CODE=$(curl -sI -o /dev/null -w "%{http_code}" https://app.withmeteoric.com/download)
+          [ "$CODE" = "200" ] || { echo "download page returned $CODE"; exit 1; }
+          echo "download page OK"
+
+      - name: Tag source
+        run: |
+          TAG="v${{ steps.ver.outputs.semver }}"
+          git tag "$TAG" 2>/dev/null || echo "tag $TAG already exists"
+          git push origin "$TAG" 2>/dev/null || echo "tag $TAG already pushed"
+
+      - name: Archive APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-${{ steps.ver.outputs.full }}
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30

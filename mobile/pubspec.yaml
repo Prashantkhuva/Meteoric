@@ -1,7 +1,7 @@
 name: meteoric_admin
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.22.1+21
+version: 0.22.3+23
 
 environment:
   sdk: ^3.13.0
@@ -20,6 +20,7 @@ dependencies:
   flutter_local_notifications: ^19.4.2
   flutter_localizations:
     sdk: flutter
+  flutter_lucide: ^1.54.0
   flutter_quill: ^11.5.1
   flutter_quill_delta_from_html: ^1.5.3
   http: ^1.6.0

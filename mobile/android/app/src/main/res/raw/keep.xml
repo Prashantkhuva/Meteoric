@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Keep rules for the resource shrinker. Both icons are referenced from
+     Dart as plain strings (flutter_local_notifications), invisible to aapt,
+     so the shrinker strips them from release APKs unless kept explicitly. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_notif,@drawable/ic_meteoric_color" />

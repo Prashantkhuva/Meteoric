@@ -61,3 +61,8 @@ shift-before*.jpeg
 shift-after*.jpeg
 shot-cal.mjs
 probe*.mjs
+
+# local secrets / scratch
+.tmp/
+meteoric-2026-firebase-*.json
+firebase-sa.json

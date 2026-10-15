@@ -451,6 +451,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_lucide:
+    dependency: "direct main"
+    description:
+      name: flutter_lucide
+      sha256: "7ac6c9f71a0e0d77b311d3707f2b34e5e2eeb919ebed0f899553fbe446d0e810"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.57.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

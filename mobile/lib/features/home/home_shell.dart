@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../../core/biometric_service.dart';
 import '../../core/fcm_service.dart';
@@ -219,31 +220,31 @@ class _HomeShellState extends State<HomeShell>
                           _navTab(
                             index,
                             0,
-                            Phosphor.gauge,
+                            LucideIcons.house,
                             'Home',
                           ),
                           _navTab(
                             index,
                             1,
-                            Phosphor.userFocus,
+                            LucideIcons.users,
                             'Leads',
                           ),
                           _navTab(
                             index,
                             2,
-                            Phosphor.fileText,
+                            LucideIcons.file_text,
                             'Proposals',
                           ),
                           _navTab(
                             index,
                             3,
-                            Phosphor.receipt,
+                            LucideIcons.receipt,
                             'Invoices',
                           ),
                           _navTab(
                             index,
                             4,
-                            Phosphor.squaresFour,
+                            LucideIcons.layout_grid,
                             'More',
                           ),
                         ],
@@ -256,7 +257,8 @@ class _HomeShellState extends State<HomeShell>
     );
   }
 
-  /// One bottom-nav slot: solid navy capsule when active, bare muted when not.
+  /// One bottom-nav slot: vertical cell (indicator pill + icon, label under).
+  /// Active state = navy pill behind icon only; label color/weight shifts.
   Widget _navTab(int current, int i, IconData icon, String label) {
     final selected = current == i;
     return Expanded(
@@ -266,39 +268,39 @@ class _HomeShellState extends State<HomeShell>
           homeTab.value = i;
         },
         borderRadius: AppRadius.pillAll,
-        child: AnimatedContainer(
-          duration: AppMotion.base,
-          curve: AppMotion.ease,
-          height: 46,
-          margin: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: BoxDecoration(
-            color: selected ? AppColors.accent : Colors.transparent,
-            borderRadius: AppRadius.pillAll,
-          ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedContainer(
+                duration: AppMotion.base,
+                curve: AppMotion.ease,
+                width: 54,
+                height: 30,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected ? AppColors.accent : Colors.transparent,
+                  borderRadius: AppRadius.pillAll,
+                ),
+                child: Icon(
                   icon,
                   size: 21,
                   color: selected ? AppColors.onAccent : AppColors.textMuted,
                 ),
-                const SizedBox(width: 7),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Satoshi',
-                    color: selected
-                        ? AppColors.onAccent
-                        : AppColors.textMuted,
-                  ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                label,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  fontFamily: 'Satoshi',
+                  color: selected ? AppColors.accent : AppColors.textMuted,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
