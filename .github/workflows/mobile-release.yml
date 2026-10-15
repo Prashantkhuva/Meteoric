@@ -176,9 +176,15 @@ jobs:
         run: |
           set -euo pipefail
           curl --proto '=https' --tlsv1.2 -fsSL https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh | bash
-          echo "$HOME/.shorebird/bin" >> "$GITHUB_PATH"
+          # Installer location varies by era: new = ~/.config/shorebird, old = ~/.shorebird.
+          SB_BIN=""
+          for d in "$HOME/.config/shorebird/bin" "$HOME/.shorebird/bin"; do
+            if [ -x "$d/shorebird" ]; then SB_BIN="$d"; break; fi
+          done
+          [ -n "$SB_BIN" ] || { echo "::error::shorebird binary not found after install"; exit 1; }
+          echo "$SB_BIN" >> "$GITHUB_PATH"
           # GITHUB_PATH only affects later steps — export for this step too.
-          export PATH="$HOME/.shorebird/bin:$PATH"
+          export PATH="$SB_BIN:$PATH"
           shorebird --version
 
       # ── Quality gate (both modes) ──────────────────────────────────────
@@ -251,10 +257,22 @@ jobs:
         if: inputs.mode == 'release'
         run: |
           set -euo pipefail
-          # Shorebird's Flutter lives in its cache after `shorebird release`.
+          # Shorebird's Flutter lands in its cache after `shorebird release`.
           # Same engine revision is mandatory — stock Flutter ships no engine.
-          FLUTTER_BIN="$HOME/.shorebird/bin/cache/flutter/bin"
-          [ -x "$FLUTTER_BIN/flutter" ] || { echo "::error::shorebird flutter missing at $FLUTTER_BIN"; exit 1; }
+          FLUTTER_BIN=""
+          for d in \
+            "$HOME/.config/shorebird/bin/cache/flutter/bin" \
+            "$HOME/.config/shorebird/cache/flutter/bin" \
+            "$HOME/.shorebird/bin/cache/flutter/bin"; do
+            if [ -x "$d/flutter" ]; then FLUTTER_BIN="$d"; break; fi
+          done
+          if [ -z "$FLUTTER_BIN" ]; then
+            FLUTTER_BIN=$(find "$HOME/.config/shorebird" "$HOME/.shorebird" \
+              -maxdepth 6 -type f -name flutter -path "*/flutter/bin/flutter" 2>/dev/null | head -1 || true)
+            FLUTTER_BIN=$(dirname "${FLUTTER_BIN:-/nonexistent}")
+          fi
+          [ -x "$FLUTTER_BIN/flutter" ] || { echo "::error::shorebird flutter not found"; exit 1; }
+          echo "Using shorebird flutter at $FLUTTER_BIN"
           export PATH="$FLUTTER_BIN:$PATH"
           cd mobile
           flutter build apk --release --no-tree-shake-icons
