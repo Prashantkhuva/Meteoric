@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/api_client.dart';
 import '../../core/formatters.dart';
@@ -27,6 +29,7 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
 
   final Set<int> _selected = {};
   bool _busy = false;
+  int? _expandedId;
 
   bool get _selecting => _selected.isNotEmpty;
 
@@ -129,6 +132,179 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
   void _snack(String msg, {bool isError = false}) =>
       isError ? Toast.error(context, msg) : Toast.success(context, msg);
 
+  String _toLine(Map<String, dynamic> email) {
+    final to = email['to_addresses'];
+    if (to is! List || to.isEmpty) return '—';
+    return to.map((e) => e.toString()).join(', ');
+  }
+
+  List<Map<String, dynamic>> _attachments(Map<String, dynamic> email) {
+    final raw = email['attachments'];
+    if (raw is! List) return const [];
+    return raw.whereType<Map>().map((e) => e.cast<String, dynamic>()).toList();
+  }
+
+  Future<void> _openAttachment(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok && mounted) _snack('Could not open attachment', isError: true);
+  }
+
+  Widget _metaRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 56,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: AppColors.textFaint,
+                fontSize: 11,
+                fontFamily: 'Satoshi',
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 12,
+                fontFamily: 'Satoshi',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetail(Map<String, dynamic> email) {
+    final body = (email['body'] as String?) ?? '';
+    final attachments = _attachments(email);
+    final status = (email['status'] as String?) ?? '—';
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.cardRaised,
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _metaRow('From', (email['from_address'] as String?) ?? '—'),
+          _metaRow('To', _toLine(email)),
+          _metaRow('Date', Fmt.dateTime(email['created_at'] as String?)),
+          _metaRow('Status', status),
+          const SizedBox(height: 4),
+          Text(
+            'BODY',
+            style: TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 10,
+              letterSpacing: 1.1,
+              fontFamily: 'Satoshi',
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (body.isEmpty)
+            Text(
+              'No body',
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 13,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Satoshi',
+              ),
+            )
+          else
+            DefaultTextStyle.merge(
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 13,
+                height: 1.5,
+                fontFamily: 'Satoshi',
+              ),
+              child: HtmlWidget(
+                body,
+                onTapUrl: (url) {
+                  _openAttachment(url);
+                  return true;
+                },
+              ),
+            ),
+          if (attachments.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              'ATTACHMENTS',
+              style: TextStyle(
+                color: AppColors.textFaint,
+                fontSize: 10,
+                letterSpacing: 1.1,
+                fontFamily: 'Satoshi',
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final att in attachments)
+                  InkWell(
+                    onTap: () {
+                      final url = att['url'];
+                      if (url is String && url.isNotEmpty) {
+                        _openAttachment(url);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.card,
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.attach_file,
+                            size: 13,
+                            color: AppColors.textFaint,
+                          ),
+                          const SizedBox(width: 6),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 180),
+                            child: Text(
+                              (att['name'] as String?) ?? 'Attachment',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                                fontFamily: 'Satoshi',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,6 +393,8 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                 setState(
                   () => isSelected ? _selected.remove(id) : _selected.add(id),
                 );
+              } else {
+                setState(() => _expandedId = _expandedId == id ? null : id);
               }
             },
             onLongPress: () => setState(() => _selected.add(id)),
@@ -230,72 +408,87 @@ class _SentEmailsScreenState extends State<SentEmailsScreen> {
                 ),
                 color: isSelected ? AppColors.cardRaised : AppColors.card,
               ),
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Text(
-                                email['subject'] ?? '—',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Satoshi',
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    email['subject'] ?? '—',
+                                    style: TextStyle(
+                                      color: AppColors.text,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Satoshi',
+                                    ),
+                                  ),
                                 ),
+                                if (!_selecting &&
+                                    _attachments(email).isNotEmpty) ...[
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.attach_file,
+                                    size: 13,
+                                    color: AppColors.textFaint,
+                                  ),
+                                ],
+                                if (!_selecting)
+                                  GestureDetector(
+                                    onTap: () => _delete(id),
+                                    child: Icon(
+                                      Icons.delete_outline,
+                                      size: 15,
+                                      color: AppColors.textFaint,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'To: ${_toLine(email)}',
+                              style: TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                                fontFamily: 'Satoshi',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              Fmt.dateTime(email['created_at'] as String?),
+                              style: TextStyle(
+                                color: AppColors.textFaint,
+                                fontSize: 10,
+                                fontFamily: 'Satoshi',
                               ),
                             ),
-                            if (!_selecting)
-                              GestureDetector(
-                                onTap: () => _delete(id),
-                                child: Icon(
-                                  Icons.delete_outline,
-                                  size: 15,
-                                  color: AppColors.textFaint,
-                                ),
-                              ),
                           ],
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'To: ${email['recipients'] ?? '—'}',
-                          style: TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 12,
-                            fontFamily: 'Satoshi',
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          Fmt.dateTime(email['created_at'] as String?),
-                          style: TextStyle(
-                            color: AppColors.textFaint,
-                            fontSize: 10,
-                            fontFamily: 'Satoshi',
-                          ),
+                      ),
+                      if (_selecting) ...[
+                        const SizedBox(width: 10),
+                        Icon(
+                          isSelected
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
+                          size: 20,
+                          color: isSelected
+                              ? AppColors.accent
+                              : AppColors.textFaint,
                         ),
                       ],
-                    ),
+                    ],
                   ),
-                  if (_selecting) ...[
-                    const SizedBox(width: 10),
-                    Icon(
-                      isSelected
-                          ? Icons.check_box
-                          : Icons.check_box_outline_blank,
-                      size: 20,
-                      color: isSelected
-                          ? AppColors.accent
-                          : AppColors.textFaint,
-                    ),
-                  ],
+                  if (_expandedId == id) _buildDetail(email),
                 ],
               ),
             ),
