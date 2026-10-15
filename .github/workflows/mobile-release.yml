@@ -129,8 +129,17 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      # Android SDK: use the runner's preinstalled SDK (ANDROID_HOME).
+      # android-actions/setup-android is intentionally NOT used — it tries
+      # to install the legacy `tools` package, removed in cmdline-tools 16.
+      - name: Guard — Android SDK present
+        run: |
+          set -euo pipefail
+          [ -n "${ANDROID_HOME:-}" ] || { echo "::error::ANDROID_HOME not set on runner"; exit 1; }
+          BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
+          echo "build-tools $BT at $ANDROID_HOME/build-tools/$BT"
+          [ -x "$ANDROID_HOME/build-tools/$BT/apksigner" ] || { echo "::error::apksigner missing"; exit 1; }
+          [ -x "$ANDROID_HOME/build-tools/$BT/aapt" ] || { echo "::error::aapt missing"; exit 1; }
 
       - name: Setup Flutter (quality gate only — shipping uses Shorebird's fork)
         uses: subosito/flutter-action@v2
