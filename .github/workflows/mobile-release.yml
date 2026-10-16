@@ -1,17 +1,17 @@
 name: Mobile Release
 
-# Ship Meteoric Admin APK end-to-end (release only, no Shorebird/OTA):
-#   build v2-signed APK on stock Flutter -> verify gates ->
+# Ship Meteoric Admin APK end-to-end with Shorebird OTA registration:
+#   build v2-signed APK via shorebird-release@v1 (registers with Shorebird,
+#   produces --artifact apk) -> verify gates ->
 #   upload to meteoric-app-releases + update Supabase latest.json.
 #
-# Local pre-flight (before dispatch):
-#   1. node scripts/check-version.mjs     # bumps build above remote highest
-#   2. edit mobile/lib/core/app_version.dart (version, patch:0, real IST)
-#   3. flutter analyze && flutter test    # bar: zero issues, all green
-#   4. commit + push main
-#   5. Actions -> Mobile Release -> Run workflow (notes optional)
+# Trigger: tag push vX.Y.Z+N (primary) OR workflow_dispatch (dry-run/override).
+# Tag is created by scripts/ship-release.mjs after version bump + commit.
 
 on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+'
   workflow_dispatch:
     inputs:
       notes:
@@ -22,6 +22,11 @@ on:
         description: "Optional forced-upgrade floor (min_supported_build). Leave empty to skip."
         required: false
         default: ""
+      dry_run:
+        description: "Validate build/signing/auth without publishing to Shorebird"
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: mobile-release
@@ -34,9 +39,12 @@ defaults:
   run:
     shell: bash
 
+env:
+  SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+
 jobs:
   ship:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -48,12 +56,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      # Single place that parses versions — later steps only read outputs.
-      - name: Read versions (pubspec + app_version.dart)
+      # Guard: SHOREBIRD_TOKEN must be present (fail-fast before any build).
+      - name: Guard — SHOREBIRD_TOKEN present
+        run: |
+          set -euo pipefail
+          [ -n "$SHOREBIRD_TOKEN" ] || { echo "::error::SHOREBIRD_TOKEN secret missing — mint from Shorebird console (Account → API Keys), then gh secret set SHOREBIRD_TOKEN"; exit 1; }
+          echo "SHOREBIRD_TOKEN present"
+
+      # Parse tag → version inputs (tag push path). Dispatch path uses inputs directly.
+      - name: Resolve version from tag or dispatch input
         id: ver
         run: |
           set -euo pipefail
-          FULL=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF_NAME}"
+            if ! echo "$TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+$'; then
+              echo "::error::tag '$TAG' does not match vX.Y.Z+N — refusing to release"
+              exit 1
+            fi
+            FULL="${TAG#v}"
+          else
+            # Dispatch path: read from pubspec (prep script already bumped it)
+            FULL=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
+          fi
           SEMVER="${FULL%%+*}"
           BUILD="${FULL##*+}"
           DART_VERSION=$(grep -oE "version = '[^']+'" mobile/lib/core/app_version.dart | sed "s/version = '//;s/'//")
@@ -92,10 +117,8 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+          cache: gradle
 
-      # Android SDK: use the runner's preinstalled SDK (ANDROID_HOME).
-      # android-actions/setup-android is intentionally NOT used — it tries
-      # to install the legacy `tools` package, removed in cmdline-tools 16.
       - name: Guard — Android SDK present
         run: |
           set -euo pipefail
@@ -114,6 +137,11 @@ jobs:
           pub-cache: true
           pub-cache-key: pub-${{ hashFiles('mobile/pubspec.lock') }}
 
+      - name: Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
+
       - name: Decode signing + Firebase secrets
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
@@ -126,7 +154,6 @@ jobs:
           [ -n "$GS_JSON_B64" ] || { echo "::error::GOOGLE_SERVICES_JSON_B64 missing"; exit 1; }
           echo "$KEYSTORE_B64"  | base64 -d > "$RUNNER_TEMP/meteoric-release.jks"
           echo "$KEY_PROPS_B64" | base64 -d > mobile/android/key.properties
-          # Point storeFile at the decoded location (runner path differs from local).
           sed -i "s|^storeFile=.*|storeFile=$RUNNER_TEMP/meteoric-release.jks|" mobile/android/key.properties
           echo "$GS_JSON_B64"  | base64 -d > mobile/android/app/google-services.json
           [ -s "$RUNNER_TEMP/meteoric-release.jks" ] || { echo "::error::keystore decode produced empty file"; exit 1; }
@@ -144,12 +171,28 @@ jobs:
           flutter analyze --no-pub
           flutter test
 
-      - name: Build APK (release, v2-signed by Gradle)
+      # Shorebird release: builds APK, registers with Shorebird, produces
+      # --artifact apk (NOT default AAB — download page needs real .apk).
+      # Flutter-only flags after -- separator. dry_run appends --dry-run.
+      - name: Shorebird release (build + register)
+        id: shorebird-release
+        uses: shorebirdtech/shorebird-release@v1
+        with:
+          flutter-version: 3.47.7
+          platform: android
+          working-directory: ./mobile
+          args: >-
+            --artifact apk
+            ${{ inputs.dry_run == true && '--dry-run' || '' }}
+            -- --no-tree-shake-icons
+
+      # Guard: APK must exist (catches forgotten --artifact apk / AAB-only).
+      - name: Guard — APK exists after Shorebird build
         run: |
           set -euo pipefail
-          cd mobile
-          flutter build apk --release --no-tree-shake-icons
-          ls -la build/app/outputs/flutter-apk/app-release.apk
+          APK=mobile/build/app/outputs/flutter-apk/app-release.apk
+          [ -f "$APK" ] || { echo "::error::APK not found at $APK — --artifact apk missing or build failed"; exit 1; }
+          ls -la "$APK"
 
       - name: Verify signature (v2, never jarsigner)
         run: |
@@ -195,19 +238,16 @@ jobs:
           [ "$CODE" = "200" ] || { echo "::error::download page returned $CODE"; exit 1; }
           echo "download page OK"
 
-      - name: Tag source
-        run: |
-          set -euo pipefail
-          TAG="v${{ steps.ver.outputs.semver }}"
-          git tag "$TAG" 2>/dev/null || echo "tag $TAG already exists"
-          git push origin "$TAG" 2>/dev/null || echo "tag $TAG already pushed"
-
       - name: Archive APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-${{ steps.ver.outputs.full }}
           path: mobile/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
+
+      - name: Shorebird doctor (diagnostics on failure)
+        if: failure()
+        run: shorebird doctor --verbose
 
       - name: Step summary
         if: always()
@@ -222,5 +262,7 @@ jobs:
             echo "| Field | Value |"
             echo "|---|---|"
             echo "| Version | \`${{ steps.ver.outputs.full }}\` |"
+            echo "| Shorebird release-version | \`${{ steps.shorebird-release.outputs.release-version }}\` |"
             echo "| Notes | ${{ inputs.notes }} |"
+            echo "| Dry run | ${{ inputs.dry_run }} |"
           } >> "$GITHUB_STEP_SUMMARY"
