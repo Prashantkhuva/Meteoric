@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import Papa from "papaparse";
 import { createClient } from "@/lib/supabase/client";
-import { updateLeadStatus, updateLeadFollowUp, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated, importLeads } from "../actions";
+import { updateLeadStatus, updateLeadFollowUp, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated, importLeads, getLeadById } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
@@ -20,6 +20,7 @@ import { Toolbar, FilterChip, SortDropdown, ClearFiltersButton } from "../compon
 import { BulkActionBar } from "../components/BulkActionBar";
 import { IconButton } from "../components/IconButton";
 import { useFilters } from "@/hooks/useFilters";
+import { useSearchParams } from "next/navigation";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { downloadCSV } from "@/lib/csv-export";
@@ -177,6 +178,23 @@ export default function LeadsPage() {
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, score: scoreFilter, source: sourceFilter, sort, page, col, dir } = filters;
   const [viewLead, setViewLead] = useState<LeadRow | null>(null);
+  const searchParams = useSearchParams();
+  const deepLinkRef = useRef<string | null>(null);
+
+  // Deep-link (?id=123): open the record's drawer directly — used by the
+  // global search palette and shared URLs.
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (!id || deepLinkRef.current === id) return;
+    let cancelled = false;
+    getLeadById(id).then((row) => {
+      if (!cancelled && row) {
+        deepLinkRef.current = id;
+        setViewLead(row as unknown as LeadRow);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [searchParams]);
   const [editLead, setEditLead] = useState<LeadRow | null>(null);
   const [showAddLead, setShowAddLead] = useState(false);
   const [showImport, setShowImport] = useState(false);

@@ -4,10 +4,10 @@ import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import type { ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  getLeads, createProposal, updateProposal, deleteProposal, sendProposal, updateProposalStatus, getProposalsPaginated, ensureShareToken,
+  getLeads, createProposal, updateProposal, deleteProposal, sendProposal, updateProposalStatus, getProposalsPaginated, ensureShareToken, getProposalById,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   X, Plus, Eye, Trash2, Send, FileText, Calendar, Pencil,
   MessageCircle, Download, ChevronUp, ChevronDown, Printer,
@@ -179,6 +179,23 @@ export default function ProposalsPage() {
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewProposal, setViewProposal] = useState<ProposalRow | null>(null);
+  const searchParams = useSearchParams();
+  const deepLinkRef = useRef<string | null>(null);
+
+  // Deep-link (?id=123): open the record's drawer directly — used by the
+  // global search palette and shared URLs.
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (!id || deepLinkRef.current === id) return;
+    let cancelled = false;
+    getProposalById(id).then((row) => {
+      if (!cancelled && row) {
+        deepLinkRef.current = id;
+        setViewProposal(row as unknown as ProposalRow);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [searchParams]);
   const [editingProposal, setEditingProposal] = useState<ProposalRow | null>(null);
   const [showNewProposal, setShowNewProposal] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);

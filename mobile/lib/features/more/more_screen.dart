@@ -11,6 +11,7 @@ import '../email/email_screen.dart';
 import '../users/users_screen.dart';
 import '../settings/settings_screen.dart';
 import '../linear/linear_issues_screen.dart';
+import '../search/global_search_screen.dart';
 import 'report_issue_screen.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -37,6 +38,7 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   static const _baseItems = [
+    _Item('Search Everything', Icons.search_outlined, GlobalSearchScreen()),
     _Item('Clients', Icons.people_outline, ClientsScreen()),
     _Item('Projects', Icons.folder_outlined, ProjectsScreen()),
     _Item('Reviews', Icons.star_outline, ReviewsScreen()),

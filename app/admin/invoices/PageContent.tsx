@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   createInvoice, updateInvoice, deleteInvoice, sendInvoice,
   markInvoiceAsPaid, markInvoiceAsOverdue, cancelInvoice, updateInvoiceStatus, getClients, getInvoicesPaginated, ensureShareToken,
-  checkOverdueInvoices, getProposalPricing, sendPaymentConfirmationAction, getBankAccounts,
+  checkOverdueInvoices, getProposalPricing, sendPaymentConfirmationAction, getBankAccounts, getInvoiceById,
 } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -137,6 +137,22 @@ export default function InvoicesPage() {
   const { search, status: statusFilter, sort, page, col, dir } = filters;
   const searchParams = useSearchParams();
   const [viewInvoice, setViewInvoice] = useState<InvoiceRow | null>(null);
+  const deepLinkRef = useRef<string | null>(null);
+
+  // Deep-link (?id=123): open the record's drawer directly — used by the
+  // global search palette and shared URLs.
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (!id || deepLinkRef.current === id) return;
+    let cancelled = false;
+    getInvoiceById(id).then((row) => {
+      if (!cancelled && row) {
+        deepLinkRef.current = id;
+        setViewInvoice(row as unknown as InvoiceRow);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [searchParams]);
   const [editingInvoice, setEditingInvoice] = useState<InvoiceRow | null>(null);
   const [showNewInvoice, setShowNewInvoice] = useState(() => searchParams.has("proposalId"));
   const [formResetKey, setFormResetKey] = useState(0);

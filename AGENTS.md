@@ -51,7 +51,7 @@ src/
 └── index.css     — Tailwind entry + theme tokens
 public/           — Static assets (logo, OG image, etc.)
 supabase/         — Migrations + seed
-scripts/          — Build/utility scripts (generate-sitemap, proxy)
+scripts/          — Build/utility scripts (proxy)
 workers/          — Cloudflare Workers
 └── app-download/ — Download redirect worker (app.withmeteoric.com)
 ```
@@ -69,6 +69,7 @@ workers/          — Cloudflare Workers
 - Delete confirmations use `ConfirmDialog` with `loading` prop
 - Pagination: 15 items per page
 - Status transitions: draft → sent (leads/proposals), draft → sent → paid/overdue (invoices)
+- **Global search:** `Ctrl/⌘+K` (or `/` on non-list pages) opens `GlobalSearchPalette` → server action `globalSearch()` in `app/admin/actions.ts` (7 groups incl. Cal.com bookings, two-phase client/lead-name match, exact counts, 3s per-user memo). Mobile app calls the same logic via `POST /api/admin/search`. Result rows deep-link `?id=` on leads/clients/invoices/proposals/projects (drawer auto-opens via `get*ById` actions).
 
 ## Email (Resend)
 - Test mode (`onboarding@resend.dev`) only delivers to `ADMIN_EMAIL`
@@ -96,7 +97,6 @@ workers/          — Cloudflare Workers
 - `npm run dev` — Start dev server
 - `npm run build` — Production build
 - `npm run lint` — ESLint (ignores `mobile` + `build` dirs)
-- `npm run generate:sitemap` — Rebuild sitemap
 
 ## API Tokens
 | Service | Token variable | Account/Email |
@@ -113,12 +113,13 @@ workers/          — Cloudflare Workers
 ## Flutter Mobile App (mobile/)
 - **SDK:** Flutter 3.47.0 at `C:\flutter` (add `/c/flutter/flutter/bin` to PATH per session)
 - **Android SDK:** `C:\Users\PRASHANT\AppData\Local\Android\sdk` (setx `ANDROID_HOME`); cmdline-tools at `sdk/cmdline-tools/latest`
-- **JDK:** Temurin 21 at `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.8-hotspot` (flutter config `--jdk-dir` set)
+- **JDK:** Temurin 21 at `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot` (flutter config `--jdk-dir` set)
 - **compileSdk:** 37 (required by flutter_secure_storage); `gradle.properties` has `kotlin.incremental=false` + `kotlin.compiler.execution.strategy=in-process` (Windows file-lock workaround for "Could not close incremental caches")
 - **Release signing:** `mobile/android/key.properties` (gitignored) + `app/meteoric-release.jks` (gitignored); alias `meteoric`. Install APK = gradle `build/app/outputs/flutter-apk/app-release.apk` (v2-signed), built AFTER `shorebird release android` (see release flow). Build with Shorebird's forked Flutter (on PATH via `~/.shorebird/bin`) so the OTA engine is embedded; stock Flutter builds have no engine at all. `shorebird releases get-apks` / `universal.apk` are legacy — invariant 2 below forbids using them.
 - **OTA updates (Shorebird):** `shorebird` CLI at `~/.shorebird/bin` (add to PATH per session); logged in as `work.prashantkhuva@gmail.com`; `app_id: 39ba27c5-5735-4c86-a9b9-e037da640ec0` in `mobile/shorebird.yaml` (checked in). Workflow: new release → `shorebird release android` (also uploads AAB to Play Store if ever needed); code change → `shorebird patch android --release-version 0.1.0+1` (tiny diff, phones auto-update on next launch, no reinstall). Limits: patches can't change native plugins/AndroidManifest/icons/assets — those need a new release. Bumping `pubspec.yaml` version = new release, not patch. Verify patch w/o publishing: `--dry-run`. Patches fail on icon-font diffs (new `Icons.*` glyphs change the tree-shaken font) — avoid new icons in patches or do a release.
 - **MANDATORY release registration:** `shorebird release android` MUST run for every new version BEFORE uploading its APK. How the 2026-09 gap happened: release flow step 3 only said `flutter build apk` — that embeds the OTA engine (forked Flutter) so the APK *looks* fine and installs, but no release record is created server-side. Result: `shorebird patch` refuses ("Release not found") and installed phones silently no-op on every update check (engine queries, nothing found). v0.16.0→v0.19.0 shipped this way; those installs can never OTA and need a one-time reinstall. Registration state = `shorebird --json releases list | grep '"version"'` — version MUST appear before the APK upload step. First registered release after the gap: `0.20.0+15`.
 - **Version tracking:** after EVERY ship (release or patch), update `mobile/lib/core/app_version.dart` — new release → bump `version` (+ `pubspec.yaml`) and reset `patch` to 0; shorebird patch → increment `patch`, leave `version`; always set `updatedAt` to ship time. Settings screen displays these.
+- **CI vs local (OTA):** GitHub Actions `mobile-release.yml` builds the release APK on STOCK Flutter (no Shorebird, no OTA engine) — fine for direct install distribution only. OTA-capable releases and all patches MUST be built/run LOCALLY with Shorebird's forked Flutter (`shorebird release android` then `~/.shorebird/bin/cache/flutter/bin flutter build apk` for releases; `shorebird patch android` for patches). CI never touches Shorebird; `SHOREBIRD_TOKEN` secret is unused.
 - **IST time for `updatedAt`:** NEVER trust system clock. Always fetch real IST: `webfetch https://time.is/IST` → parse time from response (e.g. "06:09:28"). Format: `'12 Sep 2026 · 6:09 AM'`.
 
 ### Versioning Policy (adopted 2026-09-07)
@@ -270,7 +271,7 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
   - `FAQPage` (5 Q&A) — `src/components/sections/TestimonialsSection.jsx`
   - `HowTo` (4-step process) — `src/components/sections/ProcessSection.jsx`
   - `CreativeWork` (portfolio projects) — `app/(marketing)/work/page.jsx`
-  - `ProfessionalService` + `WebSite` with `SearchAction` — `app/layout.jsx`
+  - `WebSite` (publisher → Organization, no SearchAction) — `app/layout.tsx`. **No `ProfessionalService` or `LocalBusiness` entity exists anywhere** — Organization is the only business entity; do not add a second one (would conflict with the canonical Organization).
   - **No `AggregateRating` or `Review` schema is currently emitted anywhere.** This is intentional: it stays that way unless (a) independently verifiable review data exists and (b) Google eligibility requirements for the rich result are established. Structured data must always match visible page content — rule encoded in `src/lib/seo/jsonLd.js`.
 - Projects: 4 portfolio items with outcome metrics in descriptions
 - To run AI citation check: `node scripts/check-ai-citations.mjs`

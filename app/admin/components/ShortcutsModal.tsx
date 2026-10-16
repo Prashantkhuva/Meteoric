@@ -10,6 +10,7 @@ const GROUPS = [
   {
     title: "Global navigation",
     shortcuts: [
+      { keys: "Ctrl / ⌘ + K", label: "Global search" },
       { keys: "g d", label: "Dashboard" },
       { keys: "g l", label: "Leads" },
       { keys: "g c", label: "Clients" },
@@ -28,7 +29,7 @@ const GROUPS = [
     title: "List pages",
     shortcuts: [
       { keys: "n", label: "Create new item" },
-      { keys: "/", label: "Focus search" },
+      { keys: "/", label: "Focus page search (global search elsewhere)" },
       { keys: "Esc", label: "Close dialogs / drawers" },
     ],
   },

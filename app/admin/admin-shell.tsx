@@ -7,6 +7,7 @@ import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { ToastProvider } from "./components/Toast";
 import { ShortcutsModal } from "./components/ShortcutsModal";
+import { GlobalSearchPalette } from "./components/GlobalSearchPalette";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import ErrorBoundary from "@/components/sections/ErrorBoundary";
 
@@ -39,6 +40,7 @@ export function AdminShell({ children }: AdminShellProps) {
   const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
   const [checking, setChecking] = useState(true);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const title = pageTitles[pathname] || "Admin";
 
   const openMobile = useCallback(() => setMobileOpen(true), []);
@@ -68,6 +70,43 @@ export function AdminShell({ children }: AdminShellProps) {
       };
     }, [router])
   );
+
+  useEffect(() => {
+    // List pages bind "/" to their own search input via useShortcuts;
+    // everywhere else "/" opens the global palette.
+    const listPaths = [
+      "/admin/leads",
+      "/admin/clients",
+      "/admin/invoices",
+      "/admin/proposals",
+      "/admin/projects",
+      "/admin/cal-bookings",
+      "/admin/sent-emails",
+    ];
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k" && !e.altKey && !e.shiftKey) {
+        e.preventDefault();
+        setShowSearch((v) => !v);
+        return;
+      }
+      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (listPaths.includes(pathname)) return;
+      const el = e.target as HTMLElement | null;
+      if (
+        el &&
+        (el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "SELECT" ||
+          el.isContentEditable)
+      ) {
+        return;
+      }
+      e.preventDefault();
+      setShowSearch(true);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pathname]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -137,7 +176,7 @@ export function AdminShell({ children }: AdminShellProps) {
 
         <div className="relative flex flex-1 flex-col min-w-0 min-h-0 h-full overflow-hidden">
           {!isOnboarding && (
-            <TopBar title={title} onMenuClick={openMobile} onShortcuts={() => setShowShortcuts((v) => !v)} />
+            <TopBar title={title} onMenuClick={openMobile} onShortcuts={() => setShowShortcuts((v) => !v)} onSearch={() => setShowSearch(true)} />
           )}
           <main className="flex-1 min-h-0 overflow-auto">
             <ErrorBoundary>
@@ -148,6 +187,9 @@ export function AdminShell({ children }: AdminShellProps) {
       </div>
       {!isOnboarding && (
         <ShortcutsModal open={showShortcuts} onClose={() => setShowShortcuts(false)} />
+      )}
+      {!isOnboarding && showSearch && (
+        <GlobalSearchPalette onClose={() => setShowSearch(false)} />
       )}
     </ToastProvider>
   );

@@ -1,15 +1,16 @@
 "use client";
 
-import { Menu, LogOut, Keyboard } from "lucide-react";
+import { Menu, LogOut, Keyboard, Search } from "lucide-react";
 import { signOut } from "../actions";
 
 interface TopBarProps {
   title: string;
   onMenuClick: () => void;
   onShortcuts: () => void;
+  onSearch: () => void;
 }
 
-export function TopBar({ title, onMenuClick, onShortcuts }: TopBarProps) {
+export function TopBar({ title, onMenuClick, onShortcuts, onSearch }: TopBarProps) {
   return (
     <header className="flex items-center justify-between h-14 shrink-0 px-4 lg:px-6 border-b border-white/[0.04] bg-[#070707]/90 backdrop-blur-md">
       <div className="flex items-center gap-3">
@@ -25,6 +26,18 @@ export function TopBar({ title, onMenuClick, onShortcuts }: TopBarProps) {
         </span>
       </div>
       <div className="flex items-center gap-3">
+        <button
+          onClick={onSearch}
+          className="flex items-center gap-1.5 rounded-full border border-white/[0.06] px-3 py-1 text-[11px] font-medium text-white/35 transition-colors hover:border-white/[0.15] hover:text-white/60"
+          aria-label="Global search"
+          title="Global search (Ctrl / ⌘ + K)"
+        >
+          <Search size={13} />
+          <span className="hidden sm:inline">Search</span>
+          <kbd className="hidden rounded border border-white/10 bg-white/[0.06] px-1 text-[9px] font-medium text-white/40 sm:inline">
+            ⌘K
+          </kbd>
+        </button>
         <button
           onClick={onShortcuts}
           className="flex items-center gap-1.5 rounded-full border border-white/[0.06] px-3 py-1 text-[11px] font-medium text-white/35 transition-colors hover:border-white/[0.15] hover:text-white/60"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { getSentEmails, deleteSentEmail } from "../actions";
 import DOMPurify from "dompurify";
 import { Pagination } from "../components/Pagination";
@@ -11,6 +11,9 @@ import { useToast } from "../components/ToastContext";
 import { Mail, Paperclip, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Tables } from "@/lib/supabase/database.types";
+import { useFilters } from "@/hooks/useFilters";
+import { useShortcuts } from "@/hooks/useShortcuts";
+import { Toolbar } from "../components/Toolbar";
 
 type SentEmail = Tables<"sent_emails">;
 type ActionResult<T> =
@@ -34,18 +37,31 @@ function formatTime(dateStr: string | undefined | null) {
 
 export default function SentEmailsPageContent() {
   const addToast = useToast();
+  const { filters, setFilters } = useFilters();
+  const search = filters.search;
+  const page = filters.page;
   const [emails, setEmails] = useState<SentEmail[]>([]);
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<number | null>(null);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [bulkConfirm, setBulkConfirm] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const searchRef = useRef<HTMLInputElement | null>(null);
+
+  useShortcuts(
+    useMemo(
+      () => ({
+        "/": () => searchRef.current?.focus(),
+      }),
+      []
+    )
+  );
 
   useEffect(() => {
     let cancelled = false;
-    getSentEmails(page, PAGE_SIZE).then((res) => {
+    setLoading(true);
+    getSentEmails(page, PAGE_SIZE, search || undefined).then((res) => {
       if (!cancelled) {
         if ('error' in res) {
           addToast(res.error, "error");
@@ -60,7 +76,7 @@ export default function SentEmailsPageContent() {
       }
     });
     return () => { cancelled = true; };
-  }, [page]);
+  }, [page, search]);
 
   const toggleExpand = (id: number) => {
     setExpanded(expanded === id ? null : id);
@@ -128,6 +144,12 @@ export default function SentEmailsPageContent() {
         </div>
       </div>
 
+      <Toolbar
+        search={search}
+        onSearchChange={(v) => setFilters({ search: v, page: 1 })}
+        searchRef={searchRef}
+      />
+
       {loading && emails.length === 0 ? (
         <div className="flex items-center justify-center py-20">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#EAEFFF] border-t-transparent" />
@@ -137,8 +159,17 @@ export default function SentEmailsPageContent() {
           <div className="h-12 w-12 rounded-full bg-white/[0.03] flex items-center justify-center mb-3">
             <Mail size={20} className="text-white/20" />
           </div>
-          <p className="text-sm text-white/40">No emails sent yet</p>
-          <p className="text-xs text-white/25 mt-1">Go to Compose to send your first email</p>
+          {search ? (
+            <>
+              <p className="text-sm text-white/40">No results for &ldquo;{search}&rdquo;</p>
+              <p className="text-xs text-white/25 mt-1">Try a different subject, sender, or recipient</p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-white/40">No emails sent yet</p>
+              <p className="text-xs text-white/25 mt-1">Go to Compose to send your first email</p>
+            </>
+          )}
         </div>
       ) : (
         <div className="border border-white/[0.06] bg-[#0a0a0a] rounded-xl overflow-hidden">
@@ -227,7 +258,7 @@ export default function SentEmailsPageContent() {
           ))}
           </div>
 
-          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={setPage} />
+          <Pagination current={page} total={total} pageSize={PAGE_SIZE} loading={loading} onChange={(p) => setFilters({ page: p })} />
         </div>
       )}
 

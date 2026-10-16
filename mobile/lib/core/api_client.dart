@@ -256,6 +256,10 @@ class ApiClient {
   Future<Map<String, dynamic>> leadsImport(List<Map<String, dynamic>> rows) =>
       _post('/api/admin/leads', {'action': 'import', 'rows': rows});
 
+  // ── Global search ─────────────────────────────────────────────────────────
+  Future<Map<String, dynamic>> globalSearch(String query) =>
+      _post('/api/admin/search', {'action': 'global', 'query': query});
+
   // ── Decisions ─────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> decisionsLatestForLeads(List<int> ids) =>
       _post('/api/admin/decisions', {'action': 'latest_for_leads', 'ids': ids});

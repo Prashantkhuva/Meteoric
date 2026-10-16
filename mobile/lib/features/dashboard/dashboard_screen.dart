@@ -19,6 +19,7 @@ import '../invoices/invoice_detail_screen.dart';
 import '../leads/lead_detail_screen.dart';
 import '../notifications/notifications_screen.dart';
 import '../projects/projects_screen.dart';
+import '../search/global_search_screen.dart';
 import 'widgets/half_gauge.dart';
 import 'widgets/sparkline.dart';
 
@@ -92,6 +93,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('Dashboard'),
         automaticallyImplyLeading: false,
         actions: [
+          IconButton(
+            icon: Icon(Icons.search, size: 19, color: AppColors.textMuted),
+            onPressed: () {
+              Haptic.tap();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const GlobalSearchScreen()),
+              );
+            },
+            tooltip: 'Global search',
+          ),
           IconButton(
             icon: _BellIcon(unread: NotificationState.instance.unread),
             onPressed: () async {

@@ -1600,6 +1600,60 @@ export async function getProposalById(id: number | string) {
   }
 }
 
+export async function getLeadById(id: number | string) {
+  try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
+    const safeId = idSchema.parse(id);
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", safeId)
+      .single();
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export async function getClientById(id: number | string) {
+  try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
+    const safeId = idSchema.parse(id);
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("clients")
+      .select("*")
+      .eq("id", safeId)
+      .single();
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export async function getProjectById(id: number | string) {
+  try {
+    const denied = await assertCan("view");
+    if (denied) return denied;
+    const safeId = idSchema.parse(id);
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*, client:clients(name, email, company)")
+      .eq("id", safeId)
+      .single();
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 export async function getProjectsPaginated(params: unknown) {
   const denied = await assertCan("view");
   if (denied) return denied;
@@ -1814,20 +1868,40 @@ export async function sendCustomEmailAction(data: CustomEmailPayload) {
   }
 }
 
-export async function getSentEmails(page = 1, pageSize = 15) {
+export async function getSentEmails(page = 1, pageSize = 15, search?: string) {
   try {
     const denied = await assertCan("view");
     if (denied) return denied;
     const supabase = await getSupabase();
     const from = (page - 1) * pageSize;
 
-    const { data, count } = await supabase
+    let query = supabase
       .from("sent_emails")
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(from, from + pageSize - 1);
+    if (search) {
+      const s = sanitizeSearch(search);
+      query = query.or(
+        `subject.ilike.%${s}%,from_address.ilike.%${s}%,to_addresses::text.ilike.%${s}%`
+      );
+    }
 
-    return { data: data || [], total: count || 0 };
+    let result = await query;
+
+    if (result.error && search) {
+      // Cast fallback: to_addresses::text may be rejected on some PostgREST setups
+      result = await supabase
+        .from("sent_emails")
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range(from, from + pageSize - 1)
+        .or(
+          `subject.ilike.%${sanitizeSearch(search)}%,from_address.ilike.%${sanitizeSearch(search)}%`
+        );
+    }
+
+    return { data: result.data || [], total: result.count || 0 };
   } catch {
     return { data: [], total: 0 };
   }
@@ -2334,4 +2408,501 @@ export async function deleteUser(userId: string) {
     console.error("[actions] deleteUser error:", err);
     return { error: (err as Error).message || "Failed to delete user" };
   }
+}
+
+export interface GlobalSearchItem {
+  id: number | string;
+  title: string;
+  subtitle?: string;
+  meta?: string;
+  /** Raw field names that matched the query (e.g. "email", "invoice_number"). */
+  matched?: string[];
+  /** Full row (with list-compatible embeds) — used by mobile detail screens. */
+  data?: Record<string, unknown>;
+}
+
+export interface GlobalSearchGroup {
+  key:
+    | "leads"
+    | "clients"
+    | "invoices"
+    | "proposals"
+    | "projects"
+    | "sent_emails"
+    | "bookings";
+  label: string;
+  href: string;
+  /** Total matches (exact unless phase-2 row fetch capped at 200 — admin scale). */
+  count: number;
+  items: GlobalSearchItem[];
+}
+
+type GlobalSearchGroups = { groups: GlobalSearchGroup[] };
+
+const CAL_BOOKINGS_API = "https://api.cal.com/v2";
+const MEMO_TTL_MS = 3000;
+const searchMemo = new Map<string, { exp: number; value: GlobalSearchGroups }>();
+
+function pickField(row: Record<string, unknown>, path: string): unknown {
+  return path.split(".").reduce<unknown>((o, k) => {
+    if (o && typeof o === "object") return (o as Record<string, unknown>)[k];
+    return undefined;
+  }, row);
+}
+
+function fieldText(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value
+      .map((v) =>
+        typeof v === "string" ? v : v && typeof v === "object" ? JSON.stringify(v) : ""
+      )
+      .join(" ");
+  }
+  return "";
+}
+
+function matchedFields(
+  row: Record<string, unknown>,
+  cols: string[],
+  needle: string
+): string[] {
+  const n = needle.toLowerCase();
+  return cols.filter((c) => fieldText(pickField(row, c)).toLowerCase().includes(n));
+}
+
+/**
+ * Merge phase-1 rows (direct column matches) with phase-2 rows (matched via
+ * related client/lead name). Count = count1 + count2 − overlap, where overlap
+ * = phase-2 rows that also match phase-1's own predicates.
+ */
+function mergePhase(
+  phase1Rows: Record<string, unknown>[],
+  phase1Count: number,
+  phase2: { data?: Record<string, unknown>[] | null; count?: number | null; error?: unknown } | null,
+  matchesPhase1: (row: Record<string, unknown>) => boolean,
+  idOf: (row: Record<string, unknown>) => number | string
+): { rows: Record<string, unknown>[]; count: number } {
+  const rows2 = (phase2 && !phase2.error && phase2.data) || [];
+  const count2 = (phase2 && !phase2.error && phase2.count) || 0;
+  const seen = new Set(phase1Rows.map(idOf));
+  const extras: Record<string, unknown>[] = [];
+  let overlap = 0;
+  for (const row of rows2) {
+    if (matchesPhase1(row)) overlap++;
+    const id = idOf(row);
+    if (!seen.has(id)) {
+      seen.add(id);
+      extras.push(row);
+    }
+  }
+  const rows = [...phase1Rows, ...extras];
+  return { rows, count: Math.max(phase1Count + count2 - overlap, rows.length) };
+}
+
+async function searchCalBookings(
+  q: string
+): Promise<{ count: number; items: GlobalSearchItem[] } | null> {
+  const key = process.env.CALCOM_API_KEY;
+  if (!key) return null;
+  try {
+    const res = await fetch(`${CAL_BOOKINGS_API}/bookings?limit=250&sort=startDate:desc`, {
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "cal-api-version": "2024-08-13",
+      },
+      next: { revalidate: 120 },
+    });
+    if (!res.ok) {
+      console.error("[globalSearch] cal bookings:", res.status);
+      return null;
+    }
+    const json = await res.json();
+    const all: Record<string, unknown>[] = Array.isArray(json?.data) ? json.data : [];
+    const n = q.toLowerCase();
+    const haystack = (b: Record<string, unknown>): string => {
+      const attendees = Array.isArray(b.attendees) ? b.attendees : [];
+      return [
+        b.title,
+        b.description,
+        ...attendees.map((a) =>
+          a && typeof a === "object"
+            ? `${(a as Record<string, unknown>).name || ""} ${(a as Record<string, unknown>).email || ""}`
+            : ""
+        ),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+    };
+    const matches = all.filter((b) => haystack(b).includes(n));
+    const items = matches.slice(0, 5).map((b) => {
+      const attendees = Array.isArray(b.attendees)
+        ? (b.attendees as Record<string, unknown>[])
+        : [];
+      const first = attendees[0];
+      const matched: string[] = [];
+      if ((b.title || "").toString().toLowerCase().includes(n)) matched.push("title");
+      if ((b.description || "").toString().toLowerCase().includes(n)) matched.push("description");
+      if (
+        attendees.some((a) =>
+          `${a?.name || ""} ${a?.email || ""}`.toLowerCase().includes(n)
+        )
+      ) {
+        matched.push("attendee");
+      }
+      return {
+        id: (b.id as number | string) ?? 0,
+        title: (b.title as string) || "Booking",
+        subtitle:
+          (first?.name as string) ||
+          (first?.email as string) ||
+          (b.start as string) ||
+          undefined,
+        meta: (b.status as string) || undefined,
+        matched,
+        data: b,
+      };
+    });
+    return { count: matches.length, items };
+  } catch (err) {
+    console.error("[globalSearch] cal bookings:", err);
+    return null;
+  }
+}
+
+export async function globalSearch(
+  rawQuery: string
+): Promise<GlobalSearchGroups | { error: string; status?: number }> {
+  const denied = await assertCan("view");
+  if (denied) return denied;
+
+  const q = (rawQuery || "").trim();
+  if (q.length < 2) return { groups: [] };
+
+  const s = sanitizeSearch(q);
+  const n = q.toLowerCase();
+  const like = (col: string) => `${col}.ilike.%${s}%`;
+  const seed = encodeURIComponent(q);
+
+  // Per-user 3s memo — key includes userId so one user's search is never
+  // served to another (RLS could differ between roles).
+  let userId = "anon";
+  try {
+    userId = (await getCallerPermissions())?.userId || "anon";
+  } catch {
+    userId = "anon";
+  }
+  const memoKey = `${userId}|${s}`;
+  const hit = searchMemo.get(memoKey);
+  if (hit && hit.exp > Date.now()) return hit.value;
+
+  const supabase = await getSupabase();
+
+  const [
+    leadsRes,
+    clientsRes,
+    clientIdsRes,
+    leadIdsRes,
+    invoicesRes,
+    proposalsRes,
+    projectsRes,
+    emailsRes,
+    bookingsRes,
+  ] = await Promise.all([
+    supabase
+      .from("leads")
+      .select("*", { count: "exact" })
+      .or(`${like("name")},${like("email")},${like("phone")},${like("company")}`)
+      .limit(5),
+    supabase
+      .from("clients")
+      .select("*", { count: "exact" })
+      .or(`${like("name")},${like("email")},${like("phone")},${like("company")}`)
+      .limit(5),
+    supabase
+      .from("clients")
+      .select("id")
+      .or(`${like("name")},${like("email")},${like("phone")},${like("company")}`)
+      .limit(100),
+    supabase
+      .from("leads")
+      .select("id")
+      .or(`${like("name")},${like("email")},${like("phone")},${like("company")}`)
+      .limit(100),
+    supabase
+      .from("invoices")
+      .select(
+        "*, client:clients(name, email, phone, company), proposal:proposals(id, title), bank_account:bank_accounts(*)",
+        { count: "exact" }
+      )
+      .or(`${like("invoice_number")},${like("notes")}`)
+      .order("created_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("proposals")
+      .select("*, lead:leads(name, email, phone, company)", { count: "exact" })
+      .or(like("title"))
+      .order("created_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("projects")
+      .select("*, client:clients(name, email, company)", { count: "exact" })
+      .or(`${like("name")},${like("services")}`)
+      .limit(5),
+    (async () => {
+      const base = () =>
+        supabase
+          .from("sent_emails")
+          .select("*", { count: "exact" })
+          .or(`${like("subject")},${like("from_address")},to_addresses::text.ilike.%${s}%`)
+          .order("created_at", { ascending: false })
+          .limit(5);
+      let res = await base();
+      if (res.error) {
+        // PostgREST cast fallback: subject/from_address only
+        res = await supabase
+          .from("sent_emails")
+          .select("*", { count: "exact" })
+          .or(`${like("subject")},${like("from_address")}`)
+          .order("created_at", { ascending: false })
+          .limit(5);
+      }
+      return res;
+    })(),
+    searchCalBookings(q),
+  ]);
+
+  // Phase 2: rows that match via related client/lead name (or-filter cannot
+  // span embeds without !inner, which would drop null-FK rows).
+  const clientIds = ((clientIdsRes.data || []) as { id: number }[]).map((r) => r.id);
+  const leadIds = ((leadIdsRes.data || []) as { id: number }[]).map((r) => r.id);
+
+  const [invoicesExtra, proposalsExtra, projectsExtra] = await Promise.all([
+    clientIds.length
+      ? supabase
+          .from("invoices")
+          .select(
+            "*, client:clients(name, email, phone, company), proposal:proposals(id, title), bank_account:bank_accounts(*)",
+            { count: "exact" }
+          )
+          .in("client_id", clientIds)
+          .order("created_at", { ascending: false })
+          .limit(200)
+      : Promise.resolve(null),
+    leadIds.length
+      ? supabase
+          .from("proposals")
+          .select("*, lead:leads(name, email, phone, company)", { count: "exact" })
+          .in("lead_id", leadIds)
+          .order("created_at", { ascending: false })
+          .limit(200)
+      : Promise.resolve(null),
+    clientIds.length
+      ? supabase
+          .from("projects")
+          .select("*, client:clients(name, email, company)", { count: "exact" })
+          .in("client_id", clientIds)
+          .order("created_at", { ascending: false })
+          .limit(200)
+      : Promise.resolve(null),
+  ]);
+
+  const logErr = (key: string, err: { message: string } | null) => {
+    if (err) console.error(`[globalSearch] ${key}:`, err.message);
+  };
+  logErr("leads", leadsRes.error);
+  logErr("clients", clientsRes.error);
+  logErr("invoices", invoicesRes.error);
+  logErr("proposals", proposalsRes.error);
+  logErr("projects", projectsRes.error);
+  logErr("sent_emails", emailsRes.error);
+  logErr("invoices_extra", invoicesExtra?.error || null);
+  logErr("proposals_extra", proposalsExtra?.error || null);
+  logErr("projects_extra", projectsExtra?.error || null);
+
+  const groups: GlobalSearchGroup[] = [];
+
+  if (!leadsRes.error) {
+    const rows = (leadsRes.data || []) as Record<string, unknown>[];
+    const items: GlobalSearchItem[] = rows.map((l) => ({
+      id: l.id as number,
+      title: (l.name as string) || (l.email as string) || `Lead #${l.id}`,
+      subtitle:
+        (l.company as string) ||
+        (l.email as string) ||
+        (l.phone as string) ||
+        undefined,
+      meta: (l.status as string) || undefined,
+      matched: matchedFields(l, ["name", "email", "phone", "company"], q),
+      data: l,
+    }));
+    if (items.length) {
+      groups.push({
+        key: "leads",
+        label: "Leads",
+        href: `/admin/leads?search=${seed}`,
+        count: leadsRes.count ?? items.length,
+        items,
+      });
+    }
+  }
+
+  if (!clientsRes.error) {
+    const rows = (clientsRes.data || []) as Record<string, unknown>[];
+    const items: GlobalSearchItem[] = rows.map((c) => ({
+      id: c.id as number,
+      title: (c.name as string) || (c.email as string) || `Client #${c.id}`,
+      subtitle:
+        (c.company as string) ||
+        (c.email as string) ||
+        (c.phone as string) ||
+        undefined,
+      meta: (c.status as string) || undefined,
+      matched: matchedFields(c, ["name", "email", "phone", "company"], q),
+      data: c,
+    }));
+    if (items.length) {
+      groups.push({
+        key: "clients",
+        label: "Clients",
+        href: `/admin/clients?search=${seed}`,
+        count: clientsRes.count ?? items.length,
+        items,
+      });
+    }
+  }
+
+  if (!invoicesRes.error) {
+    const phase1 = (invoicesRes.data || []) as Record<string, unknown>[];
+    const merged = mergePhase(
+      phase1,
+      invoicesRes.count ?? phase1.length,
+      invoicesExtra,
+      (r) =>
+        fieldText(r.invoice_number).toLowerCase().includes(n) ||
+        fieldText(r.notes).toLowerCase().includes(n),
+      (r) => r.id as number | string
+    );
+    const items: GlobalSearchItem[] = merged.rows.slice(0, 5).map((i) => {
+      const client = i.client as Record<string, unknown> | null;
+      return {
+        id: i.id as number,
+        title: i.invoice_number as string,
+        subtitle: ((client?.name as string) || (client?.company as string)) || undefined,
+        meta: (i.status as string) || undefined,
+        matched: matchedFields(i, ["invoice_number", "notes", "client.name"], q),
+        data: i,
+      };
+    });
+    if (items.length) {
+      groups.push({
+        key: "invoices",
+        label: "Invoices",
+        href: `/admin/invoices?search=${seed}`,
+        count: merged.count,
+        items,
+      });
+    }
+  }
+
+  if (!proposalsRes.error) {
+    const phase1 = (proposalsRes.data || []) as Record<string, unknown>[];
+    const merged = mergePhase(
+      phase1,
+      proposalsRes.count ?? phase1.length,
+      proposalsExtra,
+      (r) => fieldText(r.title).toLowerCase().includes(n),
+      (r) => r.id as number | string
+    );
+    const items: GlobalSearchItem[] = merged.rows.slice(0, 5).map((p) => {
+      const lead = p.lead as Record<string, unknown> | null;
+      return {
+        id: p.id as number,
+        title: p.title as string,
+        subtitle: (lead?.name as string) || undefined,
+        meta: (p.status as string) || undefined,
+        matched: matchedFields(p, ["title", "lead.name"], q),
+        data: p,
+      };
+    });
+    if (items.length) {
+      groups.push({
+        key: "proposals",
+        label: "Proposals",
+        href: `/admin/proposals?search=${seed}`,
+        count: merged.count,
+        items,
+      });
+    }
+  }
+
+  if (!projectsRes.error) {
+    const phase1 = (projectsRes.data || []) as Record<string, unknown>[];
+    const merged = mergePhase(
+      phase1,
+      projectsRes.count ?? phase1.length,
+      projectsExtra,
+      (r) =>
+        fieldText(r.name).toLowerCase().includes(n) ||
+        fieldText(r.services).toLowerCase().includes(n),
+      (r) => r.id as number | string
+    );
+    const items: GlobalSearchItem[] = merged.rows.slice(0, 5).map((p) => {
+      const client = p.client as Record<string, unknown> | null;
+      return {
+        id: p.id as number,
+        title: p.name as string,
+        subtitle: ((client?.name as string) || (client?.company as string)) || undefined,
+        meta: (p.status as string) || undefined,
+        matched: matchedFields(p, ["name", "services", "client.name"], q),
+        data: p,
+      };
+    });
+    if (items.length) {
+      groups.push({
+        key: "projects",
+        label: "Projects",
+        href: `/admin/projects?search=${seed}`,
+        count: merged.count,
+        items,
+      });
+    }
+  }
+
+  if (!emailsRes.error) {
+    const rows = (emailsRes.data || []) as Record<string, unknown>[];
+    const items: GlobalSearchItem[] = rows.map((e) => ({
+      id: e.id as number,
+      title: e.subject as string,
+      subtitle: (e.from_address as string) || undefined,
+      meta: (e.status as string) || undefined,
+      matched: matchedFields(e, ["subject", "from_address", "to_addresses"], q),
+      data: e,
+    }));
+    if (items.length) {
+      groups.push({
+        key: "sent_emails",
+        label: "Sent Emails",
+        href: `/admin/sent-emails?search=${seed}`,
+        count: emailsRes.count ?? items.length,
+        items,
+      });
+    }
+  }
+
+  if (bookingsRes && bookingsRes.items.length) {
+    groups.push({
+      key: "bookings",
+      label: "Bookings",
+      href: `/admin/cal-bookings?search=${seed}`,
+      count: bookingsRes.count,
+      items: bookingsRes.items,
+    });
+  }
+
+  const result: GlobalSearchGroups = { groups };
+  if (searchMemo.size > 100) searchMemo.clear();
+  searchMemo.set(memoKey, { exp: Date.now() + MEMO_TTL_MS, value: result });
+  return result;
 }

@@ -24,27 +24,27 @@ export function useFocusTrap(open?: boolean) {
     const el = ref.current;
     if (!el) return;
 
-    const focusable = el.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
+    const focusableSelector =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const first = el.querySelector<HTMLElement>(focusableSelector);
 
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === "Tab") {
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last?.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first?.focus();
-          }
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      // re-query each time: content can change while the trap is open
+      const items = el.querySelectorAll<HTMLElement>(focusableSelector);
+      const f = items[0];
+      const l = items[items.length - 1];
+      if (!f || !l) return;
+      if (e.shiftKey) {
+        if (document.activeElement === f) {
+          e.preventDefault();
+          l.focus();
         }
+      } else if (document.activeElement === l) {
+        e.preventDefault();
+        f.focus();
       }
-    }
+    };
 
     el.addEventListener("keydown", handleKey);
     first?.focus();

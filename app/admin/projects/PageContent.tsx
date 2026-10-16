@@ -3,8 +3,9 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  createProject, updateProject, deleteProject, updateProjectStatus, getClients, getProjectsPaginated,
+  createProject, updateProject, deleteProject, updateProjectStatus, getClients, getProjectsPaginated, getProjectById,
 } from "../actions";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Pencil, FolderKanban,
@@ -103,6 +104,23 @@ export default function ProjectsPage() {
   const { filters, setFilters, toggleColSort } = useFilters();
   const { search, status: statusFilter, sort, page, col, dir } = filters;
   const [viewProject, setViewProject] = useState<ProjectRow | null>(null);
+  const searchParams = useSearchParams();
+  const deepLinkRef = useRef<string | null>(null);
+
+  // Deep-link (?id=123): open the record's drawer directly — used by the
+  // global search palette and shared URLs.
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (!id || deepLinkRef.current === id) return;
+    let cancelled = false;
+    getProjectById(id).then((row) => {
+      if (!cancelled && row) {
+        deepLinkRef.current = id;
+        setViewProject(row as unknown as ProjectRow);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [searchParams]);
   const [editingProject, setEditingProject] = useState<ProjectRow | null>(null);
   const [showNew, setShowNew] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
