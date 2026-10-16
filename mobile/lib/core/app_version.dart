@@ -8,8 +8,8 @@ import 'package:shorebird_code_push/shorebird_code_push.dart';
 /// Always set [updatedAt] to the ship time (IST). Settings shows these values.
 class AppVersion {
   static const String version = '0.22.3+24';
-  static const int patch = 0;
-  static const String updatedAt = '15 Oct 2026 · 9:08 PM';
+  static const int patch = 1;
+  static const String updatedAt = '16 Oct 2026 · 5:27 AM';
 
   static final _updater = ShorebirdUpdater();
 
@@ -22,14 +22,5 @@ class AppVersion {
     } catch (_) {
       return 0;
     }
-  }
-
-  /// Build-time const for display before async lookup completes.
-  static String get display => patch > 0 ? '$version (patch $patch)' : version;
-
-  /// Runtime display with live patch number.
-  static Future<String> get runtimeDisplay async {
-    final p = await runtimePatch;
-    return p > 0 ? '$version (patch $p)' : version;
   }
 }

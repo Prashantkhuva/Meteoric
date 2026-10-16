@@ -17,22 +17,9 @@ void main() {
       expect(AppVersion.updatedAt, isNotEmpty);
     });
 
-    test('display shows version when patch is 0', () {
-      final display = AppVersion.display;
-      expect(display, contains(AppVersion.version));
-      if (AppVersion.patch > 0) {
-        expect(display, contains('patch'));
-      }
-    });
-
-    test('display always contains version string', () {
-      expect(AppVersion.display, contains(AppVersion.version));
-    });
-
-    test('runtimePatch returns a number (async)', () async {
+    test('runtimePatch returns 0 without an engine (test env)', () async {
       final patch = await AppVersion.runtimePatch;
-      expect(patch, isA<int>());
-      expect(patch, greaterThanOrEqualTo(0));
+      expect(patch, 0);
     });
   });
 }

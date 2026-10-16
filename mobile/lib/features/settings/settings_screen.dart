@@ -23,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _role = '';
   bool _editingProfile = false;
   bool _editingPassword = false;
-  int _runtimePatch = AppVersion.patch;
+  int? _runtimePatch; // null until the Shorebird engine answers
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
   bool _pinEnabled = false;
@@ -547,9 +547,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _infoRow(
             'Version',
-            _runtimePatch > 0
+            // Live engine value only — build-time const can disagree.
+            _runtimePatch != null && _runtimePatch! > 0
                 ? '${AppVersion.version} (patch $_runtimePatch)'
-                : AppVersion.display,
+                : AppVersion.version,
           ),
           _rowDivider(),
           _infoRow('Updated', AppVersion.updatedAt),
