@@ -1,0 +1,208 @@
+name: Mobile Patch
+
+# Ship an OTA patch to an existing Shorebird release (no new APK).
+# Trigger: tag push vX.Y.Z+N-hotfix.M (primary) OR workflow_dispatch (dry-run/override).
+# Tag is created by scripts/ship-patch.mjs after patch field bump + commit.
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+-hotfix.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: "Base release to patch (X.Y.Z+N format, e.g. 0.23.0+25)"
+        required: true
+      dry_run:
+        description: "Validate build/signing/auth without publishing the patch"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: mobile-patch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Guard — SHOREBIRD_TOKEN present
+        run: |
+          set -euo pipefail
+          [ -n "$SHOREBIRD_TOKEN" ] || { echo "::error::SHOREBIRD_TOKEN secret missing — mint from Shorebird console (Account → API Keys), then gh secret set SHOREBIRD_TOKEN"; exit 1; }
+          echo "SHOREBIRD_TOKEN present"
+
+      # Parse tag → release-version + patch-number (tag push path).
+      - name: Resolve release-version + patch number from tag or dispatch input
+        id: ver
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF_NAME}"
+            if ! echo "$TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+-hotfix\.[0-9]+$'; then
+              echo "::error::tag '$TAG' does not match vX.Y.Z+N-hotfix.M — refusing to patch"
+              exit 1
+            fi
+            # Strip v prefix, then strip -hotfix.M suffix → release-version
+            NOV="${TAG#v}"
+            RELEASE_VERSION="${NOV%-hotfix.*}"
+            PATCH_NUMBER="${NOV##*-hotfix.}"
+          else
+            RELEASE_VERSION="${{ inputs.release-version }}"
+            if ! echo "$RELEASE_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+$'; then
+              echo "::error::release-version '$RELEASE_VERSION' does not match X.Y.Z+N"
+              exit 1
+            fi
+            PATCH_NUMBER=""
+          fi
+          DART_VERSION=$(grep -oE "version = '[^']+'" mobile/lib/core/app_version.dart | sed "s/version = '//;s/'//")
+          DART_PATCH=$(grep -oE 'patch = [0-9]+' mobile/lib/core/app_version.dart | grep -oE '[0-9]+')
+          {
+            echo "release_version=$RELEASE_VERSION"
+            echo "patch_number=$PATCH_NUMBER"
+            echo "dart_version=$DART_VERSION"
+            echo "dart_patch=$DART_PATCH"
+          } >> "$GITHUB_OUTPUT"
+          echo "release-version=$RELEASE_VERSION  patch_number=$PATCH_NUMBER  app_version.dart=$DART_VERSION  patch=$DART_PATCH"
+
+      # Guard: pubspec version must match app_version.dart version (same as release).
+      - name: Guard — pubspec version matches app_version.dart
+        run: |
+          set -euo pipefail
+          PUBSPEC_VERSION=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
+          if [ "$PUBSPEC_VERSION" != "${{ steps.ver.outputs.dart_version }}" ]; then
+            echo "::error::pubspec.yaml ($PUBSPEC_VERSION) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Fix and re-run."
+            exit 1
+          fi
+          echo "versions match: $PUBSPEC_VERSION"
+
+      # Guard: patch field must be > 0 (a patch run for a fresh release is wrong — that's a release).
+      - name: Guard — patch field is greater than 0
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.ver.outputs.dart_patch }}" -le 0 ]; then
+            echo "::error::mode is patch but app_version.dart patch=${{ steps.ver.outputs.dart_patch }}. Use mobile-release.yml for a fresh release."
+            exit 1
+          fi
+          echo "patch field ok: ${{ steps.ver.outputs.dart_patch }}"
+
+      # Guard: tag-parsed patch number must match app_version.dart patch field.
+      - name: Guard — tag patch number matches app_version.dart patch field
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.ver.outputs.patch_number }}" != "${{ steps.ver.outputs.dart_patch }}" ]; then
+            echo "::error::tag hotfix number (${{ steps.ver.outputs.patch_number }}) != app_version.dart patch (${{ steps.ver.outputs.dart_patch }}). Re-run ship-patch.mjs to keep them in sync."
+            exit 1
+          fi
+          echo "tag patch number matches: ${{ steps.ver.outputs.patch_number }}"
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Guard — Android SDK present
+        run: |
+          set -euo pipefail
+          [ -n "${ANDROID_HOME:-}" ] || { echo "::error::ANDROID_HOME not set on runner"; exit 1; }
+          BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
+          echo "build-tools $BT at $ANDROID_HOME/build-tools/$BT"
+          [ -x "$ANDROID_HOME/build-tools/$BT/apksigner" ] || { echo "::error::apksigner missing"; exit 1; }
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          cache-key: flutter-sdk-stable
+          pub-cache: true
+          pub-cache-key: pub-${{ hashFiles('mobile/pubspec.lock') }}
+
+      - name: Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
+
+      # Patch runs flutter build internally for signing — needs keystore.
+      - name: Decode signing + Firebase secrets
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEY_PROPS_B64: ${{ secrets.KEY_PROPERTIES_B64 }}
+          GS_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+        run: |
+          set -euo pipefail
+          [ -n "$KEYSTORE_B64" ] || { echo "::error::ANDROID_KEYSTORE_BASE64 missing"; exit 1; }
+          [ -n "$KEY_PROPS_B64" ] || { echo "::error::KEY_PROPERTIES_B64 missing"; exit 1; }
+          [ -n "$GS_JSON_B64" ] || { echo "::error::GOOGLE_SERVICES_JSON_B64 missing"; exit 1; }
+          echo "$KEYSTORE_B64"  | base64 -d > "$RUNNER_TEMP/meteoric-release.jks"
+          echo "$KEY_PROPS_B64" | base64 -d > mobile/android/key.properties
+          sed -i "s|^storeFile=.*|storeFile=$RUNNER_TEMP/meteoric-release.jks|" mobile/android/key.properties
+          echo "$GS_JSON_B64"  | base64 -d > mobile/android/app/google-services.json
+          [ -s "$RUNNER_TEMP/meteoric-release.jks" ] || { echo "::error::keystore decode produced empty file"; exit 1; }
+          grep -q 'com.meteoric.meteoric_admin' mobile/android/app/google-services.json \
+            || { echo "::error::google-services.json package mismatch"; exit 1; }
+          grep -q '^storeFile=' mobile/android/key.properties \
+            || { echo "::error::key.properties missing storeFile"; exit 1; }
+          echo "secrets decoded + sanity-checked"
+
+      - name: Quality gate — analyze + test
+        run: |
+          set -euo pipefail
+          cd mobile
+          flutter pub get
+          flutter analyze --no-pub
+          flutter test
+
+      # No flutter-version pin — engine auto-resolved from named release.
+      # No --artifact apk — patch delivers via Shorebird infra, no APK produced.
+      - name: Shorebird patch (publish OTA)
+        id: shorebird-patch
+        uses: shorebirdtech/shorebird-patch@v1
+        with:
+          platform: android
+          release-version: ${{ steps.ver.outputs.release_version }}
+          working-directory: ./mobile
+          args: >-
+            ${{ inputs.dry_run == true && '--dry-run' || '' }}
+            -- --no-tree-shake-icons
+
+      - name: Shorebird doctor (diagnostics on failure)
+        if: failure()
+        run: shorebird doctor --verbose
+
+      - name: Step summary
+        if: always()
+        run: |
+          {
+            if [ "${{ job.status }}" = "success" ]; then
+              echo "### 🩹 Patch shipped — ${{ steps.ver.outputs.release_version }} patch ${{ steps.shorebird-patch.outputs.patch-number }}"
+            else
+              echo "### ❌ Mobile patch failed — see run logs"
+            fi
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Release version | \`${{ steps.ver.outputs.release_version }}\` |"
+            echo "| Patch number (Shorebird) | \`${{ steps.shorebird-patch.outputs.patch-number }}\` |"
+            echo "| Patch number (app_version.dart) | \`${{ steps.ver.outputs.dart_patch }}\` |"
+            echo "| Dry run | ${{ inputs.dry_run }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
