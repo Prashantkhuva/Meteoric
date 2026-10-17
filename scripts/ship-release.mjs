@@ -24,6 +24,13 @@ function runInherit(cmd, args) {
   execFileSync(cmd, args, { cwd: ROOT, stdio: "inherit" });
 }
 
+function die(message, e) {
+  const detail = typeof e?.stderr === "string" ? e.stderr.trim() : e?.message;
+  if (detail) console.error(detail);
+  console.error(message);
+  process.exit(1);
+}
+
 // Guard: version files must not already be dirty (don't sweep unrelated work).
 const status = run("git", ["status", "--porcelain", "mobile/pubspec.yaml", "mobile/lib/core/app_version.dart"]);
 if (status.trim()) {
@@ -96,16 +103,42 @@ console.log(`Updated app_version.dart (updatedAt + patch=0)`);
 console.log("\n=== Step 3: Commit + push ===");
 run("git", ["add", "mobile/pubspec.yaml", "mobile/lib/core/app_version.dart"]);
 const commitMsg = `chore(mobile): v${FULL} — release prep`;
-runInherit("git", ["commit", "-m", commitMsg]);
-run("git", ["pull", "--rebase", "origin", "main"]);
-runInherit("git", ["push", "origin", "main"]);
+try {
+  runInherit("git", ["commit", "-m", commitMsg]);
+} catch (e) {
+  die("Error: git commit failed.", e);
+}
+try {
+  run("git", ["pull", "--rebase", "origin", "main"]);
+} catch (e) {
+  try {
+    run("git", ["rebase", "--abort"]);
+    console.error("Rebase aborted; working tree left as it was before the pull.");
+  } catch {
+    console.error("Warning: `git rebase --abort` failed — repo may still be mid-rebase. Run it manually.");
+  }
+  die("Error: git pull --rebase origin main failed. Resolve the conflict and re-run.", e);
+}
+try {
+  runInherit("git", ["push", "origin", "main"]);
+} catch (e) {
+  die("Error: git push origin main failed.", e);
+}
 
 // 5. Create + push annotated tag.
 console.log("\n=== Step 4: Create + push tag ===");
 const TAG = `v${FULL}`;
 console.log(`\n*** TAG: ${TAG} ***`);
-run("git", ["tag", "-a", TAG, "-m", `Release ${FULL}`]);
-runInherit("git", ["push", "origin", TAG]);
+try {
+  run("git", ["tag", "-a", TAG, "-m", `Release ${FULL}`]);
+} catch (e) {
+  die(`Error: git tag ${TAG} failed.`, e);
+}
+try {
+  runInherit("git", ["push", "origin", TAG]);
+} catch (e) {
+  die(`Error: git push origin ${TAG} failed.`, e);
+}
 
 // 6. Optional: watch the workflow run (gh CLI).
 console.log("\n=== Step 5: Watch workflow run (optional) ===");
