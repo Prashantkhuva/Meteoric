@@ -24,11 +24,15 @@ export const services: Service[] = [
     metadataTitle: "Landing Page Development Services | Next.js & SEO",
     metadataDescription:
       "Build fast, conversion-focused landing pages with Next.js, responsive design, animation, and SEO foundations tailored to your product, startup, or business.",
-    h1: ["Landing Page", "Design"],
+    h1: ["Landing Page", "Development"],
     tagline: "High-converting landing pages that ship in days.",
     directAnswer:
       "A landing page engagement covers strategy, custom design, build, SEO structure, and launch support — no templates. You bring the product and offer; Meteoric handles message flow, animation, and deployment. Exact timeline and cost depend on page count and content readiness, and are fixed after a scoping call.",
     relatedName: "Landing Pages",
+    relatedLink: {
+      text: "landing page design for startups preparing to launch",
+      href: "/startup-landing-page-design",
+    },
     num: "01",
     image: "/images/service-web.webp",
     metric: "Ships in days",
@@ -97,7 +101,7 @@ export const services: Service[] = [
     title: "SaaS Development",
     shortDescription:
       "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
-    metadataTitle: "SaaS Development Agency | MVP & Product Development",
+    metadataTitle: "SaaS Development Agency | MVP & Product",
     metadataDescription:
       "Meteoric designs and develops SaaS products and MVPs with authentication, dashboards, payments, APIs, databases, and scalable full-stack architecture.",
     h1: ["SaaS", "Development"],
@@ -105,6 +109,10 @@ export const services: Service[] = [
     directAnswer:
       "Meteoric designs and builds SaaS MVPs and full products end to end: scoping, interface, auth, billing, dashboards, and deployment. The work runs in 10-day sprint cycles with weekly demos and fixed pricing agreed after the discovery call — you always know what is being built and when.",
     relatedName: "SaaS Development",
+    relatedLink: {
+      text: "see our SaaS MVP process and pricing",
+      href: "/saas-mvp-development",
+    },
     num: "02",
     image: "/images/service-saas.webp",
     metric: "3-6 week MVP",
@@ -335,7 +343,7 @@ export const services: Service[] = [
   {
     slug: "nextjs-development",
     title: "Next.js Development",
-    metadataTitle: "Next.js Development Agency | Modern Web Applications",
+    metadataTitle: "Next.js Development Services | Web Apps",
     metadataDescription:
       "Build Next.js websites and web applications with modern architecture, responsive interfaces, SEO foundations, and full-stack functionality.",
     h1: ["Next.js", "Development"],
@@ -343,6 +351,10 @@ export const services: Service[] = [
     directAnswer:
       "Meteoric builds and modernizes Next.js applications — marketing sites, dashboards, and full-stack products with server rendering, SEO foundations, and App Router patterns. Existing React or Next.js codebases can be audited, repaired, or extended rather than rewritten from scratch.",
     relatedName: "Next.js Development",
+    relatedLink: {
+      text: "hiring a Next.js agency for a startup",
+      href: "/nextjs-development-agency",
+    },
     sections: [
       {
         heading: "Why Next.js",
@@ -385,14 +397,18 @@ export const services: Service[] = [
     title: "Web Applications",
     shortDescription:
       "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
-    metadataTitle: "Web Application Development | Custom Full-Stack Apps",
+    metadataTitle: "Web Application Development Services | Full-Stack",
     metadataDescription:
-      "Meteoric builds custom web applications, dashboards, internal tools, and customer-facing platforms with modern frontend, backend, database, and API architecture.",
-    h1: ["Web", "Applications"],
+      "Custom web application development — dashboards, internal tools, and customer-facing platforms with modern frontend, backend, database, and API architecture.",
+    h1: ["Web Application", "Development"],
     tagline: "Custom web apps that are fast, reliable, and a pleasure to use.",
     directAnswer:
       "Custom web apps — dashboards, internal tools, portals, and customer-facing platforms — built with Next.js, Node.js, and PostgreSQL. The engagement covers design through deployment, including auth, APIs, and integrations with the systems you already run.",
     relatedName: "Web Applications",
+    relatedLink: {
+      text: "web app development for startups and SaaS",
+      href: "/web-app-development",
+    },
     num: "03",
     image: "/images/service-mobile.webp",
     metric: "Built to perform",

@@ -11,10 +11,10 @@ import type { ServiceIntentPage } from "./types";
 export const serviceIntentPages: ServiceIntentPage[] = [
   {
     path: "/saas-mvp-development",
-    metadataTitle: "SaaS MVP Development for Founders & Startups",
+    metadataTitle: "Hire a SaaS MVP Developer for Startups",
     metadataDescription:
-      "Founder-led SaaS MVP development: scope the core product, build auth, billing, and dashboards, and ship a launch-ready MVP with one dedicated builder.",
-    h1: "SaaS MVP development for founders with a product to prove",
+      "Hire a founder-led SaaS MVP developer — scope the core product, build auth, billing, and dashboards, and ship a launch-ready MVP with one dedicated builder.",
+    h1: "Hire a SaaS MVP developer to prove your product",
     directAnswer:
       "Meteoric is a founder-led SaaS MVP development studio. One engineer scopes your core features, designs the product, builds auth, billing, dashboards, and APIs, and ships a production-ready MVP — most focused MVPs run on a 3–6 week timeline.",
     whoFor: [
@@ -103,6 +103,10 @@ export const serviceIntentPages: ServiceIntentPage[] = [
       "how-to-implement-aeo-answer-engine-optimization-for-saas",
     ],
     relatedServiceSlug: "saas-development",
+    relatedLink: {
+      text: "full SaaS product development",
+      href: "/services/saas-development",
+    },
     ctaLine:
       "Have an MVP deadline? Book a free strategy call and leave with a scoped plan — no commitment.",
   },
@@ -200,16 +204,20 @@ export const serviceIntentPages: ServiceIntentPage[] = [
       "the-meteoric-guide-to-choosing-your-tech-stack",
     ],
     relatedServiceSlug: "nextjs-development",
+    relatedLink: {
+      text: "browse Next.js development services",
+      href: "/services/nextjs-development",
+    },
     ctaLine:
       "Planning a Next.js build or migration? Book a free strategy call — you leave with an approach, not a pitch deck.",
   },
 
   {
     path: "/startup-landing-page-design",
-    metadataTitle: "Startup Landing Page Design & Development",
+    metadataTitle: "Startup Landing Page Design for Launch",
     metadataDescription:
-      "Founder-led landing page design for startups: one focused, fast page that explains your product, earns trust, and gives visitors a single clear action.",
-    h1: "Landing page design for startups preparing to launch",
+      "Founder-led landing page design for startups — one focused, fast page that explains your product, earns trust, and gives visitors a single clear action to sign up or book a call.",
+    h1: "Landing page design for startups launching a product",
     directAnswer:
       "Meteoric designs and builds startup landing pages: one focused page that explains the product, shows proof, and gives visitors a single clear action. Designed and coded by the founder of the studio, so what you approve is what ships.",
     whoFor: [
@@ -296,13 +304,17 @@ export const serviceIntentPages: ServiceIntentPage[] = [
       "startup-seo-on-a-budget-what-to-do-first",
     ],
     relatedServiceSlug: "landing-pages",
+    relatedLink: {
+      text: "landing page development services with Next.js",
+      href: "/services/landing-pages",
+    },
     ctaLine:
       "Launching soon? Book a free strategy call and get a page plan — sections, message, and timeline.",
   },
 
   {
     path: "/web-app-development",
-    metadataTitle: "Custom Web App Development for Startups & SaaS",
+    metadataTitle: "Web App Development for Startups & SaaS",
     metadataDescription:
       "Meteoric builds custom web apps — dashboards, portals, and full-stack products — with Next.js, Node.js, and Postgres. Founder-led from data model to deploy.",
     h1: "Web app development for dashboards, portals, and SaaS products",
@@ -394,6 +406,10 @@ export const serviceIntentPages: ServiceIntentPage[] = [
       "the-meteoric-guide-to-choosing-your-tech-stack",
     ],
     relatedServiceSlug: "web-applications",
+    relatedLink: {
+      text: "web application development services",
+      href: "/services/web-applications",
+    },
     ctaLine:
       "Have a workflow to turn into a product? Book a free strategy call and map the first release.",
   },

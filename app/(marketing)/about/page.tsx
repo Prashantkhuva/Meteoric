@@ -8,7 +8,7 @@ import {
 import AboutPage from "@/components/pages/About";
 import type { Faq } from "@/data/types";
 
-const pageTitle = "About Meteoric — Founder-Led Web Development Studio";
+const pageTitle = "About — Founder-Led Web Development Studio";
 const pageDesc =
   "Meteoric is a founder-led web development studio for startups and SaaS. Founded in 2026 by Prashant Khuva, full-stack developer based in India.";
 

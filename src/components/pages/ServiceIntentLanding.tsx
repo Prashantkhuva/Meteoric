@@ -89,6 +89,18 @@ export default function ServiceIntentLanding({
             {page.directAnswer}
           </p>
         </motion.div>
+        {page.relatedLink && (
+          <p className="mt-5 text-[15px] leading-relaxed text-[var(--text-muted)] max-w-2xl">
+            Need the full capability breakdown?{" "}
+            <Link
+              href={page.relatedLink.href}
+              className="text-[var(--accent)] hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded"
+            >
+              {page.relatedLink.text}
+            </Link>
+            .
+          </p>
+        )}
       </section>
 
       {/* Who it's for + What's included */}

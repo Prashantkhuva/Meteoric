@@ -28,7 +28,7 @@ export default function ServiceLanding({ service, relatedServices = [] }: Servic
   return (
     <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
       {/* Back link */}
-      <div className="max-w-4xl mx-auto px-6 md:px-12 pt-28 md:pt-32">
+      <div className="max-w-4xl mx-auto px-6 md:px-12 pt-8">
         <Link
           href="/services"
           className="inline-flex items-center gap-1.5 min-h-6 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
@@ -72,6 +72,18 @@ export default function ServiceLanding({ service, relatedServices = [] }: Servic
           <p className="text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             {service.directAnswer}
           </p>
+          {service.relatedLink && (
+            <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              Comparing options?{" "}
+              <Link
+                href={service.relatedLink.href}
+                className="text-[var(--accent)] hover:underline underline-offset-4"
+              >
+                {service.relatedLink.text}
+              </Link>
+              .
+            </p>
+          )}
         </motion.div>
       </section>
 

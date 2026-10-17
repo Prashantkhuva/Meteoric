@@ -3,7 +3,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 import Contact from "@/components/pages/Contact";
 
-const pageTitle = "Contact Meteoric — Start a Project";
+const pageTitle = "Contact — Start a Project";
 const pageDesc =
   "Book a free 20-minute strategy call with Meteoric or email contact@withmeteoric.com. Talk through your scope, stack, and timeline before you commit.";
 

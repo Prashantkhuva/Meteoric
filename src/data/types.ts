@@ -84,6 +84,11 @@ export interface Service {
   /** Detail-page body sections (also feed HowTo JSON-LD). */
   sections: ServiceSection[];
   relatedBlogPosts?: RelatedBlogRef[];
+  /**
+   * Body cross-link rendered as a paragraph in main content.
+   * Used for cannibalization-aware internal linking (service page ↔ intent page).
+   */
+  relatedLink?: { text: string; href: string };
   /** Label used when this service appears as a "related service" card. */
   relatedName: string;
   /** When true the service must never reach the sitemap or indexable output. */
@@ -413,5 +418,10 @@ export interface ServiceIntentPage {
   insightSlugs: string[];
   /** Related service under /services (link target + label source). */
   relatedServiceSlug?: string;
+  /**
+   * Body cross-link rendered as a paragraph in main content.
+   * Used for cannibalization-aware internal linking (intent page ↔ service page).
+   */
+  relatedLink?: { text: string; href: string };
   ctaLine: string;
 }
