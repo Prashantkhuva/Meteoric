@@ -236,6 +236,7 @@ jobs:
           MIN_BUILD: ${{ inputs.min_build }}
         run: |
           set -euo pipefail
+          npm install --no-save @supabase/supabase-js
           [ -n "$GH_TOKEN" ] || { echo "::error::RELEASE_REPO_TOKEN missing — cannot upload assets"; exit 1; }
           ARGS=(mobile/build/app/outputs/flutter-apk/app-release.apk "${{ steps.ver.outputs.semver }}" "${{ steps.ver.outputs.build }}" "$NOTES")
           if [ -n "$MIN_BUILD" ]; then ARGS+=(--min-build "$MIN_BUILD"); fi
