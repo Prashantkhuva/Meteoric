@@ -188,6 +188,7 @@ jobs:
           working-directory: ./mobile
           args: >-
             ${{ inputs.dry_run == true && '--dry-run' || '' }}
+            --allow-asset-diffs
             -- --no-tree-shake-icons
 
       # Only run when setup succeeded — otherwise `shorebird` is not on PATH and the
