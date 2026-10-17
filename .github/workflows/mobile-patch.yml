@@ -95,7 +95,10 @@ jobs:
           echo "versions match: $PUBSPEC_VERSION"
 
       # Guard: patch field must be > 0 (a patch run for a fresh release is wrong — that's a release).
+      # Tag-push only: ship-patch.mjs bumps patch before tagging. On dispatch the operator
+      # supplies release-version explicitly, so patch=0 on main must not block dry-run validation.
       - name: Guard — patch field is greater than 0
+        if: github.event_name == 'push'
         run: |
           set -euo pipefail
           if [ "${{ steps.ver.outputs.dart_patch }}" -le 0 ]; then
@@ -139,6 +142,7 @@ jobs:
           pub-cache-key: pub-${{ hashFiles('mobile/pubspec.lock') }}
 
       - name: Setup Shorebird
+        id: shorebird-setup
         uses: shorebirdtech/setup-shorebird@v1
         with:
           cache: true
@@ -186,8 +190,10 @@ jobs:
             ${{ inputs.dry_run == true && '--dry-run' || '' }}
             -- --no-tree-shake-icons
 
+      # Only run when setup succeeded — otherwise `shorebird` is not on PATH and the
+      # doctor's own "command not found" masks the real guard failure.
       - name: Shorebird doctor (diagnostics on failure)
-        if: failure()
+        if: failure() && steps.shorebird-setup.outcome == 'success'
         run: shorebird doctor --verbose
 
       - name: Step summary
