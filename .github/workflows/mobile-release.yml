@@ -247,7 +247,8 @@ jobs:
         run: |
           set -euo pipefail
           curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json" | python3 -m json.tool
-          CODE=$(curl -sI -o /dev/null -w "%{http_code}" https://app.withmeteoric.com/download)
+          # Browser UA — Cloudflare bot-blocks bare curl from Actions runner IPs (returns 403).
+          CODE=$(curl -sI -o /dev/null -w "%{http_code}" -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" https://app.withmeteoric.com/download)
           [ "$CODE" = "200" ] || { echo "::error::download page returned $CODE"; exit 1; }
           echo "download page OK"
 
