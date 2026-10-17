@@ -117,9 +117,9 @@ workers/          — Cloudflare Workers
 - **compileSdk:** 37 (required by flutter_secure_storage); `gradle.properties` has `kotlin.incremental=false` + `kotlin.compiler.execution.strategy=in-process` (Windows file-lock workaround for "Could not close incremental caches")
 - **Release signing:** `mobile/android/key.properties` (gitignored) + `app/meteoric-release.jks` (gitignored); alias `meteoric`. Install APK = gradle `build/app/outputs/flutter-apk/app-release.apk` (v2-signed), built AFTER `shorebird release android` (see release flow). Build with Shorebird's forked Flutter (on PATH via `~/.shorebird/bin`) so the OTA engine is embedded; stock Flutter builds have no engine at all. `shorebird releases get-apks` / `universal.apk` are legacy — invariant 2 below forbids using them.
 - **OTA updates (Shorebird):** `shorebird` CLI at `~/.shorebird/bin` (add to PATH per session); logged in as `work.prashantkhuva@gmail.com`; `app_id: 39ba27c5-5735-4c86-a9b9-e037da640ec0` in `mobile/shorebird.yaml` (checked in). Workflow: new release → `shorebird release android` (also uploads AAB to Play Store if ever needed); code change → `shorebird patch android --release-version 0.1.0+1` (tiny diff, phones auto-update on next launch, no reinstall). Limits: patches can't change native plugins/AndroidManifest/icons/assets — those need a new release. Bumping `pubspec.yaml` version = new release, not patch. Verify patch w/o publishing: `--dry-run`. Patches fail on icon-font diffs (new `Icons.*` glyphs change the tree-shaken font) — avoid new icons in patches or do a release.
-- **MANDATORY release registration:** `shorebird release android` MUST run for every new version BEFORE uploading its APK. How the 2026-09 gap happened: release flow step 3 only said `flutter build apk` — that embeds the OTA engine (forked Flutter) so the APK *looks* fine and installs, but no release record is created server-side. Result: `shorebird patch` refuses ("Release not found") and installed phones silently no-op on every update check (engine queries, nothing found). v0.16.0→v0.19.0 shipped this way; those installs can never OTA and need a one-time reinstall. Registration state = `shorebird --json releases list | grep '"version"'` — version MUST appear before the APK upload step. First registered release after the gap: `0.20.0+15`.
+- **MANDATORY release registration:** `shorebird release android` MUST run for every new version BEFORE uploading its APK. How the 2026-09 gap happened: release flow step 3 only said `flutter build apk` — that embeds the OTA engine (forked Flutter) so the APK *looks* fine and installs, but no release record is created server-side. Result: `shorebird patch` refuses ("Release not found") and installed phones silently no-op on every update check (engine queries, nothing found). v0.16.0→v0.19.0 shipped this way; those installs can never OTA and need a one-time reinstall. Registration state = `shorebird --json releases list | grep '"version"'` — version MUST appear before the APK upload step. First registered release after the gap: `0.20.0+15`. This is now handled automatically by the CI pipeline — `shorebird-release@v1` registers during the build step. The manual "run shorebird release android locally before APK upload" step is obsolete; CI owns registration + upload together.
 - **Version tracking:** after EVERY ship (release or patch), update `mobile/lib/core/app_version.dart` — new release → bump `version` (+ `pubspec.yaml`) and reset `patch` to 0; shorebird patch → increment `patch`, leave `version`; always set `updatedAt` to ship time. Settings screen displays these.
-- **CI vs local (OTA):** GitHub Actions `mobile-release.yml` builds the release APK on STOCK Flutter (no Shorebird, no OTA engine) — fine for direct install distribution only. OTA-capable releases and all patches MUST be built/run LOCALLY with Shorebird's forked Flutter (`shorebird release android` then `~/.shorebird/bin/cache/flutter/bin flutter build apk` for releases; `shorebird patch android` for patches). CI never touches Shorebird; `SHOREBIRD_TOKEN` secret is unused.
+- **CI vs local (OTA):** GitHub Actions handles all OTA releases/patches via official Shorebird composite actions (`shorebird-release@v1` / `shorebird-patch@v1`) + `shorebirdtech/setup-shorebird@v1`. Trigger = tag push (`vX.Y.Z+N` = release, `vX.Y.Z+N-hotfix.M` = patch) + `workflow_dispatch` for dry-run/override. Local prep scripts `npm run ship:release` / `npm run ship:patch` bump versions, fetch real IST, commit+push, create+push tag. Shorebird CLI runs only in CI for releases/patches — local forked-Flutter builds are no longer used for shipping. `SHOREBIRD_TOKEN` secret (fresh API key from Shorebird console) must exist in GitHub Actions secrets. Never pass `--allow-native-diffs` (native drift fails loud = do a full release instead). Never rebuild a published release from different source — always patch from the exact release commit.
 - **IST time for `updatedAt`:** NEVER trust system clock. Always fetch real IST: `webfetch https://time.is/IST` → parse time from response (e.g. "06:09:28"). Format: `'12 Sep 2026 · 6:09 AM'`.
 
 ### Versioning Policy (adopted 2026-09-07)
@@ -160,78 +160,30 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 
 #### Release Flow — Exact Steps (follow for every ship)
 
-**New release:**
+**New release (CI pipeline):**
 ```
-1. Run version guard (auto-bumps build number above all published builds)
-   node scripts/check-version.mjs
-   This fetches latest.json, reads highest_build, and writes max(remote, local) + 1
-   into both pubspec.yaml and app_version.dart.
-
-2. Edit mobile/lib/core/app_version.dart
-   - patch: 0                ← reset to 0
-   - updatedAt: '17 Sep 2026 · 5:19 PM'  ← real IST from webfetch https://time.is/IST
-
-3. REGISTER the release with Shorebird (MANDATORY — skip = OTA silently dead,
-   patch impossible; this is how v0.16.0-v0.19.0 shipped broken)
-   export PATH="$HOME/.shorebird/bin:$PATH"
-   cd mobile
-   shorebird release android
-   (publishes artifacts to Shorebird; builds AAB at build/app/outputs/bundle/release/)
-   VERIFY registration BEFORE building the install APK:
-   shorebird --json releases list | grep '"version":"<X.Y.Z+N>"'
-   MUST find the version. If "Release not found" → stop, fix, do not upload.
-
-4. Build install APK (gradle, v2-signed; forked Flutter = OTA engine embedded)
-   (PATH already contains shorebird's flutter after step 3's export)
-   cd mobile
-   flutter build apk --release --no-tree-shake-icons
-
-5. VERIFY signature (MANDATORY — skip = Android 15/16 install fails)
-   "C:/Users/PRASHANT/AppData/Local/Android/sdk/build-tools/37.0.0/apksigner.bat" verify --verbose mobile/build/app/outputs/flutter-apk/app-release.apk
-   MUST show: "Verified using v2 scheme (APK Signature Scheme v2): true"
-   MUST NOT show: jarsigner anywhere
-
-6. VERIFY versionCode (MANDATORY — skip = INSTALL_FAILED_VERSION_DOWNGRADE)
-   "C:/Users/PRASHANT/AppData/Local/Android/sdk/build-tools/37.0.0/aapt.exe" dump badging mobile/build/app/outputs/flutter-apk/app-release.apk | grep versionCode
-   MUST show versionCode higher than highest_build from step 1.
-
-7. Upload
-   cd ..
-   node scripts/upload-app-release.mjs mobile/build/app/outputs/flutter-apk/app-release.apk 0.17.0 <N> "Release notes here"
-   (The script auto-sets highest_build = max(highest_build, N) in latest.json)
-
-8. Verify manifest
-   curl -s "https://hlxjljckxthmtssqrzwo.supabase.co/storage/v1/object/public/app-releases/latest.json"
-   MUST show correct build number, highest_build, and URL
-
-9. Verify download page
-   curl -sI "https://app.withmeteoric.com/download"
-   MUST show: Content-Type: application/vnd.android.package-archive
-
-10. git add mobile/pubspec.yaml mobile/lib/core/app_version.dart
-   git commit -m "chore(mobile): v0.17.0+N — description"
-   git push origin main
+1. Ensure `SHOREBIRD_TOKEN` secret exists in GitHub Actions (fresh API key from Shorebird console → Account → API Keys; NOT `shorebird login:ci` — dead since 2026-10-01).
+2. From repo root: `npm run ship:release`
+   - Runs `check-version.mjs` (bumps build above remote `highest_build`, writes `pubspec.yaml` + `app_version.dart`, resets `patch` to 0).
+   - Fetches real IST from `time.is/IST`, writes `updatedAt`.
+   - Commits + pushes `main`, creates + pushes annotated tag `vX.Y.Z+N`.
+   - Tag push triggers `.github/workflows/mobile-release.yml` automatically.
+3. Workflow: setup Shorebird (`setup-shorebird@v1`) → decode secrets → analyze+test → `shorebird-release@v1` (`--artifact apk -- --no-tree-shake-icons`, flutter-version 3.47.7) → APK-exists guard → apksigner v2 verify → versionCode > highest_build guard → upload (GitHub asset + Supabase `latest.json`) → verify download page → archive artifact → `shorebird doctor --verbose` on failure.
+4. Verify: `shorebird --json releases list | grep '"version":"<X.Y.Z+N>"'` shows registered. Download page `https://app.withmeteoric.com/download` returns 200. `latest.json` shows correct build + highest_build.
+5. If dry-run/validation needed: Actions → Mobile Release → Run workflow → set `dry_run=true` (or leave `false` for real).
 ```
 
-**Patch release (Shorebird OTA):**
+**Patch release (CI pipeline, OTA):**
 ```
-0. PRECHECK (MANDATORY — patch fails without it): the base version must exist
-   shorebird --json releases list | grep '"version":"<X.Y.Z+N>"'
-   Not found → base was never registered (0.16.0-0.19.0 gap) → cannot patch;
-   ship a NEW release instead (flow above). Installed phones on an unregistered
-   base need a one-time reinstall — no OTA path exists for them.
-
-1. Edit mobile/lib/core/app_version.dart
-   - patch: 1                ← increment (leave version unchanged)
-   - updatedAt: timestamp    ← real IST from time.is/IST
-
-2. cd mobile
-   shorebird patch android --release-version <X.Y.Z+N>
-   Add --dry-run first to preview without publishing.
-
-3. git add mobile/lib/core/app_version.dart
-   git commit -m "patch(mobile): v0.17.0+1 patch 1"
-   git push origin main
+1. Ensure base version exists: `shorebird --json releases list | grep '"version":"<X.Y.Z+N>"'`
+   Not found → base never registered (0.16.0-0.19.0 gap) → cannot patch; ship a NEW release instead.
+2. From repo root: `npm run ship:patch`
+   - Reads current `patch` from `app_version.dart`, increments by 1, fetches real IST, writes `updatedAt`.
+   - Commits + pushes `main`, creates + pushes annotated tag `vX.Y.Z+N-hotfix.M` (M = new patch number).
+   - Tag push triggers `.github/workflows/mobile-patch.yml` automatically.
+3. Workflow: setup Shorebird → decode secrets → analyze+test → `shorebird-patch@v1` (no flutter-version pin, engine auto-resolved from named release, `-- --no-tree-shake-icons`) → `shorebird doctor --verbose` on failure.
+4. Verify: Settings screen on device shows new patch number. Step summary shows Shorebird-assigned patch number — cross-check against `app_version.dart` patch field.
+5. Dry-run: Actions → Mobile Patch → Run workflow → set `dry_run=true` + provide `release-version` manually (tag push can't carry dry-run flag).
 ```
 
 **Key invariants (never break these):**
@@ -244,7 +196,7 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
 7. **Version in `app_version.dart` MUST match `pubspec.yaml`** — updater parses build number from version string `X.Y.Z+N`.
 8. **`updatedAt` must be real IST** — fetch from `webfetch https://time.is/IST`, never system clock.
 9. **Work on `main` only** — other OpenCode session may be on different branch.
-10. **ALWAYS run `shorebird release android` for every new version and VERIFY it appears in `shorebird --json releases list` BEFORE uploading the APK** — forked-Flutter builds embed the OTA engine even without registration, so a broken ship looks identical to a working one until someone tries to patch. Unregistered bases = permanent silent OTA failure for every installed copy (v0.16.0-v0.19.0 lesson).
+10. **ALWAYS verify the release is registered in `shorebird --json releases list` after the workflow finishes** — CI's `shorebird-release@v1` registers during the build, before the APK upload, but confirm the version appears before trusting the ship. Unregistered bases = permanent silent OTA failure for every installed copy (v0.16.0-v0.19.0 lesson). A local `shorebird release android` run is no longer part of shipping — CI owns registration + upload together.
 
 **In-app updater:** app polls `latest.json` in Supabase Storage bucket `app-releases` on launch; if remote build > local, shows update banner → downloads APK from GitHub Releases with progress → installs via platform channel (`meteoric/updater` in MainActivity.kt, FileProvider + REQUEST_INSTALL_PACKAGES).
 
