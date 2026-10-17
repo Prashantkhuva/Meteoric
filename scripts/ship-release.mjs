@@ -104,7 +104,7 @@ console.log("\n=== Step 3: Commit + push ===");
 run("git", ["add", "mobile/pubspec.yaml", "mobile/lib/core/app_version.dart"]);
 const commitMsg = `chore(mobile): v${FULL} — release prep`;
 try {
-  runInherit("git", ["commit", "-m", commitMsg]);
+  runInherit("git", ["commit", "--only", "mobile/pubspec.yaml", "mobile/lib/core/app_version.dart", "-m", commitMsg]);
 } catch (e) {
   die("Error: git commit failed.", e);
 }

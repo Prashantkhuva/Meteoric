@@ -33,14 +33,11 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 defaults:
   run:
     shell: bash
-
-env:
-  SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
 
 jobs:
   ship:
@@ -58,6 +55,8 @@ jobs:
 
       # Guard: SHOREBIRD_TOKEN must be present (fail-fast before any build).
       - name: Guard — SHOREBIRD_TOKEN present
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         run: |
           set -euo pipefail
           [ -n "$SHOREBIRD_TOKEN" ] || { echo "::error::SHOREBIRD_TOKEN secret missing — mint from Shorebird console (Account → API Keys), then gh secret set SHOREBIRD_TOKEN"; exit 1; }
@@ -79,28 +78,34 @@ jobs:
             # Dispatch path: read from pubspec (prep script already bumped it)
             FULL=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
           fi
+          PUBSPEC=$(grep -E '^version:' mobile/pubspec.yaml | awk '{print $2}' | tr -d '\r')
           SEMVER="${FULL%%+*}"
           BUILD="${FULL##*+}"
           DART_VERSION=$(grep -oE "version = '[^']+'" mobile/lib/core/app_version.dart | sed "s/version = '//;s/'//")
           DART_PATCH=$(grep -oE 'patch = [0-9]+' mobile/lib/core/app_version.dart | grep -oE '[0-9]+')
           {
             echo "full=$FULL"
+            echo "pubspec_version=$PUBSPEC"
             echo "semver=$SEMVER"
             echo "build=$BUILD"
             echo "dart_version=$DART_VERSION"
             echo "dart_patch=$DART_PATCH"
           } >> "$GITHUB_OUTPUT"
-          echo "pubspec=$FULL  app_version.dart=$DART_VERSION  patch=$DART_PATCH"
+          echo "resolved=$FULL  pubspec=$PUBSPEC  app_version.dart=$DART_VERSION  patch=$DART_PATCH"
 
       # Guard: version mismatch = updater parses wrong build number.
       - name: Guard — pubspec version matches app_version.dart
         run: |
           set -euo pipefail
           if [ "${{ steps.ver.outputs.full }}" != "${{ steps.ver.outputs.dart_version }}" ]; then
-            echo "::error::pubspec.yaml (${{ steps.ver.outputs.full }}) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Fix and re-run."
+            echo "::error::tag/dispatch version (${{ steps.ver.outputs.full }}) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Fix and re-run."
             exit 1
           fi
-          echo "versions match: ${{ steps.ver.outputs.full }}"
+          if [ "${{ steps.ver.outputs.pubspec_version }}" != "${{ steps.ver.outputs.dart_version }}" ]; then
+            echo "::error::pubspec.yaml (${{ steps.ver.outputs.pubspec_version }}) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Fix and re-run."
+            exit 1
+          fi
+          echo "versions match: tag/dispatch=${{ steps.ver.outputs.full }}  pubspec=${{ steps.ver.outputs.pubspec_version }}  dart=${{ steps.ver.outputs.dart_version }}"
 
       # Guard: a release must reset the patch field (new base = patch 0).
       - name: Guard — release resets patch field to 0
@@ -138,7 +143,10 @@ jobs:
           pub-cache-key: pub-${{ hashFiles('mobile/pubspec.lock') }}
 
       - name: Setup Shorebird
+        id: shorebird-setup
         uses: shorebirdtech/setup-shorebird@v1
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         with:
           cache: true
 
@@ -177,6 +185,8 @@ jobs:
       - name: Shorebird release (build + register)
         id: shorebird-release
         uses: shorebirdtech/shorebird-release@v1
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         with:
           flutter-version: 3.47.7
           platform: android
@@ -220,6 +230,7 @@ jobs:
             || { echo "::error::versionCode $VC <= highest_build $REMOTE — would INSTALL_FAILED_VERSION_DOWNGRADE"; exit 1; }
 
       - name: Upload release (GitHub asset + Supabase latest.json)
+        if: inputs.dry_run != true
         env:
           NOTES: ${{ inputs.notes }}
           MIN_BUILD: ${{ inputs.min_build }}
@@ -231,6 +242,7 @@ jobs:
           node scripts/upload-app-release.mjs "${ARGS[@]}"
 
       - name: Verify manifest + download page
+        if: inputs.dry_run != true
         run: |
           set -euo pipefail
           curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json" | python3 -m json.tool
@@ -246,7 +258,9 @@ jobs:
           retention-days: 30
 
       - name: Shorebird doctor (diagnostics on failure)
-        if: failure()
+        if: failure() && steps.shorebird-setup.outcome == 'success'
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         run: shorebird doctor --verbose
 
       - name: Step summary

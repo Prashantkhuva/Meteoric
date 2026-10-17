@@ -30,9 +30,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-
 jobs:
   patch:
     runs-on: ubuntu-latest
@@ -43,6 +40,8 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Guard — SHOREBIRD_TOKEN present
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         run: |
           set -euo pipefail
           [ -n "$SHOREBIRD_TOKEN" ] || { echo "::error::SHOREBIRD_TOKEN secret missing — mint from Shorebird console (Account → API Keys), then gh secret set SHOREBIRD_TOKEN"; exit 1; }
@@ -92,7 +91,11 @@ jobs:
             echo "::error::pubspec.yaml ($PUBSPEC_VERSION) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Fix and re-run."
             exit 1
           fi
-          echo "versions match: $PUBSPEC_VERSION"
+          if [ "${{ steps.ver.outputs.release_version }}" != "${{ steps.ver.outputs.dart_version }}" ]; then
+            echo "::error::release-version (${{ steps.ver.outputs.release_version }}) != app_version.dart (${{ steps.ver.outputs.dart_version }}). Stale tag or wrong input — re-run ship-patch.mjs."
+            exit 1
+          fi
+          echo "versions match: release-version=${{ steps.ver.outputs.release_version }}  pubspec=$PUBSPEC_VERSION  dart=${{ steps.ver.outputs.dart_version }}"
 
       # Guard: patch field must be > 0 (a patch run for a fresh release is wrong — that's a release).
       # Tag-push only: ship-patch.mjs bumps patch before tagging. On dispatch the operator
@@ -136,6 +139,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.47.7
           cache: true
           cache-key: flutter-sdk-stable
           pub-cache: true
@@ -144,6 +148,8 @@ jobs:
       - name: Setup Shorebird
         id: shorebird-setup
         uses: shorebirdtech/setup-shorebird@v1
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         with:
           cache: true
 
@@ -177,24 +183,28 @@ jobs:
           flutter analyze --no-pub
           flutter test
 
-      # No flutter-version pin — engine auto-resolved from named release.
+      # Patch action takes no flutter-version input — SDK pinned at Setup Flutter
+      # (3.47.7, matches release); engine itself auto-resolved from named release.
       # No --artifact apk — patch delivers via Shorebird infra, no APK produced.
       - name: Shorebird patch (publish OTA)
         id: shorebird-patch
         uses: shorebirdtech/shorebird-patch@v1
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         with:
           platform: android
           release-version: ${{ steps.ver.outputs.release_version }}
           working-directory: ./mobile
           args: >-
             ${{ inputs.dry_run == true && '--dry-run' || '' }}
-            --allow-asset-diffs
             -- --no-tree-shake-icons
 
       # Only run when setup succeeded — otherwise `shorebird` is not on PATH and the
       # doctor's own "command not found" masks the real guard failure.
       - name: Shorebird doctor (diagnostics on failure)
         if: failure() && steps.shorebird-setup.outcome == 'success'
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
         run: shorebird doctor --verbose
 
       - name: Step summary

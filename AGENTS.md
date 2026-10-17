@@ -181,7 +181,7 @@ Add `min_supported_build` to `latest.json`. The in-app updater (`updater.dart`) 
    - Reads current `patch` from `app_version.dart`, increments by 1, fetches real IST, writes `updatedAt`.
    - Commits + pushes `main`, creates + pushes annotated tag `vX.Y.Z+N-hotfix.M` (M = new patch number).
    - Tag push triggers `.github/workflows/mobile-patch.yml` automatically.
-3. Workflow: setup Shorebird → decode secrets → analyze+test → `shorebird-patch@v1` (no flutter-version pin, engine auto-resolved from named release, `-- --no-tree-shake-icons`) → `shorebird doctor --verbose` on failure.
+3. Workflow: setup Shorebird → decode secrets → analyze+test → `shorebird-patch@v1` (flutter-version 3.47.7 pinned to match release — avoids asset-font skew that previously forced `--allow-asset-diffs`; engine itself auto-resolved from named release; `-- --no-tree-shake-icons`) → `shorebird doctor --verbose` on failure.
 4. Verify: Settings screen on device shows new patch number. Step summary shows Shorebird-assigned patch number — cross-check against `app_version.dart` patch field.
 5. Dry-run: Actions → Mobile Patch → Run workflow → set `dry_run=true` + provide `release-version` manually (tag push can't carry dry-run flag).
 ```

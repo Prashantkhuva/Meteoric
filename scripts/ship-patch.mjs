@@ -105,7 +105,7 @@ console.log("\n=== Step 2: Commit + push ===");
 run("git", ["add", "mobile/lib/core/app_version.dart"]);
 const commitMsg = `chore(mobile): patch ${NEW_PATCH} — OTA fix`;
 try {
-  runInherit("git", ["commit", "-m", commitMsg]);
+  runInherit("git", ["commit", "--only", "mobile/lib/core/app_version.dart", "-m", commitMsg]);
 } catch (e) {
   die("Error: git commit failed.", e);
 }
