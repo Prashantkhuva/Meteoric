@@ -10,7 +10,9 @@
     "start": "next start",
     "lint": "eslint .",
     "email:dev": "email dev --dir src/emails",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ship:release": "node scripts/ship-release.mjs",
+    "ship:patch": "node scripts/ship-patch.mjs"
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",
