@@ -260,7 +260,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (!mounted) return;
     final state = UpdateState.instance;
     if (state.update == null && state.error == null) {
-      Toast.info(context, 'You are on the latest version');
+      Toast.info(context, "You're on the latest version");
     }
   }
 
