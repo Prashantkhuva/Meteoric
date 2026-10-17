@@ -51,6 +51,8 @@ jobs:
       # Parse tag → release-version + patch-number (tag push path).
       - name: Resolve release-version + patch number from tag or dispatch input
         id: ver
+        env:
+          RELEASE_INPUT: ${{ inputs.release-version }}
         run: |
           set -euo pipefail
           if [ "${{ github.event_name }}" = "push" ]; then
@@ -64,7 +66,7 @@ jobs:
             RELEASE_VERSION="${NOV%-hotfix.*}"
             PATCH_NUMBER="${NOV##*-hotfix.}"
           else
-            RELEASE_VERSION="${{ inputs.release-version }}"
+            RELEASE_VERSION="$RELEASE_INPUT"
             if ! echo "$RELEASE_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+$'; then
               echo "::error::release-version '$RELEASE_VERSION' does not match X.Y.Z+N"
               exit 1
@@ -126,7 +128,6 @@ jobs:
           [ -n "${ANDROID_HOME:-}" ] || { echo "::error::ANDROID_HOME not set on runner"; exit 1; }
           BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
           echo "build-tools $BT at $ANDROID_HOME/build-tools/$BT"
-          [ -x "$ANDROID_HOME/build-tools/$BT/apksigner" ] || { echo "::error::apksigner missing"; exit 1; }
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
