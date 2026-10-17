@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
 import {
@@ -56,6 +57,7 @@ export default function StatsBar({ strip = false }: { strip?: boolean }) {
 
   useEffect(() => {
     if (!inView || !ref.current) return;
+    if (!document.documentElement.hasAttribute("data-reveal")) return;
     const items = ref.current.querySelectorAll(".stat-item");
     gsap.fromTo(
       items,
@@ -88,7 +90,14 @@ export default function StatsBar({ strip = false }: { strip?: boolean }) {
             {siteStats.map((stat) => (
               <li
                 key={stat.label}
-                className="stat-item flex flex-col items-center text-center opacity-0 px-2 py-2.5 min-w-0"
+                data-reveal=""
+                className="stat-item flex flex-col items-center text-center px-2 py-2.5 min-w-0"
+                style={
+                  {
+                    "--rv-clip": "inset(100% 0% 0% 0%)",
+                    "--rv-t": "translate3d(0px, 48px, 0)",
+                  } as CSSProperties
+                }
               >
                 <span
                   className="text-[16px] font-semibold tracking-tight whitespace-nowrap leading-none"
@@ -129,7 +138,14 @@ export default function StatsBar({ strip = false }: { strip?: boolean }) {
           {siteStats.map((stat) => (
             <div
               key={stat.label}
-              className="stat-item text-center opacity-0"
+              data-reveal=""
+              className="stat-item text-center"
+              style={
+                {
+                  "--rv-clip": "inset(100% 0% 0% 0%)",
+                  "--rv-t": "translate3d(0px, 48px, 0)",
+                } as CSSProperties
+              }
             >
               <div className="text-[clamp(1.25rem,5vw,2.25rem)] font-semibold tracking-tight mb-1.5 whitespace-nowrap" style={{ color: "#ffffff" }}>
                 <AnimatedNumber target={stat.value} inView={inView} />

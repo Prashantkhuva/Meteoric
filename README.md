@@ -25,7 +25,6 @@ npm run dev
 - `npm run dev` — Start dev server
 - `npm run build` — Production build
 - `npm run lint` — ESLint
-- `npm run generate:sitemap` — Rebuild sitemap
 
 ## Environment
 
