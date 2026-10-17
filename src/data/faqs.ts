@@ -75,3 +75,59 @@ export const serviceFaqs: Faq[] = [
       "After validating your MVP with real users, we iterate based on feedback — adding features, improving performance, and scaling infrastructure. Meteoric handles the full lifecycle: MVP in 3–6 weeks, then ongoing sprints for feature expansion, analytics, billing, and team onboarding. No rebuilds, just continuous improvement.",
   },
 ];
+
+export const workFaqs: Faq[] = [
+  {
+    question: "How long does a typical project take?",
+    answer:
+      "Landing pages ship in 3–7 days. Web applications take 2–6 weeks, and SaaS products 4–10 weeks. You get a precise timeline after the discovery call, once scope is agreed.",
+  },
+  {
+    question: "What does the process look like from first call to launch?",
+    answer:
+      "A free discovery call to align on goals, then design direction, development in 10-day sprints with weekly updates, and launch. Post-launch support is included.",
+  },
+  {
+    question: "What tech stack do you build with?",
+    answer:
+      "Next.js, React, Node.js, Supabase, PostgreSQL, Tailwind CSS, GSAP, and Stripe. The stack is chosen per project — we also adapt to tools you already run.",
+  },
+  {
+    question: "How are projects scoped and priced?",
+    answer:
+      "Scope starts from the outcome you need, not a feature wishlist. Timeline and cost are fixed after the discovery call and agreed before the first sprint begins.",
+  },
+  {
+    question: "Do you only work with startups?",
+    answer:
+      "Mostly — founders and small teams who want direct access to the person building the product. Established businesses with a clearly scoped project are also a fit.",
+  },
+];
+
+export const caseStudyFaqs: Faq[] = [
+  {
+    question: "What's included in each case study?",
+    answer:
+      "The challenge, the solution we built, the tech stack, and key features. Verified results and live links are shown only where we have permission and data to back them.",
+  },
+  {
+    question: "Are the results shown in these case studies verified?",
+    answer:
+      "Only results marked as verified appear. We don't publish client metrics we can't confirm — unverified numbers are left out or labelled clearly.",
+  },
+  {
+    question: "How long did these projects take to build?",
+    answer:
+      "Timelines vary by scope. Landing pages ship in days, web apps in 2–6 weeks, and SaaS MVPs in 4–10 weeks from discovery to launch.",
+  },
+  {
+    question: "What tech stack is used across these projects?",
+    answer:
+      "Next.js, React, Node.js, Supabase, and PostgreSQL appear most often. Each case study lists the exact stack used for that build.",
+  },
+  {
+    question: "How do I start a project like one of these?",
+    answer:
+      "Book a free discovery call. We'll scope the outcome you need, agree on a timeline and fixed price, and start within the week if it's a fit.",
+  },
+];

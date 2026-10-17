@@ -1,6 +1,7 @@
 import { SITE_URL, pageMetadata } from "@/lib/seo/config";
 import { blogPosts } from "@/data/blog-posts";
 import BlogContent from "@/components/pages/BlogContent";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
@@ -15,10 +16,12 @@ export const metadata = pageMetadata({
   image: undefined,
 });
 
-const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+const breadcrumbTrail = [
   { name: "Home", path: "" },
-  { name: "Blog", path: "/blog" }
-]);
+  { name: "Blog", path: "/blog" },
+];
+
+const breadcrumbJsonLd = buildBreadcrumbJsonLd(breadcrumbTrail);
 
 const blogIndexJsonLd = {
   "@context": "https://schema.org",
@@ -44,6 +47,7 @@ export default function BlogIndex() {
     <>
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={blogIndexJsonLd} />
+      <Breadcrumbs items={breadcrumbTrail} />
       <BlogContent />
     </>
   );

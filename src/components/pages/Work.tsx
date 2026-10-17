@@ -8,8 +8,10 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import StaggerText from "@/components/layout/StaggerText";
 import { projects } from "@/data/projects";
+import { workFaqs } from "@/data/faqs";
 import { workTypeLabel } from "@/lib/work-type";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 import { trackEvent } from "@/lib/analytics/gtag";
 import type { Project } from "@/data/types";
 
@@ -127,7 +129,7 @@ export default function WorkPage() {
     >
       <section
         ref={sectionRef}
-        className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24"
+        className="relative max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-24"
       >
         {/* Header — Atomik style: left title, right description */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-12">
@@ -161,6 +163,29 @@ export default function WorkPage() {
           {filteredProjects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section
+        className="border-t border-[var(--border-color)] py-16 md:py-20"
+        aria-labelledby="work-faq-heading"
+      >
+        <div className="max-w-4xl mx-auto px-6 md:px-12">
+          <ScrollReveal direction="down" delay={0}>
+            <span className="text-[var(--accent)]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-5">
+              FAQ
+            </span>
+          </ScrollReveal>
+          <ScrollReveal direction="down" delay={0.1}>
+            <h2
+              id="work-faq-heading"
+              className="text-3xl md:text-5xl font-secondary-italic mb-14 text-[var(--text-primary)]"
+            >
+              Questions before you hire.
+            </h2>
+          </ScrollReveal>
+          <FaqAccordion items={workFaqs} />
         </div>
       </section>
     </div>

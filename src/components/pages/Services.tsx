@@ -17,15 +17,63 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-10 md:pb-12">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+      <section className="relative max-w-6xl mx-auto px-6 md:px-12 pt-8 pb-10 md:pb-12">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-6">
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] max-w-lg" style={{ color: "var(--text-primary)" }}>
             Web Development Services
           </h1>
-          <p className="text-[15px] max-w-md leading-relaxed" style={{ color: "#171717" }}>
-            Meteoric partners with founders to design, build, and launch modern
-            web products. Every project ships with the same care as if it were
-            our own.
+        </div>
+        <div className="max-w-3xl text-[15px] leading-relaxed mb-8" style={{ color: "var(--text-secondary)" }}>
+          <p className="mb-4">
+            Meteoric is a founder-led web development studio. Every project is
+            designed, built, and shipped by the same person you talk to on the
+            first call — no account managers, no handoff chains.
+          </p>
+          <p className="mb-4">
+            We work across five service lines, each solving a different stage of
+            the product journey.{" "}
+            <Link
+              href="/services/landing-pages"
+              className="text-[var(--accent)] hover:underline underline-offset-4"
+            >
+              High-converting landing pages
+            </Link>{" "}
+            for launches and campaigns that need to convert from day one.{" "}
+            <Link
+              href="/services/saas-development"
+              className="text-[var(--accent)] hover:underline underline-offset-4"
+            >
+              End-to-end SaaS development
+            </Link>{" "}
+            for founders taking a product from idea to production.{" "}
+            <Link
+              href="/services/startup-web-development"
+              className="text-[var(--accent)] hover:underline underline-offset-4"
+            >
+              Startup web development
+            </Link>{" "}
+            covering product sites, marketing pages, and full-stack builds for
+            early teams.{" "}
+            <Link
+              href="/services/nextjs-development"
+              className="text-[var(--accent)] hover:underline underline-offset-4"
+            >
+              Next.js development
+            </Link>{" "}
+            for teams that want React-based apps with SEO foundations and
+            performance baked in. And{" "}
+            <Link
+              href="/services/web-applications"
+              className="text-[var(--accent)] hover:underline underline-offset-4"
+            >
+              custom web application development
+            </Link>{" "}
+            — dashboards, portals, and internal tools built around how your team
+            actually works.
+          </p>
+          <p>
+            Not sure which fits? Start with a free strategy call — we&apos;ll
+            map the smallest version that gets you to the next milestone.
           </p>
         </div>
         <button

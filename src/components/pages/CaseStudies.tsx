@@ -4,7 +4,9 @@ import { ArrowUpRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import FaqAccordion from "@/components/sections/FaqAccordion";
 import { caseStudies } from "@/data/case-studies";
+import { caseStudyFaqs } from "@/data/faqs";
 import { projects } from "@/data/projects";
 import { workTypeLabel } from "@/lib/work-type";
 import { trackEvent } from "@/lib/analytics/gtag";
@@ -200,6 +202,31 @@ export default function CaseStudiesPage() {
           </section>
         );
       })}
+
+      {/* FAQ */}
+      <section
+        className="py-16 md:py-20"
+        style={{ borderTop: "1px solid var(--border-color)" }}
+        aria-labelledby="case-studies-faq-heading"
+      >
+        <div className="max-w-4xl mx-auto px-6 md:px-12">
+          <ScrollReveal direction="down" delay={0}>
+            <span className="text-[var(--accent)]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-5">
+              FAQ
+            </span>
+          </ScrollReveal>
+          <ScrollReveal direction="down" delay={0.1}>
+            <h2
+              id="case-studies-faq-heading"
+              className="text-3xl md:text-5xl font-secondary-italic mb-14"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Questions about the work.
+            </h2>
+          </ScrollReveal>
+          <FaqAccordion items={caseStudyFaqs} />
+        </div>
+      </section>
     </div>
   );
 }

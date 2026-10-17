@@ -10,6 +10,7 @@ import FaqAccordion from "@/components/sections/FaqAccordion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { socialIcons } from "@/components/ui/social-icons";
 import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {
   buildBreadcrumbJsonLd,
   buildArticleJsonLd,
@@ -249,11 +250,13 @@ export default async function BlogPost({
       ? [postService[post.slug]]
       : [{ href: "/services", label: "Explore Services" }];
 
-  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  const breadcrumbTrail = [
     { name: "Home", path: "" },
     { name: "Blog", path: "/blog" },
-    { name: post.title, path: `/blog/${slug}` }
-  ]);
+    { name: post.title, path: `/blog/${slug}` },
+  ];
+
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(breadcrumbTrail);
 
   const articleJsonLd = buildArticleJsonLd({
     headline: post.title,
@@ -284,10 +287,11 @@ export default async function BlogPost({
       <JsonLd data={speakableJsonLd} />
       {faqSchema && <JsonLd data={faqSchema} />}
       <article className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-        <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-32 pb-24">
+        <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-8 pb-24">
+          <Breadcrumbs items={breadcrumbTrail} containerClassName="px-0 pt-0" />
 
           {/* Back link */}
-          <div className="mb-10">
+          <div className="mt-8 mb-10">
             <Link href="/blog" className="group inline-flex items-center gap-2.5 min-h-6 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200 hover:text-[var(--text-primary)]" style={{ color: "var(--text-muted)" }}>
               <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
               All articles

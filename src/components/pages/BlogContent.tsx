@@ -96,7 +96,7 @@ export default function BlogContent() {
 
   return (
     <main className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      <div className="relative max-w-6xl mx-auto px-6 md:px-12 pt-32 pb-24">
+      <div className="relative max-w-6xl mx-auto px-6 md:px-12 pt-8 pb-24">
         {/* Header — Atomik style */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>

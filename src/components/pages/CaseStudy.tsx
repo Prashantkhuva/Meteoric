@@ -112,7 +112,7 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
       style={{ background: "var(--bg-primary)" }}
     >
       {/* Hero — H1 = project title */}
-      <section className="relative max-w-5xl mx-auto px-6 md:px-12 pt-32 pb-10">
+      <section className="relative max-w-5xl mx-auto px-6 md:px-12 pt-8 pb-10">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { SITE_URL } from "@/lib/seo/config";
 import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {
   buildFaqJsonLd,
   buildHowToJsonLd,
@@ -83,11 +84,13 @@ export default async function ServicePage({
     `How Meteoric builds ${service.h1.join(" ")} products`,
   );
 
-  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  const breadcrumbTrail = [
     { name: "Home", path: "" },
     { name: "Services", path: "/services" },
     { name: service.h1.join(" "), path: `/services/${slug}` },
-  ]);
+  ];
+
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(breadcrumbTrail);
 
   const serviceJsonLd = buildServiceJsonLd({
     name: service.h1.join(" "),
@@ -103,6 +106,7 @@ export default async function ServicePage({
       <JsonLd data={howToJsonLd} />
       <JsonLd data={serviceJsonLd} />
       <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={breadcrumbTrail} containerClassName="max-w-4xl mx-auto px-6 md:px-12" />
       <ServiceLanding
         service={service}
         relatedServices={getRelatedServices(slug)}

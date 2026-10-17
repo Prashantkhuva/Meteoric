@@ -4,6 +4,7 @@ import { caseStudies } from "@/data/case-studies";
 import type { Project } from "@/data/types";
 import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import CaseStudy from "@/components/pages/CaseStudy";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildBreadcrumbJsonLd, ORG_ID } from "@/lib/seo/jsonLd";
 
@@ -88,11 +89,13 @@ export default async function CaseStudyPage({
 
   const pageTitle = cs?.metaTitle ?? `${project.name} — Case Study`;
 
-  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  const breadcrumbTrail = [
     { name: "Home", path: "" },
     { name: "Work", path: "/work" },
     { name: project.name, path: `/work/${slug}` },
-  ]);
+  ];
+
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(breadcrumbTrail);
 
   const speakableJsonLd = {
     "@context": "https://schema.org",
@@ -129,6 +132,7 @@ export default async function CaseStudyPage({
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={speakableJsonLd} />
       <JsonLd data={creativeWorkSchema} />
+      <Breadcrumbs items={breadcrumbTrail} containerClassName="max-w-5xl mx-auto px-6 md:px-12" />
       <CaseStudy project={project} caseStudy={cs} />
     </>
   );

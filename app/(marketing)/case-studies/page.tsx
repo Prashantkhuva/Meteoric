@@ -1,9 +1,10 @@
 import { SITE_URL, pageMetadata } from "@/lib/seo/config";
 import CaseStudiesPage from "@/components/pages/CaseStudies";
 import { caseStudies } from "@/data/case-studies";
+import { caseStudyFaqs } from "@/data/faqs";
 import { projects } from "@/data/projects";
 import JsonLd from "@/components/seo/JsonLd";
-import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
+import { buildBreadcrumbJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
 const pageTitle = "Case Studies — SaaS MVP & Full-Stack Breakdowns";
 const pageDesc =
@@ -20,6 +21,8 @@ const breadcrumbJsonLd = buildBreadcrumbJsonLd([
   { name: "Home", path: "" },
   { name: "Case Studies", path: "/case-studies" }
 ]);
+
+const faqJsonLd = buildFaqJsonLd(caseStudyFaqs);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -59,6 +62,7 @@ export default function CaseStudiesRoute() {
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={speakableJsonLd} />
       <JsonLd data={collectionJsonLd} />
+      <JsonLd data={faqJsonLd} />
       <CaseStudiesPage />
     </>
   );

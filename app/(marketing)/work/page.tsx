@@ -1,8 +1,10 @@
 import { SITE_URL, SITE_NAME, pageMetadata } from "@/lib/seo/config";
 import WorkPage from "@/components/pages/Work";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { projects } from "@/data/projects";
+import { workFaqs } from "@/data/faqs";
 import JsonLd from "@/components/seo/JsonLd";
-import { buildBreadcrumbJsonLd, ORG_ID } from "@/lib/seo/jsonLd";
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, ORG_ID } from "@/lib/seo/jsonLd";
 
 const pageTitle = "Our Work — Web Design & Development Projects";
 const pageDesc =
@@ -15,10 +17,14 @@ export const metadata = pageMetadata({
   image: undefined,
 });
 
-const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+const breadcrumbTrail = [
   { name: "Home", path: "" },
-  { name: "Work", path: "/work" }
-]);
+  { name: "Work", path: "/work" },
+];
+
+const breadcrumbJsonLd = buildBreadcrumbJsonLd(breadcrumbTrail);
+
+const faqJsonLd = buildFaqJsonLd(workFaqs);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -57,6 +63,8 @@ export default function Work() {
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={speakableJsonLd} />
       <JsonLd data={creativeWorkSchema} />
+      <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={breadcrumbTrail} containerClassName="max-w-7xl mx-auto px-6 md:px-12" />
       <WorkPage />
     </>
   );

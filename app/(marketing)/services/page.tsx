@@ -1,5 +1,6 @@
 import { pageMetadata } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { buildFaqJsonLd, buildHowToJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 import { serviceFaqs } from "@/data/faqs";
 import JsonLd from "@/components/seo/JsonLd";
@@ -15,10 +16,12 @@ export const metadata = pageMetadata({
   image: undefined,
 });
 
-const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+const breadcrumbTrail = [
   { name: "Home", path: "" },
-  { name: "Services", path: "/services" }
-]);
+  { name: "Services", path: "/services" },
+];
+
+const breadcrumbJsonLd = buildBreadcrumbJsonLd(breadcrumbTrail);
 
 const speakableJsonLd = {
   "@context": "https://schema.org",
@@ -60,6 +63,7 @@ export default function Services() {
       <JsonLd data={speakableJsonLd} />
       <JsonLd data={howToSchema} />
       <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={breadcrumbTrail} />
       <ServicesPage />
     </>
   );
