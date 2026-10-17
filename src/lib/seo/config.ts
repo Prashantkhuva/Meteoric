@@ -99,98 +99,119 @@ export function pageMetadata({
   };
 }
 
-const today = new Date().toISOString().split("T")[0];
+/**
+ * Last-edit dates per static route (ISO date only). Assumed from last known
+ * content/audit touch — update when a route's content actually changes.
+ */
+const LASTMOD: Record<string, string> = {
+  "/": "2026-10-12",
+  "/about": "2026-09-29",
+  "/work": "2026-07-25",
+  "/services": "2026-09-06",
+  "/saas-mvp-development": "2026-09-06",
+  "/nextjs-development-agency": "2026-09-06",
+  "/startup-landing-page-design": "2026-09-06",
+  "/web-app-development": "2026-09-06",
+  "/case-studies": "2026-07-25",
+  "/privacy": "2026-07-25",
+  "/blog": "2026-10-12",
+  "/booking": "2026-09-06",
+  "/contact": "2026-09-06",
+  "/terms": "2026-07-25",
+  "/editorial-policy": "2026-07-25",
+  "/author/prashant-khuva": "2026-09-29",
+};
 
 export const sitemapRoutes = [
-  { path: "/", priority: "1.0", changefreq: "weekly", lastmod: today },
+  { path: "/", priority: "1.0", changefreq: "weekly", lastmod: LASTMOD["/"] },
   {
     path: "/about",
     priority: "0.8",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/about"],
   },
   {
     path: "/work",
     priority: "0.9",
     changefreq: "weekly",
-    lastmod: today,
+    lastmod: LASTMOD["/work"],
   },
   {
     path: "/services",
     priority: "0.9",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/services"],
   },
   {
     path: "/saas-mvp-development",
     priority: "0.9",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/saas-mvp-development"],
   },
   {
     path: "/nextjs-development-agency",
     priority: "0.9",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/nextjs-development-agency"],
   },
   {
     path: "/startup-landing-page-design",
     priority: "0.9",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/startup-landing-page-design"],
   },
   {
     path: "/web-app-development",
     priority: "0.9",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/web-app-development"],
   },
   {
     path: "/case-studies",
     priority: "0.9",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/case-studies"],
   },
   {
     path: "/privacy",
     priority: "0.3",
     changefreq: "yearly",
-    lastmod: "2026-07-25",
+    lastmod: LASTMOD["/privacy"],
   },
   {
     path: "/blog",
     priority: "0.8",
     changefreq: "weekly",
-    lastmod: today,
+    lastmod: LASTMOD["/blog"],
   },
   {
     path: "/booking",
     priority: "0.8",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/booking"],
   },
   {
     path: "/contact",
     priority: "0.8",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/contact"],
   },
   {
     path: "/terms",
     priority: "0.3",
     changefreq: "yearly",
-    lastmod: "2026-07-25",
+    lastmod: LASTMOD["/terms"],
   },
   {
     path: "/editorial-policy",
     priority: "0.3",
     changefreq: "yearly",
-    lastmod: "2026-07-25",
+    lastmod: LASTMOD["/editorial-policy"],
   },
   {
     path: "/author/prashant-khuva",
     priority: "0.6",
     changefreq: "monthly",
-    lastmod: today,
+    lastmod: LASTMOD["/author/prashant-khuva"],
   },
 ];

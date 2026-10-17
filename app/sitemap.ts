@@ -34,7 +34,7 @@ export default function sitemap() {
     .filter((post) => post.slug && post.published && post.draft !== true)
     .map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: post.published,
+      lastModified: post.dateModified || post.published,
       changeFrequency: "weekly",
       priority: 0.7,
     }));
