@@ -1,6 +1,6 @@
 import { SITE_NAME } from "@/lib/seo/config";
 import type { FounderDetails, FounderProfile, OrganizationDetails } from "./types";
-import { socialProfiles, socialUrls } from "./social";
+import { socialProfiles } from "./social";
 
 /**
  * Organization + founder facts for JSON-LD (Organization in root layout,
@@ -28,7 +28,10 @@ export const organization: OrganizationDetails = {
     "Landing Page Design",
     "Startup Web Development",
   ],
-  sameAs: [...socialUrls, "https://www.wikidata.org/wiki/Q140453413"],
+  sameAs: [
+    ...socialProfiles.filter((p) => p.id !== "twitter").map((p) => p.url),
+    "https://www.wikidata.org/wiki/Q140453413",
+  ],
 };
 
 export const founder: FounderDetails = {
@@ -48,12 +51,6 @@ export const founder: FounderDetails = {
     "Product Design",
   ],
 };
-
-/** Person sameAs for /about: personal GitHub first, then company socials. */
-export const founderSameAs: string[] = [
-  founder.githubUrl,
-  ...socialProfiles.filter((p) => p.id !== "github").map((p) => p.url),
-];
 
 /**
  * Founder profile links shown on /about — hand-maintained, separate from
@@ -92,3 +89,11 @@ export const founderProfiles: FounderProfile[] = [
     url: "https://contra.com/prashant_khuva_nbilfy3b",
   },
 ];
+
+/**
+ * Person.sameAs — founder's personal profiles only. Company Instagram
+ * (officialmeteoric) is excluded; it belongs to Organization.sameAs.
+ */
+export const founderSameAs: string[] = founderProfiles.flatMap((p) =>
+  p.id === "instagram" || !p.url ? [] : [p.url],
+);

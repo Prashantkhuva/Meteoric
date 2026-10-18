@@ -2,13 +2,13 @@ import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import {
   organization,
   founder,
-  founderProfiles,
+  founderSameAs,
 } from "@/data/organization";
 
 type JsonLd = Record<string, unknown>;
 
-/** Person.sameAs — the profile links shown on /about (verified 2026-09-29). */
-const PERSON_SAME_AS = founderProfiles.map((p) => p.url);
+/** Person.sameAs — verified personal profiles (company socials excluded). */
+const PERSON_SAME_AS = founderSameAs;
 
 /**
  * Reusable JSON-LD builders — single source for every structured-data object
@@ -59,6 +59,7 @@ export function buildOrganizationJsonLd() {
     "@type": "Organization",
     "@id": ORG_ID,
     name: organization.name,
+    alternateName: "Meteoric Agency",
     url: SITE_URL,
     logo: `${SITE_URL}${organization.logo}`,
     image: `${SITE_URL}${organization.image}`,
@@ -86,6 +87,7 @@ export function buildWebSiteJsonLd() {
     "@type": "WebSite",
     "@id": WEBSITE_ID,
     name: SITE_NAME,
+    alternateName: "Meteoric Agency",
     url: SITE_URL,
     publisher: { "@id": ORG_ID },
   };

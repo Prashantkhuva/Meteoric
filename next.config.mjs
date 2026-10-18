@@ -88,6 +88,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/technologies/node-js",
+        destination: "/services/web-applications",
+        permanent: true,
+      },
+      {
+        source: "/technologies/react",
+        destination: "/services/nextjs-development",
+        permanent: true,
+      },
+      {
         source: "/technologies/:path*",
         destination: "/services",
         permanent: true,
