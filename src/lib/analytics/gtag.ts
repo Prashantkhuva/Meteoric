@@ -9,6 +9,58 @@ declare global {
 
 let initialized = false;
 
+const OUTBOUND_TRACKED_DOMAINS = ["contra.com", "linkedin.com", "github.com", "x.com", "cal.com"];
+
+let clickTrackingBound = false;
+let calBookingSuccessRegistered = false;
+
+function onDocumentClick(event: MouseEvent) {
+  const target = event.target as Element | null;
+  const anchor = target?.closest?.("a[href]");
+  if (!(anchor instanceof HTMLAnchorElement)) return;
+
+  const bookingCta = anchor.getAttribute("data-booking-cta");
+  if (bookingCta) {
+    trackEvent("booking_click", { button_location: bookingCta });
+  }
+
+  let url: URL;
+  try {
+    url = new URL(anchor.href, window.location.href);
+  } catch {
+    return;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return;
+  if (url.hostname === window.location.hostname) return;
+
+  const domain = url.hostname.replace(/^www\./, "");
+  const tracked = OUTBOUND_TRACKED_DOMAINS.some(
+    (d) => domain === d || domain.endsWith(`.${d}`),
+  );
+  if (!tracked) return;
+
+  trackEvent("outbound_click", {
+    link_domain: domain,
+    page_location: window.location.href,
+  });
+}
+
+function bindClickTracking() {
+  if (clickTrackingBound) return;
+  clickTrackingBound = true;
+  document.addEventListener("click", onDocumentClick);
+}
+
+/**
+ * Registers the Cal booking-success listener exactly once per session.
+ * Call from both CalBooking and CalModal — same namespace, one listener.
+ */
+export function registerCalBookingSuccess(register: () => void) {
+  if (calBookingSuccessRegistered) return;
+  calBookingSuccessRegistered = true;
+  register();
+}
+
 /**
  * Loads gtag.js and configures GA4. Call once at app startup in production only.
  */
@@ -16,6 +68,7 @@ export function initGtag() {
   if (initialized || typeof window === "undefined") return;
   if (!GA_MEASUREMENT_ID) return;
   initialized = true;
+  bindClickTracking();
 
   const load = () => {
     window.dataLayer = window.dataLayer || [];

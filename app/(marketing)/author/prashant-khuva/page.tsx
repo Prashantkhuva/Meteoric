@@ -323,6 +323,7 @@ export default function AuthorPage() {
               href="https://cal.com/prashantkhuva/let-s-build"
               target="_blank"
               rel="noopener noreferrer"
+              data-booking-cta="/author"
               className="group inline-flex items-center gap-2 min-h-6 text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-200"
             >
               Work with {authorData.name.split(" ")[0]}

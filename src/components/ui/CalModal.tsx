@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { lockScroll, unlockScroll } from "@/lib/body-scroll-lock";
 import { registerCalModal } from "@/components/ui/cal-modal-store";
+import { registerCalBookingSuccess, trackEvent } from "@/lib/analytics/gtag";
 
 const Cal = lazy(() => import("@calcom/embed-react"));
 
@@ -37,6 +38,13 @@ export default function CalModal() {
             ...(isNarrow() ? {} : { layout: "column_view" }),
             theme: "dark",
           });
+        registerCalBookingSuccess(() => {
+          cal("on", {
+            action: "bookingSuccessfulV2",
+            callback: () =>
+              trackEvent("booking_success", { page_location: window.location.href }),
+          });
+        });
       } catch {
         return;
       }
