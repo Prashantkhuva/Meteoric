@@ -5,7 +5,15 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'out', '.next', 'middleware-snapshot.js', 'mobile', 'build']),
+  globalIgnores([
+    'dist',
+    'out',
+    '.next',
+    '.tmp',
+    'middleware-snapshot.js',
+    'mobile',
+    'build',
+  ]),
   {
     files: ['proxy.js'],
     ...js.configs.recommended,
