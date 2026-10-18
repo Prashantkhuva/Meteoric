@@ -218,7 +218,19 @@ export default function AboutPage({ faqs = [] }: { faqs?: Faq[] }) {
                 </strong>
                 , a full-stack developer based in India who previously built
                 FullStack Craft. Clients work with Prashant from the first
-                strategy call to the final deploy.
+                strategy call to the final deploy. Every guide we publish follows
+                our{" "}
+                <Link
+                  href="/editorial-policy"
+                  className="underline underline-offset-4 transition-all duration-200"
+                  style={{
+                    color: "var(--text-secondary)",
+                    textDecorationColor: "rgba(255,255,255,0.2)",
+                  }}
+                >
+                  editorial policy
+                </Link>
+                .
               </p>
               <p>
                 Typical work spans{" "}
