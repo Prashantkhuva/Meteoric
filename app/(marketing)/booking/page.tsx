@@ -3,9 +3,9 @@ import CalBooking from "@/components/pages/CalBooking";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Book a Free Strategy Call — Start a Project";
+const pageTitle = "Book a Free Web Development Strategy Call";
 const pageDesc =
-  "Talk through your project with Meteoric before you commit. 20-minute call, no pressure, straight answers on scope and stack.";
+  "Schedule a free video call with Meteoric to talk through your project's scope, stack, and timeline. No obligation.";
 
 export const metadata = pageMetadata({
   title: pageTitle,

@@ -5,10 +5,12 @@ import Image from "next/image";
 import { SITE_URL } from "@/lib/seo/config";
 import { blogPosts, getBlogPost } from "@/data/blog-posts";
 import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
+import { slugToOg } from "@/data/blog-og";
 import type { Article, ArticleSection } from "@/data/types";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { socialIcons } from "@/components/ui/social-icons";
+import { ArrowUpRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {
@@ -16,6 +18,18 @@ import {
   buildArticleJsonLd,
   buildFaqJsonLd,
 } from "@/lib/seo/jsonLd";
+
+// Dead links checked 2026-10-18 (see .tmp/fr-status.md) — skipped in the
+// Further reading list; data left untouched for a manual cleanup pass.
+const FURTHER_READING_BLOCKLIST = new Set([
+  "https://developers.google.com/search/docs/crawling-indexing/javascript/overview",
+  "https://www.goodfirms.co/web-development",
+  "https://www.ycombinator.com/library/6g-how-to-build-a-minimum-viable-product",
+  "https://blog.hubspot.com/marketing/landing-page-tips",
+  "https://ahrefs.com/keyword-research",
+  "https://moz.com/learn/seo/long-tail-keywords",
+  "https://developers.google.com/optimize",
+]);
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -29,6 +43,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getBlogPost(slug);
   if (!post) return {};
+  const ogPath = slugToOg[slug];
   return {
     title: post.seoTitle || post.title,
     description: post.description,
@@ -44,7 +59,7 @@ export async function generateMetadata({
       tags: post.tags,
       images: [
         {
-          url: `${SITE_URL}/og.jpg`,
+          url: `${SITE_URL}${ogPath || "/og.jpg"}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -57,7 +72,7 @@ export async function generateMetadata({
       creator: "@prashantkhuva_",
       title: post.title,
       description: post.description,
-      images: [`${SITE_URL}/og.jpg`],
+      images: [`${SITE_URL}${ogPath || "/og.jpg"}`],
     },
   };
 }
@@ -190,6 +205,81 @@ function renderBlocks(text: string, keyPrefix: string) {
             </p>
           ))}
         </blockquote>
+      );
+    }
+
+    // Markdown-style table: optional caption line directly above, then header,
+    // separator row (| --- |), and data rows.
+    const tableStart = lines[0].startsWith("|")
+      ? 0
+      : lines.length > 1 && lines[1].startsWith("|")
+        ? 1
+        : -1;
+    if (tableStart !== -1) {
+      const caption = tableStart === 1 ? lines[0] : null;
+      const tableLines = lines
+        .slice(tableStart)
+        .filter((l) => l.startsWith("|"));
+      const cells = tableLines.map((l) =>
+        l
+          .trim()
+          .replace(/^\|/, "")
+          .replace(/\|$/, "")
+          .split("|")
+          .map((c) => c.trim()),
+      );
+      const isSeparator = (row: string[]) =>
+        row.length > 0 && row.every((c) => c === "" || /^:?-{3,}:?$/.test(c));
+      const header = cells[0] ?? [];
+      const bodyRows = cells.slice(1).filter((r) => !isSeparator(r));
+      return (
+        <div key={key} className="my-5 overflow-x-auto">
+          <table className="w-full min-w-[560px] border-collapse text-[15px]">
+            {caption && (
+              <caption
+                className="text-left text-[13px] pb-2"
+                style={{ color: "var(--text-muted)", captionSide: "top" }}
+              >
+                {renderInline(caption, `${key}-cap`)}
+              </caption>
+            )}
+            <thead>
+              <tr>
+                {header.map((h, j) => (
+                  <th
+                    key={`${key}-th${j}`}
+                    scope="col"
+                    className="text-left font-semibold pr-5 pb-2 align-bottom"
+                    style={{
+                      color: "var(--text-primary)",
+                      borderBottom: "1px solid var(--border-color)",
+                    }}
+                  >
+                    {renderInline(h, `${key}-th${j}`)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((r, ri) => (
+                <tr key={`${key}-tr${ri}`}>
+                  {r.map((c, ci) => (
+                    <td
+                      key={`${key}-td${ri}-${ci}`}
+                      className="pr-5 py-2 align-top"
+                      style={{
+                        color: "var(--text-secondary)",
+                        borderBottom: "1px solid var(--border-color)",
+                      }}
+                    >
+                      {renderInline(c, `${key}-td${ri}-${ci}`)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
     }
 
@@ -327,7 +417,18 @@ export default async function BlogPost({
                   <time dateTime={post.published}>
                     {new Date(post.published).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                   </time>
-                  <span className="w-[3px] h-[3px] rounded-full" style={{ background: "var(--text-muted)" }} />
+                  {post.dateModified && post.dateModified > post.published && (
+                    <>
+                      <span className="w-[3px] h-[3px] rounded-full" style={{ background: "var(--text-muted)" }} aria-hidden="true" />
+                      <span>
+                        Updated{" "}
+                        <time dateTime={post.dateModified}>
+                          {new Date(post.dateModified).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                        </time>
+                      </span>
+                    </>
+                  )}
+                  <span className="w-[3px] h-[3px] rounded-full" style={{ background: "var(--text-muted)" }} aria-hidden="true" />
                   <span>{readTime} min read</span>
                 </div>
               </div>
@@ -378,6 +479,40 @@ export default async function BlogPost({
             </div>
           )}
 
+          {/* Further reading */}
+          {(post.furtherReading?.length ?? 0) > 0 && (
+            <div className="mt-20 pt-14 max-w-[700px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
+              <ScrollReveal direction="right" className="mb-8">
+                <h2 className="text-[11px] uppercase tracking-[0.1em] font-medium" style={{ color: "var(--text-muted)" }}>
+                  Further reading
+                </h2>
+              </ScrollReveal>
+              <ul className="space-y-2.5">
+                {post.furtherReading!
+                  .filter((r) => !FURTHER_READING_BLOCKLIST.has(r.url))
+                  .map((r) => (
+                    <li key={r.url}>
+                      <a
+                        href={r.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-baseline gap-1.5 text-[15px] leading-[1.6] transition-opacity duration-200 hover:opacity-70"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        <span className="underline underline-offset-4 decoration-[var(--border-color)] group-hover:decoration-[var(--text-secondary)]">
+                          {r.title}
+                        </span>
+                        <span className="text-[11px] shrink-0" style={{ color: "var(--text-muted)" }}>
+                          {r.source}
+                        </span>
+                        <ArrowUpRight size={12} className="shrink-0 translate-y-[1px]" style={{ color: "var(--text-muted)" }} aria-hidden="true" />
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
+
           {/* Author bio */}
           <ScrollReveal direction="up" className="mt-20 max-w-[700px] mx-auto rounded-[20px] p-6 md:p-8" style={{ border: "1px solid var(--border-color)", background: "var(--accent-dim)" }}>
             <div className="flex items-start gap-4">
@@ -397,7 +532,15 @@ export default async function BlogPost({
                   </Link>
                 </h3>
                 <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
-                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups.
+                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups.{" "}
+                  <Link
+                    href="/editorial-policy"
+                    className="underline underline-offset-4 transition-all duration-200"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Editorial policy
+                  </Link>{" "}
+                  for this blog.
                 </p>
                 <div className="flex items-center gap-2.5 mt-4">
                   {[

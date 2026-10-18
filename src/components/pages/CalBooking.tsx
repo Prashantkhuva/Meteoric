@@ -7,6 +7,7 @@ import type { Variants } from "framer-motion";
 import Link from "next/link";
 import { Video, Target, ShieldCheck, ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { registerCalBookingSuccess, trackEvent } from "@/lib/analytics/gtag";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -22,6 +23,13 @@ export default function CalBooking() {
     (async function () {
       const cal = await getCalApi({ namespace: "let-s-build" });
       cal("ui", { hideEventTypeDetails: true, layout: "month_view", theme: "dark" });
+      registerCalBookingSuccess(() => {
+        cal("on", {
+          action: "bookingSuccessfulV2",
+          callback: () =>
+            trackEvent("booking_success", { page_location: window.location.href }),
+        });
+      });
     })();
   }, []);
 
@@ -91,7 +99,7 @@ export default function CalBooking() {
               </div>
               <div>
                 <p className="text-[var(--text-secondary)] text-sm font-semibold mb-1">Free consultation</p>
-                <p className="text-[var(--text-muted)] text-xs leading-relaxed">30-minute video call, completely free</p>
+                <p className="text-[var(--text-muted)] text-xs leading-relaxed">Short video call, completely free</p>
               </div>
             </div>
           </ScrollReveal>
