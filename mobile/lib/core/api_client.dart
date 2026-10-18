@@ -267,9 +267,18 @@ class ApiClient {
   Future<Map<String, dynamic>> decisionLatestForLead(int id) =>
       _post('/api/admin/decisions', {'action': 'latest_for_lead', 'id': id});
 
-  Future<Map<String, dynamic>> decisionReview(int id, String verdict) => _post(
+  Future<Map<String, dynamic>> decisionReview(
+    int id,
+    String verdict, {
+    String? verdictReason,
+  }) => _post(
     '/api/admin/decisions',
-    {'action': 'review', 'id': id, 'verdict': verdict},
+    {
+      'action': 'review',
+      'id': id,
+      'verdict': verdict,
+      'verdict_reason': ?verdictReason,
+    },
   );
 
   // ── Clients ─────────────────────────────────────────────────────────────

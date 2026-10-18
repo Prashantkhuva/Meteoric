@@ -16,6 +16,15 @@ const sourceList = [
   { value: "other", label: "Other" },
 ];
 
+const timelineList = [
+  { value: "", label: "Not specified" },
+  { value: "asap", label: "ASAP" },
+  { value: "1-2 weeks", label: "1–2 weeks" },
+  { value: "1 month", label: "1 month" },
+  { value: "1-3 months", label: "1–3 months" },
+  { value: "3+ months", label: "3+ months" },
+];
+
 interface LeadFormData {
   id?: number | string;
   name?: string | null;
@@ -29,6 +38,7 @@ interface LeadFormData {
   follow_up_time?: string | null;
   follow_up_note?: string | null;
   follow_up_status?: string | null;
+  timeline?: string | null;
   source?: string | null;
 }
 
@@ -135,6 +145,21 @@ export function LeadFormModal({ open, lead, onClose, onSubmit }: LeadFormModalPr
                 placeholder="Short message for future reference..."
                 defaultValue={lead?.follow_up_note || ""}
               />
+              <div>
+                <label htmlFor="field-timeline" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
+                  Timeline
+                </label>
+                <select
+                  id="field-timeline"
+                  name="timeline"
+                  defaultValue={lead?.timeline || ""}
+                  className="w-full border border-white/[0.06] bg-black/60 px-3.5 py-2.5 text-sm text-white placeholder-white/20 transition-all focus:border-[#EAEFFF]/20 outline-none"
+                >
+                  {timelineList.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <label htmlFor="field-source" className="block text-xs font-medium tracking-wider text-white/40 uppercase mb-1.5">
                   Source

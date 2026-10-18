@@ -2,11 +2,12 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { updateClientStatus, addClient, updateClient, deleteClient, getClientsPaginated, getClientById } from "../actions";
+import { updateClientStatus, addClient, updateClient, deleteClient, getClientsPaginated, getClientById, draftClientUpdateMessage, getClientHealth, getClientChecklist, toggleChecklistItem } from "../actions";
+import { HEALTH_BAND_LABEL, HEALTH_BAND_COLOR, type ClientHealth } from "@/lib/clients/health";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, Trash2, Calendar, Building2, Mail, Phone, MessageCircle, Download,
-  ChevronUp, ChevronDown, Pencil,
+  ChevronUp, ChevronDown, Pencil, Sparkles, Copy, CheckCircle2, Loader2, Check,
 } from "lucide-react";
 import { formatDate } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -692,7 +693,39 @@ function ClientDetailDrawer({ client, onClose, onEdit, onDelete }: {
   onDelete: (id: number) => void;
 }) {
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [draftBusy, setDraftBusy] = useState(false);
+  const [draftData, setDraftData] = useState<{
+    whatsapp: string;
+    email: string;
+    subject: string;
+    source?: string;
+    model?: string | null;
+  } | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [health, setHealth] = useState<ClientHealth | null>(null);
+  const [healthLoading, setHealthLoading] = useState(false);
+  const [checklist, setChecklist] = useState<Array<{ id: number; title: string; done: boolean }>>([]);
+  const [checklistBusyId, setChecklistBusyId] = useState<number | null>(null);
   const trapRef = useFocusTrap(!!client);
+
+  useEffect(() => {
+    if (!client) return;
+    let cancelled = false;
+    setHealthLoading(true);
+    setHealth(null);
+    getClientHealth(client.id).then((res) => {
+      if (cancelled) return;
+      const r = res as { data?: ClientHealth };
+      if (r?.data) setHealth(r.data);
+      setHealthLoading(false);
+    });
+    getClientChecklist(client.id).then((res) => {
+      if (cancelled) return;
+      const r = res as { data?: Array<{ id: number; title: string; done: boolean }> };
+      if (r?.data) setChecklist(r.data);
+    });
+    return () => { cancelled = true; };
+  }, [client?.id]);
 
   useEffect(() => {
     if (!client) return;
@@ -702,6 +735,28 @@ function ClientDetailDrawer({ client, onClose, onEdit, onDelete }: {
   }, [client, onClose]);
 
   if (!client) return null;
+
+  async function loadDraft() {
+    if (!client || draftBusy) return;
+    setDraftBusy(true);
+    try {
+      const res = await draftClientUpdateMessage(client.id);
+      const r = res as { data?: { whatsapp: string; email: string; subject: string; source?: string; model?: string | null } };
+      if (r?.data) setDraftData(r.data);
+    } finally {
+      setDraftBusy(false);
+    }
+  }
+
+  async function copyText(key: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 1500);
+    } catch {
+      /* clipboard blocked */
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -749,6 +804,95 @@ function ClientDetailDrawer({ client, onClose, onEdit, onDelete }: {
                 </div>
               </div>
 
+              {(healthLoading || health) && (
+                <div className="border border-white/[0.06] bg-black/20 p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">
+                      Health
+                    </span>
+                    {health && (
+                      <span className={`inline-flex items-center border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${HEALTH_BAND_COLOR[health.band]}`}>
+                        {HEALTH_BAND_LABEL[health.band]} · {health.score}
+                      </span>
+                    )}
+                  </div>
+                  {healthLoading && !health ? (
+                    <div className="h-1.5 w-full bg-white/[0.06] overflow-hidden">
+                      <div className="h-full w-1/3 bg-[#EAEFFF]/40 animate-pulse" />
+                    </div>
+                  ) : health ? (
+                    <>
+                      <div className="h-1.5 w-full bg-white/[0.06] overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-500 ${
+                            health.band === "healthy" ? "bg-emerald-400/70" :
+                            health.band === "watch" ? "bg-amber-400/70" :
+                            health.band === "at_risk" ? "bg-red-400/70" : "bg-white/30"
+                          }`}
+                          style={{ width: `${health.score}%` }}
+                        />
+                      </div>
+                      {health.reasons.length > 0 && (
+                        <ul className="space-y-1">
+                          {health.reasons.map((r) => (
+                            <li key={r} className="flex items-start gap-1.5 text-[11px] text-white/45">
+                              <span className="mt-1.5 h-1 w-1 shrink-0 bg-white/20" />
+                              {r}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </>
+                  ) : null}
+                </div>
+              )}
+
+              {checklist.length > 0 && (
+                <div className="border border-white/[0.06] bg-black/20 p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">
+                      Onboarding
+                    </span>
+                    <span className="text-[10px] text-white/30 tabular-nums">
+                      {checklist.filter((c) => c.done).length}/{checklist.length}
+                    </span>
+                  </div>
+                  <ul className="space-y-1">
+                    {checklist.map((item) => (
+                      <li key={item.id}>
+                        <button
+                          onClick={async () => {
+                            setChecklistBusyId(item.id);
+                            const next = !item.done;
+                            setChecklist((prev) => prev.map((c) => c.id === item.id ? { ...c, done: next } : c));
+                            const res = await toggleChecklistItem(item.id, next);
+                            if (res?.error) {
+                              setChecklist((prev) => prev.map((c) => c.id === item.id ? { ...c, done: !next } : c));
+                            }
+                            setChecklistBusyId(null);
+                          }}
+                          disabled={checklistBusyId === item.id}
+                          className="flex w-full items-center gap-2 py-1 text-left transition-colors disabled:opacity-50"
+                        >
+                          <span
+                            className={`flex h-4 w-4 shrink-0 items-center justify-center border transition-colors ${
+                              item.done
+                                ? "border-[#EAEFFF]/60 bg-[#EAEFFF]/20 text-[#EAEFFF]"
+                                : "border-white/20 bg-transparent text-transparent"
+                            }`}
+                          >
+                            <Check size={10} />
+                          </span>
+                          <span className={`text-[12px] transition-colors ${item.done ? "text-white/35 line-through" : "text-white/60"}`}>
+                            {item.title}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <div className="space-y-3">
                 {[
                   { icon: Mail, label: "Email", value: client.email, href: client.email ? `mailto:${client.email}` : null },
@@ -779,6 +923,58 @@ function ClientDetailDrawer({ client, onClose, onEdit, onDelete }: {
               <div className="flex items-center gap-1.5 text-[10px] text-white/30 tabular-nums">
                 <Calendar size={11} />
                 Created {formatDate(client.created_at)}
+              </div>
+
+              <div className="border-t border-white/[0.06] pt-4 space-y-3">
+                <button
+                  onClick={loadDraft}
+                  disabled={draftBusy}
+                  className="inline-flex items-center gap-1.5 border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#EAEFFF]/70 transition-all hover:bg-[#EAEFFF]/10 disabled:opacity-40"
+                >
+                  {draftBusy ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                  {draftBusy ? "Drafting…" : "AI Draft Update"}
+                </button>
+                {draftData && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">
+                        Draft {draftData.source === "template" ? "· template" : draftData.model ? `· ${draftData.model.split("/").pop()}` : ""}
+                      </span>
+                      <button
+                        onClick={() => setDraftData(null)}
+                        className="text-[10px] text-white/30 hover:text-white/60"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    <div className="border border-white/[0.06] bg-black/30 p-3 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">WhatsApp</span>
+                        <button
+                          onClick={() => copyText("wa", draftData.whatsapp)}
+                          className="inline-flex items-center gap-1 text-[10px] text-white/40 hover:text-white/70"
+                        >
+                          {copiedKey === "wa" ? <CheckCircle2 size={10} /> : <Copy size={10} />}
+                          {copiedKey === "wa" ? "Copied" : "Copy"}
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-white/60 whitespace-pre-wrap leading-relaxed">{draftData.whatsapp}</p>
+                    </div>
+                    <div className="border border-white/[0.06] bg-black/30 p-3 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">Email · {draftData.subject}</span>
+                        <button
+                          onClick={() => copyText("em", draftData.email)}
+                          className="inline-flex items-center gap-1 text-[10px] text-white/40 hover:text-white/70"
+                        >
+                          {copiedKey === "em" ? <CheckCircle2 size={10} /> : <Copy size={10} />}
+                          {copiedKey === "em" ? "Copied" : "Copy"}
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-white/60 whitespace-pre-wrap leading-relaxed">{draftData.email}</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/[0.06] pt-4">

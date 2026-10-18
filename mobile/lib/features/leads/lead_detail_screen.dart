@@ -50,13 +50,14 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     }
   }
 
-  Future<void> _review(String verdict) async {
+  Future<void> _review(String verdict, {String? reason}) async {
     final decision = _decision;
     if (decision == null || _busy) return;
     await _run('Recorded', () async {
       await ApiClient.instance.decisionReview(
         (decision['id'] as num).toInt(),
         verdict,
+        verdictReason: reason,
       );
       setState(() => _decision = {...decision, 'verdict': verdict});
       return {};
@@ -218,6 +219,114 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     });
   }
 
+  Future<void> _reviewDisagree() async {
+    final reasons = const [
+      ('wrong_quality', 'Wrong quality'),
+      ('wrong_status', 'Wrong status'),
+      ('wrong_category', 'Wrong category'),
+      ('spam_label_wrong', 'Spam wrong'),
+      ('other', 'Other'),
+    ];
+    final ctx = context;
+    if (!ctx.mounted) return;
+    final reason = await showModalBottomSheet<String>(
+      context: ctx,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (bctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Text(
+                'Why was the decision wrong?',
+                style: TextStyle(
+                  color: AppColors.text,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Satoshi',
+                ),
+              ),
+            ),
+            for (final (value, label) in reasons)
+              ListTile(
+                dense: true,
+                title: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'Satoshi',
+                    color: AppColors.text,
+                  ),
+                ),
+                onTap: () => Navigator.pop(bctx, value),
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+    if (reason == null) return;
+    await _review('disagree', reason: reason);
+  }
+
+  Widget _distributionBar(String quality, Map<String, dynamic>? probs) {
+    if (probs == null || probs.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    const order = ['hot', 'warm', 'cold', 'spam'];
+    final entries = <(String, double)>[];
+    for (final k in order) {
+      final v = (probs[k] as num?)?.toDouble() ?? 0;
+      if (v > 0) entries.add((k, v));
+    }
+    if (entries.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              for (final (k, v) in entries)
+                Expanded(
+                  flex: (v * 1000).round().clamp(1, 1000),
+                  child: Container(
+                    height: 4,
+                    margin: const EdgeInsets.only(right: 2),
+                    decoration: BoxDecoration(
+                      color: switch (k) {
+                        'hot' => AppColors.emerald,
+                        'warm' => AppColors.amber,
+                        'spam' => AppColors.red,
+                        _ => AppColors.sky,
+                      }.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            order
+                .where((k) => probs[k] != null)
+                .map((k) => '$k ${(((probs[k] as num?)?.toDouble() ?? 0) * 100).round()}%')
+                .join(' · '),
+            style: TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 10,
+              fontFamily: 'Satoshi',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDecision() {
     final decision = _decision!;
     final result =
@@ -231,6 +340,13 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     };
     final confidence = (decision['confidence'] as num?)?.toDouble();
     final verdict = decision['verdict'] as String?;
+    final verdictReason = decision['verdict_reason'] as String?;
+    final source = (result['source'] as String?) ?? (decision['source'] as String?);
+    final factors = (result['factors'] as List?)?.cast<String>() ?? const [];
+    final probs =
+        (result['probabilities'] as Map?)?.cast<String, dynamic>();
+    final qualityProbs =
+        (probs?['quality'] as Map?)?.cast<String, dynamic>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,6 +370,24 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
                 ),
               ),
             ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: AppRadius.smAll,
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Text(
+                source == 'rules' ? 'RULES' : 'JEV',
+                style: TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.6,
+                  fontFamily: 'Satoshi',
+                ),
+              ),
+            ),
             const SizedBox(width: 10),
             if (confidence != null)
               Text(
@@ -266,6 +400,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
               ),
           ],
         ),
+        _distributionBar(quality ?? 'cold', qualityProbs),
         const SizedBox(height: 12),
         DetailRow(
           label: 'Next status',
@@ -275,6 +410,33 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
           label: 'Category',
           value: (result['service_category'] ?? '—').toString().toUpperCase(),
         ),
+        if (factors.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text(
+            'WHY',
+            style: TextStyle(
+              color: AppColors.textFaint,
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.8,
+              fontFamily: 'Satoshi',
+            ),
+          ),
+          const SizedBox(height: 6),
+          for (final f in factors)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: Text(
+                '• $f',
+                style: TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 11,
+                  height: 1.35,
+                  fontFamily: 'Satoshi',
+                ),
+              ),
+            ),
+        ],
         const SizedBox(height: 12),
         if (verdict == null)
           Row(
@@ -293,7 +455,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
               Expanded(
                 child: GhostButton(
                   height: 40,
-                  onPressed: _busy ? null : () => _review('disagree'),
+                  onPressed: _busy ? null : _reviewDisagree,
                   child: const Text(
                     'DISAGREE',
                     style: TextStyle(fontSize: 12, letterSpacing: 0.5),
@@ -306,7 +468,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
           Text(
             verdict == 'agree'
                 ? 'You agreed with this decision.'
-                : 'You disagreed with this decision.',
+                : 'You disagreed${verdictReason != null ? ' (${verdictReason.replaceAll('_', ' ')})' : ''}.',
             style: TextStyle(
               color: verdict == 'agree' ? AppColors.emerald : AppColors.red,
               fontSize: 12,

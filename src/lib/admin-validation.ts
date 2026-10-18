@@ -135,6 +135,7 @@ export const leadSchema = z.object({
     .optional()
     .or(z.literal(""))
     .transform((v) => v || null),
+  timeline: z.string().max(100).optional().or(z.literal("")).transform((v) => v?.trim() || null),
   source: z.string().max(50).optional().or(z.literal("")).transform((v) => v?.trim() || null),
 });
 

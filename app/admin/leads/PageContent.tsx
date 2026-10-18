@@ -3,12 +3,12 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import Papa from "papaparse";
 import { createClient } from "@/lib/supabase/client";
-import { updateLeadStatus, updateLeadFollowUp, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated, importLeads, getLeadById } from "../actions";
+import { updateLeadStatus, updateLeadFollowUp, convertLeadToClient, addLead, updateLead, deleteLead, getLeadsPaginated, importLeads, getLeadById, draftFollowUpMessage } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, ArrowRight, UserPlus, Trash2, Eye, Mail, Phone, Building2,
   FileText, Calendar, Download, ChevronUp, ChevronDown, Pencil,
-  Upload, FileUp, AlertTriangle, CheckCircle2, XCircle, Loader2, Tag,
+  Upload, FileUp, AlertTriangle, CheckCircle2, XCircle, Loader2, Tag, Clock, Sparkles, Copy,
 } from "lucide-react";
 import { formatDate, formatShort } from "@/lib/supabase/admin";
 import { useToast } from "../components/ToastContext";
@@ -54,6 +54,7 @@ interface LeadRow {
   follow_up_time?: string | null;
   follow_up_note?: string | null;
   follow_up_status?: string | null;
+  timeline?: string | null;
   source?: string | null;
   status: string;
   ai_score?: number | null;
@@ -1245,6 +1246,15 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleDate, setRescheduleDate] = useState("");
   const [rescheduleTime, setRescheduleTime] = useState("");
+  const [draftBusy, setDraftBusy] = useState(false);
+  const [draftData, setDraftData] = useState<{
+    whatsapp: string;
+    email: string;
+    subject: string;
+    source?: string;
+    model?: string | null;
+  } | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   useEffect(() => {
     if (!lead) return;
@@ -1278,6 +1288,28 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
       setRescheduleOpen(false);
     } finally {
       setFollowUpBusy(false);
+    }
+  }
+
+  async function loadDraft() {
+    if (!lead || draftBusy) return;
+    setDraftBusy(true);
+    try {
+      const res = await draftFollowUpMessage(lead.id);
+      const r = res as { data?: { whatsapp: string; email: string; subject: string; source?: string; model?: string | null } };
+      if (r?.data) setDraftData(r.data);
+    } finally {
+      setDraftBusy(false);
+    }
+  }
+
+  async function copyText(key: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 1500);
+    } catch {
+      /* clipboard blocked */
     }
   }
 
@@ -1352,6 +1384,7 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
                   { icon: Building2, label: "Company", value: lead.company },
                   { icon: Tag, label: "Source", value: lead.source ? (sourceList.find((s) => s.value === lead.source)?.label || lead.source) : null },
                   { icon: FileText, label: "Services", value: lead.services },
+                  { icon: Clock, label: "Timeline", value: lead.timeline },
                 ].map((f) => {
                   if (!f.value) return null;
                   const Icon = f.icon;
@@ -1447,7 +1480,56 @@ function LeadDetailDrawer({ lead, onClose, onEdit, onConvert, onDelete, onFollow
                         Reopen
                       </button>
                     )}
+                    <button
+                      onClick={loadDraft}
+                      disabled={draftBusy}
+                      className="inline-flex items-center gap-1.5 border border-[#EAEFFF]/20 bg-[#EAEFFF]/5 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#EAEFFF]/70 transition-all hover:bg-[#EAEFFF]/10 disabled:opacity-40"
+                    >
+                      {draftBusy ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                      {draftBusy ? "Drafting…" : "AI Draft"}
+                    </button>
                   </div>
+                  {draftData && (
+                    <div className="space-y-2 border-t border-white/[0.06] pt-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">
+                          Draft {draftData.source === "template" ? "· template" : draftData.model ? `· ${draftData.model.split("/").pop()}` : ""}
+                        </span>
+                        <button
+                          onClick={() => setDraftData(null)}
+                          className="text-[10px] text-white/30 hover:text-white/60"
+                        >
+                          Clear
+                        </button>
+                      </div>
+                      <div className="border border-white/[0.06] bg-black/30 p-3 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">WhatsApp</span>
+                          <button
+                            onClick={() => copyText("wa", draftData.whatsapp)}
+                            className="inline-flex items-center gap-1 text-[10px] text-white/40 hover:text-white/70"
+                          >
+                            {copiedKey === "wa" ? <CheckCircle2 size={10} /> : <Copy size={10} />}
+                            {copiedKey === "wa" ? "Copied" : "Copy"}
+                          </button>
+                        </div>
+                        <p className="text-[11px] text-white/60 whitespace-pre-wrap leading-relaxed">{draftData.whatsapp}</p>
+                      </div>
+                      <div className="border border-white/[0.06] bg-black/30 p-3 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">Email · {draftData.subject}</span>
+                          <button
+                            onClick={() => copyText("em", draftData.email)}
+                            className="inline-flex items-center gap-1 text-[10px] text-white/40 hover:text-white/70"
+                          >
+                            {copiedKey === "em" ? <CheckCircle2 size={10} /> : <Copy size={10} />}
+                            {copiedKey === "em" ? "Copied" : "Copy"}
+                          </button>
+                        </div>
+                        <p className="text-[11px] text-white/60 whitespace-pre-wrap leading-relaxed">{draftData.email}</p>
+                      </div>
+                    </div>
+                  )}
                   {rescheduleOpen && (
                     <div className="flex items-center gap-2 border-t border-white/[0.06] pt-3">
                       <input

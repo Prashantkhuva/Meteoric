@@ -63,7 +63,25 @@ function pickChoice(answers: Record<string, any>, field: string) {
   if (typeof answer.confidence !== "number") {
     throw new Error(`Decisions API: missing confidence for "${field}"`);
   }
-  return { choice: answer.choice, confidence: answer.confidence };
+  const probabilities =
+    answer.probabilities && typeof answer.probabilities === "object"
+      ? (answer.probabilities as Record<string, number>)
+      : null;
+  return { choice: answer.choice, confidence: answer.confidence, probabilities };
+}
+
+function runnerUp(choice: string, probabilities: Record<string, number> | null) {
+  if (!probabilities) return null;
+  let best: string | null = null;
+  let bestP = 0;
+  for (const [key, value] of Object.entries(probabilities)) {
+    if (key === choice) continue;
+    if (typeof value === "number" && value > bestP) {
+      best = key;
+      bestP = value;
+    }
+  }
+  return best;
 }
 
 export async function decideJev(lead: Record<string, any>) {
@@ -93,6 +111,9 @@ export async function decideJev(lead: Record<string, any>) {
     throw new Error(`Decisions API: unexpected service_category "${category.choice}"`);
   }
 
+  const usageCost =
+    typeof parsed?.usage?.cost === "number" ? parsed.usage.cost : null;
+
   return {
     quality: quality.choice,
     suggested_next_status: status.choice,
@@ -102,7 +123,18 @@ export async function decideJev(lead: Record<string, any>) {
       suggested_next_status: status.confidence,
       service_category: category.confidence,
     },
+    probabilities: {
+      quality: quality.probabilities,
+      suggested_next_status: status.probabilities,
+      service_category: category.probabilities,
+    },
+    runner_up: {
+      quality: runnerUp(quality.choice, quality.probabilities),
+      suggested_next_status: runnerUp(status.choice, status.probabilities),
+      service_category: runnerUp(category.choice, category.probabilities),
+    },
     confidence: quality.confidence,
+    usage_cost: usageCost,
     model: JEV_MODEL_ID,
     model_version: typeof parsed.model === "string" ? parsed.model : null,
   };

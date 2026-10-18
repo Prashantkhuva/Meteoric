@@ -13,12 +13,14 @@ export async function storeDecision({
   decisionType,
   result,
   inputHash,
+  source = "jev",
 }: {
   entityType: string;
   entityId: number;
   decisionType: string;
   result: DecisionResult;
   inputHash: string;
+  source?: "jev" | "rules";
 }) {
   const supabase = getClient();
   const { data, error } = await supabase
@@ -33,6 +35,7 @@ export async function storeDecision({
       model_version: result.model_version,
       input_hash: inputHash,
       status: "shadow",
+      source,
     })
     .select("id")
     .single();
@@ -44,7 +47,7 @@ export async function getLatestDecisionForLead(leadId: number) {
   const supabase = getClient();
   const { data, error } = await supabase
     .from("decisions")
-    .select("id, result, confidence, model_version, verdict, created_at")
+    .select("id, result, confidence, model_version, verdict, verdict_reason, source, input_hash, created_at")
     .eq("entity_type", "lead")
     .eq("entity_id", leadId)
     .order("created_at", { ascending: false })
@@ -75,16 +78,19 @@ export async function recordDecisionReview({
   decisionId,
   verdict,
   reviewerId,
+  verdictReason = null,
 }: {
   decisionId: number;
   verdict: string;
   reviewerId: string | null;
+  verdictReason?: string | null;
 }) {
   const supabase = getClient();
   const { data, error } = await supabase
     .from("decisions")
     .update({
       verdict,
+      verdict_reason: verdictReason || null,
       reviewed_by: reviewerId || null,
       reviewed_at: new Date().toISOString(),
     })
@@ -113,7 +119,7 @@ export async function getRecentDecisions(limit = 50) {
   const supabase = getClient();
   const { data, error } = await supabase
     .from("decisions")
-    .select("id, entity_id, result, confidence, model_version, status, verdict, created_at")
+    .select("id, entity_id, result, confidence, model_version, status, verdict, verdict_reason, source, created_at")
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw new Error(`decisions read failed: ${error.message}`);

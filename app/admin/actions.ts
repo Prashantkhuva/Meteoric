@@ -18,6 +18,62 @@ import { sanitizeSearch } from "@/lib/search";
 import { assertCan, getCallerPermissions } from "@/lib/admin-permissions";
 import { createNotification, NOTIFICATION_TYPES } from "@/lib/notifications";
 import { runDecisionForLead, runDecisionsForLeads } from "@/lib/decisions";
+import { draftFollowUp } from "@/lib/ai/follow-up-draft";
+import { draftClientUpdate } from "@/lib/ai/client-update-draft";
+import { scoreClientHealth, type ClientHealth } from "@/lib/clients/health";
+
+const DEFAULT_ONBOARDING_CHECKLIST = [
+  "Welcome call booked",
+  "Access credentials received",
+  "Project brief signed",
+  "First invoice sent",
+  "Kickoff scheduled",
+];
+
+async function seedClientChecklist(clientId: number) {
+  const supabase = await getSupabase();
+  const rows = DEFAULT_ONBOARDING_CHECKLIST.map((title, i) => ({
+    client_id: clientId,
+    title,
+    position: i,
+  }));
+  await supabase.from("client_checklists").insert(rows);
+}
+
+export async function getClientChecklist(id: number | string) {
+  const denied = await assertCan("view");
+  if (denied) return denied;
+  const supabase = await getSupabase();
+  try {
+    const safeId = idSchema.parse(id);
+    const { data, error } = await supabase
+      .from("client_checklists")
+      .select("*")
+      .eq("client_id", safeId)
+      .order("position", { ascending: true });
+    if (error) return { error: error.message };
+    return { data: data || [] };
+  } catch (err) {
+    return { error: (err as Error).message || "Failed to load checklist" };
+  }
+}
+
+export async function toggleChecklistItem(itemId: number | string, done: boolean) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
+  const supabase = await getSupabase();
+  try {
+    const safeId = idSchema.parse(itemId);
+    const { error } = await supabase
+      .from("client_checklists")
+      .update({ done, updated_at: new Date().toISOString() })
+      .eq("id", safeId);
+    if (error) return { error: error.message };
+    return { success: true };
+  } catch (err) {
+    return { error: (err as Error).message || "Failed to update checklist" };
+  }
+}
 import {
   getDecisionAccuracy,
   getRecentDecisions,
@@ -112,6 +168,14 @@ export async function updateLeadStatus(id: number | string, status: string) {
       .eq("id", safeId);
 
     if (error) return { error: error.message };
+
+    const { data: fresh } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", safeId)
+      .single();
+    if (fresh) after(() => runDecisionForLead(fresh));
+
     revalidateAdmin("/admin/leads");
     return { success: true };
   } catch (err) {
@@ -157,6 +221,7 @@ export async function addLead(formData: FormData) {
       follow_up_time: data.follow_up_time || null,
       follow_up_note: data.follow_up_note || null,
       follow_up_status: data.follow_up_status || null,
+      timeline: data.timeline || null,
       source: data.source || "manual",
       status: "inquiry",
     })
@@ -325,14 +390,81 @@ export async function getDecisionsRecent() {
   }
 }
 
-export async function reviewDecision(id: number | string, verdict: string) {
+const VERDICT_REASONS = [
+  "wrong_quality",
+  "wrong_status",
+  "wrong_category",
+  "spam_label_wrong",
+  "other",
+] as const;
+
+export async function draftFollowUpMessage(id: number | string) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
+  const supabase = await getSupabase();
+  try {
+    const safeId = idSchema.parse(id);
+    const { data: lead, error } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", safeId)
+      .single();
+    if (error || !lead) return { error: "Lead not found" };
+    const draft = await draftFollowUp(lead);
+    return { success: true, data: draft };
+  } catch (err) {
+    return { error: (err as Error).message || "Failed to draft follow-up" };
+  }
+}
+
+export async function draftClientUpdateMessage(id: number | string) {
+  const denied = await assertCan("write");
+  if (denied) return denied;
+  const supabase = await getSupabase();
+  try {
+    const safeId = idSchema.parse(id);
+    const { data: client, error } = await supabase
+      .from("clients")
+      .select("id, name, company, email, status")
+      .eq("id", safeId)
+      .single();
+    if (error || !client) return { error: "Client not found" };
+
+    const { data: projects } = await supabase
+      .from("projects")
+      .select("name, status")
+      .eq("client_id", safeId)
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    const draft = await draftClientUpdate({ ...client, projects });
+    return { success: true, data: draft };
+  } catch (err) {
+    return { error: (err as Error).message || "Failed to draft update" };
+  }
+}
+
+export async function reviewDecision(
+  id: number | string,
+  verdict: string,
+  verdictReason?: string | null,
+) {
   const denied = await assertCan("write");
   if (denied) return denied;
   try {
     const safeId = idSchema.parse(id);
     if (verdict !== "agree" && verdict !== "disagree") return { error: "Invalid verdict" };
+    const safeReason =
+      verdictReason && (VERDICT_REASONS as readonly string[]).includes(verdictReason)
+        ? verdictReason
+        : null;
     const caller = await getCallerPermissions();
-    await recordDecisionReview({ decisionId: safeId, verdict, reviewerId: caller?.userId || null });
+    await recordDecisionReview({
+      decisionId: safeId,
+      verdict,
+      reviewerId: caller?.userId || null,
+      verdictReason: safeReason,
+    });
     return { success: true };
   } catch (err) {
     return { error: (err as Error).message || "Failed to record review" };
@@ -365,11 +497,20 @@ export async function updateLead(formData: FormData) {
         follow_up_time: data.follow_up_time || null,
         follow_up_note: data.follow_up_note || null,
         follow_up_status: data.follow_up_status || null,
+        timeline: data.timeline || null,
         source: data.source || null,
       })
       .eq("id", raw.id);
 
     if (error) return { error: error.message };
+
+    const { data: fresh } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", raw.id)
+      .single();
+    if (fresh) after(() => runDecisionForLead(fresh));
+
     revalidateAdmin("/admin/leads");
     return { success: true };
   } catch (err) {
@@ -399,6 +540,14 @@ export async function updateLeadFollowUp(formData: FormData) {
 
     const { error } = await supabase.from("leads").update(patch).eq("id", raw.id);
     if (error) return { error: error.message };
+
+    const { data: fresh } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", raw.id)
+      .single();
+    if (fresh) after(() => runDecisionForLead(fresh));
+
     revalidateAdmin("/admin/leads");
     return { success: true };
   } catch (err) {
@@ -432,15 +581,23 @@ export async function convertLeadToClient(id: number | string) {
       if (existing) return { error: "A client with this email already exists" };
     }
 
-    const { error: insertError } = await supabase.from("clients").insert({
-      name: lead.name,
-      email: lead.email,
-      phone: lead.phone,
-      company: lead.company,
-      status: "onboarding",
-    });
+    const { data: inserted, error: insertError } = await supabase
+      .from("clients")
+      .insert({
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone,
+        company: lead.company,
+        status: "onboarding",
+      })
+      .select("id")
+      .single();
 
     if (insertError) return { error: insertError.message };
+
+    if (inserted?.id) {
+      await seedClientChecklist(inserted.id);
+    }
 
     const { error: updateError } = await supabase
       .from("leads")
@@ -522,15 +679,24 @@ export async function addClient(formData: FormData) {
       if (existing) return { error: "A client with this email already exists" };
     }
 
-    const { error } = await supabase.from("clients").insert({
-      name: data.name,
-      email: data.email || null,
-      phone: data.phone,
-      company: data.company,
-      status: "onboarding",
-    });
+    const { data: inserted, error: insertError } = await supabase
+      .from("clients")
+      .insert({
+        name: data.name,
+        email: data.email || null,
+        phone: data.phone,
+        company: data.company,
+        status: "onboarding",
+      })
+      .select("id")
+      .single();
 
-    if (error) return { error: error.message };
+    if (insertError) return { error: insertError.message };
+
+    if (inserted?.id) {
+      await seedClientChecklist(inserted.id);
+    }
+
     revalidateAdmin("/admin/clients");
     return { success: true };
   } catch (err) {
@@ -642,18 +808,30 @@ export async function createLeadFromBooking(formData: FormData) {
     const supabase = await getSupabase();
     const data = validateFormData(leadSchema, formData);
 
-    const { error } = await supabase.from("leads").insert({
-      name: data.name,
-      email: data.email || "",
-      phone: data.phone || "",
-      company: data.company || null,
-      services: data.services || "",
-      budget: data.budget || "",
-      source: "cal.com",
-      status: "inquiry",
-    });
+    const { data: inserted, error } = await supabase
+      .from("leads")
+      .insert({
+        name: data.name,
+        email: data.email || "",
+        phone: data.phone || "",
+        company: data.company || null,
+        services: data.services || "",
+        budget: data.budget || "",
+        timeline: data.timeline || null,
+        source: "cal.com",
+        status: "inquiry",
+      })
+      .select("id")
+      .single();
 
     if (error) return { error: error.message };
+
+    if (inserted?.id) {
+      after(() =>
+        runDecisionForLead({ ...data, id: inserted.id, status: "inquiry", source: "cal.com" }),
+      );
+    }
+
     revalidateAdmin("/admin/leads");
     return { success: true };
   } catch (err) {
@@ -699,20 +877,43 @@ export async function generateProposalDraft(leadId: number | string) {
 
   if (error || !lead) throw new Error("Lead not found");
 
-  if (!process.env.GOOGLE_API) {
-    return {
-      title: `${lead.services || "Web Development"} — Proposal`,
-      content: `<p>We propose delivering a tailored solution for ${lead.company || lead.name} covering ${lead.services || "web development"} within your budget of ${lead.budget || "market rate"}.</p>`,
-      pricing: [{ description: lead.services || "Web Development", quantity: 1, rate: 2500 }],
-      timeline: "4-6 weeks",
-      terms: "50% deposit to start, net 30 on completion",
-    };
-  }
+  const fallback = () => ({
+    title: `${lead.services || "Web Development"} — Proposal`,
+    content: `<p>We propose delivering a tailored solution for ${lead.company || lead.name} covering ${lead.services || "web development"} within your budget of ${lead.budget || "market rate"}.</p>`,
+    pricing: [{ description: lead.services || "Web Development", quantity: 1, rate: 2500 }],
+    timeline: "4-6 weeks",
+    terms: "50% deposit to start, net 30 on completion",
+  });
 
-  const { callAIJson } = await import("@/lib/ai/provider");
+  // OpenRouter free tier first (no quota cliff); Gemini only as secondary.
+  const { callOpenRouterJson, openRouterConfigured } = await import("@/lib/ai/openrouter");
   const { proposalDraftPrompt } = await import("@/lib/ai/prompts");
   const prompt = proposalDraftPrompt(lead);
-  const result = await callAIJson(prompt.system, prompt.user);
+
+  if (openRouterConfigured()) {
+    const or = await callOpenRouterJson(prompt.system, prompt.user);
+    if (or?.data) {
+      const r = or.data;
+      return {
+        title: r.title || `${lead.services || "Web Development"} — Proposal`,
+        content: r.content
+          ? `<p>${String(r.content).replace(/\n/g, "</p><p>")}</p>`
+          : `<p>Proposal for ${lead.company || lead.name}.</p>`,
+        pricing: Array.isArray(r.pricing) && r.pricing.length
+          ? r.pricing.slice(0, 5)
+          : [{ description: lead.services || "Web Development", quantity: 1, rate: 2500 }],
+        timeline: r.timeline || "4-6 weeks",
+        terms: r.terms || "50% deposit to start, net 30 on completion",
+      };
+    }
+  }
+
+  if (!process.env.GOOGLE_API) return fallback();
+
+  const { callAIJson } = await import("@/lib/ai/provider");
+  const result = await callAIJson(prompt.system, prompt.user).catch(() => null);
+
+  if (!result) return fallback();
 
   return {
     title: result?.title || `${lead.services || "Web Development"} — Proposal`,
@@ -1633,6 +1834,34 @@ export async function getClientById(id: number | string) {
     return data;
   } catch {
     return null;
+  }
+}
+
+export async function getClientHealth(
+  id: number | string,
+): Promise<{ error?: string; data?: ClientHealth }> {
+  const denied = await assertCan("view");
+  if (denied) return denied as { error: string };
+  const supabase = await getSupabase();
+  try {
+    const safeId = idSchema.parse(id);
+    const [projectsRes, invoicesRes] = await Promise.all([
+      supabase
+        .from("projects")
+        .select("status, deadline")
+        .eq("client_id", safeId),
+      supabase
+        .from("invoices")
+        .select("status, due_date, paid_at")
+        .eq("client_id", safeId),
+    ]);
+    const health = scoreClientHealth({
+      projects: projectsRes.data || [],
+      invoices: invoicesRes.data || [],
+    });
+    return { data: health };
+  } catch (err) {
+    return { error: (err as Error).message || "Failed to compute health" };
   }
 }
 

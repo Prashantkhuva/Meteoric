@@ -36,6 +36,7 @@ export async function createLead(data: Lead): Promise<{
           services: data.services || null,
           details: data.details || null,
           budget: data.budget || null,
+          timeline: data.timeline || null,
           source: data.source || "website",
           status: "inquiry",
         },

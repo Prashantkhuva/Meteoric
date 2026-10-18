@@ -50,10 +50,23 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (payload.verdict !== "agree" && payload.verdict !== "disagree") {
           return fail("verdict must be agree or disagree");
         }
+        const VERDICT_REASONS = [
+          "wrong_quality",
+          "wrong_status",
+          "wrong_category",
+          "spam_label_wrong",
+          "other",
+        ];
+        const verdictReason =
+          typeof payload.verdict_reason === "string" &&
+          VERDICT_REASONS.includes(payload.verdict_reason)
+            ? payload.verdict_reason
+            : null;
         await recordDecisionReview({
           decisionId: id,
           verdict: payload.verdict,
           reviewerId: auth.user.id,
+          verdictReason,
         });
         return Response.json({ success: true });
       }

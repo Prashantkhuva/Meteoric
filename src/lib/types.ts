@@ -6,6 +6,7 @@ export interface Lead {
   company?: string | null;
   services?: string | null;
   budget?: string | null;
+  timeline?: string | null;
   details?: string | null;
   source?: string | null;
   status?: string | null;

@@ -26,9 +26,22 @@ export type DecisionResult = {
     suggested_next_status: number;
     service_category: number;
   };
+  probabilities: {
+    quality: Record<string, number> | null;
+    suggested_next_status: Record<string, number> | null;
+    service_category: Record<string, number> | null;
+  };
+  runner_up: {
+    quality: string | null;
+    suggested_next_status: string | null;
+    service_category: string | null;
+  };
+  factors?: string[];
+  usage_cost: number | null;
   confidence: number;
   model: string;
   model_version: string | null;
+  source?: "jev" | "rules";
 };
 
 export type DecisionProvider = (

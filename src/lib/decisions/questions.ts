@@ -24,12 +24,18 @@ export function buildState(lead: Record<string, any>) {
   return {
     name: sanitizeText(lead?.name, 200),
     email: sanitizeText(lead?.email, 254),
+    phone: sanitizeText(lead?.phone, 30),
     company: sanitizeText(lead?.company, 200),
     services: sanitizeText(lead?.services, 200),
     budget: sanitizeText(lead?.budget, 100),
+    timeline: sanitizeText(lead?.timeline, 100),
     details: sanitizeText(lead?.details, 1500),
     source: sanitizeText(lead?.source, 50),
     current_status: sanitizeText(lead?.status, 50),
+    follow_up_at: sanitizeText(lead?.follow_up_at, 10),
+    follow_up_time: sanitizeText(lead?.follow_up_time, 5),
+    follow_up_status: sanitizeText(lead?.follow_up_status, 20),
+    follow_up_note: sanitizeText(lead?.follow_up_note, 500),
   };
 }
 

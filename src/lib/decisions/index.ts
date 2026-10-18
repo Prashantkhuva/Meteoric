@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
-import { selectProvider } from "./provider";
+import { selectProvider, type DecisionResult } from "./provider";
 import { buildState } from "./questions";
-import { storeDecision } from "./store";
+import { storeDecision, getLatestDecisionForLead } from "./store";
+import { looksLikeSpam } from "./spam-rules";
+import { explainFactors } from "./factors";
 
 export function decisionsEnabled() {
   return process.env.AI_DECISIONS_ENABLED === "true";
@@ -14,14 +16,47 @@ function computeInputHash(lead: Record<string, any>) {
 export async function runDecisionForLead(lead: Record<string, any>) {
   if (!decisionsEnabled() || !lead?.id) return null;
   try {
-    const provider = selectProvider(process.env.DECISIONS_PROVIDER || "jev");
-    const result = await provider(lead);
+    const hash = computeInputHash(lead);
+    const latest = await getLatestDecisionForLead(lead.id).catch(() => null);
+    if (latest?.input_hash === hash) return null;
+
+    const spamCheck = looksLikeSpam(lead);
+    let result: DecisionResult;
+    let source: "jev" | "rules";
+
+    if (spamCheck.spam) {
+      result = {
+        quality: "spam" as const,
+        suggested_next_status: "lost",
+        service_category: "other" as const,
+        per_field_confidence: { quality: 1, suggested_next_status: 1, service_category: 1 },
+        probabilities: {
+          quality: { spam: 1, hot: 0, warm: 0, cold: 0 },
+          suggested_next_status: null,
+          service_category: null,
+        },
+        runner_up: { quality: null, suggested_next_status: null, service_category: null },
+        confidence: 1,
+        usage_cost: 0,
+        model: "rules",
+        model_version: null,
+      };
+      source = "rules";
+      result.factors = spamCheck.reasons.slice(0, 3);
+    } else {
+      const provider = selectProvider(process.env.DECISIONS_PROVIDER || "jev");
+      result = await provider(lead);
+      result.factors = explainFactors(lead, result);
+      source = "jev";
+    }
+
     await storeDecision({
       entityType: "lead",
       entityId: lead.id,
       decisionType: "lead_triage",
-      result,
-      inputHash: computeInputHash(lead),
+      result: { ...result, source },
+      inputHash: hash,
+      source,
     });
     return result;
   } catch (err) {

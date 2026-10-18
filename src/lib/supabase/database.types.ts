@@ -120,6 +120,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      client_checklists: {
+        Row: {
+          client_id: number;
+          created_at: string;
+          done: boolean;
+          id: number;
+          position: number;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          client_id: number;
+          created_at?: string;
+          done?: boolean;
+          id?: never;
+          position?: number;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          client_id?: number;
+          created_at?: string;
+          done?: boolean;
+          id?: never;
+          position?: number;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "client_checklists_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "clients";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       decisions: {
         Row: {
           confidence: number;
@@ -134,8 +172,10 @@ export type Database = {
           result: Json;
           reviewed_at: string | null;
           reviewed_by: string | null;
+          source: string;
           status: string;
           verdict: string | null;
+          verdict_reason: string | null;
         };
         Insert: {
           confidence: number;
@@ -150,8 +190,10 @@ export type Database = {
           result: Json;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          source?: string;
           status?: string;
           verdict?: string | null;
+          verdict_reason?: string | null;
         };
         Update: {
           confidence?: number;
@@ -166,8 +208,10 @@ export type Database = {
           result?: Json;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          source?: string;
           status?: string;
           verdict?: string | null;
+          verdict_reason?: string | null;
         };
         Relationships: [];
       };
@@ -321,6 +365,7 @@ export type Database = {
           services: string | null;
           source: string | null;
           status: string;
+          timeline: string | null;
         };
         Insert: {
           ai_category?: string | null;
@@ -344,6 +389,7 @@ export type Database = {
           services?: string | null;
           source?: string | null;
           status?: string;
+          timeline?: string | null;
         };
         Update: {
           ai_category?: string | null;
@@ -367,6 +413,7 @@ export type Database = {
           services?: string | null;
           source?: string | null;
           status?: string;
+          timeline?: string | null;
         };
         Relationships: [];
       };
