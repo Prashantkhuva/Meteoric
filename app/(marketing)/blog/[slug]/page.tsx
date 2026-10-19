@@ -19,18 +19,6 @@ import {
   buildFaqJsonLd,
 } from "@/lib/seo/jsonLd";
 
-// Dead links checked 2026-10-18 (see .tmp/fr-status.md) — skipped in the
-// Further reading list; data left untouched for a manual cleanup pass.
-const FURTHER_READING_BLOCKLIST = new Set([
-  "https://developers.google.com/search/docs/crawling-indexing/javascript/overview",
-  "https://www.goodfirms.co/web-development",
-  "https://www.ycombinator.com/library/6g-how-to-build-a-minimum-viable-product",
-  "https://blog.hubspot.com/marketing/landing-page-tips",
-  "https://ahrefs.com/keyword-research",
-  "https://moz.com/learn/seo/long-tail-keywords",
-  "https://developers.google.com/optimize",
-]);
-
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
 }
@@ -489,7 +477,6 @@ export default async function BlogPost({
               </ScrollReveal>
               <ul className="space-y-2.5">
                 {post.furtherReading!
-                  .filter((r) => !FURTHER_READING_BLOCKLIST.has(r.url))
                   .map((r) => (
                     <li key={r.url}>
                       <a

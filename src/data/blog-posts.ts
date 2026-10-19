@@ -117,7 +117,7 @@ This guide covers what actually moves rankings on Next.js App Router sites in 20
       },
       {
         title: "Google Search Central: JavaScript SEO",
-        url: "https://developers.google.com/search/docs/crawling-indexing/javascript/overview",
+        url: "https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics",
         source: "Google",
       },
       {
@@ -262,11 +262,6 @@ This guide compares both paths on real 2026 costs, shows exactly where each wins
         title: "Clutch Web Development Agencies",
         url: "https://clutch.co/agencies/web-developers",
         source: "Clutch",
-      },
-      {
-        title: "GoodFirms Web Development Resources",
-        url: "https://www.goodfirms.co/web-development",
-        source: "GoodFirms",
       },
     ],
     relatedLinks: [
@@ -546,11 +541,6 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
         source: "Clutch",
       },
       {
-        title: "GoodFirms Web Development Resources",
-        url: "https://www.goodfirms.co/web-development",
-        source: "GoodFirms",
-      },
-      {
         title: "Stripe Billing Documentation",
         url: "https://docs.stripe.com/billing",
         source: "Stripe",
@@ -697,11 +687,6 @@ This guide compares all three paths on cost, speed, quality, and risk, explains 
         url: "https://clutch.co/agencies/web-developers",
         source: "Clutch",
       },
-      {
-        title: "GoodFirms Web Development Resources",
-        url: "https://www.goodfirms.co/web-development",
-        source: "GoodFirms",
-      },
     ],
     relatedLinks: [
       {
@@ -837,11 +822,6 @@ This guide breaks down real 2026 price ranges by app type, the five variables th
         source: "Clutch",
       },
       {
-        title: "GoodFirms Web Development Resources",
-        url: "https://www.goodfirms.co/web-development",
-        source: "GoodFirms",
-      },
-      {
         title: "Stripe Pricing",
         url: "https://stripe.com/pricing",
         source: "Stripe",
@@ -965,7 +945,7 @@ This guide covers the four core collections a billing system needs (plans, subsc
     furtherReading: [
       {
         title: "MongoDB Data Modeling Documentation",
-        url: "https://www.mongodb.com/docs/manual/core/data-model-design/",
+        url: "https://www.mongodb.com/docs/manual/data-modeling/",
         source: "MongoDB",
       },
       {
@@ -1697,7 +1677,7 @@ This comparison covers database, auth, realtime, storage, server-side logic, pri
       },
       {
         title: "Remix Documentation",
-        url: "https://remix.run/docs/en/main",
+        url: "https://v2.remix.run/docs/",
         source: "Remix",
       },
       {
@@ -2082,11 +2062,6 @@ This guide explains what agencies actually do, how an engagement runs from disco
         url: "https://supabase.com/docs/guides/getting-started/quickstarts/nextjs",
         source: "Supabase",
       },
-      {
-        title: "MVP Development Guide",
-        url: "https://www.ycombinator.com/library/6g-how-to-build-a-minimum-viable-product",
-        source: "YC",
-      },
     ],
     relatedLinks: [
       {
@@ -2216,7 +2191,7 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
       },
       {
         title: "Vite + React Guide",
-        url: "https://vitejs.dev/guide/",
+        url: "https://vite.dev/guide/",
         source: "Vite",
       },
     ],
@@ -2337,11 +2312,6 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
         title: "Clutch Web Development Agencies",
         url: "https://clutch.co/agencies/web-developers",
         source: "Clutch",
-      },
-      {
-        title: "GoodFirms Agency Selection Guide",
-        url: "https://www.goodfirms.co/web-development",
-        source: "GoodFirms",
       },
     ],
     relatedLinks: [
@@ -2473,7 +2443,7 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
       },
       {
         title: "Vite + React Guide",
-        url: "https://vitejs.dev/guide/",
+        url: "https://vite.dev/guide/",
         source: "Vite",
       },
     ],
@@ -2838,7 +2808,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
       },
       {
         heading: "Section 5: Process — How It Works",
-        body: "Show your process in 3-5 simple steps. This reduces anxiety about what happens after they click the CTA. For example, '1. Strategy Call (30 min) → 2. Proposal in 24 hours → 3. Build in 4-6 weeks → 4. Launch with support.' Each step should have a short description and an icon. The goal is to make the engagement feel structured and low-risk.",
+        body: "Show your process in 3-5 simple steps. This reduces anxiety about what happens after they click the CTA. For example, '1. Strategy Call → 2. Proposal in 24 hours → 3. Build in 4-6 weeks → 4. Launch with support.' Each step should have a short description and an icon. The goal is to make the engagement feel structured and low-risk.",
       },
       {
         heading: "Section 6: Pricing — Transparency Builds Trust",
@@ -2850,7 +2820,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
       },
       {
         heading: "Section 8: Final CTA — Close the Loop",
-        body: "End with a strong CTA that mirrors the hero. Repeat the core value proposition and make the next step crystal clear. 'Ready to ship your SaaS? Book a free 30-minute strategy call — we'll scope your project and give you a timeline, no strings attached.' Add urgency if genuine: 'We take on 2 new projects per month — currently 1 spot left for September.' The structure above is the same one behind our [landing page design service](/services/landing-pages).\n\nRef: [Cornell University](https://www.cs.cornell.edu/) research on conversion optimization patterns.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Services](/services) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+        body: "End with a strong CTA that mirrors the hero. Repeat the core value proposition and make the next step crystal clear. 'Ready to ship your SaaS? Book a free strategy call — we'll scope your project and give you a timeline, no strings attached.' Add urgency if genuine: 'We take on 2 new projects per month — currently 1 spot left for September.' The structure above is the same one behind our [landing page design service](/services/landing-pages).\n\nRef: [Cornell University](https://www.cs.cornell.edu/) research on conversion optimization patterns.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Services](/services) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
     ],
     faqs: [
@@ -2890,8 +2860,8 @@ This developer's guide breaks the page into eight sections — hero, problem, so
         source: "Unbounce",
       },
       {
-        title: "HubSpot Landing Page Best Practices",
-        url: "https://blog.hubspot.com/marketing/landing-page-tips",
+        title: "HubSpot Landing Page Design Guide",
+        url: "https://blog.hubspot.com/marketing/landing-page-design",
         source: "HubSpot",
       },
       {
@@ -3010,18 +2980,13 @@ This guide covers how to mine customer language, build topic clusters instead of
     furtherReading: [
       {
         title: "Ahrefs Long-Tail Keyword Research Guide",
-        url: "https://ahrefs.com/keyword-research",
+        url: "https://ahrefs.com/blog/long-tail-keywords/",
         source: "Ahrefs",
       },
       {
         title: "Google Search Console Documentation",
         url: "https://support.google.com/webmasters/answer/9128668",
         source: "Google",
-      },
-      {
-        title: "Moz Long-Tail SEO Guide",
-        url: "https://moz.com/learn/seo/long-tail-keywords",
-        source: "Moz",
       },
     ],
     relatedLinks: [
@@ -3279,11 +3244,6 @@ This guide covers how AI search engines choose citations, the content patterns t
       {
         title: "Core Web Vitals Documentation",
         url: "https://web.dev/vitals/",
-        source: "Google",
-      },
-      {
-        title: "A/B Testing Best Practices",
-        url: "https://developers.google.com/optimize",
         source: "Google",
       },
     ],
@@ -3726,7 +3686,7 @@ Open it once on a phone and once on a laptop. Notice how little you have to pinc
 
 Whether you need a single-outlet site in Rajkot, a multi-location build, or hotel website design India-wide, the process is the same: a clear digital menu, fast-loading pages, map and WhatsApp within reach, and local SEO wired in from day one.
 
-[Book a free 20-minute strategy call](/contact) to discuss your project. Bring your menu and your questions about cost and timeline — you will leave with a realistic scope, not a vague quote. We reply within one working day with honest feedback, even when we are not the right fit.`,
+[Book a free strategy call](/contact) to discuss your project. Bring your menu and your questions about cost and timeline — you will leave with a realistic scope, not a vague quote. We reply within one working day with honest feedback, even when we are not the right fit.`,
       },
     ],
     faqs: [
@@ -3943,7 +3903,7 @@ Thirty days gets the foundation correct. Prominence — reviews, links, mentions
         heading: "Want a Local Search Foundation That Holds Up?",
         body: `Meteoric builds the technical half of this guide into every hospitality project: fast Next.js sites, HTML menu pages, restaurant schema, and profile setup wired in from day one. The work is founder-led from Gujarat — Prashant handles your project directly — covering [website development services](/services) from first wireframe to launch.
 
-[Book a free 20-minute strategy call](/contact) with your current profile link and menu ready. You will leave with a prioritized fix list whether or not we are the right fit.
+[Book a free strategy call](/contact) with your current profile link and menu ready. You will leave with a prioritized fix list whether or not we are the right fit.
 
 This guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Services](/services) · [Contact](/contact) · Editorial review by Prashant Khuva.`,
       },
