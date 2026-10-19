@@ -1,7 +1,7 @@
 name: meteoric_admin
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.23.0+27
+version: 0.23.1+27
 
 environment:
   sdk: ^3.13.0
@@ -51,7 +51,8 @@ flutter:
   fonts:
     - family: Satoshi
       fonts:
-        - asset: assets/fonts/Satoshi-Regular.ttf
+        # Regular rendered too thin in-app — Medium is the default weight.
+        - asset: assets/fonts/Satoshi-Medium.ttf
           weight: 400
         - asset: assets/fonts/Satoshi-Medium.ttf
           weight: 500

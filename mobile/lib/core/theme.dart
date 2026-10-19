@@ -518,7 +518,7 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: display(18, weight: FontWeight.w600, spacing: -0.2),
+        titleTextStyle: display(18, weight: FontWeight.w700, spacing: -0.2),
       ),
       cardTheme: CardThemeData(
         color: AppColors.card,
