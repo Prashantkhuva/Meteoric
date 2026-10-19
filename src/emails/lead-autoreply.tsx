@@ -13,7 +13,7 @@ export default function LeadAutoReply({ name, siteUrl }: LeadAutoReplyProps) {
   return (
     <Html>
       <EmailHead />
-      <Preview>Thank you for reaching out — we'll be in touch</Preview>
+      <Preview>We usually reply within one working day.</Preview>
       <Body className="body email-page" bgcolor="#f5f5f3" style={page}>
         <EmailBanner label="Auto-reply" />
         <Container className="email-card" bgcolor="#ffffff" style={container}>
@@ -24,7 +24,7 @@ export default function LeadAutoReply({ name, siteUrl }: LeadAutoReplyProps) {
             excited to learn more about your project.
           </Text>
           <Text style={paragraph}>
-            Our team typically responds within 24 hours. In the meantime, feel
+            We usually reply within one working day. In the meantime, feel
             free to browse our work at{" "}
             <a href={baseUrl} style={link}>
               {baseUrl.replace("https://", "")}

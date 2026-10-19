@@ -18,7 +18,7 @@ function SuccessStep({ handleClose }: SuccessStepProps) {
       </div>
       <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Request Received!</h3>
       <p className="text-[var(--text-muted)] text-sm mb-6">
-        I'll get back to you within 24 hours.
+        We usually reply within one working day.
       </p>
       <button
         onClick={handleClose}

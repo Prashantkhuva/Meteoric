@@ -312,7 +312,7 @@ export interface Article {
   sections: ArticleSection[];
   faqs?: Faq[];
   tags: string[];
-  metrics: ArticleMetric[];
+  metrics?: ArticleMetric[];
   furtherReading?: ArticleReference[];
   relatedLinks?: RelatedLink[];
   relatedBlogPosts?: RelatedBlogRef[];
