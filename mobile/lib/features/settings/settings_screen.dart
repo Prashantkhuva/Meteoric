@@ -319,7 +319,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             // ── Account section ─────────────────────────────────────
             _sectionLabel('ACCOUNT'),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             _buildAccountCard(displayName),
 
             // ── Edit profile (expanded) ────────────────────────────
@@ -332,23 +332,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   : const SizedBox.shrink(),
             ),
 
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
 
             // ── Security section ────────────────────────────────────
             _sectionLabel('SECURITY'),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             _buildSecurityCard(),
 
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
 
             // ── App section ─────────────────────────────────────────
             _sectionLabel('APP'),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             _buildAppCard(),
             const SizedBox(height: 12),
             _buildUpdateChecker(),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
 
             // ── Sign out ──────────────────────────────────────────
             _buildSignOutButton(),
@@ -485,11 +485,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return _CardContainer(
       child: Column(
         children: [
-          _infoRow('Name', displayName),
+          _infoRow('Name', displayName, icon: Icons.person_outline_rounded),
           _rowDivider(),
-          _infoRow('Email', _originalEmail),
+          _infoRow('Email', _originalEmail, icon: Icons.mail_outline_rounded),
           _rowDivider(),
-          _infoRow('Role', _role.toUpperCase(), valueColor: _roleColor),
+          _infoRow(
+            'Role',
+            _role.toUpperCase(),
+            valueColor: _roleColor,
+            icon: Icons.badge_outlined,
+          ),
         ],
       ),
     );
@@ -551,12 +556,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _runtimePatch != null && _runtimePatch! > 0
                 ? '${AppVersion.version} (patch $_runtimePatch)'
                 : AppVersion.version,
+            icon: Icons.tag_outlined,
           ),
           _rowDivider(),
-          _infoRow('Updated', AppVersion.updatedAt),
+          _infoRow('Updated', AppVersion.updatedAt, icon: Icons.history),
           if (DeviceInfo.model != 'unknown') ...[
             _rowDivider(),
-            _infoRow('Device', DeviceInfo.model),
+            _infoRow('Device', DeviceInfo.model, icon: Icons.phone_iphone),
           ],
           _rowDivider(),
           _buildUpdateCheckRow(),
@@ -598,9 +604,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
               await _loadRuntimePatch();
             },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
         child: Row(
           children: [
+            Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.textFaint.withValues(alpha: 0.06),
+                borderRadius: AppRadius.smAll,
+                border: Border.all(
+                  color: AppColors.textFaint.withValues(alpha: 0.12),
+                ),
+              ),
+              child: checking
+                  ? SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1.5,
+                        color: AppColors.accent,
+                      ),
+                    )
+                  : Icon(
+                      Icons.sync_outlined,
+                      size: 16,
+                      color: AppColors.textMuted,
+                    ),
+            ),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 'Check for updates',
@@ -611,17 +644,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-            if (checking) ...[
-              SizedBox(
-                width: 12,
-                height: 12,
-                child: CircularProgressIndicator(
-                  strokeWidth: 1.5,
-                  color: AppColors.accent,
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
             Text(
               status,
               style: TextStyle(
@@ -897,32 +919,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
-  Widget _infoRow(String label, String value, {Color? valueColor}) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 13,
-              fontFamily: 'Satoshi',
+  Widget _infoRow(
+    String label,
+    String value, {
+    Color? valueColor,
+    IconData? icon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      child: Row(
+        children: [
+          if (icon != null) ...[
+            Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.textFaint.withValues(alpha: 0.06),
+                borderRadius: AppRadius.smAll,
+                border: Border.all(
+                  color: AppColors.textFaint.withValues(alpha: 0.12),
+                ),
+              ),
+              child: Icon(icon, size: 16, color: AppColors.textMuted),
+            ),
+            const SizedBox(width: 14),
+          ],
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 13,
+                fontFamily: 'Satoshi',
+              ),
             ),
           ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            color: valueColor ?? AppColors.text,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Satoshi',
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: valueColor ?? AppColors.text,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Satoshi',
+              ),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 
   Widget _rowDivider() => Padding(
     padding: EdgeInsets.symmetric(horizontal: 16),
