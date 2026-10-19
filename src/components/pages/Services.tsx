@@ -153,7 +153,7 @@ export default function ServicesPage() {
             </h2>
             <p className="text-sm leading-relaxed mb-6 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
               Start with the outcome you need — these pages answer the same
-              questions our team hears on every first call.
+              questions we hear on every first call.
             </p>
             <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
               <li>
