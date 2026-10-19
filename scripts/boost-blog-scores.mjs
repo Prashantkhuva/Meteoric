@@ -35,9 +35,6 @@ const boosts = {
   "how-much-does-a-startup-website-cost": {
     tldr: "A startup website costs 5K to 50K depending on complexity. Landing pages cost 3K to 8K. Marketing sites cost 10K to 25K. SaaS MVPs cost 25K to 75K. Ongoing costs include hosting at 20 to 200 per month.",
   },
-  "building-a-saas-prototype-in-3-weeks-a-case-study": {
-    tldr: "We built a SaaS prototype in 3 weeks using Next.js, Supabase, and Stripe. Week 1 covered auth, database, and core data model. Week 2 covered billing integration and dashboard UI. Week 3 covered deployment, testing, and beta launch.",
-  },
   "the-meteoric-guide-to-choosing-your-tech-stack": {
     tldr: "Pick a tech stack based on your team skills, not trends. Next.js plus Supabase covers 80 percent of SaaS use cases. Avoid over-engineering and start simple. Your stack should match your timeline and budget.",
   },
@@ -84,7 +81,6 @@ const entities = {
   "nextjs-vs-remix-2026-comparison": "**Next.js** is a React framework by Vercel with server-side rendering and static generation. **Remix** is a React framework focused on web standards and progressive enhancement. **React Server Components** let components render on the server.",
   "what-is-a-web-development-agency": "**Web development agency** is a company that designs, builds, and maintains websites and web applications. **SaaS** is software as a service, products delivered via subscription through a web browser. **Full-stack development** covers both frontend and backend work.",
   "how-much-does-a-startup-website-cost": "**MVP** is a minimum viable product, the simplest version that proves your idea works. **Tech stack** is the combination of frameworks and tools used to build your product. **SaaS** is software delivered via subscription through a web browser.",
-  "building-a-saas-prototype-in-3-weeks-a-case-study": "**Prototype** is an early working version of a product used to validate ideas with real users. **Supabase** is an open-source backend platform with auth, database, and storage. **Product-market fit** is the point where users want what you built and pay for it.",
   "the-meteoric-guide-to-choosing-your-tech-stack": "**Tech stack** is the set of frameworks, databases, and tools your product runs on. **Next.js** is a React framework with server-side rendering and API routes. **SaaS** is software delivered via subscription through a web browser.",
   "how-to-choose-a-web-development-agency": "**Web development agency** is a company that designs, builds, and maintains websites and web applications. **Portfolio** is a collection of past work showing an agency capabilities and results. **Tech stack** is the combination of frameworks and tools used to build your product.",
   "react-vs-nextjs-for-startup-websites": "**React** is a JavaScript library for building user interfaces. **Next.js** is a React framework with server-side rendering, routing, and build optimization. **SSR** is server-side rendering, rendering pages on the server before sending to the browser.",
@@ -153,7 +149,6 @@ for (const post of blogPosts) {
       'nextjs-vs-remix-2026-comparison': 'Ref: [Princeton University](https://www.cs.princeton.edu/) study on web framework performance patterns.',
       'what-is-a-web-development-agency': 'Ref: [Bureau of Labor Statistics](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm) employment projections for web developers.',
       'how-much-does-a-startup-website-cost': 'Ref: [Stanford Business School](https://www.gsb.stanford.edu/) research on startup technology investment.',
-      'building-a-saas-prototype-in-3-weeks-a-case-study': 'Ref: [MIT Media Lab](https://www.media.mit.edu/) research on rapid prototyping methodologies.',
       'the-meteoric-guide-to-choosing-your-tech-stack': 'Ref: [Stanford Engineering](https://engineering.stanford.edu/) research on technology stack selection patterns.',
       'how-to-choose-a-web-development-agency': 'Ref: [Harvard University](https://cs.harvard.edu/) research on vendor selection frameworks.',
       'react-vs-nextjs-for-startup-websites': 'Ref: [Cornell University](https://www.cs.cornell.edu/) study on server-rendered versus client-rendered page performance.',
@@ -185,7 +180,6 @@ for (const post of blogPosts) {
     'gsap-vs-framer-motion-production-guide': '[UNIQUE INSIGHT]',
     'conversion-focused-web-design-beyond-pretty-ui': '[UNIQUE INSIGHT]',
     'long-tail-seo-strategy-for-funded-startups': '[UNIQUE INSIGHT]',
-    'building-a-saas-prototype-in-3-weeks-a-case-study': '[PERSONAL EXPERIENCE]',
     'high-converting-landing-page-structure-for-saas': '[ORIGINAL DATA]',
     'why-visitors-leave-your-website-issues-and-solutions': '[ORIGINAL DATA]',
     'react-vs-nextjs-for-startup-websites': '[UNIQUE INSIGHT]',
@@ -209,7 +203,6 @@ for (const post of blogPosts) {
 
   // 5c. Add examples for engagement (posts with 0-1 examples)
   const examplePosts = [
-    'building-a-saas-prototype-in-3-weeks-a-case-study',
     'ai-search-optimization-how-to-get-cited-by-chatgpt',
     'nextjs-vs-remix-2026-comparison',
     'complete-website-audit-checklist-for-startups',
@@ -249,7 +242,6 @@ for (const post of blogPosts) {
               'conversion-focused-web-design-beyond-pretty-ui': ' For example, moving the CTA above the fold and adding social proof increased one SaaS client conversions by 34%.',
               'long-tail-seo-strategy-for-funded-startups': ' For example, "best CRM for real estate startups under 50 employees" converts 5x better than "best CRM".',
               'ai-search-optimization-how-to-get-cited-by-chatgpt': ' For example, structured data with FAQ schema makes your content more extractable by AI search engines.',
-              'building-a-saas-prototype-in-3-weeks-a-case-study': ' For example, the billing prototype used Stripe test mode to simulate real subscription workflows.',
               'how-to-implement-aeo-answer-engine-optimization-for-saas': ' For example, a B2B SaaS with well-structured comparison tables gets cited more often than plain-text alternatives.',
               'startup-seo-on-a-budget-what-to-do-first': ' For example, Google Business Profile optimization costs nothing but can drive 30% of local discovery traffic.',
               'supabase-vs-firebase-2026-comparison': ' For example, Supabase Row Level Security policies map directly to database queries while Firebase requires separate security rules.',

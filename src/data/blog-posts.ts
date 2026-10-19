@@ -465,7 +465,7 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
       },
       {
         heading: "Cost by MVP Type (2026 Ranges)",
-        body: "**Validation prototype** ($5K–$15K, 1–3 weeks): a clickable prototype or a thin slice with fake doors and manual fulfillment (\"concierge MVP\"). Proves demand before engineering spend. Our [3-week prototype case study](/blog/building-a-saas-prototype-in-3-weeks-a-case-study) landed in this band's upper end with real auth and payments.\n\n**Functional MVP** ($15K–$50K, 4–8 weeks): real auth, the core loop end-to-end, one payment flow, basic email. First users can pay and use the product. This is the most common founder-stage build.\n\n**Full v1** ($50K–$100K+, 8–16 weeks): subscription billing with plans and upgrades, team invites and roles, admin dashboard, usage metering, and API access. Still focused on one persona — but production-grade everywhere.\n\nThese are global founder-stage ranges. Enterprise procurement budgets are a different conversation.",
+        body: "**Validation prototype** ($5K–$15K, 1–3 weeks): a clickable prototype or a thin slice with fake doors and manual fulfillment (\"concierge MVP\"). Proves demand before engineering spend. See our [prototype scoping guide](/blog/how-to-scope-a-saas-prototype-to-ship-in-weeks) for what this band should include.\n\n**Functional MVP** ($15K–$50K, 4–8 weeks): real auth, the core loop end-to-end, one payment flow, basic email. First users can pay and use the product. This is the most common founder-stage build.\n\n**Full v1** ($50K–$100K+, 8–16 weeks): subscription billing with plans and upgrades, team invites and roles, admin dashboard, usage metering, and API access. Still focused on one persona — but production-grade everywhere.\n\nThese are global founder-stage ranges. Enterprise procurement budgets are a different conversation.",
       },
       {
         heading: "Where the Money Goes: Cost by Phase",
@@ -570,8 +570,8 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
         title: "How Much Does It Cost to Build a Web App in 2026?",
       },
       {
-        slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-        title: "Building a SaaS Prototype in 3 Weeks",
+        slug: "how-to-scope-a-saas-prototype-to-ship-in-weeks",
+        title: "How to Scope a SaaS Prototype to Ship in Weeks",
       },
     ],
   },
@@ -612,7 +612,7 @@ This guide compares all three paths on cost, speed, quality, and risk, explains 
       },
       {
         heading: "Speed to Launch",
-        body: "Freelancers start in days. Agencies in 1–2 weeks (proposal and kickoff). In-house takes 4–8 weeks to hire, onboard, and reach productivity — before a single feature ships.\n\nFor a founder racing a market window, that hiring lag is often the whole decision. Time-to-launch is why our [3-week prototype case study](/blog/building-a-saas-prototype-in-3-weeks-a-case-study) used a small senior team instead of waiting on a hire.",
+        body: "Freelancers start in days. Agencies in 1–2 weeks (proposal and kickoff). In-house takes 4–8 weeks to hire, onboard, and reach productivity — before a single feature ships.\n\nFor a founder racing a market window, that hiring lag is often the whole decision. Time-to-launch is why [our prototype scoping approach](/blog/how-to-scope-a-saas-prototype-to-ship-in-weeks) favors a small senior team instead of waiting on a hire.",
       },
       {
         heading: "Quality, Risk, and Continuity",
@@ -708,8 +708,8 @@ This guide compares all three paths on cost, speed, quality, and risk, explains 
         title: "How Much Does It Cost to Build a Web App in 2026?",
       },
       {
-        slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-        title: "Building a SaaS Prototype in 3 Weeks",
+        slug: "how-to-scope-a-saas-prototype-to-ship-in-weeks",
+        title: "How to Scope a SaaS Prototype to Ship in Weeks",
       },
     ],
   },
@@ -762,7 +762,7 @@ This guide breaks down real 2026 price ranges by app type, the five variables th
       },
       {
         heading: "How to Cut Cost Without Triggering a Rebuild",
-        body: "The cheapest version that fails costs more than the cheapest version that works. These cuts are safe:\n\n**Cut scope, not quality.** One persona, one payment flow, one core loop. Defer roles and team features to version two. Our [3-week prototype case study](/blog/building-a-saas-prototype-in-3-weeks-a-case-study) used exactly this rule.\n\n**Use proven building blocks.** Auth providers, Stripe billing, and managed databases save weeks of custom code. Custom-build only what differentiates you.\n\n**Fix the scope in a written proposal.** Fixed price with documented scope beats hourly billing — you know the number before work starts, and change requests become visible decisions instead of silent invoice growth.\n\nUnsafe cuts: skipping QA, hiring the cheapest bid without references, or custom-building commodity features (auth, billing) from scratch.",
+        body: "The cheapest version that fails costs more than the cheapest version that works. These cuts are safe:\n\n**Cut scope, not quality.** One persona, one payment flow, one core loop. Defer roles and team features to version two. The [prototype scoping guide](/blog/how-to-scope-a-saas-prototype-to-ship-in-weeks) follows exactly this rule.\n\n**Use proven building blocks.** Auth providers, Stripe billing, and managed databases save weeks of custom code. Custom-build only what differentiates you.\n\n**Fix the scope in a written proposal.** Fixed price with documented scope beats hourly billing — you know the number before work starts, and change requests become visible decisions instead of silent invoice growth.\n\nUnsafe cuts: skipping QA, hiring the cheapest bid without references, or custom-building commodity features (auth, billing) from scratch.",
       },
       {
         heading: "Timeline Correlates With Cost",
@@ -851,8 +851,8 @@ This guide breaks down real 2026 price ranges by app type, the five variables th
         title: "How to Build a SaaS MVP",
       },
       {
-        slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-        title: "Building a SaaS Prototype in 3 Weeks",
+        slug: "how-to-scope-a-saas-prototype-to-ship-in-weeks",
+        title: "How to Scope a SaaS Prototype to Ship in Weeks",
       },
     ],
   },
@@ -1965,12 +1965,12 @@ This guide explains what agencies actually do, how an engagement runs from disco
     ],
   },
   {
-    slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-    title: "SaaS Prototype in 3 Weeks: Case Study",
-    description: "Case study: taking a SaaS idea from concept to working prototype in 3 weeks — project scope, tech choices, challenges, and hard-won lessons.",
-    tagline: "From idea to working prototype in 21 days.",
+    slug: "how-to-scope-a-saas-prototype-to-ship-in-weeks",
+    title: "How to Scope a SaaS Prototype to Ship in Weeks",
+    description: "Learn how to scope a SaaS prototype that can ship in weeks: one workflow to prove, a stack that removes work, cuts decided up front, and a plan that holds.",
+    tagline: "One workflow, a proven stack, and cuts decided before day one.",
     published: "2026-07-05",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-19",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1978,78 +1978,56 @@ This guide explains what agencies actually do, how an engagement runs from disco
     sections: [
       {
         heading: "TL;DR",
-        body: "We built a SaaS prototype in 3 weeks using Next.js, Supabase, and Stripe. For example, the billing prototype used Stripe test mode to simulate real subscription workflows. Week 1 covered auth, database, and core data model. Week 2 covered billing integration and dashboard UI. Week 3 covered deployment, testing, and beta launch.",
+        body: "A SaaS prototype exists to validate one workflow with real users, not to ship a finished product. This guide covers how to pick that workflow, choose a stack that removes setup work, agree feature cuts before day one, and plan the build so it can ship in weeks instead of drifting for months.",
       },
       {
-        heading: "The Challenge",
-        body: "A founder came to us with a concept for a B2B SaaS platform. It was a project management tool designed for remote design teams. The goal was to build a working prototype in 3 weeks. We would check it with 10 beta users and present to angel investors. The core features were: team workspaces, task boards, file sharing, and real-time collaboration. No billing, no analytics, no admin dashboards. Just the core workflow.\n\n**Prototype** is an early working version of a product used to validate ideas with real users. **Supabase** is an open-source backend platform with auth, database, and storage. **Product-market fit** is the point where users want what you built and pay for it.",
+        heading: "What a SaaS Prototype Is (and Is Not)",
+        body: "**Prototype** is an early working version of a product used to validate ideas with real users. It is not a market-ready product and not a finished version one — it ships incomplete on purpose, because its only job is to answer one question about demand before production work starts. **Supabase** is an open-source backend platform with auth, database, and storage. **Product-market fit** is the point where users want what you built and pay for it.",
       },
       {
-        heading: "Tech Stack and Architecture",
-        body: "We chose [Next.js](https://nextjs.org/docs) with [Supabase](https://supabase.com/docs) for fast development. Next.js handled frontend, API routes, and **server-side rendering**. This means [generating pages on the server before sending to the browser](https://nextjs.org/docs/app/building-your-application/rendering/server-components) for faster initial load and better SEO. Supabase provided auth, [PostgreSQL](https://www.postgresql.org/docs/) database, **real-time subscriptions** — [live database updates](https://supabase.com/docs/guides/realtime) pushed to clients over WebSockets — and file storage. All with a generous free tier. Tailwind CSS for UI, Framer Motion for interactions. Total backend setup took 2 days. Auth configured, database schema designed, and storage buckets created.",
+        heading: "Pick One Workflow to Prove",
+        body: "Choose the single end-to-end flow whose failure would kill the idea — the riskiest assumption, not the easiest screen. For a project-management tool that might be: sign up, create a workspace, add a task, and see a teammate's change appear live. Everything that does not serve that flow is a candidate for later.\n\nValidating two workflows at once doubles the build and weakens the signal: if users struggle, you will not know which flow caused it. One workflow, one decision at the end.",
       },
       {
-        heading: "Week 1: Foundation",
-        body: "Day 1-2: Database schema, auth setup, project scaffolding. Day 3-4: User onboarding flow — sign up, create workspace, invite team members. Day 5: Real-time collaboration foundations — WebSocket connections via [Supabase Realtime](https://supabase.com/docs/guides/realtime). By end of week 1, users could sign up, create a workspace, and see other team members online.\n\nThe biggest time savings came from using Supabase Auth instead of building custom auth. Auth alone would have taken 1 week. Supabase gave us auth, database, and storage in 2 hours. The lesson: use managed services for everything that is not your core value.",
+        heading: "Choose a Stack That Removes Work",
+        body: "Pick an opinionated stack so infrastructure arrives as configuration instead of construction. [Next.js](https://nextjs.org/docs) handles the frontend, API routes, and **server-side rendering** — [generating pages on the server before sending them to the browser](https://nextjs.org/docs/app/building-your-application/rendering/server-components) for faster initial load and better SEO. [Supabase](https://supabase.com/docs) provides auth, a [PostgreSQL](https://www.postgresql.org/docs/) database, **real-time subscriptions** — [live database updates](https://supabase.com/docs/guides/realtime) pushed to clients over WebSockets — and file storage. Tailwind CSS covers UI, Framer Motion covers interaction polish.\n\nFor prototypes, choose frameworks with built-in features over assembling separate tools.",
       },
       {
-        heading: "Week 2: Core Features",
-        body: "Day 6-8: Task board with drag-and-drop (columns, cards, assignments). Day 9-10: File upload and sharing with preview. Day 11-12: Comments and activity feed on each task. The drag-and-drop board was the most complex feature. We used the HTML5 Drag and Drop API with optimistic UI updates for a fast feel. Real-time sync meant changes by one user appeared right away for all workspace members.",
+        heading: "Decide the Cuts Before Day One",
+        body: "Agree the cut list before writing code, so scope cuts read as planning rather than failure. Typical prototype cuts: custom email templates, an admin dashboard, analytics beyond basic events, automated test suites, and CI/CD pipelines. Data integrity and the core workflow itself are never on the cut list.\n\nA written cut list also gives everyone the same definition of done: the day the one workflow works end to end, the prototype is finished.",
       },
       {
-        heading: "Week 3: Polish and Deploy",
-        body: "Day 13-14: UI polish, responsive design for mobile, dark mode. Day 15: Deployment to [Vercel](https://vercel.com/docs) with custom domain and SSL. Day 16-17: Beta user onboarding, bug fixes from real usage. Day 18-19: Performance tuning — image compression, lazy loading, database query tuning. Day 20: Final polish and handoff. The prototype was deployed and functional in 3 weeks, with the first beta users onboarded by day 21.",
+        heading: "A Week-by-Week Plan That Holds",
+        body: "A common shape for a narrow B2B workflow runs in three phases. **Phase 1 — foundation:** data schema, auth, and onboarding up to the first real object. **Phase 2 — core features:** build the riskiest interaction first — for real-time tools, live collaboration before anything decorative. **Phase 3 — polish and deploy:** responsive fixes, a performance pass, deployment, and a first round of real users.\n\nTreat the phases as a template, not a promise. Duration scales with the number of routes, screens, and integrations you scoped, so count them before committing to dates.",
       },
       {
-        heading: "Results and Lessons",
-        body: "The prototype successfully tested the concept with beta users. Investor interest was strong enough to fund full development. Key lesson: 3 weeks is tight but achievable when you ruthlessly scope the feature set. Every feature that wasn't essential for the core workflow was deferred. The real-time collaboration features were the biggest technical risk but also the most impressive to beta users and investors.",
+        heading: "What to Measure When It Ships",
+        body: "Measure whether the one workflow activates: how many people who sign up reach the end of the flow, and what they say when they do. Watch for repeated questions — the thing users ask twice is the bug in your scope.\n\nEnd the prototype with a decision rule written in advance: if activation and feedback clear your bar, invest in production; if not, revise or stop. The point of shipping fast is deciding fast.",
       },
       {
-        heading: "What Made This Timeline Possible",
-        body: "Three things made 3 weeks realistic: 1) We used a proven stack (Next.js + Supabase) instead of evaluating new tools. 2) The founder had clear feature priorities and made decisions quickly. No scope creep, no 'let's add one more thing'. 3) We built the most complex feature (real-time collaboration) first and worked outward. If the real-time sync had failed in week 1, we would have pivoted to a simpler approach before wasting weeks on dependent features.",
-      },
-      {
-        heading: "What We'd Do Differently",
-        body: "Looking back, two changes would have improved the outcome: 1) We should have added error boundaries earlier. Some real-time edge cases caused silent failures that were harder to debug after the fact. 2) We should have included basic analytics from day 1 to track which features beta users actually used. We ended up adding a simple event tracking script in week 3. But earlier data would have helped focus on the polish work. These are minor lessons. The core approach of ruthless scope plus proven stack worked well.",
-      },
-      {
-        heading: "Tech Stack Decisions for Speed",
-        body: "We chose Next.js because it handles both frontend and API routes. Supabase gave us auth, database, and storage without separate services. Tailwind CSS enabled fast styling without writing custom CSS. This stack let us ship a working prototype in 15 business days. The alternative (React + Express + PostgreSQL + S3) would have taken 6-8 weeks. For prototypes, choose frameworks with built-in features over assembling separate tools.",
-      },
-      {
-        heading: "What We Cut to Ship Fast",
-        body: "We removed several features to hit the 3-week deadline. No custom email templates (used Resend defaults). No admin dashboard (used Supabase dashboard directly). No analytics beyond GA4 (added PostHog later). No automated tests (manual QA only). No CI/CD pipeline (manual deploys). These cuts saved 2 weeks. The prototype tested the concept with 50 beta users before we invested in production features. Ship the minimum that proves the idea.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+        heading: "Common Scoping Mistakes",
+        body: "The usual failures: scope creep mid-build (the cut list exists to block it), validating two assumptions at once, polishing screens before the core loop works, and shipping without a pre-agreed decision rule. One more, the most common: treating the deadline as the goal. The deadline exists to force decisions; the goal is evidence.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
     ],
     faqs: [
       {
-        question: "Can all SaaS products be prototyped in 3 weeks?",
-        answer: "Not all. Simple B2B tools with standard features (auth, CRUD, real-time) can ship in 3 weeks. Products with complex AI/ML, hardware integration, or heavy third-party dependencies need more time. Scope honesty is critical — a 3-week prototype should deliver one complete workflow, not a full product.",
+        question: "How long does a SaaS prototype take?",
+        answer: "It depends on how many screens and integrations the one workflow needs. A narrow B2B workflow with auth, CRUD, and little real-time logic can be built in a few weeks; anything touching hardware, AI models, or heavy third-party systems takes longer. Estimate from your route and feature count, not from a headline duration.",
       },
       {
-        question: "What was the total cost for this prototype?",
-        answer: "The 3-week prototype was delivered at a fixed project fee. The cost is significantly less than a full production build, and many agencies offer milestone-based payment structures for prototype engagements. Contact us for a specific quote based on your concept.",
+        question: "How much does a SaaS prototype cost?",
+        answer: "Prototypes are quoted at a fixed project fee after a scoping call. The price follows the size of the workflow you decide to build and the integrations it needs — bring your scope to the call and you leave with a number and a date.",
+      },
+      {
+        question: "What should a prototype leave out?",
+        answer: "Everything that does not serve the one workflow being validated: custom email templates, admin tooling, analytics beyond basic events, automated test suites, and CI/CD are usual cuts. Data integrity and the core flow itself are not.",
       },
     ],
     tags: [
       "SaaS",
       "Prototype",
-      "Case Study",
+      "Scoping",
       "MVP",
-    ],
-    metrics: [
-      {
-        label: "Prototype delivered",
-        value: "15 days",
-      },
-      {
-        label: "Beta users onboarded",
-        value: "50",
-      },
-      {
-        label: "Conversion to paying",
-        value: "34%",
-      },
     ],
     furtherReading: [
       {
@@ -2467,8 +2445,8 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
         title: "How to Choose Your Tech Stack",
       },
       {
-        slug: "building-a-saas-prototype-in-3-weeks-a-case-study",
-        title: "Building a SaaS Prototype in 3 Weeks",
+        slug: "how-to-scope-a-saas-prototype-to-ship-in-weeks",
+        title: "How to Scope a SaaS Prototype to Ship in Weeks",
       },
     ],
   },

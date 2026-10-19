@@ -80,7 +80,7 @@ const postService: Record<string, { href: string; label: string }> = {
   "nextjs-vs-remix-2026-comparison": { href: "/services/nextjs-development", label: "Next.js Development" },
   "what-is-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
   "how-much-does-a-startup-website-cost": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "building-a-saas-prototype-in-3-weeks-a-case-study": { href: "/services/saas-development", label: "SaaS Development" },
+  "how-to-scope-a-saas-prototype-to-ship-in-weeks": { href: "/services/saas-development", label: "SaaS Development" },
   "the-meteoric-guide-to-choosing-your-tech-stack": { href: "/services/saas-development", label: "SaaS Development" },
   "how-to-choose-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
   "react-vs-nextjs-for-startup-websites": { href: "/services/nextjs-development", label: "Next.js Development" },

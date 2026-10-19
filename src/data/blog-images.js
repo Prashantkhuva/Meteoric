@@ -21,7 +21,7 @@ export const slugToImage = {
   "nextjs-vs-remix-2026-comparison": "/images/blog/blog-tech-stack.webp",
   "react-vs-nextjs-for-startup-websites": "/images/blog/blog-tech-stack.webp",
   "conversion-focused-web-design-beyond-pretty-ui": "/images/blog/blog-landing-page.webp",
-  "building-a-saas-prototype-in-3-weeks-a-case-study": "/images/blog/blog-saas-mvp.webp",
+  "how-to-scope-a-saas-prototype-to-ship-in-weeks": "/images/blog/blog-saas-mvp.webp",
   "how-much-does-a-startup-website-cost": "/images/blog/blog-startup-seo.webp",
   "how-to-choose-a-web-development-agency": "/images/blog/blog-web-agency.webp",
   "complete-website-audit-checklist-for-startups": "/images/blog/blog-website-issues.webp",

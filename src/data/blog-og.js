@@ -23,7 +23,7 @@ export const slugToOg = /** @type {Record<string, string>} */ ({
   "nextjs-vs-remix-2026-comparison": "/images/og/nextjs-vs-remix-2026-comparison.jpg",
   "react-vs-nextjs-for-startup-websites": "/images/og/react-vs-nextjs-for-startup-websites.jpg",
   "conversion-focused-web-design-beyond-pretty-ui": "/images/og/conversion-focused-web-design-beyond-pretty-ui.jpg",
-  "building-a-saas-prototype-in-3-weeks-a-case-study": "/images/og/building-a-saas-prototype-in-3-weeks-a-case-study.jpg",
+  "how-to-scope-a-saas-prototype-to-ship-in-weeks": "/images/og/how-to-scope-a-saas-prototype-to-ship-in-weeks.jpg",
   "how-much-does-a-startup-website-cost": "/images/og/how-much-does-a-startup-website-cost.jpg",
   "how-to-choose-a-web-development-agency": "/images/og/how-to-choose-a-web-development-agency.jpg",
   "complete-website-audit-checklist-for-startups": "/images/og/complete-website-audit-checklist-for-startups.jpg",

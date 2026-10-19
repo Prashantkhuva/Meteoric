@@ -33,7 +33,8 @@ const URLS = [
   "https://withmeteoric.com/services/web-development-agency-for-startups",
   // Blog URLs — only slugs that exist in src/data/blog-posts.ts (published posts).
   // Dead slugs removed: nextjs-vs-remix-2026-comparison, how-much-does-a-startup-website-cost,
-  // building-a-saas-prototype-in-3-weeks-a-case-study, how-to-choose-a-web-development-agency,
+  // (prototype post renamed to how-to-scope-a-saas-prototype-to-ship-in-weeks),
+  // how-to-choose-a-web-development-agency,
   // react-vs-nextjs-for-startup-websites, conversion-focused-web-design-beyond-pretty-ui,
   // complete-website-audit-checklist-for-startups — re-add when published (QA report P0 #1/P0 #2).
   "https://withmeteoric.com/blog/mongodb-schema-design-for-saas-billing",
@@ -44,7 +45,7 @@ const URLS = [
   "https://withmeteoric.com/blog/nextjs-vs-remix-2026-comparison",
   "https://withmeteoric.com/blog/what-is-a-web-development-agency",
   "https://withmeteoric.com/blog/how-much-does-a-startup-website-cost",
-  "https://withmeteoric.com/blog/building-a-saas-prototype-in-3-weeks-a-case-study",
+  "https://withmeteoric.com/blog/how-to-scope-a-saas-prototype-to-ship-in-weeks",
   "https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack",
   "https://withmeteoric.com/blog/how-to-choose-a-web-development-agency",
   "https://withmeteoric.com/blog/react-vs-nextjs-for-startup-websites",

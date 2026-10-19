@@ -58,6 +58,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/blog/building-a-saas-prototype-in-3-weeks-a-case-study",
+        destination: "/blog/how-to-scope-a-saas-prototype-to-ship-in-weeks",
+        permanent: true,
+      },
+      {
         source: "/services/saas-development-agency",
         destination: "/services/saas-development",
         permanent: true,
