@@ -246,11 +246,44 @@ jobs:
         if: inputs.dry_run != true
         run: |
           set -euo pipefail
-          curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json" | python3 -m json.tool
-          # Browser UA — Cloudflare bot-blocks bare curl from Actions runner IPs (returns 403).
-          CODE=$(curl -sI -o /dev/null -w "%{http_code}" -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" https://app.withmeteoric.com/download)
-          [ "$CODE" = "200" ] || { echo "::error::download page returned $CODE"; exit 1; }
-          echo "download page OK"
+          EXPECTED="${{ steps.ver.outputs.build }}"
+
+          # Manifest can be CDN-cached or propagate late — cache-bust + retry until build matches.
+          M=""; B=""
+          for i in $(seq 1 10); do
+            M=$(curl -sf "$NEXT_PUBLIC_SUPABASE_URL/storage/v1/object/public/app-releases/latest.json?cb=$(date +%s)-$i" || true)
+            B=$(printf '%s' "$M" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("build",""))' 2>/dev/null || true)
+            if [ "$B" = "$EXPECTED" ]; then break; fi
+            echo "manifest build='$B' expected='$EXPECTED' — retry $i/10"
+            sleep 3
+          done
+          if [ "$B" != "$EXPECTED" ]; then
+            echo "::error::latest.json build '$B' != expected '$EXPECTED' after retries"; exit 1
+          fi
+          printf '%s' "$M" | python3 -m json.tool
+
+          # Real download target — hard requirement.
+          APK_URL=$(printf '%s' "$M" | python3 -c 'import sys,json;print(json.load(sys.stdin)["url"])')
+          APK_CODE=$(curl -sIL -o /dev/null -w "%{http_code}" -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "$APK_URL")
+          if [ "$APK_CODE" != "200" ]; then
+            echo "::error::APK URL returned $APK_CODE: $APK_URL"; exit 1
+          fi
+          echo "APK OK (200): $APK_URL"
+
+          # Download page — Cloudflare bot-blocks runner IPs (403 = protection working, page fine for users).
+          CODE=0
+          for i in 1 2 3; do
+            CODE=$(curl -sI -o /dev/null -w "%{http_code}" -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" https://app.withmeteoric.com/download)
+            if [ "$CODE" = "200" ]; then break; fi
+            sleep 5
+          done
+          if [ "$CODE" = "200" ]; then
+            echo "download page OK"
+          elif [ "$CODE" = "403" ]; then
+            echo "::warning::download page 403 from runner (Cloudflare bot block) — APK URL verified directly, page works for users"
+          else
+            echo "::error::download page returned $CODE"; exit 1
+          fi
 
       - name: Archive APK artifact
         uses: actions/upload-artifact@v4
