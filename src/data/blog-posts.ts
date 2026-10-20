@@ -2782,7 +2782,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
       },
       {
         heading: "Section 4: Social Proof — Evidence That It Works",
-        body: "Place **social proof** — evidence that other people trust and benefit from your product, such as testimonials, client logos, review scores, or case study snippets — right away after the solution. This is where skepticism is highest. Use 3-5 specific testimonials with real names, titles, and companies. Add measurable results: 'Launched ahead of schedule' or 'Cut development time significantly'. If you have client logos, show them here. If you don't have testimonials yet, use case study snippets, review scores, or client count ('47 SaaS products launched'). Strong **CRO (Conversion Rate Optimization)** — the practice of increasing the percentage of visitors who complete a desired action — depends on placing proof where decisions happen.",
+        body: "Place **social proof** — evidence that other people trust and benefit from your product, such as testimonials, client logos, review scores, or case study snippets — right away after the solution. This is where skepticism is highest. Use 3-5 specific testimonials with real names, titles, and companies. Add measurable results: 'Launched ahead of schedule' or 'Cut development time significantly'. If you have client logos, show them here. If you don't have testimonials yet, use case study snippets, review scores, or a client count. Strong **CRO (Conversion Rate Optimization)** — the practice of increasing the percentage of visitors who complete a desired action — depends on placing proof where decisions happen.",
       },
       {
         heading: "Section 5: Process — How It Works",
@@ -3163,11 +3163,11 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 6: Above-the-Fold Clarity",
-        body: "Visitors decide in 3 seconds. Your hero must answer: What do you do? Who is it for? Why care? Put your value proposition in the first screen. Add one CTA. Remove clutter. Pages with clear heroes keep more visitors on the page.",
+        body: "Visitors decide quickly. Your hero must answer: What do you do? Who is it for? Why care? Put your value proposition in the first screen. Add one CTA. Remove clutter. Pages with clear heroes keep more visitors on the page.",
       },
       {
         heading: "Measuring Conversion Impact",
-        body: "Track these metrics to test design changes. Conversion rate (visitors to leads). Time on page (engagement). Scroll depth (content consumption). Click-through rate on CTAs (action intent). Run A/B tests on headlines, CTA color, and form length. Test small before full redesigns. We use GA4 events plus Hotjar heatmaps to find drop-off points. Most wins come from removing elements.\n\nOur framework: we A/B tested 50 landing page variations across 12 SaaS clients to identify conversion patterns that consistently outperform.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+        body: "Track these metrics to test design changes. Conversion rate (visitors to leads). Time on page (engagement). Scroll depth (content consumption). Click-through rate on CTAs (action intent). Run A/B tests on headlines, CTA color, and form length. Test small before full redesigns. We use GA4 events plus Hotjar heatmaps to find drop-off points. Most wins come from removing elements.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
     ],
     faqs: [
@@ -3301,7 +3301,7 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
       {
         question: "What's the most impactful audit finding?",
         answer:
-          "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times to 4-6 seconds. Compressing images to WebP and deferring non-critical scripts typically cuts load time and reduces bounce rate. It's the single highest-ROI fix.",
+          "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times. Compressing images to WebP and deferring non-critical scripts typically cuts load time and reduces bounce rate. It's the single highest-ROI fix.",
       },
       {
         question: "Can I do this audit myself or do I need a developer?",
@@ -3434,7 +3434,7 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
       },
       {
         question: "What's the most impactful audit finding?",
-        answer: "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times to 4-6 seconds. Compressing images to WebP and deferring non-critical scripts typically cuts load time and reduces bounce rate. It's the single highest-ROI fix.",
+        answer: "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times. Compressing images to WebP and deferring non-critical scripts typically cuts load time and reduces bounce rate. It's the single highest-ROI fix.",
       },
       {
         question: "Can I do this audit myself or do I need a developer?",
