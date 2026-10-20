@@ -469,7 +469,7 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
       },
       {
         heading: "Where the Money Goes: Cost by Phase",
-        body: "**Discovery and scoping (10–15%).** Problem definition, user stories, scope cut. Cheap now, expensive later — a wrong assumption here multiplies through every subsequent phase.\n\n**Design (10–15%).** User flows and UI for the core loop only. Founders overspend here when designing settings pages for features that don't exist yet.\n\n**Build (55–70%).** Frontend, backend, data model, integrations. The visible cost — and the one inflated by weak discovery.\n\n**Launch and hardening (10–15%).** QA, deployment, monitoring, fixes. Cut this and the MVP launches into churn.\n\nProjects that skip discovery don't save 15% — they spend the build phase re-learning what discovery would have cost.",
+        body: "**Discovery and scoping.** Problem definition, user stories, scope cut. Cheap now, expensive later — a wrong assumption here multiplies through every subsequent phase.\n\n**Design (10–15%).** User flows and UI for the core loop only. Founders overspend here when designing settings pages for features that don't exist yet.\n\n**Build (55–70%).** Frontend, backend, data model, integrations. The visible cost — and the one inflated by weak discovery.\n\n**Launch and hardening (10–15%).** QA, deployment, monitoring, fixes. Cut this and the MVP launches into churn.\n\nProjects that skip discovery don't save money — they spend the build phase re-learning what discovery would have cost.",
       },
       {
         heading: "How Team Location Moves the Number",
@@ -1331,7 +1331,7 @@ This guide compares bundle size, scroll animation capability, React integration,
       },
       {
         heading: "React Integration",
-        body: "Framer Motion was built for React. Its component-based API (motion.div, AnimatePresence) feels natural in JSX. GSAP works with React through refs and the useGSAP hook. If your project is 100% React with mostly UI animations, Framer Motion is more idiomatic. If you need complex timelines or scroll animation, GSAP gives more control. We use both in production: Framer Motion for UI polish, GSAP for scroll-driven sections.",
+        body: "Framer Motion was built for React. Its component-based API (motion.div, AnimatePresence) feels natural in JSX. GSAP works with React through refs and the useGSAP hook. If your project is React throughout with mostly UI animations, Framer Motion is more idiomatic. If you need complex timelines or scroll animation, GSAP gives more control. We use both in production: Framer Motion for UI polish, GSAP for scroll-driven sections.",
       },
       {
         heading: "Can I Use GSAP in Framer?",
@@ -2672,7 +2672,7 @@ This guide covers the seven most common reasons visitors bounce, the exact techn
       {
         question: "What's a good bounce rate for a SaaS website?",
         answer:
-          "40-55% is average, 25-40% is good, and under 25% is excellent. SaaS landing pages typically bounce higher (50-70%) because they attract broader traffic. Focus on reducing bounce for high-intent pages: pricing, demo request, and signup pages should be under 40%.",
+          "40-55% is average, 25-40% is good, and under 25% is excellent. SaaS landing pages typically bounce higher because they attract broader traffic. Focus on reducing bounce for high-intent pages: pricing, demo request, and signup pages should be under 40%.",
       },
       {
         question: "How do I check my website's bounce rate?",
@@ -2682,7 +2682,7 @@ This guide covers the seven most common reasons visitors bounce, the exact techn
       {
         question: "What's the most impactful fix for reducing bounce rate?",
         answer:
-          "Speed. Reducing load time from 4+ seconds to under 2 seconds typically cuts bounce rate by 20-30%. It's also the easiest to measure and the hardest to argue against. Start there, then work through the other fixes in order of effort.",
+          "Speed. Reducing load time typically cuts bounce rate. It's also the easiest to measure and the hardest to argue against. Start there, then work through the other fixes in order of effort.",
       },
       {
         question: "How long does it take to fix these website issues?",
@@ -2782,7 +2782,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
       },
       {
         heading: "Section 4: Social Proof — Evidence That It Works",
-        body: "Place **social proof** — evidence that other people trust and benefit from your product, such as testimonials, client logos, review scores, or case study snippets — right away after the solution. This is where skepticism is highest. Use 3-5 specific testimonials with real names, titles, and companies. Add measurable results: 'Launched in 5 weeks' or 'Cut development time by 60%'. If you have client logos, show them here. If you don't have testimonials yet, use case study snippets, review scores, or client count ('47 SaaS products launched'). Strong **CRO (Conversion Rate Optimization)** — the practice of increasing the percentage of visitors who complete a desired action — depends on placing proof where decisions happen.",
+        body: "Place **social proof** — evidence that other people trust and benefit from your product, such as testimonials, client logos, review scores, or case study snippets — right away after the solution. This is where skepticism is highest. Use 3-5 specific testimonials with real names, titles, and companies. Add measurable results: 'Launched ahead of schedule' or 'Cut development time significantly'. If you have client logos, show them here. If you don't have testimonials yet, use case study snippets, review scores, or client count ('47 SaaS products launched'). Strong **CRO (Conversion Rate Optimization)** — the practice of increasing the percentage of visitors who complete a desired action — depends on placing proof where decisions happen.",
       },
       {
         heading: "Section 5: Process — How It Works",
@@ -2826,7 +2826,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
       {
         question: "What proof converts best when you have no client logos?",
         answer:
-          "Specific, verifiable results beat logos. Use measurable outcomes ('launched in 5 weeks', 'cut development time by 60%'), review scores, client counts, or case-study snippets. If you have none yet, a detailed process section with clear timelines is the honest substitute.",
+          "Specific, verifiable results beat logos. Use measurable outcomes, review scores, client counts, or case-study snippets. If you have none yet, a detailed process section with clear timelines is the honest substitute.",
       },
     ],
     tags: ["Landing Pages", "CRO", "Web Development", "SaaS"],
@@ -3131,11 +3131,11 @@ This guide covers how AI search engines choose citations, the content patterns t
     sections: [
       {
         heading: "TL;DR",
-        body: "Pretty design without conversion focus wastes traffic. For example, moving the CTA above the fold and adding social proof increased one SaaS client conversions by 34%. Every page needs one clear CTA and a path to reach it. A/B test headlines, CTAs, and layouts. Reduce friction with fewer form fields and clearer pricing.",
+        body: "Pretty design without conversion focus wastes traffic. For example, moving the CTA above the fold and adding social proof improved conversion for one SaaS client. Every page needs one clear CTA and a path to reach it. A/B test headlines, CTAs, and layouts. Reduce friction with fewer form fields and clearer pricing.",
       },
       {
         heading: "Why Pretty Websites Don't Convert",
-        body: "Awards-winning design and conversion design are often opposites. For example, moving the CTA above the fold and adding social proof increased one SaaS client conversions by 34%. Award sites focus on visual complexity. **CRO** focuses on clarity and speed. The most beautiful website is worthless if visitors can't figure out what to do. Conversion-focused design is intentional. Every element guides visitors toward a specific outcome.\n\n**Conversion rate** is the percentage of visitors who complete the desired action. **A/B testing** is comparing two versions of a page to see which performs better. **Friction** is anything that slows or stops a visitor from converting.",
+        body: "Awards-winning design and conversion design are often opposites. For example, moving the CTA above the fold and adding social proof improved conversion for one SaaS client. Award sites focus on visual complexity. **CRO** focuses on clarity and speed. The most beautiful website is worthless if visitors can't figure out what to do. Conversion-focused design is intentional. Every element guides visitors toward a specific outcome.\n\n**Conversion rate** is the percentage of visitors who complete the desired action. **A/B testing** is comparing two versions of a page to see which performs better. **Friction** is anything that slows or stops a visitor from converting.",
       },
       {
         heading: "The Conversion Hierarchy",
@@ -3143,7 +3143,7 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 1: Single-Column Layouts for Landing Pages",
-        body: "Multi-column layouts force visitors to scan in multiple directions. Single-column layouts guide the eye naturally. Hero, problem, solution, proof, CTA. Every section leads to the next. We switched a client from 3 columns to single-column. Demo requests increased 34%.\n\nWe redesigned a SaaS landing page from 5 CTAs to 1 primary CTA, and the conversion rate improved after the change. The lesson: every additional choice beyond the primary action splits user attention.",
+        body: "Multi-column layouts force visitors to scan in multiple directions. Single-column layouts guide the eye naturally. Hero, problem, solution, proof, CTA. Every section leads to the next. We switched a client from 3 columns to single-column. Demo requests increased.\n\nWe redesigned a SaaS landing page from 5 CTAs to 1 primary CTA, and the conversion rate improved after the change. The lesson: every additional choice beyond the primary action splits user attention.",
       },
       {
         heading: "Pattern 2: Visual Hierarchy Through Size and Contrast",
@@ -3151,7 +3151,7 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 3: Reduce Form Fields to the Minimum",
-        body: "Every form field you add reduces conversion by 5-10%. A demo form with name, email, company, phone, budget, and timeline converts at half the rate of name and email only. Collect the minimum to start a conversation. We reduced a client's form from 7 fields to 3. Submissions increased 67%.",
+        body: "Every form field you add reduces conversion. A demo form with name, email, company, phone, budget, and timeline converts worse than a form asking only for name and email. Collect the minimum to start a conversation. We reduced a client's form from 7 fields to 3. Submissions increased.",
       },
       {
         heading: "Pattern 4: Social Proof Near Decision Points",
@@ -3163,7 +3163,7 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 6: Above-the-Fold Clarity",
-        body: "Visitors decide in 3 seconds. Your hero must answer: What do you do? Who is it for? Why care? Put your value proposition in the first screen. Add one CTA. Remove clutter. Pages with clear heroes see 40% lower bounce rates.\n\nReference: [Nielsen Norman Group](https://www.nngroup.com/articles/)",
+        body: "Visitors decide in 3 seconds. Your hero must answer: What do you do? Who is it for? Why care? Put your value proposition in the first screen. Add one CTA. Remove clutter. Pages with clear heroes keep more visitors on the page.",
       },
       {
         heading: "Measuring Conversion Impact",
@@ -3192,16 +3192,8 @@ This guide covers how AI search engines choose citations, the content patterns t
     ],
     metrics: [
       {
-        label: "Conversion rate improvement",
-        value: "34%",
-      },
-      {
         label: "Avg load time achieved",
         value: "<1.2s",
-      },
-      {
-        label: "Bounce rate reduction",
-        value: "40%",
       },
       {
         label: "Lighthouse scores",
@@ -3309,7 +3301,7 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
       {
         question: "What's the most impactful audit finding?",
         answer:
-          "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times to 4-6 seconds. Compressing images to WebP and deferring non-critical scripts typically cuts load time by 50% and reduces bounce rate by 20-30%. It's the single highest-ROI fix.",
+          "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times to 4-6 seconds. Compressing images to WebP and deferring non-critical scripts typically cuts load time and reduces bounce rate. It's the single highest-ROI fix.",
       },
       {
         question: "Can I do this audit myself or do I need a developer?",
@@ -3442,7 +3434,7 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
       },
       {
         question: "What's the most impactful audit finding?",
-        answer: "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times to 4-6 seconds. Compressing images to WebP and deferring non-critical scripts typically cuts load time by 50% and reduces bounce rate by 20-30%. It's the single highest-ROI fix.",
+        answer: "Page speed. Most startup websites have unoptimized images and render-blocking JavaScript that slow load times to 4-6 seconds. Compressing images to WebP and deferring non-critical scripts typically cuts load time and reduces bounce rate. It's the single highest-ROI fix.",
       },
       {
         question: "Can I do this audit myself or do I need a developer?",
