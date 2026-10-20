@@ -219,7 +219,7 @@ This guide compares both paths on real 2026 costs, shows exactly where each wins
       {
         question: "Is no-code good enough for a startup MVP?",
         answer:
-          "For validation — yes, and it's often the right call: landing pages, waitlists, and concierge MVPs ship in days for $20–$100/month. For a billing, multi-tenant product you intend to scale, no-code usually hits platform limits within 12–18 months and forces a rebuild.",
+          "For validation — yes, and it's often the right call: landing pages, waitlists, and concierge MVPs ship in days for $20–$100/month. For a billing, multi-tenant product you intend to scale, no-code usually hits platform limits and forces a rebuild.",
       },
       {
         question: "When should a startup move from no-code to custom?",
@@ -451,13 +451,13 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
 
 > **Key Takeaways**
 > - Validation prototype: $5K–$15K. Functional MVP: $15K–$50K. Full v1 with billing and teams: $50K–$100K+.
-> - Discovery and design are 20–30% of spend — skipping them is how projects pay twice.
+> - As a rule of thumb, discovery and design are 20–30% of spend — skipping them is how projects pay twice.
 > - Billing, roles, and third-party APIs drive cost more than UI polish.
 > - Validate with a landing page or concierge test first; a wrong MVP costs more than a slow one.`,
     sections: [
       {
         heading: "TL;DR",
-        body: "A SaaS MVP costs $5K–$100K+ in 2026 depending on how much product is in \"MVP.\" Validation prototypes (clickable or concierge) cost $5K–$15K and take 1–3 weeks. Functional MVPs with auth and one core loop cost $15K–$50K and take 4–8 weeks. Full v1s with subscription billing, team roles, and admin tooling cost $50K–$100K+ and take 8–16 weeks. Budget 20–30% for discovery and design, and expect $20–$200/month in post-launch running costs.",
+        body: "A SaaS MVP costs $5K–$100K+ in 2026 depending on how much product is in \"MVP.\" Validation prototypes (clickable or concierge) cost $5K–$15K and take 1–3 weeks. Functional MVPs with auth and one core loop cost $15K–$50K and take 4–8 weeks. Full v1s with subscription billing, team roles, and admin tooling cost $50K–$100K+ and take 8–16 weeks. As a rule of thumb, budget 20–30% for discovery and design, and expect $20–$200/month in post-launch running costs.",
       },
       {
         heading: "What Counts as an MVP (Scope Is the Budget)",
@@ -469,7 +469,7 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
       },
       {
         heading: "Where the Money Goes: Cost by Phase",
-        body: "**Discovery and scoping.** Problem definition, user stories, scope cut. Cheap now, expensive later — a wrong assumption here multiplies through every subsequent phase.\n\n**Design (10–15%).** User flows and UI for the core loop only. Founders overspend here when designing settings pages for features that don't exist yet.\n\n**Build (55–70%).** Frontend, backend, data model, integrations. The visible cost — and the one inflated by weak discovery.\n\n**Launch and hardening (10–15%).** QA, deployment, monitoring, fixes. Cut this and the MVP launches into churn.\n\nProjects that skip discovery don't save money — they spend the build phase re-learning what discovery would have cost.",
+        body: "**Discovery and scoping.** Problem definition, user stories, scope cut. Cheap now, expensive later — a wrong assumption here multiplies through every subsequent phase.\n\n**Design (10–15% as a rule of thumb).** User flows and UI for the core loop only. Founders overspend here when designing settings pages for features that don't exist yet.\n\n**Build (55–70% as a rule of thumb).** Frontend, backend, data model, integrations. The visible cost — and the one inflated by weak discovery.\n\n**Launch and hardening (10–15% as a rule of thumb).** QA, deployment, monitoring, fixes. Cut this and the MVP launches into churn.\n\nProjects that skip discovery don't save money — they spend the build phase re-learning what discovery would have cost.",
       },
       {
         heading: "How Team Location Moves the Number",
@@ -481,11 +481,11 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
       },
       {
         heading: "Hidden Costs After the Build Quote",
-        body: "Budget monthly from launch: **hosting and database** ($20–$200/month), **email delivery** ($0–$50/month at early volume), **monitoring** (free tiers early), **domain and SSL** (trivial). Transaction fees: payment processors take a percentage per charge — fine until volume surprises you.\n\nOne-time surprises: legal (terms, privacy, GDPR basics if serving EU users), app store-style compliance if you ever wrap the PWA, and the 10–20% contingency every honest MVP budget reserves for \"the thing we couldn't know until real users arrived.\"",
+        body: "Budget monthly from launch: **hosting and database** ($20–$200/month), **email delivery** ($0–$50/month at early volume), **monitoring** (free tiers early), **domain and SSL** (trivial). Transaction fees: payment processors take a percentage per charge — fine until volume surprises you.\n\nOne-time surprises: legal (terms, privacy, GDPR basics if serving EU users), app store-style compliance if you ever wrap the PWA, and the 10–20% contingency every honest MVP budget reserves — as a rule of thumb — for \"the thing we couldn't know until real users arrived.\"",
       },
       {
         heading: "Validate Before You Spend the Big Number",
-        body: "Cheapest validation first: **landing page + waitlist** (days, near-zero cost) tests the promise. **Concierge test** (a week) delivers the service manually to 5–10 users — proves the workflow before automating it. **Clickable prototype** tests the flow with real clicks. Only then does a functional MVP quote make sense.\n\nFounders who skip validation don't save the validation budget — they spend the full MVP budget learning what validation would have taught for 5% of the cost. [Startup SEO on a budget](/blog/startup-seo-on-a-budget-what-to-do-first) covers cheap demand tests that double as pre-launch marketing.",
+        body: "Cheapest validation first: **landing page + waitlist** (days, near-zero cost) tests the promise. **Concierge test** (a week) delivers the service manually to 5–10 users — proves the workflow before automating it. **Clickable prototype** tests the flow with real clicks. Only then does a functional MVP quote make sense.\n\nFounders who skip validation don't save the validation budget — they spend the full MVP budget learning what validation would have taught for a fraction of the cost. [Startup SEO on a budget](/blog/startup-seo-on-a-budget-what-to-do-first) covers cheap demand tests that double as pre-launch marketing.",
       },
       {
         heading: "How Meteoric Prices SaaS MVPs",
@@ -501,7 +501,7 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
       {
         question: "Why do MVP quotes vary so much between agencies?",
         answer:
-          "Scope interpretation, team location, and what's counted as included (design, QA, post-launch support). Compare proposals line by line — two quotes for the same idea can differ 3x when one is code-only and the other is a complete engagement.",
+          "Scope interpretation, team location, and what's counted as included (design, QA, post-launch support). Compare proposals line by line — two quotes for the same idea can differ by a wide margin when one is code-only and the other is a complete engagement.",
       },
       {
         question: "Is it cheaper to hire freelancers for an MVP?",
@@ -530,7 +530,7 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
         value: "$15K–$50K",
       },
       {
-        label: "Discovery + design share",
+        label: "Discovery + design share (rule of thumb)",
         value: "20–30%",
       },
     ],
@@ -746,7 +746,7 @@ This guide breaks down real 2026 price ranges by app type, the five variables th
       },
       {
         heading: "Cost by App Type (2026 Ranges)",
-        body: "**Internal tools and admin dashboards** ($5K–$15K, 2–4 weeks): CRUD over one or two data models, simple auth, maybe CSV export. The most predictable category. Examples: inventory trackers, booking dashboards, content managers.\n\n**Customer-facing products with auth and payments** ($15K–$50K, 4–8 weeks): user accounts, Stripe or Razorpay integration, email flows, an admin panel. Examples: booking platforms with payments, membership sites, lightweight marketplaces.\n\n**Multi-tenant SaaS platforms** ($50K–$150K+, 8–16 weeks): subscription billing, team/role management, usage metering, dashboards, and API access. The prototype-to-launch case study we ran shipped an MVP of this class in 3 weeks by cutting scope to one persona and one payment flow.\n\nThese are 2026 market ranges for founder-stage work — not enterprise digital-transformation budgets, which run higher for procurement and compliance reasons alone.",
+        body: "**Internal tools and admin dashboards** ($5K–$15K, 2–4 weeks): CRUD over one or two data models, simple auth, maybe CSV export. The most predictable category. Examples: inventory trackers, booking dashboards, content managers.\n\n**Customer-facing products with auth and payments** ($15K–$50K, 4–8 weeks): user accounts, Stripe or Razorpay integration, email flows, an admin panel. Examples: booking platforms with payments, membership sites, lightweight marketplaces.\n\n**Multi-tenant SaaS platforms** ($50K–$150K+, 8–16 weeks): subscription billing, team/role management, usage metering, dashboards, and API access.\n\nThese are 2026 market ranges for founder-stage work — not enterprise digital-transformation budgets, which run higher for procurement and compliance reasons alone.",
       },
       {
         heading: "The Five Variables That Actually Drive Price",
@@ -782,7 +782,7 @@ This guide breaks down real 2026 price ranges by app type, the five variables th
       {
         question: "Why do web app quotes vary so much between teams?",
         answer:
-          "Scope interpretation, team location, and risk buffer. Two quotes for the same idea can differ 3x because one includes design, QA, and post-launch support while the other is code-only. Compare proposals line by line — what's included matters more than the headline number.",
+          "Scope interpretation, team location, and risk buffer. Two quotes for the same idea can differ by a wide margin because one includes design, QA, and post-launch support while the other is code-only. Compare proposals line by line — what's included matters more than the headline number.",
       },
       {
         question: "Is fixed-price or hourly billing better for a web app?",
@@ -1184,7 +1184,7 @@ This comparison covers schema flexibility, performance and scaling, ACID guarant
       },
       {
         heading: "Performance and Scaling",
-        body: "MongoDB scales horizontally via sharding. This makes it good for apps expecting massive growth. PostgreSQL scales vertically with bigger servers. Tools like Citus add horizontal scaling. For 90% of SaaS products, a single PostgreSQL instance handles millions of records.",
+        body: "MongoDB scales horizontally via sharding. This makes it good for apps expecting massive growth. PostgreSQL scales vertically with bigger servers. Tools like Citus add horizontal scaling. For most SaaS products, a single PostgreSQL instance handles millions of records.",
       },
       {
         heading: "ACID Compliance and Data Integrity",
@@ -1664,10 +1664,6 @@ This comparison covers database, auth, realtime, storage, server-side logic, pri
         label: "Remix projects built",
         value: "3",
       },
-      {
-        label: "Avg framework decision time",
-        value: "1 day",
-      },
     ],
     furtherReading: [
       {
@@ -1873,7 +1869,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
       },
       {
         heading: "How to Budget for a Startup Website in 2026",
-        body: "Spend enough that your website does its job. For pre-seed startups, a single landing page with strong copy is often the highest-ROI investment. Once you have traction, upgrade to a multi-page site. Allocate 60-70% for design and development, 15-20% for content, and 10-15% for maintenance.",
+        body: "Spend enough that your website does its job. For pre-seed startups, a single landing page with strong copy is often the highest-ROI investment. Once you have traction, upgrade to a multi-page site. As a rule of thumb, allocate 60-70% for design and development, 15-20% for content, and 10-15% for maintenance.",
       },
       {
         heading: "Why Cheap Websites End Up Costing More",
@@ -2006,7 +2002,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
       },
       {
         heading: "Common Scoping Mistakes",
-        body: "The usual failures: scope creep mid-build (the cut list exists to block it), validating two assumptions at once, polishing screens before the core loop works, and shipping without a pre-agreed decision rule. One more, the most common: treating the deadline as the goal. The deadline exists to force decisions; the goal is evidence.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+        body: "The usual failures: scope creep mid-build (the cut list exists to block it), validating two assumptions at once, polishing screens before the core loop works, and shipping without a pre-agreed decision rule. One more worth naming: treating the deadline as the goal. The deadline exists to force decisions; the goal is evidence.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
     ],
     faqs: [
@@ -2276,14 +2272,6 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
         label: "Agency evaluations completed",
         value: "40+",
       },
-      {
-        label: "Avg vendor selection time",
-        value: "2 weeks",
-      },
-      {
-        label: "Client retention rate",
-        value: "95%",
-      },
     ],
     furtherReading: [
       {
@@ -2399,14 +2387,6 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
         label: "CRA to Next.js migrations",
         value: "3",
       },
-      {
-        label: "Avg migration time",
-        value: "10 days",
-      },
-      {
-        label: "Bundle size reduction",
-        value: "35%",
-      },
     ],
     furtherReading: [
       {
@@ -2480,7 +2460,7 @@ This six-step guide covers llms.txt, definition-first content, JSON-LD structure
       },
       {
         heading: "Why AEO Matters for SaaS in 2026",
-        body: "Search behavior is shifting. Users increasingly ask AI chatbots for recommendations instead of Googling. Perplexity processes millions of queries daily. [Google AI Overviews](https://developers.google.com/search/docs/appearance/google-overview) appear on 30%+ of searches. If your SaaS isn't structured for AI consumption, you're invisible to a growing share of potential customers. **SEO (Search Engine Optimization)** is the practice of improving organic search visibility. AEO complements it. It is a new channel you need to occupy alongside traditional ranking. At Meteoric, we build Next.js and MERN-based web products for startups and local businesses in Gujarat and premium global markets — and we ship llms.txt, schema, and answer-first content as part of every launch, not as an afterthought.",
+        body: "Search behavior is shifting. Users increasingly ask AI chatbots for recommendations instead of Googling. Perplexity processes millions of queries daily. [Google AI Overviews](https://developers.google.com/search/docs/appearance/google-overview) now appear on a large and growing share of searches. If your SaaS isn't structured for AI consumption, you're invisible to a growing share of potential customers. **SEO (Search Engine Optimization)** is the practice of improving organic search visibility. AEO complements it. It is a new channel you need to occupy alongside traditional ranking. At Meteoric, we build Next.js and MERN-based web products for startups and local businesses in Gujarat and premium global markets — and we ship llms.txt, schema, and answer-first content as part of every launch, not as an afterthought.",
       },
       {
         heading: "Step 1: Create an llms.txt File",
@@ -2625,31 +2605,31 @@ This six-step guide covers llms.txt, definition-first content, JSON-LD structure
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
     },
-    intro: `Visitors leave for three reasons first: slow loading (53 percent abandon within 3 seconds), poor mobile experience (60 percent of traffic), and an unclear value proposition (70 percent of first-time visitors). Fix speed, mobile, and messaging before anything else — they are the highest-leverage leaks in any funnel.
+    intro: `Visitors leave for three reasons first: slow loading (Google's "The Need for Mobile Speed" study, 2016, found that 53 percent of mobile visits are abandoned when pages take longer than 3 seconds), poor mobile experience, and an unclear value proposition. Fix speed, mobile, and messaging before anything else — they are the highest-leverage leaks in any funnel.
 
 This guide covers the seven most common reasons visitors bounce, the exact technical fix for each, and the order to tackle them so you stop losing customers to preventable problems.
 
 > **Key Takeaways**
 > - Speed is the biggest single lever: under 2 seconds on mobile, images in WebP, lazy-load the rest.
-> - State what you do, who it's for, and why it matters above the fold in 3-5 seconds.
+> - State what you do, who it's for, and why it matters above the fold, visible without scrolling.
 > - Fix in order: technical SEO, performance, conversion, then content.
 > - Most sites need targeted fixes, not a full redesign.`,
     sections: [
       {
         heading: "The Hidden Cost of Website Bounce",
-        body: "Every visitor who leaves without acting is money wasted — on ads, content, and design. The average website bounces 40-60% of visitors. For SaaS landing pages, that number can hit 70%+. Each percentage point of **bounce rate** — the [percentage of sessions](https://support.google.com/analytics/answer/9193538) where users view only one page before leaving — you reduce translates directly to more signups, demos, and revenue. This guide covers the seven most common reasons visitors leave and the exact technical fixes for each.\n\n**Bounce rate** is the percentage of visitors who leave after viewing one page. **Core Web Vitals** are Google metrics for page speed, interactivity, and visual stability. **Value proposition** is the clear statement of what you do and why it matters. At Meteoric, speed and messaging are the first two checks in every Next.js rebuild we ship for startups and local businesses in Gujarat and premium global markets.",
+        body: "Every visitor who leaves without acting is money wasted — on ads, content, and design. Landing pages commonly bounce 40-60% of visitors (KISSmetrics, \"What Is Bounce Rate?\", 2026). SaaS landing pages often bounce higher because they attract broader traffic. Each percentage point of **bounce rate** — the [percentage of sessions](https://support.google.com/analytics/answer/9193538) where users view only one page before leaving — you reduce translates directly to more signups, demos, and revenue. This guide covers the seven most common reasons visitors leave and the exact technical fixes for each.\n\n**Bounce rate** is the percentage of visitors who leave after viewing one page. **Core Web Vitals** are Google metrics for page speed, interactivity, and visual stability. **Value proposition** is the clear statement of what you do and why it matters. At Meteoric, speed and messaging are the first two checks in every Next.js rebuild we ship for startups and local businesses in Gujarat and premium global markets.",
       },
       {
         heading: "1. Slow Page Load (Over 3 Seconds)",
-        body: "53% of mobile visitors abandon sites that take over 3 seconds to load. The fix: compress images to WebP format (60-80% smaller than PNG), build **lazy loading** — [deferring offscreen resources](https://web.dev/lazy-loading/) until users scroll to them — use a CDN for static assets, and minimize JavaScript bundles. For example, a 1-second delay in load time reduces conversions by 7%. Fix: compress images to WebP, lazy-load below-the-fold content, and use a CDN. These are common optimizations that can significantly improve page speed and reduce bounce rates. Heavy animation libraries add weight too — [GSAP vs Motion](/blog/gsap-vs-framer-motion-production-guide) sizes up the two common choices.",
+        body: "Google's \"The Need for Mobile Speed\" study (2016, [source](https://amphtml.wordpress.com/2016/09/08/new-study-speedmatters-for-mobile-user-engagement-and-revenue/)) found that 53 percent of mobile visits are abandoned when pages take longer than 3 seconds to load. The fix: compress images to WebP format (60-80% smaller than PNG), build **lazy loading** — [deferring offscreen resources](https://web.dev/lazy-loading/) until users scroll to them — use a CDN for static assets, and minimize JavaScript bundles. For example, each extra second of load time costs conversions. Fix: compress images to WebP, lazy-load below-the-fold content, and use a CDN. These are common optimizations that can significantly improve page speed and reduce bounce rates. Heavy animation libraries add weight too — [GSAP vs Motion](/blog/gsap-vs-framer-motion-production-guide) sizes up the two common choices.",
       },
       {
         heading: "2. No Clear Value Proposition Above the Fold",
-        body: "Visitors decide in 3-5 seconds whether to stay. If your hero section shows a generic tagline like 'new Solutions for Modern Businesses' with no clear answer to 'what do you do?', they leave. Fix: state exactly what you do, who it's for, and why it matters in the first screen. 'We build SaaS MVPs for funded startups in 4-6 weeks' beats 'We Build Digital Experiences' every time. For a full page-by-page formula, see [High-Converting Landing Page Structure for SaaS](/blog/high-converting-landing-page-structure-for-saas).",
+        body: "Visitors decide almost immediately whether to stay. If your hero section shows a generic tagline like 'new Solutions for Modern Businesses' with no clear answer to 'what do you do?', they leave. Fix: state exactly what you do, who it's for, and why it matters in the first screen. 'We build SaaS MVPs for funded startups in 4-6 weeks' beats 'We Build Digital Experiences' every time. For a full page-by-page formula, see [High-Converting Landing Page Structure for SaaS](/blog/high-converting-landing-page-structure-for-saas).",
       },
       {
         heading: "3. Poor Mobile Experience",
-        body: "68% of web traffic is mobile. If buttons are too small to tap, text requires pinching to zoom, or forms are impossible to fill on a phone, you're losing two-thirds of potential customers. Fix: test every page on a real phone (not just browser dev tools). make sure touch targets are at least [44x44px](https://www.nngroup.com/articles/touch-target-size/), forms use appropriate input types (email, tel, number), and navigation works with thumb reach.",
+        body: "Most web traffic is mobile. If buttons are too small to tap, text requires pinching to zoom, or forms are impossible to fill on a phone, you're losing most potential customers. Fix: test every page on a real phone (not just browser dev tools). make sure touch targets are at least [44x44px](https://www.nngroup.com/articles/touch-target-size/), forms use appropriate input types (email, tel, number), and navigation works with thumb reach.",
       },
       {
         heading: "4. Confusing Navigation",
@@ -2672,7 +2652,7 @@ This guide covers the seven most common reasons visitors bounce, the exact techn
       {
         question: "What's a good bounce rate for a SaaS website?",
         answer:
-          "40-55% is average, 25-40% is good, and under 25% is excellent. SaaS landing pages typically bounce higher because they attract broader traffic. Focus on reducing bounce for high-intent pages: pricing, demo request, and signup pages should be under 40%.",
+          "Commonly cited benchmarks ([Square](https://squareup.com/au/en/the-bottom-line/operating-your-business/bounce-rate-meaning-measure-improve), 2022; [KISSmetrics](https://kissmetrics.io/blog/what-is-bounce-rate), 2026): 40-55% is average, 25-40% is good, and under 25% is excellent. SaaS landing pages typically bounce higher because they attract broader traffic. Focus on reducing bounce for high-intent pages: pricing, demo request, and signup pages should be under 40%.",
       },
       {
         question: "How do I check my website's bounce rate?",
@@ -3131,11 +3111,11 @@ This guide covers how AI search engines choose citations, the content patterns t
     sections: [
       {
         heading: "TL;DR",
-        body: "Pretty design without conversion focus wastes traffic. For example, moving the CTA above the fold and adding social proof improved conversion for one SaaS client. Every page needs one clear CTA and a path to reach it. A/B test headlines, CTAs, and layouts. Reduce friction with fewer form fields and clearer pricing.",
+        body: "Pretty design without conversion focus wastes traffic. For example, moving the CTA above the fold and adding social proof tends to improve conversion. Every page needs one clear CTA and a path to reach it. A/B test headlines, CTAs, and layouts. Reduce friction with fewer form fields and clearer pricing.",
       },
       {
         heading: "Why Pretty Websites Don't Convert",
-        body: "Awards-winning design and conversion design are often opposites. For example, moving the CTA above the fold and adding social proof improved conversion for one SaaS client. Award sites focus on visual complexity. **CRO** focuses on clarity and speed. The most beautiful website is worthless if visitors can't figure out what to do. Conversion-focused design is intentional. Every element guides visitors toward a specific outcome.\n\n**Conversion rate** is the percentage of visitors who complete the desired action. **A/B testing** is comparing two versions of a page to see which performs better. **Friction** is anything that slows or stops a visitor from converting.",
+        body: "Awards-winning design and conversion design are often opposites. For example, moving the CTA above the fold and adding social proof tends to improve conversion. Award sites focus on visual complexity. **CRO** focuses on clarity and speed. The most beautiful website is worthless if visitors can't figure out what to do. Conversion-focused design is intentional. Every element guides visitors toward a specific outcome.\n\n**Conversion rate** is the percentage of visitors who complete the desired action. **A/B testing** is comparing two versions of a page to see which performs better. **Friction** is anything that slows or stops a visitor from converting.",
       },
       {
         heading: "The Conversion Hierarchy",
@@ -3143,7 +3123,7 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 1: Single-Column Layouts for Landing Pages",
-        body: "Multi-column layouts force visitors to scan in multiple directions. Single-column layouts guide the eye naturally. Hero, problem, solution, proof, CTA. Every section leads to the next. We switched a client from 3 columns to single-column. Demo requests increased.\n\nWe redesigned a SaaS landing page from 5 CTAs to 1 primary CTA, and the conversion rate improved after the change. The lesson: every additional choice beyond the primary action splits user attention.",
+        body: "Multi-column layouts force visitors to scan in multiple directions. Single-column layouts guide the eye naturally. Hero, problem, solution, proof, CTA. Every section leads to the next. A single-column layout typically earns more demo requests than a three-column one.\n\nWe redesigned a SaaS landing page from 5 CTAs to 1 primary CTA, and the conversion rate improved after the change. The lesson: every additional choice beyond the primary action splits user attention.",
       },
       {
         heading: "Pattern 2: Visual Hierarchy Through Size and Contrast",
@@ -3151,7 +3131,7 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 3: Reduce Form Fields to the Minimum",
-        body: "Every form field you add reduces conversion. A demo form with name, email, company, phone, budget, and timeline converts worse than a form asking only for name and email. Collect the minimum to start a conversation. We reduced a client's form from 7 fields to 3. Submissions increased.",
+        body: "Every form field you add reduces conversion. A demo form with name, email, company, phone, budget, and timeline converts worse than a form asking only for name and email. Collect the minimum to start a conversation. Shorter forms tend to increase submissions.",
       },
       {
         heading: "Pattern 4: Social Proof Near Decision Points",
@@ -3189,16 +3169,6 @@ This guide covers how AI search engines choose citations, the content patterns t
       "CRO",
       "Conversion",
       "UI/UX",
-    ],
-    metrics: [
-      {
-        label: "Avg load time achieved",
-        value: "<1.2s",
-      },
-      {
-        label: "Lighthouse scores",
-        value: "95+",
-      },
     ],
     furtherReading: [
       {
