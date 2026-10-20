@@ -9,7 +9,7 @@ export const homeFaqs: Faq[] = [
   {
     question: "How long does it take to build a website or SaaS?",
     answer:
-      "Landing pages typically take 3–7 days. Web applications range from 2–6 weeks depending on complexity. SaaS products take 4–10 weeks. We'll give you a precise timeline after our discovery call.",
+      "Landing pages typically take 3–7 days. Web applications range from 2–6 weeks depending on complexity. SaaS MVPs take 3–6 weeks. We'll give you a precise timeline after our discovery call.",
   },
   {
     question: "Do you only work with MERN stack?",
@@ -37,12 +37,12 @@ export const serviceFaqs: Faq[] = [
   {
     question: "How much does it cost to build a website or SaaS with Meteoric?",
     answer:
-      "Pricing depends on project scope. Landing pages start at lower budgets and deliver in 3-7 days. Full-stack web applications range from 2-6 weeks, and SaaS products from 4-10 weeks. Contact us for a free custom quote based on your specific requirements.",
+      "Pricing depends on project scope. Landing pages start at lower budgets and deliver in 3-7 days. Full-stack web applications range from 2-6 weeks, and SaaS MVPs from 3-6 weeks. Contact us for a free custom quote based on your specific requirements.",
   },
   {
     question: "How long does it take to build a SaaS product?",
     answer:
-      "SaaS products typically take 4-10 weeks from discovery to launch. MVP prototypes can ship in 3-6 weeks. We provide a precise timeline after our free strategy call based on your feature requirements and complexity.",
+      "SaaS MVPs typically take 3-6 weeks from discovery to launch, and full SaaS platforms 6-10 weeks. We provide a precise timeline after our free strategy call based on your feature requirements and complexity.",
   },
   {
     question: "What technologies does Meteoric use?",
@@ -80,7 +80,7 @@ export const workFaqs: Faq[] = [
   {
     question: "How long does a typical project take?",
     answer:
-      "Landing pages ship in 3–7 days. Web applications take 2–6 weeks, and SaaS products 4–10 weeks. You get a precise timeline after the discovery call, once scope is agreed.",
+      "Landing pages ship in 3–7 days. Web applications take 2–6 weeks, and SaaS MVPs 3–6 weeks. You get a precise timeline after the discovery call, once scope is agreed.",
   },
   {
     question: "What does the process look like from first call to launch?",
@@ -118,7 +118,7 @@ export const caseStudyFaqs: Faq[] = [
   {
     question: "How long did these projects take to build?",
     answer:
-      "Timelines vary by scope. Landing pages ship in days, web apps in 2–6 weeks, and SaaS MVPs in 4–10 weeks from discovery to launch.",
+      "Timelines vary by scope. Landing pages ship in days, web apps in 2–6 weeks, and SaaS MVPs in 3–6 weeks from discovery to launch.",
   },
   {
     question: "What tech stack is used across these projects?",
