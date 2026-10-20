@@ -163,7 +163,7 @@ This guide covers what actually moves rankings on Next.js App Router sites in 20
       "No-code or custom development? An honest comparison for startups — cost, speed, lock-in, and a decision checklist for when each path wins today.",
     tagline: "When no-code wins, when custom wins, and how to avoid the migration trap.",
     published: "2026-10-12",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -440,7 +440,7 @@ This guide gives the working definition AI search engines and founders actually 
       "Realistic SaaS MVP costs in 2026 — by phase and by region, what drives the final price, and how to validate scope before spending the budget.",
     tagline: "What a SaaS MVP actually costs in 2026 — and how to avoid paying twice.",
     published: "2026-10-12",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -583,7 +583,7 @@ This guide breaks down 2026 MVP costs by MVP type and by project phase, shows ho
       "Freelancer, agency, or in-house team? Compare cost, speed, and risk for building a web product — with a practical founder decision checklist.",
     tagline: "Cost, speed, and risk compared — plus a one-page decision checklist.",
     published: "2026-10-12",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -624,7 +624,7 @@ This guide compares all three paths on cost, speed, quality, and risk, explains 
       },
       {
         heading: "The Hybrid Paths Most Startups Miss",
-        body: "**Agency build → in-house maintain.** Pay an agency for v1 (process, design, launch), then hire one full-stack engineer to own iteration. Best of both: speed to market, then alignment. This is the most common good outcome we see.\n\n**Freelancer + fractional specialist.** A freelance developer builds; a fractional designer or DevOps expert joins for their slice. Cheap, but requires the founder to coordinate.\n\n**In-house product owner + agency build.** Your PM (or technical founder) owns priorities; agency executes. Keeps context in-house while buying delivery capacity.\n\nPure paths are rare in practice. Pick the hybrid that matches your budget and internal skill.",
+        body: "**Agency build → in-house maintain.** Pay an agency for v1 (process, design, launch), then hire one full-stack engineer to own iteration. Best of both: speed to market, then alignment. This is the most common good outcome.\n\n**Freelancer + fractional specialist.** A freelance developer builds; a fractional designer or DevOps expert joins for their slice. Cheap, but requires the founder to coordinate.\n\n**In-house product owner + agency build.** Your PM (or technical founder) owns priorities; agency executes. Keeps context in-house while buying delivery capacity.\n\nPure paths are rare in practice. Pick the hybrid that matches your budget and internal skill.",
       },
       {
         heading: "Product Studio vs Agency",
@@ -721,7 +721,7 @@ This guide compares all three paths on cost, speed, quality, and risk, explains 
       "Realistic 2026 web app development costs — internal tools, marketplaces, and SaaS. Price ranges, cost drivers, and how to budget without overpaying.",
     tagline: "Honest price ranges for web apps in 2026 — and what actually moves the number.",
     published: "2026-10-12",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -864,7 +864,7 @@ This guide breaks down real 2026 price ranges by app type, the five variables th
       "Learn how to design a MongoDB schema for SaaS billing — plans, subscriptions, invoices, credits, and usage tracking. Production patterns included.",
     tagline: "A practical guide to modeling subscription billing in MongoDB.",
     published: "2026-06-10",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -941,7 +941,6 @@ This guide covers the four core collections a billing system needs (plans, subsc
       },
     ],
     tags: ["MongoDB", "SaaS", "Database Design", "Billing"],
-    metrics: [],
     furtherReading: [
       {
         title: "MongoDB Data Modeling Documentation",
@@ -988,7 +987,7 @@ This guide covers the four core collections a billing system needs (plans, subsc
       "Build a SaaS MVP in 3–6 weeks — planning, tech stack choices, auth, billing, deployment, and launch steps with real project examples inside.",
     tagline: "Ship your SaaS MVP in weeks, not months.",
     published: "2026-06-15",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1033,7 +1032,7 @@ This step-by-step guide covers scoping the core feature set, choosing your stack
       },
       {
         heading: "Common MVP Mistakes to Avoid",
-        body: "We see the same mistakes repeatedly: 1) Building features nobody asked for. Your MVP should solve one problem well, not five problems poorly. 2) Over-engineering architecture. You don't need microservices, event sourcing, or a custom auth system for your first 100 users. 3) Ignoring billing integration. Many founders defer payment setup until after launch. Then they scramble to set up Stripe under time pressure. 4) Skipping the landing page. Your MVP needs a page that explains what it does and captures early interest. 5) Not setting up error monitoring from day 1. Bugs happen. You need to know about them before your users do.",
+        body: "The same mistakes appear repeatedly: 1) Building features nobody asked for. Your MVP should solve one problem well, not five problems poorly. 2) Over-engineering architecture. You don't need microservices, event sourcing, or a custom auth system for your first 100 users. 3) Ignoring billing integration. Many founders defer payment setup until after launch. Then they scramble to set up Stripe under time pressure. 4) Skipping the landing page. Your MVP needs a page that explains what it does and captures early interest. 5) Not setting up error monitoring from day 1. Bugs happen. You need to know about them before your users do.",
       },
       {
         heading: "Post-Launch: What Comes Next",
@@ -1159,7 +1158,7 @@ This step-by-step guide covers scoping the core feature set, choosing your stack
     tagline:
       "A head-to-head comparison of the two most popular databases for SaaS products.",
     published: "2026-06-20",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1294,7 +1293,7 @@ This comparison covers schema flexibility, performance and scaling, ACID guarant
     tagline:
       "Choose the right animation library for your next production project.",
     published: "2026-06-08",
-    dateModified: "2026-10-17",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1468,7 +1467,7 @@ This guide compares bundle size, scroll animation capability, React integration,
     tagline:
       "Make an informed choice between the two leading backend-as-a-service platforms.",
     published: "2026-06-25",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1551,7 +1550,6 @@ This comparison covers database, auth, realtime, storage, server-side logic, pri
       },
     ],
     tags: ["Supabase", "Firebase", "Backend", "SaaS", "PostgreSQL"],
-    metrics: [],
     furtherReading: [
       {
         title: "Supabase Documentation",
@@ -1596,7 +1594,7 @@ This comparison covers database, auth, realtime, storage, server-side logic, pri
     description: "Next.js vs Remix for production React applications in 2026 — performance, developer experience, ecosystem, and when to choose each framework.",
     tagline: "Two excellent React frameworks — which one is right for your project?",
     published: "2026-07-01",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1655,16 +1653,6 @@ This comparison covers database, auth, realtime, storage, server-side logic, pri
       "React",
       "Frameworks",
     ],
-    metrics: [
-      {
-        label: "Next.js projects built",
-        value: "20+",
-      },
-      {
-        label: "Remix projects built",
-        value: "3",
-      },
-    ],
     furtherReading: [
       {
         title: "Next.js Documentation",
@@ -1716,7 +1704,7 @@ This comparison covers database, auth, realtime, storage, server-side logic, pri
     tagline:
       "A clear explanation of web development agencies for founders and business owners.",
     published: "2026-06-05",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1784,7 +1772,6 @@ This guide explains what agencies actually do, how an engagement runs from disco
       },
     ],
     tags: ["Agency", "Web Development", "Startups", "SaaS"],
-    metrics: [],
     furtherReading: [
       {
         title: "Meteoric — Software Development Agency",
@@ -1829,7 +1816,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
     description: "Startup website costs in 2026 — landing pages to multi-page marketing sites to full SaaS platforms. Realistic ranges, cost drivers, and how to budget.",
     tagline: "Realistic pricing for startup websites in 2026 — and how to avoid overpaying.",
     published: "2026-06-28",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1906,10 +1893,6 @@ This guide explains what agencies actually do, how an engagement runs from disco
     ],
     metrics: [
       {
-        label: "Websites priced",
-        value: "50+",
-      },
-      {
         label: "Landing page cost range",
         value: "$500–$2,500",
       },
@@ -1966,7 +1949,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
     description: "Learn how to scope a SaaS prototype that can ship in weeks: one workflow to prove, a stack that removes work, cuts decided up front, and a plan that holds.",
     tagline: "One workflow, a proven stack, and cuts decided before day one.",
     published: "2026-07-05",
-    dateModified: "2026-10-19",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2067,7 +2050,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
     tagline:
       "Make technology decisions that serve your business, not the other way around.",
     published: "2026-06-12",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2151,7 +2134,6 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
       },
     ],
     tags: ["React", "Next.js", "Startup", "Frameworks"],
-    metrics: [],
     furtherReading: [
       {
         title: "Next.js vs CRA Comparison",
@@ -2196,7 +2178,7 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
     description: "How to choose the right web development agency — portfolio review, process evaluation, team assessment, and questions to ask before signing a deal.",
     tagline: "A practical framework for vetting and selecting a development partner.",
     published: "2026-07-08",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2267,12 +2249,6 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
       "Hiring",
       "Vendor Selection",
     ],
-    metrics: [
-      {
-        label: "Agency evaluations completed",
-        value: "40+",
-      },
-    ],
     furtherReading: [
       {
         title: "Clutch Web Development Agencies",
@@ -2307,7 +2283,7 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
     description: "React vs Next.js for startup websites — when plain React is enough, when Next.js pays off, and how the choice affects SEO, performance, and your roadmap.",
     tagline: "Two ways to build with React — pick the one that fits your startup's stage.",
     published: "2026-08-04",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2378,16 +2354,6 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
       "Startup",
       "Frameworks",
     ],
-    metrics: [
-      {
-        label: "Next.js projects shipped",
-        value: "20+",
-      },
-      {
-        label: "CRA to Next.js migrations",
-        value: "3",
-      },
-    ],
     furtherReading: [
       {
         title: "Next.js vs CRA Comparison",
@@ -2439,7 +2405,7 @@ This founder's guide walks through React vs Next.js, PostgreSQL vs MongoDB, how 
       "A practical guide to Answer Engine Optimization for SaaS — structure content so ChatGPT, Perplexity, and AI Overviews recommend your product today.",
     tagline: "Get your SaaS cited by AI — not just ranked on Google.",
     published: "2026-08-22",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2523,7 +2489,6 @@ This six-step guide covers llms.txt, definition-first content, JSON-LD structure
       },
     ],
     tags: ["AEO", "AI Search", "SaaS", "GEO", "SEO"],
-    metrics: [],
     furtherReading: [
       {
         title: "AEO Implementation Guide",
@@ -2600,7 +2565,7 @@ This six-step guide covers llms.txt, definition-first content, JSON-LD structure
       "The 7 most common reasons visitors bounce from your website — and the exact fixes to keep them. Stop funnel leaks with this developer guide.",
     tagline: "Stop losing customers to preventable website problems.",
     published: "2026-08-25",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2629,7 +2594,7 @@ This guide covers the seven most common reasons visitors bounce, the exact techn
       },
       {
         heading: "3. Poor Mobile Experience",
-        body: "Most web traffic is mobile. If buttons are too small to tap, text requires pinching to zoom, or forms are impossible to fill on a phone, you're losing most potential customers. Fix: test every page on a real phone (not just browser dev tools). make sure touch targets are at least [44x44px](https://www.nngroup.com/articles/touch-target-size/), forms use appropriate input types (email, tel, number), and navigation works with thumb reach.",
+        body: "Most web traffic is mobile. If buttons are too small to tap, text requires pinching to zoom, or forms are impossible to fill on a phone, you're losing a large share of visitors. Fix: test every page on a real phone (not just browser dev tools). make sure touch targets are at least [44x44px](https://www.nngroup.com/articles/touch-target-size/), forms use appropriate input types (email, tel, number), and navigation works with thumb reach.",
       },
       {
         heading: "4. Confusing Navigation",
@@ -2678,7 +2643,7 @@ This guide covers the seven most common reasons visitors bounce, the exact techn
     tags: ["Web Development", "CRO", "Conversion", "Performance"],
     metrics: [
       {
-        label: "Avg load time target",
+        label: "Load time guideline",
         value: "<2s",
       },
     ],
@@ -2729,7 +2694,7 @@ This guide covers the seven most common reasons visitors bounce, the exact techn
       "The exact landing page structure that converts SaaS visitors into signups — section-by-section breakdown with examples from real shipped projects.",
     tagline: "The page structure that turns visitors into customers.",
     published: "2026-08-28",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2746,7 +2711,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
     sections: [
       {
         heading: "What Makes a Landing Page Convert?",
-        body: "A high-converting landing page does three things in sequence: captures attention with a clear promise, builds trust with evidence, and removes friction from the next step. Most SaaS landing pages fail because they focus on looking impressive instead of guiding visitors toward a single action. The structure below is what we use for every client project — it works because it follows how people actually evaluate software.\n\n**Conversion rate** is the percentage of visitors who take the desired action. **Above the fold** is the content visible without scrolling on first load. **CTA** is a call to action, the button or link that drives the next step.",
+        body: "A high-converting landing page does three things in sequence: captures attention with a clear promise, builds trust with evidence, and removes friction from the next step. Most SaaS landing pages fail because they focus on looking impressive instead of guiding visitors toward a single action. The structure below is what converts — it works because it follows how people actually evaluate software.\n\n**Conversion rate** is the percentage of visitors who take the desired action. **Above the fold** is the content visible without scrolling on first load. **CTA** is a call to action, the button or link that drives the next step.",
       },
       {
         heading: "Section 1: Hero — The 5-Second Test",
@@ -2810,7 +2775,6 @@ This developer's guide breaks the page into eight sections — hero, problem, so
       },
     ],
     tags: ["Landing Pages", "CRO", "Web Development", "SaaS"],
-    metrics: [],
     furtherReading: [
       {
         title: "Unbounce Landing Page Statistics",
@@ -2862,7 +2826,7 @@ This developer's guide breaks the page into eight sections — hero, problem, so
     tagline:
       "You don't need a big domain to rank — you need the right keywords.",
     published: "2026-09-01",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2934,7 +2898,6 @@ This guide covers how to mine customer language, build topic clusters instead of
       },
     ],
     tags: ["SEO", "Startups", "Content Strategy", "Keywords"],
-    metrics: [],
     furtherReading: [
       {
         title: "Ahrefs Long-Tail Keyword Research Guide",
@@ -2977,7 +2940,7 @@ This guide covers how to mine customer language, build topic clusters instead of
       "How to get your brand recommended by AI search — structured data, llms.txt, authority signals, and content patterns that AI models actually cite.",
     tagline: "Stop being invisible to AI. Start being the answer.",
     published: "2026-09-04",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -3053,7 +3016,6 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
     ],
     tags: ["AI Search", "GEO", "AEO", "SEO", "Content Strategy"],
-    metrics: [],
     furtherReading: [
       {
         title: "LLMs.txt Specification",
@@ -3103,7 +3065,7 @@ This guide covers how AI search engines choose citations, the content patterns t
     description: "Pretty websites do not convert. Conversion-focused websites do. A developer guide to designing sites that turn visitors into customers with clear CTAs.",
     tagline: "Design that looks good is nice. Design that converts is better.",
     published: "2026-09-07",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -3123,7 +3085,7 @@ This guide covers how AI search engines choose citations, the content patterns t
       },
       {
         heading: "Pattern 1: Single-Column Layouts for Landing Pages",
-        body: "Multi-column layouts force visitors to scan in multiple directions. Single-column layouts guide the eye naturally. Hero, problem, solution, proof, CTA. Every section leads to the next. A single-column layout typically earns more demo requests than a three-column one.\n\nWe redesigned a SaaS landing page from 5 CTAs to 1 primary CTA, and the conversion rate improved after the change. The lesson: every additional choice beyond the primary action splits user attention.",
+        body: "Multi-column layouts force visitors to scan in multiple directions. Single-column layouts guide the eye naturally. Hero, problem, solution, proof, CTA. Every section leads to the next. A single-column layout can earn more demo requests than a three-column one, depending on the page.\n\nReducing a page to a single primary CTA can improve conversion. The lesson: every additional choice beyond the primary action splits user attention.",
       },
       {
         heading: "Pattern 2: Visual Hierarchy Through Size and Contrast",
@@ -3222,7 +3184,7 @@ This guide covers how AI search engines choose citations, the content patterns t
     tagline:
       "You don't need a big budget to rank. You need the right priorities.",
     published: "2026-09-10",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -3290,7 +3252,6 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
       },
     ],
     tags: ["SEO", "Technical SEO", "Website Audit", "Performance"],
-    metrics: [],
     furtherReading: [
       {
         title: "Google PageSpeed Insights",
@@ -3362,7 +3323,7 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
     description: "A 50-point website audit checklist covering technical SEO, performance, conversion, and content — the exact audit we run for clients, with free tools.",
     tagline: "Audit your website in 2 hours. Fix the top 10 issues in a weekend.",
     published: "2026-09-13",
-    dateModified: "2026-10-12",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -3416,20 +3377,6 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
       "Technical SEO",
       "Website Audit",
       "Performance",
-    ],
-    metrics: [
-      {
-        label: "Audits completed",
-        value: "30+",
-      },
-      {
-        label: "Avg audit completion time",
-        value: "2 hours",
-      },
-      {
-        label: "Avg issues found",
-        value: "12",
-      },
     ],
     furtherReading: [
       {
@@ -3509,7 +3456,7 @@ This guide is a prioritized 50-point audit across technical SEO, performance, co
     tagline:
       "What to check, what it costs, and what a real sample site looks like — for cafe and restaurant owners in Gujarat.",
     published: "2026-10-06",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -3673,7 +3620,6 @@ Whether you need a single-outlet site in Rajkot, a multi-location build, or hote
       "Hospitality",
       "Local SEO",
     ],
-    metrics: [],
     furtherReading: [
       {
         title: "Google Business Profile",
@@ -3722,7 +3668,7 @@ Whether you need a single-outlet site in Rajkot, a multi-location build, or hote
     tagline:
       "Website, Google profile, photos, and reviews as one system — plus a 30-day local visibility plan for restaurants and cafes.",
     published: "2026-10-06",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-20",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -3881,7 +3827,6 @@ This guide is maintained by the [Meteoric](https://withmeteoric.com) team. [Abou
       },
     ],
     tags: ["Local SEO", "Restaurants", "Gujarat", "Photography", "SEO"],
-    metrics: [],
     furtherReading: [
       {
         title: "Local business structured data",
