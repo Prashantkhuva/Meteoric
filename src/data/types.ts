@@ -273,11 +273,6 @@ export interface ArticleSection {
   body: string;
 }
 
-export interface ArticleMetric {
-  label: string;
-  value: string;
-}
-
 export interface ArticleReference {
   title: string;
   url: string;
@@ -312,7 +307,6 @@ export interface Article {
   sections: ArticleSection[];
   faqs?: Faq[];
   tags: string[];
-  metrics?: ArticleMetric[];
   furtherReading?: ArticleReference[];
   relatedLinks?: RelatedLink[];
   relatedBlogPosts?: RelatedBlogRef[];

@@ -294,7 +294,7 @@ export const services: Service[] = [
       },
       {
         heading: "Startup-friendly pricing",
-        body: "We publish the ranges we work in: landing pages ship in 3–7 days, multi-page websites in 1–3 weeks, web applications in 2–6 weeks, and SaaS MVPs in 3–6 weeks. Every project is quoted at a fixed price after a free strategy call. No hourly billing, no surprise invoices. We work with pre-seed, seed, and Series A startups — the budget matches your stage.",
+        body: "We publish the ranges we work in: landing pages ship in 3–7 days, multi-page websites in 1–3 weeks, web applications in 2–6 weeks, and SaaS MVPs in 3–6 weeks. Every project is quoted at a fixed price after a free strategy call. No hourly billing within the agreed scope, no surprise invoices. We work with pre-seed, seed, and Series A startups — the budget matches your stage.",
       },
     ],
     faqs: [
@@ -463,7 +463,7 @@ export const services: Service[] = [
       {
         question: "Does the client own the source code?",
         answer:
-          "Yes. You receive the full source code at handover and own it outright — no lock-in and no licensing restrictions. The stack is standard (Next.js, Node.js, PostgreSQL), so any competent development team can maintain it going forward if you ever choose to switch.",
+          "Yes. You receive the full source code at handover and own the code you receive once the project is paid in full, with no lock-in on your side. The stack is standard (Next.js, Node.js, PostgreSQL), so any competent development team can maintain it going forward if you ever choose to switch.",
       },
     ],
   },

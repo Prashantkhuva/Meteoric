@@ -24,7 +24,7 @@ export const homeFaqs: Faq[] = [
   {
     question: "How do I get started?",
     answer:
-      "Book a free strategy call using the button below. We'll discuss your project, give you a timeline and estimate, and if we're a good fit, we'll start within the week.",
+      "Book a free strategy call using the button below. We'll discuss your project, give you a timeline and estimate, and if we're a good fit, we'll agree a start date.",
   },
   {
     question: "What kinds of founders or businesses are a good fit?",
@@ -128,6 +128,6 @@ export const caseStudyFaqs: Faq[] = [
   {
     question: "How do I start a project like one of these?",
     answer:
-      "Book a free discovery call. We'll scope the outcome you need, agree on a timeline and fixed price, and start within the week if it's a fit.",
+      "Book a free discovery call. We'll scope the outcome you need, agree on a timeline and fixed price, and agree a start date if it's a fit.",
   },
 ];

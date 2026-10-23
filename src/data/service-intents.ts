@@ -94,7 +94,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
       {
         question: "How do I get a timeline and price for my MVP?",
         answer:
-          "Book the free strategy call. Scope is confirmed together, then you receive a fixed project fee and a start date before any work begins — no hourly billing surprises.",
+          "Book the free strategy call. Scope is confirmed together, then you receive a fixed project fee and a start date before any work begins — no hourly billing surprises within the agreed scope.",
       },
     ],
     insightSlugs: [
