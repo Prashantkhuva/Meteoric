@@ -65,7 +65,7 @@ export const services: Service[] = [
       },
       {
         heading: "Timeline",
-        body: "Landing pages deliver in 3–7 days from concept to launch. We work in 10-day sprints with daily updates during active development so you're never waiting for progress.",
+        body: "Landing pages deliver in 3–7 days from concept to launch. We work in 10-day sprints with weekly updates during active development so you're never waiting for progress.",
       },
     ],
     faqs: [
@@ -183,7 +183,7 @@ export const services: Service[] = [
       {
         question: "How much does it cost to build a SaaS MVP?",
         answer:
-          "SaaS MVP costs depend on complexity. A focused MVP with auth, billing, and core features typically starts at a fixed project fee. Factors that affect cost: number of user roles, third-party integrations, real-time requirements, and design complexity. We quote fixed prices after a free strategy call — no hourly billing surprises.",
+          "SaaS MVP costs depend on complexity. A focused MVP with auth, billing, and core features typically starts at a fixed project fee. Factors that affect cost: number of user roles, third-party integrations, real-time requirements, and design complexity. We quote fixed prices after a free strategy call — no hourly billing surprises within the agreed scope.",
       },
       {
         question: "How long does it take to build a SaaS product?",

@@ -1702,7 +1702,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
     description: "Startup website costs in 2026 — landing pages to multi-page marketing sites to full SaaS platforms. Realistic ranges, cost drivers, and how to budget.",
     tagline: "Realistic pricing for startup websites in 2026 — and how to avoid overpaying.",
     published: "2026-06-28",
-    dateModified: "2026-10-23",
+    dateModified: "2026-10-24",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1750,7 +1750,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
       },
       {
         heading: "The Meteoric Approach: Transparent Fixed Pricing",
-        body: "At Meteoric, we publish the ranges we work in instead of hiding pricing behind sales calls: landing pages ship in 3–7 days, multi-page marketing sites in 1–3 weeks, and web applications or SaaS MVPs in 2–6 weeks. Every project is quoted at a fixed price after a free strategy call, with the scope documented in a proposal — no hourly billing surprises within the agreed scope; changes beyond it are discussed before extra work starts. You get founder-level involvement, weekly updates, and post-launch support included. The goal is simple: you should know exactly what your website will cost before we start, and it should pay for itself in leads and credibility within its first months. If you're building a startup website in 2026, that's the standard you should hold any agency to.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
+        body: "At Meteoric, we publish the ranges we work in instead of hiding pricing behind sales calls: landing pages ship in 3–7 days, multi-page marketing sites in 1–3 weeks, and web applications in 2–6 weeks and SaaS MVPs in 3–6 weeks. Every project is quoted at a fixed price after a free strategy call, with the scope documented in a proposal — no hourly billing surprises within the agreed scope; changes beyond it are discussed before extra work starts. You get founder-level involvement, weekly updates, and post-launch support included. The goal is simple: you should know exactly what your website will cost before we start, and it should pay for itself in leads and credibility within its first months. If you're building a startup website in 2026, that's the standard you should hold any agency to.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
     ],
     faqs: [
