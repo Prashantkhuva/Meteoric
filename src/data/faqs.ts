@@ -19,7 +19,7 @@ export const homeFaqs: Faq[] = [
   {
     question: "What happens after launch? Do you provide support?",
     answer:
-      "Yes. We include post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery — we treat every product as a long-term partnership.",
+      "Yes. Post-launch support for bug fixes, tweaks, and guidance is available, scoped in the proposal. We don't disappear after delivery — we treat every product as a long-term partnership.",
   },
   {
     question: "How do I get started?",
@@ -57,7 +57,7 @@ export const serviceFaqs: Faq[] = [
   {
     question: "What happens after my website or app launches?",
     answer:
-      "Every project includes post-launch support for bug fixes, tweaks, and guidance. We don't disappear after delivery. We treat every product as a long-term partnership and offer ongoing maintenance and feature development.",
+      "Post-launch support for bug fixes, tweaks, and guidance is available, scoped in the proposal. We don't disappear after delivery. We treat every product as a long-term partnership and offer ongoing maintenance and feature development.",
   },
   {
     question: "How is Meteoric different from other development agencies?",
@@ -85,7 +85,7 @@ export const workFaqs: Faq[] = [
   {
     question: "What does the process look like from first call to launch?",
     answer:
-      "A free discovery call to align on goals, then design direction, development in 10-day sprints with weekly updates, and launch. Post-launch support is included.",
+      "A free discovery call to align on goals, then design direction, development in 10-day sprints with weekly updates, and launch. Post-launch support is available, scoped in the proposal.",
   },
   {
     question: "What tech stack do you build with?",

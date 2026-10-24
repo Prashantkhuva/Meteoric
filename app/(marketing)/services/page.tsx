@@ -50,7 +50,7 @@ const howToSchema = buildHowToJsonLd([
   },
   {
     name: "Launch & Support",
-    text: "Deployment, optimization, and final polishing before the product goes live. Post-launch support and maintenance included with every project.",
+    text: "Deployment, optimization, and final polishing before the product goes live. Post-launch support and maintenance available for every project, scoped in the proposal.",
   },
 ],
   "How Meteoric builds web products",

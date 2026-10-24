@@ -77,7 +77,7 @@ export const services: Service[] = [
       {
         question: "Can I update the landing page myself after launch?",
         answer:
-          "Yes. We build on Next.js with a clean, documented codebase. We'll walk you through the basics or set up a simple CMS if you prefer. Post-launch support is included.",
+          "Yes. We build on Next.js with a clean, documented codebase. We'll walk you through the basics or set up a simple CMS if you prefer. Post-launch support is available, scoped in the proposal.",
       },
       {
         question: "Do you include SEO in landing page builds?",
@@ -278,7 +278,7 @@ export const services: Service[] = [
       },
       {
         heading: "What we build for startups",
-        body: "Landing pages that convert, marketing websites that rank, MVPs that validate, and SaaS platforms that scale. Our web development for startups covers the full spectrum: custom design, modern stack (Next.js + Supabase), SEO foundations, performance optimization, and deployment. Every project includes analytics, mobile responsiveness, and post-launch support.",
+        body: "Landing pages that convert, marketing websites that rank, MVPs that validate, and SaaS platforms that scale. Our web development for startups covers the full spectrum: custom design, modern stack (Next.js + Supabase), SEO foundations, performance optimization, and deployment. Every project includes analytics and mobile responsiveness, and post-launch support is available, scoped in the proposal.",
       },
       {
         heading: "Startup problems we solve",
@@ -306,7 +306,7 @@ export const services: Service[] = [
       {
         question: "How much does a startup website cost?",
         answer:
-          "Landing pages start at a fixed price and deliver in 3–7 days. Multi-page websites range from 1–3 weeks. Web applications and SaaS MVPs from 2–6 weeks. Contact us for a free quote based on your specific needs.",
+          "Landing pages start at a fixed price and deliver in 3–7 days. Multi-page websites range from 1–3 weeks. Web applications from 2–6 weeks and SaaS MVPs from 3–6 weeks. Contact us for a free quote based on your specific needs.",
       },
       {
         question: "How long does it take to build a startup MVP?",
