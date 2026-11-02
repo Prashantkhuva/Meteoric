@@ -74,7 +74,7 @@ class SkeletonBlock extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: color ?? AppColors.tint,
+        color: color ?? AppColors.borderSoft,
         borderRadius: borderRadius ?? AppRadius.smAll,
       ),
     );

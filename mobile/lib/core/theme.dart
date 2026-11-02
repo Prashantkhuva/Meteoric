@@ -359,9 +359,17 @@ class AppShadows {
         ),
       ];
 
-  /// Deprecated black shadows — kept as no-ops for compile compatibility.
-  static List<BoxShadow> get card => const [];
-  static List<BoxShadow> get subtle => const [];
+  /// Subtle card shadow — small blur for KPI cards and list items.
+  static List<BoxShadow> get subtle => const [
+        BoxShadow(
+          color: Color(0x0A0B1533),
+          blurRadius: 12,
+          offset: Offset(0, 4),
+        ),
+      ];
+
+  /// Deprecated — kept as no-op for compile compatibility.
+  static List<BoxShadow> get card => subtle;
 }
 
 /// Luminance-stacked surfaces — brighter = higher.

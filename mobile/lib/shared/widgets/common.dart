@@ -524,16 +524,16 @@ class LoadingView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
+            width: 32,
+            height: 32,
+            child: CircularProgressIndicator(strokeWidth: 3),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             label,
             style: TextStyle(
-              color: AppColors.textFaint,
-              fontSize: 12,
+              color: AppColors.textMuted,
+              fontSize: 13,
               fontFamily: 'Satoshi',
             ),
           ),

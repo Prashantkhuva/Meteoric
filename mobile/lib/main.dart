@@ -78,13 +78,7 @@ class _AuthGateState extends State<AuthGate> {
     if (!_ready) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(
-          child: SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-        ),
+        body: const LoadingView(label: 'Initializing...'),
       );
     }
     if (!AuthService.isSignedIn) return const LoginScreen();

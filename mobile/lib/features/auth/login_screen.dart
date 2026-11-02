@@ -96,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return UnfocusOnTap(
       child: Scaffold(
         backgroundColor: AppColors.background,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             const _LoginBackground(),
@@ -526,13 +527,7 @@ class _AuthSuccessState extends State<_AuthSuccess> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Center(
-        child: SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-      ),
+      body: const LoadingView(label: 'Signing in...'),
     );
   }
 }
