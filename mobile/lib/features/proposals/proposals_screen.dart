@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/api_client.dart';
 import '../../core/config.dart';
 import '../../core/constants.dart';
+import '../../core/data_cache.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -65,25 +66,35 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
     super.dispose();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
-      final res = await ApiClient.instance.proposalsList({
+      final params = {
         'page': _page,
         'pageSize': _pageSize,
         'search': _search.text.trim(),
         'status': _status,
         'sort': _sort,
-      });
+      };
+      final cacheKey = 'proposals_${_page}_${_status}_${_sort}_${_search.text.trim()}';
+
+      final (cached, isStale) = await DataCache.instance.getOrFetch(
+        key: cacheKey,
+        fetch: () => ApiClient.instance.proposalsList(params),
+        ttl: const Duration(minutes: 5),
+      );
+
       if (mounted) {
         setState(() {
-          _proposals = ((res['data'] as List?) ?? const [])
+          _proposals = ((cached?['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
-          _total = (res['total'] as num?)?.toInt() ?? 0;
+          _total = (cached?['total'] as num?)?.toInt() ?? 0;
           _selected.clear();
           _loading = false;
         });
@@ -119,14 +130,12 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
   ) async {
     if (!mounted) return;
     setState(() => _busy = true);
-    var failed = 0;
-    for (final id in _selected.toList()) {
-      try {
-        await action(id);
-      } catch (_) {
-        failed++;
-      }
-    }
+    final ids = _selected.toList();
+    final results = await Future.wait(
+      ids.map((id) => action(id).then((_) => true).catchError((_) => false)),
+      eagerError: false,
+    );
+    final failed = results.where((r) => !r).length;
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -137,7 +146,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
     } else {
       Toast.error(context, 'Completed with $failed failures');
     }
-    _load();
+    _load(silent: true);
   }
 
   Future<void> _bulkDelete() async {

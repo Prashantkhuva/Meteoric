@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../core/api_client.dart';
 import '../../core/config.dart';
 import '../../core/constants.dart';
+import '../../core/data_cache.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -66,25 +67,35 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     super.dispose();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
-      final res = await ApiClient.instance.invoicesList({
+      final params = {
         'page': _page,
         'pageSize': _pageSize,
         'search': _search.text.trim(),
         'status': _status,
         'sort': _sort,
-      });
+      };
+      final cacheKey = 'invoices_${_page}_${_status}_${_sort}_${_search.text.trim()}';
+
+      final (cached, isStale) = await DataCache.instance.getOrFetch(
+        key: cacheKey,
+        fetch: () => ApiClient.instance.invoicesList(params),
+        ttl: const Duration(minutes: 5),
+      );
+
       if (mounted) {
         setState(() {
-          _invoices = ((res['data'] as List?) ?? const [])
+          _invoices = ((cached?['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
-          _total = (res['total'] as num?)?.toInt() ?? 0;
+          _total = (cached?['total'] as num?)?.toInt() ?? 0;
           _selected.clear();
           _loading = false;
         });
@@ -120,14 +131,12 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
   ) async {
     if (!mounted) return;
     setState(() => _busy = true);
-    var failed = 0;
-    for (final id in _selected.toList()) {
-      try {
-        await action(id);
-      } catch (_) {
-        failed++;
-      }
-    }
+    final ids = _selected.toList();
+    final results = await Future.wait(
+      ids.map((id) => action(id).then((_) => true).catchError((_) => false)),
+      eagerError: false,
+    );
+    final failed = results.where((r) => !r).length;
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -138,7 +147,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
     } else {
       Toast.error(context, 'Completed with $failed failures');
     }
-    _load();
+    _load(silent: true);
   }
 
   Future<void> _bulkDelete() async {
@@ -431,18 +440,18 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
 
   Future<void> _openDetail(Map<String, dynamic> invoice) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => InvoiceDetailScreen(invoice: invoice)),
+      AppMotion.page(InvoiceDetailScreen(invoice: invoice)),
     );
     if (!mounted) return;
-    _load();
+    _load(silent: true);
   }
 
   Future<void> _openForm({Map<String, dynamic>? invoice}) async {
     final changed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => InvoiceFormScreen(invoice: invoice)),
+      AppMotion.page(InvoiceFormScreen(invoice: invoice)),
     );
     if (!mounted) return;
-    if (changed == true) _load();
+    if (changed == true) _load(silent: true);
   }
 }
 

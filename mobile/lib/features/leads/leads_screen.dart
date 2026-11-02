@@ -72,11 +72,13 @@ class _LeadsScreenState extends State<LeadsScreen> {
     super.dispose();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
       final params = {
         'page': _page,
@@ -141,9 +143,9 @@ class _LeadsScreenState extends State<LeadsScreen> {
     await _load();
   }
 
-  Future<void> _reload() async {
+  Future<void> _reload({bool silent = false}) async {
     _invalidateLeads();
-    await _load();
+    await _load(silent: silent);
   }
 
   int _id(Map<String, dynamic> row) => (row['id'] as num).toInt();
@@ -171,14 +173,14 @@ class _LeadsScreenState extends State<LeadsScreen> {
     final ok = await confirmBulkDelete(context, count: _selected.length);
     if (!ok || !mounted) return;
     setState(() => _busy = true);
-    var failed = 0;
-    for (final id in _selected.toList()) {
-      try {
-        await ApiClient.instance.leadDelete(id);
-      } catch (_) {
-        failed++;
-      }
-    }
+    final ids = _selected.toList();
+    final results = await Future.wait(
+      ids.map((id) => ApiClient.instance.leadDelete(id)
+          .then((_) => true)
+          .catchError((_) => false)),
+      eagerError: false,
+    );
+    final failed = results.where((r) => !r).length;
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -189,19 +191,19 @@ class _LeadsScreenState extends State<LeadsScreen> {
     } else {
       Toast.error(context, 'Deleted with $failed failures');
     }
-    _reload();
+    _reload(silent: true);
   }
 
   Future<void> _bulkStatus(String status) async {
     setState(() => _busy = true);
-    var failed = 0;
-    for (final id in _selected.toList()) {
-      try {
-        await ApiClient.instance.leadStatus(id, status);
-      } catch (_) {
-        failed++;
-      }
-    }
+    final ids = _selected.toList();
+    final results = await Future.wait(
+      ids.map((id) => ApiClient.instance.leadStatus(id, status)
+          .then((_) => true)
+          .catchError((_) => false)),
+      eagerError: false,
+    );
+    final failed = results.where((r) => !r).length;
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -212,7 +214,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
     } else {
       Toast.error(context, '$failed failed');
     }
-    _reload();
+    _reload(silent: true);
   }
 
   Future<List<Map<String, dynamic>>> _fetchAll() async {
@@ -556,17 +558,17 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   Future<void> _openDetail(Map<String, dynamic> lead) async {
     await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => LeadDetailScreen(lead: lead)));
+        .push(AppMotion.page(LeadDetailScreen(lead: lead)));
     if (!mounted) return;
-    _reload();
+    _reload(silent: true);
   }
 
   Future<void> _openForm({Map<String, dynamic>? lead}) async {
     final changed = await Navigator.of(context).push<Map<String, dynamic>?>(
-      MaterialPageRoute(builder: (_) => LeadFormScreen(lead: lead)),
+      AppMotion.page(LeadFormScreen(lead: lead)),
     );
     if (!mounted) return;
-    if (changed != null) _reload();
+    if (changed != null) _reload(silent: true);
   }
 }
 

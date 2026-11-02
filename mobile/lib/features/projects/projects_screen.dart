@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
+import '../../core/data_cache.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -64,25 +65,35 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     super.dispose();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
-      final res = await ApiClient.instance.projectsList({
+      final params = {
         'page': _page,
         'pageSize': _pageSize,
         'search': _search.text.trim(),
         'status': _status,
         'sort': _sort,
-      });
+      };
+      final cacheKey = 'projects_${_page}_${_status}_${_sort}_${_search.text.trim()}';
+
+      final (cached, isStale) = await DataCache.instance.getOrFetch(
+        key: cacheKey,
+        fetch: () => ApiClient.instance.projectsList(params),
+        ttl: const Duration(minutes: 5),
+      );
+
       if (mounted) {
         setState(() {
-          _projects = ((res['data'] as List?) ?? const [])
+          _projects = ((cached?['data'] as List?) ?? const [])
               .map((e) => (e as Map).cast<String, dynamic>())
               .toList();
-          _total = (res['total'] as num?)?.toInt() ?? 0;
+          _total = (cached?['total'] as num?)?.toInt() ?? 0;
           _selected.clear();
           _loading = false;
         });
@@ -118,14 +129,12 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   ) async {
     if (!mounted) return;
     setState(() => _busy = true);
-    var failed = 0;
-    for (final id in _selected.toList()) {
-      try {
-        await action(id);
-      } catch (_) {
-        failed++;
-      }
-    }
+    final ids = _selected.toList();
+    final results = await Future.wait(
+      ids.map((id) => action(id).then((_) => true).catchError((_) => false)),
+      eagerError: false,
+    );
+    final failed = results.where((r) => !r).length;
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -136,7 +145,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     } else {
       Toast.error(context, 'Completed with $failed failures');
     }
-    _load();
+    _load(silent: true);
   }
 
   Future<void> _bulkDelete() async {
@@ -397,18 +406,18 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   Future<void> _openDetail(Map<String, dynamic> project) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => ProjectDetailScreen(project: project)),
+      AppMotion.page(ProjectDetailScreen(project: project)),
     );
     if (!mounted) return;
-    _load();
+    _load(silent: true);
   }
 
   Future<void> _openForm({Map<String, dynamic>? project}) async {
     final changed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => ProjectFormScreen(project: project)),
+      AppMotion.page(ProjectFormScreen(project: project)),
     );
     if (!mounted) return;
-    if (changed == true) _load();
+    if (changed == true) _load(silent: true);
   }
 }
 
