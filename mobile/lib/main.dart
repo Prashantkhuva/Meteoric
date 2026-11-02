@@ -12,6 +12,7 @@ import 'core/data_cache.dart';
 import 'features/auth/login_screen.dart';
 import 'features/home/home_shell.dart';
 import 'features/onboarding/onboarding_screen.dart';
+import 'shared/widgets/common.dart';
 
 final _navKey = GlobalKey<NavigatorState>();
 final _routeObserver = ErrorRouteObserver();

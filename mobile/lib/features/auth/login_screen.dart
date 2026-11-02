@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/supabase.dart';
 import '../../core/theme.dart';
 import '../../main.dart';
+import '../../shared/widgets/common.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
