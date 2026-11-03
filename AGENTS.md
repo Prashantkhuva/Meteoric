@@ -111,8 +111,9 @@ workers/          — Cloudflare Workers
 | Razorpay | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | test mode |
 
 ## Flutter Mobile App (mobile/)
-- **SDK:** Flutter 3.47.0 at `C:\flutter` (add `/c/flutter/flutter/bin` to PATH per session)
-- **Android SDK:** `C:\Users\PRASHANT\AppData\Local\Android\sdk` (setx `ANDROID_HOME`); cmdline-tools at `sdk/cmdline-tools/latest`
+- **SDK:** Flutter 3.47.0 at `D:\flutter` (use `D:/flutter/flutter/bin/flutter` — not on PATH by default)
+- **Android SDK:** `D:\Android\Sdk` (`ANDROID_HOME`/`ANDROID_SDK_ROOT` env set); cmdline-tools at `sdk/cmdline-tools/latest`
+- **Tool paths moved to D: (2026-11-03):** `PUB_CACHE=D:\PubCache`, `GRADLE_USER_HOME=D:\gradle-home`, gradle caches at `D:\gradle-cache`. `C:\Users\PRASHANT\.gradle` and `C:\...\AppData\Local\Android\Sdk` no longer exist. Shorebird NOT moved — still `C:\Users\PRASHANT\.shorebird` (on PATH).
 - **JDK:** Temurin 21 at `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot` (flutter config `--jdk-dir` set)
 - **compileSdk:** 37 (required by flutter_secure_storage); `gradle.properties` has `kotlin.incremental=false` + `kotlin.compiler.execution.strategy=in-process` (Windows file-lock workaround for "Could not close incremental caches")
 - **Release signing:** `mobile/android/key.properties` (gitignored) + `app/meteoric-release.jks` (gitignored); alias `meteoric`. Install APK = gradle `build/app/outputs/flutter-apk/app-release.apk` (v2-signed). In CI, `shorebird-release@v1` handles registration + build together (no separate local step). If building locally outside CI, use Shorebird's forked Flutter (on PATH via `~/.shorebird/bin`) so the OTA engine is embedded; stock Flutter builds have no engine at all. `shorebird releases get-apks` / `universal.apk` are legacy — invariant 2 below forbids using them.
