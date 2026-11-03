@@ -158,6 +158,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   }
 
   Future<void> _changeStatus(String status) async {
+    if (_busy) return;
     setState(() => _busy = true);
     try {
       await ApiClient.instance.invoiceStatus(

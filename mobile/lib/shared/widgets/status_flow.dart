@@ -140,6 +140,28 @@ class StatusFlowSection extends StatelessWidget {
                 fontFamily: 'Satoshi',
               ),
             )
+          else if (busy)
+            Row(
+              children: [
+                SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.accent,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Updating status…',
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12,
+                    fontFamily: 'Satoshi',
+                  ),
+                ),
+              ],
+            )
           else
             Wrap(
               spacing: 8,

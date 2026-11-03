@@ -28,6 +28,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
   }
 
   Future<void> _changeStatus(String status) async {
+    if (_busy) return;
     setState(() => _busy = true);
     try {
       await ApiClient.instance.clientStatus(

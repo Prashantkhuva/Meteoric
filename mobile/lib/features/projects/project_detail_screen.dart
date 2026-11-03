@@ -35,6 +35,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   Future<void> _changeStatus(String status) async {
+    if (_busy) return;
     setState(() => _busy = true);
     try {
       await ApiClient.instance.projectStatus(

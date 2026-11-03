@@ -126,7 +126,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
   Future<void> _runBulk(
     Future<Map<String, dynamic>> Function(int id) action,
   ) async {
-    if (!mounted) return;
+    if (!mounted || _busy) return;
     setState(() => _busy = true);
     final ids = _selected.toList();
     final results = await Future.wait(

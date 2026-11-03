@@ -45,6 +45,7 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
   String get _currency => (_proposal['currency'] as String?) ?? 'USD';
 
   Future<void> _changeStatus(String status) async {
+    if (_busy) return;
     setState(() => _busy = true);
     try {
       await ApiClient.instance.proposalStatus(

@@ -170,6 +170,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
   }
 
   Future<void> _bulkDelete() async {
+    if (_busy) return;
     final ok = await confirmBulkDelete(context, count: _selected.length);
     if (!ok || !mounted) return;
     setState(() => _busy = true);
@@ -195,6 +196,7 @@ class _LeadsScreenState extends State<LeadsScreen> {
   }
 
   Future<void> _bulkStatus(String status) async {
+    if (_busy) return;
     setState(() => _busy = true);
     final ids = _selected.toList();
     final results = await Future.wait(

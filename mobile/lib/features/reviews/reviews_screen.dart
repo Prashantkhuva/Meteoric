@@ -28,6 +28,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   String _status = 'all';
   String _sort = 'newest';
   bool _loading = true;
+  bool _busy = false;
   Object? _error;
 
   final _search = TextEditingController();
@@ -95,6 +96,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   Future<void> _action(int id, String action, {bool? verified}) async {
+    if (_busy) return;
+    setState(() => _busy = true);
     try {
       if (action == 'verified') {
         await ApiClient.instance.reviewVerified(id, verified ?? true);
@@ -114,10 +117,13 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       _load();
     } catch (err) {
       if (mounted) _snack(err.toString(), isError: true);
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
   }
 
   Future<void> _delete(int id) async {
+    if (_busy) return;
     final ok = await showAppDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -268,6 +274,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, i) => _ReviewCard(
           review: _reviews[i],
+          busy: _busy,
           onVerified: (v) => _action(
             (_reviews[i]['id'] as num).toInt(),
             'verified',
@@ -284,12 +291,14 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 class _ReviewCard extends StatelessWidget {
   const _ReviewCard({
     required this.review,
+    required this.busy,
     required this.onVerified,
     required this.onStatus,
     required this.onDelete,
   });
 
   final Map<String, dynamic> review;
+  final bool busy;
   final ValueChanged<bool> onVerified;
   final ValueChanged<String> onStatus;
   final VoidCallback onDelete;
@@ -407,16 +416,20 @@ class _ReviewCard extends StatelessWidget {
 
   Widget _chip(String label, Color color, VoidCallback onTap) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: busy ? null : onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          border: Border.all(color: color.withValues(alpha: 0.4)),
+          border: Border.all(
+            color: busy
+                ? AppColors.border
+                : color.withValues(alpha: 0.4),
+          ),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: color,
+            color: busy ? AppColors.textFaint : color,
             fontSize: 10,
             fontWeight: FontWeight.w600,
             fontFamily: 'Satoshi',
