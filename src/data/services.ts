@@ -21,9 +21,9 @@ export const services: Service[] = [
     title: "Landing Pages",
     shortDescription:
       "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
-    metadataTitle: "Landing Page Development Services | Next.js & SEO",
+    metadataTitle: "Landing Page Development | Next.js & SEO",
     metadataDescription:
-      "Build fast, conversion-focused landing pages with Next.js, responsive design, animation, and SEO foundations tailored to your product, startup, or business.",
+      "Build fast, conversion-focused landing pages with Next.js, responsive design, animation, and SEO foundations tailored to your product or startup.",
     h1: ["Landing Page", "Development"],
     tagline: "High-converting landing pages that ship in days.",
     directAnswer:
@@ -227,9 +227,9 @@ export const services: Service[] = [
     title: "Full-Stack Development",
     shortDescription:
       "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
-    metadataTitle: "Startup Web Development | Websites & Web Products",
+    metadataTitle: "Startup Web Development | Websites & Apps",
     metadataDescription:
-      "Custom web development for startups, from product websites and marketing pages to full web applications built with modern frontend and backend technologies.",
+      "Custom web development for startups, from product websites and marketing pages to full web applications built with frontend and backend technologies.",
     h1: ["Startup Web", "Development"],
     tagline: "The web development agency that ships like a startup.",
     directAnswer:
@@ -397,9 +397,9 @@ export const services: Service[] = [
     title: "Web Applications",
     shortDescription:
       "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
-    metadataTitle: "Web Application Development Services | Full-Stack",
+    metadataTitle: "Web Application Development | Full-Stack",
     metadataDescription:
-      "Custom web application development — dashboards, internal tools, and customer-facing platforms with modern frontend, backend, database, and API architecture.",
+      "Custom web application development — dashboards, internal tools, and customer-facing platforms with frontend, backend, database, and API architecture.",
     h1: ["Web Application", "Development"],
     tagline: "Custom web apps that are fast, reliable, and a pleasure to use.",
     directAnswer:

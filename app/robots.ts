@@ -4,7 +4,16 @@ export default function robots() {
   return {
     rules: [
       {
-        userAgent: "*",
+        userAgent: [
+          "*",
+          "GPTBot",
+          "ChatGPT-User",
+          "OAI-SearchBot",
+          "ClaudeBot",
+          "anthropic-ai",
+          "PerplexityBot",
+          "Google-Extended",
+        ],
         allow: "/",
         disallow: [
           "/admin",

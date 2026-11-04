@@ -6,7 +6,7 @@ import { projects } from "@/data/projects";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildBreadcrumbJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Case Studies — SaaS MVP & Full-Stack Breakdowns";
+const pageTitle = "Case Studies — SaaS MVP & Full-Stack";
 const pageDesc =
   "In-depth breakdowns of how Meteoric ships SaaS MVPs and full-stack apps for startups — architecture, stack choices, and results.";
 

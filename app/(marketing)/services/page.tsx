@@ -5,7 +5,7 @@ import { buildFaqJsonLd, buildHowToJsonLd, buildBreadcrumbJsonLd } from "@/lib/s
 import { serviceFaqs } from "@/data/faqs";
 import JsonLd from "@/components/seo/JsonLd";
 
-const pageTitle = "Software Development Services — SaaS & Web Apps";
+const pageTitle = "Software Development Services — SaaS & Web";
 const pageDesc =
   "Explore Meteoric's software development services for startups — SaaS development, Next.js applications, landing pages, and full-stack web development.";
 

@@ -296,6 +296,8 @@ export interface Article {
   title: string;
   /** Optional shorter title for the <title> tag; falls back to `title`. */
   seoTitle?: string;
+  /** Optional shorter meta description for the <description> tag; falls back to `description`. og/twitter keep `description`. */
+  seoDescription?: string;
   description: string;
   tagline: string;
   /** Optional lead paragraphs rendered before the first section (no H2). */

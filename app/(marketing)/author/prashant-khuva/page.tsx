@@ -62,16 +62,20 @@ function formatDate(dateStr: string) {
   });
 }
 
+const AUTHOR_META_TITLE = "Prashant Khuva — Founder & Full-Stack Dev";
+const AUTHOR_META_DESC =
+  "Prashant Khuva — Founder & Full-Stack Developer at Meteoric. Specializes in React, Next.js, Node.js & Supabase. No account managers.";
+
 export function generateMetadata() {
   return {
-    title: `${authorData.name} — ${authorData.title}`,
-    description: `${authorData.name} — ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+    title: AUTHOR_META_TITLE,
+    description: AUTHOR_META_DESC,
     alternates: {
       canonical: `${SITE_URL}/author/prashant-khuva`,
     },
     openGraph: {
-      title: `${authorData.name} — ${authorData.title}`,
-      description: `${authorData.name} — ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+      title: AUTHOR_META_TITLE,
+      description: AUTHOR_META_DESC,
       url: `${SITE_URL}/author/prashant-khuva`,
       type: "profile",
       images: [
@@ -88,8 +92,8 @@ export function generateMetadata() {
       card: "summary_large_image",
       site: "@prashantkhuva_",
       creator: "@prashantkhuva_",
-      title: `${authorData.name} — ${authorData.title}`,
-      description: `${authorData.name} — ${authorData.title} at ${SITE_NAME}. ${authorData.bio}`,
+      title: AUTHOR_META_TITLE,
+      description: AUTHOR_META_DESC,
       images: [`${SITE_URL}${DEFAULT_OG_IMAGE}`],
     },
   };
@@ -264,7 +268,7 @@ export default function AuthorPage() {
                     >
                       <Image
                         src={postImage(post)}
-                        alt=""
+                        alt={post.title}
                         fill
                         sizes="(max-width: 640px) 100vw, 200px"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"

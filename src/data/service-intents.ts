@@ -13,7 +13,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
     path: "/saas-mvp-development",
     metadataTitle: "Hire a SaaS MVP Developer for Startups",
     metadataDescription:
-      "Hire a founder-led SaaS MVP developer — scope the core product, build auth, billing, and dashboards, and ship a launch-ready MVP with one dedicated builder.",
+      "Hire a founder-led SaaS MVP developer — scope the product, build auth, billing, and dashboards, and ship a launch-ready MVP with a dedicated builder.",
     h1: "Hire a SaaS MVP developer to prove your product",
     directAnswer:
       "Meteoric is a founder-led SaaS MVP development studio. One engineer scopes your core features, designs the product, builds auth, billing, dashboards, and APIs, and ships a production-ready MVP — most focused MVPs run on a 3–6 week timeline.",
@@ -113,9 +113,9 @@ export const serviceIntentPages: ServiceIntentPage[] = [
 
   {
     path: "/nextjs-development-agency",
-    metadataTitle: "Next.js Development Agency for Startups & SaaS",
+    metadataTitle: "Next.js Development Agency, Startups & SaaS",
     metadataDescription:
-      "Meteoric is a founder-led Next.js development agency: marketing sites, SaaS frontends, and web apps with server rendering and SEO built in from day one.",
+      "Meteoric is a founder-led Next.js development agency: marketing sites, SaaS frontends, and web apps with server rendering and SEO built in.",
     h1: "A Next.js development agency for startups and SaaS products",
     directAnswer:
       "Meteoric is a founder-led Next.js development agency. We design and build marketing sites, SaaS frontends, and full web applications on Next.js — server rendering, routing, and SEO handled as part of the build, not bolted on afterwards.",
@@ -216,7 +216,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
     path: "/startup-landing-page-design",
     metadataTitle: "Startup Landing Page Design for Launch",
     metadataDescription:
-      "Founder-led landing page design for startups — one focused, fast page that explains your product, earns trust, and gives visitors a single clear action to sign up or book a call.",
+      "Founder-led landing page design for startups — one fast page that explains your product, earns trust, and gives visitors a single clear action.",
     h1: "Landing page design for startups launching a product",
     directAnswer:
       "Meteoric designs and builds startup landing pages: one focused page that explains the product, shows proof, and gives visitors a single clear action. Designed and coded by the founder of the studio, so what you approve is what ships.",
@@ -316,7 +316,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
     path: "/web-app-development",
     metadataTitle: "Web App Development for Startups & SaaS",
     metadataDescription:
-      "Meteoric builds custom web apps — dashboards, portals, and full-stack products — with Next.js, Node.js, and Postgres. Founder-led from data model to deploy.",
+      "Meteoric builds custom web apps — dashboards, portals, and full-stack products — with Next.js, Node.js, and Postgres. Founder-led end to end.",
     h1: "Web app development for dashboards, portals, and SaaS products",
     directAnswer:
       "Meteoric builds custom web applications end to end: data model, API, frontend, and deployment. Common builds include SaaS dashboards, internal tools, and client portals — engineered by the founder of the studio, not handed down a chain of teams.",

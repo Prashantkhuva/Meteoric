@@ -535,3 +535,8 @@ input[type="number"]:hover::-webkit-inner-spin-button,
 input[type="number"]:hover::-webkit-outer-spin-button {
   opacity: 1;
 }
+
+/* ── Anchor offset for fixed navbar (in-page heading ids) ── */
+:is(h2, h3)[id] {
+  scroll-margin-top: 5.5rem;
+}

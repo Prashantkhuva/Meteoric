@@ -40,6 +40,7 @@
     "node_modules",
     "mobile",
     "workers",
-    "build"
+    "build",
+    "claude-blog"
   ]
 }

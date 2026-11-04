@@ -10,7 +10,7 @@ import { homeFaqs } from "@/data/faqs";
 import { processSteps } from "@/data/process-steps";
 
 const pageDesc =
-  "Meteoric is a founder-led software development studio building SaaS products, web applications, and high-performance websites for startups and growing businesses.";
+  "Meteoric is a founder-led software development studio building SaaS products, web applications, and websites for startups and growing businesses.";
 
 // No `title` here — inherits the site default (SITE_TITLE) from the root layout.
 export const metadata = pageMetadata({

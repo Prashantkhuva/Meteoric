@@ -34,7 +34,7 @@ export async function generateMetadata({
   const ogPath = slugToOg[slug];
   return {
     title: post.seoTitle || post.title,
-    description: post.description,
+    description: post.seoDescription || post.description,
     alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     openGraph: {
       title: post.title,
@@ -99,6 +99,14 @@ const postService: Record<string, { href: string; label: string }> = {
 function readingTime(sections: ArticleSection[]) {
   const words = sections.reduce((acc, s) => acc + s.body.split(/\s+/).length, 0);
   return Math.max(1, Math.ceil(words / 200));
+}
+
+function headingId(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
 }
 
 function renderBold(text: string, key: string) {
@@ -444,7 +452,7 @@ export default async function BlogPost({
                   <span className="font-display text-[13px] tabular-nums shrink-0 pt-1" style={{ color: "var(--text-muted)" }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h2 className="font-display text-[24px] sm:text-[26px] md:text-[30px] leading-[1.2] tracking-[-0.015em] text-balance" style={{ color: "var(--text-primary)" }}>
+                  <h2 id={headingId(section.heading)} className="font-display text-[24px] sm:text-[26px] md:text-[30px] leading-[1.2] tracking-[-0.015em] text-balance" style={{ color: "var(--text-primary)" }}>
                     {section.heading}
                   </h2>
                 </div>
@@ -459,7 +467,7 @@ export default async function BlogPost({
           {(post.faqs?.length ?? 0) > 0 && (
             <div className="mt-20 pt-14 max-w-[700px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
               <ScrollReveal direction="right" className="mb-8">
-                <h2 className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]" style={{ color: "var(--text-primary)" }}>
+                <h2 id="frequently-asked-questions" className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]" style={{ color: "var(--text-primary)" }}>
                   Frequently Asked Questions
                 </h2>
               </ScrollReveal>
@@ -471,7 +479,7 @@ export default async function BlogPost({
           {(post.furtherReading?.length ?? 0) > 0 && (
             <div className="mt-20 pt-14 max-w-[700px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
               <ScrollReveal direction="right" className="mb-8">
-                <h2 className="text-[11px] uppercase tracking-[0.1em] font-medium" style={{ color: "var(--text-muted)" }}>
+                <h2 id="further-reading" className="text-[11px] uppercase tracking-[0.1em] font-medium" style={{ color: "var(--text-muted)" }}>
                   Further reading
                 </h2>
               </ScrollReveal>
@@ -510,7 +518,7 @@ export default async function BlogPost({
                 <p className="text-[10px] font-medium uppercase tracking-[0.16em] mb-2" style={{ color: "var(--text-muted)" }}>
                   Written by
                 </p>
-                <h3 className="font-display text-lg mb-1.5" style={{ color: "var(--text-primary)" }}>
+                <h3 id="author" className="font-display text-lg mb-1.5" style={{ color: "var(--text-primary)" }}>
                   <Link
                     href="/author/prashant-khuva"
                     className="underline-offset-4 hover:underline transition-all duration-200 hover:opacity-70"
@@ -561,7 +569,7 @@ export default async function BlogPost({
                 <p className="text-[10px] font-medium uppercase tracking-[0.16em] mb-3" style={{ color: "var(--text-muted)" }}>
                   Keep reading
                 </p>
-                <h2 className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]" style={{ color: "var(--text-primary)" }}>
+                <h2 id="continue-reading" className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]" style={{ color: "var(--text-primary)" }}>
                   Continue Reading
                 </h2>
               </ScrollReveal>
@@ -598,7 +606,7 @@ export default async function BlogPost({
             <p className="text-[10px] font-medium uppercase tracking-[0.18em] mb-4" style={{ color: "var(--text-muted)" }}>
               Meteoric
             </p>
-            <h3 className="font-display text-[26px] sm:text-[32px] md:text-[38px] leading-[1.15] tracking-[-0.015em] mb-4 text-balance" style={{ color: "var(--text-primary)" }}>
+            <h3 id="have-a-project-in-mind" className="font-display text-[26px] sm:text-[32px] md:text-[38px] leading-[1.15] tracking-[-0.015em] mb-4 text-balance" style={{ color: "var(--text-primary)" }}>
               Have a project in mind?
             </h3>
             <p className="text-[15px] leading-[1.7] mb-9 max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
