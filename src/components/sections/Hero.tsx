@@ -168,6 +168,17 @@ function Hero() {
           {/* Headline */}
           <div className="max-w-md">
             <h1
+              className="font-medium uppercase tracking-[0.16em] mb-3"
+              style={{
+                color: "#ffffff",
+                fontSize: "clamp(0.75rem, 1vw, 0.8125rem)",
+                lineHeight: 1.4,
+                textShadow: "0 1px 2px rgba(1,4,5,0.85)",
+              }}
+            >
+              Web & SaaS Development for Startups
+            </h1>
+            <p
               className="font-semibold leading-[1.1] tracking-[-0.02em] mb-2"
               style={{
                 color: "#ffffff",
@@ -175,14 +186,14 @@ function Hero() {
               }}
             >
               <span ref={mainTextRef} className="block">
-                Ship Fast.
+                Ship Fast.{" "}
               </span>
               <span
                 ref={mutedTextRef}
                 className="block"
                 style={{ color: "#ffffff" }}
               >
-                Ship Right.
+                Ship Right.{" "}
               </span>
               <span
                 className="block"
@@ -190,7 +201,7 @@ function Hero() {
               >
                 Ship Meteoric.
               </span>
-            </h1>
+            </p>
           </div>
 
           {/* Description — mobile: under headline; desktop: right column */}

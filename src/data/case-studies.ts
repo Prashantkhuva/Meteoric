@@ -144,7 +144,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Blog / editorial platform",
     timeline: "5 weeks",
     role: "Full-stack development, UI/UX design",
-    metaTitle: "MegaBlog — Blog Platform Case Study",
+    metaTitle: "MegaBlog — Editorial Blog Platform Case Study",
     metaDescription:
       "How Meteoric built MegaBlog: a React 19 + Appwrite editorial platform with TinyMCE rich text editing, full CRUD, and dark editorial design.",
     challenge:

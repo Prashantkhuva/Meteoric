@@ -62,7 +62,7 @@ function formatDate(dateStr: string) {
   });
 }
 
-const AUTHOR_META_TITLE = "Prashant Khuva — Founder & Full-Stack Dev";
+const AUTHOR_META_TITLE = "Prashant Khuva — Founder & Full-Stack Developer";
 const AUTHOR_META_DESC =
   "Prashant Khuva — Founder & Full-Stack Developer at Meteoric. Specializes in React, Next.js, Node.js & Supabase. No account managers.";
 

@@ -21,7 +21,7 @@ export const services: Service[] = [
     title: "Landing Pages",
     shortDescription:
       "High-converting, fast-loading landing pages designed to make a lasting impression. Built with Next.js and optimized for SEO, speed, and conversion.",
-    metadataTitle: "Landing Page Development | Next.js & SEO",
+    metadataTitle: "Landing Page Development Services | Next.js",
     metadataDescription:
       "Build fast, conversion-focused landing pages with Next.js, responsive design, animation, and SEO foundations tailored to your product or startup.",
     h1: ["Landing Page", "Development"],
@@ -227,7 +227,7 @@ export const services: Service[] = [
     title: "Full-Stack Development",
     shortDescription:
       "Frontend to backend, database to deployment. We build complete systems — APIs, auth, integrations, and polished interfaces — all under one roof.",
-    metadataTitle: "Startup Web Development | Websites & Apps",
+    metadataTitle: "Startup Web Development | Websites & Products",
     metadataDescription:
       "Custom web development for startups, from product websites and marketing pages to full web applications built with frontend and backend technologies.",
     h1: ["Startup Web", "Development"],
@@ -397,7 +397,7 @@ export const services: Service[] = [
     title: "Web Applications",
     shortDescription:
       "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
-    metadataTitle: "Web Application Development | Full-Stack",
+    metadataTitle: "Web Application Development Services | Full-Stack",
     metadataDescription:
       "Custom web application development — dashboards, internal tools, and customer-facing platforms with frontend, backend, database, and API architecture.",
     h1: ["Web Application", "Development"],

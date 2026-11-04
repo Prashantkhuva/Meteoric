@@ -113,7 +113,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
 
   {
     path: "/nextjs-development-agency",
-    metadataTitle: "Next.js Development Agency, Startups & SaaS",
+    metadataTitle: "Next.js Development Agency for Startups & SaaS",
     metadataDescription:
       "Meteoric is a founder-led Next.js development agency: marketing sites, SaaS frontends, and web apps with server rendering and SEO built in.",
     h1: "A Next.js development agency for startups and SaaS products",

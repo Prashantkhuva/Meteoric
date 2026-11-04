@@ -182,6 +182,17 @@ export default function ServicesSection() {
       <GridLines />
 
       <div className="px-6 md:px-16 lg:px-20 max-w-[1200px] mx-auto">
+        {/* Intro — lives here (not in the hero) so the primary CTA stays
+            above the fold on 375px viewports */}
+        <p
+          className="pt-16 md:pt-24 max-w-2xl text-[15px] md:text-base leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          Meteoric is a founder-led software development studio that builds SaaS
+          products, web applications, and landing pages for startups. You work
+          directly with the founder, with no account managers in between.
+        </p>
+
         {/* Header */}
         <div ref={headingRef} className="pt-16 pb-10 lg:pt-24 lg:pb-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">

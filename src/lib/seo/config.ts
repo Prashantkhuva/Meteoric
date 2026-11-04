@@ -13,7 +13,7 @@ export const SITE_NAME = "Meteoric";
 
 /** Default <title>. Pages that do not export a title inherit this. */
 export const SITE_TITLE =
-  "Meteoric | Software Development Agency for Startups";
+  "Meteoric | Software Development Agency for Startups & SaaS";
 
 /** Applied to every page title that exports a plain string. */
 export const TITLE_TEMPLATE = "%s | Meteoric";

@@ -4,7 +4,7 @@ export const homeFaqs: Faq[] = [
   {
     question: "What's your typical development process?",
     answer:
-      "We start with a discovery call to understand your vision and requirements. Then we move through design direction, development sprints, and finally launch. The entire process is transparent with weekly updates and a clear timeline.",
+      "We start with a discovery call to understand your vision and requirements. Then we move through design direction, build phases, and launch. The entire process is transparent with weekly updates and a clear timeline.",
   },
   {
     question: "How long does it take to build a website or SaaS?",
@@ -29,7 +29,7 @@ export const homeFaqs: Faq[] = [
   {
     question: "What kinds of founders or businesses are a good fit?",
     answer:
-      "Meteoric works best with founders and small teams who want direct access to the person building their product, a clearly scoped first version, and transparent 10-day sprint cycles. It's a poor fit for engagements that need large teams, formal account management, or enterprise procurement processes.",
+      "Meteoric works best with founders and small teams who want direct access to the person building their product, a clearly scoped first version, and transparent scope and direct access to the person building the product. It's a poor fit for engagements that need large teams, formal account management, or enterprise procurement processes.",
   },
 ];
 
