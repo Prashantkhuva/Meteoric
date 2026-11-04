@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 export interface StaggerTextProps extends HTMLAttributes<HTMLSpanElement> {
@@ -22,51 +22,54 @@ export default function StaggerText({
   ...rest
 }: StaggerTextProps) {
   const [internalHovered, setInternalHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
   const hovered = externalHovered !== undefined ? externalHovered : internalHovered;
   const content = text || (typeof children === "string" ? children : "");
   const words = content.split(" ");
 
+  // Word-level roll: the server HTML keeps the real text as plain readable
+  // text nodes (one per word, real spaces between). The aria-hidden enter
+  // layer is mounted client-side only, so it never appears in the built HTML.
   useEffect(() => {
-    ref.current?.classList.add("st-runtime");
+    setMounted(true);
   }, []);
 
   return (
     <span
       ref={ref}
-      className={className}
-      style={{ ...style, lineHeight: 1.25 }}
+      className={hovered ? `${className ?? ""} st-hover`.trim() : className}
+      style={
+        {
+          ...style,
+          lineHeight: 1.25,
+          ...(hoverColor ? { "--st-hover": hoverColor } : null),
+        } as CSSProperties
+      }
       onMouseEnter={() => setInternalHovered(true)}
       onMouseLeave={() => setInternalHovered(false)}
       {...rest}
     >
-        {words.map((word, wi) => (
-          <span key={wi} className="st-word">
-            {word.split("").map((char, ci) => {
-              const delay = `${(wi * word.length + ci) * 30}ms`;
-              const charStyle = { transitionDelay: delay };
-              const enterStyle = { transitionDelay: delay, color: hoverColor };
-
-              return (
-                <span key={ci} className="st-char-wrap" style={{ height: "1.25em" }}>
-                  <span
-                    className={`st-char ${hovered ? "exit" : ""}`}
-                    style={charStyle}
-                  >
-                    {char}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className={`st-char-enter ${hovered ? "enter" : ""}`}
-                    style={enterStyle}
-                  >
-                    {char}
-                  </span>
+      {content === "" ? (
+        children
+      ) : (
+        words.map((word, wi) => (
+          <Fragment key={wi}>
+            {wi > 0 ? " " : null}
+            <span
+              className="st-word"
+              style={{ "--sw": `${wi * 45}ms` } as CSSProperties}
+            >
+              <span className="st-word-inner">{word}</span>
+              {mounted && (
+                <span aria-hidden="true" className="st-word-enter">
+                  {word}
                 </span>
-              );
-            })}
-          </span>
-        ))}
-      </span>
+              )}
+            </span>
+          </Fragment>
+        ))
+      )}
+    </span>
   );
 }
