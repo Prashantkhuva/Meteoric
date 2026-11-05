@@ -147,6 +147,7 @@ html.lenis {
   left: 0;
   color: var(--st-hover, currentColor);
   transform: translateY(110%);
+  user-select: none;
 }
 .st-hover .st-word-inner {
   transform: translateY(-110%);
