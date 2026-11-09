@@ -126,46 +126,42 @@ html.lenis {
   outline-offset: 2px;
 }
 
-/* ── StaggerText (word-level) ── */
+/* ── StaggerText ── */
 .st-word {
+  display: inline-flex;
+  margin-right: 0.3em;
+}
+.st-word:last-child {
+  margin-right: 0;
+}
+.st-char-wrap {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  height: 1.25em;
   vertical-align: top;
 }
-.st-word-inner,
-.st-word-enter {
+.st-char {
   display: inline-block;
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: var(--sw, 0ms);
   will-change: transform;
 }
-.st-word-enter {
+.st-char.exit {
+  transform: translateY(-110%);
+}
+.st-char-enter {
+  display: none;
+}
+.st-runtime .st-char-enter {
+  display: inline-block;
   position: absolute;
   top: 0;
   left: 0;
-  color: var(--st-hover, currentColor);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
   transform: translateY(110%);
-  user-select: none;
 }
-.st-hover .st-word-inner {
-  transform: translateY(-110%);
-}
-.st-hover .st-word-enter {
-  transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  .st-word-inner,
-  .st-word-enter {
-    transition: none;
-  }
-  .st-hover .st-word-inner {
-    transform: none;
-  }
-  .st-hover .st-word-enter {
-    transform: translateY(110%);
-  }
+.st-char-enter.enter {
+  transform: translateY(0%);
 }
 
 /* ── Hide scrollbars ── */
