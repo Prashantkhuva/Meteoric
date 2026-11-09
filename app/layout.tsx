@@ -90,7 +90,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <JsonLd data={buildOrganizationJsonLd()} />
         <JsonLd data={buildWebSiteJsonLd()} />
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="Sp6fJOBHvNDqwfTbQoLFcA"
+          async
+        />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://analytics.ahrefs.com" />
         <link
           rel="preconnect"
           href={
