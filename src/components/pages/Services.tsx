@@ -22,73 +22,11 @@ export default function ServicesPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] max-w-lg" style={{ color: "var(--text-primary)" }}>
             Web Development Services
           </h1>
-        </div>
-        <div className="max-w-3xl text-[15px] leading-relaxed mb-8" style={{ color: "var(--text-secondary)" }}>
-          <p className="mb-4">
-            Meteoric is a founder-led web development studio. Every project is
-            designed, built, and shipped by the same person you talk to on the
-            first call — no account managers, no handoff chains.
-          </p>
-          <p className="mb-4">
-            We work across five service lines, each solving a different stage of
-            the product journey.{" "}
-            <Link
-              href="/services/landing-pages"
-              className="text-[var(--accent)] hover:underline underline-offset-4"
-            >
-              High-converting landing pages
-            </Link>{" "}
-            for launches and campaigns that need to convert from day one.{" "}
-            <Link
-              href="/services/saas-development"
-              className="text-[var(--accent)] hover:underline underline-offset-4"
-            >
-              End-to-end SaaS development
-            </Link>{" "}
-            for founders taking a product from idea to production.{" "}
-            <Link
-              href="/services/startup-web-development"
-              className="text-[var(--accent)] hover:underline underline-offset-4"
-            >
-              Startup web development
-            </Link>{" "}
-            covering product sites, marketing pages, and full-stack builds for
-            early teams.{" "}
-            <Link
-              href="/services/nextjs-development"
-              className="text-[var(--accent)] hover:underline underline-offset-4"
-            >
-              Next.js development
-            </Link>{" "}
-            for teams that want React-based apps with SEO foundations and
-            performance baked in. And{" "}
-            <Link
-              href="/services/web-applications"
-              className="text-[var(--accent)] hover:underline underline-offset-4"
-            >
-              custom web application development
-            </Link>{" "}
-            — dashboards, portals, and internal tools built around how your team
-            actually works.
-          </p>
-          <p>
-            Not sure which fits? Start with a free strategy call — we&apos;ll
-            map the smallest version that gets you to the next milestone.
+          <p className="text-[15px] max-w-md leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            Founder-led web and Next.js development for startups — from landing
+            pages to full SaaS products and web apps.
           </p>
         </div>
-        <button
-          onClick={() => {
-            trackEvent("services_cta_click", { button_location: "/services" });
-            openCal();
-          }}
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
-          style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
-        >
-          Book a call
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px">
-            <path fill="currentColor" d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z" />
-          </svg>
-        </button>
       </section>
 
       {/* Service Cards */}
@@ -137,6 +75,83 @@ export default function ServicesPage() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Intro */}
+      <section className="pb-16">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          <ScrollReveal direction="up" className="max-w-[65ch]">
+            <h2 className="text-xl md:text-2xl font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+              About our services
+            </h2>
+            <div className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              <p className="mb-4">
+                Meteoric is a founder-led web development studio. Every project is
+                designed, built, and shipped by the same person you talk to on the
+                first call — no account managers, no handoff chains.
+              </p>
+              <p className="mb-4">
+                We work across five service lines, each solving a different stage of
+                the product journey.{" "}
+                <Link
+                  href="/services/landing-pages"
+                  className="text-[var(--accent)] hover:underline underline-offset-4"
+                >
+                  High-converting landing pages
+                </Link>{" "}
+                for launches and campaigns that need to convert from day one.{" "}
+                <Link
+                  href="/services/saas-development"
+                  className="text-[var(--accent)] hover:underline underline-offset-4"
+                >
+                  End-to-end SaaS development
+                </Link>{" "}
+                for founders taking a product from idea to production.{" "}
+                <Link
+                  href="/services/startup-web-development"
+                  className="text-[var(--accent)] hover:underline underline-offset-4"
+                >
+                  Startup web development
+                </Link>{" "}
+                covering product sites, marketing pages, and full-stack builds for
+                early teams.{" "}
+                <Link
+                  href="/services/nextjs-development"
+                  className="text-[var(--accent)] hover:underline underline-offset-4"
+                >
+                  Next.js development
+                </Link>{" "}
+                for teams that want React-based apps with SEO foundations and
+                performance baked in. And{" "}
+                <Link
+                  href="/services/web-applications"
+                  className="text-[var(--accent)] hover:underline underline-offset-4"
+                >
+                  custom web application development
+                </Link>{" "}
+                — dashboards, portals, and internal tools built around how your team
+                actually works.
+              </p>
+              <p>
+                Not sure which fits? Start with a free strategy call — we&apos;ll
+                map the smallest version that gets you to the next milestone.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                trackEvent("services_cta_click", { button_location: "/services" });
+                openCal();
+              }}
+              className="mt-8 inline-flex items-center justify-center whitespace-nowrap rounded-full transition-all outline-none cursor-pointer h-8 gap-2 border-0 px-3.5 text-[13px] font-medium shadow-none group hover:opacity-85"
+              style={{ background: "var(--text-primary)", color: "var(--bg-primary)" }}
+            >
+              Book a call
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" className="size-2 -rotate-90 transition-transform duration-150 group-hover:translate-x-px">
+                <path fill="currentColor" d="M.996 4.248a.75.75 0 0 1 1.281-.53l3.72 3.72 3.72-3.72a.75.75 0 0 1 1.061 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L.996 4.779a.75.75 0 0 1 0-5.331Z" />
+              </svg>
+            </button>
+          </ScrollReveal>
         </div>
       </section>
 
