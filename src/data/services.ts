@@ -103,7 +103,7 @@ export const services: Service[] = [
       "From MVP prototypes to production SaaS platforms. We design, build, and launch complete products — auth, dashboards, payments, and everything in between.",
     metadataTitle: "SaaS Development Agency | MVP & Product",
     metadataDescription:
-      "Meteoric designs and develops SaaS products and MVPs with authentication, dashboards, payments, APIs, databases, and scalable full-stack architecture.",
+      "Meteoric builds SaaS products and MVPs with auth, dashboards, payments, APIs, and scalable full-stack architecture.",
     h1: ["SaaS", "Development"],
     tagline: "From idea to production SaaS — MVP in weeks, not months.",
     directAnswer:
@@ -206,7 +206,8 @@ export const services: Service[] = [
           "Yes. We handle tech stack migration, performance optimization, feature scaling, and architecture overhauls. If your current product is slow, buggy, or hard to maintain, we can fix it.",
       },
       {
-        question: "How is Meteoric different from other SaaS development agencies?",
+        question:
+          "How is Meteoric different from other SaaS development agencies?",
         answer:
           "Direct founder involvement, no account managers, 10-day sprint cycles, and fixed pricing. You work with the person who builds your product.",
       },
@@ -386,7 +387,8 @@ export const services: Service[] = [
           "Yes. Next.js API routes and Server Actions can handle backend logic, database operations, and third-party integrations. For complex backends, we pair Next.js with Supabase or Node.js.",
       },
       {
-        question: "Can Meteoric work with an existing Next.js or React codebase?",
+        question:
+          "Can Meteoric work with an existing Next.js or React codebase?",
         answer:
           "Yes. We audit the current setup, fix performance or structural issues, and continue development in your codebase — App Router or Pages Router, plain React, or a migration from another framework. You keep ownership of the repository, and we adapt to the process your team already uses.",
       },
@@ -399,7 +401,7 @@ export const services: Service[] = [
       "Custom web applications — dashboards, internal tools, and customer-facing platforms. Clean UI, solid backend, built to perform at scale.",
     metadataTitle: "Web Application Development Services | Full-Stack",
     metadataDescription:
-      "Custom web application development — dashboards, internal tools, and customer-facing platforms with frontend, backend, database, and API architecture.",
+      "Custom web application development — dashboards, internal tools, and customer platforms with full-stack frontend, backend, and APIs.",
     h1: ["Web Application", "Development"],
     tagline: "Custom web apps that are fast, reliable, and a pleasure to use.",
     directAnswer:

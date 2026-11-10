@@ -18,7 +18,8 @@ export default function robots() {
         disallow: [
           "/admin",
           "/login",
-          "/editor",
+          "/editor/",
+          "/editor$",
           "/preview",
           "/share",
           "/*?q=",
