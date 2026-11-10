@@ -4,7 +4,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { ORG_ID, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Editorial Policy";
+const pageTitle = "Editorial Policy: How We Create Content";
 const pageDesc =
   "How Meteoric creates, reviews, and maintains blog content. Our editorial standards ensure accuracy, expertise, and usefulness for every article.";
 
@@ -39,7 +39,13 @@ export default function EditorialPolicyPage() {
     <>
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={jsonLd} />
-      <div className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
+      <div
+        className="min-h-screen"
+        style={{
+          background: "var(--bg-primary)",
+          color: "var(--text-primary)",
+        }}
+      >
         <div className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           <div className="mb-12">
             <Link
@@ -55,13 +61,22 @@ export default function EditorialPolicyPage() {
           </div>
 
           <header className="mb-16">
-            <span className="uppercase tracking-[0.25em] text-[11px] font-medium block mb-4" style={{ color: "var(--text-muted)" }}>
+            <span
+              className="uppercase tracking-[0.25em] text-[11px] font-medium block mb-4"
+              style={{ color: "var(--text-muted)" }}
+            >
               Editorial Policy
             </span>
-            <h1 className="text-3xl md:text-4xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
+            <h1
+              className="text-3xl md:text-4xl font-secondary-italic mb-4"
+              style={{ color: "var(--text-primary)" }}
+            >
               How We Create Content
             </h1>
-            <p className="text-[15px] leading-[1.8] font-[350]" style={{ color: "var(--text-secondary)" }}>
+            <p
+              className="text-[15px] leading-[1.8] font-[350]"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Transparency about our content creation process, editorial
               standards, and commitment to accuracy.
             </p>
@@ -69,10 +84,16 @@ export default function EditorialPolicyPage() {
 
           <div className="space-y-14">
             <ScrollReveal direction="up">
-              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
+              <h2
+                className="text-xl md:text-2xl font-secondary-italic mb-4"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Who Writes Our Content
               </h2>
-              <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-[15px] leading-[1.85] font-[350]"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 All blog content on withmeteoric.com is written or reviewed by{" "}
                 <Link
                   href="/author/prashant-khuva"
@@ -81,66 +102,108 @@ export default function EditorialPolicyPage() {
                 >
                   Prashant Khuva
                 </Link>
-                , Founder &amp; Full-Stack Developer at Meteoric.
-                Every article reflects real project experience — we only write
-                about technologies and approaches we have shipped in production
-                for clients. We do not publish AI-generated content without
-                human review and hands-on verification.
+                , Founder &amp; Full-Stack Developer at Meteoric. Every article
+                reflects real project experience — we only write about
+                technologies and approaches we have shipped in production for
+                clients. We do not publish AI-generated content without human
+                review and hands-on verification.
               </p>
             </ScrollReveal>
 
             <ScrollReveal direction="up">
-              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
+              <h2
+                className="text-xl md:text-2xl font-secondary-italic mb-4"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Our Editorial Standards
               </h2>
             </ScrollReveal>
             <div className="space-y-4">
               <ScrollReveal direction="up">
-                  <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
-                    <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
-                      Accuracy First
-                    </h3>
-                    <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
-                      Every technical claim is verified against official
-                      documentation. Code examples are tested. Statistics are
-                      sourced from published research, official benchmarks, or our
-                      own project data. When we reference metrics, those numbers
-                      come from real projects we have shipped.
-                    </p>
-                  </div>
-                </ScrollReveal>
-                <ScrollReveal direction="up" delay={0.08}>
-                  <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
-                    <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
-                      No Speculation
-                    </h3>
-                    <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
-                      We do not publish opinion pieces without evidence. If we
-                      recommend a technology, we explain why based on production
-                      experience — not marketing claims. If we compare tools, we
-                      disclose when we have direct experience versus when we are
-                      citing third-party benchmarks.
-                    </p>
-                  </div>
-                </ScrollReveal>
-                <ScrollReveal direction="up" delay={0.16}>
-                  <div className="p-6 rounded-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)" }}>
-                    <h3 className="text-sm font-medium mb-2" style={{ color: "var(--text-secondary)" }}>
-                      Regular Updates
-                    </h3>
-                    <p className="text-[14px] leading-[1.7] font-[350]" style={{ color: "var(--text-muted)" }}>
-                      Every article shows its last modified date. We review
-                      content quarterly for accuracy and freshness. When
-                      technology versions change or new data becomes available, we
-                      update the article and note the changes. Outdated content is
-                      either updated or archived.
-                    </p>
-                  </div>
-                </ScrollReveal>
-              </div>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                >
+                  <h3
+                    className="text-sm font-medium mb-2"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Accuracy First
+                  </h3>
+                  <p
+                    className="text-[14px] leading-[1.7] font-[350]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Every technical claim is verified against official
+                    documentation. Code examples are tested. Statistics are
+                    sourced from published research, official benchmarks, or our
+                    own project data. When we reference metrics, those numbers
+                    come from real projects we have shipped.
+                  </p>
+                </div>
+              </ScrollReveal>
+              <ScrollReveal direction="up" delay={0.08}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                >
+                  <h3
+                    className="text-sm font-medium mb-2"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    No Speculation
+                  </h3>
+                  <p
+                    className="text-[14px] leading-[1.7] font-[350]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    We do not publish opinion pieces without evidence. If we
+                    recommend a technology, we explain why based on production
+                    experience — not marketing claims. If we compare tools, we
+                    disclose when we have direct experience versus when we are
+                    citing third-party benchmarks.
+                  </p>
+                </div>
+              </ScrollReveal>
+              <ScrollReveal direction="up" delay={0.16}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                >
+                  <h3
+                    className="text-sm font-medium mb-2"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Regular Updates
+                  </h3>
+                  <p
+                    className="text-[14px] leading-[1.7] font-[350]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Every article shows its last modified date. We review
+                    content quarterly for accuracy and freshness. When
+                    technology versions change or new data becomes available, we
+                    update the article and note the changes. Outdated content is
+                    either updated or archived.
+                  </p>
+                </div>
+              </ScrollReveal>
+            </div>
 
             <ScrollReveal direction="up">
-              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
+              <h2
+                className="text-xl md:text-2xl font-secondary-italic mb-4"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Content Review Process
               </h2>
               <ol className="space-y-3">
@@ -153,10 +216,16 @@ export default function EditorialPolicyPage() {
                   "Monitoring — track performance and update as needed.",
                 ].map((step, i) => (
                   <li key={i} className="flex items-start gap-4">
-                    <span className="text-sm font-mono shrink-0 mt-0.5 tabular-nums" style={{ color: "var(--text-muted)" }}>
+                    <span
+                      className="text-sm font-mono shrink-0 mt-0.5 tabular-nums"
+                      style={{ color: "var(--text-muted)" }}
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-[15px] leading-[1.7] font-[350]" style={{ color: "var(--text-secondary)" }}>
+                    <span
+                      className="text-[15px] leading-[1.7] font-[350]"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {step}
                     </span>
                   </li>
@@ -165,10 +234,16 @@ export default function EditorialPolicyPage() {
             </ScrollReveal>
 
             <ScrollReveal direction="up">
-              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
+              <h2
+                className="text-xl md:text-2xl font-secondary-italic mb-4"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Corrections
               </h2>
-              <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-[15px] leading-[1.85] font-[350]"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 If you find an error in any of our articles, please contact us
                 at{" "}
                 <a
@@ -185,10 +260,16 @@ export default function EditorialPolicyPage() {
             </ScrollReveal>
 
             <ScrollReveal direction="up">
-              <h2 className="text-xl md:text-2xl font-secondary-italic mb-4" style={{ color: "var(--text-primary)" }}>
+              <h2
+                className="text-xl md:text-2xl font-secondary-italic mb-4"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Conflicts of Interest
               </h2>
-              <p className="text-[15px] leading-[1.85] font-[350]" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-[15px] leading-[1.85] font-[350]"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Some articles reference technologies we use in client projects
                 (Next.js, Supabase, Stripe, GSAP). We disclose when we have
                 direct commercial experience with a tool. Our recommendations

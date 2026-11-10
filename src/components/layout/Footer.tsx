@@ -28,43 +28,39 @@ const socialLinkStyle = {
 
 export default function Footer() {
   const ctaRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
+  const headingRef = useRef<HTMLParagraphElement>(null);
 
   const openCal = useCallback(() => openCalModal(), []);
 
-  useSectionAnimations(
-    ctaRef,
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useSectionAnimations(ctaRef, () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      const heading = headingRef.current;
-      if (heading) {
-        const split = new SplitText(heading, {
-          type: "lines",
-          linesClass: "split-line",
-          aria: "manual" as "auto",
-        });
-        gsap.fromTo(
-          split.lines,
-          { y: 40, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            ease: "power3.out",
-            duration: 0.5,
-            scrollTrigger: {
-              trigger: ctaRef.current,
-              start: "top 85%",
-              toggleActions: "play none reverse none",
-              invalidateOnRefresh: true,
-            },
+    const heading = headingRef.current;
+    if (heading) {
+      const split = new SplitText(heading, {
+        type: "lines",
+        linesClass: "split-line",
+        aria: "manual" as "auto",
+      });
+      gsap.fromTo(
+        split.lines,
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+          duration: 0.5,
+          scrollTrigger: {
+            trigger: ctaRef.current,
+            start: "top 85%",
+            toggleActions: "play none reverse none",
+            invalidateOnRefresh: true,
           },
-        );
-      }
-    },
-    [],
-  );
+        },
+      );
+    }
+  }, []);
 
   return (
     <footer
@@ -94,13 +90,13 @@ export default function Footer() {
         </div>
 
         <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24">
-          <h2
+          <p
             ref={headingRef}
             className="text-3xl md:text-5xl font-display tracking-tight leading-[1.05] mb-4"
             style={{ color: "#ffffff" }}
           >
             Let&apos;s ship your next product
-          </h2>
+          </p>
           <p
             className="text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto"
             style={{ color: "var(--footer-text)" }}
@@ -159,10 +155,7 @@ export default function Footer() {
           style={{ borderColor: "var(--footer-border)" }}
         >
           {/* Brand column */}
-          <ScrollReveal
-            direction="up"
-            className="col-span-2 md:col-span-1"
-          >
+          <ScrollReveal direction="up" className="col-span-2 md:col-span-1">
             <p
               className="text-xs leading-relaxed"
               style={{ color: "var(--footer-muted)" }}
@@ -172,7 +165,11 @@ export default function Footer() {
           </ScrollReveal>
 
           {footerColumns.map((col, i) => (
-            <ScrollReveal key={col.heading} direction="up" delay={0.08 * (i + 1)}>
+            <ScrollReveal
+              key={col.heading}
+              direction="up"
+              delay={0.08 * (i + 1)}
+            >
               <h3
                 className="text-xs font-semibold uppercase tracking-wider mb-4"
                 style={{ color: "var(--footer-text)" }}
@@ -194,7 +191,6 @@ export default function Footer() {
               </ul>
             </ScrollReveal>
           ))}
-
         </div>
 
         {/* ── BOTTOM BAR ── */}
@@ -202,10 +198,7 @@ export default function Footer() {
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-6 border-t"
           style={{ borderColor: "var(--footer-border)" }}
         >
-          <p
-            className="text-xs"
-            style={{ color: "var(--footer-muted)" }}
-          >
+          <p className="text-xs" style={{ color: "var(--footer-muted)" }}>
             &copy; 2026 Meteoric. All rights reserved.
           </p>
           <div className="flex items-center gap-4">

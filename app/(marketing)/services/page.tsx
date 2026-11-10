@@ -1,13 +1,17 @@
 import { pageMetadata } from "@/lib/seo/config";
 import ServicesPage from "@/components/pages/Services";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
-import { buildFaqJsonLd, buildHowToJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
+import {
+  buildFaqJsonLd,
+  buildHowToJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/seo/jsonLd";
 import { serviceFaqs } from "@/data/faqs";
 import JsonLd from "@/components/seo/JsonLd";
 
 const pageTitle = "Software Development Services — SaaS & Web";
 const pageDesc =
-  "Explore Meteoric's software development services for startups — SaaS development, Next.js applications, landing pages, and full-stack web development.";
+  "Software development services for startups — SaaS products, Next.js apps, landing pages, and full-stack web development by Meteoric.";
 
 export const metadata = pageMetadata({
   title: pageTitle,
@@ -35,24 +39,25 @@ const speakableJsonLd = {
 
 const faqJsonLd = buildFaqJsonLd(serviceFaqs);
 
-const howToSchema = buildHowToJsonLd([
-  {
-    name: "Discovery & Strategy",
-    text: "We align on the product vision, audience, requirements, and goals before development begins. This includes a free strategy call to scope your project.",
-  },
-  {
-    name: "Design Direction",
-    text: "Interfaces and user flows designed around clarity, usability, and modern interaction patterns. We create wireframes and visual designs tailored to your brand.",
-  },
-  {
-    name: "Development Sprints",
-    text: "Frontend and backend systems engineered for performance, scalability, and maintainability. We build in 10-day sprints with weekly updates and transparent communication.",
-  },
-  {
-    name: "Launch & Support",
-    text: "Deployment, optimization, and final polishing before the product goes live. Post-launch support and maintenance available for every project, scoped in the proposal.",
-  },
-],
+const howToSchema = buildHowToJsonLd(
+  [
+    {
+      name: "Discovery & Strategy",
+      text: "We align on the product vision, audience, requirements, and goals before development begins. This includes a free strategy call to scope your project.",
+    },
+    {
+      name: "Design Direction",
+      text: "Interfaces and user flows designed around clarity, usability, and modern interaction patterns. We create wireframes and visual designs tailored to your brand.",
+    },
+    {
+      name: "Development Sprints",
+      text: "Frontend and backend systems engineered for performance, scalability, and maintainability. We build in 10-day sprints with weekly updates and transparent communication.",
+    },
+    {
+      name: "Launch & Support",
+      text: "Deployment, optimization, and final polishing before the product goes live. Post-launch support and maintenance available for every project, scoped in the proposal.",
+    },
+  ],
   "How Meteoric builds web products",
 );
 

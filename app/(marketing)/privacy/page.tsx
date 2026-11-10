@@ -3,7 +3,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/jsonLd";
 
-const pageTitle = "Privacy Policy";
+const pageTitle = "Privacy Policy: How We Handle Your Data";
 const pageDesc =
   "How Meteoric collects, uses, and protects your data — plain and simple.";
 
@@ -104,7 +104,7 @@ const sections: {
 
 const breadcrumbJsonLd = buildBreadcrumbJsonLd([
   { name: "Home", path: "" },
-  { name: "Privacy Policy", path: "/privacy" }
+  { name: "Privacy Policy", path: "/privacy" },
 ]);
 
 const speakableJsonLd = {
@@ -122,19 +122,37 @@ export default function Privacy() {
     <>
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={speakableJsonLd} />
-      <div className="min-h-screen" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
+      <div
+        className="min-h-screen"
+        style={{
+          background: "var(--bg-primary)",
+          color: "var(--text-primary)",
+        }}
+      >
         <main className="relative max-w-3xl mx-auto px-6 md:px-12 pt-32 pb-24">
           {/* Header */}
           <div className="mb-16">
-            <span className="uppercase tracking-[0.3em] text-xs font-bold block mb-6" style={{ color: "var(--text-muted)" }}>
+            <span
+              className="uppercase tracking-[0.3em] text-xs font-bold block mb-6"
+              style={{ color: "var(--text-muted)" }}
+            >
               Legal
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6" style={{ color: "var(--text-primary)" }}>
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-secondary-italic font-normal leading-[1.1] tracking-tight mb-6"
+              style={{ color: "var(--text-primary)" }}
+            >
               Privacy Policy
             </h1>
             <div className="flex items-center gap-3">
-              <span className="h-px w-8" style={{ background: "var(--border-color)" }} />
-              <span className="text-xs font-mono tracking-wider" style={{ color: "var(--text-muted)" }}>
+              <span
+                className="h-px w-8"
+                style={{ background: "var(--border-color)" }}
+              />
+              <span
+                className="text-xs font-mono tracking-wider"
+                style={{ color: "var(--text-muted)" }}
+              >
                 Last updated — July 6, 2026
               </span>
             </div>
@@ -151,26 +169,44 @@ export default function Privacy() {
               >
                 <div className="flex gap-6 md:gap-10">
                   {/* Number */}
-                  <span className="text-4xl md:text-5xl font-secondary-italic leading-none mt-1 shrink-0" style={{ color: "var(--accent-dim)" }}>
+                  <span
+                    className="text-4xl md:text-5xl font-secondary-italic leading-none mt-1 shrink-0"
+                    style={{ color: "var(--accent-dim)" }}
+                  >
                     {section.num}
                   </span>
 
                   {/* Content */}
                   <div>
-                    <h2 className="text-xl md:text-2xl font-secondary-italic font-normal mb-4" style={{ color: "var(--text-primary)" }}>
+                    <h2
+                      className="text-xl md:text-2xl font-secondary-italic font-normal mb-4"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {section.title}
                     </h2>
-                    <p className="text-[15px] leading-[1.8] mb-4" style={{ color: "var(--text-secondary)" }}>
+                    <p
+                      className="text-[15px] leading-[1.8] mb-4"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {section.content}
                     </p>
                     {section.items && (
                       <ul className="space-y-3 mt-4">
                         {section.items.map((item, i) => (
                           <li key={i} className="flex items-start gap-3">
-                            <span className="w-1 h-1 rounded-full mt-2.5 shrink-0" style={{ background: "var(--text-muted)" }} />
-                            <span className="text-[15px] leading-[1.8]" style={{ color: "var(--text-secondary)" }}>
+                            <span
+                              className="w-1 h-1 rounded-full mt-2.5 shrink-0"
+                              style={{ background: "var(--text-muted)" }}
+                            />
+                            <span
+                              className="text-[15px] leading-[1.8]"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
                               {item.label && (
-                                <strong className="font-medium" style={{ color: "var(--text-primary)" }}>
+                                <strong
+                                  className="font-medium"
+                                  style={{ color: "var(--text-primary)" }}
+                                >
                                   {item.label} —{" "}
                                 </strong>
                               )}
