@@ -1745,7 +1745,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
     tagline:
       "Realistic pricing for startup websites in 2026 — and how to avoid overpaying.",
     published: "2026-06-28",
-    dateModified: "2026-10-24",
+    dateModified: "2026-11-10",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -1753,7 +1753,7 @@ This guide explains what agencies actually do, how an engagement runs from disco
     sections: [
       {
         heading: "TL;DR",
-        body: "A startup website costs $5K to $50K depending on complexity. For example, a 5-page marketing site costs $2k-$5k while a full SaaS platform with billing costs several times more. Landing pages cost $3K to $8K. Larger marketing sites cost $10K to $25K. Rough 2026 estimates put a functional SaaS MVP at $15K-$50K. Ongoing costs include hosting at $20 to $200 per month.",
+        body: "A startup marketing website typically costs $3K–$8K for a landing page and $10K–$25K for a larger multi-page marketing site with a CMS, custom design, and SEO setup. A simple 5-page site built on a template can come in lower, around $2K–$5K. Ongoing costs include hosting at $20 to $200 per month. If you need logins, dashboards, or billing, you are building a web app or SaaS product, which is priced differently — see the dedicated guides linked below.",
       },
       {
         heading: "Landing Pages: Quickly Ship a Single Page",
@@ -1764,12 +1764,12 @@ This guide explains what agencies actually do, how an engagement runs from disco
         body: "A multi-page marketing website costs more and takes 1-3 weeks. The price scales with page count. You get everything from a landing page plus multiple templates, content strategy, blog setup, and analytics. This is the sweet spot for startups needing a complete web presence.",
       },
       {
-        heading: "Custom Web Applications",
-        body: "Custom web applications like dashboards and portals come at a higher price point. They take 2-6 weeks. These include user auth, database design, API development, and interactive features. The cost depends on feature complexity and integrations.",
+        heading: "Custom Web Applications: Priced by Features, Not Pages",
+        body: 'If your "website" needs user accounts, dashboards, a database, or integrations, it is a web application, not a marketing site — and it is priced by features rather than pages. Our [web app development cost guide](/blog/how-much-does-it-cost-to-build-a-web-app) breaks down 2026 ranges by app type, the variables that drive price, and how to budget.',
       },
       {
-        heading: "SaaS Products and Platforms",
-        body: "Full **SaaS** products with subscription billing and multi-tenant architecture are the biggest investment. A **SaaS MVP** ships in 3-6 weeks. Costs reflect the complexity of auth, billing, and real-time features. Many agencies offer milestone-based payments.",
+        heading: "SaaS Products: Budget Them as an MVP",
+        body: "A SaaS product adds subscription billing, multi-tenant data, and onboarding on top of a web app, so it is the largest investment of the three. For realistic MVP budgets by phase and region, and how to validate scope before spending, see [SaaS MVP cost in 2026](/blog/saas-mvp-development-cost).",
       },
       {
         heading: "Hidden Costs to Consider",
