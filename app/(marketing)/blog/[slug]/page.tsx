@@ -197,8 +197,23 @@ function headingId(text: string) {
 }
 
 function renderBold(text: string, key: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).filter(Boolean);
   return parts.map((part, j) => {
+    const code = part.match(/^`([^`]+)`$/);
+    if (code) {
+      return (
+        <code
+          key={`${key}-c${j}`}
+          className="rounded px-1.5 py-0.5 text-[0.9em] font-mono"
+          style={{
+            background: "var(--accent-glow)",
+            color: "var(--text-primary)",
+          }}
+        >
+          {code[1]}
+        </code>
+      );
+    }
     const match = part.match(/^\*\*([^*]+)\*\*$/);
     if (!match) return part;
     return (
