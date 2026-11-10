@@ -1,5 +1,5 @@
 version: 1.0
-last-updated: 2026-10-12
+last-updated: 2026-11-10
 contact: contact@withmeteoric.com
 see-also: https://withmeteoric.com
 
@@ -66,7 +66,7 @@ End-to-end web application development including database design, server-side lo
 
 - [Next.js SEO Guide: App Router Best Practices for 2026](https://withmeteoric.com/blog/nextjs-seo-guide) — 2026-10-12
 - [No-Code vs Custom Development for Startups: A 2026 Guide](https://withmeteoric.com/blog/no-code-vs-custom-development) — 2026-10-12
-- [What Is a SaaS Development Agency? Definition, Services, and Pricing](https://withmeteoric.com/blog/what-is-a-saas-development-agency) — 2026-10-12
+- [What Is a SaaS Agency? Meaning, Services, and Pricing](https://withmeteoric.com/blog/what-is-a-saas-development-agency) — 2026-10-12
 - [How Much Does a SaaS MVP Cost in 2026?](https://withmeteoric.com/blog/saas-mvp-development-cost) — 2026-10-12
 - [Freelancer vs Agency vs In-House: Which Should Build Your Product?](https://withmeteoric.com/blog/freelance-vs-agency-vs-in-house) — 2026-10-12
 - [How Much Does It Cost to Build a Web App in 2026?](https://withmeteoric.com/blog/how-much-does-it-cost-to-build-a-web-app) — 2026-10-12
@@ -90,7 +90,7 @@ End-to-end web application development including database design, server-side lo
 - [How to Build a SaaS MVP: Step-by-Step Guide](https://withmeteoric.com/blog/how-to-build-a-saas-mvp-step-by-step-guide) — 2026-06-15
 - [How to Choose Your Tech Stack: A Founder's Guide](https://withmeteoric.com/blog/the-meteoric-guide-to-choosing-your-tech-stack) — 2026-06-12
 - [MongoDB Schema Design for SaaS Billing](https://withmeteoric.com/blog/mongodb-schema-design-for-saas-billing) — 2026-06-10
-- [GSAP vs Framer Motion in 2026: Which Should You Use?](https://withmeteoric.com/blog/gsap-vs-framer-motion-production-guide) — 2026-06-08
+- [GSAP vs Framer Motion (Now Motion): Which to Use in 2026](https://withmeteoric.com/blog/gsap-vs-framer-motion-production-guide) — 2026-06-08
 - [What Is a Web Development Agency?](https://withmeteoric.com/blog/what-is-a-web-development-agency) — 2026-06-05
 
 ## Outbound links

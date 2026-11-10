@@ -101,7 +101,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
     insightSlugs: [
       "how-to-build-a-saas-mvp-step-by-step-guide",
       "mongodb-vs-postgresql-for-saas",
-      "how-to-implement-aeo-answer-engine-optimization-for-saas",
+      "what-is-a-saas-development-agency",
     ],
     relatedServiceSlug: "saas-development",
     relatedLink: {
@@ -203,7 +203,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
     insightSlugs: [
       "what-is-a-web-development-agency",
       "gsap-vs-framer-motion-production-guide",
-      "the-meteoric-guide-to-choosing-your-tech-stack",
+      "react-vs-nextjs-for-startup-websites",
     ],
     relatedServiceSlug: "nextjs-development",
     relatedLink: {

@@ -1,14 +1,13 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
+import FeaturedGuides from "@/components/sections/FeaturedGuides";
 import { mapReviewRow } from "@/data/testimonials";
 
 const StatsBar = dynamic(() => import("../sections/StatsBar"));
 // const ManifestoSection = dynamic(() => import("../sections/ManifestoSection"));
 const ServicesSection = dynamic(() => import("../sections/ServicesSection"));
 const Projects = dynamic(() => import("@/components/sections/Projects"));
-const ProcessSection = dynamic(
-  () => import("../sections/ProcessSection"),
-);
+const ProcessSection = dynamic(() => import("../sections/ProcessSection"));
 const TestimonialsSection = dynamic(
   () => import("../sections/TestimonialsSection"),
 );
@@ -45,6 +44,7 @@ export default async function Home() {
       <Projects />
       <ProcessSection />
       <TestimonialsSection initialReviews={initialReviews} />
+      <FeaturedGuides />
     </div>
   );
 }
