@@ -3,14 +3,14 @@ import type { Article } from "./types";
 export const blogPosts: Article[] = [
   {
     slug: "nextjs-seo-guide",
-    seoTitle: "Next.js App Router SEO Guide (2026)",
+    seoTitle: "Next.js SEO: App Router and next-seo Guide (2026)",
     title: "Next.js SEO Guide: App Router Best Practices for 2026",
     description:
       "How Next.js App Router handles SEO in 2026 — metadata API, structured data, sitemaps, Core Web Vitals, and the mistakes that kill organic traffic.",
     tagline:
       "Server rendering, metadata, structured data, and the mistakes that kill rankings.",
     published: "2026-10-12",
-    dateModified: "2026-10-12",
+    dateModified: "2026-11-10",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -40,7 +40,11 @@ This guide covers what actually moves rankings on Next.js App Router sites in 20
       },
       {
         heading: "Metadata API Patterns",
-        body: "Export a `generateMetadata` function from each page (or layout) alongside the component:\n\n\`\`\`tsx\nexport async function generateMetadata({ params }) {\n  const post = await getPost(params.slug)\n  return {\n    title: post.seoTitle,\n    description: post.description,\n    alternates: { canonical: \`https://example.com/blog/\${params.slug}\` },\n    openGraph: { title: post.seoTitle, images: [post.ogImage] },\n  }\n}\n\`\`\`\n\nEvery page gets: unique title (<60 chars), meta description (~155 chars), canonical URL, Open Graph + Twitter card fields, and robots directives where needed. Root layout defines defaults; page-level metadata overrides. No third-party SEO libraries required — the Metadata API is the supported path (Ref: [Next.js generateMetadata docs](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)).",
+        body: "Export a `generateMetadata` function from each page (or layout) alongside the component:\n\n\`\`\`tsx\nexport async function generateMetadata({ params }) {\n  const { slug } = await params // params is a Promise in Next.js 15+\n  const post = await getPost(slug)\n  return {\n    title: post.seoTitle,\n    description: post.description,\n    alternates: { canonical: \`https://example.com/blog/\${slug}\` },\n    openGraph: { title: post.seoTitle, images: [post.ogImage] },\n  }\n}\n\`\`\`\n\nEvery page gets: unique title (<60 chars), meta description (~155 chars), canonical URL, Open Graph + Twitter card fields, and robots directives where needed. Root layout defines defaults; page-level metadata overrides. No third-party SEO libraries required — the Metadata API is the supported path (Ref: [Next.js generateMetadata docs](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)).",
+      },
+      {
+        heading: "next-seo vs the Built-in Metadata API",
+        body: '**next-seo** is a popular package from the Pages Router era that sets titles, meta tags, Open Graph, and JSON-LD through React components. In the App Router, the built-in Metadata API (`metadata` and `generateMetadata`) covers titles, descriptions, canonicals, Open Graph, Twitter cards, and robots directly, and renders them on the server. For new App Router projects, use the Metadata API and render JSON-LD with a `<script type="application/ld+json">` tag; you do not need next-seo. Keep next-seo only on Pages Router code you have not migrated yet.',
       },
       {
         heading: "Structured Data (JSON-LD)",
@@ -921,7 +925,7 @@ This guide covers the four core collections a billing system needs (plans, subsc
       "Build a SaaS MVP in 3–6 weeks — planning, tech stack choices, auth, billing, deployment, and launch steps with real project examples inside.",
     tagline: "Ship your SaaS MVP in weeks, not months.",
     published: "2026-06-15",
-    dateModified: "2026-10-20",
+    dateModified: "2026-11-10",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -998,6 +1002,16 @@ This step-by-step guide covers scoping the core feature set, choosing your stack
         question: "What is the biggest mistake when building a SaaS MVP?",
         answer:
           "Building features nobody asked for. An MVP should solve one problem well, not five problems poorly. Scope the 20% of features that deliver 80% of the value, ship that, and let beta user feedback decide what comes next.",
+      },
+      {
+        question: "Can I build a SaaS MVP without coding?",
+        answer:
+          "Yes, for testing demand. No-code tools can ship a working prototype quickly, but billing logic, multi-tenant data, performance, and integrations usually hit limits once paying users arrive. See [no-code vs custom development](/blog/no-code-vs-custom-development) for where the line falls.",
+      },
+      {
+        question: "How do I turn an MVP into a full SaaS product?",
+        answer:
+          "Use real usage data to decide what to build next: fix what blocks activation, strengthen billing and onboarding, add the features paying users ask for, and invest in monitoring, security, and performance before scaling marketing.",
       },
     ],
     tags: ["SaaS", "MVP", "Development", "Startup"],
@@ -2347,7 +2361,7 @@ This founder's guide covers each layer of the stack — frontend, backend, datab
       "A practical guide to Answer Engine Optimization for SaaS — structure content so ChatGPT, Perplexity, and AI Overviews recommend your product today.",
     tagline: "Get your SaaS cited by AI — not just ranked on Google.",
     published: "2026-08-22",
-    dateModified: "2026-10-20",
+    dateModified: "2026-11-10",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2396,7 +2410,7 @@ This six-step guide covers llms.txt, definition-first content, JSON-LD structure
       },
       {
         heading: "AEO Tools and Measurement",
-        body: "Use these tools to track AEO performance. Perplexity Analytics shows how often your brand appears in AI answers. ChatGPT's search suggestions reveal which queries trigger your content. Google Search Console tracks AI Overview appearances. Brand monitoring tools (Mention, Brandwatch) track AI-mentioned brand references. Set up a monthly AEO audit: search your target queries in each AI tool and record citation frequency. The data is early but directional.",
+        body: "There is no official analytics dashboard from ChatGPT or Perplexity that shows how often your brand is cited, so AEO measurement combines three sources. 1) **A fixed prompt set:** 10–20 questions your buyers actually ask, run monthly in ChatGPT, Perplexity, Google AI Mode, and Claude, recording whether you are mentioned, which page is cited, and which competitor appears instead. 2) **Search Console:** impressions and clicks from Google's AI features are included in your Search performance data, and referral traffic from chatgpt.com and perplexity.ai shows up in your analytics. 3) **AI visibility trackers:** paid tools such as Profound, Peec AI, Otterly.AI, Ahrefs Brand Radar, and Semrush's AI visibility reports run prompt sets at scale and chart your share of answers over time. Start with the manual prompt set — it is free and tells you most of what you need early on.",
       },
       {
         heading: "Common AEO Implementation Mistakes",
@@ -2428,6 +2442,11 @@ This six-step guide covers llms.txt, definition-first content, JSON-LD structure
         question: "What content should I create first for AEO?",
         answer:
           "Answer capsules: two-to-three sentence blocks that directly answer one question your ideal customer would ask an AI — cost, timeline, comparisons, definitions. Place them at the top of relevant pages. Clean, self-contained answers are what AI models extract for citations.",
+      },
+      {
+        question: "Is there an AEO automation platform?",
+        answer:
+          "Tools can automate the measurement side — running prompt sets, tracking citations, and checking structured data. The work that earns citations cannot be automated: clear answer-first content, accurate facts, and mentions on sites AI models trust.",
       },
     ],
     tags: ["AEO", "AI Search", "SaaS", "GEO", "SEO"],
@@ -2885,7 +2904,7 @@ This guide covers how to mine customer language, build topic clusters instead of
       "How to get your brand recommended by AI search — structured data, llms.txt, authority signals, and content patterns that AI models actually cite.",
     tagline: "Stop being invisible to AI. Start being the answer.",
     published: "2026-09-04",
-    dateModified: "2026-10-06",
+    dateModified: "2026-11-10",
     author: {
       name: "Prashant Khuva",
       url: "https://withmeteoric.com/about",
@@ -2929,6 +2948,10 @@ This guide covers how AI search engines choose citations, the content patterns t
         body: "Build a prompt set of 10-20 questions your buyers actually ask AI: category, comparison, pricing, and how-to queries. Ask ChatGPT, Perplexity, and Claude the same set monthly and record three things — whether you are mentioned, which page is cited, and which competitor appears instead. Track AI Overview impressions in Google Search Console alongside. Share of answers is the metric that matters; rank position no longer exists on these surfaces.",
       },
       {
+        heading: "Tools That Track ChatGPT and Perplexity Citations",
+        body: "Neither ChatGPT nor Perplexity offers brands an official citation report, so tracking relies on third-party tools that run prompts on your behalf. Examples include Profound, Peec AI, Otterly.AI, Ahrefs Brand Radar, and Semrush's AI visibility reports. They differ in which assistants they cover, how many prompts they run, and price, so compare them on the prompts that matter to you. Pair any tool with two free signals: referral traffic from chatgpt.com and perplexity.ai in your analytics, and Search Console data for Google's AI features.",
+      },
+      {
         heading: "Where AI Search Fits With SEO and AEO",
         body: "Think of three layers of one discipline: SEO earns indexation and links, AEO structures pages so answer engines can extract them, and AI search optimization earns selection as the cited source. They share foundations — clear structure, real evidence, fresh content — so work done once compounds across all three. For a step-by-step build order, see [How to Implement AEO for Your SaaS](/blog/how-to-implement-aeo-answer-engine-optimization-for-saas). At Meteoric, we ship llms.txt, schema, and answer-first content with every Next.js build for startups in Gujarat and premium global markets.\n\nReference: [Nielsen Norman Group](https://www.nngroup.com/articles/) research on how people evaluate information online.\n\nThis guide is maintained by the [Meteoric](https://withmeteoric.com) team. [About us](/about) · [Services](/services) · [Contact](/contact) · Editorial review by Prashant Khuva.",
       },
@@ -2958,6 +2981,11 @@ This guide covers how AI search engines choose citations, the content patterns t
         question: "How do I track if my brand is cited by AI?",
         answer:
           "Build a fixed prompt set of 10-20 questions your buyers ask AI, run it monthly across ChatGPT, Perplexity, and Claude, and record mentions, cited pages, and competitors. Pair that with AI Overview impressions in Google Search Console and referral analytics by channel.",
+      },
+      {
+        question: "How do I get my products cited in ChatGPT shopping results?",
+        answer:
+          "Make product pages crawlable by OAI-SearchBot, mark them up with Product structured data (name, price, availability, reviews), and keep that data consistent across your site and marketplaces. ChatGPT's shopping results draw on structured product information from merchants and third-party sources, and eligible merchants can apply to OpenAI to provide a product feed directly.",
       },
     ],
     tags: ["AI Search", "GEO", "AEO", "SEO", "Content Strategy"],
