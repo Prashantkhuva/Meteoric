@@ -9,9 +9,9 @@ import {
 import { serviceFaqs } from "@/data/faqs";
 import JsonLd from "@/components/seo/JsonLd";
 
-const pageTitle = "Software Development Services — SaaS & Web";
+const pageTitle = "SaaS, Web App & Next.js Development Services";
 const pageDesc =
-  "Software development services for startups — SaaS products, Next.js apps, landing pages, and full-stack web development by Meteoric.";
+  "Founder-led SaaS, web app, and Next.js development for startups — MVPs, dashboards, and landing pages built in weeks with fixed, agreed pricing.";
 
 export const metadata = pageMetadata({
   title: pageTitle,
