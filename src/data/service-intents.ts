@@ -11,6 +11,7 @@ import type { ServiceIntentPage } from "./types";
 export const serviceIntentPages: ServiceIntentPage[] = [
   {
     path: "/saas-mvp-development",
+    topic: "SaaS MVP development",
     metadataTitle: "Hire a SaaS MVP Developer for Startups",
     metadataDescription:
       "Hire a founder-led SaaS MVP developer — scope the product, build auth, billing, and dashboards, and ship a launch-ready MVP with a dedicated builder.",
@@ -113,6 +114,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
 
   {
     path: "/nextjs-development-agency",
+    topic: "Next.js development",
     metadataTitle: "Next.js Development Agency for Startups & SaaS",
     metadataDescription:
       "Meteoric is a founder-led Next.js development agency: marketing sites, SaaS frontends, and web apps with server rendering and SEO built in.",
@@ -214,6 +216,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
 
   {
     path: "/startup-landing-page-design",
+    topic: "startup landing page design",
     metadataTitle: "Startup Landing Page Design for Launch",
     metadataDescription:
       "Founder-led landing page design for startups — one fast page that explains your product, earns trust, and gives visitors a single clear action.",
@@ -314,6 +317,7 @@ export const serviceIntentPages: ServiceIntentPage[] = [
 
   {
     path: "/web-app-development",
+    topic: "web app development",
     metadataTitle: "Web App Development for Startups & SaaS",
     metadataDescription:
       "Meteoric builds custom web apps — dashboards, portals, and full-stack products — with Next.js, Node.js, and Postgres. Founder-led end to end.",

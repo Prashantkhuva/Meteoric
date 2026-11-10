@@ -398,6 +398,8 @@ export interface ServiceIntentPage {
   metadataTitle: string;
   metadataDescription: string;
   h1: string;
+  /** Short service phrase used mid-sentence in section headings, e.g. "SaaS MVP development". */
+  topic: string;
   /** AEO direct answer shown immediately below the H1. */
   directAnswer: string;
   whoFor: string[];

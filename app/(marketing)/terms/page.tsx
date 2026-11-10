@@ -80,7 +80,7 @@ const sections = [
   },
   {
     num: "13",
-    title: "Contact",
+    title: "Questions About These Terms",
     content: `For questions about these terms, contact us at contact@withmeteoric.com.`,
   },
 ];

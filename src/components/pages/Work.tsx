@@ -17,59 +17,62 @@ import type { Project } from "@/data/types";
 
 const visibleProjects = projects.filter((p) => p.draft !== true);
 
-const categories = ["All", ...new Set(visibleProjects.map((p) => p.projectType))];
+const categories = [
+  "All",
+  ...new Set(visibleProjects.map((p) => p.projectType)),
+];
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <ScrollReveal direction="up" delay={0.06 * (index % 2)}>
-    <Link
-      href={`/work/${project.slug}`}
-      className="group relative flex flex-col h-full rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)]"
-      style={{ background: "var(--card-bg)" }}
-    >
-      <div className="relative overflow-hidden aspect-[16/10]">
-        <Image
-          src={project.image}
-          alt={project.imageAlt}
-          fill
-          priority={index < 2}
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      </div>
-
-      <div className="flex flex-col flex-1 p-5 sm:p-6">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-[11px] font-mono tracking-widest uppercase text-[var(--text-muted)]">
-            {project.projectType}
-          </span>
-          {workTypeLabel(project.workType) && (
-            <span className="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full ring-1 ring-[var(--border-color)] text-[var(--text-muted)]">
-              {workTypeLabel(project.workType)}
-            </span>
-          )}
-        </div>
-
-        <h2 className="text-xl sm:text-2xl font-display text-[var(--text-primary)] mb-2 tracking-tight leading-snug">
-          {project.name}
-        </h2>
-
-        <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-5 line-clamp-2">
-          {project.tagline}
-        </p>
-
-        <div className="mt-auto flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-          <StaggerText>
-            {project.caseStudySlug ? "View Case Study" : "View Project"}
-          </StaggerText>
-          <ArrowUpRight
-            size={14}
-            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+      <Link
+        href={`/work/${project.slug}`}
+        className="group relative flex flex-col h-full rounded-2xl overflow-hidden ring-1 ring-[var(--border-color)] hover:ring-[var(--border-hover)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_var(--accent-glow)]"
+        style={{ background: "var(--card-bg)" }}
+      >
+        <div className="relative overflow-hidden aspect-[16/10]">
+          <Image
+            src={project.image}
+            alt={project.imageAlt}
+            fill
+            priority={index < 2}
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
-      </div>
-    </Link>
+
+        <div className="flex flex-col flex-1 p-5 sm:p-6">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="text-[11px] font-mono tracking-widest uppercase text-[var(--text-muted)]">
+              {project.projectType}
+            </span>
+            {workTypeLabel(project.workType) && (
+              <span className="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full ring-1 ring-[var(--border-color)] text-[var(--text-muted)]">
+                {workTypeLabel(project.workType)}
+              </span>
+            )}
+          </div>
+
+          <h3 className="text-xl sm:text-2xl font-display text-[var(--text-primary)] mb-2 tracking-tight leading-snug">
+            {project.name}
+          </h3>
+
+          <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-5 line-clamp-2">
+            {project.tagline}
+          </p>
+
+          <div className="mt-auto flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+            <StaggerText>
+              {project.caseStudySlug ? "View Case Study" : "View Project"}
+            </StaggerText>
+            <ArrowUpRight
+              size={14}
+              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </div>
+        </div>
+      </Link>
     </ScrollReveal>
   );
 }
@@ -91,10 +94,12 @@ export default function WorkPage() {
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        headingRef.current?.querySelectorAll<HTMLElement>(".split-line").forEach((el) => {
-          el.style.opacity = "1";
-          el.style.transform = "none";
-        });
+        headingRef.current
+          ?.querySelectorAll<HTMLElement>(".split-line")
+          .forEach((el) => {
+            el.style.opacity = "1";
+            el.style.transform = "none";
+          });
         return;
       }
 
@@ -133,11 +138,18 @@ export default function WorkPage() {
       >
         {/* Header — Atomik style: left title, right description */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-12">
-          <h1 ref={headingRef} className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]">
+          <h1
+            ref={headingRef}
+            className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-[var(--text-primary)]"
+          >
             Our Work
           </h1>
-          <p className="text-[15px] max-w-[260px] leading-[1.4] md:text-right" style={{ color: "#171717" }}>
-            Every project went from concept to production — on time, on budget, and built to convert.
+          <p
+            className="text-[15px] max-w-[260px] leading-[1.4] md:text-right"
+            style={{ color: "#171717" }}
+          >
+            Every project went from concept to production — on time, on budget,
+            and built to convert.
           </p>
         </div>
 
@@ -159,6 +171,7 @@ export default function WorkPage() {
         </div>
 
         {/* Project Grid */}
+        <h2 className="sr-only">Web and SaaS projects by Meteoric</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {filteredProjects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />

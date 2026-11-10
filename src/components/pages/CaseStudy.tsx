@@ -9,10 +9,7 @@ import { projects } from "@/data/projects";
 import { workTypeLabel, workTypeDisclosure } from "@/lib/work-type";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { ReactNode } from "react";
-import type {
-  CaseStudy as CaseStudyData,
-  Project,
-} from "@/data/types";
+import type { CaseStudy as CaseStudyData, Project } from "@/data/types";
 
 interface StrategyStepProps {
   number: string;
@@ -38,7 +35,13 @@ function StrategyStep({ number, title, description }: StrategyStepProps) {
   );
 }
 
-function SectionHeading({ id, children }: { id: string; children?: ReactNode }) {
+function SectionHeading({
+  id,
+  children,
+}: {
+  id: string;
+  children?: ReactNode;
+}) {
   return (
     <h2
       id={`${id}-heading`}
@@ -67,6 +70,7 @@ export interface CaseStudyProps {
 }
 
 export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
+  const name = cs?.name ?? project.name;
   const relatedSlugs = cs?.relatedProjects || [];
   const relatedItems = relatedSlugs
     .map((slug) => {
@@ -143,7 +147,10 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
                 {cs?.name ?? project.name}
               </h1>
             </div>
-            <p className="text-[15px] max-w-xs leading-relaxed md:text-right" style={{ color: "var(--text-secondary)" }}>
+            <p
+              className="text-[15px] max-w-xs leading-relaxed md:text-right"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {cs?.tagline ?? project.tagline}
             </p>
           </div>
@@ -153,7 +160,10 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
               role="note"
               aria-label="Project disclosure"
               className="mt-6 rounded-xl ring-1 ring-[var(--border-hover)] px-5 py-4 text-sm leading-relaxed"
-              style={{ background: "var(--bg-surface)", color: "var(--text-secondary)" }}
+              style={{
+                background: "var(--bg-surface)",
+                color: "var(--text-secondary)",
+              }}
             >
               {disclosure}
             </div>
@@ -187,10 +197,14 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
         className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16"
       >
         <ScrollReveal direction="up">
-          <SectionHeading id="overview">Overview</SectionHeading>
+          <SectionHeading id="overview">{name} overview</SectionHeading>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pb-10 mb-8 border-b border-[var(--border-color)]">
             {metaCells.map((cell) => (
-              <MetaCell key={cell.label} label={cell.label} value={cell.value} />
+              <MetaCell
+                key={cell.label}
+                label={cell.label}
+                value={cell.value}
+              />
             ))}
           </div>
         </ScrollReveal>
@@ -246,7 +260,9 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16"
         >
           <ScrollReveal direction="up">
-            <SectionHeading id="challenge">The challenge</SectionHeading>
+            <SectionHeading id="challenge">
+              The challenge behind {name}
+            </SectionHeading>
             <p className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
               {cs.challenge}
             </p>
@@ -262,7 +278,9 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-16"
         >
           <ScrollReveal direction="up">
-            <SectionHeading id="solution">The solution</SectionHeading>
+            <SectionHeading id="solution">
+              What we built for {name}
+            </SectionHeading>
             <p className="text-base md:text-lg text-[var(--text-secondary)] leading-[1.8]">
               {solutionBody}
             </p>
@@ -295,7 +313,7 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
         >
           <ScrollReveal direction="up">
-            <SectionHeading id="process">How we built it</SectionHeading>
+            <SectionHeading id="process">How we built {name}</SectionHeading>
           </ScrollReveal>
           <div className="space-y-8">
             {cs.productDecisions.slice(0, 4).map((item, i) => {
@@ -322,7 +340,7 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
           className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
         >
           <ScrollReveal direction="up">
-            <SectionHeading id="results">Results</SectionHeading>
+            <SectionHeading id="results">{name} results</SectionHeading>
           </ScrollReveal>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
             {cs.results.map((r, ri) => (
@@ -333,7 +351,9 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
                 <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-1">
                   {r.metric}
                 </p>
-                <p className="text-xs text-[var(--text-muted)]">{r.description}</p>
+                <p className="text-xs text-[var(--text-muted)]">
+                  {r.description}
+                </p>
               </ScrollReveal>
             ))}
           </div>
@@ -371,7 +391,7 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
         className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20"
       >
         <ScrollReveal direction="up">
-          <SectionHeading id="technology">Technology</SectionHeading>
+          <SectionHeading id="technology">{name} tech stack</SectionHeading>
         </ScrollReveal>
         <ScrollReveal direction="up" delay={0.06}>
           <div className="flex flex-wrap gap-2">
@@ -417,7 +437,7 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
         <section className="relative max-w-4xl mx-auto px-6 md:px-12 pb-20">
           <ScrollReveal direction="up">
             <h2 className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-8 font-medium">
-              Continue exploring
+              More projects like {name}
             </h2>
           </ScrollReveal>
           <div className="grid sm:grid-cols-2 gap-5">
@@ -439,7 +459,9 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
                   </div>
                   <div className="p-5">
                     <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2">
-                      {rel.projectType ?? rel.role?.split(",")[0] ?? "Case Study"}
+                      {rel.projectType ??
+                        rel.role?.split(",")[0] ??
+                        "Case Study"}
                     </p>
                     <h3 className="text-base font-display text-[var(--text-primary)] mb-1 group-hover:text-[var(--accent)] transition-colors">
                       {rel.name}
@@ -461,12 +483,15 @@ export default function CaseStudy({ project, caseStudy: cs }: CaseStudyProps) {
         aria-labelledby="next-step-heading"
         className="relative max-w-4xl mx-auto px-6 md:px-12 pb-24"
       >
-        <ScrollReveal direction="up" className="pt-12 border-t border-[var(--border-color)]">
+        <ScrollReveal
+          direction="up"
+          className="pt-12 border-t border-[var(--border-color)]"
+        >
           <h2
             id="next-step-heading"
             className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-6 font-medium"
           >
-            Next step
+            Build something like {name}
           </h2>
           <div className="flex flex-wrap gap-4">
             <Link
