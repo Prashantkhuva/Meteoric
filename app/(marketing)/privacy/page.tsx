@@ -97,7 +97,7 @@ const sections: {
   },
   {
     num: "11",
-    title: "Contact",
+    title: "Privacy Questions and Contact",
     content: `For questions about this privacy policy, contact us at contact@withmeteoric.com.`,
   },
 ];

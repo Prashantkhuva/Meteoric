@@ -70,8 +70,18 @@ export const caseStudies: CaseStudy[] = [
       "Let'em Know agency website preview with the interactive particle hero section",
     gradient: "from-white/[0.04] to-white/[0.01]",
     accent: "#1c1917",
-    technology: ["React", "GSAP", "Framer Motion", "Lenis", "Tailwind CSS", "Calendly"],
-    serviceLink: { label: "Landing Page Design", href: "/services/landing-pages" },
+    technology: [
+      "React",
+      "GSAP",
+      "Framer Motion",
+      "Lenis",
+      "Tailwind CSS",
+      "Calendly",
+    ],
+    serviceLink: {
+      label: "Landing Page Design",
+      href: "/services/landing-pages",
+    },
     relatedProjects: ["habit-flow", "megablog"],
   },
   {
@@ -87,9 +97,9 @@ export const caseStudies: CaseStudy[] = [
     metaDescription:
       "How Meteoric shipped a full-stack habit tracking SaaS MVP in 3 weeks with streak tracking, analytics, reminders, and 200+ beta users.",
     challenge:
-      "The project required a production-ready MVP with authentication, persistent data, analytics, and a clean dashboard — shipped quickly enough to test with real users and validate the concept.",
+      "The project required a production-ready MVP with authentication, persistent data, analytics, and a clean dashboard — shipped quickly enough to test with real users and validate the concept. Habit tracking is a daily-use product: if checking in takes more than a few seconds on a phone, or a streak resets because of a bug, users stop coming back. The MVP therefore had to be fast and reliable on mobile from day one, keep streak logic consistent across devices, and give users enough feedback — progress, streaks, and reminders — to make the habit stick, all within a three-week build.",
     solution:
-      "Shipped the core loop first — create habit, check in, track streak — then layered analytics, reminders, and polish on top.",
+      "Shipped the core loop first — create habit, check in, track streak — then layered analytics, reminders, and polish on top. Streak tracking and check-in validation run on the server, so a streak is calculated the same way on every device and cannot drift on the client. Stateless JWT authentication lets users move between phone and desktop without server-side sessions. Weekly analytics are computed from stored habit data when the dashboard loads, which kept the data model simple for the MVP. The dashboard was designed mobile-first, because most check-ins happen on a phone.",
     whatWasBuilt:
       "A full-stack SaaS application with user authentication, habit CRUD, daily check-in flow, streak tracking engine, weekly analytics dashboard, and reminder notifications. The backend is a Node.js/Express API with MongoDB persistence. The frontend is a React single-page application with a responsive dashboard.",
     productDecisions: [
@@ -193,7 +203,13 @@ export const caseStudies: CaseStudy[] = [
     imageAlt: "Preview of the MegaBlog editorial publishing platform",
     gradient: "from-white/[0.04] to-white/[0.01]",
     accent: "#1c1917",
-    technology: ["React", "Appwrite", "Redux Toolkit", "TinyMCE", "Framer Motion"],
+    technology: [
+      "React",
+      "Appwrite",
+      "Redux Toolkit",
+      "TinyMCE",
+      "Framer Motion",
+    ],
     serviceLink: {
       label: "Web Application Development",
       href: "/services/web-applications",
@@ -209,8 +225,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Developer tool — VS Code Marketplace",
     timeline: "1 week",
     role: "VS Code extension development",
-    metaTitle:
-      "Mobile Preview Simulator — VS Code Extension",
+    metaTitle: "Mobile Preview Simulator — VS Code Extension",
     metaDescription:
       "How Meteoric built a VS Code extension for previewing responsive mobile layouts directly in the editor — 1,000+ installs on the VS Code Marketplace.",
     challenge:
@@ -237,10 +252,15 @@ export const caseStudies: CaseStudy[] = [
       "One-click install from VS Code Marketplace",
     ],
     results: [
-      { metric: "Installs", value: "1,000+", description: "VS Code Marketplace" },
+      {
+        metric: "Installs",
+        value: "1,000+",
+        description: "VS Code Marketplace",
+      },
     ],
     resultsVerified: true,
-    liveUrl: "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
+    liveUrl:
+      "https://marketplace.visualstudio.com/items?itemName=Prashantkhuva.mobile-preview-simulator",
     liveUrlVerified: true,
     image: "/mobile-simulator.webp",
     imageAlt:

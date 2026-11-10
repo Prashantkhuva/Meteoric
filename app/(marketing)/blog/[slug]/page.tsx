@@ -66,38 +66,125 @@ export async function generateMetadata({
 }
 
 const postService: Record<string, { href: string; label: string }> = {
-  "nextjs-seo-guide": { href: "/services/nextjs-development", label: "Next.js Development" },
-  "no-code-vs-custom-development": { href: "/services/web-applications", label: "Web Applications" },
-  "what-is-a-saas-development-agency": { href: "/services/saas-development", label: "SaaS Development" },
-  "saas-mvp-development-cost": { href: "/services/saas-development", label: "SaaS Development" },
-  "freelance-vs-agency-vs-in-house": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "how-much-does-it-cost-to-build-a-web-app": { href: "/services/web-applications", label: "Web Applications" },
-  "mongodb-schema-design-for-saas-billing": { href: "/services/saas-development", label: "SaaS Development" },
-  "how-to-build-a-saas-mvp-step-by-step-guide": { href: "/services/saas-development", label: "SaaS Development" },
-  "mongodb-vs-postgresql-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
-  "gsap-vs-framer-motion-production-guide": { href: "/services/landing-pages", label: "Landing Pages" },
-  "supabase-vs-firebase-2026-comparison": { href: "/services/saas-development", label: "SaaS Development" },
-  "nextjs-vs-remix-2026-comparison": { href: "/services/nextjs-development", label: "Next.js Development" },
-  "what-is-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "how-much-does-a-startup-website-cost": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "how-to-scope-a-saas-prototype-to-ship-in-weeks": { href: "/services/saas-development", label: "SaaS Development" },
-  "the-meteoric-guide-to-choosing-your-tech-stack": { href: "/services/saas-development", label: "SaaS Development" },
-  "how-to-choose-a-web-development-agency": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "react-vs-nextjs-for-startup-websites": { href: "/services/nextjs-development", label: "Next.js Development" },
-  "how-to-implement-aeo-answer-engine-optimization-for-saas": { href: "/services/saas-development", label: "SaaS Development" },
-  "why-visitors-leave-your-website-issues-and-solutions": { href: "/services/landing-pages", label: "Landing Pages" },
-  "high-converting-landing-page-structure-for-saas": { href: "/services/landing-pages", label: "Landing Pages" },
-  "long-tail-seo-strategy-for-funded-startups": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "ai-search-optimization-how-to-get-cited-by-chatgpt": { href: "/services/landing-pages", label: "Landing Pages" },
-  "conversion-focused-web-design-beyond-pretty-ui": { href: "/services/landing-pages", label: "Landing Pages" },
-  "startup-seo-on-a-budget-what-to-do-first": { href: "/services/startup-web-development", label: "Startup Web Development" },
-  "complete-website-audit-checklist-for-startups": { href: "/services/web-applications", label: "Web Applications" },
-  "cafe-restaurant-website-design-gujarat": { href: "/services/landing-pages", label: "Landing Pages" },
-  "restaurant-local-seo-photography-guide": { href: "/services/landing-pages", label: "Landing Pages" },
+  "nextjs-seo-guide": {
+    href: "/services/nextjs-development",
+    label: "Next.js Development",
+  },
+  "no-code-vs-custom-development": {
+    href: "/services/web-applications",
+    label: "Web Applications",
+  },
+  "what-is-a-saas-development-agency": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "saas-mvp-development-cost": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "freelance-vs-agency-vs-in-house": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "how-much-does-it-cost-to-build-a-web-app": {
+    href: "/services/web-applications",
+    label: "Web Applications",
+  },
+  "mongodb-schema-design-for-saas-billing": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "how-to-build-a-saas-mvp-step-by-step-guide": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "mongodb-vs-postgresql-for-saas": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "gsap-vs-framer-motion-production-guide": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
+  "supabase-vs-firebase-2026-comparison": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "nextjs-vs-remix-2026-comparison": {
+    href: "/services/nextjs-development",
+    label: "Next.js Development",
+  },
+  "what-is-a-web-development-agency": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "how-much-does-a-startup-website-cost": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "how-to-scope-a-saas-prototype-to-ship-in-weeks": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "the-meteoric-guide-to-choosing-your-tech-stack": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "how-to-choose-a-web-development-agency": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "react-vs-nextjs-for-startup-websites": {
+    href: "/services/nextjs-development",
+    label: "Next.js Development",
+  },
+  "how-to-implement-aeo-answer-engine-optimization-for-saas": {
+    href: "/services/saas-development",
+    label: "SaaS Development",
+  },
+  "why-visitors-leave-your-website-issues-and-solutions": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
+  "high-converting-landing-page-structure-for-saas": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
+  "long-tail-seo-strategy-for-funded-startups": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "ai-search-optimization-how-to-get-cited-by-chatgpt": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
+  "conversion-focused-web-design-beyond-pretty-ui": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
+  "startup-seo-on-a-budget-what-to-do-first": {
+    href: "/services/startup-web-development",
+    label: "Startup Web Development",
+  },
+  "complete-website-audit-checklist-for-startups": {
+    href: "/services/web-applications",
+    label: "Web Applications",
+  },
+  "cafe-restaurant-website-design-gujarat": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
+  "restaurant-local-seo-photography-guide": {
+    href: "/services/landing-pages",
+    label: "Landing Pages",
+  },
 };
 
 function readingTime(sections: ArticleSection[]) {
-  const words = sections.reduce((acc, s) => acc + s.body.split(/\s+/).length, 0);
+  const words = sections.reduce(
+    (acc, s) => acc + s.body.split(/\s+/).length,
+    0,
+  );
   return Math.max(1, Math.ceil(words / 200));
 }
 
@@ -179,11 +266,17 @@ function renderBlocks(text: string, keyPrefix: string) {
             background: "var(--accent-dim)",
           }}
         >
-          <p className={`${PARA_CLASS} mb-2.5`} style={{ color: "var(--text-primary)" }}>
+          <p
+            className={`${PARA_CLASS} mb-2.5`}
+            style={{ color: "var(--text-primary)" }}
+          >
             {renderInline(quoteLines[0], `${key}-q`)}
           </p>
           {items.length > 0 && (
-            <ul className={LIST_CLASS} style={{ color: "var(--text-secondary)" }}>
+            <ul
+              className={LIST_CLASS}
+              style={{ color: "var(--text-secondary)" }}
+            >
               {items.map((item, j) => (
                 <li key={`${key}-qi${j}`} className={LIST_ITEM_CLASS}>
                   {renderInline(item, `${key}-qi${j}`)}
@@ -279,9 +372,16 @@ function renderBlocks(text: string, keyPrefix: string) {
       );
     }
 
-    if (lines.some((l) => l.startsWith("- ")) && lines.every((l) => l.startsWith("- ") || l.length === 0)) {
+    if (
+      lines.some((l) => l.startsWith("- ")) &&
+      lines.every((l) => l.startsWith("- ") || l.length === 0)
+    ) {
       return (
-        <ul key={key} className={LIST_CLASS} style={{ color: "var(--text-secondary)" }}>
+        <ul
+          key={key}
+          className={LIST_CLASS}
+          style={{ color: "var(--text-secondary)" }}
+        >
           {lines
             .filter((l) => l.startsWith("- "))
             .map((l, j) => (
@@ -293,7 +393,10 @@ function renderBlocks(text: string, keyPrefix: string) {
       );
     }
 
-    if (lines.some((l) => /^\d+\.\s/.test(l)) && lines.every((l) => /^\d+\.\s/.test(l) || l.length === 0)) {
+    if (
+      lines.some((l) => /^\d+\.\s/.test(l)) &&
+      lines.every((l) => /^\d+\.\s/.test(l) || l.length === 0)
+    ) {
       return (
         <ol
           key={key}
@@ -312,7 +415,11 @@ function renderBlocks(text: string, keyPrefix: string) {
     }
 
     return (
-      <p key={key} className={PARA_CLASS} style={{ color: "var(--text-secondary)" }}>
+      <p
+        key={key}
+        className={PARA_CLASS}
+        style={{ color: "var(--text-secondary)" }}
+      >
         {renderInline(block, key)}
       </p>
     );
@@ -329,7 +436,8 @@ export default async function BlogPost({
   if (!post) notFound();
 
   const readTime = readingTime(post.sections);
-  const image = (slugToImage as Record<string, string>)[slug] || FALLBACK_BLOG_IMAGE;
+  const image =
+    (slugToImage as Record<string, string>)[slug] || FALLBACK_BLOG_IMAGE;
   const relatedLinks = post.relatedLinks?.length
     ? post.relatedLinks
     : postService[post.slug]
@@ -357,14 +465,30 @@ export default async function BlogPost({
   const faqSchema =
     (post.faqs?.length ?? 0) > 0 ? buildFaqJsonLd(post.faqs) : null;
 
-  const speakableJsonLd = { "@context": "https://schema.org", "@type": "WebPage", name: post.title, speakable: { "@type": "SpeakableSpecification", cssSelector: [".sr-only", "h1"] } };
+  const speakableJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: post.title,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".sr-only", "h1"],
+    },
+  };
 
+  // Page-specific suffix keeps template H2s (TL;DR, FAQ, sources, related) unique per post
+  const topic = (post.seoTitle || post.title)
+    .replace(/\s*\([^)]*\)\s*$/, "")
+    .trim();
   const relatedPosts = post.relatedBlogPosts?.length
     ? post.relatedBlogPosts
         .map((rp) => blogPosts.find((p) => p.slug === rp.slug))
         .filter((p): p is Article => p !== undefined)
         .slice(0, 3)
-    : blogPosts.filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t))).slice(0, 3);
+    : blogPosts
+        .filter(
+          (p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t)),
+        )
+        .slice(0, 3);
 
   return (
     <>
@@ -372,14 +496,23 @@ export default async function BlogPost({
       <JsonLd data={articleJsonLd} />
       <JsonLd data={speakableJsonLd} />
       {faqSchema && <JsonLd data={faqSchema} />}
-      <article className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
+      <article
+        className="min-h-screen"
+        style={{ background: "var(--bg-primary)" }}
+      >
         <div className="relative max-w-4xl mx-auto px-6 md:px-12 pt-8 pb-24">
           <Breadcrumbs items={breadcrumbTrail} containerClassName="px-0 pt-0" />
 
           {/* Back link */}
           <div className="mt-8 mb-10">
-            <Link href="/blog" className="group inline-flex items-center gap-2.5 min-h-6 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200 hover:text-[var(--text-primary)]" style={{ color: "var(--text-muted)" }}>
-              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
+            <Link
+              href="/blog"
+              className="group inline-flex items-center gap-2.5 min-h-6 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200 hover:text-[var(--text-primary)]"
+              style={{ color: "var(--text-muted)" }}
+            >
+              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
+                ←
+              </span>
               All articles
             </Link>
           </div>
@@ -388,43 +521,90 @@ export default async function BlogPost({
           <header className="mb-14 max-w-[820px]">
             <div className="flex flex-wrap items-center gap-2 mb-7">
               {post.tags.slice(0, 2).map((tag) => (
-                <span key={tag} className="text-[10px] font-medium uppercase tracking-[0.14em] px-3 py-1.5 rounded-full" style={{ background: "var(--accent-dim)", color: "var(--text-secondary)", border: "1px solid var(--border-color)" }}>
+                <span
+                  key={tag}
+                  className="text-[10px] font-medium uppercase tracking-[0.14em] px-3 py-1.5 rounded-full"
+                  style={{
+                    background: "var(--accent-dim)",
+                    color: "var(--text-secondary)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                >
                   {tag}
                 </span>
               ))}
             </div>
 
-            <h1 className="font-display text-[32px] sm:text-[40px] md:text-[46px] lg:text-[52px] leading-[1.06] tracking-[-0.02em] mb-6 text-balance" style={{ color: "var(--text-primary)" }}>
+            <h1
+              className="font-display text-[32px] sm:text-[40px] md:text-[46px] lg:text-[52px] leading-[1.06] tracking-[-0.02em] mb-6 text-balance"
+              style={{ color: "var(--text-primary)" }}
+            >
               {post.title}
             </h1>
 
-            <p className="text-[17px] md:text-[19px] leading-[1.65] max-w-[680px] mb-9" style={{ color: "var(--text-secondary)" }}>
+            <p
+              className="text-[17px] md:text-[19px] leading-[1.65] max-w-[680px] mb-9"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {post.tagline}
             </p>
 
             {/* Author card */}
-            <div className="flex items-center gap-3.5 pt-6" style={{ borderTop: "1px solid var(--border-color)" }}>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center font-display text-[13px] tracking-wide" style={{ background: "var(--accent-dim)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+            <div
+              className="flex items-center gap-3.5 pt-6"
+              style={{ borderTop: "1px solid var(--border-color)" }}
+            >
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center font-display text-[13px] tracking-wide"
+                style={{
+                  background: "var(--accent-dim)",
+                  border: "1px solid var(--border-color)",
+                  color: "var(--text-muted)",
+                }}
+              >
                 PK
               </div>
               <div>
-                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Prashant Khuva</p>
-                <div className="flex items-center gap-2 text-[11px] tracking-wide" style={{ color: "var(--text-muted)" }}>
+                <p
+                  className="text-sm font-medium"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Prashant Khuva
+                </p>
+                <div
+                  className="flex items-center gap-2 text-[11px] tracking-wide"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   <time dateTime={post.published}>
-                    {new Date(post.published).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                    {new Date(post.published).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </time>
                   {post.dateModified && post.dateModified > post.published && (
                     <>
-                      <span className="w-[3px] h-[3px] rounded-full" style={{ background: "var(--text-muted)" }} aria-hidden="true" />
+                      <span
+                        className="w-[3px] h-[3px] rounded-full"
+                        style={{ background: "var(--text-muted)" }}
+                        aria-hidden="true"
+                      />
                       <span>
                         Updated{" "}
                         <time dateTime={post.dateModified}>
-                          {new Date(post.dateModified).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                          {new Date(post.dateModified).toLocaleDateString(
+                            "en-US",
+                            { month: "long", day: "numeric", year: "numeric" },
+                          )}
                         </time>
                       </span>
                     </>
                   )}
-                  <span className="w-[3px] h-[3px] rounded-full" style={{ background: "var(--text-muted)" }} aria-hidden="true" />
+                  <span
+                    className="w-[3px] h-[3px] rounded-full"
+                    style={{ background: "var(--text-muted)" }}
+                    aria-hidden="true"
+                  />
                   <span>{readTime} min read</span>
                 </div>
               </div>
@@ -432,28 +612,65 @@ export default async function BlogPost({
           </header>
 
           {/* Featured image */}
-          <ScrollReveal direction="up" className="relative rounded-[20px] overflow-hidden mb-16 aspect-[16/9]" style={{ border: "1px solid var(--border-color)", boxShadow: "0 24px 60px -32px rgba(0,0,0,0.35)" }}>
-            <Image src={image} alt={post.title} fill priority fetchPriority="high" sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.18) 100%)" }} />
+          <ScrollReveal
+            direction="up"
+            className="relative rounded-[20px] overflow-hidden mb-16 aspect-[16/9]"
+            style={{
+              border: "1px solid var(--border-color)",
+              boxShadow: "0 24px 60px -32px rgba(0,0,0,0.35)",
+            }}
+          >
+            <Image
+              src={image}
+              alt={post.title}
+              fill
+              priority
+              fetchPriority="high"
+              sizes="(max-width: 768px) 100vw, 896px"
+              className="object-cover"
+            />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.18) 100%)",
+              }}
+            />
           </ScrollReveal>
 
           {/* Article body */}
           <div className="max-w-[700px] mx-auto">
             {post.intro && (
               <ScrollReveal direction="up" className="mb-14">
-                <div className="space-y-5 text-[17px] md:text-[18px] leading-[1.7] [&_p]:text-[inherit] [&_p]:leading-[inherit] [&_ul]:text-[inherit] [&_ol]:text-[inherit]" style={{ color: "var(--text-secondary)" }}>
+                <div
+                  className="space-y-5 text-[17px] md:text-[18px] leading-[1.7] [&_p]:text-[inherit] [&_p]:leading-[inherit] [&_ul]:text-[inherit] [&_ol]:text-[inherit]"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   {renderBlocks(post.intro, "intro")}
                 </div>
               </ScrollReveal>
             )}
             {post.sections.map((section, i) => (
-              <ScrollReveal key={i} direction="up" className="mb-14 md:mb-16 last:mb-0">
+              <ScrollReveal
+                key={i}
+                direction="up"
+                className="mb-14 md:mb-16 last:mb-0"
+              >
                 <div className="flex items-baseline gap-4 mb-5">
-                  <span className="font-display text-[13px] tabular-nums shrink-0 pt-1" style={{ color: "var(--text-muted)" }}>
+                  <span
+                    className="font-display text-[13px] tabular-nums shrink-0 pt-1"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h2 id={headingId(section.heading)} className="font-display text-[24px] sm:text-[26px] md:text-[30px] leading-[1.2] tracking-[-0.015em] text-balance" style={{ color: "var(--text-primary)" }}>
-                    {section.heading}
+                  <h2
+                    id={headingId(section.heading)}
+                    className="font-display text-[24px] sm:text-[26px] md:text-[30px] leading-[1.2] tracking-[-0.015em] text-balance"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {section.heading === "TL;DR"
+                      ? `TL;DR: ${topic}`
+                      : section.heading}
                   </h2>
                 </div>
                 <div className="space-y-5 md:space-y-6 pl-0 sm:pl-9">
@@ -465,10 +682,17 @@ export default async function BlogPost({
 
           {/* FAQ */}
           {(post.faqs?.length ?? 0) > 0 && (
-            <div className="mt-20 pt-14 max-w-[700px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
+            <div
+              className="mt-20 pt-14 max-w-[700px] mx-auto"
+              style={{ borderTop: "1px solid var(--border-color)" }}
+            >
               <ScrollReveal direction="right" className="mb-8">
-                <h2 id="frequently-asked-questions" className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]" style={{ color: "var(--text-primary)" }}>
-                  Frequently Asked Questions
+                <h2
+                  id="frequently-asked-questions"
+                  className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  FAQ: {topic}
                 </h2>
               </ScrollReveal>
               <FaqAccordion items={post.faqs} />
@@ -477,48 +701,83 @@ export default async function BlogPost({
 
           {/* Further reading */}
           {(post.furtherReading?.length ?? 0) > 0 && (
-            <div className="mt-20 pt-14 max-w-[700px] mx-auto" style={{ borderTop: "1px solid var(--border-color)" }}>
+            <div
+              className="mt-20 pt-14 max-w-[700px] mx-auto"
+              style={{ borderTop: "1px solid var(--border-color)" }}
+            >
               <ScrollReveal direction="right" className="mb-8">
-                <h2 id="further-reading" className="text-[11px] uppercase tracking-[0.1em] font-medium" style={{ color: "var(--text-muted)" }}>
-                  Further reading
+                <h2
+                  id="further-reading"
+                  className="text-[11px] uppercase tracking-[0.1em] font-medium"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Sources: {topic}
                 </h2>
               </ScrollReveal>
               <ul className="space-y-2.5">
-                {post.furtherReading!
-                  .map((r) => (
-                    <li key={r.url}>
-                      <a
-                        href={r.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-baseline gap-1.5 text-[15px] leading-[1.6] transition-opacity duration-200 hover:opacity-70"
-                        style={{ color: "var(--text-secondary)" }}
+                {post.furtherReading!.map((r) => (
+                  <li key={r.url}>
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-baseline gap-1.5 text-[15px] leading-[1.6] transition-opacity duration-200 hover:opacity-70"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <span className="underline underline-offset-4 decoration-[var(--border-color)] group-hover:decoration-[var(--text-secondary)]">
+                        {r.title}
+                      </span>
+                      <span
+                        className="text-[11px] shrink-0"
+                        style={{ color: "var(--text-muted)" }}
                       >
-                        <span className="underline underline-offset-4 decoration-[var(--border-color)] group-hover:decoration-[var(--text-secondary)]">
-                          {r.title}
-                        </span>
-                        <span className="text-[11px] shrink-0" style={{ color: "var(--text-muted)" }}>
-                          {r.source}
-                        </span>
-                        <ArrowUpRight size={12} className="shrink-0 translate-y-[1px]" style={{ color: "var(--text-muted)" }} aria-hidden="true" />
-                      </a>
-                    </li>
-                  ))}
+                        {r.source}
+                      </span>
+                      <ArrowUpRight
+                        size={12}
+                        className="shrink-0 translate-y-[1px]"
+                        style={{ color: "var(--text-muted)" }}
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           )}
 
           {/* Author bio */}
-          <ScrollReveal direction="up" className="mt-20 max-w-[700px] mx-auto rounded-[20px] p-6 md:p-8" style={{ border: "1px solid var(--border-color)", background: "var(--accent-dim)" }}>
+          <ScrollReveal
+            direction="up"
+            className="mt-20 max-w-[700px] mx-auto rounded-[20px] p-6 md:p-8"
+            style={{
+              border: "1px solid var(--border-color)",
+              background: "var(--accent-dim)",
+            }}
+          >
             <div className="flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center font-display text-base tracking-wide shrink-0" style={{ background: "var(--card-bg)", border: "1px solid var(--border-color)", color: "var(--text-muted)" }}>
+              <div
+                className="w-14 h-14 rounded-full flex items-center justify-center font-display text-base tracking-wide shrink-0"
+                style={{
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--border-color)",
+                  color: "var(--text-muted)",
+                }}
+              >
                 PK
               </div>
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.16em] mb-2" style={{ color: "var(--text-muted)" }}>
+                <p
+                  className="text-[10px] font-medium uppercase tracking-[0.16em] mb-2"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   Written by
                 </p>
-                <h3 id="author" className="font-display text-lg mb-1.5" style={{ color: "var(--text-primary)" }}>
+                <h3
+                  id="author"
+                  className="font-display text-lg mb-1.5"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   <Link
                     href="/author/prashant-khuva"
                     className="underline-offset-4 hover:underline transition-all duration-200 hover:opacity-70"
@@ -526,8 +785,12 @@ export default async function BlogPost({
                     Prashant Khuva
                   </Link>
                 </h3>
-                <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>
-                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS products and high-performance web applications for startups.{" "}
+                <p
+                  className="text-[14px] leading-[1.7]"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Founder &amp; Full-Stack Developer at Meteoric. Building SaaS
+                  products and high-performance web applications for startups.{" "}
                   <Link
                     href="/editorial-policy"
                     className="underline underline-offset-4 transition-all duration-200"
@@ -539,10 +802,26 @@ export default async function BlogPost({
                 </p>
                 <div className="flex items-center gap-2.5 mt-4">
                   {[
-                    { id: "twitter", href: "https://x.com/prashantkhuva_", label: "X" },
-                    { id: "linkedin", href: "https://linkedin.com/in/prashantkhuva", label: "LinkedIn" },
-                    { id: "github", href: "https://github.com/Prashantkhuva", label: "GitHub" },
-                    { id: "instagram", href: "https://www.instagram.com/officialmeteoric/", label: "Instagram" },
+                    {
+                      id: "twitter",
+                      href: "https://x.com/prashantkhuva_",
+                      label: "X",
+                    },
+                    {
+                      id: "linkedin",
+                      href: "https://linkedin.com/in/prashantkhuva",
+                      label: "LinkedIn",
+                    },
+                    {
+                      id: "github",
+                      href: "https://github.com/Prashantkhuva",
+                      label: "GitHub",
+                    },
+                    {
+                      id: "instagram",
+                      href: "https://www.instagram.com/officialmeteoric/",
+                      label: "Instagram",
+                    },
                   ].map((s) => (
                     <a
                       key={s.id}
@@ -552,7 +831,10 @@ export default async function BlogPost({
                       aria-label={s.label}
                       title={s.label}
                       className="inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-200 hover:text-[var(--text-primary)] hover:bg-[var(--accent-dim)]"
-                      style={{ color: "var(--text-muted)", border: "1px solid var(--border-color)" }}
+                      style={{
+                        color: "var(--text-muted)",
+                        border: "1px solid var(--border-color)",
+                      }}
                     >
                       {socialIcons[s.id as keyof typeof socialIcons]}
                     </a>
@@ -564,33 +846,77 @@ export default async function BlogPost({
 
           {/* Related posts */}
           {relatedPosts.length > 0 && (
-            <div className="mt-20 pt-14" style={{ borderTop: "1px solid var(--border-color)" }}>
+            <div
+              className="mt-20 pt-14"
+              style={{ borderTop: "1px solid var(--border-color)" }}
+            >
               <ScrollReveal direction="right" className="mb-9">
-                <p className="text-[10px] font-medium uppercase tracking-[0.16em] mb-3" style={{ color: "var(--text-muted)" }}>
+                <p
+                  className="text-[10px] font-medium uppercase tracking-[0.16em] mb-3"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   Keep reading
                 </p>
-                <h2 id="continue-reading" className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]" style={{ color: "var(--text-primary)" }}>
-                  Continue Reading
+                <h2
+                  id="continue-reading"
+                  className="font-display text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.015em]"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Related reading: {topic}
                 </h2>
               </ScrollReveal>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7">
                 {relatedPosts.map((rp, i) => {
-                  const rpImage = (slugToImage as Record<string, string>)[rp.slug] || FALLBACK_BLOG_IMAGE;
+                  const rpImage =
+                    (slugToImage as Record<string, string>)[rp.slug] ||
+                    FALLBACK_BLOG_IMAGE;
                   return (
                     <ScrollReveal key={rp.slug} direction="up" delay={0.08 * i}>
                       <Link href={`/blog/${rp.slug}`} className="group block">
-                        <div className="relative rounded-[16px] overflow-hidden mb-4 aspect-[16/10]" style={{ border: "1px solid var(--border-color)" }}>
-                          <Image src={rpImage} alt={rp.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
+                        <div
+                          className="relative rounded-[16px] overflow-hidden mb-4 aspect-[16/10]"
+                          style={{ border: "1px solid var(--border-color)" }}
+                        >
+                          <Image
+                            src={rpImage}
+                            alt={rp.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                          />
                         </div>
-                        <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.14em]" style={{ color: "var(--text-muted)" }}>
+                        <div
+                          className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.14em]"
+                          style={{ color: "var(--text-muted)" }}
+                        >
                           <span>{rp.tags[0]}</span>
-                          <span className="w-[3px] h-[3px] rounded-full" style={{ background: "var(--text-muted)" }} />
-                          <span>{Math.max(1, Math.ceil(rp.sections.reduce((acc, s) => acc + s.body.split(/\s+/).length, 0) / 200))} min</span>
+                          <span
+                            className="w-[3px] h-[3px] rounded-full"
+                            style={{ background: "var(--text-muted)" }}
+                          />
+                          <span>
+                            {Math.max(
+                              1,
+                              Math.ceil(
+                                rp.sections.reduce(
+                                  (acc, s) => acc + s.body.split(/\s+/).length,
+                                  0,
+                                ) / 200,
+                              ),
+                            )}{" "}
+                            min
+                          </span>
                         </div>
-                        <h3 className="text-[15px] font-medium leading-[1.45] mb-1.5 transition-opacity duration-300 group-hover:opacity-65 text-pretty" style={{ color: "var(--text-primary)" }}>
+                        <h3
+                          className="text-[15px] font-medium leading-[1.45] mb-1.5 transition-opacity duration-300 group-hover:opacity-65 text-pretty"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {rp.title}
                         </h3>
-                        <p className="text-[13px] line-clamp-2 leading-[1.6]" style={{ color: "var(--text-muted)" }}>
+                        <p
+                          className="text-[13px] line-clamp-2 leading-[1.6]"
+                          style={{ color: "var(--text-muted)" }}
+                        >
                           {rp.tagline}
                         </p>
                       </Link>
@@ -602,19 +928,45 @@ export default async function BlogPost({
           )}
 
           {/* CTA */}
-          <ScrollReveal direction="up" className="mt-20 px-7 py-12 md:px-14 md:py-16 rounded-[24px] text-center relative overflow-hidden" style={{ border: "1px solid var(--border-color)", background: "var(--accent-glow)" }}>
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] mb-4" style={{ color: "var(--text-muted)" }}>
+          <ScrollReveal
+            direction="up"
+            className="mt-20 px-7 py-12 md:px-14 md:py-16 rounded-[24px] text-center relative overflow-hidden"
+            style={{
+              border: "1px solid var(--border-color)",
+              background: "var(--accent-glow)",
+            }}
+          >
+            <p
+              className="text-[10px] font-medium uppercase tracking-[0.18em] mb-4"
+              style={{ color: "var(--text-muted)" }}
+            >
               Meteoric
             </p>
-            <h3 id="have-a-project-in-mind" className="font-display text-[26px] sm:text-[32px] md:text-[38px] leading-[1.15] tracking-[-0.015em] mb-4 text-balance" style={{ color: "var(--text-primary)" }}>
+            <h3
+              id="have-a-project-in-mind"
+              className="font-display text-[26px] sm:text-[32px] md:text-[38px] leading-[1.15] tracking-[-0.015em] mb-4 text-balance"
+              style={{ color: "var(--text-primary)" }}
+            >
               Have a project in mind?
             </h3>
-            <p className="text-[15px] leading-[1.7] mb-9 max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
-              From landing pages to full SaaS platforms — let&apos;s build something exceptional.
+            <p
+              className="text-[15px] leading-[1.7] mb-9 max-w-md mx-auto"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              From landing pages to full SaaS platforms — let&apos;s build
+              something exceptional.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
               {relatedLinks.map((rs) => (
-                <Link key={rs.href} href={rs.href} className="min-h-10 px-6 py-2.5 inline-flex items-center text-[12px] font-medium uppercase tracking-[0.12em] rounded-full transition-colors duration-200 hover:bg-[var(--accent-dim)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)]" style={{ color: "var(--text-muted)", border: "1px solid var(--border-color)" }}>
+                <Link
+                  key={rs.href}
+                  href={rs.href}
+                  className="min-h-10 px-6 py-2.5 inline-flex items-center text-[12px] font-medium uppercase tracking-[0.12em] rounded-full transition-colors duration-200 hover:bg-[var(--accent-dim)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)]"
+                  style={{
+                    color: "var(--text-muted)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                >
                   {rs.label}
                   <span className="ml-2">→</span>
                 </Link>
@@ -623,9 +975,18 @@ export default async function BlogPost({
           </ScrollReveal>
 
           {/* Back link */}
-          <div className="mt-14 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
-            <Link href="/blog" className="group inline-flex items-center gap-2.5 min-h-6 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200 hover:text-[var(--text-primary)]" style={{ color: "var(--text-muted)" }}>
-              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
+          <div
+            className="mt-14 pt-8"
+            style={{ borderTop: "1px solid var(--border-color)" }}
+          >
+            <Link
+              href="/blog"
+              className="group inline-flex items-center gap-2.5 min-h-6 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200 hover:text-[var(--text-primary)]"
+              style={{ color: "var(--text-muted)" }}
+            >
+              <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
+                ←
+              </span>
               All articles
             </Link>
           </div>

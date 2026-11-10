@@ -42,6 +42,7 @@ export default function ServiceIntentLanding({
   relatedService = null,
 }: ServiceIntentLandingProps) {
   const openCal = useCallback(() => openCalModal(), []);
+  const topicTitle = page.topic.charAt(0).toUpperCase() + page.topic.slice(1);
 
   const sectionLabel = (text: string) => (
     <ScrollReveal direction="down" delay={0}>
@@ -112,7 +113,7 @@ export default function ServiceIntentLanding({
               id="who-for"
               className="text-2xl md:text-3xl font-secondary-italic mb-7"
             >
-              Built for founders at a specific stage
+              Who {page.topic} is for
             </h2>
             <ul className="grid sm:grid-cols-2 gap-4">
               {page.whoFor.map((item, i) => (
@@ -135,7 +136,7 @@ export default function ServiceIntentLanding({
               id="included"
               className="text-2xl md:text-3xl font-secondary-italic mb-7"
             >
-              What ships with the engagement
+              What ships with {page.topic}
             </h2>
             <ul className="space-y-3.5">
               {page.deliverables.map((item, i) => (
@@ -170,7 +171,7 @@ export default function ServiceIntentLanding({
             id="process"
             className="text-2xl md:text-3xl font-secondary-italic mb-10"
           >
-            How the work runs
+            How {page.topic} works
           </h2>
           <ol className="space-y-8">
             {page.processSteps.map((step, idx) => (
@@ -204,7 +205,7 @@ export default function ServiceIntentLanding({
               id="tech"
               className="text-2xl md:text-3xl font-secondary-italic mb-8"
             >
-              Tools chosen for this kind of build
+              {topicTitle} tech stack
             </h2>
             <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {page.technologies.map((tech, i) => (
@@ -214,7 +215,9 @@ export default function ServiceIntentLanding({
                     delay={0.07 * i}
                     className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] p-5"
                   >
-                    <p className="text-[15px] font-semibold mb-1">{tech.name}</p>
+                    <p className="text-[15px] font-semibold mb-1">
+                      {tech.name}
+                    </p>
                     <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">
                       {tech.use}
                     </p>
@@ -237,7 +240,7 @@ export default function ServiceIntentLanding({
             id="fit"
             className="text-2xl md:text-3xl font-secondary-italic mb-3"
           >
-            When this engagement fits — and when it doesn&apos;t
+            When {page.topic} fits — and when it doesn&apos;t
           </h2>
           <p className="text-[15px] text-[var(--text-muted)] mb-10 max-w-2xl leading-relaxed">
             Every project is built directly by the founder — that model works
@@ -311,7 +314,7 @@ export default function ServiceIntentLanding({
               id="work"
               className="text-2xl md:text-3xl font-secondary-italic mb-4"
             >
-              Projects in this territory
+              {topicTitle} projects
             </h2>
             <p className="text-[15px] text-[var(--text-muted)] mb-10 max-w-2xl leading-relaxed">
               Shipped work pulled straight from{" "}
@@ -325,7 +328,11 @@ export default function ServiceIntentLanding({
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               {pageProjects.map((project, i) => (
-                <ScrollReveal key={project.slug} direction="up" delay={0.08 * i}>
+                <ScrollReveal
+                  key={project.slug}
+                  direction="up"
+                  delay={0.08 * i}
+                >
                   <Link
                     href={`/work/${project.slug}`}
                     className="group block h-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary, #0a0a0a)] overflow-hidden hover:border-[var(--border-hover, rgba(255,255,255,0.12))] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
@@ -367,7 +374,7 @@ export default function ServiceIntentLanding({
             id="faq"
             className="text-3xl md:text-5xl font-secondary-italic mb-14"
           >
-            Questions, answered plainly
+            {topicTitle} FAQ
           </h2>
           <FaqAccordion items={page.faqs} />
         </div>
@@ -385,7 +392,7 @@ export default function ServiceIntentLanding({
               id="insights"
               className="text-2xl md:text-3xl font-secondary-italic mb-10"
             >
-              Read before you decide
+              {topicTitle} guides
             </h2>
             <div className="grid md:grid-cols-3 gap-4">
               {insights.map((post, i) => (
@@ -425,8 +432,11 @@ export default function ServiceIntentLanding({
         className="border-t border-[var(--border-color)] py-16 md:py-20"
       >
         <div className="max-w-4xl mx-auto px-6 md:px-12">
-          <h2 id="cta" className="text-2xl md:text-3xl font-secondary-italic mb-4">
-            Start the conversation
+          <h2
+            id="cta"
+            className="text-2xl md:text-3xl font-secondary-italic mb-4"
+          >
+            Start your {page.topic} project
           </h2>
           <p className="text-[15px] md:text-base text-[var(--text-muted)] leading-relaxed mb-8 max-w-2xl">
             {page.ctaLine}

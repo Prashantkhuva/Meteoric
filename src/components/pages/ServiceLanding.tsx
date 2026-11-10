@@ -7,14 +7,22 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import FaqAccordion from "@/components/sections/FaqAccordion";
 import { blogPosts } from "@/data/blog-posts";
 import { openCalModal } from "@/components/ui/cal-modal-store";
-import type { Article, Service, ServiceSection, RelatedBlogRef } from "@/data/types";
+import type {
+  Article,
+  Service,
+  ServiceSection,
+  RelatedBlogRef,
+} from "@/data/types";
 
 export interface ServiceLandingProps {
   service: Service;
   relatedServices?: { slug: string; name: string }[];
 }
 
-export default function ServiceLanding({ service, relatedServices = [] }: ServiceLandingProps) {
+export default function ServiceLanding({
+  service,
+  relatedServices = [],
+}: ServiceLandingProps) {
   const configuredRelated = service.relatedBlogPosts?.length ?? 0;
   const relatedPosts = (service.relatedBlogPosts ?? [])
     .map((rp: RelatedBlogRef) =>
@@ -26,7 +34,10 @@ export default function ServiceLanding({ service, relatedServices = [] }: Servic
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen text-[var(--text-primary)]" style={{ background: "var(--bg-primary)" }}>
+    <div
+      className="min-h-screen text-[var(--text-primary)]"
+      style={{ background: "var(--bg-primary)" }}
+    >
       {/* Back link */}
       <div className="max-w-4xl mx-auto px-6 md:px-12 pt-8">
         <Link
@@ -69,11 +80,17 @@ export default function ServiceLanding({ service, relatedServices = [] }: Servic
           <span className="text-[var(--accent)]/40 uppercase tracking-[0.2em] text-xs font-bold block mb-3">
             Quick answer
           </span>
-          <p className="text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <p
+            className="text-[15px] leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
             {service.directAnswer}
           </p>
           {service.relatedLink && (
-            <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
+            <p
+              className="mt-4 text-[15px] leading-relaxed"
+              style={{ color: "var(--text-muted)" }}
+            >
               Comparing options?{" "}
               <Link
                 href={service.relatedLink.href}
@@ -133,19 +150,28 @@ export default function ServiceLanding({ service, relatedServices = [] }: Servic
           <ScrollReveal direction="up" delay={0}>
             <div
               className="flex flex-col items-start gap-6 p-8 md:p-12 rounded-2xl"
-              style={{ border: "1px solid var(--border-color)", background: "var(--card-bg)" }}
+              style={{
+                border: "1px solid var(--border-color)",
+                background: "var(--card-bg)",
+              }}
             >
               <h2 className="text-3xl md:text-4xl font-secondary-italic">
-                Have a project in mind?
+                {service.title}: have a project in mind?
               </h2>
-              <p className="text-[15px] leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-                Book a free strategy call — we&apos;ll scope the work, agree on a
-                timeline, and send fixed pricing. No obligation either way.
+              <p
+                className="text-[15px] leading-relaxed max-w-xl"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Book a free strategy call — we&apos;ll scope the work, agree on
+                a timeline, and send fixed pricing. No obligation either way.
               </p>
               <button
                 onClick={openCalModal}
                 className="inline-flex items-center justify-center rounded-full px-6 py-3 text-[13px] font-medium transition-all duration-300"
-                style={{ background: "var(--accent)", color: "var(--accent-text)" }}
+                style={{
+                  background: "var(--accent)",
+                  color: "var(--accent-text)",
+                }}
               >
                 Book a Free Strategy Call
               </button>
