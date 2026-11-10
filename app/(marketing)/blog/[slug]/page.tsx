@@ -8,6 +8,7 @@ import { slugToImage, FALLBACK_BLOG_IMAGE } from "@/data/blog-images";
 import { slugToOg } from "@/data/blog-og";
 import type { Article, ArticleSection } from "@/data/types";
 import FaqAccordion from "@/components/sections/FaqAccordion";
+import TopicClusterNav from "@/components/blog/TopicClusterNav";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { socialIcons } from "@/components/ui/social-icons";
 import { ArrowUpRight } from "lucide-react";
@@ -694,6 +695,8 @@ export default async function BlogPost({
               </ScrollReveal>
             ))}
           </div>
+
+          <TopicClusterNav slug={slug} />
 
           {/* FAQ */}
           {(post.faqs?.length ?? 0) > 0 && (
